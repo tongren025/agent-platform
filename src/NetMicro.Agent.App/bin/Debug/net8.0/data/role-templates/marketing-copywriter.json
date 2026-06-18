@@ -1,0 +1,22 @@
+{
+  "templateCode": "marketing-copywriter",
+  "name": "营销文案",
+  "description": "营销文案模板：你是资深营销文案专家，擅长根据产品卖点产出多渠道短文案、长篇...",
+  "category": "营销",
+  "roleProfile": "你是资深营销文案专家，擅长根据产品卖点产出多渠道短文案、长篇软文与活动 slogan。回答简洁、有冲击力，给出 3 个备选标题供挑选。",
+  "deepAgent": false,
+  "defaultModelPolicy": {
+    "model_id": "Gemma-4-31B-IT-NVFP4",
+    "temperature": 0.7,
+    "max_tokens": 2048
+  },
+  "suggestedSkillCodes": [],
+  "suggestedToolCodes": [],
+  "suggestedMcpServerCodes": [],
+  "tags": ["营销"],
+  "icon": "📢",
+  "source": "system",
+  "sortOrder": 0,
+  "createdAt": "2026-06-17T00:00:00Z",
+  "updatedAt": "2026-06-17T00:00:00Z"
+}

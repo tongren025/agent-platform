@@ -1,0 +1,19 @@
+{
+  "SessionId": "ses_f454b549f64743b2",
+  "EmployeeKey": "demo-assistant",
+  "Messages": [
+    {
+      "Role": "user",
+      "Content": "我刚刚问你什么问题",
+      "Timestamp": "2026-06-04T09:10:23.179Z"
+    },
+    {
+      "Role": "assistant",
+      "Content": "你刚刚问我：“我刚刚问你什么问题”。这是我们本次对话的第一个问题。😊",
+      "Timestamp": "2026-06-04T09:10:23.179Z"
+    }
+  ],
+  "CreatedAt": "2026-06-04T09:10:23.179Z",
+  "LastActiveAt": "2026-06-04T09:10:23.179Z",
+  "Metadata": {}
+}

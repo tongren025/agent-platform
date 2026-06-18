@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NetMicro.Agent.App/NetMicro.Agent.App.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent 管理中心</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--soft:#f8fafc;--line:#e5eaf2;--text:#172033;--muted:#64748b;--blue:#2563eb;--blue-soft:#eff6ff;--green:#059669;--green-soft:#ecfdf5;--red:#dc2626;--red-soft:#fef2f2;--amber:#b7791f;--amber-soft:#fffbeb;--shadow:0 8px 24px rgba(15,23,42,.06);--font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;--mono:"Cascadia Code",Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 var(--font)}
+button,input,textarea,select{font:inherit}button{border:0;cursor:pointer}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:99px}
+.topbar{display:flex;align-items:center;gap:14px;height:56px;padding:0 24px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.topbar h1{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
+.topbar h1 .icon{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:#111827;color:#fff;font-size:13px;font-weight:800}
+.topbar .spacer{flex:1}
+.back{color:var(--blue);text-decoration:none;font-size:13px}.back:hover{text-decoration:underline}
+.tabs{display:flex;gap:2px;padding:8px 24px 0;background:var(--card);border-bottom:1px solid var(--line)}
+.tab{padding:10px 18px;background:none;color:var(--muted);font-weight:600;border:none;border-bottom:2px solid transparent}
+.tab:hover{color:var(--text)}.tab.active{color:var(--blue);border-color:var(--blue)}
+.page{max-width:1000px;margin:0 auto;padding:20px 24px 60px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow);text-align:center}
+.stat .num{font-size:32px;font-weight:800;color:var(--blue)}.stat .label{color:var(--muted);font-size:12px;margin-top:2px}
+.toolbar{display:flex;align-items:center;margin-bottom:12px}.toolbar h2{margin:0;font-size:15px;flex:1}.toolbar h2 .ct{color:var(--muted);font-weight:400}
+.btn{height:34px;display:inline-flex;align-items:center;gap:5px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:13px;white-space:nowrap}
+.btn:hover{background:var(--soft)}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.primary:hover{background:#1d4ed8}
+.btn.danger{color:var(--red);border-color:#fecaca}.btn.danger:hover{background:var(--red-soft)}
+.btn.green{color:var(--green);border-color:#bbf7d0}.btn.green:hover{background:var(--green-soft)}
+.btn.sm{height:28px;padding:0 10px;font-size:12px}
+.cards{display:grid;gap:10px}
+.card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+.card:hover{border-color:#bfdbfe}
+.card-info{min-width:0}.card-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.card-desc{color:var(--muted);font-size:12px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:600px}
+.card-meta{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.card-acts{display:flex;gap:6px;flex-shrink:0}
+.tag{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:99px;font-size:11px;font-weight:600}
+.tag.code{background:var(--blue-soft);color:var(--blue);border:1px solid #bfdbfe}
+.tag.green{background:var(--green-soft);color:var(--green);border:1px solid #bbf7d0}
+.tag.amber{background:var(--amber-soft);color:var(--amber);border:1px solid #fde68a}
+.tag.muted{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+.empty{padding:40px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn .15s}
+.modal{width:680px;max-width:92vw;max-height:88vh;display:flex;flex-direction:column;background:var(--card);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-head{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}.modal-head h3{margin:0;flex:1;font-size:15px}
+.modal-body{flex:1;overflow:auto;padding:20px}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid var(--line)}
+.fg{display:grid;gap:16px}.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fd{display:flex;flex-direction:column;gap:4px}
+.fd label{font-size:12px;font-weight:600;color:var(--muted)}.fd label .req{color:var(--red)}
+.fd input,.fd textarea,.fd select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;outline:none;background:var(--card)}
+.fd input:focus,.fd textarea:focus,.fd select:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.fd textarea{min-height:80px;resize:vertical}.fd .ht{font-size:11px;color:var(--muted)}
+.toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.toggle input{display:none}.toggle .tk{width:36px;height:20px;border-radius:99px;background:#cbd5e1;position:relative;transition:.2s}
+.toggle input:checked+.tk{background:var(--blue)}.toggle .tk::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.toggle input:checked+.tk::after{left:18px}
+.bind-sec{margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}
+.bind-sec h4{margin:0 0 10px;font-size:13px}
+.bind-list{display:flex;flex-wrap:wrap;gap:6px}
+.bi{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 6px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:12px;cursor:pointer;user-select:none}
+.bi:hover{border-color:#93c5fd}.bi.on{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+.bi .ck{width:16px;height:16px;border-radius:4px;border:1.5px solid #cbd5e1;display:grid;place-items:center;font-size:10px;color:transparent}
+.bi.on .ck{border-color:var(--blue);background:var(--blue);color:#fff}
+/* sub-skill cards */
+.sub-cards{display:grid;gap:8px;margin-top:8px}
+.sub-card{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.sub-card-head{display:flex;align-items:center;gap:8px}.sub-card-head strong{flex:1;font-size:13px}
+.sub-card-desc{color:var(--muted);font-size:12px;margin-top:4px;max-height:40px;overflow:hidden}
+/* param table */
+.param-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.param-table th{text-align:left;padding:6px 8px;background:var(--soft);border-bottom:1px solid var(--line);color:var(--muted);font-weight:600}
+.param-table td{padding:6px 8px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.param-table input,.param-table select{width:100%;padding:4px 6px;border:1px solid var(--line);border-radius:4px;font-size:12px}
+.param-table .rm{color:var(--red);cursor:pointer;font-size:16px;text-align:center}
+.toast{position:fixed;bottom:20px;right:20px;z-index:200}
+.toast-item{padding:10px 16px;margin-top:8px;border-radius:10px;background:#111827;color:#fff;font-size:13px;box-shadow:var(--shadow);animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.fr{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar"><h1><span class="icon">⚙</span>管理中心</h1><div class="spacer"></div><a href="/" class="back">← 返回工作台</a></div>
+<div class="tabs" id="tabs">
+  <button class="tab active" data-tab="overview">概览</button>
+  <button class="tab" data-tab="employees">AI 助手</button>
+  <button class="tab" data-tab="skills">知识 / 规则</button>
+  <button class="tab" data-tab="tools">工具 / 能力</button>
+  <button class="tab" data-tab="mcp">外部服务</button>
+</div>
+<div class="page" id="ct"></div>
+<div class="toast" id="toast"></div>
+<script>
+const API=location.origin+'/api/v1/agentapp/registry';
+let tab='overview',C={};
+const $=id=>document.getElementById(id),E=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function T(m,ms=2500){const d=document.createElement('div');d.className='toast-item';d.textContent=m;$('toast').appendChild(d);setTimeout(()=>d.remove(),ms)}
+async function P(p,o){return(await fetch(API+p,{headers:{'Content-Type':'application/json'},...o})).json()}
+function slug(s){return s.replace(/[\s一-龥]+/g,m=>{const py={'充':'chong','值':'zhi','策':'ce','略':'lve','助':'zhu','手':'shou','解':'jie','析':'xi','模':'mo','板':'ban','人':'ren','群':'qun','包':'bao','面':'mian','回':'hui','滚':'gun','预':'yu','检':'jian','创':'chuang','建':'jian2','获':'huo','取':'qu','搜':'sou','索':'suo','查':'cha','询':'xun','导':'dao','出':'chu','数':'shu','据':'ju','分':'fen','书':'shu2','籍':'ji'};return'-'}).replace(/[^a-zA-Z0-9-]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'').toLowerCase().slice(0,30)||'new-'+Date.now()%1000}
+
+$('tabs').onclick=e=>{const t=e.target.closest('.tab');if(!t)return;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');tab=t.dataset.tab;render()};
+
+async function load(){const[a,b,c,d]=await Promise.all([P('/skills'),P('/mcp-servers'),P('/tools'),P('/employees')]);C={skills:a.data||[],mcp:b.data||[],tools:c.data||[],emps:d.data||[]}}
+async function render(){await load();({overview:pgOverview,employees:pgEmps,skills:pgSkills,tools:pgTools,mcp:pgMcp})[tab]($('ct'))}
+
+// ═══ 概览 ═══
+function pgOverview(c){c.innerHTML=`
+  <div class="stats">
+    <div class="stat" onclick="switchTab('employees')"><div class="num">${C.emps.length}</div><div class="label">AI 助手</div></div>
+    <div class="stat" onclick="switchTab('skills')"><div class="num">${C.skills.length}</div><div class="label">知识 / 规则</div></div>
+    <div class="stat" onclick="switchTab('tools')"><div class="num">${C.tools.length}</div><div class="label">工具 / 能力</div></div>
+    <div class="stat" onclick="switchTab('mcp')"><div class="num">${C.mcp.length}</div><div class="label">外部服务</div></div>
+  </div>
+  <div style="color:var(--muted);line-height:2">
+    <p><b>AI 助手</b>：每个助手有自己的角色定位和技能组合，面对不同业务场景。</p>
+    <p><b>知识 / 规则</b>：可复用的业务知识、解析规则或 SOP，绑定给助手后它就"学会"了。</p>
+    <p><b>工具 / 能力</b>：助手可以调用的操作（如获取数据、预检、创建资源），每个工具定义好了参数。</p>
+    <p><b>外部服务</b>：连接第三方 MCP 服务器，自动获取它提供的工具能力。</p>
+  </div>`}
+function switchTab(t){tab=t;document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('active');if(x.dataset.tab===t)x.classList.add('active')});render()}
+
+// ═══ AI 助手 ═══
+function pgEmps(c){c.innerHTML=`
+  <div class="toolbar"><h2>AI 助手 <span class="ct">(${C.emps.length})</span></h2>
+    <button class="btn primary" onclick="editEmp()">+ 创建助手</button></div>
+  <div class="cards">${C.emps.map(e=>`
+    <div class="card"><div class="card-info">
+      <div class="card-title">${E(e.name)} ${e.deepAgent?'<span class="tag green">高级模式</span>':''}</div>
+      <div class="card-desc">${E(firstLine(e.roleProfile))}</div>
+      <div class="card-meta">
+        ${(e.skillRefs||[]).map(r=>`<span class="tag muted">📖 ${E(findName('skills',r,'code'))}</span>`).join('')}
+        ${allToolCodes(e).map(r=>`<span class="tag muted">🔧 ${E(findName('tools',r,'toolCode'))}</span>`).join('')}
+        ${(e.mcpServerRefs||[]).map(r=>`<span class="tag muted">🔌 ${E(findName('mcp',r,'serverCode'))}</span>`).join('')}
+      </div></div>
+      <div class="card-acts">
+        <button class="btn sm green" onclick="editBind('${E(e.employeeKey)}')">配置能力</button>
+        <button class="btn sm" onclick="editEmp('${E(e.employeeKey)}')">编辑</button>
+        <button class="btn sm danger" onclick="del('employees','${E(e.employeeKey)}','助手')">删除</button>
+      </div></div>`).join('')||'<div class="empty">还没有助手，点击右上角创建</div>'}</div>`}
+
+function editEmp(key){
+  const e=key?C.emps.find(x=>x.employeeKey===key):{};const isN=!key;
+  modal(isN?'创建 AI 助手':'编辑助手',`
+    <div class="fg">
+      <div class="fr">
+        <div class="fd"><label>助手名称 <span class="req">*</span></label><input id="f_name" value="${E(e.name||'')}" placeholder="如：数据分析助手"></div>
+        <div class="fd"><label>唯一编码</label><input id="f_key" value="${E(e.employeeKey||'')}" ${isN?'':'readonly style="background:#f1f5f9"'} placeholder="自动生成"><span class="ht">创建后不可修改</span></div>
+      </div>
+      <div class="fd"><label>角色定位 <span class="req">*</span></label>
+        <textarea id="f_profile" rows="6" placeholder="描述这个助手的身份、职责、工作方式和回答风格&#10;&#10;例如：你是充值策略运营助手，帮运营人员理解和执行批量策略配置。">${E(e.roleProfile||'')}</textarea>
+        <span class="ht">这段话会成为助手的"人设"，决定它如何理解和回答问题</span></div>
+      <div class="fr">
+        <div class="fd"><label>使用模型</label><select id="f_model">
+          ${['Gemma-4-31B-IT-NVFP4','gpt-4o','gpt-4o-mini','claude-sonnet-4-20250514'].map(m=>`<option ${(e.defaultModelPolicy?.model_id||'gpt-4o')===m?'selected':''}>${m}</option>`).join('')}
+        </select></div>
+        <div class="fd"><label>回答风格</label><select id="f_temp">
+          <option value="0.3" ${(e.defaultModelPolicy?.temperature??0.7)<=0.3?'selected':''}>精确（适合解析、数据）</option>
+          <option value="0.5" ${(e.defaultModelPolicy?.temperature??0.7)>0.3&&(e.defaultModelPolicy?.temperature??0.7)<=0.5?'selected':''}>均衡</option>
+          <option value="0.7" ${(e.defaultModelPolicy?.temperature??0.7)>0.5&&(e.defaultModelPolicy?.temperature??0.7)<=0.7?'selected':''}>自然（适合对话）</option>
+          <option value="1.0" ${(e.defaultModelPolicy?.temperature??0.7)>0.7?'selected':''}>创意（适合写作）</option>
+        </select></div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="f_deep" ${e.deepAgent?'checked':''}><span class="tk"></span>
+        <div><b>开启高级模式</b><div class="ht">开启后助手可以：分步规划任务、在沙盒中暂存文件、委派子任务、请求人工确认、执行脚本</div></div></label>
+    </div>`,async()=>{
+    const o=isN?{}:{...e};
+    o.name=$('f_name').value.trim();
+    o.employeeKey=$('f_key').value.trim()||(isN?slug(o.name):e.employeeKey);
+    o.roleProfile=$('f_profile').value;o.deepAgent=$('f_deep').checked;
+    o.defaultModelPolicy={model_id:$('f_model').value,temperature:parseFloat($('f_temp').value),max_tokens:4096};
+    if(!o.name)return T('请填写助手名称');
+    if(isN)$('f_key').value=o.employeeKey;
+    return P('/employees',{method:'POST',body:JSON.stringify(o)})})
+}
+
+async function editBind(key){
+  await load();const e=C.emps.find(x=>x.employeeKey===key);if(!e)return;
+  const R={s:[...(e.skillRefs||[])],t:[...(e.toolRefs||[])],m:[...(e.mcpServerRefs||[])]};
+  const tog=(a,v)=>{const i=a.indexOf(v);i>=0?a.splice(i,1):a.push(v)};
+  function body(){return`
+    <div class="bind-sec"><h4>📖 知识 / 规则</h4><p class="ht" style="margin:0 0 8px">勾选后，助手就能使用这些业务知识来回答问题和执行任务</p>
+      ${C.skills.length?`<div class="bind-list">${C.skills.map(s=>`<div class="bi ${R.s.includes(s.code)?'on':''}" data-g="s" data-v="${E(s.code)}"><span class="ck">✓</span>${E(s.name)}</div>`).join('')}</div>`:'<span class="ht">还没有知识规则，请先在「知识/规则」中创建</span>'}</div>
+    <div class="bind-sec"><h4>🔧 工具 / 能力</h4><p class="ht" style="margin:0 0 8px">勾选后，助手可以调用这些操作（如查数据、预检、创建资源）</p>
+      ${C.tools.length?`<div class="bind-list">${C.tools.map(t=>`<div class="bi ${R.t.includes(t.toolCode)?'on':''}" data-g="t" data-v="${E(t.toolCode)}"><span class="ck">✓</span>${E(t.name)}</div>`).join('')}</div>`:'<span class="ht">工具库为空</span>'}</div>
+    <div class="bind-sec"><h4>🔌 外部服务</h4><p class="ht" style="margin:0 0 8px">勾选后，助手可以使用该服务提供的所有工具</p>
+      ${C.mcp.length?`<div class="bind-list">${C.mcp.map(m=>`<div class="bi ${R.m.includes(m.serverCode)?'on':''}" data-g="m" data-v="${E(m.serverCode)}"><span class="ck">✓</span>${E(m.name)}</div>`).join('')}</div>`:'<span class="ht">外部服务库为空</span>'}</div>`}
+  const mk=modal(`配置能力 — ${e.name}`,body(),async()=>{
+    e.skillRefs=R.s;e.toolRefs=R.t;e.mcpServerRefs=R.m;
+    return P('/employees',{method:'POST',body:JSON.stringify(e)})});
+  function bindClicks(){mk.querySelectorAll('.bi').forEach(el=>{el.onclick=()=>{
+    const g=el.dataset.g,v=el.dataset.v;tog(g==='s'?R.s:g==='t'?R.t:R.m,v);
+    mk.querySelector('.modal-body').innerHTML=body();bindClicks()}})}
+  bindClicks()
+}
+
+// ═══ 知识 / 规则 ═══
+function pgSkills(c){c.innerHTML=`
+  <div class="toolbar"><h2>知识 / 规则 <span class="ct">(${C.skills.length})</span></h2>
+    <button class="btn primary" onclick="editSkill()">+ 新建</button></div>
+  <div class="cards">${C.skills.map(s=>`
+    <div class="card"><div class="card-info">
+      <div class="card-title">${E(s.name)} ${s.isTree?`<span class="tag amber">${(s.children||[]).length} 个子规则</span>`:''} ${s.required?'<span class="tag green">必选</span>':''}</div>
+      <div class="card-desc">${E(s.summary||'无概要')}</div>
+    </div><div class="card-acts">
+      ${s.isTree?`<button class="btn sm" onclick="editSubSkills('${E(s.code)}')">管理子规则</button>`:''}
+      <button class="btn sm" onclick="editSkill('${E(s.code)}')">编辑</button>
+      <button class="btn sm danger" onclick="del('skills','${E(s.code)}','知识')">删除</button>
+    </div></div>`).join('')||'<div class="empty">还没有业务知识。创建后绑定给助手，它就能用这些知识回答问题。</div>'}</div>`}
+
+function editSkill(code){
+  const s=code?C.skills.find(x=>x.code===code):{};const isN=!code;
+  modal(isN?'新建知识 / 规则':'编辑知识',`
+    <div class="fg">
+      <div class="fr">
+        <div class="fd"><label>名称 <span class="req">*</span></label><input id="f_name" value="${E(s.name||'')}" placeholder="如：充值策略解析规则"></div>
+        <div class="fd"><label>唯一编码</label><input id="f_code" value="${E(s.code||'')}" ${isN?'':'readonly style="background:#f1f5f9"'} placeholder="自动生成"></div>
+      </div>
+      <div class="fd"><label>概要</label>
+        <textarea id="f_sum" rows="2" placeholder="一两句话概括这套知识的用途，助手会看到这个来判断是否需要用">${E(s.summary||'')}</textarea></div>
+      <div class="fd"><label>详细内容</label>
+        <textarea id="f_desc" rows="8" placeholder="完整的业务规则、解析方法、操作指南…&#10;支持多行文本，写得越详细助手执行越准确">${E(s.description||'')}</textarea>
+        <span class="ht">这里写完整的业务规则。助手需要深入了解时会查阅这里的内容。</span></div>
+      <div class="fr">
+        <label class="toggle"><input type="checkbox" id="f_tree" ${s.isTree?'checked':''}><span class="tk"></span> 包含子规则（保存后可管理）</label>
+        <label class="toggle"><input type="checkbox" id="f_req" ${s.required?'checked':''}><span class="tk"></span> 必选（强制注入，不可取消）</label>
+      </div>
+    </div>`,async()=>{
+    const o=isN?{}:{...s};
+    o.name=$('f_name').value.trim();o.code=$('f_code').value.trim()||(isN?slug(o.name):s.code);
+    o.summary=$('f_sum').value;o.description=$('f_desc').value;
+    o.isTree=$('f_tree').checked;o.required=$('f_req').checked;o.sortOrder=s.sortOrder||0;
+    if(!isN&&s.children)o.children=s.children;
+    if(!o.name)return T('请填写名称');
+    return P('/skills',{method:'POST',body:JSON.stringify(o)})})
+}
+
+function editSubSkills(code){
+  const s=C.skills.find(x=>x.code===code);if(!s)return;
+  const children=[...(s.children||[])];
+  function body(){return`
+    <div class="ht" style="margin-bottom:12px">每个子规则是一套独立的处理方法。助手会根据实际情况选择合适的子规则。</div>
+    <div class="sub-cards">${children.map((ch,i)=>`
+      <div class="sub-card"><div class="sub-card-head"><strong>${E(ch.name||'未命名')}</strong>
+        <button class="btn sm" onclick="editOneSub(${i})">编辑</button>
+        <button class="btn sm danger" onclick="delSub(${i})">删除</button>
+      </div><div class="sub-card-desc">${E((ch.summary||ch.description||'').slice(0,100))}</div></div>`).join('')}
+      ${children.length===0?'<div class="empty" style="padding:20px">还没有子规则</div>':''}
+    </div>
+    <div style="margin-top:12px"><button class="btn primary" onclick="addSub()">+ 添加子规则</button></div>`}
+  const mk=modal(`管理子规则 — ${s.name}`,body(),async()=>{
+    s.children=children;return P('/skills',{method:'POST',body:JSON.stringify(s)})});
+  window.addSub=()=>{children.push({code:'sub-'+(children.length+1),name:'',summary:'',description:''});mk.querySelector('.modal-body').innerHTML=body()};
+  window.delSub=i=>{if(confirm('删除这个子规则？')){children.splice(i,1);mk.querySelector('.modal-body').innerHTML=body()}};
+  window.editOneSub=i=>{
+    const ch=children[i];
+    modal('编辑子规则',`<div class="fg">
+      <div class="fr">
+        <div class="fd"><label>名称 <span class="req">*</span></label><input id="s_name" value="${E(ch.name||'')}"></div>
+        <div class="fd"><label>编码</label><input id="s_code" value="${E(ch.code||'')}"></div>
+      </div>
+      <div class="fd"><label>概要</label><textarea id="s_sum" rows="2">${E(ch.summary||'')}</textarea></div>
+      <div class="fd"><label>详细规则</label><textarea id="s_desc" rows="8">${E(ch.description||'')}</textarea></div>
+    </div>`,async()=>{
+      ch.name=$('s_name').value.trim();ch.code=$('s_code').value.trim()||slug(ch.name);
+      ch.summary=$('s_sum').value;ch.description=$('s_desc').value;
+      if(!ch.name)return T('请填写名称');
+      mk.querySelector('.modal-body').innerHTML=body();return{code:200}})
+  }
+}
+
+// ═══ 工具 / 能力 ═══
+function pgTools(c){c.innerHTML=`
+  <div class="toolbar"><h2>工具 / 能力 <span class="ct">(${C.tools.length})</span></h2>
+    <button class="btn primary" onclick="editTool()">+ 新建工具</button></div>
+  <div class="cards">${C.tools.map(t=>{
+    const ps=parseParams(t.inputSchema);
+    return`<div class="card"><div class="card-info">
+      <div class="card-title">${E(t.name)} <span class="tag code">${E(t.toolCode)}</span>
+        ${ps.length?`<span class="tag green">${ps.length} 个参数</span>`:'<span class="tag amber">无参数定义</span>'}</div>
+      <div class="card-desc">${E(t.description||'无描述')}</div>
+    </div><div class="card-acts">
+      <button class="btn sm" onclick="editTool('${E(t.toolCode)}')">编辑</button>
+      <button class="btn sm danger" onclick="del('tools','${E(t.toolCode)}','工具')">删除</button>
+    </div></div>`}).join('')||'<div class="empty">工具库为空。工具的执行逻辑需要后端代码实现，这里管理的是参数定义和描述。</div>'}</div>`}
+
+function editTool(code){
+  const t=code?C.tools.find(x=>x.toolCode===code):{};const isN=!code;
+  let params=parseParams(t.inputSchema);
+  function paramRows(){return params.map((p,i)=>`<tr>
+    <td><input value="${E(p.name)}" onchange="this._p.name=this.value" style="font-weight:600"></td>
+    <td><select onchange="this._p.type=this.value">${['string','integer','number','boolean','array'].map(tp=>`<option ${p.type===tp?'selected':''}>${tp}</option>`).join('')}</select></td>
+    <td style="text-align:center"><input type="checkbox" ${p.required?'checked':''} onchange="this._p.required=this.checked"></td>
+    <td><input value="${E(p.desc)}" onchange="this._p.desc=this.value" placeholder="参数说明"></td>
+    <td class="rm" onclick="params.splice(${i},1);refreshParams()">✕</td>
+  </tr>`).join('')}
+  function refreshParams(){
+    const tb=document.querySelector('#paramBody');
+    tb.innerHTML=paramRows();
+    tb.querySelectorAll('tr').forEach((tr,i)=>{tr.querySelectorAll('[onchange]').forEach(el=>el._p=params[i])})}
+  modal(isN?'新建工具':'编辑工具',`
+    <div class="fg">
+      <div class="fr">
+        <div class="fd"><label>工具名称 <span class="req">*</span></label><input id="f_name" value="${E(t.name||'')}" placeholder="如：获取解析结果"></div>
+        <div class="fd"><label>工具编码</label><input id="f_code" value="${E(t.toolCode||'')}" ${isN?'':'readonly style="background:#f1f5f9"'} placeholder="自动生成"></div>
+      </div>
+      <div class="fd"><label>功能说明</label>
+        <textarea id="f_desc" rows="3" placeholder="说明这个工具的用途，助手根据这段话判断什么时候该用它">${E(t.description||'')}</textarea></div>
+      <div class="fd"><label>参数定义</label>
+        <span class="ht">定义助手调用此工具时需要传哪些参数</span>
+        <table class="param-table"><thead><tr><th>参数名</th><th style="width:90px">类型</th><th style="width:50px">必填</th><th>说明</th><th style="width:30px"></th></tr></thead>
+        <tbody id="paramBody">${paramRows()}</tbody></table>
+        <button class="btn sm" style="margin-top:8px" onclick="params.push({name:'',type:'string',required:false,desc:''});refreshParams()">+ 添加参数</button>
+      </div>
+    </div>`,async()=>{
+    const o=isN?{}:{...t};
+    o.name=$('f_name').value.trim();o.toolCode=$('f_code').value.trim()||(isN?slug(o.name):t.toolCode);
+    o.description=$('f_desc').value;o.inputSchema=buildSchema(params);
+    if(!o.name)return T('请填写工具名称');
+    return P('/tools',{method:'POST',body:JSON.stringify(o)})});
+  setTimeout(()=>{const tb=document.querySelector('#paramBody');if(tb)tb.querySelectorAll('tr').forEach((tr,i)=>{tr.querySelectorAll('[onchange]').forEach(el=>el._p=params[i])})},50)
+}
+
+function parseParams(schema){
+  if(!schema)return[];
+  try{const s=JSON.parse(schema);const p=s.properties||{};const req=s.required||[];
+    return Object.entries(p).map(([k,v])=>({name:k,type:v.type||'string',required:req.includes(k),desc:v.description||''}))}
+  catch{return[]}
+}
+function buildSchema(params){
+  if(!params.length)return null;
+  const props={},req=[];
+  params.filter(p=>p.name).forEach(p=>{props[p.name]={type:p.type||'string'};if(p.desc)props[p.name].description=p.desc;if(p.required)req.push(p.name)});
+  return JSON.stringify({type:'object',properties:props,required:req,additionalProperties:false})}
+
+// ═══ 外部服务 ═══
+function pgMcp(c){c.innerHTML=`
+  <div class="toolbar"><h2>外部服务（MCP）<span class="ct">(${C.mcp.length})</span></h2>
+    <button class="btn primary" onclick="editMcp()">+ 添加服务</button></div>
+  <div class="cards">${C.mcp.map(m=>`
+    <div class="card"><div class="card-info">
+      <div class="card-title">${E(m.name)} <span class="tag ${m.transportType==='http'?'amber':'muted'}">${m.transportType==='http'?'远程':'本地进程'}</span></div>
+      <div class="card-desc">${E(m.description||m.command||'无描述')}</div>
+    </div><div class="card-acts">
+      <button class="btn sm green" onclick="testMcp('${E(m.serverCode)}')">测试连接</button>
+      <button class="btn sm" onclick="editMcp('${E(m.serverCode)}')">编辑</button>
+      <button class="btn sm danger" onclick="del('mcp-servers','${E(m.serverCode)}','服务')">删除</button>
+    </div></div>`).join('')||'<div class="empty">还没有外部服务。连接 MCP 服务器后，它提供的工具会自动可用。</div>'}</div>`}
+
+function editMcp(code){
+  const m=code?C.mcp.find(x=>x.serverCode===code):{};const isN=!code;
+  modal(isN?'添加外部服务':'编辑服务',`
+    <div class="fg">
+      <div class="fr">
+        <div class="fd"><label>服务名称 <span class="req">*</span></label><input id="f_name" value="${E(m.name||'')}" placeholder="如：文件系统"></div>
+        <div class="fd"><label>服务编码</label><input id="f_code" value="${E(m.serverCode||'')}" ${isN?'':'readonly style="background:#f1f5f9"'} placeholder="自动生成"></div>
+      </div>
+      <div class="fd"><label>用途说明</label><input id="f_desc" value="${E(m.description||'')}" placeholder="这个服务提供什么能力"></div>
+      <div class="fd"><label>连接方式</label><select id="f_tp">
+        <option value="stdio" ${m.transportType!=='http'?'selected':''}>本地进程（stdio）— 启动一个本地命令</option>
+        <option value="http" ${m.transportType==='http'?'selected':''}>远程服务（HTTP）— 连接一个 URL</option>
+      </select></div>
+      <div class="fr">
+        <div class="fd"><label>启动命令</label><input id="f_cmd" value="${E(m.command||'')}" placeholder="如 node、npx、python"><span class="ht">本地进程模式下填写</span></div>
+        <div class="fd"><label>命令参数</label><input id="f_args" value="${E((m.commandArgs||[]).join(' '))}" placeholder="如 server.js --port 3000"><span class="ht">用空格分隔</span></div>
+      </div>
+      <div class="fd"><label>远程地址</label><input id="f_url" value="${E(m.url||'')}" placeholder="HTTP 模式下填写 URL"></div>
+      <div class="fd"><label>环境变量</label><textarea id="f_env" rows="2" placeholder="每行一个，格式 KEY=VALUE">${Object.entries(m.env||{}).map(([k,v])=>k+'='+v).join('\n')}</textarea></div>
+    </div>`,async()=>{
+    const o=isN?{}:{...m};o.name=$('f_name').value.trim();o.serverCode=$('f_code').value.trim()||(isN?slug(o.name):m.serverCode);
+    o.description=$('f_desc').value;o.transportType=$('f_tp').value;o.command=$('f_cmd').value.trim()||null;
+    o.commandArgs=$('f_args').value.trim()?$('f_args').value.trim().split(/\s+/):[];
+    o.url=$('f_url').value.trim()||null;o.env={};
+    $('f_env').value.trim().split('\n').filter(Boolean).forEach(l=>{const[k,...v]=l.split('=');if(k)o.env[k.trim()]=v.join('=').trim()});
+    if(!o.name)return T('请填写服务名称');
+    return P('/mcp-servers',{method:'POST',body:JSON.stringify(o)})})
+}
+async function testMcp(code){T('正在测试连接...');try{const r=await P(`/mcp-servers/${code}/test`,{method:'POST'});
+  r.code===200?T(`✅ 连接成功！发现 ${r.data.toolCount} 个工具：${r.data.tools.map(t=>t.name).join(', ')}`,4000):T('❌ '+r.message,4000)}catch(e){T('❌ '+e.message)}}
+
+// ═══ 公用 ═══
+function modal(title,bodyHtml,onSave){
+  const mk=document.createElement('div');mk.className='mask';
+  mk.innerHTML=`<div class="modal"><div class="modal-head"><h3>${title}</h3></div><div class="modal-body">${bodyHtml}</div>
+    <div class="modal-foot"><button class="btn" id="mc">取消</button><button class="btn primary" id="ms">保存</button></div></div>`;
+  document.body.appendChild(mk);
+  mk.querySelector('#mc').onclick=()=>mk.remove();
+  mk.querySelector('#ms').onclick=async()=>{const r=await onSave();if(!r)return;T('已保存');mk.remove();render()};
+  mk.addEventListener('click',e=>{if(e.target===mk)mk.remove()});return mk}
+async function del(ep,key,label){if(!confirm(`确定删除${label}「${key}」？`))return;await P(`/${ep}/${key}`,{method:'DELETE'});T('已删除');render()}
+function firstLine(s){return(s||'').split('\n').find(l=>l.trim()&&!l.startsWith('#'))?.replace(/^你是/,'').trim().slice(0,80)||'未设置'}
+function findName(type,code,keyField){const list=type==='skills'?C.skills:type==='tools'?C.tools:C.mcp;const it=list.find(x=>x[keyField]===code);return it?.name||code}
+function allToolCodes(e){return[...(e.toolRefs||[]),...(e.tools||[]).map(t=>t.toolCode)]}
+render();
+</script>
+</body>
+</html>
