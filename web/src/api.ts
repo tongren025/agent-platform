@@ -1,0 +1,153 @@
+import type { ApiResult } from './types';
+
+const BASE = '/api/v1/agentapp';
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    headers: { 'Content-Type': 'application/json', ...init?.headers },
+    ...init,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(text || `HTTP ${res.status}`);
+  }
+  let json: ApiResult<T>;
+  try {
+    json = await res.json();
+  } catch {
+    throw new Error(`服务端返回了非 JSON 响应 (HTTP ${res.status})`);
+  }
+  if (json.code !== 200) throw new Error(json.message || `code ${json.code}`);
+  return json.data;
+}
+
+export const api = {
+  // Registry
+  getOverview: () => request<Record<string, number>>('/registry/overview'),
+  listEmployees: () => request<any[]>('/registry/employees'),
+  getEmployee: (key: string) => request<any>(`/registry/employees/${key}`),
+  saveEmployee: (data: any) => request<any>('/registry/employees', { method: 'POST', body: JSON.stringify(data) }),
+  updateEmployee: (key: string, data: any) => request<any>(`/registry/employees/${key}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteEmployee: (key: string) => request<any>(`/registry/employees/${key}`, { method: 'DELETE' }),
+  toggleEnabled: (key: string, enabled: boolean) => request<any>(`/registry/employees/${key}/enabled`, { method: 'POST', body: JSON.stringify({ enabled }) }),
+  cloneEmployee: (key: string, newKey: string, newName: string) =>
+    request<any>(`/registry/employees/${key}/clone`, { method: 'POST', body: JSON.stringify({ newKey, newName }) }),
+  applyTemplate: (code: string, employeeKey: string, employeeName: string) =>
+    request<any>(`/registry/role-templates/${code}/apply`, { method: 'POST', body: JSON.stringify({ employeeKey, employeeName }) }),
+
+  listTemplates: () => request<any[]>('/registry/role-templates'),
+  listTools: () => request<any[]>('/registry/tools'),
+  listSkills: () => request<any[]>('/registry/skills'),
+  listTeams: () => request<any[]>('/registry/teams'),
+  saveTeam: (data: any) => request<any>('/registry/teams', { method: 'POST', body: JSON.stringify(data) }),
+  deleteTeam: (code: string) => request<any>(`/registry/teams/${code}`, { method: 'DELETE' }),
+  updateTeamMembers: (code: string, memberEmployeeKeys: string[]) =>
+    request<any>(`/registry/teams/${code}/members`, { method: 'PUT', body: JSON.stringify({ memberEmployeeKeys }) }),
+
+  listMcpServers: () => request<any[]>('/registry/mcp-servers'),
+  saveMcpServer: (data: any) => request<any>('/registry/mcp-servers', { method: 'POST', body: JSON.stringify(data) }),
+  deleteMcpServer: (code: string) => request<any>(`/registry/mcp-servers/${code}`, { method: 'DELETE' }),
+
+  saveTool: (data: any) => request<any>('/registry/tools', { method: 'POST', body: JSON.stringify(data) }),
+  deleteTool: (code: string) => request<any>(`/registry/tools/${code}`, { method: 'DELETE' }),
+
+  saveSkill: (data: any) => request<any>('/registry/skills', { method: 'POST', body: JSON.stringify(data) }),
+  deleteSkill: (code: string) => request<any>(`/registry/skills/${code}`, { method: 'DELETE' }),
+
+  updateBindings: (key: string, bindings: { skillRefs?: string[]; toolRefs?: string[]; mcpServerRefs?: string[] }) =>
+    request<any>(`/registry/employees/${key}/bindings`, { method: 'PUT', body: JSON.stringify(bindings) }),
+
+  // Knowledge
+  listKnowledge: (key: string) => request<any[]>(`/registry/employees/${key}/knowledge`),
+  deleteKnowledge: (key: string, docId: string) => request<any>(`/registry/employees/${key}/knowledge/${docId}`, { method: 'DELETE' }),
+  uploadKnowledge: async (key: string, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(`${BASE}/registry/employees/${key}/knowledge`, { method: 'POST', body: form });
+    const json = await res.json();
+    if (json.code !== 200) throw new Error(json.message || 'upload failed');
+    return json.data;
+  },
+
+  // AI Providers
+  listAiProviders: () => request<any[]>('/agent/ai-providers'),
+  getAiProvider: (name: string) => request<any>(`/agent/ai-providers/${encodeURIComponent(name)}`),
+  saveAiProvider: (data: any) => request<any>('/agent/ai-providers', { method: 'POST', body: JSON.stringify(data) }),
+  updateAiProvider: (name: string, data: any) =>
+    request<any>(`/agent/ai-providers/${encodeURIComponent(name)}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteAiProvider: (name: string) =>
+    request<any>(`/agent/ai-providers/${encodeURIComponent(name)}`, { method: 'DELETE' }),
+  testAiProvider: (name: string) =>
+    request<any>(`/agent/ai-providers/${encodeURIComponent(name)}/test`, { method: 'POST' }),
+
+  // System
+  getSystemInfo: () => request<any>('/agent/system-info'),
+
+  // 自动学习 / 提示词采集
+  listScrapeSources: () => request<any[]>('/scrape/sources'),
+  getScrapeSource: (code: string) => request<any>(`/scrape/sources/${encodeURIComponent(code)}`),
+  saveScrapeSource: (data: any) => request<any>('/scrape/sources', { method: 'POST', body: JSON.stringify(data) }),
+  updateScrapeSource: (code: string, data: any) =>
+    request<any>(`/scrape/sources/${encodeURIComponent(code)}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteScrapeSource: (code: string) =>
+    request<any>(`/scrape/sources/${encodeURIComponent(code)}`, { method: 'DELETE' }),
+  runScrapeSource: (code: string) =>
+    request<any>(`/scrape/sources/${encodeURIComponent(code)}/run`, { method: 'POST' }),
+  listScrapePrompts: (code: string, limit = 200) =>
+    request<any[]>(`/scrape/sources/${encodeURIComponent(code)}/prompts?limit=${limit}`),
+  listScrapeHistory: (code: string) =>
+    request<any[]>(`/scrape/sources/${encodeURIComponent(code)}/history`),
+
+  // 定时文章学习
+  listLearnSources: () => request<any[]>('/scrape/learn-sources'),
+  saveLearnSource: (data: any) => request<any>('/scrape/learn-sources', { method: 'POST', body: JSON.stringify(data) }),
+  updateLearnSource: (code: string, data: any) =>
+    request<any>(`/scrape/learn-sources/${encodeURIComponent(code)}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteLearnSource: (code: string) =>
+    request<any>(`/scrape/learn-sources/${encodeURIComponent(code)}`, { method: 'DELETE' }),
+  runLearnSource: (code: string) =>
+    request<any>(`/scrape/learn-sources/${encodeURIComponent(code)}/run`, { method: 'POST' }),
+  listLearnHistory: (code: string) =>
+    request<any[]>(`/scrape/learn-sources/${encodeURIComponent(code)}/history`),
+
+  // 长期记忆
+  getMemoryStats: (empKey: string) => request<any>(`/memory/stats/${encodeURIComponent(empKey)}`),
+  getAllMemories: (empKey: string) => request<any>(`/memory/all/${encodeURIComponent(empKey)}`),
+  listSemanticMemories: (empKey: string) => request<any[]>(`/memory/semantic/${encodeURIComponent(empKey)}`),
+  addSemanticMemory: (empKey: string, data: any) =>
+    request<any>(`/memory/semantic/${encodeURIComponent(empKey)}`, { method: 'POST', body: JSON.stringify(data) }),
+  deleteSemanticMemory: (empKey: string, memId: string) =>
+    request<any>(`/memory/semantic/${encodeURIComponent(empKey)}/${encodeURIComponent(memId)}`, { method: 'DELETE' }),
+  listEpisodicMemories: (empKey: string) => request<any[]>(`/memory/episodic/${encodeURIComponent(empKey)}`),
+  addEpisodicMemory: (empKey: string, data: any) =>
+    request<any>(`/memory/episodic/${encodeURIComponent(empKey)}`, { method: 'POST', body: JSON.stringify(data) }),
+  deleteEpisodicMemory: (empKey: string, memId: string) =>
+    request<any>(`/memory/episodic/${encodeURIComponent(empKey)}/${encodeURIComponent(memId)}`, { method: 'DELETE' }),
+  listProceduralMemories: (empKey: string) => request<any[]>(`/memory/procedural/${encodeURIComponent(empKey)}`),
+  addProceduralMemory: (empKey: string, data: any) =>
+    request<any>(`/memory/procedural/${encodeURIComponent(empKey)}`, { method: 'POST', body: JSON.stringify(data) }),
+  deleteProceduralMemory: (empKey: string, memId: string) =>
+    request<any>(`/memory/procedural/${encodeURIComponent(empKey)}/${encodeURIComponent(memId)}`, { method: 'DELETE' }),
+  triggerMemoryExtraction: (empKey: string, sessionId: string) =>
+    request<any>(`/memory/extract/${encodeURIComponent(empKey)}/${encodeURIComponent(sessionId)}`, { method: 'POST' }),
+
+  // 工作流编排
+  listWorkflows: () => request<any[]>('/workflow'),
+  getWorkflow: (key: string) => request<any>(`/workflow/${encodeURIComponent(key)}`),
+  saveWorkflow: (data: any) => request<any>('/workflow', { method: 'POST', body: JSON.stringify(data) }),
+  updateWorkflow: (key: string, data: any) =>
+    request<any>(`/workflow/${encodeURIComponent(key)}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteWorkflow: (key: string) =>
+    request<any>(`/workflow/${encodeURIComponent(key)}`, { method: 'DELETE' }),
+  runWorkflow: (key: string, inputs: Record<string, any>) =>
+    request<any>(`/workflow/${encodeURIComponent(key)}/run`, { method: 'POST', body: JSON.stringify({ inputs }) }),
+  listWorkflowRuns: (key: string) => request<any[]>(`/workflow/${encodeURIComponent(key)}/runs`),
+  listNodeTypes: () => request<any[]>('/workflow/node-types'),
+
+  // Agent
+  listAgentEmployees: () => request<any[]>('/agent/employees'),
+  runAgent: (data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string }) =>
+    request<any>('/agent/run', { method: 'POST', body: JSON.stringify(data) }),
+  listSessions: (employeeKey: string, limit = 20) => request<any[]>(`/agent/sessions?employeeKey=${employeeKey}&limit=${limit}`),
+  deleteSession: (sessionId: string) => request<any>(`/agent/sessions/${sessionId}`, { method: 'DELETE' }),
+};

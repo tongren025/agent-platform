@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Node / Frontend
+web/node_modules/
+web/dist/
+
+# Runtime data (JSON file store, user-generated)
+data/
+
+# C# build artifacts (legacy)
+src/*/bin/
+src/*/obj/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Sensitive config (contains API keys)
+appsettings.Development.json
+
+# Logs & temp
+*.log
+_server*.log
+_ssr__*.json
+
+# Test scripts (keep in repo for reference, but exclude temp outputs)
