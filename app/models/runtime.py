@@ -52,6 +52,7 @@ class TeamMemberSummary(BaseModel):
 
 
 class EmployeeRuntimeSnapshot(BaseModel):
+    employee_key: str = Field("", alias="employeeKey")
     system_prompt_block: Optional[str] = None
     skills_by_scope: dict[str, list[RuntimeSkill]] = Field(default_factory=dict)
     skill_trees_by_scope: dict[str, list[RuntimeSkill]] = Field(default_factory=dict)

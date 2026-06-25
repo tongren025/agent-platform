@@ -11,6 +11,7 @@ import Workbench from './pages/Workbench';
 import AutoLearn from './pages/AutoLearn';
 import ArticleLearn from './pages/ArticleLearn';
 import Memory from './pages/Memory';
+import Pipeline from './pages/Pipeline';
 import Settings from './pages/Settings';
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/auto-learn" element={<AutoLearn />} />
         <Route path="/article-learn" element={<ArticleLearn />} />
         <Route path="/memory" element={<Memory />} />
+        <Route path="/pipeline" element={<Pipeline />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>

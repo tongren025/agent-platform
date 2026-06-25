@@ -16,11 +16,11 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import re
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
+from app.api.common import ok as _ok, validate_key as _validate
 from app.config import settings
 from app.dependencies import workflow_registry, workflow_run_store
 from app.models.workflow import WorkflowDefinition
@@ -31,8 +31,6 @@ router = APIRouter(prefix="/api/v1/agentapp/workflow")
 
 logger = logging.getLogger(__name__)
 
-_BAD_KEY_RE = re.compile(r"[/\\]|\.\.")
-
 _NODE_TYPE_META = {
     "start": {"label": "开始", "desc": "工作流入口，声明输入字段"},
     "agent": {"label": "智能体", "desc": "调用一个数字员工（多 subagent 的核心）"},
@@ -40,17 +38,12 @@ _NODE_TYPE_META = {
     "condition": {"label": "条件分支", "desc": "按 if/else 规则走不同分支"},
     "template": {"label": "文本拼装", "desc": "用 {{node.field}} 组合文本，不耗 token"},
     "tool": {"label": "工具", "desc": "调用已注册的工具 / MCP"},
+    "iteration": {"label": "循环", "desc": "对数组逐项调用指定员工，收集结果"},
+    "http": {"label": "HTTP 请求", "desc": "调用外部 API，响应注入变量池"},
+    "code": {"label": "代码", "desc": "安全 Python 表达式做数据变换，不耗 token"},
+    "sub-workflow": {"label": "子工作流", "desc": "嵌套执行另一个工作流"},
     "end": {"label": "结束", "desc": "汇总输出并返回"},
 }
-
-
-def _ok(data: object = None) -> dict:
-    return {"code": 200, "data": data}
-
-
-def _validate(key: str) -> None:
-    if not key or _BAD_KEY_RE.search(key):
-        raise HTTPException(status_code=400, detail=f"Invalid workflow key: {key!r}")
 
 
 class _RunBody(BaseModel):
@@ -67,7 +60,8 @@ def list_workflows():
 @router.get("/node-types")
 def list_node_types():
     available = set(get_all_node_executors().keys())
-    ordered = ["start", "agent", "knowledge", "condition", "template", "tool", "end"]
+    ordered = ["start", "agent", "knowledge", "condition", "template", "tool",
+               "iteration", "http", "code", "sub-workflow", "end"]
     result = [
         {"type": t, **_NODE_TYPE_META.get(t, {"label": t, "desc": ""})}
         for t in ordered if t in available

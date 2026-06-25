@@ -277,7 +277,7 @@ export default function Teams() {
       message.success('添加成功'); setAddMemberOpen(false); setAddKeys([]); fetchData();
     } catch (e: any) { message.error(e.message); }
   };
-  const handleEditEmployee = (emp: Employee) => { window.location.href = `/employees?edit=${emp.employeeKey}`; };
+  const handleEditEmployee = (emp: Employee) => { navigate(`/employees?edit=${encodeURIComponent(emp.employeeKey)}`); };
   const availableForAdd = employees.filter(e => !(selectedTeam?.memberEmployeeKeys ?? []).includes(e.employeeKey));
 
   return (
@@ -518,7 +518,7 @@ export default function Teams() {
       )}
 
       {/* Create/Edit Team Modal */}
-      <Modal title={editingTeam ? '编辑团队' : '新建团队'} open={teamModalOpen} onOk={handleSaveTeam} onCancel={() => setTeamModalOpen(false)} destroyOnHidden width={500}>
+      <Modal title={editingTeam ? '编辑团队' : '新建团队'} open={teamModalOpen} onOk={handleSaveTeam} onCancel={() => setTeamModalOpen(false)} destroyOnHidden forceRender width={500}>
         <Form form={teamForm} layout="vertical">
           <Form.Item label="团队编码" name="teamCode" rules={[{ required: true }]}>
             <Input disabled={!!editingTeam} placeholder="唯一标识" />

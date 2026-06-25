@@ -189,7 +189,7 @@ export default function Tools() {
       ]} />
 
       {/* Tool Modal */}
-      <Modal title={toolEditing ? '编辑工具' : '添加工具'} open={toolOpen} onOk={handleSaveTool} onCancel={() => setToolOpen(false)} destroyOnHidden width={600}>
+      <Modal title={toolEditing ? '编辑工具' : '添加工具'} open={toolOpen} onOk={handleSaveTool} onCancel={() => setToolOpen(false)} destroyOnHidden forceRender width={600}>
         <Form form={toolForm} layout="vertical">
           <Form.Item label="工具编码" name="toolCode" rules={[{ required: true }]}><Input disabled={!!toolEditing} /></Form.Item>
           <Form.Item label="名称" name="name" rules={[{ required: true }]}><Input /></Form.Item>
@@ -199,7 +199,7 @@ export default function Tools() {
       </Modal>
 
       {/* Skill Modal */}
-      <Modal title={skillEditing ? '编辑技能' : '添加技能'} open={skillOpen} onOk={handleSaveSkill} onCancel={() => setSkillOpen(false)} destroyOnHidden width={600}>
+      <Modal title={skillEditing ? '编辑技能' : '添加技能'} open={skillOpen} onOk={handleSaveSkill} onCancel={() => setSkillOpen(false)} destroyOnHidden forceRender width={600}>
         <Form form={skillForm} layout="vertical">
           <Form.Item label="编码" name="code" rules={[{ required: true }]}><Input disabled={!!skillEditing} /></Form.Item>
           <Form.Item label="名称" name="name" rules={[{ required: true }]}><Input /></Form.Item>
@@ -209,7 +209,7 @@ export default function Tools() {
       </Modal>
 
       {/* MCP Modal */}
-      <Modal title={mcpEditing ? '编辑 MCP 服务器' : '添加 MCP 服务器'} open={mcpOpen} onOk={handleSaveMcp} onCancel={() => setMcpOpen(false)} destroyOnHidden width={640}>
+      <Modal title={mcpEditing ? '编辑 MCP 服务器' : '添加 MCP 服务器'} open={mcpOpen} onOk={handleSaveMcp} onCancel={() => setMcpOpen(false)} destroyOnHidden forceRender width={640}>
         <Form form={mcpForm} layout="vertical">
           <Form.Item label="服务器编码" name="serverCode" rules={[{ required: true }]}><Input disabled={!!mcpEditing} /></Form.Item>
           <Form.Item label="名称" name="name" rules={[{ required: true }]}><Input /></Form.Item>

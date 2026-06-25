@@ -4,6 +4,7 @@ import {
   Descriptions, Upload, Slider, InputNumber, Divider, Row, Col, Typography,
 } from 'antd';
 import { PlusOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../api';
 import { COLORS } from '../theme';
 import type { Employee } from '../types';
@@ -30,6 +31,7 @@ export default function Employees() {
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailEmp, setDetailEmp] = useState<Employee | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const fetchAll = async () => {
     setLoading(true);
@@ -66,6 +68,28 @@ export default function Employees() {
     setOpen(true);
   };
 
+  useEffect(() => {
+    const key = searchParams.get('edit');
+    if (!key || list.length === 0 || editing?.employeeKey === key) return;
+    const target = list.find((item) => item.employeeKey === key);
+    if (target) openEdit(target);
+    else {
+      message.warning(`未找到员工：${key}`);
+      const next = new URLSearchParams(searchParams);
+      next.delete('edit');
+      setSearchParams(next, { replace: true });
+    }
+  }, [list, searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const closeEditor = () => {
+    setOpen(false);
+    if (searchParams.has('edit')) {
+      const next = new URLSearchParams(searchParams);
+      next.delete('edit');
+      setSearchParams(next, { replace: true });
+    }
+  };
+
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
@@ -78,7 +102,7 @@ export default function Employees() {
       };
       if (editing) { await api.updateEmployee(editing.employeeKey, payload); message.success('更新成功'); }
       else { await api.saveEmployee(payload); message.success('创建成功'); }
-      setOpen(false); fetchAll();
+      closeEditor(); fetchAll();
     } catch (e: any) { if (e.message) message.error(e.message); }
   };
 
@@ -196,7 +220,7 @@ export default function Employees() {
       </div>
       <Table rowKey="employeeKey" columns={columns} dataSource={list} loading={loading} pagination={{ pageSize: 20 }} />
 
-      <Modal title={editing ? '编辑员工' : '新建员工'} open={open} onOk={handleSave} onCancel={() => setOpen(false)} destroyOnHidden width={720}>
+      <Modal title={editing ? '编辑员工' : '新建员工'} open={open} onOk={handleSave} onCancel={closeEditor} destroyOnHidden forceRender width={720}>
         <Form form={form} layout="vertical">
           <Form.Item label="员工标识" name="employeeKey" rules={[{ required: true, message: '请输入员工标识' }]}>
             <Input disabled={!!editing} placeholder="唯一标识，创建后不可修改" />

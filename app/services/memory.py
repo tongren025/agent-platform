@@ -33,8 +33,11 @@ class ConversationMemoryStore:
 
     def list_sessions(
         self,
-        employee_key: str,
+        employee_key: str | None = None,
         limit: int = 20,
+        target_type: str | None = None,
+        team_code: str | None = None,
+        include_archived: bool = False,
     ) -> list[ConversationSession]:
         if not self._dir.exists():
             return []
@@ -42,10 +45,17 @@ class ConversationMemoryStore:
         sessions: list[ConversationSession] = []
         for fp in self._dir.glob("*.json"):
             try:
-                data = json.loads(fp.read_text(encoding="utf-8"))
+                data = _normalize_keys(json.loads(fp.read_text(encoding="utf-8")))
                 s = ConversationSession.model_validate(data)
-                if s.employee_key == employee_key:
-                    sessions.append(s)
+                if employee_key and s.employee_key != employee_key:
+                    continue
+                if target_type and s.target_type != target_type:
+                    continue
+                if team_code and s.team_code != team_code:
+                    continue
+                if not include_archived and s.archived:
+                    continue
+                sessions.append(s)
             except Exception:
                 logger.warning("Skipping corrupt session file %s", fp, exc_info=True)
 

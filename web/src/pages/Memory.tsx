@@ -237,7 +237,10 @@ export default function Memory() {
         {!selectedEmp ? (
           <Empty description="请选择一个数字员工查看其长期记忆" />
         ) : loading ? (
-          <Spin tip="加载中..." style={{ display: 'block', margin: '60px auto' }} />
+          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+            <Spin />
+            <div style={{ marginTop: 10, color: '#64748b', fontSize: 13 }}>加载中...</div>
+          </div>
         ) : (
           <>
             <Row gutter={16} style={{ marginBottom: 24 }}>
@@ -330,6 +333,7 @@ export default function Memory() {
         onCancel={() => setModalOpen(false)}
         onOk={() => form.submit()}
         destroyOnHidden
+        forceRender
       >
         <Form form={form} layout="vertical" onFinish={handleAdd}>
           {renderModalFields()}

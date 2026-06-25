@@ -5,7 +5,7 @@
 NodeExecutor 子类并 register_node_executor，遍历引擎（workflow_executor）无需改动。
 
 v1 内置：start / agent / condition / template / tool / knowledge / end。
-延后（不在 v1）：iteration / variable-aggregator / code / http / parameter-extraction / sub-workflow。
+v2 新增：iteration / http / code / sub-workflow。
 
 每个执行器把自己的产出作为一个 dict 发布到变量池的 node_key 下；约定至少含 'output' 与 'text'
 两个字段（下游用 {{node.output}} 引用）。
@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 # 审批挂起前缀（与 app/runtime/loop.py 一致）——工作流路径也必须尊重它
 _PENDING_PREFIX = "##PENDING_APPROVAL##"
+_NODE_OUTPUT_MAX = 2000
 # 永不允许从工作流 tool 节点直接调用的工具：Shell 执行 / 跨员工委派
 _WORKFLOW_BLOCKED_TOOLS = {"execute", "delegate_to_employee"}
 
@@ -315,9 +316,285 @@ def _compare(left: str, op: str, right) -> bool:
     return False
 
 
+# ── v2 新增执行器 ──────────────────────────────────────────────────
+
+
+class IterationExecutor(NodeExecutor):
+    """循环节点：对一个 JSON 数组逐项调用指定员工，收集结果。
+
+    config:
+      arrayTemplate   — 解析为 JSON 数组的模板（如 ``{{start.items}}``）
+      employeeKey     — 每项调用的数字员工 key
+      userInputTemplate — 每次迭代的输入模板；可用 ``{{__item__}}`` ``{{__index__}}`` ``{{__total__}}``
+      maxParallel     — 最大并行数（默认 1 = 串行）
+    output:
+      items  — 各项结果列表
+      output — 用换行连接的全部回复文本
+      count  — 处理数量
+    """
+    node_type = "iteration"
+
+    async def execute(self, ctx: NodeContext) -> NodeResult:
+        cfg = ctx.node.config or {}
+        employee_key = (cfg.get("employeeKey") or "").strip()
+        if not employee_key:
+            return NodeResult(status="failed", error="iteration 节点缺少 employeeKey")
+
+        raw_array = resolve_template(cfg.get("arrayTemplate") or "[]", ctx.variables)
+        try:
+            items = json.loads(raw_array) if isinstance(raw_array, str) else raw_array
+        except (json.JSONDecodeError, TypeError):
+            items = []
+        if not isinstance(items, list):
+            items = [items]
+        if not items:
+            return NodeResult(output=_publish("", items=[], count=0))
+
+        max_par = max(1, int(cfg.get("maxParallel") or 1))
+        user_tpl = cfg.get("userInputTemplate") or "{{__item__}}"
+        total = len(items)
+        results = [None] * total
+        total_pt = total_ct = 0
+
+        sem = asyncio.Semaphore(max_par)
+
+        async def _run_one(idx: int, item) -> None:
+            nonlocal total_pt, total_ct
+            iter_vars = dict(ctx.variables)
+            item_str = json.dumps(item, ensure_ascii=False) if not isinstance(item, str) else item
+            iter_vars["__item__"] = {"output": item_str, "text": item_str}
+            iter_vars["__index__"] = {"output": str(idx), "text": str(idx)}
+            iter_vars["__total__"] = {"output": str(total), "text": str(total)}
+
+            user_input = resolve_template(user_tpl, iter_vars)
+            from app.models.conversation import AgentRunRequest
+            from app.services.invocation import run_invocation
+            req = AgentRunRequest(employee_key=employee_key, user_input=user_input)
+            async with sem:
+                res = await run_invocation(req)
+            msg = res.assistant_message or ""
+            if res.token_usage:
+                total_pt += res.token_usage.prompt_tokens
+                total_ct += res.token_usage.completion_tokens
+            results[idx] = {"index": idx, "input": user_input, "output": msg,
+                            "success": res.success}
+
+        tasks = [_run_one(i, item) for i, item in enumerate(items)]
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+        texts = [r["output"] for r in results if r and r.get("output")]
+        failed = sum(1 for r in results if r and not r.get("success"))
+        return NodeResult(
+            output=_publish("\n\n".join(texts), items=results, count=total,
+                            failed_count=failed),
+            status="success" if failed == 0 else ("partial" if failed < total else "failed"),
+            error=f"{failed}/{total} 项失败" if failed else None,
+            prompt_tokens=total_pt,
+            completion_tokens=total_ct,
+        )
+
+
+class HttpExecutor(NodeExecutor):
+    """HTTP 请求节点：调用外部 API，把响应注入变量池。
+
+    config:
+      url         — 模板解析后的完整 URL
+      method      — GET / POST / PUT / DELETE（默认 GET）
+      headers     — dict，值支持模板
+      bodyTemplate — 请求体模板（POST/PUT 时使用）
+      timeout     — 秒（默认 30）
+    output:
+      output      — 响应体文本
+      statusCode  — HTTP 状态码
+    """
+    node_type = "http"
+
+    async def execute(self, ctx: NodeContext) -> NodeResult:
+        import httpx
+
+        cfg = ctx.node.config or {}
+        url = resolve_template(cfg.get("url") or "", ctx.variables).strip()
+        if not url:
+            return NodeResult(status="failed", error="http 节点缺少 url")
+
+        method = (cfg.get("method") or "GET").upper()
+        timeout = min(120, max(1, int(cfg.get("timeout") or 30)))
+        headers = {}
+        for k, v in (cfg.get("headers") or {}).items():
+            headers[k] = resolve_template(str(v), ctx.variables)
+
+        body_text = None
+        if method in ("POST", "PUT", "PATCH"):
+            raw = cfg.get("bodyTemplate")
+            if raw is not None:
+                body_text = resolve_template(str(raw), ctx.variables)
+
+        try:
+            async with httpx.AsyncClient(
+                timeout=httpx.Timeout(float(timeout), connect=10.0),
+                follow_redirects=True,
+            ) as client:
+                resp = await client.request(
+                    method, url, headers=headers or None,
+                    content=body_text.encode("utf-8") if body_text else None,
+                )
+            text = resp.text[:_NODE_OUTPUT_MAX] if len(resp.text) > _NODE_OUTPUT_MAX else resp.text
+            out = _publish(text, statusCode=resp.status_code)
+            parsed = _try_json(text)
+            if isinstance(parsed, dict):
+                for k, v in parsed.items():
+                    if k not in out:
+                        out[k] = v
+            status = "success" if resp.is_success else "failed"
+            return NodeResult(output=out, status=status,
+                              error=f"HTTP {resp.status_code}" if not resp.is_success else None)
+        except httpx.TimeoutException:
+            return NodeResult(status="failed", error=f"HTTP 请求超时（{timeout}s）")
+        except Exception as exc:
+            return NodeResult(status="failed", error=f"HTTP 请求失败：{exc}")
+
+
+class CodeExecutor(NodeExecutor):
+    """代码/表达式节点：安全地执行 Python 表达式做数据变换，不耗 token。
+
+    config:
+      expression — Python 表达式字符串
+      inputs     — dict，键为变量名，值为模板表达式（解析后注入表达式的命名空间）
+    output:
+      output — 表达式的求值结果（stringify）
+
+    安全：AST 白名单校验 + 受限 builtins，绝不 exec/import。
+    """
+    node_type = "code"
+
+    _SAFE_BUILTINS = {
+        "len": len, "str": str, "int": int, "float": float, "bool": bool,
+        "list": list, "dict": dict, "tuple": tuple, "set": set,
+        "sorted": sorted, "reversed": reversed, "enumerate": enumerate,
+        "zip": zip, "range": range, "map": map, "filter": filter,
+        "min": min, "max": max, "sum": sum, "abs": abs, "round": round,
+        "isinstance": isinstance, "type": type, "hasattr": hasattr,
+        "True": True, "False": False, "None": None,
+        "json_loads": json.loads, "json_dumps": lambda o: json.dumps(o, ensure_ascii=False),
+    }
+
+    import ast as _ast
+    _ALLOWED_NODES = {
+        _ast.Expression, _ast.Constant, _ast.Name, _ast.Load, _ast.Store, _ast.Del,
+        _ast.BinOp, _ast.UnaryOp, _ast.BoolOp, _ast.Compare,
+        _ast.Add, _ast.Sub, _ast.Mult, _ast.Div, _ast.FloorDiv, _ast.Mod, _ast.Pow,
+        _ast.USub, _ast.UAdd, _ast.Not, _ast.Invert,
+        _ast.And, _ast.Or,
+        _ast.Eq, _ast.NotEq, _ast.Lt, _ast.LtE, _ast.Gt, _ast.GtE, _ast.In, _ast.NotIn, _ast.Is, _ast.IsNot,
+        _ast.IfExp,
+        _ast.Subscript, _ast.Slice,
+        _ast.Attribute,
+        _ast.Call, _ast.keyword,
+        _ast.List, _ast.Tuple, _ast.Dict, _ast.Set,
+        _ast.ListComp, _ast.DictComp, _ast.SetComp, _ast.GeneratorExp, _ast.comprehension,
+        _ast.JoinedStr, _ast.FormattedValue,
+        _ast.Starred,
+    }
+    del _ast
+
+    async def execute(self, ctx: NodeContext) -> NodeResult:
+        import ast as _ast
+        cfg = ctx.node.config or {}
+        expr = (cfg.get("expression") or "").strip()
+        if not expr:
+            return NodeResult(status="failed", error="code 节点缺少 expression")
+
+        try:
+            tree = compile(expr, "<code-node>", "eval", _ast.PyCF_ONLY_AST)
+        except SyntaxError as e:
+            return NodeResult(status="failed", error=f"表达式语法错误：{e}")
+
+        for node in _ast.walk(tree):
+            if type(node) not in self._ALLOWED_NODES:
+                return NodeResult(status="failed",
+                                  error=f"不允许的语法：{type(node).__name__}")
+            if isinstance(node, _ast.Attribute) and node.attr.startswith("_"):
+                return NodeResult(status="failed",
+                                  error=f"不允许访问下划线属性：{node.attr}")
+
+        ns = dict(self._SAFE_BUILTINS)
+        for name, tpl in (cfg.get("inputs") or {}).items():
+            resolved = resolve_value(tpl, ctx.variables)
+            ns[name] = resolved
+
+        try:
+            code = compile(expr, "<code-node>", "eval")
+            result = eval(code, {"__builtins__": {}}, ns)  # noqa: S307
+        except Exception as exc:
+            return NodeResult(status="failed", error=f"表达式执行失败：{exc}")
+
+        out_str = json.dumps(result, ensure_ascii=False, default=str) if not isinstance(result, str) else result
+        out = _publish(out_str)
+        if isinstance(result, dict):
+            for k, v in result.items():
+                if k not in out:
+                    out[k] = v
+        elif isinstance(result, list):
+            out["items"] = result
+            out["count"] = len(result)
+        return NodeResult(output=out)
+
+
+class SubWorkflowExecutor(NodeExecutor):
+    """子工作流节点：执行另一个工作流定义，把其最终输出注入变量池。
+
+    config:
+      workflowKey    — 目标工作流 key
+      inputsTemplate — dict，键为子工作流 start 输入字段名，值为模板表达式
+    output:
+      output    — 子工作流 end 节点的输出
+      subRunId  — 子工作流运行 ID（可溯源）
+      subStatus — 子工作流运行状态
+    """
+    node_type = "sub-workflow"
+
+    _MAX_DEPTH = 3
+    _DEPTH_KEY = "__sub_workflow_depth"
+
+    async def execute(self, ctx: NodeContext) -> NodeResult:
+        cfg = ctx.node.config or {}
+        wf_key = (cfg.get("workflowKey") or "").strip()
+        if not wf_key:
+            return NodeResult(status="failed", error="sub-workflow 节点缺少 workflowKey")
+
+        depth = int(ctx.variables.get(self._DEPTH_KEY, {}).get("output", 0))
+        if depth >= self._MAX_DEPTH:
+            return NodeResult(status="failed",
+                              error=f"子工作流嵌套深度超过上限（{self._MAX_DEPTH}）")
+
+        from app.dependencies import workflow_registry
+        from app.services.workflow_executor import run_workflow
+
+        wf = workflow_registry.get(wf_key)
+        if wf is None:
+            return NodeResult(status="failed", error=f"子工作流不存在：{wf_key}")
+
+        inputs_tpl = cfg.get("inputsTemplate") or {}
+        inputs = {}
+        for k, v in inputs_tpl.items():
+            inputs[k] = resolve_value(v, ctx.variables)
+        inputs[self._DEPTH_KEY] = depth + 1
+
+        run = await run_workflow(wf, inputs)
+        final = run.final_output or ""
+        out = _publish(final, subRunId=run.run_id, subStatus=run.status)
+        pt = run.total_prompt_tokens
+        ct = run.total_completion_tokens
+        status = "success" if run.status == "success" else "failed"
+        return NodeResult(output=out, status=status,
+                          error=run.error if run.status != "success" else None,
+                          prompt_tokens=pt, completion_tokens=ct)
+
+
 # ── 注册内置执行器（导入即生效，仿 app/tools 的 import 副作用）────
 for _ex in (
     StartExecutor(), AgentExecutor(), ConditionExecutor(), TemplateExecutor(),
     ToolExecutor(), KnowledgeExecutor(), EndExecutor(),
+    IterationExecutor(), HttpExecutor(), CodeExecutor(), SubWorkflowExecutor(),
 ):
     register_node_executor(_ex)

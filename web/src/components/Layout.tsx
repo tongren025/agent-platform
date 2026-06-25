@@ -14,6 +14,7 @@ import {
   LeftOutlined,
   RightOutlined,
   PartitionOutlined,
+  ThunderboltOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../theme';
 
@@ -30,6 +31,7 @@ const navSections = [
       { key: '/employees', icon: <TeamOutlined />, label: '数字员工' },
       { key: '/teams', icon: <ApartmentOutlined />, label: '团队' },
       { key: '/workflows', icon: <PartitionOutlined />, label: '工作流' },
+      { key: '/pipeline', icon: <ThunderboltOutlined />, label: 'CLI 流水线' },
       { key: '/templates', icon: <AppstoreOutlined />, label: '角色模板' },
     ],
   },
@@ -206,7 +208,7 @@ export default function Layout() {
         background: COLORS.canvas,
         minHeight: '100vh',
       }}>
-        <div style={{ padding: 28 }}>
+        <div style={{ padding: location.pathname === '/workbench' ? '14px' : '28px' }}>
           <Outlet />
         </div>
       </div>

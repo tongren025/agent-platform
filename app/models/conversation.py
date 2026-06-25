@@ -1,11 +1,9 @@
 from __future__ import annotations
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, Field
 
-
-def _now() -> datetime:
-    return datetime.now(timezone.utc)
+from app.utils import utcnow as _now
 
 
 class AgentRunRequest(BaseModel):
@@ -71,6 +69,17 @@ class ConversationMessage(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class ConversationArtifact(BaseModel):
+    artifact_id: str = Field("", alias="artifactId")
+    title: str = ""
+    kind: str = "document"
+    content: str = ""
+    source_message_index: int = Field(0, alias="sourceMessageIndex")
+    created_at: datetime = Field(default_factory=_now, alias="createdAt")
+
+    model_config = {"populate_by_name": True}
+
+
 class PendingApprovalInfo(BaseModel):
     description: str = ""
     action_type: str = Field("", alias="actionType")
@@ -83,7 +92,12 @@ class PendingApprovalInfo(BaseModel):
 class ConversationSession(BaseModel):
     session_id: str = Field("", alias="sessionId")
     employee_key: str = Field("", alias="employeeKey")
+    target_type: str = Field("employee", alias="targetType")
+    team_code: Optional[str] = Field(None, alias="teamCode")
+    title: str = ""
+    archived: bool = False
     messages: list[ConversationMessage] = Field(default_factory=list)
+    artifacts: list[ConversationArtifact] = Field(default_factory=list)
     compressed_summary: Optional[str] = Field(None, alias="compressedSummary")
     created_at: datetime = Field(default_factory=_now, alias="createdAt")
     last_active_at: datetime = Field(default_factory=_now, alias="lastActiveAt")

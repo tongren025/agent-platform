@@ -188,7 +188,7 @@ export default function Dashboard() {
               {employees.slice(0, 6).map(emp => (
                 <div
                   key={emp.employeeKey}
-                  onClick={() => navigate('/workbench')}
+                  onClick={() => navigate(`/workbench?employee=${encodeURIComponent(emp.employeeKey)}`)}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 14,
                     padding: '12px 14px', borderRadius: 10, cursor: 'pointer',

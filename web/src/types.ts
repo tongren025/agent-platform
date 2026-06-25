@@ -84,9 +84,24 @@ export interface Overview {
 export interface SessionItem {
   sessionId: string;
   employeeKey: string;
+  targetType?: 'employee' | 'team';
+  teamCode?: string | null;
+  title?: string;
+  archived?: boolean;
   messages: { role: string; content: string; timestamp: string }[];
+  artifacts?: ConversationArtifact[];
+  metadata?: Record<string, any>;
   createdAt: string;
   lastActiveAt: string;
+}
+
+export interface ConversationArtifact {
+  artifactId: string;
+  title: string;
+  kind: string;
+  content: string;
+  sourceMessageIndex: number;
+  createdAt: string;
 }
 
 export interface AgentRunResponse {

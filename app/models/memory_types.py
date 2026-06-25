@@ -8,14 +8,12 @@
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field
 
-
-def _now() -> datetime:
-    return datetime.now(timezone.utc)
+from app.utils import utcnow as _now
 
 
 class SemanticMemory(BaseModel):

@@ -168,13 +168,17 @@ def _looks_like_login_redirect(final_url: str) -> bool:
     return any(h in low for h in _LOGIN_URL_HINTS)
 
 
+def _is_video_source(url: str) -> bool:
+    low = url.lower()
+    return "/video" in low or "tab=video" in low or "category=video" in low
+
+
 def _parse_jimeng(
-    html: str, source_code: str, max_items: int, final_url: str
+    html: str, source_code: str, max_items: int, final_url: str,
+    *, source_url: str = "",
 ) -> list[CollectedPrompt]:
     raw = _extract_window_json(html, "__get_explore_result")
     if raw is None:
-        # 只有当最终 URL 确实被重定向到登录/认证域时，才判定为「需要登录」；
-        # 否则按「页面结构变化」处理（更准确，避免误导用户去配 Cookie）。
         if _looks_like_login_redirect(final_url):
             raise ScraperNeedsLogin(
                 f"即梦页面被重定向到登录页（{final_url}），需要登录态才能抓取。"
@@ -185,17 +189,19 @@ def _parse_jimeng(
         )
 
     try:
-        # parse_constant 把裸 NaN/Infinity 等非法常量收敛为 None，避免污染下游 int()
         data = json.loads(raw, parse_constant=lambda _c: None)
     except json.JSONDecodeError as exc:
         raise ScraperError(f"即梦探索数据 JSON 解析失败：{exc}") from exc
 
+    force_video = _is_video_source(source_url or final_url)
     item_list = (((data or {}).get("data") or {}).get("item_list")) or []
     results: list[CollectedPrompt] = []
     for item in item_list:
         if not isinstance(item, dict):
             continue
         prompt, item_type = _coerce_prompt(item)
+        if force_video:
+            item_type = "video"
         if not prompt:
             continue
 
@@ -248,7 +254,7 @@ def _parse_xyq(
     )
 
 
-_PARSERS: dict[str, Callable[[str, str, int, str], list[CollectedPrompt]]] = {
+_PARSERS: dict[str, Callable] = {
     "jimeng": _parse_jimeng,
     "xyq": _parse_xyq,
 }
@@ -281,6 +287,8 @@ async def scrape_source(
     except httpx.HTTPError as exc:
         raise ScraperError(f"请求失败：{exc}") from exc
 
+    if platform == "jimeng":
+        return _parse_jimeng(html, source_code, max_items, final_url, source_url=url)
     return parser(html, source_code, max_items, final_url)
 
 
@@ -417,4 +425,6 @@ async def scrape_and_summarize(
         "charCount": article.char_count,
         "knowledgeDocId": doc_result.doc_id if doc_result else None,
         "memoriesAdded": memories_added,
+        "originalContent": article.content,
+        "summary": knowledge_md,
     }

@@ -28,6 +28,8 @@ class LearnArticleResult(BaseModel):
     char_count: int = Field(0, alias="charCount")
     memories_added: int = Field(0, alias="memoriesAdded")
     knowledge_doc_id: Optional[str] = Field(None, alias="knowledgeDocId")
+    original_content: str = Field("", alias="originalContent")
+    summary: str = ""
     message: str = ""
 
     model_config = {"populate_by_name": True, "extra": "allow"}

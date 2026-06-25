@@ -9,6 +9,7 @@ from typing import Optional
 from app.dependencies import memory_store
 from app.models.conversation import (
     AgentRunRequest,
+    ConversationArtifact,
     ConversationMessage,
     ConversationSession,
 )
@@ -22,6 +23,33 @@ logger = logging.getLogger(__name__)
 
 def _generate_session_id() -> str:
     return "ses_" + secrets.token_hex(8)
+
+
+def _generate_artifact_id() -> str:
+    return "art_" + secrets.token_hex(6)
+
+
+def _session_title(text: str) -> str:
+    title = " ".join(text.strip().split())
+    if not title:
+        return "新会话"
+    return title[:36] + ("..." if len(title) > 36 else "")
+
+
+def _maybe_add_artifact(session: ConversationSession, content: str) -> None:
+    text = content.strip()
+    if len(text) < 400 and "```" not in text and "# " not in text and "## " not in text:
+        return
+    idx = len(session.messages) - 1
+    if any(a.source_message_index == idx for a in session.artifacts):
+        return
+    session.artifacts.append(ConversationArtifact(
+        artifact_id=_generate_artifact_id(),
+        title=f"回复产出 {len(session.artifacts) + 1}",
+        kind="markdown" if ("```" in text or "#" in text) else "document",
+        content=text,
+        source_message_index=idx,
+    ))
 
 
 async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
@@ -90,6 +118,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
             session_id=session_id,
             employee_key=request.employee_key,
             created_at=now,
+            title=_session_title(request.user_input),
         )
 
     session.messages.append(
@@ -104,6 +133,9 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     )
 
     session.last_active_at = now
+    if not session.title:
+        session.title = _session_title(request.user_input)
+    _maybe_add_artifact(session, result.assistant_message)
     memory_store.save_session(session)
     result.session_id = session.session_id
 

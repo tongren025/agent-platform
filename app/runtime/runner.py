@@ -23,8 +23,6 @@ from app.runtime.loop import (
 
 logger = logging.getLogger(__name__)
 
-tool_handler_registry: dict[str, object] = {}
-
 
 @dataclass
 class AgentRunResult:
@@ -53,35 +51,25 @@ def _build_tool_handler(
     rt: RuntimeTool,
     employee_key: str,
     extra_context: Optional[str],
+    shared_deep_state: object | None = None,
 ) -> Optional[ToolHandler]:
-    # 优先用本地注册表（向后兼容，目前为空）；否则桥接到 app.tools.base 的全局
-    # 注册表——所有真实 handler（builtin / delegate / strategy / deep）都注册在那里。
-    # 历史 bug：此前只读本地空 dict，导致主循环里每个工具都落到 stub（从未真正执行）。
-    handler_fn = tool_handler_registry.get(rt.tool_code)
-    if handler_fn is None:
-        base_handler = get_handler(rt.tool_code)
-        if base_handler is None:
-            logger.debug("No handler registered for tool: %s", rt.tool_code)
+    base_handler = get_handler(rt.tool_code)
+    if base_handler is None:
+        logger.debug("No handler registered for tool: %s", rt.tool_code)
 
-            async def _stub(args: str, _code: str = rt.tool_code) -> str:
-                return f"工具 '{_code}' 尚未注册处理函数。"
-
-            handler_fn = _stub
-        else:
-            # 适配器：把 loop 的 Callable[[str], Awaitable[str]] 协议桥接到
-            # base.ToolHandler.handle(ToolContext)，并透传 employee_key / extra_context
-            # （delegate 等工具靠 extra_context 里的 __delegation_stack 做深度/环检测）。
-            async def _adapt(
-                args: str,
-                _code: str = rt.tool_code,
-                _emp: str = employee_key,
-                _extra: Optional[str] = extra_context,
-                _h=base_handler,
-            ) -> str:
-                ctx = ToolContext(_code, args, _emp, _extra)
-                return await _h.handle(ctx)
-
-            handler_fn = _adapt
+        async def handler_fn(args: str, _code: str = rt.tool_code) -> str:
+            return f"工具 '{_code}' 尚未注册处理函数。"
+    else:
+        async def handler_fn(
+            args: str,
+            _code: str = rt.tool_code,
+            _emp: str = employee_key,
+            _extra: Optional[str] = extra_context,
+            _h=base_handler,
+            _ds=shared_deep_state,
+        ) -> str:
+            ctx = ToolContext(_code, args, _emp, _extra, deep_state=_ds)
+            return await _h.handle(ctx)
 
     return ToolHandler(
         name=rt.tool_code,
@@ -109,22 +97,23 @@ async def run_agent(
     max_tokens: int = int(model_policy.get("max_tokens", 4096))
 
     try:
-        client, resolved_model = ai_service.get_client(model_id)
+        client, resolved_model = ai_service.get_client(model_id, async_client=True)
     except ValueError as exc:
         logger.error("Failed to resolve AI model %s: %s", model_id, exc)
         run_result.success = False
         run_result.error_message = f"无法解析模型: {model_id}"
         return run_result
 
+    shared_deep_state = None
+    if snapshot.deep_agent:
+        from app.tools.deep import DeepAgentState
+        shared_deep_state = DeepAgentState()
+
     tool_handlers: list[ToolHandler] = []
     for rt in visible_tools:
-        handler = _build_tool_handler(rt, employee_key, extra_context)
+        handler = _build_tool_handler(rt, employee_key, extra_context, shared_deep_state)
         if handler is not None:
             tool_handlers.append(handler)
-
-    full_user_message = user_message
-    if extra_context:
-        full_user_message = f"{extra_context}\n\n{user_message}"
 
     max_iterations = 12 if snapshot.deep_agent else 5
 
@@ -141,7 +130,7 @@ async def run_agent(
             client=client,
             options=options,
             system_prompt=compiled_prompt.system_prompt,
-            user_message=full_user_message,
+            user_message=user_message,
             tools=tool_handlers,
         )
     except Exception as exc:

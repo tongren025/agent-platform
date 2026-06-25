@@ -6,6 +6,7 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from app.api.common import ok as _ok
 from app.dependencies import long_term_memory
 from app.models.memory_types import (
     EpisodicMemory,
@@ -14,10 +15,6 @@ from app.models.memory_types import (
 )
 
 router = APIRouter(prefix="/api/v1/agentapp/memory", tags=["memory"])
-
-
-def _ok(data=None):
-    return {"code": 200, "data": data, "message": "ok"}
 
 
 # ── 总览 ─────────────────────────────────────────────

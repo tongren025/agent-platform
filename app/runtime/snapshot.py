@@ -37,6 +37,7 @@ def load_snapshot(
         return None
 
     snapshot = EmployeeRuntimeSnapshot(
+        employee_key=employee.employee_key,
         system_prompt_block=employee.role_profile,
         deep_agent=employee.deep_agent,
         default_model_policy=(

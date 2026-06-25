@@ -6,6 +6,7 @@ import {
 import {
   PlusOutlined, ReloadOutlined, EditOutlined, DeleteOutlined, ThunderboltOutlined,
   ReadOutlined, ClockCircleOutlined, RobotOutlined, HistoryOutlined,
+  LinkOutlined, FileTextOutlined, BookOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { api } from '../api';
@@ -34,6 +35,8 @@ export default function ArticleLearn() {
   const [historySource, setHistorySource] = useState<any | null>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [articleDetail, setArticleDetail] = useState<any | null>(null);
+  const [detailTab, setDetailTab] = useState<'original' | 'summary'>('original');
 
   const fetchAll = async () => {
     setLoading(true);
@@ -158,7 +161,7 @@ export default function ArticleLearn() {
           locale={{ emptyText: <Empty description="还没有学习源，点击右上角新建" /> }} />
       </Card>
 
-      <Modal title={editing ? '编辑学习源' : '新建学习源'} open={modalOpen} onOk={handleSave} onCancel={() => setModalOpen(false)} confirmLoading={saving} destroyOnHidden width={640}>
+      <Modal title={editing ? '编辑学习源' : '新建学习源'} open={modalOpen} onOk={handleSave} onCancel={() => setModalOpen(false)} confirmLoading={saving} destroyOnHidden forceRender width={640}>
         <Form form={form} layout="vertical">
           <Row gutter={16}>
             <Col span={12}><Form.Item label="标识 (sourceCode)" name="sourceCode" rules={[{ required: true, message: '请输入唯一标识' }, { pattern: /^[\w-]+$/, message: '只允许字母数字 _ -' }]}><Input placeholder="如 design-blogs" disabled={!!editing} /></Form.Item></Col>
@@ -193,15 +196,59 @@ export default function ArticleLearn() {
                 <Text type="secondary" style={{ fontSize: 12 }}>成功 {h.learnedCount}/{h.totalUrls}</Text>
               </Space>
               {(h.articles || []).map((a: any, j: number) => (
-                <div key={j} style={{ fontSize: 12, padding: '3px 0', borderTop: j ? '1px solid #f5f5f8' : 'none' }}>
-                  <Tag color={a.status === 'ok' ? 'green' : 'red'} style={{ fontSize: 10 }}>{a.status === 'ok' ? 'OK' : '失败'}</Tag>
-                  <Text style={{ fontSize: 12 }}>{a.title || a.url}</Text>
-                  {a.status === 'ok' && <Text type="secondary" style={{ fontSize: 11, marginLeft: 6 }}>+{a.memoriesAdded} 记忆 · {a.charCount} 字</Text>}
-                  {a.message && <Paragraph type="danger" style={{ fontSize: 11, margin: 0 }}>{a.message}</Paragraph>}
+                <div key={j} style={{ fontSize: 12, padding: '6px 0', borderTop: j ? '1px solid #f5f5f8' : 'none' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                    <Tag color={a.status === 'ok' ? 'green' : 'red'} style={{ fontSize: 10 }}>{a.status === 'ok' ? 'OK' : '失败'}</Tag>
+                    <Text strong style={{ fontSize: 12 }}>{a.title || '(无标题)'}</Text>
+                    {a.status === 'ok' && <Text type="secondary" style={{ fontSize: 11 }}>+{a.memoriesAdded} 记忆 · {a.charCount} 字</Text>}
+                  </div>
+                  {a.url && (
+                    <div style={{ marginTop: 2, paddingLeft: 4 }}>
+                      <a href={a.url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: COLORS.iris }}>
+                        <LinkOutlined style={{ marginRight: 3 }} />{a.url.length > 60 ? a.url.slice(0, 60) + '…' : a.url}
+                      </a>
+                    </div>
+                  )}
+                  {a.status === 'ok' && (a.originalContent || a.summary) && (
+                    <Space size={4} style={{ marginTop: 4, paddingLeft: 4 }}>
+                      {a.originalContent && <Button type="link" size="small" icon={<FileTextOutlined />} style={{ fontSize: 11, padding: 0, height: 'auto' }} onClick={() => { setArticleDetail(a); setDetailTab('original'); }}>原文</Button>}
+                      {a.summary && <Button type="link" size="small" icon={<BookOutlined />} style={{ fontSize: 11, padding: 0, height: 'auto' }} onClick={() => { setArticleDetail(a); setDetailTab('summary'); }}>AI 总结</Button>}
+                    </Space>
+                  )}
+                  {a.message && <Paragraph type="danger" style={{ fontSize: 11, margin: '2px 0 0' }}>{a.message}</Paragraph>}
                 </div>
               ))}
             </Card>
           ))}
+      </Drawer>
+
+      <Drawer
+        title={articleDetail?.title || '文章详情'}
+        open={!!articleDetail}
+        onClose={() => setArticleDetail(null)}
+        width={720}
+        extra={
+          <Space>
+            <Button size="small" type={detailTab === 'original' ? 'primary' : 'default'} icon={<FileTextOutlined />} onClick={() => setDetailTab('original')}>原文</Button>
+            <Button size="small" type={detailTab === 'summary' ? 'primary' : 'default'} icon={<BookOutlined />} onClick={() => setDetailTab('summary')}>AI 总结</Button>
+          </Space>
+        }
+      >
+        {articleDetail && (
+          <>
+            {articleDetail.url && (
+              <div style={{ marginBottom: 12, padding: '8px 12px', background: '#fafafa', borderRadius: 8 }}>
+                <Text type="secondary" style={{ fontSize: 12 }}>来源：</Text>
+                <a href={articleDetail.url} target="_blank" rel="noreferrer" style={{ fontSize: 12, marginLeft: 4 }}>{articleDetail.url}</a>
+              </div>
+            )}
+            <div style={{ whiteSpace: 'pre-wrap', fontSize: 13, lineHeight: 1.8 }}>
+              {detailTab === 'original'
+                ? (articleDetail.originalContent || '(未保存原文)')
+                : (articleDetail.summary || '(未保存总结)')}
+            </div>
+          </>
+        )}
       </Drawer>
     </div>
   );

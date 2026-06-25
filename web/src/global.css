@@ -53,3 +53,123 @@ body {
   transform: translateY(0);
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
+
+/* ── Workbench ── */
+.wb-session-item:hover {
+  background: #f8f9fc !important;
+}
+.wb-bubble-ai:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+.wb-msg-row:hover .wb-msg-actions {
+  opacity: 1 !important;
+}
+
+/* ── Markdown in chat bubbles ── */
+.wb-markdown {
+  font-size: 14px;
+  line-height: 1.7;
+  word-break: break-word;
+}
+.wb-markdown p {
+  margin: 0 0 8px;
+}
+.wb-markdown p:last-child {
+  margin-bottom: 0;
+}
+.wb-markdown h1, .wb-markdown h2, .wb-markdown h3, .wb-markdown h4 {
+  margin: 12px 0 6px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.wb-markdown h1 { font-size: 18px; }
+.wb-markdown h2 { font-size: 16px; }
+.wb-markdown h3 { font-size: 15px; }
+.wb-markdown ul, .wb-markdown ol {
+  margin: 4px 0 8px;
+  padding-left: 20px;
+}
+.wb-markdown li {
+  margin-bottom: 3px;
+}
+.wb-markdown code {
+  background: rgba(99, 102, 241, 0.08);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+}
+.wb-markdown pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 14px 16px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.wb-markdown pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.wb-markdown blockquote {
+  border-left: 3px solid #6366f1;
+  margin: 8px 0;
+  padding: 4px 12px;
+  color: #64748b;
+  background: rgba(99, 102, 241, 0.04);
+  border-radius: 0 6px 6px 0;
+}
+.wb-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+  font-size: 13px;
+}
+.wb-markdown th, .wb-markdown td {
+  border: 1px solid #e8ecf4;
+  padding: 6px 10px;
+  text-align: left;
+}
+.wb-markdown th {
+  background: #f8f9fc;
+  font-weight: 600;
+}
+.wb-markdown hr {
+  border: none;
+  border-top: 1px solid #e8ecf4;
+  margin: 12px 0;
+}
+.wb-markdown a {
+  color: #6366f1;
+  text-decoration: none;
+}
+.wb-markdown a:hover {
+  text-decoration: underline;
+}
+.wb-markdown img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+/* ── Common page styles ── */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.page-header h4 {
+  margin: 0 !important;
+}
+.stat-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.stat-row > * {
+  flex: 1;
+}

@@ -5,11 +5,10 @@ Prefix: /api/v1/agentapp/scrape
 """
 from __future__ import annotations
 
-import re
-
 from fastapi import APIRouter, HTTPException, Query
-from pydantic import Field
+from pydantic import BaseModel as _BaseModel, Field
 
+from app.api.common import ok as _ok, validate_key as _validate
 from app.dependencies import (
     collected_prompt_store,
     employee_registry,
@@ -18,8 +17,6 @@ from app.dependencies import (
     scrape_history_store,
     scrape_source_store,
 )
-from pydantic import BaseModel as _BaseModel
-
 from app.models.learn import LearnSource
 from app.models.scrape import ScrapeSource
 from app.services.learn_runner import run_learn
@@ -32,17 +29,6 @@ class _LearnRequest(_BaseModel):
     model_config = {"populate_by_name": True}
     url: str = ""
     role_hint: str = Field("", alias="roleHint")
-
-_BAD_KEY_RE = re.compile(r"[/\\]|\.\.")
-
-
-def _ok(data: object = None) -> dict:
-    return {"code": 200, "data": data}
-
-
-def _validate(code: str) -> None:
-    if not code or _BAD_KEY_RE.search(code):
-        raise HTTPException(status_code=400, detail=f"Invalid source code: {code!r}")
 
 
 # ── 采集源 CRUD ─────────────────────────────────────────────────────

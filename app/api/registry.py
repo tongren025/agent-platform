@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import re
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, UploadFile, File
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
+from app.api.common import ok as _ok, validate_key as _validate_key
 from app.dependencies import (
     employee_registry,
     knowledge_store,
@@ -25,17 +25,6 @@ from app.models.registry import (
 )
 
 router = APIRouter(prefix="/api/v1/agentapp/registry")
-
-_BAD_KEY_RE = re.compile(r"[/\\]|\.\.")
-
-
-def _ok(data: object = None) -> dict:
-    return {"code": 200, "data": data}
-
-
-def _validate_key(key: str) -> None:
-    if not key or _BAD_KEY_RE.search(key):
-        raise HTTPException(status_code=400, detail=f"Invalid key: {key!r}")
 
 
 # ── Skills ──────────────────────────────────────────────────────────
@@ -256,14 +245,9 @@ def update_employee_bindings(key: str, body: BindingsBody):
 # ── Role Templates ──────────────────────────────────────────────────
 
 class ApplyTemplateBody(BaseModel):
-    employee_key: str = ""
-    employee_name: str = ""
-
-    class Config:
-        populate_by_name = True
-
-    employeeKey: str | None = None
-    employeeName: str | None = None
+    model_config = {"populate_by_name": True}
+    employee_key: str = Field("", alias="employeeKey")
+    employee_name: str = Field("", alias="employeeName")
 
 
 @router.get("/role-templates")
@@ -311,8 +295,8 @@ def delete_role_template(code: str):
 @router.post("/role-templates/{code}/apply")
 def apply_role_template(code: str, body: ApplyTemplateBody):
     _validate_key(code)
-    emp_key = body.employeeKey or body.employee_key
-    emp_name = body.employeeName or body.employee_name
+    emp_key = body.employee_key
+    emp_name = body.employee_name
     if not emp_key:
         raise HTTPException(status_code=400, detail="employeeKey is required")
     _validate_key(emp_key)
@@ -330,12 +314,8 @@ def apply_role_template(code: str, body: ApplyTemplateBody):
 # ── Teams ───────────────────────────────────────────────────────────
 
 class TeamMembersBody(BaseModel):
-    member_employee_keys: list[str] = []
-
-    class Config:
-        populate_by_name = True
-
-    memberEmployeeKeys: list[str] | None = None
+    model_config = {"populate_by_name": True}
+    member_employee_keys: list[str] = Field(default_factory=list, alias="memberEmployeeKeys")
 
 
 @router.get("/teams")
@@ -389,7 +369,7 @@ def update_team_members(code: str, body: TeamMembersBody):
     if team is None:
         raise HTTPException(status_code=404, detail=f"Team not found: {code}")
 
-    member_keys = body.memberEmployeeKeys or body.member_employee_keys
+    member_keys = body.member_employee_keys
     for mk in member_keys:
         if not employee_registry.exists(mk):
             raise HTTPException(

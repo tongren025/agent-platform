@@ -333,6 +333,7 @@ export default function Settings() {
         onCancel={() => setModalOpen(false)}
         confirmLoading={saving}
         destroyOnHidden
+        forceRender
         width={720}
       >
         <Form form={form} layout="vertical" preserve={false}>

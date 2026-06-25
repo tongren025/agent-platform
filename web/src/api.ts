@@ -9,7 +9,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(text || `HTTP ${res.status}`);
+    let message = text;
+    try {
+      const json = JSON.parse(text);
+      message = json.detail || json.message || text;
+    } catch {
+      // keep raw text
+    }
+    throw new Error(message || `HTTP ${res.status}`);
   }
   let json: ApiResult<T>;
   try {
@@ -146,8 +153,24 @@ export const api = {
 
   // Agent
   listAgentEmployees: () => request<any[]>('/agent/employees'),
+  uploadFile: async (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(`${BASE}/agent/upload`, { method: 'POST', body: form });
+    const json = await res.json();
+    if (json.code !== 200) throw new Error(json.message || 'upload failed');
+    return json.data as { fileId: string; fileName: string; fileSize: number; ext: string; isImage: boolean; isText: boolean; textContent: string; url: string };
+  },
   runAgent: (data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string }) =>
     request<any>('/agent/run', { method: 'POST', body: JSON.stringify(data) }),
-  listSessions: (employeeKey: string, limit = 20) => request<any[]>(`/agent/sessions?employeeKey=${employeeKey}&limit=${limit}`),
+  listSessions: (employeeKey: string, limit = 20, includeArchived = false) =>
+    request<any[]>(`/agent/sessions?employeeKey=${encodeURIComponent(employeeKey)}&targetType=employee&includeArchived=${includeArchived}&limit=${limit}`),
+  listTeamSessions: (teamCode: string, limit = 20, includeArchived = false) =>
+    request<any[]>(`/agent/sessions?teamCode=${encodeURIComponent(teamCode)}&targetType=team&includeArchived=${includeArchived}&limit=${limit}`),
+  getSession: (sessionId: string) => request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}`),
+  archiveSession: (sessionId: string, archived = true) =>
+    request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}/archive`, { method: 'POST', body: JSON.stringify({ archived }) }),
   deleteSession: (sessionId: string) => request<any>(`/agent/sessions/${sessionId}`, { method: 'DELETE' }),
+  runTeam: (data: { teamCode: string; userInput: string; sessionId?: string; extraContext?: string }) =>
+    request<any>('/agent/team-run', { method: 'POST', body: JSON.stringify(data) }),
 };

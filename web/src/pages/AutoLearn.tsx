@@ -24,7 +24,8 @@ const IMG_FALLBACK =
   );
 
 const PLATFORMS = [
-  { value: 'jimeng', label: '即梦 Dreamina', defaultUrl: 'https://jimeng.jianying.com/ai-tool/home/' },
+  { value: 'jimeng', label: '即梦 · 图片', defaultUrl: 'https://jimeng.jianying.com/ai-tool/home/' },
+  { value: 'jimeng', label: '即梦 · 视频', defaultUrl: 'https://jimeng.jianying.com/ai-tool/home/video' },
   { value: 'xyq', label: '小云雀（需登录）', defaultUrl: 'https://xyq.jianying.com/home?from_page=xiaoyunque_landing_page&tab_name=home' },
 ];
 
@@ -337,6 +338,7 @@ export default function AutoLearn() {
         onCancel={() => setModalOpen(false)}
         confirmLoading={saving}
         destroyOnHidden
+        forceRender
         width={640}
       >
         <Form form={form} layout="vertical">

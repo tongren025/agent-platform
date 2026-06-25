@@ -106,7 +106,7 @@ export default function Workflows() {
         </div>
       )}
 
-      <Modal title="新建工作流" open={createOpen} onOk={handleCreate} onCancel={() => setCreateOpen(false)} destroyOnHidden>
+      <Modal title="新建工作流" open={createOpen} onOk={handleCreate} onCancel={() => setCreateOpen(false)} destroyOnHidden forceRender>
         <Form form={form} layout="vertical">
           <Form.Item label="标识 (workflowKey)" name="workflowKey" rules={[{ required: true, message: '请输入唯一标识' }, { pattern: /^[\w-]+$/, message: '只允许字母数字 _ -' }]}>
             <Input placeholder="如 comic-pipeline" />

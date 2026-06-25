@@ -10,17 +10,14 @@ DIFY 式工作流编排引擎的数据模型。
 from __future__ import annotations
 
 import secrets
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from app.models.conversation import AgentInvocationTrace
 from app.models.registry import RegistryEntity
-
-
-def _now() -> datetime:
-    return datetime.now(timezone.utc)
+from app.utils import utcnow as _now
 
 
 def _gen_run_id() -> str:

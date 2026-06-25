@@ -90,11 +90,11 @@ class AIService:
                 merged.append(p)
         return merged
 
-    def get_client(self, model_id: str) -> tuple[openai.OpenAI, str]:
+    def get_client(self, model_id: str, *, async_client: bool = False) -> tuple[openai.OpenAI | openai.AsyncOpenAI, str]:
         if ":" in model_id:
             provider_name, model_name = model_id.split(":", 1)
-            return self._resolve_with_provider(provider_name, model_name)
-        return self._resolve_any(model_id)
+            return self._resolve_with_provider(provider_name, model_name, async_client=async_client)
+        return self._resolve_any(model_id, async_client=async_client)
 
     def list_providers(self) -> list[AiModelConfig]:
         return [p for p in self._providers if p.enabled]
@@ -106,9 +106,13 @@ class AIService:
     def store(self) -> AiProviderStore:
         return self._store
 
+    def _make_client(self, provider: AiModelConfig, *, async_client: bool) -> openai.OpenAI | openai.AsyncOpenAI:
+        cls = openai.AsyncOpenAI if async_client else openai.OpenAI
+        return cls(base_url=provider.endpoint, api_key=provider.api_key)
+
     def _resolve_with_provider(
-        self, provider_name: str, model_name: str
-    ) -> tuple[openai.OpenAI, str]:
+        self, provider_name: str, model_name: str, *, async_client: bool = False,
+    ) -> tuple[openai.OpenAI | openai.AsyncOpenAI, str]:
         provider = self._find_provider(provider_name)
         if provider is None:
             raise ValueError(f"AI provider not found: {provider_name!r}")
@@ -119,19 +123,15 @@ class AIService:
                 f"Model {model_name!r} not found in provider {provider_name!r}"
             )
 
-        client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
-        return client, resolved_model_id
+        return self._make_client(provider, async_client=async_client), resolved_model_id
 
-    def _resolve_any(self, model_name: str) -> tuple[openai.OpenAI, str]:
+    def _resolve_any(self, model_name: str, *, async_client: bool = False) -> tuple[openai.OpenAI | openai.AsyncOpenAI, str]:
         for provider in self._providers:
             if not provider.enabled:
                 continue
             resolved = self._find_model_in_provider(provider, model_name)
             if resolved is not None:
-                client = openai.OpenAI(
-                    base_url=provider.endpoint, api_key=provider.api_key
-                )
-                return client, resolved
+                return self._make_client(provider, async_client=async_client), resolved
 
         raise ValueError(f"Model {model_name!r} not found in any provider")
 

@@ -59,6 +59,8 @@ async def _run_inner(source: LearnSource) -> LearnRunResult:
             art.char_count = r.get("charCount", 0)
             art.memories_added = r.get("memoriesAdded", 0)
             art.knowledge_doc_id = r.get("knowledgeDocId")
+            art.original_content = r.get("originalContent", "")
+            art.summary = r.get("summary", "")
             learned += 1
         except ScraperError as exc:
             art.status = "failed"

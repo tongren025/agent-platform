@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import time
@@ -9,6 +10,8 @@ from typing import Awaitable, Callable, Optional
 import openai
 
 from app.models.conversation import AgentInvocationTrace, PendingApprovalDetail
+
+SyncOrAsyncClient = openai.OpenAI | openai.AsyncOpenAI
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +74,7 @@ def _parse_pending_approval(raw: str) -> PendingApprovalDetail | None:
 
 
 async def run_agent_loop(
-    client: openai.OpenAI,
+    client: SyncOrAsyncClient,
     options: AgentLoopOptions,
     system_prompt: str,
     user_message: str,
@@ -89,6 +92,8 @@ async def run_agent_loop(
     openai_tools = _build_openai_tools(tools) if tools else []
     handler_map: dict[str, ToolHandler] = {h.name: h for h in tools}
 
+    is_async = isinstance(client, openai.AsyncOpenAI)
+
     for iteration in range(1, options.max_iterations + 1):
         result.iterations = iteration
 
@@ -102,7 +107,12 @@ async def run_agent_loop(
             if openai_tools:
                 create_kwargs["tools"] = openai_tools
 
-            response = client.chat.completions.create(**create_kwargs)
+            if is_async:
+                response = await client.chat.completions.create(**create_kwargs)
+            else:
+                response = await asyncio.get_event_loop().run_in_executor(
+                    None, lambda: client.chat.completions.create(**create_kwargs)
+                )
         except Exception as exc:
             logger.error("OpenAI API call failed (iteration=%d): %s", iteration, exc)
             result.success = False
