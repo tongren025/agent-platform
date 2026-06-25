@@ -10,6 +10,19 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ---
 
+## Screenshots / 截图
+
+### Production Kanban / 制作看板
+![Production Kanban](docs/screenshots/production-kanban.png)
+
+### Workflow Canvas / 工作流画布编辑器
+![Workflow Canvas](docs/screenshots/workflow-canvas.png)
+
+### AI Workbench / AI 对话工作台
+![Workbench](docs/screenshots/workbench.png)
+
+---
+
 ## 核心功能
 
 ### 数字员工管理
