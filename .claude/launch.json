@@ -4,9 +4,10 @@
     {
       "name": "web",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["vite", "--host", "127.0.0.1", "--port", "5173"],
+      "runtimeArgs": ["vite", "--host", "127.0.0.1", "--port", "5188"],
       "cwd": "web",
-      "port": 5173
+      "port": 5188,
+      "autoPort": false
     }
   ]
 }

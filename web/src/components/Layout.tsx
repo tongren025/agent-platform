@@ -15,6 +15,7 @@ import {
   RightOutlined,
   PartitionOutlined,
   ThunderboltOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../theme';
 
@@ -23,6 +24,7 @@ const navSections = [
     items: [
       { key: '/dashboard', icon: <DashboardOutlined />, label: '总览' },
       { key: '/workbench', icon: <MessageOutlined />, label: '工作台' },
+      { key: '/production', icon: <VideoCameraOutlined />, label: '制作看板' },
     ],
   },
   {
@@ -208,7 +210,7 @@ export default function Layout() {
         background: COLORS.canvas,
         minHeight: '100vh',
       }}>
-        <div style={{ padding: location.pathname === '/workbench' ? '14px' : '28px' }}>
+        <div style={{ padding: (location.pathname === '/workbench' || location.pathname === '/production') ? '14px' : '28px' }}>
           <Outlet />
         </div>
       </div>

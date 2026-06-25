@@ -173,4 +173,25 @@ export const api = {
   deleteSession: (sessionId: string) => request<any>(`/agent/sessions/${sessionId}`, { method: 'DELETE' }),
   runTeam: (data: { teamCode: string; userInput: string; sessionId?: string; extraContext?: string }) =>
     request<any>('/agent/team-run', { method: 'POST', body: JSON.stringify(data) }),
+
+  // Production pipeline
+  listProjects: () => request<any[]>('/production/projects'),
+  createProject: (data: { name: string; description?: string; sourceType?: string; sourceContent?: string; employeeKey?: string; teamCode?: string }) =>
+    request<any>('/production/projects', { method: 'POST', body: JSON.stringify({ source_type: data.sourceType, source_content: data.sourceContent, employee_key: data.employeeKey, team_code: data.teamCode, ...data }) }),
+  getProject: (pid: string) => request<any>(`/production/projects/${pid}`),
+  updateProject: (pid: string, data: any) =>
+    request<any>(`/production/projects/${pid}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteProject: (pid: string) =>
+    request<any>(`/production/projects/${pid}`, { method: 'DELETE' }),
+  addCard: (pid: string, data: any) =>
+    request<any>(`/production/projects/${pid}/cards`, { method: 'POST', body: JSON.stringify(data) }),
+  updateCard: (cardId: string, data: any) =>
+    request<any>(`/production/cards/${cardId}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteCard: (cardId: string) =>
+    request<any>(`/production/cards/${cardId}`, { method: 'DELETE' }),
+  moveCard: (cardId: string, stage: string) =>
+    request<any>(`/production/cards/${cardId}/move?stage=${stage}`, { method: 'POST' }),
+  generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string }) =>
+    request<any>(`/production/projects/${pid}/generate`, { method: 'POST', body: JSON.stringify(data) }),
+  listStages: () => request<any[]>('/production/stages'),
 };

@@ -16,7 +16,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import BASE_DIR, settings
-from app.api import agent, ai_providers, memory_api, pipeline, registry, scrape, sessions, strategy_proxy, workflow
+from app.api import agent, ai_providers, memory_api, pipeline, production, registry, scrape, sessions, strategy_proxy, workflow
 
 import app.tools.builtin  # noqa: F401
 import app.tools.delegate  # noqa: F401
@@ -112,6 +112,7 @@ app.include_router(strategy_proxy.router)
 app.include_router(memory_api.router)
 app.include_router(workflow.router)
 app.include_router(pipeline.router)
+app.include_router(production.router)
 
 
 # ── Static files (SPA fallback) ────────────────────────────────────
