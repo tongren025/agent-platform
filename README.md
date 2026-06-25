@@ -1,6 +1,14 @@
-# Agent Platform
+# 🎬 Agent Platform
 
-一个**多智能体协作平台**，支持类似 DIFY 的可视化工作流编排，让多个 AI 数字员工按 DAG 流程图自动接力完成复杂任务。
+**AI-powered anime/manga production pipeline — from script to final cut.**
+
+An open-source multi-agent platform for AI-driven short-form anime (漫剧) production. Features a 10-stage production kanban (script → character/scene design → storyboard → image prompts → video prompts → generation → final cut), DIFY-style visual workflow engine, and multi-agent collaboration with delegated task execution.
+
+**AI 驱动的漫剧全流程制作平台，从剧本到成片。**
+
+开源多智能体协作平台，专为 AI 竖屏漫剧制作设计。内置 10 阶段制作看板（剧本 → 角色·场景设定 → 视觉设计 → 分镜 → 图片提示词 → 视频提示词 → 生图 → 生视频 → 成片），类 DIFY 可视化工作流引擎，多个 AI 数字员工按 DAG 流程图自动接力完成复杂任务。
+
+---
 
 ## 核心功能
 
