@@ -22,12 +22,21 @@ logger = logging.getLogger(__name__)
 _TICK_SECONDS = 30
 
 
+_DISTILLATION_TIME = "03:00"
+_EVOLUTION_TIME = "04:00"
+
+
 class DailyScheduler:
     def __init__(self) -> None:
         self._task: asyncio.Task | None = None
         self._stop = asyncio.Event()
         self._inflight: set[str] = set()        # 提示词采集在途
         self._inflight_learn: set[str] = set()  # 文章学习在途
+        self._inflight_distill: set[str] = set()  # 蒸馏在途
+        self._inflight_evolve: set[str] = set()   # 进化在途
+        self._distill_done_today: set[str] = set()
+        self._evolve_done_today: set[str] = set()
+        self._last_date: str = ""
 
     def start(self) -> None:
         if self._task is not None:
@@ -71,8 +80,18 @@ class DailyScheduler:
         today = now.strftime("%Y-%m-%d")
         cur_hhmm = now.strftime("%H:%M")
 
+        if today != self._last_date:
+            self._distill_done_today.clear()
+            self._evolve_done_today.clear()
+            self._last_date = today
+
         self._scan(scrape_source_store.list_all(), today, cur_hhmm, self._inflight, self._dispatch_scrape)
         self._scan(learn_source_store.list_all(), today, cur_hhmm, self._inflight_learn, self._dispatch_learn)
+
+        if cur_hhmm >= _DISTILLATION_TIME:
+            self._scan_distillation()
+        if cur_hhmm >= _EVOLUTION_TIME:
+            self._scan_evolution()
 
     def _scan(self, sources, today: str, cur_hhmm: str, inflight: set, dispatch) -> None:
         """水位线/边沿触发：到点且当天未跑过且不在途，则派发。两类采集源共用。"""
@@ -124,3 +143,61 @@ class DailyScheduler:
                 self._inflight_learn.discard(code)
 
         asyncio.create_task(_run(), name=f"learn-{code}")
+
+    # ── Deep Dream 蒸馏 ───────────────────────────────────
+
+    def _scan_distillation(self) -> None:
+        from app.dependencies import employee_registry
+
+        for emp in employee_registry.list_all():
+            k = emp.employee_key
+            if not k or not emp.enabled:
+                continue
+            if k in self._distill_done_today or k in self._inflight_distill:
+                continue
+            self._dispatch_distill(k)
+
+    def _dispatch_distill(self, emp_key: str) -> None:
+        self._inflight_distill.add(emp_key)
+        logger.info("定时触发蒸馏：%s @ %s", emp_key, _DISTILLATION_TIME)
+
+        async def _run() -> None:
+            try:
+                from app.services.distillation import run_distillation
+                await run_distillation(emp_key)
+                self._distill_done_today.add(emp_key)
+            except Exception:  # noqa: BLE001
+                logger.exception("定时蒸馏执行失败：%s", emp_key)
+            finally:
+                self._inflight_distill.discard(emp_key)
+
+        asyncio.create_task(_run(), name=f"distill-{emp_key}")
+
+    # ── 自我进化 ───────────────────────────────────────────
+
+    def _scan_evolution(self) -> None:
+        from app.dependencies import employee_registry
+
+        for emp in employee_registry.list_all():
+            k = emp.employee_key
+            if not k or not emp.enabled:
+                continue
+            if k in self._evolve_done_today or k in self._inflight_evolve:
+                continue
+            self._dispatch_evolve(k)
+
+    def _dispatch_evolve(self, emp_key: str) -> None:
+        self._inflight_evolve.add(emp_key)
+        logger.info("定时触发自我进化：%s @ %s", emp_key, _EVOLUTION_TIME)
+
+        async def _run() -> None:
+            try:
+                from app.services.evolution import run_evolution_analysis
+                await run_evolution_analysis(emp_key)
+                self._evolve_done_today.add(emp_key)
+            except Exception:  # noqa: BLE001
+                logger.exception("定时自我进化执行失败：%s", emp_key)
+            finally:
+                self._inflight_evolve.discard(emp_key)
+
+        asyncio.create_task(_run(), name=f"evolve-{emp_key}")

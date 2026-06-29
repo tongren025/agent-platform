@@ -6,6 +6,7 @@ import {
 import {
   BulbOutlined, ExperimentOutlined, ThunderboltOutlined,
   PlusOutlined, DeleteOutlined, ReloadOutlined,
+  CoffeeOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 
@@ -33,6 +34,8 @@ export default function Memory() {
   const [modalType, setModalType] = useState<string>('');
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [distillLogs, setDistillLogs] = useState<any[]>([]);
+  const [distilling, setDistilling] = useState(false);
 
   useEffect(() => {
     api.listEmployees().then(setEmployees).catch(() => {});
@@ -42,16 +45,18 @@ export default function Memory() {
     if (!empKey) return;
     setLoading(true);
     try {
-      const [s, sem, ep, proc] = await Promise.all([
+      const [s, sem, ep, proc, dLogs] = await Promise.all([
         api.getMemoryStats(empKey),
         api.listSemanticMemories(empKey),
         api.listEpisodicMemories(empKey),
         api.listProceduralMemories(empKey),
+        api.listDistillationLogs(empKey),
       ]);
       setStats(s);
       setSemanticData(sem);
       setEpisodicData(ep);
       setProceduralData(proc);
+      setDistillLogs(dLogs);
     } catch (e: any) {
       message.error(e.message);
     } finally {
@@ -319,6 +324,72 @@ export default function Memory() {
                       手动添加
                     </Button>
                     <Table dataSource={proceduralData} columns={proceduralColumns} rowKey="memoryId" size="small" pagination={{ pageSize: 10 }} />
+                  </>
+                ),
+              },
+              {
+                key: 'distillation',
+                label: <span><CoffeeOutlined /> Deep Dream 蒸馏</span>,
+                children: (
+                  <>
+                    <div style={{ marginBottom: 12, color: '#888', fontSize: 13 }}>
+                      模拟人类睡眠时的记忆整合：合并重复记忆、调整重要性权重、剪枝低价值条目。每天凌晨 3:00 自动运行。
+                    </div>
+                    <Button
+                      type="primary"
+                      icon={<CoffeeOutlined />}
+                      loading={distilling}
+                      onClick={async () => {
+                        setDistilling(true);
+                        try {
+                          const log = await api.triggerDistillation(selectedEmp);
+                          message.success(`蒸馏完成：执行了 ${log.actions?.length ?? 0} 个操作`);
+                          refresh(selectedEmp);
+                        } catch (e: any) {
+                          message.error(e.message || '蒸馏失败');
+                        } finally {
+                          setDistilling(false);
+                        }
+                      }}
+                      style={{ marginBottom: 12 }}
+                    >
+                      手动蒸馏
+                    </Button>
+                    <Table
+                      dataSource={[...distillLogs].reverse()}
+                      rowKey="logId"
+                      size="small"
+                      pagination={{ pageSize: 10 }}
+                      columns={[
+                        {
+                          title: '时间', dataIndex: 'ranAt', width: 160,
+                          render: (v: string) => v ? new Date(v).toLocaleString('zh-CN') : '-',
+                        },
+                        {
+                          title: '操作数', dataIndex: 'actions', width: 80,
+                          render: (a: any[]) => a?.length ?? 0,
+                        },
+                        {
+                          title: '蒸馏前', dataIndex: 'beforeCounts', width: 150,
+                          render: (c: any) => c ? `语义${c.semantic} 经验${c.episodic} 行为${c.procedural}` : '-',
+                        },
+                        {
+                          title: '蒸馏后', dataIndex: 'afterCounts', width: 150,
+                          render: (c: any) => c ? `语义${c.semantic_count ?? c.semantic} 经验${c.episodic_count ?? c.episodic} 行为${c.procedural_count ?? c.procedural}` : '-',
+                        },
+                        { title: '模型', dataIndex: 'llmModel', width: 140 },
+                        {
+                          title: '耗时', dataIndex: 'durationMs', width: 80,
+                          render: (v: number) => v ? `${(v / 1000).toFixed(1)}s` : '-',
+                        },
+                        {
+                          title: '状态', dataIndex: 'error', width: 80,
+                          render: (v: string | null) => v
+                            ? <Tag color="error">失败</Tag>
+                            : <Tag color="success">成功</Tag>,
+                        },
+                      ]}
+                    />
                   </>
                 ),
               },

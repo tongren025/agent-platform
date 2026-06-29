@@ -147,3 +147,19 @@ async def trigger_extraction(employee_key: str, session_id: str):
     messages = [{"role": msg.role, "content": msg.content} for msg in session.messages]
     await extract_and_store(messages, employee_key, session_id)
     return _ok(long_term_memory.get_stats(employee_key))
+
+
+# ── Deep Dream 蒸馏 ───────────────────────────────────
+
+@router.post("/distill/{employee_key}")
+async def trigger_distillation(employee_key: str):
+    from app.services.distillation import run_distillation
+    log = await run_distillation(employee_key)
+    return _ok(log.model_dump(by_alias=True, mode="json"))
+
+
+@router.get("/distillation-logs/{employee_key}")
+async def get_distillation_logs(employee_key: str):
+    from app.services.distillation import list_distillation_logs
+    logs = list_distillation_logs(employee_key)
+    return _ok([lg.model_dump(by_alias=True, mode="json") for lg in logs])

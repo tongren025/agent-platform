@@ -14,6 +14,14 @@ import Memory from './pages/Memory';
 import Pipeline from './pages/Pipeline';
 import Production from './pages/Production';
 import Settings from './pages/Settings';
+import SkillTracker from './pages/SkillTracker';
+import KnowledgeGraph from './pages/KnowledgeGraph';
+import Evolution from './pages/Evolution';
+import AdminLayout from './components/AdminLayout';
+import AdminLogin from './pages/admin/AdminLogin';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminEmployees from './pages/admin/AdminEmployees';
+import AdminProviders from './pages/admin/AdminProviders';
 
 export default function App() {
   return (
@@ -33,7 +41,19 @@ export default function App() {
         <Route path="/memory" element={<Memory />} />
         <Route path="/pipeline" element={<Pipeline />} />
         <Route path="/production" element={<Production />} />
+        <Route path="/trends" element={<SkillTracker />} />
+        <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
+        <Route path="/evolution" element={<Evolution />} />
         <Route path="/settings" element={<Settings />} />
+      </Route>
+
+      {/* 管理端：独立 Layout + 独立鉴权，与用户端隔离 */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="employees" element={<AdminEmployees />} />
+        <Route path="providers" element={<AdminProviders />} />
       </Route>
     </Routes>
   );

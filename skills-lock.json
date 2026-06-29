@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "remotion-render": {
+      "source": "halt-catch-fire/skills",
+      "sourceType": "github",
+      "skillPath": "tools/video/remotion-render/SKILL.md",
+      "computedHash": "9a00df8ceabf3033451cf0c4d41cdda5f38024822de07ea69884055611064ffe"
+    },
+    "seedance-v2": {
+      "source": "doany-ai/skills",
+      "sourceType": "github",
+      "skillPath": "seedance-v2/SKILL.md",
+      "computedHash": "a73a04a285a6589b5544600c4dcc1b864cf53cbff39f555a91b61e5e2531fe88"
+    }
+  }
+}

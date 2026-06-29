@@ -4,7 +4,7 @@ const BASE = '/api/v1/agentapp';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', ...init?.headers },
     ...init,
   });
   if (!res.ok) {
@@ -185,13 +185,73 @@ export const api = {
     request<any>(`/production/projects/${pid}`, { method: 'DELETE' }),
   addCard: (pid: string, data: any) =>
     request<any>(`/production/projects/${pid}/cards`, { method: 'POST', body: JSON.stringify(data) }),
+  batchAddCards: (pid: string, cards: any[]) =>
+    request<any>(`/production/projects/${pid}/cards/batch`, { method: 'POST', body: JSON.stringify({ cards }) }),
   updateCard: (cardId: string, data: any) =>
     request<any>(`/production/cards/${cardId}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteCard: (cardId: string) =>
     request<any>(`/production/cards/${cardId}`, { method: 'DELETE' }),
   moveCard: (cardId: string, stage: string) =>
     request<any>(`/production/cards/${cardId}/move?stage=${stage}`, { method: 'POST' }),
+  batchMoveCards: (cardIds: string[], stage: string) =>
+    request<any>(`/production/cards/batch-move`, { method: 'POST', body: JSON.stringify({ card_ids: cardIds, stage }) }),
+  uploadCardFile: async (pid: string, cardId: string, file: File, fileType: 'image' | 'video' = 'image') => {
+    const form = new FormData();
+    form.append('file', file);
+    const resp = await fetch(`${BASE}/production/projects/${pid}/cards/${cardId}/upload?file_type=${fileType}`, { method: 'POST', body: form });
+    const json = await resp.json();
+    if (!resp.ok || json.code !== 200) throw new Error(json.detail || 'Upload failed');
+    return json.data;
+  },
+  batchDeleteCards: (cardIds: string[]) =>
+    request<any>(`/production/cards/batch-delete`, { method: 'POST', body: JSON.stringify({ card_ids: cardIds }) }),
+  batchUpdateStatus: (cardIds: string[], status: string) =>
+    request<any>(`/production/cards/batch-status`, { method: 'POST', body: JSON.stringify({ card_ids: cardIds, status }) }),
+  searchCards: (pid: string, params: { q?: string; stage?: string; status?: string; episode?: number; assignee?: string }) => {
+    const qs = new URLSearchParams();
+    if (params.q) qs.set('q', params.q);
+    if (params.stage) qs.set('stage', params.stage);
+    if (params.status) qs.set('status', params.status);
+    if (params.episode !== undefined) qs.set('episode', String(params.episode));
+    if (params.assignee) qs.set('assignee', params.assignee);
+    return request<any[]>(`/production/projects/${pid}/search?${qs.toString()}`);
+  },
+  getProjectStats: (pid: string) => request<any>(`/production/projects/${pid}/stats`),
+  addMember: (pid: string, data: { name: string; role?: string; avatar?: string }) =>
+    request<any>(`/production/projects/${pid}/members`, { method: 'POST', body: JSON.stringify(data) }),
+  updateMemberRole: (pid: string, userId: string, role: string) =>
+    request<any>(`/production/projects/${pid}/members/${userId}`, { method: 'PUT', body: JSON.stringify({ role }) }),
+  removeMember: (pid: string, userId: string) =>
+    request<any>(`/production/projects/${pid}/members/${userId}`, { method: 'DELETE' }),
   generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string }) =>
     request<any>(`/production/projects/${pid}/generate`, { method: 'POST', body: JSON.stringify(data) }),
   listStages: () => request<any[]>('/production/stages'),
+
+  // AI 趋势雷达 (skill_tracker)
+  listTrendQueries: () => request<any[]>('/skills/queries'),
+  listTrends: (query: string) => request<any>(`/skills/list?query=${encodeURIComponent(query)}`),
+  getRepoHistory: (query: string, fullName: string) =>
+    request<any[]>(`/skills/repo-history?query=${encodeURIComponent(query)}&fullName=${encodeURIComponent(fullName)}`),
+  refreshTrends: (query: string, limit = 15, recentDays = 180) =>
+    request<any>('/skills/refresh', { method: 'POST', body: JSON.stringify({ query, limit, recentDays }) }),
+
+  // 知识图谱
+  getKnowledgeGraph: () => request<any>('/knowledge-graph'),
+
+  // Deep Dream 蒸馏
+  triggerDistillation: (empKey: string) =>
+    request<any>(`/memory/distill/${empKey}`, { method: 'POST' }),
+  listDistillationLogs: (empKey: string) =>
+    request<any[]>(`/memory/distillation-logs/${empKey}`),
+
+  // 自我进化
+  listInsights: (empKey: string) => request<any[]>(`/evolution/insights/${empKey}`),
+  triggerEvolution: (empKey: string) =>
+    request<any>(`/evolution/analyze/${empKey}`, { method: 'POST' }),
+  acceptInsight: (empKey: string, insightId: string) =>
+    request<any>(`/evolution/accept/${empKey}/${insightId}`, { method: 'POST' }),
+  rejectInsight: (empKey: string, insightId: string) =>
+    request<any>(`/evolution/reject/${empKey}/${insightId}`, { method: 'POST' }),
+  evolutionRunLogs: (empKey: string) => request<any[]>(`/evolution/run-logs/${empKey}`),
+  evolutionOverview: () => request<any[]>('/evolution/overview'),
 };

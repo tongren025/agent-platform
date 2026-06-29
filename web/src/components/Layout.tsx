@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Tooltip } from 'antd';
 import {
@@ -16,6 +16,9 @@ import {
   PartitionOutlined,
   ThunderboltOutlined,
   VideoCameraOutlined,
+  RocketOutlined,
+  ShareAltOutlined,
+  RiseOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../theme';
 
@@ -35,6 +38,7 @@ const navSections = [
       { key: '/workflows', icon: <PartitionOutlined />, label: '工作流' },
       { key: '/pipeline', icon: <ThunderboltOutlined />, label: 'CLI 流水线' },
       { key: '/templates', icon: <AppstoreOutlined />, label: '角色模板' },
+      { key: '/knowledge-graph', icon: <ShareAltOutlined />, label: '知识图谱' },
     ],
   },
   {
@@ -44,6 +48,8 @@ const navSections = [
       { key: '/auto-learn', icon: <ReadOutlined />, label: '提示词采集' },
       { key: '/article-learn', icon: <ReadOutlined />, label: '文章学习' },
       { key: '/memory', icon: <BulbOutlined />, label: '记忆' },
+      { key: '/trends', icon: <RocketOutlined />, label: 'AI 趋势' },
+      { key: '/evolution', icon: <RiseOutlined />, label: '自我进化' },
     ],
   },
   {
@@ -55,12 +61,24 @@ const navSections = [
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
+  const [isNarrow, setIsNarrow] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const siderWidth = collapsed ? 72 : 240;
+  const pageIsWorkspace = location.pathname === '/workbench' || location.pathname === '/production';
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 900px)');
+    const sync = () => setIsNarrow(media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
+
+  const navCollapsed = collapsed || isNarrow;
+  const siderWidth = navCollapsed ? 64 : 240;
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', width: '100vw', overflowX: 'hidden' }}>
       {/* Sidebar */}
       <div
         style={{
@@ -78,8 +96,8 @@ export default function Layout() {
         {/* Brand */}
         <div style={{
           height: 64, display: 'flex', alignItems: 'center',
-          justifyContent: collapsed ? 'center' : 'flex-start',
-          padding: collapsed ? '0' : '0 20px',
+          justifyContent: navCollapsed ? 'center' : 'flex-start',
+          padding: navCollapsed ? '0' : '0 20px',
           gap: 10, flexShrink: 0,
           borderBottom: '1px solid rgba(255,255,255,0.06)',
         }}>
@@ -92,7 +110,7 @@ export default function Layout() {
           }}>
             A
           </div>
-          {!collapsed && (
+          {!navCollapsed && (
             <div>
               <div style={{ color: '#fff', fontWeight: 700, fontSize: 16, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
                 Agent Studio
@@ -105,11 +123,11 @@ export default function Layout() {
         </div>
 
         {/* Navigation */}
-        <div style={{ flex: 1, padding: collapsed ? '12px 8px' : '12px 12px' }}>
+        <div style={{ flex: 1, padding: navCollapsed ? '12px 8px' : '12px 12px' }}>
           {navSections.map((section, si) => (
             <div key={si} style={{ marginBottom: 8 }}>
               {/* Section title */}
-              {section.title && !collapsed && (
+              {section.title && !navCollapsed && (
                 <div style={{
                   fontSize: 10, fontWeight: 600, textTransform: 'uppercase',
                   letterSpacing: '0.08em',
@@ -119,7 +137,7 @@ export default function Layout() {
                   {section.title}
                 </div>
               )}
-              {section.title && collapsed && (
+              {section.title && navCollapsed && (
                 <div style={{
                   height: 1, background: 'rgba(255,255,255,0.06)',
                   margin: '8px 6px',
@@ -134,8 +152,8 @@ export default function Layout() {
                     onClick={() => navigate(item.key)}
                     style={{
                       display: 'flex', alignItems: 'center',
-                      gap: 12, padding: collapsed ? '10px 0' : '10px 12px',
-                      justifyContent: collapsed ? 'center' : 'flex-start',
+                      gap: 12, padding: navCollapsed ? '10px 0' : '10px 12px',
+                      justifyContent: navCollapsed ? 'center' : 'flex-start',
                       borderRadius: 10, cursor: 'pointer',
                       marginBottom: 2,
                       transition: 'all 0.15s',
@@ -159,21 +177,21 @@ export default function Layout() {
                   >
                     {isActive && (
                       <div style={{
-                        position: 'absolute', left: collapsed ? '50%' : -12, top: collapsed ? 'auto' : '50%',
-                        bottom: collapsed ? -2 : 'auto',
-                        transform: collapsed ? 'translateX(-50%)' : 'translateY(-50%)',
-                        width: collapsed ? 20 : 3,
-                        height: collapsed ? 3 : 20,
+                        position: 'absolute', left: navCollapsed ? '50%' : -12, top: navCollapsed ? 'auto' : '50%',
+                        bottom: navCollapsed ? -2 : 'auto',
+                        transform: navCollapsed ? 'translateX(-50%)' : 'translateY(-50%)',
+                        width: navCollapsed ? 20 : 3,
+                        height: navCollapsed ? 3 : 20,
                         borderRadius: 2,
                         background: COLORS.iris,
                       }} />
                     )}
                     <span style={{ fontSize: 16 }}>{item.icon}</span>
-                    {!collapsed && <span style={{ fontSize: 14 }}>{item.label}</span>}
+                    {!navCollapsed && <span style={{ fontSize: 14 }}>{item.label}</span>}
                   </div>
                 );
 
-                return collapsed ? (
+                return navCollapsed ? (
                   <Tooltip key={item.key} title={item.label} placement="right">
                     {navItem}
                   </Tooltip>
@@ -194,6 +212,7 @@ export default function Layout() {
             borderTop: '1px solid rgba(255,255,255,0.06)',
             color: 'rgba(255,255,255,0.3)', fontSize: 14,
             transition: 'color 0.15s', flexShrink: 0,
+            visibility: isNarrow ? 'hidden' : 'visible',
           }}
           onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.color = 'rgba(255,255,255,0.6)'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.color = 'rgba(255,255,255,0.3)'; }}
@@ -206,11 +225,14 @@ export default function Layout() {
       <div style={{
         marginLeft: siderWidth,
         flex: 1,
+        width: `calc(100vw - ${siderWidth}px)`,
+        minWidth: 0,
         transition: 'margin-left 0.2s',
         background: COLORS.canvas,
         minHeight: '100vh',
+        overflowX: 'hidden',
       }}>
-        <div style={{ padding: (location.pathname === '/workbench' || location.pathname === '/production') ? '14px' : '28px' }}>
+        <div style={{ padding: pageIsWorkspace ? (isNarrow ? '8px' : '14px') : (isNarrow ? '16px' : '28px'), minWidth: 0 }}>
           <Outlet />
         </div>
       </div>
