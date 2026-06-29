@@ -42,6 +42,10 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
 }
+.card-hover:focus-visible {
+  outline: 2px solid #6366f1 !important;
+  outline-offset: 2px;
+}
 
 /* Smooth page transitions */
 .page-enter {

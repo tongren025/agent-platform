@@ -21,6 +21,16 @@ STAGES = [
 
 STAGE_KEYS = [s["key"] for s in STAGES]
 
+ROLES = ["owner", "editor", "viewer"]
+
+
+class ProjectMember(BaseModel):
+    user_id: str = ""
+    name: str = ""
+    role: str = "viewer"
+    avatar: str = ""
+    added_at: str = ""
+
 
 class ProductionCard(BaseModel):
     card_id: str = ""
@@ -28,13 +38,14 @@ class ProductionCard(BaseModel):
     stage: str = "idea"
     title: str = ""
     content: str = ""
-    episode: Optional[int] = None  # None=全局资产, 1=EP01, 2=EP02...
+    episode: Optional[int] = None
     shot_number: int = 0
     prompts: list[str] = Field(default_factory=list)
     images: list[str] = Field(default_factory=list)
     videos: list[str] = Field(default_factory=list)
     metadata: dict = Field(default_factory=dict)
     status: str = "pending"
+    assignee: str = ""
     created_at: str = ""
     updated_at: str = ""
 
@@ -49,6 +60,12 @@ class ProductionProject(BaseModel):
     source_content: str = ""
     employee_key: str = ""
     team_code: str = ""
+    members: list[ProjectMember] = Field(default_factory=list)
+    settings: dict = Field(default_factory=lambda: {
+        "visibility": "private",
+        "allow_ai_generate": True,
+        "default_status": "pending",
+    })
     created_at: str = ""
     updated_at: str = ""
 
@@ -58,3 +75,4 @@ class ProductionProject(BaseModel):
 class ProjectWithCards(ProductionProject):
     cards: list[ProductionCard] = Field(default_factory=list)
     stages: list[dict] = Field(default_factory=lambda: list(STAGES))
+    stats: dict = Field(default_factory=dict)
