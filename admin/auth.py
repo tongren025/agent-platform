@@ -1,7 +1,6 @@
-"""最简管理员鉴权：口令登录 + HMAC 签名 token，不引第三方依赖。
+"""管理端鉴权——基于平台用户存储，HMAC 签名 token。
 
-token 结构：base64url(payload) + "." + base64url(HMAC-SHA256(payload))
-payload 是 {"sub": 用户名, "exp": 过期时间戳}。无状态，校验只看签名和过期时间。
+token payload: {"sub": username, "role": roleCode, "exp": timestamp}
 """
 from __future__ import annotations
 
@@ -13,7 +12,7 @@ import time
 
 from fastapi import Header, HTTPException
 
-from admin.config import ADMIN_PASSWORD, ADMIN_SECRET, ADMIN_TOKEN_TTL, ADMIN_USERNAME
+from admin.config import ADMIN_SECRET, ADMIN_TOKEN_TTL
 
 
 def _b64encode(raw: bytes) -> str:
@@ -29,22 +28,15 @@ def _sign(payload: bytes) -> str:
     return _b64encode(hmac.new(ADMIN_SECRET.encode(), payload, hashlib.sha256).digest())
 
 
-def verify_credentials(username: str, password: str) -> bool:
-    # 常数时间比较，避免计时侧信道
-    u_ok = hmac.compare_digest(username or "", ADMIN_USERNAME)
-    p_ok = hmac.compare_digest(password or "", ADMIN_PASSWORD)
-    return u_ok and p_ok
-
-
-def issue_token(username: str) -> str:
+def issue_token(username: str, role: str = "admin") -> str:
     payload = json.dumps(
-        {"sub": username, "exp": int(time.time()) + ADMIN_TOKEN_TTL},
+        {"sub": username, "role": role, "exp": int(time.time()) + ADMIN_TOKEN_TTL},
         separators=(",", ":"),
     ).encode()
     return f"{_b64encode(payload)}.{_sign(payload)}"
 
 
-def _parse_token(token: str) -> dict:
+def parse_token(token: str) -> dict:
     try:
         body, sig = token.split(".", 1)
         payload = _b64decode(body)
@@ -59,7 +51,17 @@ def _parse_token(token: str) -> dict:
 
 
 def require_admin(authorization: str = Header(default="")) -> dict:
-    """FastAPI 依赖：校验 Authorization: Bearer <token>，返回管理员声明。"""
+    """校验 token 并要求 system:admin 权限。"""
     if not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="缺少管理员凭证")
-    return _parse_token(authorization[len("Bearer "):].strip())
+        raise HTTPException(status_code=401, detail="缺少凭证")
+    claims = parse_token(authorization[len("Bearer "):].strip())
+    if claims.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="需要管理员权限")
+    return claims
+
+
+def require_login(authorization: str = Header(default="")) -> dict:
+    """校验 token，任何已登录用户均可。"""
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="缺少凭证")
+    return parse_token(authorization[len("Bearer "):].strip())

@@ -16,7 +16,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import BASE_DIR, settings
-from app.api import agent, ai_providers, evolution, knowledge_graph, memory_api, pipeline, production, registry, scrape, sessions, skills, strategy_proxy, workflow
+from app.api import agent, ai_providers, evolution, knowledge_graph, memory_api, pipeline, production, registry, scrape, sessions, skills, strategy_proxy, trend_sources, user_auth, workflow
 
 import app.tools.builtin  # noqa: F401
 import app.tools.delegate  # noqa: F401
@@ -103,6 +103,7 @@ app.add_middleware(
 def healthcheck():
     return "ok"
 
+app.include_router(user_auth.router)
 app.include_router(registry.router)
 app.include_router(agent.router)
 app.include_router(ai_providers.router)
@@ -116,6 +117,7 @@ app.include_router(production.router)
 app.include_router(skills.router)
 app.include_router(knowledge_graph.router)
 app.include_router(evolution.router)
+app.include_router(trend_sources.router)
 
 
 # ── Static files (SPA fallback) ────────────────────────────────────

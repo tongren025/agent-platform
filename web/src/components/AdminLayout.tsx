@@ -13,7 +13,8 @@ import { adminApi, adminToken } from '../adminApi';
 
 const navItems = [
   { key: '/admin/dashboard', icon: <DashboardOutlined />, label: '系统总览' },
-  { key: '/admin/employees', icon: <TeamOutlined />, label: '员工治理' },
+  { key: '/admin/users', icon: <TeamOutlined />, label: '用户管理' },
+  { key: '/admin/roles', icon: <SafetyCertificateOutlined />, label: '角色管理' },
   { key: '/admin/providers', icon: <ApiOutlined />, label: 'AI 服务商' },
 ];
 

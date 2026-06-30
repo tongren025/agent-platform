@@ -16,7 +16,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from admin.config import ADMIN_PORT
-from admin.api import auth_api, system, employees, providers
+from admin.api import auth_api, system, providers, users, roles
 
 logging.basicConfig(
     level=logging.INFO,
@@ -41,7 +41,8 @@ def healthcheck():
 
 app.include_router(auth_api.router)
 app.include_router(system.router)
-app.include_router(employees.router)
+app.include_router(users.router)
+app.include_router(roles.router)
 app.include_router(providers.router)
 
 
