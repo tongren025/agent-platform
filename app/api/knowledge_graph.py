@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
+from app.api.common import ok as _ok
 from app.dependencies import (
     employee_registry,
     tool_registry,
@@ -14,9 +15,6 @@ from app.dependencies import (
 
 router = APIRouter(prefix="/api/v1/agentapp/knowledge-graph", tags=["knowledge-graph"])
 
-
-def _ok(data):
-    return {"code": 200, "data": data}
 
 
 @router.get("")

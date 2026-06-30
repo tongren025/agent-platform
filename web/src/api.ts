@@ -234,6 +234,26 @@ export const api = {
     request<any[]>(`/skills/repo-history?query=${encodeURIComponent(query)}&fullName=${encodeURIComponent(fullName)}`),
   refreshTrends: (query: string, limit = 15, recentDays = 180) =>
     request<any>('/skills/refresh', { method: 'POST', body: JSON.stringify({ query, limit, recentDays }) }),
+  analyzeTrends: () => request<any>('/skills/analyze', { method: 'POST' }),
+  getAnalysis: () => request<any>('/skills/analyze'),
+  getTrendSummary: () => request<any>('/skills/summary'),
+
+  // 多源趋势
+  getHnQueries: () => request<any[]>('/trend-sources/hn/queries'),
+  getHnList: (query: string, limit = 20) =>
+    request<any>(`/trend-sources/hn?query=${encodeURIComponent(query)}&limit=${limit}`),
+  getArxivCategories: () => request<any[]>('/trend-sources/arxiv/categories'),
+  getArxivList: (category: string, limit = 20) =>
+    request<any>(`/trend-sources/arxiv?category=${encodeURIComponent(category)}&limit=${limit}`),
+  getNewsTopics: () => request<any[]>('/trend-sources/news/topics'),
+  getNewsList: (query: string, limit = 20) =>
+    request<any>(`/trend-sources/news?query=${encodeURIComponent(query)}&limit=${limit}`),
+  getRedditSubs: () => request<any[]>('/trend-sources/reddit/subs'),
+  getRedditList: (subreddit: string, limit = 20) =>
+    request<any>(`/trend-sources/reddit?subreddit=${encodeURIComponent(subreddit)}&limit=${limit}`),
+  getTrendSourcesOverview: () => request<any[]>('/trend-sources/overview'),
+  translateTitles: (titles: string[]) =>
+    request<string[]>('/trend-sources/translate', { method: 'POST', body: JSON.stringify({ titles }) }),
 
   // 知识图谱
   getKnowledgeGraph: () => request<any>('/knowledge-graph'),

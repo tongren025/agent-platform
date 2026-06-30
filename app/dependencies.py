@@ -20,6 +20,7 @@ from app.services.scrape_store import (
 from app.services.learn_store import LearnHistoryStore, LearnSourceStore
 from app.services.scheduler import DailyScheduler
 from app.services.long_term_memory import LongTermMemoryStore
+from app.services.user_store import RoleStore, UserStore
 
 skill_registry = SkillRegistryService()
 mcp_server_registry = McpServerRegistryService()
@@ -50,3 +51,7 @@ long_term_memory = LongTermMemoryStore()
 # ── 工作流编排引擎 ──────────────────────────────────────────────
 workflow_registry = WorkflowRegistryService()
 workflow_run_store = WorkflowRunStore()
+
+# ── 平台用户与角色 ─────────────────────────────────────────────
+role_store = RoleStore()
+user_store = UserStore(role_store)

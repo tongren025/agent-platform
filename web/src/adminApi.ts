@@ -1,8 +1,5 @@
 import type { ApiResult } from './types';
 
-// 管理端独立后端服务。
-// 开发期：由 vite 把 /api/admin 代理到 admin 服务端口（见 vite.config）。
-// 生产期：admin 服务独立部署，通过 VITE_ADMIN_API_BASE 指向其地址。
 const BASE = (import.meta.env.VITE_ADMIN_API_BASE as string) || '/api/admin';
 
 const TOKEN_KEY = 'admin_token';
@@ -23,7 +20,6 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     },
     ...init,
   });
-  // 凭证失效：清 token 并踢回登录页
   if (res.status === 401) {
     adminToken.clear();
     if (!location.pathname.startsWith('/admin/login')) {
@@ -31,15 +27,16 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     }
     throw new Error('未登录或登录已过期');
   }
+  if (res.status === 403) {
+    throw new Error('权限不足');
+  }
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     let message = text;
     try {
       const j = JSON.parse(text);
       message = j.detail || j.message || text;
-    } catch {
-      // keep raw text
-    }
+    } catch { /* keep raw text */ }
     throw new Error(message || `HTTP ${res.status}`);
   }
   let json: ApiResult<T>;
@@ -64,23 +61,28 @@ export interface AdminOverview {
   roleTemplates: number;
 }
 
-export interface AdminEmployee {
-  employeeKey: string;
-  name: string;
-  roleProfile: string;
-  deepAgent: boolean;
-  defaultModelPolicy: Record<string, unknown>;
-  skillRefs: string[] | null;
-  toolRefs: string[] | null;
-  mcpServerRefs: string[] | null;
-  teamCode: string | null;
-  teamName: string | null;
-  hasKnowledgeBase: boolean;
-  tags: string[];
+export interface PlatformUser {
+  userId: string;
+  username: string;
+  displayName: string;
+  role: string;
+  roleName?: string;
   enabled: boolean;
-  source: string;
   createdAt: string;
-  updatedAt: string;
+  lastLoginAt: string | null;
+}
+
+export interface PlatformRole {
+  roleCode: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  builtIn: boolean;
+}
+
+export interface PermissionDef {
+  code: string;
+  label: string;
 }
 
 export interface AdminProvider {
@@ -102,35 +104,38 @@ export interface TestResult {
 
 export const adminApi = {
   login: (username: string, password: string) =>
-    request<{ token: string; username: string }>('/auth/login', {
+    request<{ token: string; username: string; displayName: string; role: string }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     }),
-  me: () => request<{ username: string }>('/auth/me'),
+  me: () => request<PlatformUser & { permissions: string[] }>('/auth/me'),
   overview: () => request<AdminOverview>('/system/overview'),
 
-  // 员工治理
-  listEmployees: () => request<AdminEmployee[]>('/employees'),
-  toggleEmployee: (key: string, enabled: boolean) =>
-    request<AdminEmployee>(`/employees/${key}/enabled`, {
-      method: 'POST',
-      body: JSON.stringify({ enabled }),
-    }),
-  deleteEmployee: (key: string) =>
-    request<boolean>(`/employees/${key}`, { method: 'DELETE' }),
+  // 用户管理
+  listUsers: () => request<PlatformUser[]>('/users'),
+  createUser: (data: { username: string; password: string; displayName?: string; role?: string; enabled?: boolean }) =>
+    request<PlatformUser>('/users', { method: 'POST', body: JSON.stringify(data) }),
+  updateUser: (username: string, data: { displayName?: string; role?: string; enabled?: boolean; password?: string }) =>
+    request<PlatformUser>(`/users/${username}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteUser: (username: string) =>
+    request<boolean>(`/users/${username}`, { method: 'DELETE' }),
+
+  // 角色管理
+  listRoles: () => request<PlatformRole[]>('/roles'),
+  listPermissions: () => request<PermissionDef[]>('/roles/permissions'),
+  createRole: (data: { roleCode: string; name: string; description?: string; permissions: string[] }) =>
+    request<PlatformRole>('/roles', { method: 'POST', body: JSON.stringify(data) }),
+  updateRole: (roleCode: string, data: { roleCode: string; name: string; description?: string; permissions: string[] }) =>
+    request<PlatformRole>(`/roles/${roleCode}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteRole: (roleCode: string) =>
+    request<boolean>(`/roles/${roleCode}`, { method: 'DELETE' }),
 
   // AI 服务商
   listProviders: () => request<AdminProvider[]>('/providers'),
   saveProvider: (data: { name: string; endpoint: string; apiKey: string; enabled?: boolean; models?: unknown[] }) =>
-    request<AdminProvider>('/providers', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    request<AdminProvider>('/providers', { method: 'POST', body: JSON.stringify(data) }),
   updateProvider: (name: string, data: { name: string; endpoint: string; apiKey?: string; enabled?: boolean; models?: unknown[] }) =>
-    request<AdminProvider>(`/providers/${name}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    }),
+    request<AdminProvider>(`/providers/${name}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteProvider: (name: string) =>
     request<boolean>(`/providers/${name}`, { method: 'DELETE' }),
   testProvider: (name: string) =>
