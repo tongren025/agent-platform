@@ -113,7 +113,10 @@ async def extract_memories(
         if start < 0 or end <= start:
             logger.warning("记忆提取返回非 JSON: %s", raw[:200])
             return None
-        data = json.loads(raw[start:end])
+        # 在 json.loads 前清洗：模型常把箭头写成 $\rightarrow$，其中 \r/\t 会被 JSON
+        # 解析成控制字符（CR/TAB）造成乱码。趁反斜杠还在，先还原成 unicode 符号。
+        from app.utils import strip_latex_artifacts
+        data = json.loads(strip_latex_artifacts(raw[start:end]))
     except json.JSONDecodeError as exc:
         logger.warning("记忆提取 JSON 解析失败: %s", exc)
         return None
@@ -174,11 +177,19 @@ async def extract_and_store(
     if result is None:
         return
 
+    from app.utils import strip_latex_artifacts as _clean
+
     for m in result.semantic:
+        m.content = _clean(m.content)
         long_term_memory.add_semantic(employee_key, m)
 
     for m in result.episodic:
+        m.observation = _clean(m.observation)
+        m.action = _clean(m.action)
+        m.result = _clean(m.result)
         long_term_memory.add_episodic(employee_key, m)
 
     for m in result.procedural:
+        m.rule = _clean(m.rule)
+        m.rationale = _clean(m.rationale)
         long_term_memory.add_procedural(employee_key, m)

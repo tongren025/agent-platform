@@ -128,10 +128,13 @@ async def run_distillation(employee_key: str) -> DistillationLog:
             ensure_ascii=False, indent=1,
         )
 
-    prompt = _DISTILLATION_PROMPT.format(
-        semantic_json=_dump(semantic, ["memory_id", "content", "category", "importance", "access_count"]),
-        episodic_json=_dump(episodic, ["memory_id", "observation", "action", "result", "success_score", "access_count"]),
-        procedural_json=_dump(procedural, ["memory_id", "rule", "rationale", "confidence", "activation_count"]),
+    # 用 replace 而非 format：模板里含字面 JSON 示例 {"action":...}，format 会把它当成
+    # 格式字段名抛 KeyError。replace 对花括号免疫。
+    prompt = (
+        _DISTILLATION_PROMPT
+        .replace("{semantic_json}", _dump(semantic, ["memory_id", "content", "category", "importance", "access_count"]))
+        .replace("{episodic_json}", _dump(episodic, ["memory_id", "observation", "action", "result", "success_score", "access_count"]))
+        .replace("{procedural_json}", _dump(procedural, ["memory_id", "rule", "rationale", "confidence", "activation_count"]))
     )
 
     try:

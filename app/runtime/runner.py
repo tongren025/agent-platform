@@ -139,7 +139,8 @@ async def run_agent(
         run_result.error_message = f"代理循环执行失败: {exc}"
         return run_result
 
-    run_result.assistant_message = loop_result.final_text
+    from app.utils import strip_latex_artifacts
+    run_result.assistant_message = strip_latex_artifacts(loop_result.final_text)
     run_result.success = loop_result.success
     run_result.traces = loop_result.traces
     run_result.auto_invoke_count = loop_result.iterations

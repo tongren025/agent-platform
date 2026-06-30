@@ -140,11 +140,29 @@ def compile(
         mem_lines: list[str] = []
 
         if mem_data["procedural"]:
-            rules = [f"  - {m.rule}" for m in mem_data["procedural"][:10]]
+            rules = [f"  - {m.rule}" for m in mem_data["procedural"][:12]]
             mem_lines.append("<learned_behaviors>\n" + "\n".join(rules) + "\n</learned_behaviors>")
 
         if mem_data["semantic"]:
-            facts = [f"  - [{m.category}] {m.content}" for m in mem_data["semantic"][:20]]
+            # 按类别轮转抽取：保证 craft/knowledge 等正典类别也进注入，
+            # 不被高 importance 的项目规则(0.9+)挤占全部名额。每类内部按 importance 降序。
+            from collections import defaultdict
+            by_cat: dict[str, list] = defaultdict(list)
+            for m in mem_data["semantic"]:
+                by_cat[m.category or ""].append(m)
+            for items in by_cat.values():
+                items.sort(key=lambda x: x.importance, reverse=True)
+            groups = list(by_cat.values())
+            selected: list = []
+            depth = 0
+            while len(selected) < 30 and any(depth < len(g) for g in groups):
+                for g in groups:
+                    if depth < len(g):
+                        selected.append(g[depth])
+                        if len(selected) >= 30:
+                            break
+                depth += 1
+            facts = [f"  - [{m.category}] {m.content}" for m in selected]
             mem_lines.append("<user_knowledge>\n" + "\n".join(facts) + "\n</user_knowledge>")
 
         if mem_data["episodic"]:
