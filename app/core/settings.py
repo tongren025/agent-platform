@@ -27,6 +27,9 @@ class CoreSettings(BaseSettings):
     # 逐个 store 迁移期间用它灰度切换，PG 未就绪时保持 False 不影响现有功能。
     use_db_stores: bool = False
 
+    # 用户端 API 强制鉴权(P0 修复):默认开。仅作应急逃生口,勿在生产关闭。
+    user_api_auth: bool = True
+
     # 数据库(M1 起用)
     database_url: str = "postgresql+psycopg://agent:change-me-in-prod@postgres:5432/agent"
 

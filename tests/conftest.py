@@ -22,7 +22,14 @@ from fastapi.testclient import TestClient
 @pytest.fixture(scope="session")
 def app_client() -> TestClient:
     from app.main import app
-    return TestClient(app)
+    from admin.auth import issue_token
+
+    client = TestClient(app)
+    # 用户端 API 已强制鉴权(P0):契约测试统一带管理员凭证。
+    # 'admin' 用户由 UserStore 首次启动播种,本地与 CI 均存在;
+    # issue_token 直接签发绕过密码,避免依赖环境里的真实口令。
+    client.headers.update({"Authorization": f"Bearer {issue_token('admin', 'admin')}"})
+    return client
 
 
 @pytest.fixture(scope="session")

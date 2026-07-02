@@ -21,44 +21,50 @@ import {
   RiseOutlined,
   HistoryOutlined,
   CloudSyncOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../theme';
+import { hasPerm, userAuth } from '../userAuth';
 
-const navSections = [
+// perm 为空的条目所有登录用户可见;有 perm 的按角色权限显隐(与后端中间件的映射一致)
+type NavItem = { key: string; icon: React.ReactNode; label: string; perm?: string };
+type NavSection = { title?: string; items: NavItem[] };
+
+const navSections: NavSection[] = [
   {
     items: [
       { key: '/dashboard', icon: <DashboardOutlined />, label: '总览' },
-      { key: '/workbench', icon: <MessageOutlined />, label: '工作台' },
-      { key: '/production', icon: <VideoCameraOutlined />, label: '制作看板' },
+      { key: '/workbench', icon: <MessageOutlined />, label: '工作台', perm: 'workbench:use' },
+      { key: '/production', icon: <VideoCameraOutlined />, label: '制作看板', perm: 'production:manage' },
     ],
   },
   {
     title: '资源',
     items: [
-      { key: '/employees', icon: <TeamOutlined />, label: '数字员工' },
-      { key: '/teams', icon: <ApartmentOutlined />, label: '团队' },
-      { key: '/workflows', icon: <PartitionOutlined />, label: '工作流' },
-      { key: '/pipeline', icon: <ThunderboltOutlined />, label: 'CLI 流水线' },
-      { key: '/templates', icon: <AppstoreOutlined />, label: '角色模板' },
-      { key: '/knowledge-graph', icon: <ShareAltOutlined />, label: '知识图谱' },
+      { key: '/employees', icon: <TeamOutlined />, label: '数字员工', perm: 'employee:manage' },
+      { key: '/teams', icon: <ApartmentOutlined />, label: '团队', perm: 'team:manage' },
+      { key: '/workflows', icon: <PartitionOutlined />, label: '工作流', perm: 'workflow:manage' },
+      { key: '/pipeline', icon: <ThunderboltOutlined />, label: 'CLI 流水线', perm: 'production:manage' },
+      { key: '/templates', icon: <AppstoreOutlined />, label: '角色模板', perm: 'employee:manage' },
+      { key: '/knowledge-graph', icon: <ShareAltOutlined />, label: '知识图谱', perm: 'employee:manage' },
     ],
   },
   {
     title: '能力',
     items: [
-      { key: '/tools', icon: <ToolOutlined />, label: '工具 & MCP' },
-      { key: '/auto-learn', icon: <ReadOutlined />, label: '提示词采集' },
-      { key: '/article-learn', icon: <ReadOutlined />, label: '文章学习' },
-      { key: '/memory', icon: <BulbOutlined />, label: '记忆' },
-      { key: '/trends', icon: <RocketOutlined />, label: 'AI 趋势' },
-      { key: '/evolution', icon: <RiseOutlined />, label: '自我进化' },
-      { key: '/runs', icon: <HistoryOutlined />, label: '运行记录' },
-      { key: '/tasks', icon: <CloudSyncOutlined />, label: '异步队列' },
+      { key: '/tools', icon: <ToolOutlined />, label: '工具 & MCP', perm: 'tool:manage' },
+      { key: '/auto-learn', icon: <ReadOutlined />, label: '提示词采集', perm: 'employee:manage' },
+      { key: '/article-learn', icon: <ReadOutlined />, label: '文章学习', perm: 'employee:manage' },
+      { key: '/memory', icon: <BulbOutlined />, label: '记忆', perm: 'employee:manage' },
+      { key: '/trends', icon: <RocketOutlined />, label: 'AI 趋势', perm: 'employee:manage' },
+      { key: '/evolution', icon: <RiseOutlined />, label: '自我进化', perm: 'employee:manage' },
+      { key: '/runs', icon: <HistoryOutlined />, label: '运行记录', perm: 'workbench:use' },
+      { key: '/tasks', icon: <CloudSyncOutlined />, label: '异步队列', perm: 'workbench:use' },
     ],
   },
   {
     items: [
-      { key: '/settings', icon: <SettingOutlined />, label: '设置' },
+      { key: '/settings', icon: <SettingOutlined />, label: '设置', perm: 'settings:manage' },
     ],
   },
 ];
@@ -80,6 +86,16 @@ export default function Layout() {
 
   const navCollapsed = collapsed || isNarrow;
   const siderWidth = navCollapsed ? 64 : 240;
+
+  // 按当前用户权限过滤导航;整段为空的分组连标题一起隐藏
+  const visibleSections = navSections
+    .map((s) => ({ ...s, items: s.items.filter((it) => !it.perm || hasPerm(it.perm)) }))
+    .filter((s) => s.items.length > 0);
+
+  const logout = () => {
+    userAuth.logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', width: '100vw', overflowX: 'hidden' }}>
@@ -128,7 +144,7 @@ export default function Layout() {
 
         {/* Navigation */}
         <div style={{ flex: 1, padding: navCollapsed ? '12px 8px' : '12px 12px' }}>
-          {navSections.map((section, si) => (
+          {visibleSections.map((section, si) => (
             <div key={si} style={{ marginBottom: 8 }}>
               {/* Section title */}
               {section.title && !navCollapsed && (
@@ -205,6 +221,25 @@ export default function Layout() {
               })}
             </div>
           ))}
+        </div>
+
+        {/* Logout */}
+        <div
+          onClick={logout}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 12,
+            justifyContent: navCollapsed ? 'center' : 'flex-start',
+            padding: navCollapsed ? '12px 0' : '12px 24px',
+            cursor: 'pointer',
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+            color: 'rgba(255,255,255,0.35)', fontSize: 13,
+            transition: 'color 0.15s', flexShrink: 0,
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.color = COLORS.rose; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.color = 'rgba(255,255,255,0.35)'; }}
+        >
+          <LogoutOutlined style={{ fontSize: 15 }} />
+          {!navCollapsed && <span>退出登录</span>}
         </div>
 
         {/* Collapse toggle */}

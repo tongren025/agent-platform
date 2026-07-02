@@ -5,6 +5,34 @@
 
 ---
 
+## [2026-07-02] P0 安全修复:用户端 API 强制鉴权 + 角色权限落地
+
+**动机**:登录门禁此前只在前端路由(UserAuthGuard),后端 `/agent/run`、`/registry/*`
+等全部裸奔——局域网内任何人可 curl 直调,烧 LLM 费用且可改数据;viewer/editor
+角色权限在用户端完全未生效。
+
+**变更点**
+- 新增 `app/core/auth.py`:`UserAuthMiddleware`——保护 app 下所有 `/api/*`;
+  豁免 `/auth/*` 与 OPTIONS;读(GET/HEAD)任何登录用户,写按前缀映射权限
+  (registry→employee/team/tool、workflow、production+pipeline、ai-providers→settings、
+  memory/scrape/skills/evolution/knowledge-graph/trend-sources→employee、默认 workbench:use);
+  用户须存在且未禁用(禁用立即生效,不等 token 过期)。
+- `app/core/settings.py` + `app/main.py`:开关 `USER_API_AUTH`(默认开)。
+- 前端 `api.ts`:所有请求带 `Authorization: Bearer`;401 统一清 token 跳 `/login`。
+- 前端 `userAuth.ts`:登录/校验后缓存 `permissions`;新增 `hasPerm()`。
+- 前端 `Layout.tsx`:导航按权限显隐(空分组隐藏);侧栏新增退出登录。
+- 测试:`test_user_api_auth.py`(7 用例);`conftest.app_client` 统一带管理员凭证。
+
+**影响面**
+- **接口**:app 服务全部 `/api/*` 未带凭证返回 401(信封格式);无权限写操作 403。
+- **配置**:新增 `USER_API_AUTH`(默认 true)。
+- **前端**:老 token 继续有效;权限列表登录后自动拉取。
+- **注意**:`ADMIN_SECRET` 未配置时重启即随机——生产必须在 `.env` 固定,
+  否则重启后全员被登出;app 与 admin 进程若各自随机,token 互不通用。
+- 管理端(:8001)不受影响(原有 require_admin)。
+
+---
+
 ## [2026-07-02] fix: 未构建前端时后端启动崩溃（CI 全红根因）
 
 **动机**：`wwwroot/index.html` 已进版本库但 `wwwroot/assets/` 是构建产物（gitignore）。

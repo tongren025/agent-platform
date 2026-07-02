@@ -382,6 +382,7 @@ agent-platform/
 
 ## 安全设计
 
+- **API 强制鉴权** — 用户端所有 `/api/*` 端点须携带 `Authorization: Bearer <token>`(登录获取);读操作任何登录用户可用,写操作按角色权限(admin/editor/viewer)前缀映射拦截;禁用账号立即失效。开关 `USER_API_AUTH`(默认开)。管理端(:8001)独立鉴权
 - **工具节点授权** — 工作流中的工具节点必须指定授权员工（`employeeKey`），且工具必须在该员工的 `toolRefs` 绑定列表内才能执行
 - **黑名单机制** — Shell 执行（`execute`）和跨员工委派（`delegate_to_employee`）在工作流节点中硬禁止
 - **审批闸门** — 工具返回 `##PENDING_APPROVAL##` 时，工作流节点按失败处理，不会静默跳过人工审批

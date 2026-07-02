@@ -1,12 +1,27 @@
 import type { ApiResult, AgentRunRecord } from './types';
+import { userToken } from './userAuth';
 
 const BASE = '/api/v1/agentapp';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = userToken.get();
   const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', ...init?.headers },
     ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...init?.headers,
+    },
   });
+  if (res.status === 401) {
+    // 凭证失效:统一清 token 回登录页,免得每个页面各自处理
+    userToken.clear();
+    if (!window.location.pathname.startsWith('/login')) {
+      window.location.href = '/login';
+    }
+    throw new Error('登录已失效，请重新登录');
+  }
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     let message = text;

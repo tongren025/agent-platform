@@ -94,7 +94,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Agent Service", version="v1", lifespan=lifespan)
 
-# 顺序:CORS 最外层 → 请求上下文(request_id / 访问日志)
+# 顺序(外→内):CORS → 请求上下文(request_id/访问日志)→ API 鉴权。
+# add_middleware 后添加者在外层,故按内→外的相反顺序书写。
+if core_settings.user_api_auth:
+    from app.core.auth import UserAuthMiddleware
+    app.add_middleware(UserAuthMiddleware)
 app.add_middleware(RequestContextMiddleware)
 app.add_middleware(
     CORSMiddleware,
