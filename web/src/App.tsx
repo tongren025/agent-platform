@@ -15,6 +15,8 @@ import Runs from './pages/Runs';
 import Tasks from './pages/Tasks';
 import Pipeline from './pages/Pipeline';
 import Production from './pages/Production';
+import ProductionHub from './pages/ProductionHub';
+import EpisodeDetail from './pages/EpisodeDetail';
 import Settings from './pages/Settings';
 import SkillTracker from './pages/SkillTracker';
 import KnowledgeGraph from './pages/KnowledgeGraph';
@@ -50,6 +52,9 @@ export default function App() {
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/pipeline" element={<Pipeline />} />
           <Route path="/production" element={<Production />} />
+          <Route path="/production/:pid" element={<ProductionHub />} />
+          <Route path="/production/:pid/ep/:ep" element={<EpisodeDetail />} />
+          <Route path="/production/:pid/pipeline" element={<Production />} />
           <Route path="/trends" element={<SkillTracker />} />
           <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
           <Route path="/evolution" element={<Evolution />} />

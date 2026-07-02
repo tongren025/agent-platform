@@ -13,6 +13,7 @@ import {
   CloseOutlined, DragOutlined, FilterOutlined, BarChartOutlined,
   CheckCircleOutlined, ClockCircleOutlined, ExclamationCircleOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { COLORS } from '../theme';
 import ReactMarkdown from 'react-markdown';
@@ -161,6 +162,7 @@ function CardThumbnails({ images }: { images: string[] }) {
 }
 
 export default function Production() {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedPid, setSelectedPid] = useState('');
   const [project, setProject] = useState<Project | null>(null);
@@ -551,9 +553,16 @@ export default function Production() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Text strong style={{ fontSize: 13 }}>{p.name}</Text>
-                  <Popconfirm title="删除此项目？" onConfirm={(e) => { e?.stopPropagation(); handleDeleteProject(p.project_id); }} onCancel={e => e?.stopPropagation()}>
-                    <Button type="text" size="small" danger icon={<DeleteOutlined />} onClick={e => e.stopPropagation()} style={{ width: 24, height: 24, opacity: 0.5 }} />
-                  </Popconfirm>
+                  <Space size={2}>
+                    <Tooltip title="层级视图">
+                      <Button type="text" size="small" icon={<AppstoreOutlined />}
+                        onClick={e => { e.stopPropagation(); navigate(`/production/${p.project_id}`); }}
+                        style={{ width: 24, height: 24, opacity: 0.6, color: COLORS.iris }} />
+                    </Tooltip>
+                    <Popconfirm title="删除此项目？" onConfirm={(e) => { e?.stopPropagation(); handleDeleteProject(p.project_id); }} onCancel={e => e?.stopPropagation()}>
+                      <Button type="text" size="small" danger icon={<DeleteOutlined />} onClick={e => e.stopPropagation()} style={{ width: 24, height: 24, opacity: 0.5 }} />
+                    </Popconfirm>
+                  </Space>
                 </div>
                 {p.description && <Text type="secondary" style={{ fontSize: 11, display: 'block', marginTop: 2 }}>{p.description}</Text>}
                 <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
