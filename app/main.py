@@ -5,7 +5,6 @@ Port of C# Program.cs — Agent Service.
 """
 from __future__ import annotations
 
-import logging
 from datetime import datetime, timezone
 
 from contextlib import asynccontextmanager
@@ -16,18 +15,22 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import BASE_DIR, settings
-from app.api import agent, ai_providers, evolution, knowledge_graph, memory_api, pipeline, production, registry, scrape, sessions, skills, strategy_proxy, trend_sources, user_auth, workflow
+from app.core.settings import settings as core_settings
+from app.core.logging import configure_logging, get_logger
+from app.core.middleware import RequestContextMiddleware
+from app.core.errors import register_exception_handlers
+from app.core.observability import setup_metrics
+from app.core.rate_limit import limiter, rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.api import agent, ai_providers, evolution, knowledge_graph, memory_api, pipeline, production, registry, runs, scrape, sessions, skills, strategy_proxy, tasks, trend_sources, user_auth, workflow
 
 import app.tools.builtin  # noqa: F401
 import app.tools.delegate  # noqa: F401
 import app.tools.deep  # noqa: F401
 import app.tools.strategy.handlers  # noqa: F401
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
+configure_logging()
+logger = get_logger(__name__)
 
 # ── Lifespan ───────────────────────────────────────────────────────
 
@@ -91,13 +94,21 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Agent Service", version="v1", lifespan=lifespan)
 
+# 顺序:CORS 最外层 → 请求上下文(request_id / 访问日志)
+app.add_middleware(RequestContextMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=core_settings.cors_origin_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+register_exception_handlers(app)
+setup_metrics(app)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
+
 
 @app.get("/healthcheck")
 def healthcheck():
@@ -108,6 +119,7 @@ app.include_router(registry.router)
 app.include_router(agent.router)
 app.include_router(ai_providers.router)
 app.include_router(sessions.router)
+app.include_router(runs.router)
 app.include_router(scrape.router)
 app.include_router(strategy_proxy.router)
 app.include_router(memory_api.router)
@@ -118,6 +130,7 @@ app.include_router(skills.router)
 app.include_router(knowledge_graph.router)
 app.include_router(evolution.router)
 app.include_router(trend_sources.router)
+app.include_router(tasks.router)
 
 
 # ── Static files (SPA fallback) ────────────────────────────────────

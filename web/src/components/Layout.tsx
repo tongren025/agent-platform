@@ -19,6 +19,8 @@ import {
   RocketOutlined,
   ShareAltOutlined,
   RiseOutlined,
+  HistoryOutlined,
+  CloudSyncOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../theme';
 
@@ -50,6 +52,8 @@ const navSections = [
       { key: '/memory', icon: <BulbOutlined />, label: '记忆' },
       { key: '/trends', icon: <RocketOutlined />, label: 'AI 趋势' },
       { key: '/evolution', icon: <RiseOutlined />, label: '自我进化' },
+      { key: '/runs', icon: <HistoryOutlined />, label: '运行记录' },
+      { key: '/tasks', icon: <CloudSyncOutlined />, label: '异步队列' },
     ],
   },
   {

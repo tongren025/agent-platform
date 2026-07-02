@@ -12,11 +12,12 @@ import logging
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, HTTPException, Request, UploadFile
 from pydantic import BaseModel, Field
 
 from app.api.common import ok as _ok
 from app.config import BASE_DIR, settings
+from app.core.rate_limit import check_quota, limiter, record_token_usage
 from app.dependencies import employee_registry, memory_store, team_registry
 from app.models.conversation import AgentRunRequest, AgentRunResponse
 from app.services.invocation import run_invocation
@@ -128,7 +129,14 @@ async def upload_file(file: UploadFile = File(...)):
 
 
 @router.post("/run")
-async def run_agent_endpoint(body: AgentRunRequest):
+@limiter.limit("20/minute")
+async def run_agent_endpoint(request: Request, body: AgentRunRequest):
+    quotas = getattr(settings, "quotas", {})
+    if quotas:
+        allowed, reason = check_quota(body.employee_key, quotas)
+        if not allowed:
+            raise HTTPException(status_code=429, detail=reason)
+
     timeout = settings.agent.run_timeout_seconds
 
     try:

@@ -1,6 +1,40 @@
+# ── Web 框架 ───────────────────────────────────────────────
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
 pydantic>=2.10.0
+python-multipart>=0.0.18
+
+# ── LLM / HTTP ─────────────────────────────────────────────
 openai>=1.60.0
 httpx>=0.28.0
-python-multipart>=0.0.18
+
+# ── 配置 / 密钥(M0)────────────────────────────────────────
+pydantic-settings>=2.6.0
+python-dotenv>=1.0.1
+
+# ── 结构化日志 / 可观测性(M0)─────────────────────────────
+structlog>=24.4.0
+prometheus-fastapi-instrumentator>=7.0.0
+
+# ── 测试(M0)──────────────────────────────────────────────
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+
+# ── M1 数据层:PostgreSQL + ORM + 迁移 ─────────────────────
+sqlalchemy[asyncio]>=2.0.36
+alembic>=1.14.0
+psycopg[binary,pool]>=3.2.0
+
+# ── M2 LLM 调用治理 ────────────────────────────────────────
+tenacity>=9.0.0
+
+# ── M3 RAG 向量化(国内 DashScope embedding/rerank)────────
+pgvector>=0.3.6
+dashscope>=1.20.0
+
+# ── M4 异步任务队列 ────────────────────────────────────────
+arq>=0.26.0
+redis>=5.2.0
+
+# ── M5 安全:限流 ──────────────────────────────────────────
+slowapi>=0.1.9

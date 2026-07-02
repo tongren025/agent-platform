@@ -1,0 +1,31 @@
+# 版本库 / IDE
+.git
+.gitignore
+.vs
+.vscode
+.idea
+
+# Python 缓存与虚拟环境
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# 前端依赖与构建产物(Dockerfile 内重新构建)
+web/node_modules/
+web/dist/
+
+# 运行期数据与密钥
+data/
+.env
+appsettings.Development.json
+*.log
+
+# 文档 / 部署自身
+deploy/grafana/data/
+.codegraph/
+openspec/
+
+# OS
+Thumbs.db
+.DS_Store

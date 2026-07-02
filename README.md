@@ -102,7 +102,11 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **Pydantic v2** — 数据校验与序列化（camelCase 别名兼容前端）
 - **OpenAI SDK** — LLM 调用（兼容 OpenAI 格式的任意网关）
 - **httpx** — 异步 HTTP 客户端
-- **JSON 文件存储** — 零依赖，原子写入（`tmp` + `os.replace`），单用户场景足够
+- **存储双模式** — 默认 JSON 文件（零依赖，原子写入）；`USE_DB_STORES=true` 时运行态（运行记录/会话/长期记忆/向量）切 **PostgreSQL**（SQLAlchemy 2.0 + Alembic 迁移），并发安全由事务保证
+- **pgvector + DashScope embedding** — 知识库语义检索（不配 API key 自动退化为关键词检索）
+- **Redis + arq** — 异步任务队列（agent 后台运行）；slowapi 接口限流 + 员工月度 token 配额
+- **Prometheus + Grafana** — `/metrics` 指标（HTTP / 运行次数 / Token / 成本）+ 自动置备面板
+- **structlog** — 结构化日志 + request_id 全链路追踪 + 统一异常信封
 - **asyncio** — 工作流并行执行 + 定时调度
 
 ### 前端技术栈
@@ -112,7 +116,30 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **React Router 6** — SPA 路由
 - **Vite 6** — 构建工具 + 开发服务器 + HMR
 
+### 生产部署形态（docker-compose）
+
+| 服务 | 端口 | 说明 |
+|------|------|------|
+| app | 8000 | 用户端 API + 前端 SPA |
+| admin | 8001 | 管理端（用户/角色/AI 供应商治理，独立鉴权） |
+| worker | — | arq 异步任务消费者（可独立扩容） |
+| postgres (pgvector) | 5432 | 关系数据 + 向量检索 |
+| redis | 6379 | 任务队列 / 限流 |
+| prometheus | 9090 | 指标采集 |
+| grafana | 3000 | 监控面板（自动置备「Agent 运行概览」） |
+
 ## 快速开始
+
+### 方式一：Docker Compose 一键全套
+
+```bash
+cp .env.example .env      # 按需修改密码/密钥
+docker compose up -d --build
+```
+
+前端 http://localhost:8000 · 管理端 http://localhost:8001（默认 `admin/admin123`，生产请改）· Grafana http://localhost:3000
+
+### 方式二：本地开发（以下 1-5 步）
 
 ### 环境要求
 - Python 3.12+
@@ -278,6 +305,8 @@ agent-platform/
 └── WORKFLOW_ENGINE.md            # 工作流引擎技术文档
 ```
 
+> **M0–M6 生产化新增**（未列入上图）：`app/core/`（settings/logging/db/queue/rate_limit/embedding/metrics 基础设施）、`app/tasks/`（arq worker）、`admin/`（管理端服务 :8001）、`app/models/db/`（ORM）、`migrations/`（Alembic）、`tests/`、`deploy/`（Prometheus/Grafana 置备）、`docker-compose.yml` + `Dockerfile`。详见 [docs/CHANGELOG.md](docs/CHANGELOG.md)。
+
 ## API 概览
 
 所有 API 前缀：`/api/v1/agentapp`
@@ -304,6 +333,17 @@ agent-platform/
 | GET | `/sessions` | 列出会话 |
 | GET | `/sessions/{id}` | 获取会话详情 |
 | GET | `/ai-models` | 列出可用 AI 模型 |
+| GET | `/agent/runs` | 运行记录列表（Token/成本/耗时） |
+| GET | `/agent/quota/{employee_key}` | 员工本月 token 用量与配额 |
+
+### 异步任务（`/tasks`）
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/tasks/agent-run` | 员工运行入队（后台执行，不占请求连接） |
+| GET | `/tasks/{job_id}` | 查询任务状态 / 结果 |
+
+> 知识检索升级：`GET /registry/employees/{key}/knowledge/search?q=` — 配置 `DASHSCOPE_API_KEY` 且 `USE_DB_STORES=true` 时走向量语义检索，否则退化关键词。
+> 管理端另有独立服务（:8001，前缀 `/api/admin`）：登录、用户/角色/权限、AI 供应商治理。
 
 ### 工作流（`/workflow`）
 | 方法 | 路径 | 说明 |
@@ -388,8 +428,22 @@ agent-platform/
 
 - **LLM 调用同步** — 底层 OpenAI SDK 调用为同步模式，并行节点实际串行执行（引擎已支持并行，待迁移 AsyncOpenAI 即可自动并发）
 - **无 SSE 实时推送** — 运行状态通过轮询获取，暂无 Server-Sent Events 实时更新
-- **文件存储无锁** — 适合单用户 / 开发环境；多用户并发需加锁或换数据库
+- ~~文件存储无锁~~ — **已解决**：`USE_DB_STORES=true` 时运行态切 PostgreSQL（事务保并发安全）；JSON 仍为默认（单人零依赖）
 - **节点类型待扩展** — 迭代（循环）、变量聚合、代码执行、HTTP 请求、子工作流等节点类型规划中
+
+## 生产化里程碑（已完工）
+
+| 里程碑 | 内容 | 状态 |
+|--------|------|------|
+| M0 | Docker Compose / `.env` 密钥 / structlog / request-id / 统一异常 / CI | ✅ |
+| M1 | 运行态存储 PostgreSQL 可切换（Alembic + JSON 导入脚本） | ✅ |
+| M2 | LLM 成本核算（`modelPrices` 价目 → 运行记录落真实成本） | ✅ |
+| M3 | 向量语义检索（pgvector + DashScope，fail-open 退化关键词） | ✅ |
+| M4 | 异步任务队列（arq + Redis + worker 容器） | ✅ |
+| M5 | 接口限流（slowapi）+ 员工月度 token 配额 | ✅ |
+| M6 | Prometheus 业务指标 + Grafana 自动置备面板 | ✅ |
+
+逐项动机 / 变更点 / 影响面见 [docs/CHANGELOG.md](docs/CHANGELOG.md)。**不做多租户**。
 
 ## 许可证
 

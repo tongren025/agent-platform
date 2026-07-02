@@ -21,6 +21,7 @@ import re
 import secrets
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Protocol
 
 from app.config import BASE_DIR
 from app.models.memory_types import (
@@ -77,39 +78,57 @@ def _similarity(a: str, b: str) -> float:
     return len(ta & tb) / len(ta | tb)
 
 
-class LongTermMemoryStore:
+class MemoryBackend(Protocol):
+    """长期记忆的存取原语——业务逻辑（合并/衰减/检索/截断）留在 LongTermMemoryStore 里，
+    后端只负责"读整表 / 写整表"。JSON 与 PG 各实现这两个方法即可切换，零行为漂。"""
 
-    def __init__(self) -> None:
-        self._root = BASE_DIR / "data" / "memory"
+    def load(self, emp_key: str, kind: str) -> list[dict]: ...
+    def save(self, emp_key: str, kind: str, rows: list[dict]) -> None: ...
+
+
+class JsonMemoryBackend:
+    """默认后端：每员工每类型一个 JSON 文件，原子写（保持原行为）。"""
+
+    def __init__(self, root: Path | None = None) -> None:
+        self._root = root or (BASE_DIR / "data" / "memory")
         self._root.mkdir(parents=True, exist_ok=True)
 
-    def _emp_dir(self, emp_key: str) -> Path:
+    def _path(self, emp_key: str, kind: str) -> Path:
         d = self._root / _sanitize(emp_key)
         d.mkdir(parents=True, exist_ok=True)
-        return d
+        return d / f"{kind}.json"
+
+    def load(self, emp_key: str, kind: str) -> list[dict]:
+        fp = self._path(emp_key, kind)
+        if not fp.exists():
+            return []
+        return json.loads(fp.read_text(encoding="utf-8"))
+
+    def save(self, emp_key: str, kind: str, rows: list[dict]) -> None:
+        _atomic_write(self._path(emp_key, kind), json.dumps(rows, ensure_ascii=False, indent=2))
+
+
+class LongTermMemoryStore:
+
+    def __init__(self, backend: MemoryBackend | None = None) -> None:
+        # 默认 JSON 文件后端（原行为）；use_db_stores 时由 dependencies 注入 PgMemoryBackend
+        self._backend = backend or JsonMemoryBackend()
 
     # ── 语义记忆 ──────────────────────────────────────────
 
-    def _semantic_path(self, emp_key: str) -> Path:
-        return self._emp_dir(emp_key) / "semantic.json"
-
     def list_semantic(self, emp_key: str) -> list[SemanticMemory]:
-        fp = self._semantic_path(emp_key)
-        if not fp.exists():
-            return []
         try:
-            raw = json.loads(fp.read_text(encoding="utf-8"))
-            return [SemanticMemory.model_validate(d) for d in raw]
+            return [SemanticMemory.model_validate(d) for d in self._backend.load(emp_key, "semantic")]
         except Exception:
-            logger.warning("语义记忆加载失败: %s", fp, exc_info=True)
+            logger.warning("语义记忆加载失败: %s", emp_key, exc_info=True)
             return []
 
     def _save_semantic(self, emp_key: str, items: list[SemanticMemory]) -> None:
         items.sort(key=lambda m: m.importance, reverse=True)
         if len(items) > _MAX_SEMANTIC:
             items = items[:_MAX_SEMANTIC]
-        data = [it.model_dump(by_alias=True, mode="json") for it in items]
-        _atomic_write(self._semantic_path(emp_key), json.dumps(data, ensure_ascii=False, indent=2))
+        rows = [it.model_dump(by_alias=True, mode="json") for it in items]
+        self._backend.save(emp_key, "semantic", rows)
 
     def add_semantic(self, emp_key: str, memory: SemanticMemory) -> SemanticMemory:
         items = self.list_semantic(emp_key)
@@ -159,26 +178,19 @@ class LongTermMemoryStore:
 
     # ── 经验记忆 ──────────────────────────────────────────
 
-    def _episodic_path(self, emp_key: str) -> Path:
-        return self._emp_dir(emp_key) / "episodic.json"
-
     def list_episodic(self, emp_key: str) -> list[EpisodicMemory]:
-        fp = self._episodic_path(emp_key)
-        if not fp.exists():
-            return []
         try:
-            raw = json.loads(fp.read_text(encoding="utf-8"))
-            return [EpisodicMemory.model_validate(d) for d in raw]
+            return [EpisodicMemory.model_validate(d) for d in self._backend.load(emp_key, "episodic")]
         except Exception:
-            logger.warning("经验记忆加载失败: %s", fp, exc_info=True)
+            logger.warning("经验记忆加载失败: %s", emp_key, exc_info=True)
             return []
 
     def _save_episodic(self, emp_key: str, items: list[EpisodicMemory]) -> None:
         items.sort(key=lambda m: m.success_score, reverse=True)
         if len(items) > _MAX_EPISODIC:
             items = items[:_MAX_EPISODIC]
-        data = [it.model_dump(by_alias=True, mode="json") for it in items]
-        _atomic_write(self._episodic_path(emp_key), json.dumps(data, ensure_ascii=False, indent=2))
+        rows = [it.model_dump(by_alias=True, mode="json") for it in items]
+        self._backend.save(emp_key, "episodic", rows)
 
     def add_episodic(self, emp_key: str, memory: EpisodicMemory) -> EpisodicMemory:
         items = self.list_episodic(emp_key)
@@ -220,26 +232,19 @@ class LongTermMemoryStore:
 
     # ── 行为记忆 ──────────────────────────────────────────
 
-    def _procedural_path(self, emp_key: str) -> Path:
-        return self._emp_dir(emp_key) / "procedural.json"
-
     def list_procedural(self, emp_key: str) -> list[ProceduralMemory]:
-        fp = self._procedural_path(emp_key)
-        if not fp.exists():
-            return []
         try:
-            raw = json.loads(fp.read_text(encoding="utf-8"))
-            return [ProceduralMemory.model_validate(d) for d in raw]
+            return [ProceduralMemory.model_validate(d) for d in self._backend.load(emp_key, "procedural")]
         except Exception:
-            logger.warning("行为记忆加载失败: %s", fp, exc_info=True)
+            logger.warning("行为记忆加载失败: %s", emp_key, exc_info=True)
             return []
 
     def _save_procedural(self, emp_key: str, items: list[ProceduralMemory]) -> None:
         items.sort(key=lambda m: (m.confidence, m.activation_count), reverse=True)
         if len(items) > _MAX_PROCEDURAL:
             items = items[:_MAX_PROCEDURAL]
-        data = [it.model_dump(by_alias=True, mode="json") for it in items]
-        _atomic_write(self._procedural_path(emp_key), json.dumps(data, ensure_ascii=False, indent=2))
+        rows = [it.model_dump(by_alias=True, mode="json") for it in items]
+        self._backend.save(emp_key, "procedural", rows)
 
     def add_procedural(self, emp_key: str, memory: ProceduralMemory) -> ProceduralMemory:
         items = self.list_procedural(emp_key)

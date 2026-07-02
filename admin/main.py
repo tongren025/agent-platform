@@ -10,28 +10,33 @@
 """
 from __future__ import annotations
 
-import logging
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from admin.config import ADMIN_PORT
+from app.core.settings import settings as core_settings
+from app.core.logging import configure_logging
+from app.core.middleware import RequestContextMiddleware
+from app.core.errors import register_exception_handlers
+from app.core.observability import setup_metrics
 from admin.api import auth_api, system, providers, users, roles
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-)
+configure_logging()
 
 app = FastAPI(title="Agent Admin Service", version="v1")
 
+# 顺序:CORS 最外层 → 请求上下文(request_id / 访问日志)
+app.add_middleware(RequestContextMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=core_settings.cors_origin_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+register_exception_handlers(app)
+setup_metrics(app)
 
 
 @app.get("/healthcheck")

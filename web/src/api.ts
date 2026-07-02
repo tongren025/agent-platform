@@ -1,4 +1,4 @@
-import type { ApiResult } from './types';
+import type { ApiResult, AgentRunRecord } from './types';
 
 const BASE = '/api/v1/agentapp';
 
@@ -31,6 +31,28 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export const api = {
   // Registry
   getOverview: () => request<Record<string, number>>('/registry/overview'),
+
+  // Runs (运行可观测)
+  listRuns: (params?: { employeeKey?: string; sessionId?: string; success?: boolean; limit?: number }) => {
+    const q = new URLSearchParams();
+    if (params?.employeeKey) q.set('employeeKey', params.employeeKey);
+    if (params?.sessionId) q.set('sessionId', params.sessionId);
+    if (params?.success !== undefined) q.set('success', String(params.success));
+    if (params?.limit) q.set('limit', String(params.limit));
+    const qs = q.toString();
+    return request<AgentRunRecord[]>(`/agent/runs${qs ? `?${qs}` : ''}`);
+  },
+  getRun: (runId: string) => request<AgentRunRecord>(`/agent/runs/${runId}`),
+  getQuota: (employeeKey: string) => request<{ month: string; employee_key: string; tokens_used: number }>(`/agent/quota/${encodeURIComponent(employeeKey)}`),
+
+  // Tasks (异步队列)
+  enqueueAgentRun: (data: { employeeKey: string; userInput: string; sessionId?: string }) =>
+    request<{ job_id: string; status: string }>('/tasks/agent-run', { method: 'POST', body: JSON.stringify(data) }),
+  getTaskStatus: (jobId: string) => request<{ job_id: string; status: string; result: any; enqueue_time: string | null }>(`/tasks/${encodeURIComponent(jobId)}`),
+
+  // Knowledge 语义搜索
+  searchKnowledge: (key: string, q: string, topK = 5) =>
+    request<any[]>(`/registry/employees/${encodeURIComponent(key)}/knowledge/search?q=${encodeURIComponent(q)}&topK=${topK}`),
   listEmployees: () => request<any[]>('/registry/employees'),
   getEmployee: (key: string) => request<any>(`/registry/employees/${key}`),
   saveEmployee: (data: any) => request<any>('/registry/employees', { method: 'POST', body: JSON.stringify(data) }),

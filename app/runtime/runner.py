@@ -117,12 +117,25 @@ async def run_agent(
 
     max_iterations = 12 if snapshot.deep_agent else 5
 
+    # 预解析跨 provider 降级模型：各自拿独立 client，主模型失败后依次尝试。
+    # 解析失败的降级模型直接跳过——降级本身不该让主流程崩。
+    fallback_clients: list = []
+    for fb_model_id in model_policy.get("fallback_models", []):
+        try:
+            fb_client, fb_resolved = ai_service.get_client(fb_model_id, async_client=True)
+            fallback_clients.append((fb_client, fb_resolved))
+        except Exception as exc:
+            logger.warning("降级模型 %s 解析失败，跳过: %s", fb_model_id, exc)
+
     options = AgentLoopOptions(
         existing_messages=existing_messages,
         max_iterations=max_iterations,
         temperature=temperature,
         max_tokens=max_tokens,
         model=resolved_model,
+        max_retries=int(model_policy.get("max_retries", 2)),
+        request_timeout=float(model_policy.get("request_timeout", 60.0)),
+        fallback_clients=fallback_clients,
     )
 
     try:

@@ -3,16 +3,21 @@ from __future__ import annotations
 import asyncio
 import logging
 import secrets
+import time
 from datetime import datetime, timezone
 from typing import Optional
 
-from app.dependencies import memory_store
+from app.dependencies import agent_run_store, memory_store
 from app.models.conversation import (
     AgentRunRequest,
     ConversationArtifact,
     ConversationMessage,
     ConversationSession,
 )
+from app.core.metrics import record_run_metrics
+from app.core.rate_limit import record_token_usage
+from app.models.run_record import AgentRunRecord
+from app.services.run_store import estimate_cost
 from app.runtime.prompt import compile
 from app.runtime.runner import AgentRunResult, run_agent
 from app.runtime.scope import build_scopes
@@ -62,7 +67,10 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
             error_message=f"Employee not found: {request.employee_key}",
         )
 
-    compiled_prompt = compile(snapshot, scopes, request.structured_schema_json)
+    compiled_prompt = compile(
+        snapshot, scopes, request.structured_schema_json,
+        user_query=request.user_input,
+    )
 
     user_message = request.user_input
     if request.extra_context:
@@ -97,6 +105,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         extra["__approval_decision"] = request.approval_decision
         extra_context = _json.dumps(extra, ensure_ascii=False)
 
+    _t0 = time.monotonic()
     result = await run_agent(
         snapshot=snapshot,
         compiled_prompt=compiled_prompt,
@@ -107,6 +116,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         extra_context=extra_context,
         existing_messages=existing_messages,
     )
+    elapsed_ms = int((time.monotonic() - _t0) * 1000)
 
     now = datetime.now(timezone.utc)
 
@@ -138,6 +148,35 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     _maybe_add_artifact(session, result.assistant_message)
     memory_store.save_session(session)
     result.session_id = session.session_id
+
+    # 运行落库 + 指标：把这次 run 的 trace/token/成本落成可查记录并累加 Prometheus 指标
+    # （失败绝不影响主流程）
+    try:
+        pt = result.token_usage.prompt_tokens if result.token_usage else 0
+        ct = result.token_usage.completion_tokens if result.token_usage else 0
+        model_id = (snapshot.default_model_policy or {}).get("model_id", "")
+        cost = estimate_cost(model_id, pt, ct)
+        agent_run_store.save_run(AgentRunRecord(
+            session_id=session.session_id,
+            employee_key=request.employee_key,
+            workflow_key=request.workflow_key,
+            model=model_id,
+            success=result.success,
+            iterations=result.auto_invoke_count,
+            prompt_tokens=pt,
+            completion_tokens=ct,
+            total_tokens=pt + ct,
+            cost_usd=cost,
+            elapsed_ms=elapsed_ms,
+            error_message=result.error_message,
+            pending_approval=result.pending_approval is not None,
+            traces=result.traces,
+            created_at=now,
+        ))
+        record_run_metrics(request.employee_key, result.success, pt, ct, cost)
+        record_token_usage(request.employee_key, pt + ct)
+    except Exception:
+        logger.warning("运行记录落库/指标失败（不影响主流程）", exc_info=True)
 
     # LangMem Background Formation: 后台提取长期记忆，不阻塞响应
     if result.success and len(session.messages) >= 4:

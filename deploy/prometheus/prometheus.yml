@@ -1,0 +1,23 @@
+# Prometheus 抓取配置 —— 采集用户端与管理端的 /metrics 指标。
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: agent-app
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["app:8000"]
+        labels:
+          service: user-app
+
+  - job_name: agent-admin
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["admin:8001"]
+        labels:
+          service: admin

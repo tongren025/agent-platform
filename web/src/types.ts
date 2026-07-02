@@ -112,6 +112,34 @@ export interface AgentRunResponse {
   pendingApproval: { description: string; actionType: string } | null;
 }
 
+export interface AgentInvocationTrace {
+  iteration: number;
+  toolName: string;
+  arguments: string | null;
+  result: string | null;
+  success: boolean;
+  elapsedMilliseconds: number;
+}
+
+export interface AgentRunRecord {
+  runId: string;
+  sessionId: string;
+  employeeKey: string;
+  workflowKey: string | null;
+  model: string;
+  success: boolean;
+  iterations: number;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  costUsd: number | null;
+  elapsedMilliseconds: number;
+  errorMessage: string | null;
+  pendingApproval: boolean;
+  traces: AgentInvocationTrace[];
+  createdAt: string;
+}
+
 export interface ApiResult<T> {
   code: number;
   data: T;

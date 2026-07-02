@@ -1,0 +1,11 @@
+{
+  "id": "visual_prompt_art_bible_compliance",
+  "employeeKey": "REPLACE_WITH_REAL_EMPLOYEE_KEY",
+  "input": "给《九陆纪元》EP01 苍霖矿洞初现场景写一条竖屏图片提示词。",
+  "checks": [
+    { "type": "min_length", "value": 80 },
+    { "type": "not_contains", "value": "横屏" },
+    { "type": "not_contains", "value": "16:9" },
+    { "type": "regex", "pattern": "竖屏|9:16|1080.?1920" }
+  ]
+}

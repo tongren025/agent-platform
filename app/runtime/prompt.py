@@ -29,6 +29,7 @@ def compile(
     snapshot: EmployeeRuntimeSnapshot,
     active_scopes: list[str],
     structured_schema_json: Optional[str] = None,
+    user_query: Optional[str] = None,
 ) -> PromptCompileResult:
     visible_skills: list[RuntimeSkill] = []
     visible_skill_trees: list[RuntimeSkill] = []
@@ -133,25 +134,51 @@ def compile(
             )
         parts.append("<mcp_servers>\n" + "\n".join(mcp_lines) + "\n</mcp_servers>")
 
-    # ── LangMem: 注入长期记忆 ──────────────────────────
+    # ── RAG: 知识库检索增强 ─────────────────────────────
+    if user_query and snapshot.has_knowledge_base:
+        try:
+            from app.dependencies import knowledge_retriever
+            snippets = knowledge_retriever.search(snapshot.employee_key, user_query, top_k=5)
+            if snippets:
+                kb_lines = []
+                for s in snippets:
+                    kb_lines.append(
+                        f"  <snippet file=\"{s.file_name}\" score=\"{s.score}\">\n"
+                        f"    {s.excerpt}\n"
+                        f"  </snippet>"
+                    )
+                parts.append(
+                    "<retrieved_knowledge>\n"
+                    "以下是从知识库中检索到的与用户问题相关的参考资料，请优先参考：\n"
+                    + "\n".join(kb_lines)
+                    + "\n</retrieved_knowledge>"
+                )
+        except Exception:
+            logger.debug("知识库 RAG 检索跳过", exc_info=True)
+
+    # ── LangMem: 注入长期记忆（查询感知）──────────────────
     try:
         from app.dependencies import long_term_memory
-        mem_data = long_term_memory.get_all_for_prompt(snapshot.employee_key)
+        emp_key = snapshot.employee_key
         mem_lines: list[str] = []
 
-        if mem_data["procedural"]:
-            rules = [f"  - {m.rule}" for m in mem_data["procedural"][:12]]
+        procedural = long_term_memory.list_procedural(emp_key)
+        if procedural:
+            rules = [f"  - {m.rule}" for m in procedural[:12]]
             mem_lines.append("<learned_behaviors>\n" + "\n".join(rules) + "\n</learned_behaviors>")
 
-        if mem_data["semantic"]:
-            # 按类别轮转抽取：保证 craft/knowledge 等正典类别也进注入，
-            # 不被高 importance 的项目规则(0.9+)挤占全部名额。每类内部按 importance 降序。
+        if user_query:
+            semantic = long_term_memory.retrieve_semantic(emp_key, user_query, top_k=20)
+        else:
+            semantic = long_term_memory.list_semantic(emp_key)
+        if semantic:
             from collections import defaultdict
             by_cat: dict[str, list] = defaultdict(list)
-            for m in mem_data["semantic"]:
+            for m in semantic:
                 by_cat[m.category or ""].append(m)
-            for items in by_cat.values():
-                items.sort(key=lambda x: x.importance, reverse=True)
+            if not user_query:
+                for items in by_cat.values():
+                    items.sort(key=lambda x: x.importance, reverse=True)
             groups = list(by_cat.values())
             selected: list = []
             depth = 0
@@ -165,9 +192,13 @@ def compile(
             facts = [f"  - [{m.category}] {m.content}" for m in selected]
             mem_lines.append("<user_knowledge>\n" + "\n".join(facts) + "\n</user_knowledge>")
 
-        if mem_data["episodic"]:
+        if user_query:
+            episodic = long_term_memory.retrieve_episodic(emp_key, user_query, top_k=5)
+        else:
+            episodic = long_term_memory.list_episodic(emp_key)[:5]
+        if episodic:
             eps = []
-            for m in mem_data["episodic"][:5]:
+            for m in episodic:
                 eps.append(
                     f"  <experience>\n"
                     f"    <situation>{m.observation}</situation>\n"

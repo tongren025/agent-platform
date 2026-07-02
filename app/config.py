@@ -25,6 +25,7 @@ class AgentConfig:
     team_dir: str = "data/teams"
     role_template_dir: str = "data/role-templates"
     knowledge_dir: str = "data/knowledge"
+    run_record_dir: str = "data/agent-runs"
     admin_api_base_url: str = "http://localhost:5040"
     run_timeout_seconds: int = 180
     shell_execute_enabled: bool = False
@@ -61,6 +62,11 @@ class Settings:
     agent: AgentConfig = field(default_factory=AgentConfig)
     workflow: WorkflowConfig = field(default_factory=WorkflowConfig)
     ai_models: list[AiModelConfig] = field(default_factory=list)
+    # 模型价目：model_id -> {"promptPer1k": x, "completionPer1k": y}（USD）。
+    # 默认空——价格会漂，不硬编码；用户按需在 appsettings.json 的 "modelPrices" 段填。
+    model_prices: dict = field(default_factory=dict)
+    # 员工 token 配额：default_monthly_tokens(0=不限)、overrides 按员工覆盖。
+    quotas: dict = field(default_factory=dict)
 
 
 def _load_json(path: Path) -> dict:
@@ -98,6 +104,7 @@ def load_settings() -> Settings:
         team_dir=agent_raw.get("TeamDir", "data/teams"),
         role_template_dir=agent_raw.get("RoleTemplateDir", "data/role-templates"),
         knowledge_dir=agent_raw.get("KnowledgeDir", "data/knowledge"),
+        run_record_dir=agent_raw.get("RunRecordDir", "data/agent-runs"),
         admin_api_base_url=agent_raw.get("AdminApiBaseUrl", "http://localhost:5040"),
         run_timeout_seconds=int(agent_raw.get("RunTimeoutSeconds", 180)),
         shell_execute_enabled=shell_raw.get("Enabled", False),
@@ -140,6 +147,8 @@ def load_settings() -> Settings:
         agent=agent,
         workflow=workflow,
         ai_models=ai_models,
+        model_prices=cfg.get("modelPrices", {}),
+        quotas=cfg.get("quotas", {}),
     )
 
 

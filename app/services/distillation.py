@@ -149,14 +149,17 @@ async def run_distillation(employee_key: str) -> DistillationLog:
         return log
 
     try:
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": "你是记忆蒸馏引擎。只返回 JSON 数组，不要解释。"},
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.2,
-            max_tokens=3000,
+        import asyncio
+        resp = await asyncio.to_thread(
+            lambda: client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": "你是记忆蒸馏引擎。只返回 JSON 数组，不要解释。"},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.2,
+                max_tokens=3000,
+            )
         )
         raw = resp.choices[0].message.content or "[]"
     except Exception as exc:

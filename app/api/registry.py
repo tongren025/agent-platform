@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 from app.api.common import ok as _ok, validate_key as _validate_key
 from app.dependencies import (
     employee_registry,
+    knowledge_retriever,
     knowledge_store,
     mcp_server_registry,
     role_template_registry,
+    semantic_retriever,
     skill_registry,
     team_registry,
     tool_registry,
@@ -411,6 +413,24 @@ def delete_knowledge_doc(key: str, doc_id: str):
     if not deleted:
         raise HTTPException(status_code=404, detail=f"Document not found: {doc_id}")
     return _ok(True)
+
+
+from fastapi import Query as _Query
+
+
+@router.get("/employees/{key}/knowledge/search")
+async def search_knowledge(
+    key: str,
+    q: str = _Query(..., alias="q"),
+    top_k: int = _Query(5, alias="topK"),
+):
+    _validate_key(key)
+    if semantic_retriever is not None:
+        results = await semantic_retriever.search(key, q, top_k=top_k, source_type="knowledge")
+        if results:
+            return _ok([r.model_dump(by_alias=True, mode="json") for r in results])
+    results = knowledge_retriever.search(key, q, top_k=top_k)
+    return _ok([r.model_dump(by_alias=True, mode="json") for r in results])
 
 
 # ── Overview ────────────────────────────────────────────────────────

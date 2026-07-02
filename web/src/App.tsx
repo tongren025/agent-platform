@@ -11,6 +11,8 @@ import Workbench from './pages/Workbench';
 import AutoLearn from './pages/AutoLearn';
 import ArticleLearn from './pages/ArticleLearn';
 import Memory from './pages/Memory';
+import Runs from './pages/Runs';
+import Tasks from './pages/Tasks';
 import Pipeline from './pages/Pipeline';
 import Production from './pages/Production';
 import Settings from './pages/Settings';
@@ -44,6 +46,8 @@ export default function App() {
           <Route path="/auto-learn" element={<AutoLearn />} />
           <Route path="/article-learn" element={<ArticleLearn />} />
           <Route path="/memory" element={<Memory />} />
+          <Route path="/runs" element={<Runs />} />
+          <Route path="/tasks" element={<Tasks />} />
           <Route path="/pipeline" element={<Pipeline />} />
           <Route path="/production" element={<Production />} />
           <Route path="/trends" element={<SkillTracker />} />
