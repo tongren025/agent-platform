@@ -5,6 +5,36 @@
 
 ---
 
+## [2026-07-02] fix: 未构建前端时后端启动崩溃（CI 全红根因）
+
+**动机**：`wwwroot/index.html` 已进版本库但 `wwwroot/assets/` 是构建产物（gitignore）。
+克隆后未 `npm run build` 直接起后端（或 CI 跑测试）时，`StaticFiles(wwwroot/assets)`
+构造即抛 `RuntimeError`，应用起不来——首轮 CI 因此 backend 全红。
+
+**变更点**：`app/main.py` 挂载 `/assets` 前单独判断目录存在；SPA fallback 不受影响。
+
+**影响面**：无接口/配置变化。CI backend job 恢复绿；新人克隆仓库可直接起后端。
+
+---
+
+## [2026-07-02] 制作看板层级视图（剧 → 集 → 镜头 → 资源）
+
+**动机**：原制作看板是平铺看板，372 张卡片混在一起，不直观。
+用户需要按「剧 → 集 → 镜头 → 资源」的层级逐级下钻浏览。
+
+**变更点**
+- 新增 `web/src/pages/ProductionHub.tsx`：项目总览页，展示项目摘要、全局资产（按故事/角色/场景/设计分组）、剧集网格（含镜头数/进度/缩略图）。
+- 新增 `web/src/pages/EpisodeDetail.tsx`：单集详情页，展示该集所有镜头卡片，点击任一镜头弹出 Drawer，按阶段 Tab 显示剧本/分镜/提示词/图片/视频等资源。
+- 修改 `web/src/App.tsx`：新增路由 `/production/:pid`（层级总览）、`/production/:pid/ep/:ep`（集详情）、`/production/:pid/pipeline`（原看板）。
+- 修改 `web/src/pages/Production.tsx`：项目列表卡片加「层级视图」按钮，跳转到 ProductionHub。
+
+**影响面**
+- 前端新增 2 个页面组件 + 3 条路由。
+- 原 `/production` 看板不受影响，可通过 ProductionHub 的「管线视图」按钮回到看板。
+- 无后端/API/数据库变更。
+
+---
+
 ## [2026-07-01] M5 限流/配额 + M4 异步任务队列 + M3 向量检索 + M6 Grafana 面板
 
 **动机**：M0-M2-M6 已落地后的收尾冲刺——把剩余三个里程碑（M5/M4/M3）一次性交付，

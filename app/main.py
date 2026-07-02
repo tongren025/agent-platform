@@ -140,7 +140,10 @@ uploads_dir = BASE_DIR / "data" / "uploads"
 uploads_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
 if wwwroot.exists():
-    app.mount("/assets", StaticFiles(directory=str(wwwroot / "assets")), name="assets")
+    # assets 是前端构建产物(gitignore),克隆后未 build 时不存在——挂载必须单独判断,
+    # 否则 StaticFiles 构造即抛 RuntimeError,后端起不来(CI 上曾因此全红)
+    if (wwwroot / "assets").exists():
+        app.mount("/assets", StaticFiles(directory=str(wwwroot / "assets")), name="assets")
 
     @app.get("/{full_path:path}")
     async def spa_fallback(request: Request, full_path: str):
