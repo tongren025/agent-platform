@@ -10,6 +10,8 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 开源多智能体协作平台，专为 AI 竖屏漫剧制作设计。内置 10 阶段制作看板（剧本 → 角色·场景设定 → 视觉设计 → 分镜 → 图片提示词 → 视频提示词 → 生图 → 生视频 → 成片），类 DIFY 可视化工作流引擎，多个 AI 数字员工按 DAG 流程图自动接力完成复杂任务。
 
+![Demo](docs/screenshots/demo.gif)
+
 ---
 
 ## Screenshots / 截图

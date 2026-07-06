@@ -6,6 +6,8 @@ English | [简体中文](README.md)
 
 An open-source multi-agent platform purpose-built for AI-driven short-form anime production. Not another general-purpose agent framework — this is a **vertical production line**: a 10-stage kanban takes you from script → character/scene design → storyboard → image prompts → video prompts → generation → final cut, with a team of AI "digital employees" relaying work along a DAG workflow.
 
+![Demo](docs/screenshots/demo.gif)
+
 ## Screenshots
 
 ### Production Kanban
