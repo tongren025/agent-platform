@@ -27,16 +27,19 @@ R2Y = "R2少龙（猫大，鳞片渐密深灰，角冠初成型，翼展约一�
 R2A = "R2巨龙（马大可骑乘，宽阔翼展，半透明翼膜血管可见，锋利角冠，长吻，颈部鳞片密集，胸腔白热龙焰，熔金龙瞳，爪尖火星）"
 
 def r3(ep):
+    """按集数返回 R3 苍霖对应阶段的形象描述。"""
     if ep <= 3: return R3E
     if ep <= 8: return R3M
     return R3L
 
 def r2(ep):
+    """按集数返回 R2 龙对应阶段的形象描述。"""
     if ep == 4: return R2B
     if ep <= 7: return R2Y
     return R2A
 
 def card(cid, stage, title, content, ep, shot=0, prompts=None):
+    """构造一张制作看板卡片 dict。"""
     return {
         "card_id": cid, "project_id": PROJECT_ID, "stage": stage,
         "title": title, "content": content, "episode": ep,

@@ -1,3 +1,4 @@
+// 用户端主布局：左侧导航（按权限显隐）+ 内容区；含折叠与窄屏适配。
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Tooltip } from 'antd';
@@ -19,6 +20,7 @@ import {
   RocketOutlined,
   ShareAltOutlined,
   RiseOutlined,
+  ExpandOutlined,
   HistoryOutlined,
   CloudSyncOutlined,
   LogoutOutlined,
@@ -36,6 +38,7 @@ const navSections: NavSection[] = [
       { key: '/dashboard', icon: <DashboardOutlined />, label: '总览' },
       { key: '/workbench', icon: <MessageOutlined />, label: '工作台', perm: 'workbench:use' },
       { key: '/production', icon: <VideoCameraOutlined />, label: '制作看板', perm: 'production:manage' },
+      { key: '/canvas', icon: <ExpandOutlined />, label: '自由画布', perm: 'production:manage' },
     ],
   },
   {
@@ -74,7 +77,7 @@ export default function Layout() {
   const [isNarrow, setIsNarrow] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const pageIsWorkspace = location.pathname === '/workbench' || location.pathname === '/production';
+  const pageIsWorkspace = location.pathname === '/workbench' || location.pathname === '/production' || location.pathname === '/canvas';
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 900px)');

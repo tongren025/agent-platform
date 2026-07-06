@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from admin.config import ADMIN_PORT
 from app.core.settings import settings as core_settings
@@ -39,8 +40,23 @@ register_exception_handlers(app)
 setup_metrics(app)
 
 
+@app.get("/")
+def root():
+    # 管理端是纯 API 服务，本身不托管前端。直接裸访问 :8001 会一脸 404，
+    # 这里给一个友好指引，说明后台"界面"其实在前端的 /admin 路由下。
+    """GET /：友好指引——管理端是纯 API，控制台界面在前端 /admin 路由。"""
+    return JSONResponse({
+        "service": "Agent Admin Service",
+        "note": "这是管理端 API（纯后端，不含界面）。管理控制台界面在前端的 /admin 路由。",
+        "console_ui": "开发环境: http://127.0.0.1:5188/admin/login ；生产环境: 用户端同源的 /admin",
+        "api_docs": "/docs",
+        "healthcheck": "/healthcheck",
+    })
+
+
 @app.get("/healthcheck")
 def healthcheck():
+    """存活探针，供容器健康检查。"""
     return "ok"
 
 

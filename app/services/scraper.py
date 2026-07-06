@@ -55,6 +55,7 @@ class _ArticleExtractor(HTMLParser):
     ])
 
     def __init__(self):
+        """初始化解析状态：噪音标签跳过深度、正文块列表、标题及是否在 title 内。"""
         super().__init__()
         self._skip_depth = 0
         self._chunks: list[str] = []
@@ -62,18 +63,21 @@ class _ArticleExtractor(HTMLParser):
         self._in_title = False
 
     def handle_starttag(self, tag: str, attrs):
+        """进入噪音标签则加深跳过计数；首次遇到 <title> 开始收集标题。"""
         if tag in self._SKIP_TAGS:
             self._skip_depth += 1
         if tag == "title" and not self._title:
             self._in_title = True
 
     def handle_endtag(self, tag: str):
+        """离开噪音标签则减少跳过计数；</title> 结束标题收集。"""
         if tag in self._SKIP_TAGS and self._skip_depth > 0:
             self._skip_depth -= 1
         if tag == "title":
             self._in_title = False
 
     def handle_data(self, data: str):
+        """title 区内首段文本记为标题；非跳过区的非空文本累积为正文块。"""
         if self._in_title and not self._title:
             self._title = data.strip()
         if self._skip_depth == 0:
@@ -82,6 +86,7 @@ class _ArticleExtractor(HTMLParser):
                 self._chunks.append(text)
 
     def get_text(self) -> str:
+        """合并正文块成纯文本：保留长行、压缩连续空行、短行仅在紧跟未满行时保留。"""
         raw = "\n".join(self._chunks)
         lines = [line.strip() for line in raw.splitlines()]
         merged: list[str] = []
@@ -96,10 +101,12 @@ class _ArticleExtractor(HTMLParser):
         return "\n".join(merged).strip()
 
     def get_title(self) -> str:
+        """返回提取到的页面标题。"""
         return self._title
 
 
 def _safe_int(value: object) -> int:
+    """尽力把任意值转成 int，失败返回 0。"""
     try:
         return int(value)  # type: ignore[arg-type]
     except (ValueError, TypeError, OverflowError):
@@ -164,11 +171,13 @@ def _coerce_prompt(item: dict) -> tuple[str, str]:
 
 
 def _looks_like_login_redirect(final_url: str) -> bool:
+    """最终 URL 是否命中登录页特征片段（用于判定被重定向到登录）。"""
     low = final_url.lower()
     return any(h in low for h in _LOGIN_URL_HINTS)
 
 
 def _is_video_source(url: str) -> bool:
+    """URL 是否指向视频类目（据此把条目类型强制判为 video）。"""
     low = url.lower()
     return "/video" in low or "tab=video" in low or "category=video" in low
 
@@ -177,6 +186,10 @@ def _parse_jimeng(
     html: str, source_code: str, max_items: int, final_url: str,
     *, source_url: str = "",
 ) -> list[CollectedPrompt]:
+    """解析即梦首页内嵌的 __get_explore_result，抽出带提示词的条目为 CollectedPrompt 列表。
+
+    找不到数据块时：若被重定向到登录页抛 ScraperNeedsLogin，否则抛 ScraperError（页面结构变化）。
+    """
     raw = _extract_window_json(html, "__get_explore_result")
     if raw is None:
         if _looks_like_login_redirect(final_url):
@@ -248,6 +261,7 @@ def _parse_jimeng(
 def _parse_xyq(
     html: str, source_code: str, max_items: int, final_url: str
 ) -> list[CollectedPrompt]:
+    """小云雀解析器：首页纯 SPA、提示词需登录后由接口加载，服务端抓不到，直接抛 ScraperNeedsLogin。"""
     raise ScraperNeedsLogin(
         "小云雀首页为纯前端渲染，提示词需登录后由接口加载，服务端无法直接抓取。"
         "请改用「浏览器采集」方式，或提供登录态 Cookie。"
@@ -299,6 +313,7 @@ class ArticleResult:
     __slots__ = ("url", "title", "content", "content_hash", "char_count")
 
     def __init__(self, url: str, title: str, content: str):
+        """记录 url/title/content，并计算内容哈希（去重用）与字数。"""
         self.url = url
         self.title = title
         self.content = content

@@ -1,0 +1,10 @@
+{
+  "id": "screenwriter_basic",
+  "employeeKey": "comic-screenwriter",
+  "input": "写一段 15 秒竖屏漫剧开场：主角在矿洞醒来发现自己有了龙的竖瞳，要有一句让观众想发弹幕的台词。",
+  "checks": [
+    { "type": "min_length", "value": 100 },
+    { "type": "not_contains", "value": "抱歉" },
+    { "type": "not_contains", "value": "作为AI" }
+  ]
+}

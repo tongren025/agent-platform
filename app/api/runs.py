@@ -23,6 +23,7 @@ def list_runs(
     success: bool | None = Query(None, alias="success"),
     limit: int = Query(50, alias="limit"),
 ):
+    """GET /runs：按员工/会话/成功与否过滤，列出运行记录（最多 limit 条）。"""
     runs = agent_run_store.list_runs(
         employee_key=employeeKey,
         session_id=sessionId,
@@ -34,6 +35,7 @@ def list_runs(
 
 @router.get("/runs/{run_id}")
 def get_run(run_id: str):
+    """GET /runs/{run_id}：查单条运行记录，不存在返回 404。"""
     record = agent_run_store.load_run(run_id)
     if record is None:
         raise HTTPException(status_code=404, detail=f"Run not found: {run_id}")
@@ -42,4 +44,5 @@ def get_run(run_id: str):
 
 @router.get("/quota/{employee_key}")
 def get_quota(employee_key: str):
+    """GET /quota/{employee_key}：查该员工本月 token 用量与配额。"""
     return _ok(get_usage(employee_key))

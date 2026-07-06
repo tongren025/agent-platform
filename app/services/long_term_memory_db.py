@@ -16,12 +16,14 @@ from app.models.db.memory import LongTermMemoryORM
 
 
 class PgMemoryBackend:
+    """MemoryBackend 的 PostgreSQL 实现：整表读写 long_term_memories，save 为删旧插新的整表覆盖。"""
 
     def __init__(self, session_factory: sessionmaker | None = None) -> None:
         self._sf = session_factory or SessionLocal
 
     @contextmanager
     def _session(self) -> Iterator[Session]:
+        """事务边界：正常提交、异常回滚、始终关闭。"""
         s = self._sf()
         try:
             yield s
@@ -33,6 +35,7 @@ class PgMemoryBackend:
             s.close()
 
     def load(self, emp_key: str, kind: str) -> list[dict]:
+        """读某员工某类型的全部记忆（按 position 保序），返回原始 dict 列表。"""
         with self._session() as s:
             stmt = (
                 select(LongTermMemoryORM)
@@ -43,6 +46,7 @@ class PgMemoryBackend:
             return [row.data for row in s.scalars(stmt)]
 
     def save(self, emp_key: str, kind: str, rows: list[dict]) -> None:
+        """整表覆盖写：先删该员工该类型全部行，再按顺序插入（与 JSON 后端重写文件语义一致）。"""
         with self._session() as s:
             # 整表覆盖：删旧插新，与 JSON 后端"重写整个文件"语义一致
             s.execute(

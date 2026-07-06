@@ -1,3 +1,4 @@
+// 总览页：平台资源统计卡片与快捷入口。
 import { useEffect, useState } from 'react';
 import { Spin, Tag, Space, Typography, Avatar, Tooltip } from 'antd';
 import {

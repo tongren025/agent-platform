@@ -17,10 +17,12 @@ from app.utils import utcnow as _now
 
 
 def _generate_run_id() -> str:
+    """生成 run_ 前缀的随机运行 ID。"""
     return "run_" + secrets.token_hex(8)
 
 
 class AgentRunRecord(BaseModel):
+    """一条 agent 运行记录：模型/token/成本/耗时/工具轨迹/成败，落库供 /runs API 事后审计。"""
     run_id: str = Field(default_factory=_generate_run_id, alias="runId")
     session_id: str = Field("", alias="sessionId")
     employee_key: str = Field("", alias="employeeKey")

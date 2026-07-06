@@ -1,3 +1,9 @@
+"""通用文件型注册表（Registry）。
+
+FileJsonRegistry 是一个泛型基类：把任意 RegistryEntity 以 <data_dir>/<key>.json
+形式落盘，提供统一的 增删改查 + 排序 + 时间戳维护。员工/工具/技能/团队/工作流/
+角色模板/MCP 服务等各类实体都通过它的子类共用同一套存储逻辑。
+"""
 from __future__ import annotations
 
 import json
@@ -27,6 +33,11 @@ _BAD_KEY_RE = re.compile(r"[/\\]|\.\.")
 
 
 def _normalize_keys(data: dict) -> dict:
+    """递归把 dict 的键首字母转小写（PascalCase/camelCase 统一成 camelCase）。
+
+    历史数据可能是 C# 风格的 PascalCase，这里归一化后再喂给 pydantic 校验，
+    保证新旧落盘格式都能正确回读。
+    """
     out = {}
     for k, v in data.items():
         camel = k[0].lower() + k[1:] if k else k
@@ -39,6 +50,7 @@ def _normalize_keys(data: dict) -> dict:
 
 
 class FileJsonRegistry(Generic[T]):
+    """泛型文件注册表：一实体一 json 文件，统一 增删改查。子类只需绑定实体类型与目录。"""
 
     def __init__(self, model_cls: type[T], data_dir: str) -> None:
         self._model_cls = model_cls
@@ -47,14 +59,17 @@ class FileJsonRegistry(Generic[T]):
 
     @staticmethod
     def _sanitize_key(key: str) -> str:
+        """校验实体 key 合法（非空、无斜杠/..），防止写文件时路径穿越。"""
         if not key or _BAD_KEY_RE.search(key):
             raise ValueError(f"Invalid registry key: {key!r}")
         return key
 
     def _path_for(self, key: str) -> Path:
+        """实体 key → json 文件路径。"""
         return self._dir / f"{self._sanitize_key(key)}.json"
 
     def list_all(self) -> list[T]:
+        """读出目录下全部实体，按 (sort_order, name) 排序；损坏文件告警跳过。"""
         items: list[T] = []
         if not self._dir.exists():
             return items
@@ -68,6 +83,7 @@ class FileJsonRegistry(Generic[T]):
         return items
 
     def get(self, key: str) -> T | None:
+        """按 key 读取单个实体；缺失或损坏返回 None。"""
         fp = self._path_for(key)
         if not fp.exists():
             return None
@@ -79,9 +95,11 @@ class FileJsonRegistry(Generic[T]):
             return None
 
     def exists(self, key: str) -> bool:
+        """判断某 key 的实体文件是否存在。"""
         return self._path_for(key).exists()
 
     def save(self, item: T) -> T:
+        """写入实体并维护时间戳：新建填 created_at，更新则保留原 created_at、刷新 updated_at。"""
         key = item.get_key()
         fp = self._path_for(key)
         now = datetime.now(timezone.utc)
@@ -103,6 +121,7 @@ class FileJsonRegistry(Generic[T]):
         return item
 
     def delete(self, key: str) -> bool:
+        """删除实体文件，成功 True，本不存在 False。"""
         fp = self._path_for(key)
         if fp.exists():
             fp.unlink()
@@ -110,37 +129,46 @@ class FileJsonRegistry(Generic[T]):
         return False
 
 
+# ── 以下为各实体的具体注册表：只把泛型基类绑定到对应实体类型与存储目录 ──
+
 class SkillRegistryService(FileJsonRegistry[SkillDefinition]):
+    """技能定义注册表。"""
     def __init__(self) -> None:
         super().__init__(SkillDefinition, settings.agent.skill_dir)
 
 
 class McpServerRegistryService(FileJsonRegistry[McpServerDefinition]):
+    """MCP 服务定义注册表。"""
     def __init__(self) -> None:
         super().__init__(McpServerDefinition, settings.agent.mcp_server_dir)
 
 
 class ToolRegistryService(FileJsonRegistry[ToolDefinition]):
+    """工具定义注册表。"""
     def __init__(self) -> None:
         super().__init__(ToolDefinition, settings.agent.tool_dir)
 
 
 class EmployeeRegistryService(FileJsonRegistry[EmployeeDefinition]):
+    """数字员工定义注册表。"""
     def __init__(self) -> None:
         super().__init__(EmployeeDefinition, settings.agent.data_dir)
 
 
 class TeamRegistryService(FileJsonRegistry[TeamDefinition]):
+    """团队定义注册表。"""
     def __init__(self) -> None:
         super().__init__(TeamDefinition, settings.agent.team_dir)
 
 
 class WorkflowRegistryService(FileJsonRegistry[WorkflowDefinition]):
+    """工作流定义注册表。"""
     def __init__(self) -> None:
         super().__init__(WorkflowDefinition, settings.workflow.workflow_dir)
 
 
 class RoleTemplateRegistryService(FileJsonRegistry[RoleTemplateDefinition]):
+    """角色模板注册表，额外支持「按模板派生新员工」。"""
     def __init__(self) -> None:
         super().__init__(RoleTemplateDefinition, settings.agent.role_template_dir)
 
@@ -150,6 +178,10 @@ class RoleTemplateRegistryService(FileJsonRegistry[RoleTemplateDefinition]):
         new_key: str,
         new_name: str,
     ) -> EmployeeDefinition | None:
+        """以角色模板为蓝本创建并保存一个新员工；模板不存在返回 None。
+
+        复制模板的角色画像/模型策略/建议的技能·工具·MCP 绑定，标记 source=template。
+        """
         tpl = self.get(template_code)
         if tpl is None:
             return None

@@ -56,4 +56,5 @@ def configure_logging() -> None:
 
 
 def get_logger(name: str | None = None):
+    """获取绑定了 contextvars 的 structlog logger，业务代码统一从这里拿而不是直接用 logging。"""
     return structlog.get_logger(name)

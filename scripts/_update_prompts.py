@@ -5,10 +5,12 @@ sys.stdout.reconfigure(encoding='utf-8')
 BASE = "http://127.0.0.1:8000/api/v1/agentapp"
 
 def get_emp(key):
+    """从本地 API 拉一个员工的完整定义。"""
     r = httpx.get(f"{BASE}/registry/employees/{key}", timeout=10)
     return r.json()["data"]
 
 def update_role(key, new_profile):
+    """更新员工的 roleProfile 并 PUT 回去。"""
     emp = get_emp(key)
     emp["roleProfile"] = new_profile
     r = httpx.put(f"{BASE}/registry/employees/{key}", json=emp, timeout=10)

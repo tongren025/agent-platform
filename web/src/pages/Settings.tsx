@@ -1,3 +1,4 @@
+// 设置页：AI 供应商配置（endpoint/key/模型列表）与系统信息。
 import { useEffect, useState } from 'react';
 import {
   Card, Col, Row, Spin, Tag, Space, Typography, Descriptions, Table, Switch,

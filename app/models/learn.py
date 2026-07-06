@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 
 
 def _now() -> datetime:
+    """UTC 当前时间工厂（默认值用）。"""
     return datetime.now(timezone.utc)
 
 
@@ -36,6 +37,7 @@ class LearnArticleResult(BaseModel):
 
 
 class LearnSource(BaseModel):
+    """一个文章学习源：URL 列表 + 目标员工 + 每日定时配置 + 最近运行状态（由运行器回写）。"""
     source_code: str = Field("", alias="sourceCode")
     name: str = ""
     target_employee_key: str = Field("", alias="targetEmployeeKey")
@@ -58,10 +60,12 @@ class LearnSource(BaseModel):
     model_config = {"populate_by_name": True, "extra": "ignore"}
 
     def get_key(self) -> str:
+        """注册表主键：source_code。"""
         return self.source_code
 
 
 class LearnRunResult(BaseModel):
+    """一次学习运行的汇总结果，articles 里含每篇文章的明细。"""
     source_code: str = Field("", alias="sourceCode")
     status: str = "success"  # success | partial | failed
     total_urls: int = Field(0, alias="totalUrls")

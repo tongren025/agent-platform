@@ -1,3 +1,4 @@
+"""注册表数据模型：技能/工具/MCP/员工/团队/角色模板的定义。均为 JSON 文件存储（刻意保留——静态配置），camelCase alias 对齐前端。"""
 from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Optional
@@ -5,10 +6,12 @@ from pydantic import BaseModel, Field
 
 
 def _now() -> datetime:
+    """UTC 当前时间工厂（默认值用）。"""
     return datetime.now(timezone.utc)
 
 
 class RegistryEntity(BaseModel):
+    """注册表实体基类：排序 + 创建/更新时间；子类实现 get_key() 提供文件名主键。"""
     sort_order: int = Field(0, alias="sortOrder")
     created_at: datetime = Field(default_factory=_now, alias="createdAt")
     updated_at: datetime = Field(default_factory=_now, alias="updatedAt")
@@ -16,10 +19,12 @@ class RegistryEntity(BaseModel):
     model_config = {"populate_by_name": True, "extra": "allow"}
 
     def get_key(self) -> str:
+        """注册表主键，子类必须实现（决定 JSON 文件名）。"""
         raise NotImplementedError
 
 
 class SkillDefinition(RegistryEntity):
+    """技能定义：注入提示词的能力描述，支持树形子技能（children）。"""
     code: str = ""
     name: str = ""
     binding_code: Optional[str] = Field(None, alias="bindingCode")
@@ -30,10 +35,12 @@ class SkillDefinition(RegistryEntity):
     children: Optional[list[dict]] = None
 
     def get_key(self) -> str:
+        """注册表主键：code。"""
         return self.code
 
 
 class McpServerDefinition(RegistryEntity):
+    """MCP 服务器定义：stdio（command+args）或 http（url）两种接入方式。"""
     server_code: str = Field("", alias="serverCode")
     name: str = ""
     transport_type: str = Field("stdio", alias="transportType")
@@ -44,10 +51,12 @@ class McpServerDefinition(RegistryEntity):
     description: Optional[str] = None
 
     def get_key(self) -> str:
+        """注册表主键：server_code。"""
         return self.server_code
 
 
 class ToolDefinition(RegistryEntity):
+    """工具定义：暴露给 agent 的函数调用（input_schema 为 JSON Schema 字符串）。"""
     tool_code: str = Field("", alias="toolCode")
     name: str = ""
     binding_code: Optional[str] = Field(None, alias="bindingCode")
@@ -55,10 +64,12 @@ class ToolDefinition(RegistryEntity):
     input_schema: Optional[str] = Field(None, alias="inputSchema")
 
     def get_key(self) -> str:
+        """注册表主键：tool_code。"""
         return self.tool_code
 
 
 class EmployeeDefinition(RegistryEntity):
+    """数字员工定义：角色画像 + 模型策略 + 技能/工具/MCP 绑定 + 团队归属。"""
     employee_key: str = Field("", alias="employeeKey")
     name: str = ""
     role_profile: str = Field("", alias="roleProfile")
@@ -77,10 +88,12 @@ class EmployeeDefinition(RegistryEntity):
     owner_user_id: Optional[str] = Field(None, alias="ownerUserId")
 
     def get_key(self) -> str:
+        """注册表主键：employee_key。"""
         return self.employee_key
 
 
 class TeamRole(BaseModel):
+    """团队内一个成员的角色标注（阶段分组 + 组内排序）。"""
     employee_key: str = Field("", alias="employeeKey")
     stage: str = ""          # 阶段分组（如 创作 / 设计 / 生成），仅展示用
     order: int = 0           # 同阶段内排序
@@ -89,6 +102,7 @@ class TeamRole(BaseModel):
 
 
 class TeamDefinition(RegistryEntity):
+    """团队定义：成员列表 + 队长 + 有序角色 + 默认编排工作流。"""
     team_code: str = Field("", alias="teamCode")
     name: str = ""
     member_employee_keys: list[str] = Field(default_factory=list, alias="memberEmployeeKeys")
@@ -103,10 +117,12 @@ class TeamDefinition(RegistryEntity):
     default_workflow_key: Optional[str] = Field(None, alias="defaultWorkflowKey")
 
     def get_key(self) -> str:
+        """注册表主键：team_code。"""
         return self.team_code
 
 
 class RoleTemplateDefinition(RegistryEntity):
+    """角色模板：一键创建员工的预置配方（画像 + 建议技能/工具/MCP）。"""
     template_code: str = Field("", alias="templateCode")
     name: str = ""
     category: str = ""
@@ -122,4 +138,5 @@ class RoleTemplateDefinition(RegistryEntity):
     source: str = "system"
 
     def get_key(self) -> str:
+        """注册表主键：template_code。"""
         return self.template_code

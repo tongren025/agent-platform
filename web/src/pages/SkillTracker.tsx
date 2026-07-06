@@ -1,3 +1,4 @@
+// AI 趋势雷达页：GitHub 趋势仓库追踪与 LLM 分析。
 import { useEffect, useState, useCallback } from 'react';
 import {
   Card, Table, Button, Tabs, Tag, Space, message, Drawer, Spin,

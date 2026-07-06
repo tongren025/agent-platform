@@ -27,11 +27,13 @@ CACHE_TTL_HOURS = 2
 
 
 def _cache_path(source: str, query: str) -> Path:
+    """按 (来源, 查询词) 生成缓存文件路径（查询词 slug 化）。"""
     slug = re.sub(r"[^a-zA-Z0-9]+", "_", query.strip().lower()).strip("_") or "default"
     return CACHE_DIR / source / f"{slug}.json"
 
 
 def _read_cache(source: str, query: str) -> dict | None:
+    """读缓存：存在且未过期（2 小时 TTL）才返回，否则 None。"""
     p = _cache_path(source, query)
     if not p.exists():
         return None
@@ -46,6 +48,7 @@ def _read_cache(source: str, query: str) -> dict | None:
 
 
 def _write_cache(source: str, query: str, data: dict) -> None:
+    """写缓存 JSON（自动建目录）。"""
     p = _cache_path(source, query)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -59,6 +62,7 @@ _NOVERIFY_HOSTS = {"export.arxiv.org"}
 
 
 def _fetch_url(url: str, *, headers: dict | None = None, timeout: int = 15) -> bytes:
+    """带 UA 的 HTTP GET；对 arXiv 等证书有问题的主机跳过 SSL 校验。"""
     req = urllib.request.Request(url, headers=headers or {})
     req.add_header("User-Agent", "AgentStudio-TrendRadar/1.0")
     host = urllib.parse.urlparse(url).hostname or ""
@@ -80,6 +84,7 @@ HN_QUERIES = [
 
 
 def _fetch_hn(query: str, limit: int = 20) -> list[dict]:
+    """调 HN Algolia 搜索 API，返回按时间倒序的 story 列表。"""
     url = (
         f"https://hn.algolia.com/api/v1/search?"
         f"query={urllib.parse.quote(query)}&tags=story&hitsPerPage={limit}"
@@ -103,11 +108,13 @@ def _fetch_hn(query: str, limit: int = 20) -> list[dict]:
 
 @router.get("/hn/queries")
 def hn_queries():
+    """GET /hn/queries：HN 预置查询词列表。"""
     return _ok(HN_QUERIES)
 
 
 @router.get("/hn")
 async def hn_list(query: str = Query("AI agent"), limit: int = Query(20, le=50)):
+    """GET /hn：按查询词拉 HN 故事（带 2 小时缓存），上游失败返 502。"""
     cached = _read_cache("hn", query)
     if cached:
         return _ok(cached)
@@ -134,6 +141,7 @@ ARXIV_NS = {"atom": "http://www.w3.org/2005/Atom", "arxiv": "http://arxiv.org/sc
 
 
 def _fetch_arxiv(category: str, limit: int = 20) -> list[dict]:
+    """调 arXiv API 拉某分类的最新论文列表（Atom XML 解析）。"""
     url = (
         f"http://export.arxiv.org/api/query?"
         f"search_query=cat:{category}&sortBy=submittedDate&sortOrder=descending"
@@ -170,11 +178,13 @@ def _fetch_arxiv(category: str, limit: int = 20) -> list[dict]:
 
 @router.get("/arxiv/categories")
 def arxiv_categories():
+    """GET /arxiv/categories：arXiv 预置分类列表。"""
     return _ok(ARXIV_CATEGORIES)
 
 
 @router.get("/arxiv")
 async def arxiv_list(category: str = Query("cs.AI"), limit: int = Query(20, le=50)):
+    """GET /arxiv：按分类拉最新论文（带缓存），上游失败返 502。"""
     cached = _read_cache("arxiv", category)
     if cached:
         return _ok(cached)
@@ -199,6 +209,7 @@ NEWS_TOPICS = [
 
 
 def _fetch_news_rss(query: str, limit: int = 20) -> list[dict]:
+    """拉 Google News RSS 并解析为条目列表。"""
     url = (
         f"https://news.google.com/rss/search?"
         f"q={urllib.parse.quote(query)}+when:7d&hl=en&gl=US&ceid=US:en"
@@ -227,11 +238,13 @@ def _fetch_news_rss(query: str, limit: int = 20) -> list[dict]:
 
 @router.get("/news/topics")
 def news_topics():
+    """GET /news/topics：新闻预置主题列表。"""
     return _ok(NEWS_TOPICS)
 
 
 @router.get("/news")
 async def news_list(query: str = Query("artificial intelligence"), limit: int = Query(20, le=50)):
+    """GET /news：按主题拉新闻（带缓存），上游失败返 502。"""
     cached = _read_cache("news", query)
     if cached:
         return _ok(cached)
@@ -256,6 +269,7 @@ REDDIT_SUBS = [
 
 
 def _fetch_reddit(subreddit: str, limit: int = 20) -> list[dict]:
+    """拉 subreddit 热帖 JSON 并解析为条目列表。"""
     url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit={limit}"
     raw = _fetch_url(url, headers={"Accept": "application/json"}, timeout=15)
     data = json.loads(raw)
@@ -283,11 +297,13 @@ def _fetch_reddit(subreddit: str, limit: int = 20) -> list[dict]:
 
 @router.get("/reddit/subs")
 def reddit_subs():
+    """GET /reddit/subs：预置 subreddit 列表。"""
     return _ok(REDDIT_SUBS)
 
 
 @router.get("/reddit")
 async def reddit_list(subreddit: str = Query("MachineLearning"), limit: int = Query(20, le=50)):
+    """GET /reddit：按 subreddit 拉热帖（带缓存），上游失败返 502。"""
     cached = _read_cache("reddit", subreddit)
     if cached:
         return _ok(cached)
@@ -335,6 +351,7 @@ def sources_overview():
 # ── 批量翻译 ─────────────────────────────────────────────────────────
 
 class TranslateRequest(BaseModel):
+    """标题批量翻译请求体。"""
     titles: list[str]
 
 

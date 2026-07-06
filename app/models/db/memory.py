@@ -12,6 +12,7 @@ from app.models.db.base import Base
 
 
 class LongTermMemoryORM(Base):
+    """long_term_memories 表：一行一条长期记忆，data 存整条 by_alias dict，position 保序。"""
     __tablename__ = "long_term_memories"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)

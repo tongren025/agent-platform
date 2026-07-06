@@ -1,3 +1,4 @@
+"""一次性探针脚本：验证视频生成接口/参数（调试用，可删）。"""
 import json, httpx
 from app.services.scraper import _extract_window_json
 

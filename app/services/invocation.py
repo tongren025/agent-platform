@@ -1,3 +1,9 @@
+"""Agent 调用编排层。
+
+把一次「员工对话请求」跑完整条链路：编译提示词 → 载入历史会话 →
+执行 agent 循环 → 落库会话/运行记录/指标 → 后台异步提取长期记忆。
+是用户端 /run、工作流节点、委派调用共用的统一入口。
+"""
 from __future__ import annotations
 
 import asyncio
@@ -27,14 +33,17 @@ logger = logging.getLogger(__name__)
 
 
 def _generate_session_id() -> str:
+    """生成会话 ID，形如 ses_xxxx（16 位十六进制随机串）。"""
     return "ses_" + secrets.token_hex(8)
 
 
 def _generate_artifact_id() -> str:
+    """生成产出物 ID，形如 art_xxxx（12 位十六进制随机串）。"""
     return "art_" + secrets.token_hex(6)
 
 
 def _session_title(text: str) -> str:
+    """用用户首条输入生成会话标题：压缩连续空白后截断到 36 字，超长补省略号。"""
     title = " ".join(text.strip().split())
     if not title:
         return "新会话"
@@ -42,7 +51,13 @@ def _session_title(text: str) -> str:
 
 
 def _maybe_add_artifact(session: ConversationSession, content: str) -> None:
+    """把足够"重"的助手回复沉淀为一条 artifact（可在前端单独查看的产出物）。
+
+    仅当回复较长（≥400 字）或含代码块 / Markdown 标题等结构化内容时才提取；
+    并按来源消息下标去重，同一条回复只会沉淀一次。
+    """
     text = content.strip()
+    # 短且无结构的普通闲聊不值得单独存成产出物
     if len(text) < 400 and "```" not in text and "# " not in text and "## " not in text:
         return
     idx = len(session.messages) - 1
@@ -58,6 +73,21 @@ def _maybe_add_artifact(session: ConversationSession, content: str) -> None:
 
 
 async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
+    """执行一次完整的 agent 调用，并把过程与结果持久化。
+
+    流程：
+      1. 按员工 + 工作流构建可见范围(scopes)、加载员工快照；员工不存在直接返回失败。
+      2. 编译系统提示词，拼接额外上下文与结构化输出指令。
+      3. 若带 session_id 则载入历史消息，作为多轮对话上下文。
+      4. 审批场景：把 approval_decision 合并进 __approval_decision JSON 再传给 agent。
+      5. 跑 agent 循环并记录耗时。
+      6. 追加 user / assistant 两条消息、按需沉淀 artifact，保存会话。
+      7. 落库运行记录 + Prometheus 指标 + token 配额累加（失败绝不影响主流程）。
+      8. 满足条件时后台异步提取长期记忆，不阻塞本次返回。
+
+    返回 AgentRunResult，其中 session_id 会被回填为本次实际使用的会话 ID。
+    """
+    # 1. 构建可见范围并加载员工快照（快照 = 该员工当前生效的模型/工具/记忆等只读切片）
     scopes = build_scopes(request.employee_key, request.workflow_key)
 
     snapshot = load_snapshot(request.employee_key, scopes)
@@ -67,6 +97,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
             error_message=f"Employee not found: {request.employee_key}",
         )
 
+    # 2. 编译系统提示词
     compiled_prompt = compile(
         snapshot, scopes, request.structured_schema_json,
         user_query=request.user_input,
@@ -79,6 +110,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     if compiled_prompt.response_instruction:
         user_message = f"{user_message}\n\n{compiled_prompt.response_instruction}"
 
+    # 3. 载入历史会话（若指定了 session_id），把过往消息喂给 agent 作多轮上下文
     existing_messages: Optional[list[dict]] = None
     existing_session: Optional[ConversationSession] = None
 
@@ -105,6 +137,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         extra["__approval_decision"] = request.approval_decision
         extra_context = _json.dumps(extra, ensure_ascii=False)
 
+    # 5. 执行 agent 循环（工具调用 / 多轮自动推进都在 run_agent 内部完成）
     _t0 = time.monotonic()
     result = await run_agent(
         snapshot=snapshot,
@@ -118,6 +151,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     )
     elapsed_ms = int((time.monotonic() - _t0) * 1000)
 
+    # 6. 组织会话：复用旧会话或新建，追加本轮 user / assistant 消息
     now = datetime.now(timezone.utc)
 
     if existing_session is not None:

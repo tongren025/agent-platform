@@ -5,6 +5,82 @@
 
 ---
 
+## [2026-07-06] docs: 知识库体系——全量中文注释 + 模块索引 + 架构导览
+
+**动机**：代码注释缺口大（451 处无 docstring），且没有"快速知道某模块干什么"的入口，
+新人/未来的自己只能靠翻代码。本次建立四层文档体系。
+
+**变更点**
+- 全仓补齐中文 docstring：app/admin/evals/scripts 463 处（模块头/类/函数），
+  web/src 45 个文件全部加中文头注释。AST 扫描缺失归零，118 tests 全绿（零行为变化）。
+- 新增 `scripts/gen_module_index.py`：从 docstring 自动生成 `docs/MODULE_INDEX.md`
+  （118 后端模块 + 45 前端文件的一句话职责索引），代码变了重跑即同步。
+- 新增 `docs/ARCHITECTURE.md`（手写）：分层总览、5 条核心数据流
+  （对话/异步任务/工作流/知识检索/记忆三层）、"想改 X 去哪个文件"速查表、文档四层约定。
+- README 新增"文档导航"一节。
+
+**影响面**：纯文档 + 一个生成脚本，无接口/行为变化。
+维护约定：新增模块跑一次 `python -m scripts.gen_module_index`；
+ARCHITECTURE.md 只在数据流/分层变化时手工更新。
+
+---
+
+## [2026-07-06] fix(M3): 知识文档向量化接线 + 首批 eval golden cases
+
+**动机**：M3 交付时 `SemanticRetriever.index_document` / `remove_document` 写了但**没有任何调用方**——
+即使配好 PG + DASHSCOPE_API_KEY，上传的知识文档也永远不会被向量化，语义检索恒空（退化关键词）。
+本次把"入口"接上，语义检索链路才真正闭环。另补首批 eval golden cases（此前只有模板）。
+
+**变更点**
+- `app/api/registry.py`：
+  - 上传知识文档成功后 `asyncio.create_task(_vectorize_doc(...))` 后台切片向量化
+    （不阻塞上传响应；semantic_retriever 未启用或失败时静默跳过，fail-open）。
+  - 删除知识文档时 `_drop_doc_vectors` 连带清掉该文档全部切片向量。
+- 新增 3 个 eval golden case（`evals/cases/*.json`）：
+  `prompt_engineer_basic` / `screenwriter_basic` / `qa_inspector_basic`——
+  基于漫剧员工的保守确定性检查（min_length / contains / not_contains），
+  `python -m evals.run_evals` 即可跑（需 LLM 供应商已配置）。
+- 测试：`test_vector_store.py` 新增 4 用例（向量化调度 / 未启用空转 / 清向量 / 失败吞掉）。
+
+**影响面**
+- 接口行为：上传/删除知识文档的响应契约不变；仅在 `USE_DB_STORES=true` +
+  `DASHSCOPE_API_KEY` 配置时新增后台向量化副作用。
+- 无 DB schema / 配置项变化。全量测试 118 passed。
+
+---
+
+## [2026-07-03] feat: 自由画布(对标即梦智能画布的 MVP)
+
+**动机**:制作看板是线性流水线,缺一个空间化、非线性的图像迭代工作区。
+即梦智能画布(无限画布+局部重绘+扩图)是行业标配交互;本次先落 MVP:
+无限画布 + 文生图 + 变体 + 上传参考图 + 出图回写看板,复用现有 ReactFlow。
+
+**变更点**
+- 新增 `app/api/canvas.py`:画布 CRUD(`/api/v1/agentapp/canvas/canvases*`)、
+  `GET /image-models`(列启用供应商的模型,用户自选生图模型)、
+  `POST /canvases/{cid}/generate`(文生图,走 ai_service 的 OpenAI 兼容
+  images 接口,远端图片下载转存本地)、`POST /canvases/{cid}/upload`(传参考图)。
+- 画布数据落盘 `data/canvas/{canvas_id}.json`;生成/上传的图片存
+  `data/uploads/canvas/`,经 `/uploads` 静态挂载直出(`<img>` 无需带
+  Authorization —— 刻意不放 `/api/*` 下,避开鉴权中间件)。
+- `app/core/auth.py`:`_WRITE_PERMS` 增加 canvas 前缀 → `production:manage`。
+- `app/main.py`:挂载 canvas router。
+- 前端新增 `pages/Canvas.tsx` + `components/canvas/CanvasNodes.tsx`:
+  提示词节点 → 生成 → 图片节点,连线记录血缘;变体/下载/发送到看板
+  (回写为 img_gen 阶段卡片);节点改动 1.2s 防抖自动保存;
+  模型与尺寸选择记在 localStorage。
+- `App.tsx` 路由 `/canvas`;`Layout.tsx` 导航「自由画布」(perm production:manage)。
+
+**影响面**
+- **接口**:新增 `/api/v1/agentapp/canvas/*`(读=登录用户,写=production:manage)。
+- **数据**:新目录 `data/canvas/`、`data/uploads/canvas/`。
+- **依赖/配置**:无新增(httpx 已在 requirements)。生图必须先在
+  AI 供应商里配好支持 OpenAI images 接口的模型(如方舟 seedream),
+  在画布顶栏选择后才可用;未配置时生成返回明确错误,不影响其他功能。
+- **暂不包含**:局部重绘/扩图/消除/放大/图生视频(下一迭代,依赖 inpaint 类 API)。
+
+---
+
 ## [2026-07-02] P0 安全修复:用户端 API 强制鉴权 + 角色权限落地
 
 **动机**:登录门禁此前只在前端路由(UserAuthGuard),后端 `/agent/run`、`/registry/*`
@@ -42,6 +118,23 @@
 **变更点**：`app/main.py` 挂载 `/assets` 前单独判断目录存在；SPA fallback 不受影响。
 
 **影响面**：无接口/配置变化。CI backend job 恢复绿；新人克隆仓库可直接起后端。
+
+---
+
+## [2026-07-02] 修复 CLI 流水线页白屏 + 管理端根路径 404 + 补项目知识库文档
+
+**动机**：用户反馈「CLI 流水线」页打不开、后台 :8001 报 404，并要求给制作项目补知识库文档。
+
+**变更点**
+- **修复 `web/src/pages/Pipeline.tsx` 白屏崩溃**：页面用裸 `fetch` 拉 `/api/v1/pipeline/*`，未带 `Authorization` 头。后端鉴权开启后返回 401 错误信封 `{code,message,data:null}`，被 `setCliStatus` 塞进 state，渲染时 `Object.entries(cliStatus.available)` 因 `available` 为 `undefined` 抛 TypeError 导致整页崩溃。修复：新增带 token 的 `authFetch`，6 处 fetch 全部改用；并对异常响应兜底（`r.ok ? r.json() : null` + `Array.isArray` 校验），避免错误对象污染 state。
+- **修复管理端 `admin/main.py` 根路径 404**：`:8001` 是纯 API 服务，裸访问根路径 `/` 返回 404 令人困惑。新增 `GET /` 返回友好指引 JSON（说明后台界面在前端 `/admin` 路由、附文档/健康检查入口）。后台界面本身正常（前端 `/admin/login`，API 走 `/api/admin/*` 代理到 :8001）。
+- **新增 `data/production/jiulu-s1/README.md`**：制作项目知识库总纲（命题/三幕/角色/场景/分集进度/资产索引/管线）。数据源自 `cards.json`+`project.json`+master packages。
+- **删除两个废弃 story bible**：`story_bible_v2_龙棺.md`（《她死后，龙来了》龙棺重生复仇，主角沈昭）与 `story_bible_重绘.md`（《描红》世界重绘，主角昭）均为早期未采用的故事方向草案，与苍霖篇生产线不一致，易混淆，经用户确认后删除（已核对 `cards.json`/`project.json` 无悬空引用）。
+
+**影响面**
+- 前端：Pipeline 页恢复可用（此前任何已登录用户进入即白屏）。
+- 后端：admin `:8001/` 由 404 变为 200 指引；无 API 行为变更。
+- 数据：`data/` 属 gitignore，项目 README 跟随业务数据，不进版本库。
 
 ---
 

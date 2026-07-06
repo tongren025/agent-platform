@@ -1,3 +1,4 @@
+"""策略文件解析代理：把用户端上传/查询请求转发到管理端(:8001)的策略接口。"""
 from __future__ import annotations
 
 import logging
@@ -15,11 +16,13 @@ _http = httpx.AsyncClient(timeout=60.0)
 
 
 def _admin_base_url() -> str:
+    """管理端 API 基址（去掉末尾斜杠）。"""
     return settings.agent.admin_api_base_url.rstrip("/")
 
 
 @router.post("/upload")
 async def upload_strategy_file(file: UploadFile = File(...)):
+    """POST /upload：把上传的策略文件转发到管理端解析接口；管理端出错按其状态码/502 返回。"""
     if not file.filename:
         raise HTTPException(status_code=400, detail="Filename is required")
 
@@ -46,6 +49,7 @@ async def upload_strategy_file(file: UploadFile = File(...)):
 
 @router.get("/parsestatus")
 async def get_parse_status(snapshotId: str = Query(..., alias="snapshotId")):
+    """GET /parsestatus：按 snapshotId 向管理端查询策略解析结果。"""
     url = f"{_admin_base_url()}/api/v1/strategy/parse-result"
 
     try:

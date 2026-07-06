@@ -1,3 +1,4 @@
+// 自我进化页：查看/采纳/拒绝 LLM 分析会话后产出的改进洞察。
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button, Card, Collapse, Descriptions, Empty, message, Progress,

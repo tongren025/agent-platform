@@ -21,10 +21,12 @@ from app.utils import utcnow as _now
 
 
 def _gen_run_id() -> str:
+    """生成 wfr_ 前缀的工作流运行 ID。"""
     return "wfr_" + secrets.token_hex(8)
 
 
 class WorkflowNode(BaseModel):
+    """工作流节点：类型 + 画布坐标 + 类型相关的松散 config（结构见上方注释）。"""
     node_key: str = Field("", alias="nodeKey")
     type: str = ""  # start | agent | condition | template | tool | knowledge | end
     name: str = ""
@@ -43,10 +45,12 @@ class WorkflowNode(BaseModel):
     model_config = {"populate_by_name": True, "extra": "allow"}
 
     def get_key(self) -> str:
+        """节点主键：node_key。"""
         return self.node_key
 
 
 class WorkflowEdge(BaseModel):
+    """工作流有向边；source_handle 是 condition 节点的分支标签，普通边为 None。"""
     edge_id: str = Field("", alias="edgeId")
     source: str = ""  # 源节点 node_key
     target: str = ""  # 目标节点 node_key
@@ -57,6 +61,7 @@ class WorkflowEdge(BaseModel):
 
 
 class WorkflowDefinition(RegistryEntity):
+    """工作流定义（DAG）：节点 + 边，复用 RegistryEntity 的 JSON 文件存储。"""
     workflow_key: str = Field("", alias="workflowKey")
     name: str = ""
     description: Optional[str] = None
@@ -67,10 +72,12 @@ class WorkflowDefinition(RegistryEntity):
     owner_user_id: Optional[str] = Field(None, alias="ownerUserId")
 
     def get_key(self) -> str:
+        """注册表主键：workflow_key。"""
         return self.workflow_key
 
 
 class NodeStepResult(BaseModel):
+    """一次运行中单个节点的执行明细（状态/输出/轨迹/token）。"""
     node_key: str = Field("", alias="nodeKey")
     type: str = ""
     status: str = "pending"  # pending | running | success | failed | skipped
@@ -85,6 +92,7 @@ class NodeStepResult(BaseModel):
 
 
 class WorkflowRun(BaseModel):
+    """一次工作流运行：输入、逐节点明细、最终输出与 token 汇总。"""
     run_id: str = Field(default_factory=_gen_run_id, alias="runId")
     workflow_key: str = Field("", alias="workflowKey")
     status: str = "running"  # running | success | failed | timeout

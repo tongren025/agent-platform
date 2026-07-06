@@ -1,3 +1,4 @@
+// CLI 流水线页：用本地 claude/gemini CLI 跑漫剧创作流水线（导演→编剧→美术…）。
 import { useState, useEffect } from 'react';
 import {
   Card, Button, Input, Table, Tag, Space, Spin, Typography,
@@ -7,12 +8,27 @@ import {
   PlayCircleOutlined, CheckCircleOutlined, CloseCircleOutlined,
   FileTextOutlined, ThunderboltOutlined, ReloadOutlined,
 } from '@ant-design/icons';
+import { userToken } from '../userAuth';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
 
 const API = '/api/v1/pipeline';
+
+// pipeline 端点同样受后端鉴权保护——裸 fetch 会拿到 401 错误信封，
+// 若直接塞进 state 会导致 Object.entries(cliStatus.available) 崩溃白屏。
+// 统一走带 token 的 authFetch。
+async function authFetch(url: string, init?: RequestInit) {
+  const token = userToken.get();
+  return fetch(url, {
+    ...init,
+    headers: {
+      ...(init?.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+}
 
 interface StageInfo {
   order: number;
@@ -79,8 +95,8 @@ export default function Pipeline() {
   };
 
   useEffect(() => {
-    fetch(`${API}/cli-status`).then(r => r.json()).then(setCliStatus).catch(() => {});
-    fetch(`${API}/runs`).then(r => r.json()).then(setRuns).catch(() => {});
+    authFetch(`${API}/cli-status`).then(r => (r.ok ? r.json() : null)).then(d => { if (d) setCliStatus(d); }).catch(() => {});
+    authFetch(`${API}/runs`).then(r => (r.ok ? r.json() : null)).then(d => { if (Array.isArray(d)) setRuns(d); }).catch(() => {});
   }, []);
 
   const handleRun = async () => {
@@ -94,7 +110,7 @@ export default function Pipeline() {
       const body: any = { theme: theme.trim() };
       if (Object.keys(cliOverrides).length > 0) body.cli_overrides = cliOverrides;
 
-      const res = await fetch(`${API}/run`, {
+      const res = await authFetch(`${API}/run`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -103,7 +119,7 @@ export default function Pipeline() {
       const data: RunResult = await res.json();
       setResult(data);
       message.success(`流水线完成: ${data.steps.filter(s => s.success).length}/${data.steps.length} 步成功`);
-      fetch(`${API}/runs`).then(r => r.json()).then(setRuns).catch(() => {});
+      authFetch(`${API}/runs`).then(r => (r.ok ? r.json() : null)).then(d => { if (Array.isArray(d)) setRuns(d); }).catch(() => {});
     } catch (err: any) {
       message.error(`运行失败: ${err.message}`);
     } finally {
@@ -113,7 +129,7 @@ export default function Pipeline() {
 
   const showFinal = async (runId: string) => {
     try {
-      const res = await fetch(`${API}/runs/${runId}/final`);
+      const res = await authFetch(`${API}/runs/${runId}/final`);
       if (!res.ok) throw new Error(await readError(res));
       const data = await res.json();
       setFinalDoc(data.content);
@@ -299,7 +315,7 @@ export default function Pipeline() {
           <Button
             size="small"
             icon={<ReloadOutlined />}
-            onClick={() => fetch(`${API}/runs`).then(r => r.json()).then(setRuns)}
+            onClick={() => authFetch(`${API}/runs`).then(r => (r.ok ? r.json() : null)).then(d => { if (Array.isArray(d)) setRuns(d); })}
           >
             刷新
           </Button>

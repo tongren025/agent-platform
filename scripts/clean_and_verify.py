@@ -4,6 +4,7 @@ sys.path.insert(0, ".")
 
 # 处理被 json 解析破坏的残留：$\rightarrow$ -> $<CR>ightarrow$（r被\r吃掉）
 def clean_existing(t):
+    """清洗已有记忆文本（去噪归一）。"""
     if not isinstance(t, str) or not t:
         return t
     t = re.sub(r"\$[\x00-\x1f\s]*ightarrow[\x00-\x1f\s]*\$", "→", t)
@@ -58,6 +59,7 @@ sess = memory_store.load_session(SESS)
 if sess:
     msgs = [{"role": m.role, "content": m.content} for m in sess.messages]
     async def go():
+        """触发一次记忆提取并落库。"""
         await extract_and_store(msgs, PE, SESS)
     asyncio.run(go())
     # 检查新抽取的有没有控制字符

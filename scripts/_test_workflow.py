@@ -5,6 +5,7 @@ from app.services.workflow_executor import run_workflow, validate_graph
 
 
 def diamond():
+    """构造菱形（并行汇聚）拓扑的测试工作流。"""
     return WorkflowDefinition(
         workflowKey="test-diamond",
         name="diamond",
@@ -31,6 +32,7 @@ def diamond():
 
 
 async def main():
+    """跑一次菱形工作流并打印各节点结果。"""
     wf = diamond()
 
     # 高分支

@@ -13,11 +13,13 @@ QA = "comic-qa-inspector"
 
 
 def stats(e):
+    """返回某员工三类长期记忆的数量三元组。"""
     d = ltm.get_all_for_prompt(e)
     return len(d["semantic"]), len(d["episodic"]), len(d["procedural"])
 
 
 async def main():
+    """接续上个会话的产出继续运行下一位员工。"""
     sess = memory_store.load_session(PE_SESSION)
     pe_output = sess.messages[-1].content if sess and sess.messages else ""
     print(f"[载入] prompt-engineer 产出 {len(pe_output)} 字符\n")

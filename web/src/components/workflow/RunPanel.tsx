@@ -1,3 +1,4 @@
+// 工作流运行面板：填输入 → 触发运行 → 逐节点结果实时展示。
 import { useEffect, useState } from 'react';
 import {
   Drawer, Form, Input, Button, Tag, Typography, Collapse, Empty, Spin, message, Tabs, Space,

@@ -20,6 +20,7 @@ router = APIRouter(prefix="/api/admin/system", tags=["admin-system"])
 
 @router.get("/overview")
 def overview(_: dict = Depends(require_admin)):
+    """GET /api/admin/system/overview：平台资源数量总览（员工启停统计等）。"""
     employees = employee_registry.list_all()
     enabled = sum(1 for e in employees if getattr(e, "enabled", True))
     return ok({

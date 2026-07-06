@@ -13,6 +13,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class CoreSettings(BaseSettings):
+    """基础设施配置（环境变量 / .env 驱动）：DB、Redis、密钥、日志、CORS 等，app 与 admin 两进程共享。"""
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -54,10 +56,12 @@ class CoreSettings(BaseSettings):
 
     @property
     def is_production(self) -> bool:
+        """APP_ENV 是否为生产环境（production / prod），用于日志格式、错误脱敏等分支。"""
         return self.app_env.lower() in ("production", "prod")
 
     @property
     def cors_origin_list(self) -> list[str]:
+        """把逗号分隔的 CORS_ORIGINS 解析成列表；空或 '*' 视为全放开（仅限开发）。"""
         raw = (self.cors_origins or "").strip()
         if not raw or raw == "*":
             return ["*"]
@@ -66,6 +70,7 @@ class CoreSettings(BaseSettings):
 
 @lru_cache
 def get_settings() -> CoreSettings:
+    """进程级单例配置（lru_cache 保证只加载一次 .env）；常规代码直接用模块级 settings 即可。"""
     return CoreSettings()
 
 

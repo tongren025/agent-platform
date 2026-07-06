@@ -60,6 +60,7 @@ _EXTRACTION_PROMPT = """\
 
 
 def _build_conversation_text(messages: list[dict]) -> str:
+    """把消息列表拼成喂给 LLM 的对话文本：跳过 system 与空消息，标注用户/助手，单条截断 2000 字。"""
     lines = []
     for msg in messages:
         role = msg.get("role", "unknown")
@@ -78,7 +79,12 @@ async def extract_memories(
     employee_key: str,
     session_id: str,
 ) -> Optional[MemoryExtractionResult]:
-    """用 LLM 从对话历史中提取三层记忆。"""
+    """用 LLM 从对话历史中提取三层记忆（语义/经验/行为），无有效产出返回 None。
+
+    流程：拼对话文本 → 太短(<50 字)直接跳过 → 取默认 LLM 客户端 → 按固定提示词抽取 →
+    从返回中截取 JSON 并清洗 LaTeX 残留 → 各类最多取 5 条、数值裁剪到 [0,1]。
+    任一步出错都只告警并返回 None，绝不影响主对话。
+    """
     from app.dependencies import ai_service
 
     conversation_text = _build_conversation_text(messages)

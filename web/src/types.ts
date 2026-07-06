@@ -1,3 +1,4 @@
+// 前后端共享的 TypeScript 类型定义（与后端 Pydantic 模型的 camelCase 契约一一对应）。
 export interface Employee {
   employeeKey: string;
   name: string;

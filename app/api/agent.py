@@ -34,6 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 def _extract_description(role_profile: str | None) -> str:
+    """从员工角色画像文本中提取第一行非标题内容，作为员工的简介展示。"""
     if not role_profile:
         return ""
     for line in role_profile.splitlines():
@@ -44,6 +45,7 @@ def _extract_description(role_profile: str | None) -> str:
 
 
 def _build_tags(emp) -> list[str]:
+    """根据员工绑定的技能/工具/MCP/知识库等配置，生成前端展示用的标签列表。"""
     tags: list[str] = []
 
     skill_count = len(emp.skill_refs) if emp.skill_refs else 0
@@ -68,6 +70,7 @@ def _build_tags(emp) -> list[str]:
 
 
 class TeamRunBody(BaseModel):
+    """POST /team-run 的请求体：指定团队编码与用户输入，可携带会话 ID 与额外上下文。"""
     model_config = {"populate_by_name": True}
     team_code: str = Field("", alias="teamCode")
     user_input: str = Field("", alias="userInput")
@@ -80,6 +83,7 @@ class TeamRunBody(BaseModel):
 
 @router.get("/employees")
 def list_agent_employees():
+    """GET /employees：返回全部数字员工列表，附带计算出的标签与简介（computedTags/computedDescription）。"""
     employees = employee_registry.list_all()
     result = []
     for emp in employees:
@@ -95,6 +99,7 @@ def list_agent_employees():
 
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
+    """POST /upload：上传聊天附件（≤10MB），保存到 data/uploads 并返回文件元信息；文本类文件顺带返回前 20000 字符内容，超限返 413。"""
     data = await file.read()
     if len(data) > _MAX_UPLOAD_SIZE:
         raise HTTPException(status_code=413, detail="文件不能超过 10 MB")
@@ -131,6 +136,7 @@ async def upload_file(file: UploadFile = File(...)):
 @router.post("/run")
 @limiter.limit("20/minute")
 async def run_agent_endpoint(request: Request, body: AgentRunRequest):
+    """POST /run：执行一次 agent 运行并同步返回结果；配额超限返 429，超时返 504，内部失败返 500。"""
     quotas = getattr(settings, "quotas", {})
     if quotas:
         allowed, reason = check_quota(body.employee_key, quotas)
@@ -173,6 +179,7 @@ async def run_agent_endpoint(request: Request, body: AgentRunRequest):
 
 
 def _team_context(team_code: str, user_input: str, extra_context: str | None = None) -> tuple[str, str, dict]:
+    """构建团队对话上下文：解析团队 leader、成员列表与 @提及，返回 (leader_key, 团队名, 注入 context)；团队/负责人缺失时抛 404/400。"""
     team = team_registry.get(team_code)
     if team is None:
         raise HTTPException(status_code=404, detail=f"Team not found: {team_code}")
@@ -228,6 +235,7 @@ def _team_context(team_code: str, user_input: str, extra_context: str | None = N
 
 @router.post("/team-run")
 async def run_team_endpoint(body: TeamRunBody):
+    """POST /team-run：以团队 leader 身份执行一次团队对话（复用 /run），并把会话标记为 team 类型；参数缺失返 400。"""
     team_code = body.team_code
     user_input = body.user_input
     session_id = body.session_id

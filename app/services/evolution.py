@@ -74,20 +74,24 @@ _EVOLUTION_PROMPT = """\
 
 
 def _data_dir(emp_key: str) -> Path:
+    """员工进化数据目录（顺带创建）。"""
     d = BASE_DIR / "data" / "evolution" / emp_key
     d.mkdir(parents=True, exist_ok=True)
     return d
 
 
 def _insights_path(emp_key: str) -> Path:
+    """员工进化建议文件路径。"""
     return _data_dir(emp_key) / "insights.json"
 
 
 def _run_logs_path(emp_key: str) -> Path:
+    """员工进化运行日志文件路径。"""
     return _data_dir(emp_key) / "run_logs.json"
 
 
 def _atomic_write(path: Path, text: str) -> None:
+    """原子写：先写临时文件再 os.replace，避免半截文件。"""
     import os
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + f".tmp{os.getpid()}")
@@ -96,6 +100,7 @@ def _atomic_write(path: Path, text: str) -> None:
 
 
 def _load_json_list(path: Path, model_cls):
+    """通用读取：把 json 数组反序列化为 model_cls 列表；缺失或损坏返回空。"""
     if not path.exists():
         return []
     try:
@@ -106,25 +111,30 @@ def _load_json_list(path: Path, model_cls):
 
 
 def list_insights(emp_key: str) -> list[EvolutionInsight]:
+    """列出某员工的全部进化建议。"""
     return _load_json_list(_insights_path(emp_key), EvolutionInsight)
 
 
 def list_run_logs(emp_key: str) -> list[EvolutionRunLog]:
+    """列出某员工的进化运行日志。"""
     return _load_json_list(_run_logs_path(emp_key), EvolutionRunLog)
 
 
 def _save_insights(emp_key: str, items: list[EvolutionInsight]) -> None:
+    """写回员工的进化建议列表。"""
     data = [it.model_dump(by_alias=True, mode="json") for it in items]
     _atomic_write(_insights_path(emp_key), json.dumps(data, ensure_ascii=False, indent=2))
 
 
 def _save_run_logs(emp_key: str, logs: list[EvolutionRunLog]) -> None:
+    """写回员工的进化运行日志（只留最近 50 条）。"""
     logs = logs[-50:]
     data = [lg.model_dump(by_alias=True, mode="json") for lg in logs]
     _atomic_write(_run_logs_path(emp_key), json.dumps(data, ensure_ascii=False, indent=2))
 
 
 def _get_recent_sessions(emp_key: str, days: int) -> list[dict]:
+    """取近 days 天、消息数≥2 的会话，压成带预览的摘要 dict（最多 20 条）供 LLM 分析。"""
     from app.dependencies import memory_store
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
     sessions = []
@@ -146,6 +156,12 @@ def _get_recent_sessions(emp_key: str, days: int) -> list[dict]:
 
 
 async def run_evolution_analysis(employee_key: str) -> EvolutionRunLog:
+    """对一个员工跑一次自我进化分析并返回运行日志。
+
+    取近 7 天会话 + 现有行为规则 → LLM 产出 ≤8 条改进建议（提示词/规则/技能/工具）→
+    追加到待处理建议列表。员工不存在、无会话、取客户端/LLM/解析失败都会落一条日志提前返回。
+    生成的建议仅入库待人工确认（accept/reject），不自动改员工。
+    """
     from app.dependencies import ai_service, employee_registry, long_term_memory
 
     t0 = time.monotonic()
@@ -266,6 +282,10 @@ async def run_evolution_analysis(employee_key: str) -> EvolutionRunLog:
 
 
 def accept_insight(employee_key: str, insight_id: str) -> bool:
+    """采纳一条进化建议并落地：prompt_improve 追加到员工角色画像，new_rule 写入行为记忆。
+
+    仅对 pending 状态的建议生效；采纳后标记 accepted。不存在或非 pending 返回 False。
+    """
     from app.dependencies import employee_registry, long_term_memory
     from app.models.memory_types import ProceduralMemory
 
@@ -302,6 +322,7 @@ def accept_insight(employee_key: str, insight_id: str) -> bool:
 
 
 def reject_insight(employee_key: str, insight_id: str) -> bool:
+    """驳回一条 pending 建议（标记 rejected）；不存在或非 pending 返回 False。"""
     insights = list_insights(employee_key)
     for ins in insights:
         if ins.insight_id == insight_id:

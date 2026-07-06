@@ -33,6 +33,7 @@ _WRITE_PERMS: list[tuple[str, str]] = [
     ("/api/v1/agentapp/registry", "employee:manage"),
     ("/api/v1/agentapp/workflow", "workflow:manage"),
     ("/api/v1/agentapp/production", "production:manage"),
+    ("/api/v1/agentapp/canvas", "production:manage"),
     ("/api/v1/pipeline", "production:manage"),
     ("/api/v1/agentapp/memory", "employee:manage"),
     ("/api/v1/agentapp/scrape", "employee:manage"),
@@ -47,10 +48,12 @@ _READ_METHODS = {"GET", "HEAD"}
 
 
 def _envelope(status: int, message: str) -> JSONResponse:
+    """构造与 app.api.common.ok() 一致的 {code, message, data} 错误信封响应。"""
     return JSONResponse(status_code=status, content={"code": status, "message": message, "data": None})
 
 
 def _required_write_perm(path: str) -> str:
+    """按 _WRITE_PERMS 前缀表（长前缀在前）匹配写操作所需权限；未命中返回默认 workbench:use。"""
     for prefix, perm in _WRITE_PERMS:
         if path.startswith(prefix):
             return perm
@@ -58,7 +61,10 @@ def _required_write_perm(path: str) -> str:
 
 
 class UserAuthMiddleware(BaseHTTPMiddleware):
+    """用户端 API 鉴权中间件：对 /api/* 强制登录 + 写操作角色权限校验，由 app.main 按 USER_API_AUTH 开关挂载。"""
+
     async def dispatch(self, request: Request, call_next):
+        """逐请求鉴权：豁免路径放行 → 解析 Bearer token → 校验账号有效 → 写操作再查角色权限，失败返回统一信封。"""
         path = request.url.path
         # 非 API 路径(SPA/静态/healthcheck/metrics/uploads)与登录端点直接放行
         if not path.startswith("/api/") or path.startswith(_AUTH_EXEMPT_PREFIX):

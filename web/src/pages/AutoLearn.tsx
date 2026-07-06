@@ -1,3 +1,4 @@
+// 提示词采集页：采集源 CRUD、手动触发、已采提示词与历史查看。
 import { useEffect, useState } from 'react';
 import {
   Card, Table, Button, Modal, Form, Input, Select, Switch, InputNumber,

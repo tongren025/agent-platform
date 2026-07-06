@@ -1,3 +1,4 @@
+// 管理端登录页：管理员账号换管理端独立 token。
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, message } from 'antd';

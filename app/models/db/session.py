@@ -15,6 +15,7 @@ from app.models.db.base import Base, to_iso, utcnow
 
 
 class ConversationSessionORM(Base):
+    """conversation_sessions 表：一行一个会话，messages/artifacts 等子结构整体存 JSON 列。"""
     __tablename__ = "conversation_sessions"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -36,6 +37,7 @@ class ConversationSessionORM(Base):
     )
 
     def to_dict(self) -> dict:
+        """输出 camelCase dict，与 JSON 版 ConversationSession 序列化结构逐字对齐。"""
         return {
             "sessionId": self.session_id,
             "employeeKey": self.employee_key,

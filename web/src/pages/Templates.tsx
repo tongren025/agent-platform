@@ -1,3 +1,4 @@
+// 角色模板页：浏览模板并一键套用创建员工。
 import { useEffect, useState } from 'react';
 import { Card, Row, Col, Tag, Button, Modal, Form, Input, Spin, Empty, message, Space } from 'antd';
 import type { RoleTemplate } from '../types';

@@ -28,6 +28,7 @@ router = APIRouter(prefix="/api/v1/pipeline", tags=["Pipeline"])
 
 
 class PipelineRunRequest(BaseModel):
+    """POST /run 的请求体：漫剧生产流水线的题材输入，可按员工覆盖 CLI 类型或跳过部分员工。"""
     theme: str = Field(..., description="漫剧题材/梗概")
     cli_overrides: Optional[dict[str, str]] = Field(
         None, description="按员工覆盖 CLI 类型，如 {\"comic-screenwriter\": \"gemini\"}"
@@ -38,6 +39,7 @@ class PipelineRunRequest(BaseModel):
 
 
 class StepInfo(BaseModel):
+    """流水线单步执行结果：员工、所用 CLI、产出文件、耗时与成败信息，嵌在 PipelineRunResponse.steps 中。"""
     employeeKey: str
     name: str
     cliType: str
@@ -49,6 +51,7 @@ class StepInfo(BaseModel):
 
 
 class PipelineRunResponse(BaseModel):
+    """POST /run 的响应体：一次流水线运行的整体结果（输出目录、最终文件、总耗时与各步骤明细）。"""
     runId: str
     theme: str
     outputDir: str

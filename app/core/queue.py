@@ -23,6 +23,7 @@ _pool: ArqRedis | None = None
 
 
 def _redis_settings() -> RedisSettings:
+    """把 REDIS_URL（redis://host:port/db）解析成 arq 的 RedisSettings；解析不了退回默认值（localhost:6379/0）。"""
     url = core_settings.redis_url
     if url.startswith("redis://"):
         parts = url.replace("redis://", "").split("/")
@@ -38,6 +39,7 @@ def _redis_settings() -> RedisSettings:
 
 
 async def get_pool() -> ArqRedis:
+    """获取进程级单例 arq Redis 连接池，首次调用时懒创建。"""
     global _pool
     if _pool is None:
         _pool = await create_pool(_redis_settings())
@@ -45,11 +47,13 @@ async def get_pool() -> ArqRedis:
 
 
 async def enqueue(func_name: str, *args: Any, **kwargs: Any):
+    """入队辅助：按函数名把任务丢进队列，返回 arq Job（可能为 None，如 job_id 重复）。"""
     pool = await get_pool()
     return await pool.enqueue_job(func_name, *args, **kwargs)
 
 
 async def close_pool() -> None:
+    """关闭并清空单例连接池，应用 shutdown 时调用。"""
     global _pool
     if _pool is not None:
         await _pool.aclose()

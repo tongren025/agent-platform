@@ -1,3 +1,4 @@
+// 节点配置抽屉：按节点类型渲染对应的配置表单（agent/条件/模板/工具等）。
 import { useEffect, useMemo } from 'react';
 import {
   Drawer, Form, Input, Select, InputNumber, Button, Space, Tag, Typography, Divider, Popconfirm,

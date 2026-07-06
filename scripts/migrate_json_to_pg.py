@@ -17,6 +17,7 @@ _KINDS = ("semantic", "episodic", "procedural")
 
 
 def migrate_runs(json_store, db_store) -> int:
+    """把 JSON 运行记录全部 upsert 进 PG（幂等），返回条数。"""
     runs = json_store.list_runs(limit=10**9)
     for r in runs:
         db_store.save_run(r)
@@ -24,6 +25,7 @@ def migrate_runs(json_store, db_store) -> int:
 
 
 def migrate_sessions(json_store, db_store) -> int:
+    """把 JSON 会话（含归档）全部 upsert 进 PG（幂等），返回条数。"""
     sessions = json_store.list_sessions(limit=10**9, include_archived=True)
     for s in sessions:
         db_store.save_session(s)
@@ -31,6 +33,7 @@ def migrate_sessions(json_store, db_store) -> int:
 
 
 def migrate_memory(memory_root: Path, json_backend, pg_backend) -> int:
+    """把 data/memory 下三类长期记忆逐员工整表写入 PG，返回条数。"""
     if not memory_root.exists():
         return 0
     count = 0
@@ -47,6 +50,7 @@ def migrate_memory(memory_root: Path, json_backend, pg_backend) -> int:
 
 
 def main() -> None:
+    """入口：init_db 建表后依次迁移 runs/sessions/memory 并打印统计。"""
     from app.config import BASE_DIR
     from app.core.db import init_db
     from app.services.memory import ConversationMemoryStore

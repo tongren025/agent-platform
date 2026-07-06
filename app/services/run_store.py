@@ -35,15 +35,18 @@ def estimate_cost(model: str, prompt_tokens: int, completion_tokens: int) -> flo
 
 
 class AgentRunStore:
+    """运行记录文件存储：每次 run 一份 <run_dir>/run_*.json，供审计成本与行为。"""
 
     def __init__(self, run_dir: str | None = None) -> None:
         self._dir = BASE_DIR / (run_dir or settings.agent.run_record_dir)
         self._dir.mkdir(parents=True, exist_ok=True)
 
     def _path_for(self, run_id: str) -> Path:
+        """运行 id → json 文件路径。"""
         return self._dir / f"{run_id}.json"
 
     def save_run(self, record: AgentRunRecord) -> None:
+        """保存一条运行记录（字段按别名序列化，与前端对齐）。"""
         self._dir.mkdir(parents=True, exist_ok=True)
         data = record.model_dump(by_alias=True, mode="json")
         self._path_for(record.run_id).write_text(
@@ -52,6 +55,7 @@ class AgentRunStore:
         )
 
     def load_run(self, run_id: str) -> AgentRunRecord | None:
+        """读取单条运行记录；缺失或损坏返回 None（损坏会告警）。"""
         fp = self._path_for(run_id)
         if not fp.exists():
             return None
@@ -69,6 +73,7 @@ class AgentRunStore:
         success: bool | None = None,
         limit: int = 50,
     ) -> list[AgentRunRecord]:
+        """列出运行记录，可按员工/会话/成功与否过滤，按创建时间倒序取前 limit 条。"""
         if not self._dir.exists():
             return []
 

@@ -26,6 +26,7 @@ router = APIRouter(prefix="/api/v1/agentapp/scrape")
 
 
 class _LearnRequest(_BaseModel):
+    """单篇文章学习请求体：文章 URL + 可选角色提示。"""
     model_config = {"populate_by_name": True}
     url: str = ""
     role_hint: str = Field("", alias="roleHint")
@@ -35,12 +36,14 @@ class _LearnRequest(_BaseModel):
 
 @router.get("/sources")
 def list_sources():
+    """GET /sources：列出全部提示词采集源。"""
     items = scrape_source_store.list_all()
     return _ok([s.model_dump(by_alias=True, mode="json") for s in items])
 
 
 @router.get("/sources/{code}")
 def get_source(code: str):
+    """GET /sources/{code}：查单个采集源，不存在返 404。"""
     _validate(code)
     src = scrape_source_store.get(code)
     if src is None:
@@ -50,6 +53,7 @@ def get_source(code: str):
 
 @router.post("/sources")
 def create_source(body: ScrapeSource):
+    """POST /sources：创建采集源（运行时状态字段由服务端初始化，忽略客户端传值），重复返 409。"""
     _validate(body.source_code)
     if scrape_source_store.exists(body.source_code):
         raise HTTPException(status_code=409, detail=f"Source already exists: {body.source_code}")
@@ -65,6 +69,7 @@ def create_source(body: ScrapeSource):
 
 @router.put("/sources/{code}")
 def update_source(code: str, body: ScrapeSource):
+    """PUT /sources/{code}：更新采集源配置，保留服务端维护的运行时状态字段。"""
     _validate(code)
     existing = scrape_source_store.get(code)
     if existing is None:
@@ -82,6 +87,7 @@ def update_source(code: str, body: ScrapeSource):
 
 @router.delete("/sources/{code}")
 def delete_source(code: str):
+    """DELETE /sources/{code}：删除采集源并连带清掉其已采提示词与历史。"""
     _validate(code)
     if not scrape_source_store.delete(code):
         raise HTTPException(status_code=404, detail=f"Source not found: {code}")
@@ -94,6 +100,7 @@ def delete_source(code: str):
 
 @router.post("/sources/{code}/run")
 async def run_source_now(code: str):
+    """POST /sources/{code}/run：立即执行一次采集（不等定时），返回本次运行结果。"""
     _validate(code)
     src = scrape_source_store.get(code)
     if src is None:
@@ -106,6 +113,7 @@ async def run_source_now(code: str):
 
 @router.get("/sources/{code}/prompts")
 def list_prompts(code: str, limit: int = Query(200, ge=1, le=600)):
+    """GET /sources/{code}/prompts：列出该源已采集的提示词（limit 1-600）。"""
     _validate(code)
     items = collected_prompt_store.list(code)[:limit]
     return _ok([p.model_dump(by_alias=True, mode="json") for p in items])
@@ -113,6 +121,7 @@ def list_prompts(code: str, limit: int = Query(200, ge=1, le=600)):
 
 @router.get("/sources/{code}/history")
 def list_history(code: str):
+    """GET /sources/{code}/history：列出该源的历史运行记录。"""
     _validate(code)
     items = scrape_history_store.list(code)
     return _ok([h.model_dump(by_alias=True, mode="json") for h in items])
@@ -163,12 +172,14 @@ async def learn_batch(employee_key: str, body: list[_LearnRequest]):
 
 @router.get("/learn-sources")
 def list_learn_sources():
+    """GET /learn-sources：列出全部文章学习源。"""
     items = learn_source_store.list_all()
     return _ok([s.model_dump(by_alias=True, mode="json") for s in items])
 
 
 @router.get("/learn-sources/{code}")
 def get_learn_source(code: str):
+    """GET /learn-sources/{code}：查单个学习源，不存在返 404。"""
     _validate(code)
     src = learn_source_store.get(code)
     if src is None:
@@ -178,6 +189,7 @@ def get_learn_source(code: str):
 
 @router.post("/learn-sources")
 def create_learn_source(body: LearnSource):
+    """POST /learn-sources：创建文章学习源（运行时状态由服务端初始化），重复返 409。"""
     _validate(body.source_code)
     if learn_source_store.exists(body.source_code):
         raise HTTPException(status_code=409, detail=f"Learn source already exists: {body.source_code}")
@@ -192,6 +204,7 @@ def create_learn_source(body: LearnSource):
 
 @router.put("/learn-sources/{code}")
 def update_learn_source(code: str, body: LearnSource):
+    """PUT /learn-sources/{code}：更新学习源配置，保留运行时状态字段。"""
     _validate(code)
     existing = learn_source_store.get(code)
     if existing is None:
@@ -208,6 +221,7 @@ def update_learn_source(code: str, body: LearnSource):
 
 @router.delete("/learn-sources/{code}")
 def delete_learn_source(code: str):
+    """DELETE /learn-sources/{code}：删除学习源并清掉其历史。"""
     _validate(code)
     if not learn_source_store.delete(code):
         raise HTTPException(status_code=404, detail=f"Learn source not found: {code}")
@@ -217,6 +231,7 @@ def delete_learn_source(code: str):
 
 @router.post("/learn-sources/{code}/run")
 async def run_learn_source_now(code: str):
+    """POST /learn-sources/{code}/run：立即执行一次文章学习，返回本次运行结果。"""
     _validate(code)
     src = learn_source_store.get(code)
     if src is None:
@@ -227,6 +242,7 @@ async def run_learn_source_now(code: str):
 
 @router.get("/learn-sources/{code}/history")
 def list_learn_history(code: str):
+    """GET /learn-sources/{code}/history：列出该学习源的历史运行记录。"""
     _validate(code)
     items = learn_history_store.list(code)
     return _ok([h.model_dump(by_alias=True, mode="json") for h in items])
@@ -236,6 +252,7 @@ def list_learn_history(code: str):
 
 @router.get("/employees")
 def list_target_employees():
+    """GET /target-employees：可作为学习目标的员工精简列表（下拉框用）。"""
     emps = employee_registry.list_all()
     return _ok([
         {"employeeKey": e.employee_key, "name": e.name}

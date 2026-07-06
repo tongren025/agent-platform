@@ -32,7 +32,9 @@ FILM_SRC = ["StudioBinder","Adobe","No Film School","AnimeOutline","CharacterBaz
             "Studiovity","AMPAS","FlowHunt","Portkey","维基百科","蒙太奇","概念藝術","視覺效果",
             "電影製作","透視","構圖","色彩理論","动画12原则","形状语言","伦勃朗","三点布光"]
 
-def has(c, kws): return any(k in c for k in kws)
+def has(c, kws):
+    """判断文本 c 是否命中任一关键词。"""
+    return any(k in c for k in kws)
 
 stats = {"law":0,"fixed":0,"elevated":0,"demoted":0,"kept":0}
 for f in sorted(glob.glob("data/memory/comic-*/semantic.json")):

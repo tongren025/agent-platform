@@ -1,3 +1,4 @@
+"""充值策略工具 handler：get_parse_result / precheck_strategy / create_strategy / rollback_strategy 四个工具，包装 admin_client 并注册到全局工具 registry。"""
 from __future__ import annotations
 
 import json
@@ -10,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def _extract_snapshot_id(ctx: ToolContext) -> str | None:
+    """取 snapshot_id：工具参数优先，其次从 extra_context 里找（会话上下文携带）。"""
     args = ctx.parse_args()
     sid = args.get("snapshot_id", "").strip()
     if sid:
@@ -23,6 +25,7 @@ def _extract_snapshot_id(ctx: ToolContext) -> str | None:
 
 
 async def _safe_call(coro, error_label: str) -> dict | str:
+    """调用 admin API 的统一护栏：异常吞掉并转成 {error} dict，不让工具调用崩掉主循环。"""
     try:
         return await coro
     except Exception as exc:
@@ -31,9 +34,11 @@ async def _safe_call(coro, error_label: str) -> dict | str:
 
 
 class GetParseResultHandler:
+    """get_parse_result 工具：查询策略文件的解析结果。"""
     tool_code = "get_parse_result"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """校验 snapshot_id 后查询解析结果。"""
         snapshot_id = _extract_snapshot_id(ctx)
         if not snapshot_id:
             return json.dumps({"error": "snapshot_id is required"})
@@ -46,9 +51,11 @@ class GetParseResultHandler:
 
 
 class PrecheckStrategyHandler:
+    """precheck_strategy 工具：先确认解析结果存在，再执行创建前预检。"""
     tool_code = "precheck_strategy"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """先查解析结果（失败即返回错误），再调预检接口。"""
         snapshot_id = _extract_snapshot_id(ctx)
         if not snapshot_id:
             return json.dumps({"error": "snapshot_id is required"})
@@ -68,9 +75,11 @@ class PrecheckStrategyHandler:
 
 
 class CreateStrategyHandler:
+    """create_strategy 工具：从解析结果提取 configs 并批量创建策略。"""
     tool_code = "create_strategy"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """查解析结果 → 提取 configs（为空报错）→ 批量创建。"""
         snapshot_id = _extract_snapshot_id(ctx)
         if not snapshot_id:
             return json.dumps({"error": "snapshot_id is required"})
@@ -103,9 +112,11 @@ class CreateStrategyHandler:
 
 
 class RollbackStrategyHandler:
+    """rollback_strategy 工具：回滚某快照创建的全部策略。"""
     tool_code = "rollback_strategy"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """校验 snapshot_id 后调用回滚接口。"""
         snapshot_id = _extract_snapshot_id(ctx)
         if not snapshot_id:
             return json.dumps({"error": "snapshot_id is required"})

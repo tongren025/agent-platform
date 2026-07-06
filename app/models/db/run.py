@@ -14,6 +14,7 @@ from app.models.db.base import Base, to_iso, utcnow
 
 
 class AgentRunORM(Base):
+    """agent_runs 表：一行一条 agent 运行记录（token/成本/轨迹/成败）。"""
     __tablename__ = "agent_runs"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -37,6 +38,7 @@ class AgentRunORM(Base):
     )
 
     def to_dict(self) -> dict:
+        """输出 camelCase dict，与 JSON 版 AgentRunRecord 序列化结构逐字对齐。"""
         return {
             "runId": self.run_id,
             "sessionId": self.session_id,

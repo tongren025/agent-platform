@@ -17,12 +17,14 @@ TASK = (
 )
 
 def stats(e):
+    """返回某员工三类长期记忆的数量三元组。"""
     d = ltm.get_all_for_prompt(e)
     return len(d["semantic"]), len(d["episodic"]), len(d["procedural"])
 
 
 async def main():
     # ── 1. 调用前基线 ──
+    """运行一次员工并对比运行前后的记忆数量。"""
     before = stats(EMP)
     print(f"[调用前] {EMP} 记忆 sem/epi/proc = {before}\n")
 

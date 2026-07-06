@@ -14,6 +14,7 @@ from app.models.db.base import Base, to_iso, utcnow
 
 
 class Role(Base):
+    """roles 表：平台角色（权限集合），built_in 标记内置角色不可删。"""
     __tablename__ = "roles"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -25,6 +26,7 @@ class Role(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     def to_dict(self) -> dict:
+        """输出 camelCase dict，对齐旧 JSON store 的角色结构。"""
         return {
             "roleCode": self.role_code,
             "name": self.name,
@@ -36,6 +38,7 @@ class Role(Base):
 
 
 class User(Base):
+    """users 表：平台登录用户，password_hash 存哈希，role_code 关联角色。"""
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -49,6 +52,7 @@ class User(Base):
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     def to_dict(self, include_hash: bool = False) -> dict:
+        """输出 camelCase dict；include_hash=True 时附带密码哈希（仅内部鉴权用，勿外传）。"""
         data = {
             "userId": self.user_id,
             "username": self.username,

@@ -1,3 +1,4 @@
+// 全局配色常量 COLORS + antd 主题定制（主色/圆角/组件级覆盖）。
 import type { ThemeConfig } from 'antd';
 
 export const COLORS = {

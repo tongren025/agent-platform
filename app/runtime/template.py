@@ -33,6 +33,7 @@ def _lookup(ref: str, variables: dict):
 
 
 def _stringify(value) -> str:
+    """把任意值转成模板输出字符串：None→空串，dict/list→JSON，其余 str()。"""
     if value is None:
         return ""
     if isinstance(value, str):

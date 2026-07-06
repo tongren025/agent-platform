@@ -17,6 +17,7 @@ _logger = get_logger("http.error")
 
 
 def _envelope(code: int, message: str, data=None, request_id: str | None = None) -> JSONResponse:
+    """构造统一错误信封 {code, message, data[, requestId]}；code>=400 时同步作为 HTTP 状态码。"""
     body = {"code": code, "message": message, "data": data}
     if request_id:
         body["requestId"] = request_id
@@ -24,18 +25,22 @@ def _envelope(code: int, message: str, data=None, request_id: str | None = None)
 
 
 def register_exception_handlers(app: FastAPI) -> None:
+    """向 FastAPI app 注册三类全局异常处理器（HTTP 异常 / 参数校验 / 未捕获兜底），启动时调用一次。"""
     @app.exception_handler(StarletteHTTPException)
     async def _http_exc(request: Request, exc: StarletteHTTPException):
+        """业务主动抛出的 HTTPException：按原状态码转成统一信封。"""
         rid = getattr(request.state, "request_id", None)
         return _envelope(exc.status_code, str(exc.detail), request_id=rid)
 
     @app.exception_handler(RequestValidationError)
     async def _validation_exc(request: Request, exc: RequestValidationError):
+        """请求体/参数校验失败：返回 422，data 里带 pydantic 的字段级错误明细。"""
         rid = getattr(request.state, "request_id", None)
         return _envelope(422, "请求参数校验失败", data=exc.errors(), request_id=rid)
 
     @app.exception_handler(Exception)
     async def _unhandled_exc(request: Request, exc: Exception):
+        """未捕获异常兜底：记结构化错误日志（含堆栈），对客户端只回通用 500 + request_id，不泄漏内部实现。"""
         rid = getattr(request.state, "request_id", None)
         _logger.error(
             "unhandled_exception",

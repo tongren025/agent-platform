@@ -25,6 +25,7 @@ _MAX_HISTORY = 50
 
 
 def _sanitize(key: str) -> str:
+    """校验 code 合法（非空、无斜杠/..），防路径穿越。"""
     if not key or _BAD_KEY_RE.search(key):
         raise ValueError(f"Invalid key: {key!r}")
     return key
@@ -39,14 +40,18 @@ def _atomic_write(path: Path, text: str) -> None:
 
 
 class ScrapeSourceStore:
+    """采集源（提示词采集任务配置）存储：data/scrape-sources/<code>.json。"""
+
     def __init__(self) -> None:
         self._dir = BASE_DIR / "data" / "scrape-sources"
         self._dir.mkdir(parents=True, exist_ok=True)
 
     def _path(self, code: str) -> Path:
+        """采集源 code → json 文件路径。"""
         return self._dir / f"{_sanitize(code)}.json"
 
     def list_all(self) -> list[ScrapeSource]:
+        """读出全部采集源，按创建时间升序；损坏文件告警跳过。"""
         items: list[ScrapeSource] = []
         for fp in self._dir.glob("*.json"):
             try:
@@ -57,6 +62,7 @@ class ScrapeSourceStore:
         return items
 
     def get(self, code: str) -> ScrapeSource | None:
+        """按 code 读取单个采集源，缺失或损坏返回 None。"""
         fp = self._path(code)
         if not fp.exists():
             return None
@@ -67,9 +73,11 @@ class ScrapeSourceStore:
             return None
 
     def exists(self, code: str) -> bool:
+        """判断某采集源是否存在。"""
         return self._path(code).exists()
 
     def save(self, source: ScrapeSource) -> ScrapeSource:
+        """写入采集源；更新时保留原 created_at、刷新 updated_at。"""
         fp = self._path(source.source_code)
         now = datetime.now(timezone.utc)
         if fp.exists():
@@ -84,6 +92,7 @@ class ScrapeSourceStore:
         return source
 
     def delete(self, code: str) -> bool:
+        """删除采集源，成功 True，本不存在 False。"""
         fp = self._path(code)
         if fp.exists():
             fp.unlink()
@@ -92,14 +101,18 @@ class ScrapeSourceStore:
 
 
 class CollectedPromptStore:
+    """采集到的提示词库存储：data/collected-prompts/<source_code>.json，按热度排序去重封顶。"""
+
     def __init__(self) -> None:
         self._dir = BASE_DIR / "data" / "collected-prompts"
         self._dir.mkdir(parents=True, exist_ok=True)
 
     def _path(self, source_code: str) -> Path:
+        """采集源 code → 提示词库 json 文件路径。"""
         return self._dir / f"{_sanitize(source_code)}.json"
 
     def list(self, source_code: str) -> list[CollectedPrompt]:
+        """读出某源已采集的提示词；缺失或损坏返回空列表。"""
         fp = self._path(source_code)
         if not fp.exists():
             return []
@@ -111,6 +124,7 @@ class CollectedPromptStore:
             return []
 
     def _write(self, source_code: str, items: list[CollectedPrompt]) -> None:
+        """把提示词列表原子写回文件。"""
         fp = self._path(source_code)
         data = [it.model_dump(by_alias=True, mode="json") for it in items]
         _atomic_write(fp, json.dumps(data, ensure_ascii=False, indent=2))
@@ -140,9 +154,11 @@ class CollectedPromptStore:
         return newly
 
     def count(self, source_code: str) -> int:
+        """返回某源已采集的提示词数量。"""
         return len(self.list(source_code))
 
     def delete_all(self, source_code: str) -> None:
+        """删除某源的全部提示词文件（失败只告警）。"""
         fp = self._path(source_code)
         try:
             if fp.exists():
@@ -152,14 +168,18 @@ class CollectedPromptStore:
 
 
 class ScrapeHistoryStore:
+    """采集运行历史存储：data/scrape-history/<source_code>.json，保留最近 _MAX_HISTORY 条。"""
+
     def __init__(self) -> None:
         self._dir = BASE_DIR / "data" / "scrape-history"
         self._dir.mkdir(parents=True, exist_ok=True)
 
     def _path(self, source_code: str) -> Path:
+        """采集源 code → 历史 json 文件路径。"""
         return self._dir / f"{_sanitize(source_code)}.json"
 
     def list(self, source_code: str) -> list[ScrapeRunResult]:
+        """读出某源的采集历史（最新在前）；缺失或损坏返回空列表。"""
         fp = self._path(source_code)
         if not fp.exists():
             return []
@@ -170,6 +190,7 @@ class ScrapeHistoryStore:
             return []
 
     def append(self, result: ScrapeRunResult) -> None:
+        """追加一条采集历史到队首，封顶 _MAX_HISTORY 条后原子写回。"""
         items = self.list(result.source_code)
         items.insert(0, result)
         items = items[:_MAX_HISTORY]
@@ -178,6 +199,7 @@ class ScrapeHistoryStore:
         _atomic_write(fp, json.dumps(data, ensure_ascii=False, indent=2))
 
     def delete_all(self, source_code: str) -> None:
+        """删除某源的全部采集历史文件（失败只告警）。"""
         fp = self._path(source_code)
         try:
             if fp.exists():

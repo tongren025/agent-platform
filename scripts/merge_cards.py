@@ -2,6 +2,7 @@
 import json, sys
 
 def main():
+    """把 shots_data.json 的分镜合并进项目 cards.json。"""
     shots_path = "D:/P/agent/scripts/shots_data.json"
     cards_path = "D:/P/agent/data/production/jiulu-s1/cards.json"
 

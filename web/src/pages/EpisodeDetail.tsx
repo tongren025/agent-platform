@@ -1,3 +1,4 @@
+// 单集详情页：该集全部镜头卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {

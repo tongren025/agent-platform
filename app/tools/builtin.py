@@ -1,3 +1,4 @@
+"""内置工具：技能详情查询 + 知识库检索。模块加载时自动注册到全局工具 registry（main.py 顶部 import 触发）。"""
 from __future__ import annotations
 
 import json
@@ -10,9 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 class SkillDetailHandler:
+    """get_skill_detail 工具：按技能编码返回技能详情（含树形子技能展开），让 agent 按需拉取技能全文而非全部塞进提示词。"""
     tool_code = "get_skill_detail"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """执行查询：校验 skill_code，返回技能详情 JSON（树形技能递归展开 children）。"""
         args = ctx.parse_args()
         skill_code = args.get("skill_code", "").strip()
         if not skill_code:
@@ -35,6 +38,7 @@ class SkillDetailHandler:
         return json.dumps(result, ensure_ascii=False)
 
     def _collect_children(self, children: list[dict]) -> list[dict]:
+        """递归展开子技能：优先用注册表里的最新定义覆盖节点内嵌数据。"""
         collected: list[dict] = []
         for child in children:
             child_code = child.get("code", "")
@@ -59,9 +63,11 @@ class SkillDetailHandler:
 
 
 class KnowledgeQueryHandler:
+    """query_knowledge_base 工具：在该员工的知识库中按关键词检索，返回 top-k 片段（top_k 限 1-20）。"""
     tool_code = "query_knowledge_base"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """执行检索：校验 query，调 knowledge_retriever 返回命中片段 JSON。"""
         args = ctx.parse_args()
         query = args.get("query", "").strip()
         if not query:

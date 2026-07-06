@@ -67,12 +67,14 @@ _DISTILLATION_PROMPT = """\
 
 
 def _log_path(emp_key: str) -> Path:
+    """员工蒸馏日志文件路径（顺带创建其目录）。"""
     d = BASE_DIR / "data" / "memory" / emp_key
     d.mkdir(parents=True, exist_ok=True)
     return d / "distillation_logs.json"
 
 
 def _load_logs(emp_key: str) -> list[DistillationLog]:
+    """读取员工蒸馏历史；缺失或损坏返回空列表。"""
     fp = _log_path(emp_key)
     if not fp.exists():
         return []
@@ -84,6 +86,7 @@ def _load_logs(emp_key: str) -> list[DistillationLog]:
 
 
 def _save_logs(emp_key: str, logs: list[DistillationLog]) -> None:
+    """保存蒸馏日志（只保留最近 50 条，原子写回）。"""
     from app.services.long_term_memory import _atomic_write
     logs = logs[-50:]
     data = [lg.model_dump(by_alias=True, mode="json") for lg in logs]
@@ -91,10 +94,17 @@ def _save_logs(emp_key: str, logs: list[DistillationLog]) -> None:
 
 
 def list_distillation_logs(emp_key: str) -> list[DistillationLog]:
+    """列出某员工的蒸馏历史日志。"""
     return _load_logs(emp_key)
 
 
 async def run_distillation(employee_key: str) -> DistillationLog:
+    """对一个员工的长期记忆执行一次蒸馏并返回本次日志。
+
+    拉取三层记忆 → 交给 LLM 产出 merge/adjust/prune 操作数组 → 逐条应用到长期记忆库 →
+    记录操作明细与前后计数。空记忆、取客户端失败、LLM 调用失败、JSON 解析失败都会
+    提前落一条带 error 的日志并返回，绝不抛出中断定时任务。
+    """
     from app.dependencies import ai_service, long_term_memory
 
     t0 = time.monotonic()
@@ -123,6 +133,7 @@ async def run_distillation(employee_key: str) -> DistillationLog:
         return log
 
     def _dump(items, fields):
+        """把记忆对象列表按指定字段导出为紧凑 JSON 字符串（用于填充提示词）。"""
         return json.dumps(
             [{f: getattr(m, f, "") for f in fields} for m in items],
             ensure_ascii=False, indent=1,

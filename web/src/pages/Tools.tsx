@@ -1,3 +1,4 @@
+// 工具 & MCP 管理页：工具定义与 MCP 服务器的 CRUD。
 import { useEffect, useState } from 'react';
 import {
   Tabs, Table, Button, Modal, Form, Input, Space, Popconfirm, message, Tag, Spin,

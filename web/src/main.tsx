@@ -1,3 +1,4 @@
+// 前端入口：挂载 React 根组件，套 antd 中文语言包与主题配置。
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';

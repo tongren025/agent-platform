@@ -248,6 +248,7 @@ DOCS = {
 }
 
 def doc_id_for(emp, fname):
+    """按 (员工, 文件名) 生成确定性的 16 位文档 ID，保证重跑幂等。"""
     return hashlib.sha1(f"{emp}/{fname}/seed".encode()).hexdigest()[:16]
 
 for emp, (fname, content) in DOCS.items():

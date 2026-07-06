@@ -1,3 +1,4 @@
+// 运行记录页（可观测）：每次 agent 运行的 token/成本/轨迹审计 + 员工月度配额用量。
 import { useEffect, useState, useCallback } from 'react';
 import {
   Card, Select, Table, Button, Tag, Space, message, Progress,

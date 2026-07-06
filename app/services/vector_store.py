@@ -21,6 +21,7 @@ class VectorStore:
     """pgvector 向量 CRUD。"""
 
     def __init__(self) -> None:
+        """尝试拿到 DB session 工厂；DB 不可用则标记 available=False，后续所有操作空转。"""
         self._available = False
         try:
             from app.core.db import SessionLocal
@@ -31,6 +32,7 @@ class VectorStore:
 
     @property
     def available(self) -> bool:
+        """向量存储是否可用（PG/pgvector 是否就绪）。"""
         return self._available
 
     def upsert(
@@ -41,6 +43,7 @@ class VectorStore:
         content: str,
         embedding: list[float],
     ) -> None:
+        """按 (员工, 来源类型, 来源 id) 插入或更新一条向量；DB 不可用时空操作，失败只告警。"""
         if not self._available:
             return
         from app.models.db.embedding import EmbeddingORM
@@ -70,6 +73,7 @@ class VectorStore:
             session.close()
 
     def delete(self, employee_key: str, source_type: str, source_id: str) -> None:
+        """删除指定 (员工, 来源类型, 来源 id) 的向量；DB 不可用时空操作。"""
         if not self._available:
             return
         from app.models.db.embedding import EmbeddingORM
@@ -128,6 +132,7 @@ class SemanticRetriever:
     """语义检索器 —— 替代/补充 KeywordRetriever。"""
 
     def __init__(self, vector_store: VectorStore, knowledge_store=None) -> None:
+        """注入底层向量存储与（可选）知识库存储。"""
         self._vs = vector_store
         self._ks = knowledge_store
 
@@ -138,6 +143,7 @@ class SemanticRetriever:
         top_k: int = 5,
         source_type: str | None = None,
     ) -> list[KnowledgeSnippet]:
+        """语义检索：query 向量化 → 余弦相似 top-k → 转成 KnowledgeSnippet；不可用或向量化失败返回空。"""
         if not self._vs.available:
             return []
 
@@ -188,6 +194,7 @@ class SemanticRetriever:
         return stored
 
     def remove_document(self, employee_key: str, doc_id: str, source_type: str = "knowledge") -> None:
+        """删除某文档的全部切片向量（按 doc_id 前缀匹配 source_id）。"""
         if not self._vs.available:
             return
         from app.models.db.embedding import EmbeddingORM

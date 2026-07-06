@@ -1,3 +1,4 @@
+// 画布上的工作流节点卡片：按类型着色，显示节点名与摘要。
 import { Handle, Position } from 'reactflow';
 import type { NodeProps } from 'reactflow';
 import { NODE_META } from './nodeMeta';

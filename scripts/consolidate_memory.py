@@ -21,19 +21,24 @@ ROOT = Path("D:/P/agent/data/memory")
 SESS = "learn_consolidation_20260630"
 NOW = datetime.now(timezone.utc).isoformat()
 
-def sid(emp, typ, n): return f"{SESS}_{emp}_{typ}_{n:02d}"
+def sid(emp, typ, n):
+    """生成确定性的记忆 ID（会话+员工+类型+序号），保证重跑幂等。"""
+    return f"{SESS}_{emp}_{typ}_{n:02d}"
 
 def sem(emp, n, content, category, importance):
+    """构造一条语义记忆 dict（带确定性 memoryId）。"""
     return {"memoryId": sid(emp,"sem",n), "employeeKey": emp, "content": content,
             "category": category, "importance": importance, "sourceSession": SESS,
             "accessCount": 0, "createdAt": NOW, "lastAccessed": None, "updatedAt": NOW}
 
 def epi(emp, n, obs, act, res, score):
+    """构造一条经验记忆 dict。"""
     return {"memoryId": sid(emp,"epi",n), "employeeKey": emp, "observation": obs,
             "action": act, "result": res, "successScore": score, "sourceSession": SESS,
             "accessCount": 0, "createdAt": NOW, "lastAccessed": None}
 
 def proc(emp, n, rule, rationale, conf):
+    """构造一条行为规则记忆 dict。"""
     return {"memoryId": sid(emp,"proc",n), "employeeKey": emp, "rule": rule,
             "rationale": rationale, "confidence": conf, "activationCount": 0,
             "sourceSession": SESS, "createdAt": NOW, "updatedAt": NOW}
@@ -306,16 +311,20 @@ PACKS["comic-keyframe-artist"] = {
 # ══════════════════════════════════════════════════════════════
 
 def load(fp):
+    """读 JSON 文件，不存在/损坏返回空列表。"""
     if fp.exists():
         try: return json.loads(fp.read_text("utf-8"))
         except Exception: return []
     return []
 
 def write(fp, data):
+    """写 JSON 文件（自动建目录）。"""
     fp.parent.mkdir(parents=True, exist_ok=True)
     fp.write_text(json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
 
-def strip_mine(items): return [x for x in items if x.get("sourceSession") != SESS]
+def strip_mine(items):
+    """剔除本脚本此前写入的记忆（按 sourceSession 识别），避免重复叠加。"""
+    return [x for x in items if x.get("sourceSession") != SESS]
 
 total = {"sem":0, "epi":0, "proc":0}
 for emp, pack in PACKS.items():

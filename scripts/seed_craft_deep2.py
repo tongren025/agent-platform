@@ -172,11 +172,13 @@ ASSIGN = {
 }
 
 def load(fp):
+    """读 JSON 文件，不存在/损坏返回空列表。"""
     if fp.exists():
         try: return json.loads(fp.read_text("utf-8"))
         except Exception: return []
     return []
 def write(fp, data):
+    """写 JSON 文件（自动建目录）。"""
     fp.parent.mkdir(parents=True, exist_ok=True)
     fp.write_text(json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
 

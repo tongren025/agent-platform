@@ -1,0 +1,9 @@
+{
+  "id": "qa_inspector_basic",
+  "employeeKey": "comic-qa-inspector",
+  "input": "检查这条图片提示词是否符合规范并给出结论：'一个男人站着，好看的画面，高质量'。",
+  "checks": [
+    { "type": "min_length", "value": 50 },
+    { "type": "not_contains", "value": "抱歉" }
+  ]
+}

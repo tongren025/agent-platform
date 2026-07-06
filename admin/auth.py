@@ -16,19 +16,23 @@ from admin.config import ADMIN_SECRET, ADMIN_TOKEN_TTL
 
 
 def _b64encode(raw: bytes) -> str:
+    """URL-safe base64 编码（去掉 = 填充）。"""
     return base64.urlsafe_b64encode(raw).decode().rstrip("=")
 
 
 def _b64decode(s: str) -> bytes:
+    """URL-safe base64 解码（自动补回 = 填充）。"""
     pad = "=" * (-len(s) % 4)
     return base64.urlsafe_b64decode(s + pad)
 
 
 def _sign(payload: bytes) -> str:
+    """用 ADMIN_SECRET 对 payload 做 HMAC-SHA256 签名，返回 base64 摘要。"""
     return _b64encode(hmac.new(ADMIN_SECRET.encode(), payload, hashlib.sha256).digest())
 
 
 def issue_token(username: str, role: str = "admin") -> str:
+    """签发管理端 token：payload(sub/role/exp) + HMAC 签名，格式 body.sig，有效期 ADMIN_TOKEN_TTL。"""
     payload = json.dumps(
         {"sub": username, "role": role, "exp": int(time.time()) + ADMIN_TOKEN_TTL},
         separators=(",", ":"),
@@ -37,6 +41,7 @@ def issue_token(username: str, role: str = "admin") -> str:
 
 
 def parse_token(token: str) -> dict:
+    """解析并校验 token：格式、HMAC 签名（常量时间比较）、过期时间，任一不过返 401。"""
     try:
         body, sig = token.split(".", 1)
         payload = _b64decode(body)

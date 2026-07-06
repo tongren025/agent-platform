@@ -12,12 +12,14 @@ from dataclasses import dataclass
 
 @dataclass
 class CheckResult:
+    """单条检查的结果：检查类型、是否通过、失败时的说明。"""
     kind: str
     passed: bool
     detail: str
 
 
 def _as_json(output: str):
+    """尝试把输出解析成 JSON，失败返回 None（供 is_json / json_has_keys 用）。"""
     try:
         return json.loads(output)
     except (json.JSONDecodeError, TypeError):
@@ -25,6 +27,7 @@ def _as_json(output: str):
 
 
 def run_check(output: str, check: dict) -> CheckResult:
+    """执行单条检查：按 check['type'] 分发到对应断言，未知类型视为失败。"""
     kind = check.get("type", "")
 
     if kind == "contains":

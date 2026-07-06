@@ -1,3 +1,4 @@
+"""运行时快照构建：从各注册表聚合员工的技能/工具/MCP/团队上下文，产出 EmployeeRuntimeSnapshot 供 prompt 编译与运行使用。"""
 from __future__ import annotations
 
 import logging
@@ -31,6 +32,7 @@ def load_snapshot(
     employee_key: str,
     active_scopes: list[str],
 ) -> Optional[EmployeeRuntimeSnapshot]:
+    """按员工 key 构建运行时快照：解析绑定的技能/工具/MCP（按 scope 分组）、模型策略与队友摘要；员工不存在返回 None。"""
     employee = employee_registry.get(employee_key)
     if employee is None:
         logger.warning("Employee not found: %s", employee_key)

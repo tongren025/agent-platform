@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 
 def utcnow() -> datetime:
+    """返回带 UTC 时区的当前时间——全项目统一的时间来源，禁用 naive datetime。"""
     return datetime.now(timezone.utc)
 
 

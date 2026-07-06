@@ -14,10 +14,12 @@ from pydantic import BaseModel, Field
 
 
 def _now() -> datetime:
+    """UTC 当前时间工厂（默认值用）。"""
     return datetime.now(timezone.utc)
 
 
 class ScrapeSource(BaseModel):
+    """一个提示词采集源：平台(jimeng/xyq) + 目标员工 + 定时配置 + 最近运行状态（由采集器回写）。"""
     source_code: str = Field("", alias="sourceCode")
     name: str = ""
     platform: str = "jimeng"  # jimeng | xyq
@@ -40,10 +42,12 @@ class ScrapeSource(BaseModel):
     model_config = {"populate_by_name": True, "extra": "ignore"}
 
     def get_key(self) -> str:
+        """注册表主键：source_code。"""
         return self.source_code
 
 
 class CollectedPrompt(BaseModel):
+    """采集到的单条提示词（标题/作者/热度/图片），external_id 用于去重。"""
     external_id: str = Field("", alias="externalId")
     source_code: str = Field("", alias="sourceCode")
     platform: str = "jimeng"
@@ -61,6 +65,7 @@ class CollectedPrompt(BaseModel):
 
 
 class ScrapeRunResult(BaseModel):
+    """一次采集运行的结果汇总（抓了几条、新增几条、状态与消息）。"""
     source_code: str = Field("", alias="sourceCode")
     status: str = "success"  # success | failed | needs_login
     fetched_count: int = Field(0, alias="fetchedCount")

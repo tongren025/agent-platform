@@ -7,10 +7,12 @@ from sqlalchemy.orm import DeclarativeBase
 
 
 class Base(DeclarativeBase):
+    """所有 ORM 模型的公共基类（SQLAlchemy 2.0 DeclarativeBase）。"""
     pass
 
 
 def utcnow() -> datetime:
+    """统一的 UTC 当前时间工厂，供 ORM 列默认值使用。"""
     return datetime.now(timezone.utc)
 
 

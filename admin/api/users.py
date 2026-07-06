@@ -12,6 +12,7 @@ router = APIRouter(prefix="/api/admin/users", tags=["admin-users"])
 
 
 class CreateUserReq(BaseModel):
+    """用户创建请求体：用户名/密码/显示名/角色/启用状态。"""
     username: str
     password: str
     displayName: str = ""
@@ -20,6 +21,7 @@ class CreateUserReq(BaseModel):
 
 
 class UpdateUserReq(BaseModel):
+    """用户更新请求体：全部字段可选，传了才改（含改密）。"""
     displayName: str | None = None
     role: str | None = None
     enabled: bool | None = None
@@ -28,6 +30,7 @@ class UpdateUserReq(BaseModel):
 
 @router.get("")
 def list_users(_: dict = Depends(require_admin)):
+    """GET /api/admin/users：列出全部用户，附带角色显示名。"""
     users = user_store.list_all()
     roles = {r["roleCode"]: r["name"] for r in role_store.list_all()}
     for u in users:
@@ -37,6 +40,7 @@ def list_users(_: dict = Depends(require_admin)):
 
 @router.post("")
 def create_user(req: CreateUserReq, _: dict = Depends(require_admin)):
+    """POST：创建用户，用户名重复等校验失败返 400。"""
     try:
         user = user_store.create({
             "username": req.username,
@@ -52,6 +56,7 @@ def create_user(req: CreateUserReq, _: dict = Depends(require_admin)):
 
 @router.put("/{username}")
 def update_user(username: str, req: UpdateUserReq, _: dict = Depends(require_admin)):
+    """PUT /{username}：按传入字段增量更新用户信息/密码。"""
     data = {}
     if req.displayName is not None:
         data["displayName"] = req.displayName
@@ -70,6 +75,7 @@ def update_user(username: str, req: UpdateUserReq, _: dict = Depends(require_adm
 
 @router.delete("/{username}")
 def delete_user(username: str, _: dict = Depends(require_admin)):
+    """DELETE /{username}：删除用户，不存在返 404，受保护用户返 400。"""
     try:
         deleted = user_store.delete(username)
         if not deleted:

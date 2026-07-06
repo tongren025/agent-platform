@@ -10,6 +10,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 
 
 def setup_metrics(app: FastAPI) -> None:
+    """给 FastAPI app 装 Prometheus 采集器并暴露 /metrics（排除 /metrics、/healthcheck 自身），启动时调用一次。"""
     Instrumentator(
         should_group_status_codes=True,
         should_ignore_untemplated=True,

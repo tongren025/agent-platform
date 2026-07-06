@@ -1,3 +1,4 @@
+"""Prompt 编译器：把员工运行时快照 + 生效 scope 编译成最终 system prompt（角色画像 + 技能 + 团队上下文 + DeepAgent 工作流指引 + 结构化输出指令）。"""
 from __future__ import annotations
 
 import logging
@@ -31,6 +32,7 @@ def compile(
     structured_schema_json: Optional[str] = None,
     user_query: Optional[str] = None,
 ) -> PromptCompileResult:
+    """编译提示词：按 active_scopes 聚合可见技能/工具/MCP（去重），拼装 system prompt 与响应指令，返回 PromptCompileResult。"""
     visible_skills: list[RuntimeSkill] = []
     visible_skill_trees: list[RuntimeSkill] = []
     visible_tools: list[RuntimeTool] = []

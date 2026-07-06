@@ -1,3 +1,9 @@
+"""全局服务单例装配（轻量级手工 DI 容器）。
+
+模块加载时按依赖顺序实例化所有 registry / store / service 单例，供 API 层
+直接 import 使用。use_db_stores 开关决定运行态数据（会话/运行记录/长期记忆/向量）
+走 PostgreSQL 还是 JSON 文件——两条分支对上层暴露同一接口。
+"""
 from app.config import settings
 from app.services.registry import (
     EmployeeRegistryService,

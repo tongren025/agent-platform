@@ -1,3 +1,4 @@
+"""员工间委派工具（delegate_to_employee）：把消息转给另一个数字员工执行并取回结果。带总开关、深度上限与环路检测（__delegation_stack）。"""
 from __future__ import annotations
 
 import asyncio
@@ -12,10 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 class DelegateHandler:
+    """delegate_to_employee 工具：校验开关/自委派/深度/环路后，调目标员工的 run_invocation 并返回其回复。"""
     tool_code = "delegate_to_employee"
 
     async def handle(self, ctx: ToolContext) -> str:
         # 委派总开关：关闭时直接拒绝（此前从未真正校验，P0 修复让工具真正执行后这点尤为重要）
+        """执行委派：逐项校验（开关、参数、自委派、深度、环路），把委派栈注入 extra_context 后调用目标员工。"""
         if not settings.agent.delegation_enabled:
             return self._error("DELEGATION_DISABLED", "Delegation is disabled.")
 
@@ -127,6 +130,7 @@ class DelegateHandler:
 
     @staticmethod
     def _error(code: str, message: str) -> str:
+        """构造结构化错误 JSON（code + message），供 agent 识别失败原因。"""
         return json.dumps(
             {"status": "error", "errorCode": code, "message": message},
             ensure_ascii=False,

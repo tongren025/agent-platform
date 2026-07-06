@@ -18,6 +18,7 @@ _source_locks: dict[str, asyncio.Lock] = {}
 
 
 def _lock_for(code: str) -> asyncio.Lock:
+    """取（或惰性创建）某学习源的专属锁，保证同一源不会被并发重复学习。"""
     lk = _source_locks.get(code)
     if lk is None:
         lk = asyncio.Lock()
@@ -26,11 +27,17 @@ def _lock_for(code: str) -> asyncio.Lock:
 
 
 async def run_learn(source: LearnSource) -> LearnRunResult:
+    """执行一次学习源运行的对外入口：按源加锁串行，实际逻辑委托 _run_inner。"""
     async with _lock_for(source.source_code):
         return await _run_inner(source)
 
 
 async def _run_inner(source: LearnSource) -> LearnRunResult:
+    """逐个 URL 抓取+总结写入目标员工知识库，汇总成功/失败并回写学习源状态与历史。
+
+    max_articles 兜底为 ≥1；目标员工不存在直接判失败；按「全失败=failed / 有失败=partial /
+    全成功=success」定级。
+    """
     from app.dependencies import employee_registry, learn_history_store, learn_source_store
     from app.services.scraper import ScraperError, scrape_and_summarize
 
@@ -88,6 +95,10 @@ async def _run_inner(source: LearnSource) -> LearnRunResult:
 
 
 def _writeback(source: LearnSource, result: LearnRunResult) -> None:
+    """把本次运行结果回写到学习源（last_run_at/last_status/累计学习数等）。
+
+    先重新读一遍最新的源再改，避免覆盖运行期间用户的其他编辑。
+    """
     from app.dependencies import learn_source_store
 
     fresh = learn_source_store.get(source.source_code)

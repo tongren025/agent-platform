@@ -1,3 +1,4 @@
+// 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、知识库上传。
 import { useEffect, useState } from 'react';
 import {
   Table, Button, Modal, Form, Input, Switch, Select, Tag, Space, Popconfirm, message,

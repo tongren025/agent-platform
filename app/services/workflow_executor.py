@@ -27,6 +27,7 @@ _OUTPUT_MAX = 2000  # 单节点输出落盘截断（仿 loop.py:178），防 bas
 
 
 def _now() -> datetime:
+    """当前 UTC 时间。"""
     return datetime.now(timezone.utc)
 
 
@@ -68,6 +69,7 @@ def validate_graph(wf: WorkflowDefinition) -> str | None:
 
 
 def _persist(run: WorkflowRun) -> None:
+    """把运行记录增量落盘（失败只告警，不影响执行主流程）。"""
     try:
         from app.dependencies import workflow_run_store
         workflow_run_store.save(run)
@@ -76,6 +78,7 @@ def _persist(run: WorkflowRun) -> None:
 
 
 async def _run_node(node, variables: dict, run: WorkflowRun) -> NodeResult:
+    """执行单个节点：按类型取执行器并加节点级超时；未知类型/超时/异常统一返回 failed 结果。"""
     executor = get_node_executor(node.type)
     if executor is None:
         return NodeResult(status="failed", error=f"未知节点类型：{node.type!r}")
@@ -95,6 +98,12 @@ async def _run_node(node, variables: dict, run: WorkflowRun) -> NodeResult:
 
 
 async def run_workflow(wf: WorkflowDefinition, inputs: dict | None) -> WorkflowRun:
+    """执行整张工作流 DAG 并返回运行记录。
+
+    先做图校验（非法直接失败返回）；然后 ready-set 遍历：每轮挑出「入边全终态且至少一条激活」
+    的节点并发跑，未激活分支整支 skipped；每轮增量落盘。兜底：max_steps 防环、节点级/整体超时、
+    onError=stop 时首个失败即中止。全部终态后把剩余 pending 记为 skipped，运行态收敛为 success。
+    """
     run = WorkflowRun(workflow_key=wf.workflow_key, inputs=dict(inputs or {}), status="running")
 
     err = validate_graph(wf)
@@ -119,6 +128,7 @@ async def run_workflow(wf: WorkflowDefinition, inputs: dict | None) -> WorkflowR
     run.steps = list(steps.values())
 
     def passable(k: str) -> bool:
+        """节点 k 是否可放行下游：success，或 failed 且 onError=continue。"""
         s = status[k]
         if s == "success":
             return True
@@ -127,6 +137,7 @@ async def run_workflow(wf: WorkflowDefinition, inputs: dict | None) -> WorkflowR
         return False
 
     def edge_active(e) -> bool:
+        """边 e 是否激活：源可放行，且 source_handle 与源选中的分支一致（普通节点走 None-handle）。"""
         if not passable(e.source):
             return False
         ch = chosen.get(e.source)  # 非 condition 节点为 None（放行全部 None-handle 出边）

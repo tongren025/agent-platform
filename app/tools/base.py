@@ -23,6 +23,7 @@ class ToolContext:
         self.deep_state = deep_state
 
     def parse_args(self) -> dict:
+        """把工具调用的 arguments JSON 解析成 dict（空串返回空 dict，非法 JSON 抛异常由调用方兜底）。"""
         if not self.arguments_json:
             return {}
         return json.loads(self.arguments_json)
@@ -39,9 +40,12 @@ class ToolContext:
 
 
 class ToolHandler(Protocol):
+    """工具处理器协议：实现 tool_code 属性与 async handle(ctx)，注册到全局 registry 后即可被 agent 调用。"""
     tool_code: str
 
-    async def handle(self, ctx: ToolContext) -> str: ...
+    async def handle(self, ctx: ToolContext) -> str:
+        """执行一次工具调用，返回给 LLM 的结果文本（通常为 JSON 字符串）。"""
+        ...
 
 
 # ── Global registry ──────────────────────────────────────────────

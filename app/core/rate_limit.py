@@ -26,6 +26,7 @@ limiter = Limiter(key_func=get_remote_address, default_limits=["60/minute"])
 
 
 async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
+    """slowapi 触发限流时的异常处理器：返回 429 + 统一 {code, message, data} 信封。"""
     return JSONResponse(
         status_code=429,
         content={
@@ -45,10 +46,12 @@ _monthly_key_cache: str = ""
 
 
 def _current_month_key() -> str:
+    """当前 UTC 月份 key，形如 '2026-07'，用作月度配额计数的命名空间。"""
     return datetime.now(timezone.utc).strftime("%Y-%m")
 
 
 def _rotate_if_needed() -> None:
+    """跨月自动清零：发现月份变化就清空内存计数器（配额按自然月滚动）。"""
     global _monthly_key_cache
     mk = _current_month_key()
     if mk != _monthly_key_cache:
@@ -57,6 +60,7 @@ def _rotate_if_needed() -> None:
 
 
 def record_token_usage(employee_key: str, tokens: int) -> None:
+    """一次 LLM 调用后累加员工本月 token 用量（invocation 结束时调用）。"""
     _rotate_if_needed()
     mk = _current_month_key()
     _monthly_counters[mk][employee_key] += tokens
@@ -79,6 +83,7 @@ def check_quota(employee_key: str, quotas_config: dict) -> tuple[bool, str]:
 
 
 def get_usage(employee_key: str) -> dict:
+    """查询员工本月 token 用量，返回 {month, employee_key, tokens_used}（供 API 展示）。"""
     _rotate_if_needed()
     mk = _current_month_key()
     return {

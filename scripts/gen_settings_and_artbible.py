@@ -14,6 +14,7 @@ with open(CARDS_PATH, "r", encoding="utf-8") as f:
 existing_ids = {c["card_id"] for c in existing}
 
 def card(cid, stage, title, content, ep=None, shot=0, prompts=None):
+    """构造一张制作看板卡片 dict。"""
     return {
         "card_id": cid, "project_id": PROJECT_ID, "stage": stage,
         "title": title, "content": content, "episode": ep,

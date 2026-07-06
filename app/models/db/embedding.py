@@ -22,6 +22,7 @@ except ImportError:
 
 
 class EmbeddingORM(Base):
+    """embeddings 表：一段文本切片的向量。(employee_key, source_type, source_id) 唯一，PG 用 pgvector Vector(1024) 列，SQLite 测试环境退化为 JSON 列。"""
     __tablename__ = "embeddings"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)

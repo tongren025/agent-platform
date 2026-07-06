@@ -1,3 +1,4 @@
+// 用户端登录态：token 存取、登录/校验/登出、权限缓存与 hasPerm() 判断。
 import type { ApiResult } from './types';
 
 const TOKEN_KEY = 'user_token';

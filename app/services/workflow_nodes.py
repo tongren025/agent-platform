@@ -31,6 +31,7 @@ _WORKFLOW_BLOCKED_TOOLS = {"execute", "delegate_to_employee"}
 
 @dataclass
 class NodeContext:
+    """单个节点执行时的上下文：节点本身、变量池、所属运行及运行/工作流标识。"""
     node: object              # WorkflowNode
     variables: dict           # node_key -> {field: value}
     run: object               # WorkflowRun
@@ -40,6 +41,7 @@ class NodeContext:
 
 @dataclass
 class NodeResult:
+    """节点执行结果：发布到变量池的输出、分支标签、状态与 token 消耗。"""
     output: dict = field(default_factory=dict)   # 发布到 variables[node_key] 的字段
     next_handle: Optional[str] = None            # condition 选中的分支标签
     status: str = "success"                      # success | failed
@@ -50,9 +52,11 @@ class NodeResult:
 
 
 class NodeExecutor:
+    """节点执行器基类：子类声明 node_type 并实现 execute。"""
     node_type: str = ""
 
     async def execute(self, ctx: NodeContext) -> NodeResult:  # pragma: no cover - 抽象
+        """执行节点并返回结果（抽象方法，子类必须覆写）。"""
         raise NotImplementedError
 
 
@@ -61,18 +65,22 @@ _executors: dict[str, NodeExecutor] = {}
 
 
 def register_node_executor(inst: NodeExecutor) -> None:
+    """把一个执行器实例按其 node_type 注册进全局表。"""
     _executors[inst.node_type] = inst
 
 
 def get_node_executor(node_type: str) -> Optional[NodeExecutor]:
+    """按节点类型取执行器，未注册返回 None。"""
     return _executors.get(node_type)
 
 
 def get_all_node_executors() -> dict[str, NodeExecutor]:
+    """返回全部已注册执行器的副本（供前端列出可用节点类型）。"""
     return dict(_executors)
 
 
 def _publish(text: str, **extra) -> dict:
+    """构造节点输出 dict：约定含 output/text 两字段，额外字段随 extra 合并。"""
     out = {"output": text, "text": text}
     out.update(extra)
     return out
@@ -81,9 +89,11 @@ def _publish(text: str, **extra) -> dict:
 # ── 内置执行器 ──────────────────────────────────────────────────
 
 class StartExecutor(NodeExecutor):
+    """start 节点执行器：透传引擎播种的触发输入，供下游模板引用。"""
     node_type = "start"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """透传触发输入：把引擎播种的 start 输入原样发布，供下游 {{start.xxx}} 引用。"""
         # 触发输入已由引擎播种到 variables['start']；本节点透传，便于 {{<startNodeKey>.output}}
         inputs = ctx.variables.get("start", {})
         out = dict(inputs) if isinstance(inputs, dict) else {}
@@ -96,6 +106,7 @@ class AgentExecutor(NodeExecutor):
     node_type = "agent"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """解析输入模板 → 调 run_invocation 跑该员工 → 发布回复文本；结构化 JSON 的顶层键也一并发布。"""
         cfg = ctx.node.config or {}
         employee_key = (cfg.get("employeeKey") or "").strip()
         if not employee_key:
@@ -147,6 +158,7 @@ class ConditionExecutor(NodeExecutor):
     node_type = "condition"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """按 cases 顺序用安全比较器匹配，命中即激活对应分支 handle；都不中走 else。"""
         cfg = ctx.node.config or {}
         cases = cfg.get("cases") or []
         else_label = cfg.get("elseLabel") or "else"
@@ -165,6 +177,7 @@ class TemplateExecutor(NodeExecutor):
     node_type = "template"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """渲染 template 模板并发布为输出（纯文本拼接，不调 LLM）。"""
         cfg = ctx.node.config or {}
         out = resolve_template(cfg.get("template") or "", ctx.variables)
         return NodeResult(output=_publish(out))
@@ -180,6 +193,7 @@ class ToolExecutor(NodeExecutor):
     node_type = "tool"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """授权校验（员工绑定 + 黑名单）后调用工具 handler；参数经 JSON 转义防注入，尊重审批挂起。"""
         from app.dependencies import employee_registry
         from app.tools.base import ToolContext, get_handler
 
@@ -238,6 +252,7 @@ class KnowledgeExecutor(NodeExecutor):
     node_type = "knowledge"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """对指定员工知识库做关键词检索，把命中片段拼接后作为变量注入下游（含 count）。"""
         from app.dependencies import knowledge_retriever
 
         cfg = ctx.node.config or {}
@@ -259,6 +274,7 @@ class EndExecutor(NodeExecutor):
     node_type = "end"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """用 outputTemplate 渲染并发布工作流最终输出。"""
         cfg = ctx.node.config or {}
         tmpl = cfg.get("outputTemplate")
         out = resolve_template(tmpl, ctx.variables) if tmpl else ""
@@ -268,6 +284,7 @@ class EndExecutor(NodeExecutor):
 # ── 辅助 ────────────────────────────────────────────────────────
 
 def _try_json(text):
+    """尝试把文本解析为 JSON（仅当去空白后以 { 或 [ 开头）；非字符串或解析失败返回 None。"""
     if not isinstance(text, str):
         return None
     s = text.strip()
@@ -335,6 +352,7 @@ class IterationExecutor(NodeExecutor):
     node_type = "iteration"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """把 arrayTemplate 解析成数组，对每项调用员工（受 maxParallel 限流），汇总结果与 token。"""
         cfg = ctx.node.config or {}
         employee_key = (cfg.get("employeeKey") or "").strip()
         if not employee_key:
@@ -359,6 +377,7 @@ class IterationExecutor(NodeExecutor):
         sem = asyncio.Semaphore(max_par)
 
         async def _run_one(idx: int, item) -> None:
+            """跑单项：注入 __item__/__index__/__total__ 后调用员工，结果写入 results[idx] 并累加 token。"""
             nonlocal total_pt, total_ct
             iter_vars = dict(ctx.variables)
             item_str = json.dumps(item, ensure_ascii=False) if not isinstance(item, str) else item
@@ -410,6 +429,7 @@ class HttpExecutor(NodeExecutor):
     node_type = "http"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """按配置发起 HTTP 请求（模板解析 url/headers/body），把响应体与状态码注入变量池。"""
         import httpx
 
         cfg = ctx.node.config or {}
@@ -498,6 +518,7 @@ class CodeExecutor(NodeExecutor):
     del _ast
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """AST 白名单校验后，在受限命名空间里 eval 表达式做数据变换（禁下划线属性、禁 import/exec）。"""
         import ast as _ast
         cfg = ctx.node.config or {}
         expr = (cfg.get("expression") or "").strip()
@@ -557,6 +578,7 @@ class SubWorkflowExecutor(NodeExecutor):
     _DEPTH_KEY = "__sub_workflow_depth"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
+        """执行子工作流：校验嵌套深度上限 → 解析输入 → run_workflow → 把子流程输出/运行态注入变量池。"""
         cfg = ctx.node.config or {}
         wf_key = (cfg.get("workflowKey") or "").strip()
         if not wf_key:

@@ -1,3 +1,4 @@
+"""DeepAgent 工具集：任务清单(write_todos)、虚拟文件系统(ls/read/write/edit)、人工审批(require_approval)、受限 shell(execute)、子代理(task)。状态都存在 DeepAgentState（单次运行内存内共享），模块加载时自动注册。"""
 from __future__ import annotations
 
 import asyncio
@@ -24,31 +25,37 @@ _BLOCKED_KEYWORDS = frozenset([
 
 
 def _now() -> datetime:
+    """UTC 当前时间工厂。"""
     return datetime.now(timezone.utc)
 
 
 @dataclass
 class DeepAgentState:
+    """一次深度运行的共享状态：todos 清单 + 虚拟文件系统 + 待审批信息。同一次 run 的所有工具共享此对象。"""
     todos: list[dict] = field(default_factory=list)
     files: dict[str, str] = field(default_factory=dict)
     pending_approval: PendingApprovalDetail | None = None
 
 
 def _ensure_deep_state(ctx: ToolContext) -> DeepAgentState:
+    """惰性初始化 ctx 上的 DeepAgentState（首个深度工具调用时创建）。"""
     if ctx.deep_state is None:
         ctx.deep_state = DeepAgentState()
     return ctx.deep_state
 
 
 def _normalise_status(raw: str) -> str:
+    """把任务状态字符串规整到 pending/in_progress/completed，非法值落回 pending。"""
     low = raw.lower().strip().replace(" ", "_")
     return low if low in _VALID_STATUSES else "pending"
 
 
 class WriteTodosHandler:
+    """write_todos 工具：整表覆盖任务清单，agent 用它规划与更新执行步骤。"""
     tool_code = "write_todos"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """整表覆盖 todos：校验列表结构、规整状态后写入共享状态。"""
         state = _ensure_deep_state(ctx)
         args = ctx.parse_args()
         raw_todos = args.get("todos", [])
@@ -75,9 +82,11 @@ class WriteTodosHandler:
 
 
 class LsHandler:
+    """ls 工具：列出虚拟文件系统中的全部文件（路径 + 大小）。"""
     tool_code = "ls"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """列出虚拟文件（按路径排序）。"""
         state = _ensure_deep_state(ctx)
         listing = [
             {"path": path, "size": len(content)}
@@ -90,9 +99,11 @@ class LsHandler:
 
 
 class ReadFileHandler:
+    """read_file 工具：读虚拟文件内容，支持 offset/limit 分页读取行。"""
     tool_code = "read_file"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """读文件：校验路径存在，按 offset/limit 截取行返回。"""
         state = _ensure_deep_state(ctx)
         args = ctx.parse_args()
         path = args.get("path", "").strip()
@@ -125,9 +136,11 @@ class ReadFileHandler:
 
 
 class WriteFileHandler:
+    """write_file 工具：创建或整体覆盖一个虚拟文件。"""
     tool_code = "write_file"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """写文件：整体覆盖内容，返回 created/overwritten 与大小。"""
         state = _ensure_deep_state(ctx)
         args = ctx.parse_args()
         path = args.get("path", "").strip()
@@ -148,9 +161,11 @@ class WriteFileHandler:
 
 
 class EditFileHandler:
+    """edit_file 工具：按唯一 old_string 精确替换虚拟文件内容（不唯一时要求补充上下文）。"""
     tool_code = "edit_file"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """编辑文件：old_string 必须存在且唯一，只替换第一处。"""
         state = _ensure_deep_state(ctx)
         args = ctx.parse_args()
         path = args.get("path", "").strip()
@@ -186,9 +201,11 @@ class EditFileHandler:
 
 
 class RequireApprovalHandler:
+    """require_approval 工具：agent 在危险动作前挂起等人批。首次调用记录待审批并返回哨兵信号中断循环；带 __approval_decision 恢复时返回批准结果。"""
     tool_code = "require_approval"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """两种路径：extra_context 带审批决定则返回结果；否则登记待审批并返回 PENDING 哨兵。"""
         extra = ctx.parse_extra_context()
 
         decision = extra.get("__approval_decision")
@@ -216,9 +233,11 @@ class RequireApprovalHandler:
 
 
 class ShellExecuteHandler:
+    """execute 工具：受限 shell 执行——总开关 + 命令白名单 + 危险关键词黑名单 + 超时 + 输出截断，四层防护。"""
     tool_code = "execute"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """执行命令：逐层校验（开关/白名单/黑名单）后子进程执行，超时与输出长度受配置约束。"""
         if not settings.agent.shell_execute_enabled:
             return json.dumps({"error": "Shell execution is disabled."})
 
@@ -282,9 +301,11 @@ _SUBTASK_ALLOWED_TOOLS = frozenset([
 
 
 class TaskHandler:
+    """task 工具：把子任务委托给一个轻量子代理（独立 LLM 循环，只开放虚拟文件系统工具，最多 8 轮），与主 agent 共享 DeepAgentState。"""
     tool_code = "task"
 
     async def handle(self, ctx: ToolContext) -> str:
+        """运行子代理循环：受限工具集 + 迭代上限，返回子代理的最终文本结论。"""
         args = ctx.parse_args()
         subagent_type = args.get("subagent_type", "worker")
         instruction = args.get("instruction", "").strip()

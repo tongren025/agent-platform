@@ -57,5 +57,6 @@ async def embed_texts(
 
 
 async def embed_single(text: str, **kwargs) -> list[float] | None:
+    """单条文本向量化（embed_texts 的便捷包装）。失败或未配置 key 时返回 None。"""
     results = await embed_texts([text], **kwargs)
     return results[0] if results else None

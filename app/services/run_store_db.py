@@ -18,6 +18,7 @@ from app.models.run_record import AgentRunRecord
 
 
 class AgentRunDbStore:
+    """运行记录的 PG 仓储：接口镜像 JSON 版 AgentRunStore，可通过 dependencies 一行切换。"""
 
     def __init__(self, session_factory: sessionmaker | None = None) -> None:
         # 允许注入 sessionmaker（测试用 SQLite 内存库），默认走应用的 PG SessionLocal
@@ -25,6 +26,7 @@ class AgentRunDbStore:
 
     @contextmanager
     def _session(self) -> Iterator[Session]:
+        """事务性 Session 上下文：正常退出自动 commit，异常 rollback，最后必定 close。"""
         s = self._sf()
         try:
             yield s
@@ -36,6 +38,7 @@ class AgentRunDbStore:
             s.close()
 
     def save_run(self, record: AgentRunRecord) -> None:
+        """按 run_id upsert 一条运行记录：存在则更新字段，不存在则插入新行。"""
         with self._session() as s:
             row = s.scalar(select(AgentRunORM).where(AgentRunORM.run_id == record.run_id))
             if row is None:
@@ -58,6 +61,7 @@ class AgentRunDbStore:
             row.created_at = record.created_at
 
     def load_run(self, run_id: str) -> AgentRunRecord | None:
+        """按 run_id 读取单条运行记录，不存在返回 None。"""
         with self._session() as s:
             row = s.scalar(select(AgentRunORM).where(AgentRunORM.run_id == run_id))
             return AgentRunRecord.model_validate(row.to_dict()) if row else None
@@ -69,6 +73,7 @@ class AgentRunDbStore:
         success: bool | None = None,
         limit: int = 50,
     ) -> list[AgentRunRecord]:
+        """按员工/会话/成功与否过滤运行记录，按创建时间倒序取前 limit 条。"""
         with self._session() as s:
             stmt = select(AgentRunORM)
             if employee_key:

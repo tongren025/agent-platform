@@ -18,12 +18,14 @@ router = APIRouter(prefix="/api/v1/agentapp/agent")
 
 
 def _mask_key(key: str) -> str:
+    """把 API Key 脱敏为 "前4位****后4位"，短 key 直接返回 "****"，避免明文外泄。"""
     if not key or len(key) <= 8:
         return "****"
     return key[:4] + "****" + key[-4:]
 
 
 class AiProviderBody(BaseModel):
+    """POST/PUT /ai-providers 的请求体：AI 供应商配置（名称、endpoint、apiKey、启用状态与模型列表）。"""
     name: str
     endpoint: str
     apiKey: str
@@ -33,6 +35,7 @@ class AiProviderBody(BaseModel):
 
 @router.get("/ai-providers")
 def list_ai_providers():
+    """GET /ai-providers：列出全部供应商（含配置文件内置与用户自管），apiKey 脱敏返回，managed 标记是否可编辑。"""
     providers = ai_service.list_all_providers()
     store = ai_service.store
     result = []
@@ -51,6 +54,7 @@ def list_ai_providers():
 
 @router.get("/ai-providers/{name}")
 def get_ai_provider(name: str):
+    """GET /ai-providers/{name}：返回单个供应商详情（含明文 apiKey 供编辑回填）；名称非法返 400，不存在返 404。"""
     if BAD_KEY_RE.search(name):
         raise HTTPException(status_code=400, detail="Invalid provider name")
     store = ai_service.store
@@ -76,6 +80,7 @@ def get_ai_provider(name: str):
 
 @router.post("/ai-providers")
 def save_ai_provider(body: AiProviderBody):
+    """POST /ai-providers：新建（或按名称覆盖）一个用户自管供应商；名称非法返 400。"""
     if BAD_KEY_RE.search(body.name):
         raise HTTPException(status_code=400, detail="Invalid provider name")
     data = {
@@ -94,6 +99,7 @@ def save_ai_provider(body: AiProviderBody):
 
 @router.put("/ai-providers/{name}")
 def update_ai_provider(name: str, body: AiProviderBody):
+    """PUT /ai-providers/{name}：更新供应商配置；apiKey 传空表示沿用旧值；名称非法返 400。"""
     if BAD_KEY_RE.search(name):
         raise HTTPException(status_code=400, detail="Invalid provider name")
     existing = ai_service.store.get(name)
@@ -116,6 +122,7 @@ def update_ai_provider(name: str, body: AiProviderBody):
 
 @router.delete("/ai-providers/{name}")
 def delete_ai_provider(name: str):
+    """DELETE /ai-providers/{name}：删除用户自管供应商；名称非法返 400，不存在返 404。"""
     if BAD_KEY_RE.search(name):
         raise HTTPException(status_code=400, detail="Invalid provider name")
     deleted = ai_service.store.delete(name)
@@ -126,6 +133,7 @@ def delete_ai_provider(name: str):
 
 @router.post("/ai-providers/{name}/test")
 def test_ai_provider(name: str):
+    """POST /ai-providers/{name}/test：用首个模型发一条测试消息验证连通性；结果放在 success 字段而非 HTTP 状态码。"""
     if BAD_KEY_RE.search(name):
         raise HTTPException(status_code=400, detail="Invalid provider name")
     provider = None
@@ -153,6 +161,7 @@ def test_ai_provider(name: str):
 
 @router.get("/system-info")
 def get_system_info():
+    """GET /system-info：返回运行环境与 agent 关键开关（版本、端口、供应商/模型数量、委派/Shell/知识库配置等）。"""
     import platform
     providers = ai_service.list_providers()
     total_models = sum(len(p.models) for p in providers)

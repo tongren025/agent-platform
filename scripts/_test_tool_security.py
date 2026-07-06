@@ -5,6 +5,7 @@ from app.services.workflow_executor import run_workflow
 
 
 def wf(tool_cfg):
+    """构造只含一个 tool 节点的最小测试工作流。"""
     return WorkflowDefinition(
         workflowKey="test-tool-sec", name="t",
         nodes=[
@@ -21,6 +22,7 @@ def wf(tool_cfg):
 
 async def main():
     # 1) 黑名单工具（Shell 执行）被拒
+    """依次验证 shell 工具默认禁用等安全约束。"""
     r = await run_workflow(wf({"toolCode": "execute", "employeeKey": "comic-director", "argsTemplate": "{}"}), {})
     tool_step = next(s for s in r.steps if s.node_key == "tool")
     print("BLOCKED:", tool_step.status, "|", tool_step.error)

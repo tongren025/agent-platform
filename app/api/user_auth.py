@@ -12,12 +12,14 @@ router = APIRouter(prefix="/api/v1/agentapp/auth", tags=["user-auth"])
 
 
 class LoginRequest(BaseModel):
+    """POST /login 的请求体：用户名与密码。"""
     username: str
     password: str
 
 
 @router.post("/login")
 def login(req: LoginRequest):
+    """POST /login：校验账号密码，成功则签发 token 并返回用户名/显示名/角色。"""
     user = user_store.authenticate(req.username, req.password)
     if not user:
         raise HTTPException(status_code=401, detail="账号或密码错误，或账号已被禁用")
@@ -31,6 +33,7 @@ def login(req: LoginRequest):
 
 @router.get("/me")
 def me(authorization: str = ""):
+    """GET /me：占位接口，当前恒返回未认证（实际身份校验走 /check）。"""
     from fastapi import Header
     # 手动拿 header 避免自动 401
     return ok({"authenticated": False})
@@ -38,6 +41,7 @@ def me(authorization: str = ""):
 
 @router.get("/check")
 def check_token(token: str = ""):
+    """GET /check：校验 token 有效且用户启用，返回用户名/角色/权限列表。"""
     if not token:
         raise HTTPException(status_code=401, detail="未提供 token")
     claims = parse_token(token)

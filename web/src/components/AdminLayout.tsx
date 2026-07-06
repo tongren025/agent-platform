@@ -1,3 +1,4 @@
+// 管理端布局：独立导航与鉴权守卫，与用户端完全隔离。
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Tooltip, message } from 'antd';

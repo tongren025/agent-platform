@@ -19,11 +19,13 @@ router = APIRouter(prefix="/api/v1/agentapp/knowledge-graph", tags=["knowledge-g
 
 @router.get("")
 def get_knowledge_graph():
+    """GET ''：聚合员工/工具/技能/MCP/团队/工作流为节点、绑定关系为边，返回 {nodes, edges} 供前端可视化。"""
     nodes: list[dict] = []
     edges: list[dict] = []
     edge_id = 0
 
     def _add_edge(source: str, target: str, relation: str):
+        """追加一条带自增 id 的有向关系边。"""
         nonlocal edge_id
         edge_id += 1
         edges.append({"id": f"e{edge_id}", "source": source, "target": target, "relation": relation})

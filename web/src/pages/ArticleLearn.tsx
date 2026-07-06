@@ -1,3 +1,4 @@
+// 文章学习页：学习源 CRUD、手动触发、学习历史（网页→LLM 总结→知识库+记忆）。
 import { useEffect, useState } from 'react';
 import {
   Card, Table, Button, Modal, Form, Input, Select, Switch, InputNumber, TimePicker,

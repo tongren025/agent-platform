@@ -76,3 +76,55 @@ def test_search_knowledge_api_exists(app_client):
     body = resp.json()
     assert body["code"] == 200
     assert isinstance(body["data"], list)
+
+
+# ── M3 接线回归：上传 → 向量化调度、删除 → 清向量 ─────────────────
+
+
+class _FakeRetriever:
+    """记录调用的假语义检索器。"""
+    def __init__(self):
+        self.indexed = []
+        self.removed = []
+
+    async def index_document(self, key, doc_id, text, **kw):
+        self.indexed.append((key, doc_id, text))
+        return 1
+
+    def remove_document(self, key, doc_id, source_type="knowledge"):
+        self.removed.append((key, doc_id))
+
+
+@pytest.mark.asyncio
+async def test_vectorize_doc_calls_retriever(monkeypatch):
+    import app.api.registry as reg
+    fake = _FakeRetriever()
+    monkeypatch.setattr(reg, "semantic_retriever", fake)
+    await reg._vectorize_doc("emp1", "doc1", "你好世界".encode("utf-8"))
+    assert fake.indexed == [("emp1", "doc1", "你好世界")]
+
+
+@pytest.mark.asyncio
+async def test_vectorize_doc_noop_when_disabled(monkeypatch):
+    import app.api.registry as reg
+    monkeypatch.setattr(reg, "semantic_retriever", None)
+    await reg._vectorize_doc("emp1", "doc1", b"hello")  # 不应抛异常
+
+
+def test_drop_doc_vectors_calls_retriever(monkeypatch):
+    import app.api.registry as reg
+    fake = _FakeRetriever()
+    monkeypatch.setattr(reg, "semantic_retriever", fake)
+    reg._drop_doc_vectors("emp1", "doc1")
+    assert fake.removed == [("emp1", "doc1")]
+
+
+def test_drop_doc_vectors_failure_is_swallowed(monkeypatch):
+    import app.api.registry as reg
+
+    class _Boom:
+        def remove_document(self, *a, **k):
+            raise RuntimeError("db down")
+
+    monkeypatch.setattr(reg, "semantic_retriever", _Boom())
+    reg._drop_doc_vectors("emp1", "doc1")  # fail-open，不抛

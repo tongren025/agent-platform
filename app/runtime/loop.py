@@ -1,3 +1,14 @@
+"""Agent 工具调用循环 —— 系统最核心的 LLM 执行引擎。
+
+职责边界：只负责"给定 client + 消息 + 工具，把一轮多迭代的 tool-calling
+对话跑到收敛"，并内建三层可靠性（同模型指数退避重试 → 同 provider 备用
+模型 → 跨 provider fallback client）。它不做的事：不解析员工配置、不选
+模型、不落库——那些在上游 runner.run_agent / invocation 里；工具的具体
+实现在 app/tools/*，这里只通过 ToolHandler.handler 回调执行并记录 trace。
+
+特殊约定：工具结果以 ##PENDING_APPROVAL## 开头时视为人工审批中断，
+循环立即停下并把详情放进 AgentLoopResult.pending_approval，由上游持久化。
+"""
 from __future__ import annotations
 
 import asyncio
@@ -35,6 +46,8 @@ _FATAL_ERRORS: tuple[type[BaseException], ...] = (
 
 @dataclass
 class ToolHandler:
+    """循环可调用的一个工具：name/description/input_schema 报给 LLM，handler 收 JSON 参数串返回文本结果（由 runner 组装）。"""
+
     name: str
     description: str
     input_schema: dict
@@ -43,6 +56,8 @@ class ToolHandler:
 
 @dataclass
 class AgentLoopOptions:
+    """一次循环的运行参数：会话历史、迭代/生成上限、模型，以及重试/超时/降级等可靠性配置（由 runner 按员工模型策略填好）。"""
+
     existing_messages: Optional[list[dict]] = None
     max_iterations: int = 5
     temperature: float = 0.7
@@ -60,6 +75,8 @@ class AgentLoopOptions:
 
 @dataclass
 class AgentLoopResult:
+    """循环产出：最终回复、成败、迭代数、工具 trace、完整消息列表（供续聊持久化）、审批中断详情与 token 用量。"""
+
     final_text: str = ""
     success: bool = True
     iterations: int = 0
@@ -71,6 +88,7 @@ class AgentLoopResult:
 
 
 def _build_openai_tools(handlers: list[ToolHandler]) -> list[dict]:
+    """把 ToolHandler 列表转成 OpenAI chat.completions 的 tools（function calling）声明格式。"""
     tools: list[dict] = []
     for h in handlers:
         tools.append({
@@ -85,6 +103,7 @@ def _build_openai_tools(handlers: list[ToolHandler]) -> list[dict]:
 
 
 def _parse_pending_approval(raw: str) -> PendingApprovalDetail | None:
+    """解析 ##PENDING_APPROVAL## 信号后的 JSON 体为审批详情；解析失败降级为 unknown 类型（不让坏格式打断中断流程）。"""
     try:
         body = raw[len(_PENDING_PREFIX):].strip()
         data = json.loads(body)
@@ -174,6 +193,19 @@ async def run_agent_loop(
     user_message: str,
     tools: list[ToolHandler],
 ) -> AgentLoopResult:
+    """运行 agent 工具调用主循环，直到模型给出最终回复或触碰边界条件。
+
+    每轮迭代：调一次 LLM（经 _create_with_retry，内含重试 + 同 provider
+    备用模型 + 跨 provider fallback 三级降级）→ 若无 tool_calls 即收敛返回；
+    否则逐个执行工具、追加 tool 消息进入下一轮。
+
+    终止条件：模型自然收敛 / 达到 max_iterations / 工具返回审批中断信号 /
+    LLM 在重试降级全部用尽后仍失败（success=False，错误写入 final_text，
+    不上抛异常——由调用方把它记成一次失败的 run）。
+
+    注意：工具执行异常不会中断循环，错误文本会作为 tool 结果喂回模型让其
+    自行调整；trace 中的工具结果截断到 2000 字符，完整结果只进消息历史。
+    """
     result = AgentLoopResult()
 
     messages: list[dict] = [{"role": "system", "content": system_prompt}]

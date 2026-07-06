@@ -10,6 +10,7 @@ from app.utils import utcnow as _now
 
 
 class EvolutionInsight(BaseModel):
+    """自我进化产出的一条洞察（提示词改进/新规则/技能建议/工具建议），由人工 accept/reject。"""
     insight_id: str = Field("", alias="insightId")
     employee_key: str = Field("", alias="employeeKey")
     type: Literal["prompt_improve", "new_rule", "skill_suggest", "tool_suggest"] = "prompt_improve"
@@ -25,6 +26,7 @@ class EvolutionInsight(BaseModel):
 
 
 class EvolutionRunLog(BaseModel):
+    """一次进化分析运行的日志：分析了几个会话、产出几条洞察、耗时。"""
     log_id: str = Field("", alias="logId")
     employee_key: str = Field("", alias="employeeKey")
     ran_at: datetime = Field(default_factory=_now, alias="ranAt")

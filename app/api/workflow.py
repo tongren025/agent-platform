@@ -47,18 +47,21 @@ _NODE_TYPE_META = {
 
 
 class _RunBody(BaseModel):
+    """POST /{key}/run 的请求体：工作流启动输入变量字典（键对应 start 节点声明的字段）。"""
     model_config = {"populate_by_name": True}
     inputs: dict = {}
 
 
 @router.get("")
 def list_workflows():
+    """GET ''：列出全部工作流定义。"""
     items = workflow_registry.list_all()
     return _ok([w.model_dump(by_alias=True, mode="json") for w in items])
 
 
 @router.get("/node-types")
 def list_node_types():
+    """GET /node-types：返回已注册的节点类型及中文标签/描述（供前端调色板渲染）。"""
     available = set(get_all_node_executors().keys())
     ordered = ["start", "agent", "knowledge", "condition", "template", "tool",
                "iteration", "http", "code", "sub-workflow", "end"]
@@ -71,6 +74,7 @@ def list_node_types():
 
 @router.get("/{key}")
 def get_workflow(key: str):
+    """GET /{key}：取单个工作流，不存在返 404。"""
     _validate(key)
     wf = workflow_registry.get(key)
     if wf is None:
@@ -80,6 +84,7 @@ def get_workflow(key: str):
 
 @router.post("")
 def create_workflow(body: WorkflowDefinition):
+    """POST ''：创建工作流；key 已存在返 409。图非法也允许保存，附 validationError 供前端提示。"""
     _validate(body.workflow_key)
     if workflow_registry.exists(body.workflow_key):
         raise HTTPException(status_code=409, detail=f"Workflow already exists: {body.workflow_key}")
@@ -91,6 +96,7 @@ def create_workflow(body: WorkflowDefinition):
 
 @router.put("/{key}")
 def update_workflow(key: str, body: WorkflowDefinition):
+    """PUT /{key}：更新工作流；不存在返 404，附 validationError。"""
     _validate(key)
     if not workflow_registry.exists(key):
         raise HTTPException(status_code=404, detail=f"Workflow not found: {key}")
@@ -103,6 +109,7 @@ def update_workflow(key: str, body: WorkflowDefinition):
 
 @router.delete("/{key}")
 def delete_workflow(key: str):
+    """DELETE /{key}：删除工作流及其全部运行记录，不存在返 404。"""
     _validate(key)
     if not workflow_registry.delete(key):
         raise HTTPException(status_code=404, detail=f"Workflow not found: {key}")
@@ -112,6 +119,7 @@ def delete_workflow(key: str):
 
 @router.post("/{key}/run")
 async def run_workflow_now(key: str, body: _RunBody):
+    """POST /{key}/run：立即运行工作流（带整体超时）；不存在 404、超时 504、异常 500。"""
     _validate(key)
     wf = workflow_registry.get(key)
     if wf is None:
@@ -132,6 +140,7 @@ async def run_workflow_now(key: str, body: _RunBody):
 
 @router.get("/{key}/runs")
 def list_runs(key: str):
+    """GET /{key}/runs：列出该工作流的运行历史。"""
     _validate(key)
     runs = workflow_run_store.list(key)
     return _ok([r.model_dump(by_alias=True, mode="json") for r in runs])
@@ -139,6 +148,7 @@ def list_runs(key: str):
 
 @router.get("/{key}/runs/{run_id}")
 def get_run(key: str, run_id: str):
+    """GET /{key}/runs/{run_id}：查单次工作流运行详情，不存在返 404。"""
     _validate(key)
     run = workflow_run_store.get(key, run_id)
     if run is None:

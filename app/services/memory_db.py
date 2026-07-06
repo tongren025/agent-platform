@@ -18,12 +18,15 @@ from app.models.db.session import ConversationSessionORM
 
 
 class ConversationMemoryDbStore:
+    """会话的 PG 仓储：接口镜像 JSON 版 ConversationMemoryStore，可通过 dependencies 一行切换。"""
 
     def __init__(self, session_factory: sessionmaker | None = None) -> None:
+        # 允许注入 sessionmaker（测试用 SQLite 内存库），默认走应用的 PG SessionLocal
         self._sf = session_factory or SessionLocal
 
     @contextmanager
     def _session(self) -> Iterator[Session]:
+        """事务性 Session 上下文：正常退出自动 commit，异常 rollback，最后必定 close。"""
         s = self._sf()
         try:
             yield s
@@ -35,6 +38,7 @@ class ConversationMemoryDbStore:
             s.close()
 
     def load_session(self, session_id: str) -> ConversationSession | None:
+        """按 session_id 读取单个会话，不存在返回 None。"""
         with self._session() as s:
             row = s.scalar(
                 select(ConversationSessionORM).where(
@@ -51,6 +55,7 @@ class ConversationMemoryDbStore:
         team_code: str | None = None,
         include_archived: bool = False,
     ) -> list[ConversationSession]:
+        """按员工/目标类型/团队过滤会话，默认排除已归档，按最近活跃倒序取前 limit 条。"""
         with self._session() as s:
             stmt = select(ConversationSessionORM)
             if employee_key:
@@ -65,6 +70,7 @@ class ConversationMemoryDbStore:
             return [ConversationSession.model_validate(r.to_dict()) for r in s.scalars(stmt)]
 
     def save_session(self, session: ConversationSession) -> None:
+        """按 session_id upsert 会话：存在则更新全部字段，不存在则插入新行。"""
         with self._session() as s:
             row = s.scalar(
                 select(ConversationSessionORM).where(
@@ -91,6 +97,7 @@ class ConversationMemoryDbStore:
             row.last_active_at = session.last_active_at
 
     def delete_session(self, session_id: str) -> bool:
+        """按 session_id 删除会话，成功 True，本不存在 False。"""
         with self._session() as s:
             row = s.scalar(
                 select(ConversationSessionORM).where(

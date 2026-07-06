@@ -1,3 +1,4 @@
+// 管理端 API 封装：走 /api/admin/*（代理到 :8001），带管理端独立 token。
 import type { ApiResult } from './types';
 
 const BASE = (import.meta.env.VITE_ADMIN_API_BASE as string) || '/api/admin';

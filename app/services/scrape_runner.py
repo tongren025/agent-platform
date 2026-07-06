@@ -20,6 +20,7 @@ _source_locks: dict[str, asyncio.Lock] = {}
 
 
 def _lock_for(source_code: str) -> asyncio.Lock:
+    """取（或惰性创建）某采集源的专属锁，保证同源不会并发重复采集。"""
     lk = _source_locks.get(source_code)
     if lk is None:
         lk = asyncio.Lock()
@@ -28,6 +29,7 @@ def _lock_for(source_code: str) -> asyncio.Lock:
 
 
 def _render_markdown(source: ScrapeSource, prompts: list) -> str:
+    """把采集到的提示词渲染成知识库 markdown：按热度取前 _KNOWLEDGE_MAX_RENDER 条，单条截断。"""
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     lines: list[str] = [
         f"# {source.name} — 自动采集的提示词库",
@@ -99,6 +101,11 @@ async def run_scrape(source: ScrapeSource) -> ScrapeRunResult:
 
 
 async def _run_scrape_inner(source: ScrapeSource) -> ScrapeRunResult:
+    """采集实际逻辑：抓取 → 去重入库 → 注入知识库 → 回写源状态与历史。
+
+    按结果分级：needs_login（需登录）/ failed（抓取或未知错误）/ success；
+    知识库注入失败只告警、不影响本次采集判定成功。
+    """
     from app.dependencies import (
         collected_prompt_store,
         scrape_history_store,

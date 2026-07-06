@@ -1,3 +1,4 @@
+// 工作流节点类型元数据：类型/名称/描述/配色，画布与工具箱共用。
 import { COLORS } from '../../theme';
 import type { WorkflowNodeType } from '../../types';
 

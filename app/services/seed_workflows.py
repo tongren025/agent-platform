@@ -31,6 +31,7 @@ COMIC_ROLES: list[tuple[str, str, int]] = [
 
 
 def _agent(node_key: str, name: str, emp: str, tmpl: str, x: int, y: int) -> WorkflowNode:
+    """构造一个 agent 节点：绑定员工 + 用户输入模板，出错时继续（onError=continue）。"""
     return WorkflowNode(
         node_key=node_key, type="agent", name=name,
         position={"x": x, "y": y},
@@ -39,11 +40,13 @@ def _agent(node_key: str, name: str, emp: str, tmpl: str, x: int, y: int) -> Wor
 
 
 def _tmpl(node_key: str, name: str, tmpl: str, x: int, y: int) -> WorkflowNode:
+    """构造一个 template 节点：纯文本拼接上游产出，不调用 LLM。"""
     return WorkflowNode(node_key=node_key, type="template", name=name,
                         position={"x": x, "y": y}, config={"template": tmpl})
 
 
 def build_comic_drama_workflow() -> WorkflowDefinition:
+    """构建漫剧创作流水线的完整工作流定义：统筹→编剧→设计(并行)→提示词→生成(并行)→成片。"""
     nodes = [
         WorkflowNode(node_key="start", type="start", name="题材输入",
                      position={"x": 40, "y": 300},
@@ -81,6 +84,7 @@ def build_comic_drama_workflow() -> WorkflowDefinition:
     ]
 
     def edge(s: str, t: str) -> WorkflowEdge:
+        """简写工厂：按 source->target 命名规则构造一条普通边。"""
         return WorkflowEdge(edge_id=f"{s}->{t}", source=s, target=t, source_handle=None)
 
     edges = [

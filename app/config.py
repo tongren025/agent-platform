@@ -1,3 +1,10 @@
+"""业务配置装载（appsettings.json 体系）。
+
+从仓库根目录的 appsettings.json + appsettings.Development.json 深合并读出
+Agent / Workflow / AI 模型 / 价目 / 配额等业务配置（沿用 C# 版的 PascalCase 键名）。
+与 app/core/settings.py（.env 驱动的基础设施配置）互补：本文件管业务参数，
+core 管数据库 / 开关 / 密钥。模块加载时即构造全局单例 `settings`。
+"""
 from __future__ import annotations
 import json
 from pathlib import Path
@@ -8,6 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 @dataclass
 class AiModelConfig:
+    """一个 AI 供应商接入点（appsettings 的 aiModels 数组项）——endpoint + key + 旗下模型列表。"""
     name: str
     endpoint: str
     api_key: str
@@ -17,6 +25,7 @@ class AiModelConfig:
 
 @dataclass
 class AgentConfig:
+    """Agent 子系统配置：各类 JSON 数据目录、运行超时、shell/委派/知识库开关与限额。"""
     data_dir: str = "data/employees"
     session_dir: str = "data/sessions"
     skill_dir: str = "data/skills"
@@ -46,6 +55,7 @@ class AgentConfig:
 
 @dataclass
 class WorkflowConfig:
+    """工作流编排引擎配置：定义/运行记录目录与全局、节点两级超时及步数上限。"""
     workflow_dir: str = "data/workflows"
     run_dir: str = "data/workflow-runs"
     # 整条工作流的全局超时（秒）——多节点运行比单 agent 长，故与 agent.run_timeout 分开
@@ -58,6 +68,7 @@ class WorkflowConfig:
 
 @dataclass
 class Settings:
+    """业务配置聚合根——load_settings() 的产物，全局单例 `settings` 即此类型。"""
     port: int = 5311
     agent: AgentConfig = field(default_factory=AgentConfig)
     workflow: WorkflowConfig = field(default_factory=WorkflowConfig)
@@ -70,16 +81,19 @@ class Settings:
 
 
 def _load_json(path: Path) -> dict:
+    """读取 JSON 配置文件；文件不存在时返回空 dict（Development 覆盖文件可缺省）。"""
     if path.exists():
         return json.loads(path.read_text(encoding="utf-8"))
     return {}
 
 
 def load_settings() -> Settings:
+    """装载并解析业务配置：base 与 Development 深合并后映射为强类型 Settings。"""
     base = _load_json(BASE_DIR / "appsettings.json")
     env = _load_json(BASE_DIR / "appsettings.Development.json")
 
     def _merge(a: dict, b: dict) -> dict:
+        """递归深合并两个 dict，b 的键覆盖 a（嵌套 dict 逐层合并而非整体替换）。"""
         out = {**a}
         for k, v in b.items():
             if k in out and isinstance(out[k], dict) and isinstance(v, dict):

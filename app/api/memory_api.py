@@ -21,11 +21,13 @@ router = APIRouter(prefix="/api/v1/agentapp/memory", tags=["memory"])
 
 @router.get("/stats/{employee_key}")
 async def get_stats(employee_key: str):
+    """GET /stats/{key}：三层记忆各自条数统计。"""
     return _ok(long_term_memory.get_stats(employee_key))
 
 
 @router.get("/all/{employee_key}")
 async def get_all(employee_key: str):
+    """GET /all/{key}：返回该员工三层记忆全量（用于提示词注入的完整视图）。"""
     data = long_term_memory.get_all_for_prompt(employee_key)
     return _ok({
         "semantic": [m.model_dump(by_alias=True, mode="json") for m in data["semantic"]],
@@ -38,17 +40,20 @@ async def get_all(employee_key: str):
 
 @router.get("/semantic/{employee_key}")
 async def list_semantic(employee_key: str):
+    """GET /semantic/{key}：列出该员工的全部语义记忆。"""
     items = long_term_memory.list_semantic(employee_key)
     return _ok([m.model_dump(by_alias=True, mode="json") for m in items])
 
 
 class SemanticBody(BaseModel):
+    """POST /semantic/{employee_key} 的请求体：新增语义记忆的内容、分类与重要度。"""
     content: str
     category: str = "fact"
     importance: float = 0.5
 
 @router.post("/semantic/{employee_key}")
 async def add_semantic(employee_key: str, body: SemanticBody):
+    """POST /semantic/{key}：新增一条语义记忆（与已有高相似则合并）。"""
     m = SemanticMemory(
         employee_key=employee_key,
         content=body.content,
@@ -61,6 +66,7 @@ async def add_semantic(employee_key: str, body: SemanticBody):
 
 @router.delete("/semantic/{employee_key}/{memory_id}")
 async def delete_semantic(employee_key: str, memory_id: str):
+    """DELETE /semantic/{key}/{id}：删除一条语义记忆，不存在返 404。"""
     if not long_term_memory.delete_semantic(employee_key, memory_id):
         raise HTTPException(404, "Memory not found")
     return _ok()
@@ -70,11 +76,13 @@ async def delete_semantic(employee_key: str, memory_id: str):
 
 @router.get("/episodic/{employee_key}")
 async def list_episodic(employee_key: str):
+    """GET /episodic/{key}：列出该员工的全部经验记忆。"""
     items = long_term_memory.list_episodic(employee_key)
     return _ok([m.model_dump(by_alias=True, mode="json") for m in items])
 
 
 class EpisodicBody(BaseModel):
+    """POST /episodic/{employee_key} 的请求体：新增经验记忆的观察/动作/结果与成功度评分。"""
     observation: str
     action: str = ""
     result: str = ""
@@ -83,6 +91,7 @@ class EpisodicBody(BaseModel):
 
 @router.post("/episodic/{employee_key}")
 async def add_episodic(employee_key: str, body: EpisodicBody):
+    """POST /episodic/{key}：新增一条经验记忆。"""
     m = EpisodicMemory(
         employee_key=employee_key,
         observation=body.observation,
@@ -96,6 +105,7 @@ async def add_episodic(employee_key: str, body: EpisodicBody):
 
 @router.delete("/episodic/{employee_key}/{memory_id}")
 async def delete_episodic(employee_key: str, memory_id: str):
+    """DELETE /episodic/{key}/{id}：删除一条经验记忆，不存在返 404。"""
     if not long_term_memory.delete_episodic(employee_key, memory_id):
         raise HTTPException(404, "Memory not found")
     return _ok()
@@ -105,17 +115,20 @@ async def delete_episodic(employee_key: str, memory_id: str):
 
 @router.get("/procedural/{employee_key}")
 async def list_procedural(employee_key: str):
+    """GET /procedural/{key}：列出该员工的全部行为记忆。"""
     items = long_term_memory.list_procedural(employee_key)
     return _ok([m.model_dump(by_alias=True, mode="json") for m in items])
 
 
 class ProceduralBody(BaseModel):
+    """POST /procedural/{employee_key} 的请求体：新增行为记忆的规则、依据与置信度。"""
     rule: str
     rationale: str = ""
     confidence: float = 0.5
 
 @router.post("/procedural/{employee_key}")
 async def add_procedural(employee_key: str, body: ProceduralBody):
+    """POST /procedural/{key}：新增一条行为记忆（与已有高相似则合并）。"""
     m = ProceduralMemory(
         employee_key=employee_key,
         rule=body.rule,
@@ -128,6 +141,7 @@ async def add_procedural(employee_key: str, body: ProceduralBody):
 
 @router.delete("/procedural/{employee_key}/{memory_id}")
 async def delete_procedural(employee_key: str, memory_id: str):
+    """DELETE /procedural/{key}/{id}：删除一条行为记忆，不存在返 404。"""
     if not long_term_memory.delete_procedural(employee_key, memory_id):
         raise HTTPException(404, "Memory not found")
     return _ok()
@@ -137,6 +151,7 @@ async def delete_procedural(employee_key: str, memory_id: str):
 
 @router.post("/extract/{employee_key}/{session_id}")
 async def trigger_extraction(employee_key: str, session_id: str):
+    """POST /extract/{key}/{session_id}：从指定会话手动提取记忆并存入长期记忆，会话不存在返 404。"""
     from app.dependencies import memory_store
     from app.services.memory_extractor import extract_and_store
 
@@ -153,6 +168,7 @@ async def trigger_extraction(employee_key: str, session_id: str):
 
 @router.post("/distill/{employee_key}")
 async def trigger_distillation(employee_key: str):
+    """POST /distill/{key}：立即触发一次记忆蒸馏并返回日志。"""
     from app.services.distillation import run_distillation
     log = await run_distillation(employee_key)
     return _ok(log.model_dump(by_alias=True, mode="json"))
@@ -160,6 +176,7 @@ async def trigger_distillation(employee_key: str):
 
 @router.get("/distillation-logs/{employee_key}")
 async def get_distillation_logs(employee_key: str):
+    """GET /distillation-logs/{key}：列出该员工的蒸馏历史。"""
     from app.services.distillation import list_distillation_logs
     logs = list_distillation_logs(employee_key)
     return _ok([lg.model_dump(by_alias=True, mode="json") for lg in logs])

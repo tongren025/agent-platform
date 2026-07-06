@@ -19,6 +19,7 @@ _DEFAULT_DIR = Path(__file__).resolve().parent / "cases"
 
 async def _real_invoke(employee_key: str, user_input: str) -> str:
     # 延迟导入：只有真正跑 eval 时才拉起 app 依赖
+    """真实调用路径：延迟导入 app 依赖，调 run_invocation 返回助手回复（失败抛异常）。"""
     from app.models.conversation import AgentRunRequest
     from app.services.invocation import run_invocation
 
@@ -31,6 +32,7 @@ async def _real_invoke(employee_key: str, user_input: str) -> str:
 
 
 def _print_report(report: SuiteReport) -> None:
+    """打印逐 case 结果与失败检查明细，末行输出通过率。"""
     for r in report.reports:
         mark = "PASS" if r.passed else "FAIL"
         print(f"[{mark}] {r.case_id}  ({r.employee_key})")
@@ -43,6 +45,7 @@ def _print_report(report: SuiteReport) -> None:
 
 
 def main() -> int:
+    """CLI 入口：加载 case → 跑套件 → 打印报告，全过返回 0 否则 1（CI 门禁用）。"""
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", type=Path, default=_DEFAULT_DIR)
     args = ap.parse_args()

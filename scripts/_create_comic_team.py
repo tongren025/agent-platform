@@ -4,6 +4,7 @@ import httpx, json, sys
 BASE = "http://127.0.0.1:8000/api/v1/agentapp"
 
 def post(path, data):
+    """POST 到本地 API 并返回 data（非 200 抛错）。"""
     r = httpx.post(f"{BASE}{path}", json=data, timeout=10)
     j = r.json()
     if j.get("code") != 200:
@@ -13,6 +14,7 @@ def post(path, data):
     return j["data"]
 
 def put(path, data):
+    """PUT 到本地 API 并返回 data（非 200 抛错）。"""
     r = httpx.put(f"{BASE}{path}", json=data, timeout=10)
     j = r.json()
     if j.get("code") != 200:

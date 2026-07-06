@@ -42,6 +42,7 @@ def _latest_per_query() -> dict[str, dict]:
 
 
 def _snap_slug(query: str) -> str:
+    """把 query 归一化为快照目录名（小写、非字母数字替换为下划线），空结果回退为 "default"。"""
     import re
     s = re.sub(r"[^a-zA-Z0-9]+", "_", query.strip().lower()).strip("_")
     return s or "default"
@@ -101,6 +102,7 @@ def repo_history(
 
 
 class RefreshReq(BaseModel):
+    """POST /refresh 的请求体：要刷新的 query、榜单条数上限与"真实增长"统计的时间窗口（天）。"""
     query: str
     limit: int = 15
     recentDays: int = 180

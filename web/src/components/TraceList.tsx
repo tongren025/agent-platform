@@ -1,3 +1,4 @@
+// 工具调用轨迹展示组件：逐轮显示工具名/参数/结果/成败。
 import { Collapse, Typography, Space } from 'antd';
 import { COLORS } from '../theme';
 

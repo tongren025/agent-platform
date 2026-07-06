@@ -39,12 +39,14 @@ _MAX_PROCEDURAL = 50
 
 
 def _sanitize(key: str) -> str:
+    """校验 employee_key 合法（非空、无斜杠/..），防路径穿越。"""
     if not key or _BAD_KEY_RE.search(key):
         raise ValueError(f"Invalid key: {key!r}")
     return key
 
 
 def _atomic_write(path: Path, text: str) -> None:
+    """原子写：先写临时文件再 os.replace，避免半截文件。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + f".tmp{os.getpid()}")
     tmp.write_text(text, encoding="utf-8")
@@ -52,10 +54,12 @@ def _atomic_write(path: Path, text: str) -> None:
 
 
 def _gen_id() -> str:
+    """生成记忆 ID，形如 mem_xxxx。"""
     return "mem_" + secrets.token_hex(6)
 
 
 def _now() -> datetime:
+    """当前 UTC 时间。"""
     return datetime.now(timezone.utc)
 
 
@@ -72,6 +76,7 @@ def _tokenize(text: str) -> set[str]:
 
 
 def _similarity(a: str, b: str) -> float:
+    """两段文本的 Jaccard 相似度（词元交集/并集），任一为空返回 0。"""
     ta, tb = _tokenize(a), _tokenize(b)
     if not ta or not tb:
         return 0.0
@@ -82,8 +87,13 @@ class MemoryBackend(Protocol):
     """长期记忆的存取原语——业务逻辑（合并/衰减/检索/截断）留在 LongTermMemoryStore 里，
     后端只负责"读整表 / 写整表"。JSON 与 PG 各实现这两个方法即可切换，零行为漂。"""
 
-    def load(self, emp_key: str, kind: str) -> list[dict]: ...
-    def save(self, emp_key: str, kind: str, rows: list[dict]) -> None: ...
+    def load(self, emp_key: str, kind: str) -> list[dict]:
+        """读某员工某类型（semantic/episodic/procedural）的整表记忆。"""
+        ...
+
+    def save(self, emp_key: str, kind: str, rows: list[dict]) -> None:
+        """整表覆盖写某员工某类型的记忆（语义等同重写整个 JSON 文件）。"""
+        ...
 
 
 class JsonMemoryBackend:
@@ -94,29 +104,35 @@ class JsonMemoryBackend:
         self._root.mkdir(parents=True, exist_ok=True)
 
     def _path(self, emp_key: str, kind: str) -> Path:
+        """员工某类记忆(kind)的 JSON 文件路径。"""
         d = self._root / _sanitize(emp_key)
         d.mkdir(parents=True, exist_ok=True)
         return d / f"{kind}.json"
 
     def load(self, emp_key: str, kind: str) -> list[dict]:
+        """读整表：返回某员工某类记忆的原始 dict 列表（不存在返回空）。"""
         fp = self._path(emp_key, kind)
         if not fp.exists():
             return []
         return json.loads(fp.read_text(encoding="utf-8"))
 
     def save(self, emp_key: str, kind: str, rows: list[dict]) -> None:
+        """写整表：原子覆盖某员工某类记忆。"""
         _atomic_write(self._path(emp_key, kind), json.dumps(rows, ensure_ascii=False, indent=2))
 
 
 class LongTermMemoryStore:
+    """长期记忆业务层：合并/衰减/检索/截断逻辑在此，读写整表委托给可切换的后端。"""
 
     def __init__(self, backend: MemoryBackend | None = None) -> None:
+        """注入记忆后端；默认 JSON 文件后端，use_db_stores 时由 dependencies 换成 PG 后端。"""
         # 默认 JSON 文件后端（原行为）；use_db_stores 时由 dependencies 注入 PgMemoryBackend
         self._backend = backend or JsonMemoryBackend()
 
     # ── 语义记忆 ──────────────────────────────────────────
 
     def list_semantic(self, emp_key: str) -> list[SemanticMemory]:
+        """读出某员工的全部语义记忆；加载失败告警并返回空。"""
         try:
             return [SemanticMemory.model_validate(d) for d in self._backend.load(emp_key, "semantic")]
         except Exception:
@@ -124,6 +140,7 @@ class LongTermMemoryStore:
             return []
 
     def _save_semantic(self, emp_key: str, items: list[SemanticMemory]) -> None:
+        """按重要性降序排序、封顶 _MAX_SEMANTIC 条后写回。"""
         items.sort(key=lambda m: m.importance, reverse=True)
         if len(items) > _MAX_SEMANTIC:
             items = items[:_MAX_SEMANTIC]
@@ -131,6 +148,7 @@ class LongTermMemoryStore:
         self._backend.save(emp_key, "semantic", rows)
 
     def add_semantic(self, emp_key: str, memory: SemanticMemory) -> SemanticMemory:
+        """新增语义记忆；与已有内容相似度 >0.6 则合并更新（取高重要性、访问计数+1）而非重复插入。"""
         items = self.list_semantic(emp_key)
         # 合并：如果已有高相似度的记忆，更新而非新增
         for existing in items:
@@ -148,6 +166,7 @@ class LongTermMemoryStore:
         return memory
 
     def delete_semantic(self, emp_key: str, memory_id: str) -> bool:
+        """按 memory_id 删除一条语义记忆，不存在返回 False。"""
         items = self.list_semantic(emp_key)
         filtered = [m for m in items if m.memory_id != memory_id]
         if len(filtered) == len(items):
@@ -156,6 +175,7 @@ class LongTermMemoryStore:
         return True
 
     def retrieve_semantic(self, emp_key: str, query: str, top_k: int = 10) -> list[SemanticMemory]:
+        """按 query 检索语义记忆（相似度0.6+重要性0.3+访问热度0.1 加权），命中项刷新访问统计。"""
         items = self.list_semantic(emp_key)
         if not query.strip():
             return items[:top_k]
@@ -179,6 +199,7 @@ class LongTermMemoryStore:
     # ── 经验记忆 ──────────────────────────────────────────
 
     def list_episodic(self, emp_key: str) -> list[EpisodicMemory]:
+        """读出某员工的全部经验记忆；加载失败告警并返回空。"""
         try:
             return [EpisodicMemory.model_validate(d) for d in self._backend.load(emp_key, "episodic")]
         except Exception:
@@ -186,6 +207,7 @@ class LongTermMemoryStore:
             return []
 
     def _save_episodic(self, emp_key: str, items: list[EpisodicMemory]) -> None:
+        """按成功分降序排序、封顶 _MAX_EPISODIC 条后写回。"""
         items.sort(key=lambda m: m.success_score, reverse=True)
         if len(items) > _MAX_EPISODIC:
             items = items[:_MAX_EPISODIC]
@@ -193,6 +215,7 @@ class LongTermMemoryStore:
         self._backend.save(emp_key, "episodic", rows)
 
     def add_episodic(self, emp_key: str, memory: EpisodicMemory) -> EpisodicMemory:
+        """新增一条经验记忆（不做相似合并，缺 id 时生成）。"""
         items = self.list_episodic(emp_key)
         if not memory.memory_id:
             memory.memory_id = _gen_id()
@@ -201,6 +224,7 @@ class LongTermMemoryStore:
         return memory
 
     def delete_episodic(self, emp_key: str, memory_id: str) -> bool:
+        """按 memory_id 删除一条经验记忆，不存在返回 False。"""
         items = self.list_episodic(emp_key)
         filtered = [m for m in items if m.memory_id != memory_id]
         if len(filtered) == len(items):
@@ -209,6 +233,7 @@ class LongTermMemoryStore:
         return True
 
     def retrieve_episodic(self, emp_key: str, query: str, top_k: int = 5) -> list[EpisodicMemory]:
+        """按 query 检索经验记忆（相似度0.5+成功分0.4+访问热度0.1 加权），命中项刷新访问统计。"""
         items = self.list_episodic(emp_key)
         if not query.strip():
             return items[:top_k]
@@ -233,6 +258,7 @@ class LongTermMemoryStore:
     # ── 行为记忆 ──────────────────────────────────────────
 
     def list_procedural(self, emp_key: str) -> list[ProceduralMemory]:
+        """读出某员工的全部行为记忆；加载失败告警并返回空。"""
         try:
             return [ProceduralMemory.model_validate(d) for d in self._backend.load(emp_key, "procedural")]
         except Exception:
@@ -240,6 +266,7 @@ class LongTermMemoryStore:
             return []
 
     def _save_procedural(self, emp_key: str, items: list[ProceduralMemory]) -> None:
+        """按 (置信度, 激活次数) 降序排序、封顶 _MAX_PROCEDURAL 条后写回。"""
         items.sort(key=lambda m: (m.confidence, m.activation_count), reverse=True)
         if len(items) > _MAX_PROCEDURAL:
             items = items[:_MAX_PROCEDURAL]
@@ -247,6 +274,7 @@ class LongTermMemoryStore:
         self._backend.save(emp_key, "procedural", rows)
 
     def add_procedural(self, emp_key: str, memory: ProceduralMemory) -> ProceduralMemory:
+        """新增行为记忆；与已有规则相似度 >0.5 则合并（置信度+0.1、激活次数+1）而非重复插入。"""
         items = self.list_procedural(emp_key)
         for existing in items:
             if _similarity(existing.rule, memory.rule) > 0.5:
@@ -264,6 +292,7 @@ class LongTermMemoryStore:
         return memory
 
     def delete_procedural(self, emp_key: str, memory_id: str) -> bool:
+        """按 memory_id 删除一条行为记忆，不存在返回 False。"""
         items = self.list_procedural(emp_key)
         filtered = [m for m in items if m.memory_id != memory_id]
         if len(filtered) == len(items):
@@ -272,6 +301,7 @@ class LongTermMemoryStore:
         return True
 
     def get_all_for_prompt(self, emp_key: str) -> dict:
+        """一次性取三层记忆（供提示词编译时注入员工背景）。"""
         return {
             "semantic": self.list_semantic(emp_key),
             "episodic": self.list_episodic(emp_key),
@@ -279,6 +309,7 @@ class LongTermMemoryStore:
         }
 
     def get_stats(self, emp_key: str) -> dict:
+        """返回三层记忆各自的条数统计。"""
         return {
             "semantic_count": len(self.list_semantic(emp_key)),
             "episodic_count": len(self.list_episodic(emp_key)),

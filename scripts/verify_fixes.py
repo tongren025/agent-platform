@@ -46,6 +46,7 @@ print(f"  含维基出处: {'✓' if '维基百科' in block else '✗'}\n")
 print("=== Fix1: distillation 不再 KeyError ===")
 from app.services.distillation import run_distillation
 async def t():
+    """跑一次蒸馏并打印错误状态。"""
     log = await run_distillation("comic-qa-inspector")
     print(f"  status error={log.error!r}")
     print(f"  before={log.before_counts} after={log.after_counts}")

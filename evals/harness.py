@@ -18,6 +18,7 @@ AsyncInvoke = Callable[[str, str], Awaitable[str]]
 
 @dataclass
 class EvalCase:
+    """一个 golden case：哪个员工、什么输入、过哪些 checks。"""
     case_id: str
     employee_key: str
     input: str
@@ -26,6 +27,7 @@ class EvalCase:
 
 @dataclass
 class CaseReport:
+    """单 case 运行报告：通过与否、逐项检查结果、输出摘录（截 500 字）。"""
     case_id: str
     employee_key: str
     passed: bool
@@ -36,22 +38,27 @@ class CaseReport:
 
 @dataclass
 class SuiteReport:
+    """整套 eval 的汇总报告。"""
     reports: list[CaseReport] = field(default_factory=list)
 
     @property
     def total(self) -> int:
+        """case 总数。"""
         return len(self.reports)
 
     @property
     def passed(self) -> int:
+        """通过的 case 数。"""
         return sum(1 for r in self.reports if r.passed)
 
     @property
     def all_passed(self) -> bool:
+        """是否全部通过（空套件视为不通过，防误绿）。"""
         return self.total > 0 and self.passed == self.total
 
 
 def load_cases(cases_dir: Path) -> list[EvalCase]:
+    """从目录加载全部 *.json case 文件（*.json.example 模板不会被加载）。"""
     cases: list[EvalCase] = []
     for fp in sorted(cases_dir.glob("*.json")):
         data = json.loads(fp.read_text(encoding="utf-8"))
@@ -65,6 +72,7 @@ def load_cases(cases_dir: Path) -> list[EvalCase]:
 
 
 async def run_case(case: EvalCase, invoke: AsyncInvoke) -> CaseReport:
+    """跑单个 case：invoke 失败即失败但不中断整套；输出过 checks 全过才算通过。"""
     try:
         output = await invoke(case.employee_key, case.input)
     except Exception as exc:  # invoke 失败即本 case 失败，但不中断整套
@@ -75,6 +83,7 @@ async def run_case(case: EvalCase, invoke: AsyncInvoke) -> CaseReport:
 
 
 async def run_suite(cases: list[EvalCase], invoke: AsyncInvoke) -> SuiteReport:
+    """顺序跑完全部 case，汇总成 SuiteReport。"""
     report = SuiteReport()
     for case in cases:
         report.reports.append(await run_case(case, invoke))

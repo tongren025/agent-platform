@@ -39,6 +39,7 @@ DEFAULT_CLI_MAP: dict[str, str] = {
 
 @dataclass
 class StepResult:
+    """流水线单步结果：哪个员工、用了哪个 CLI、产出文件与文本、成败与耗时。"""
     employee_key: str
     name: str
     cli_type: str
@@ -51,6 +52,7 @@ class StepResult:
 
 @dataclass
 class PipelineRunResult:
+    """一次完整流水线运行的结果：全部步骤 + 最终汇总文档路径。"""
     run_id: str
     theme: str
     output_dir: str
@@ -173,6 +175,7 @@ PIPELINE_STAGES: list[dict] = [
 
 
 def _load_employee_system_prompt(employee_key: str) -> str:
+    """直接从员工 JSON 文件读 roleProfile 作为 system prompt（不走注册表服务，保持流水线独立）。"""
     fp = BASE_DIR / "data" / "employees" / f"{employee_key}.json"
     if not fp.exists():
         return ""
@@ -181,6 +184,7 @@ def _load_employee_system_prompt(employee_key: str) -> str:
 
 
 def _get_cli_for_employee(employee_key: str) -> str:
+    """决定员工用哪个 CLI：员工 JSON 的 cliProvider.type 优先，否则查 DEFAULT_CLI_MAP，兜底 claude。"""
     fp = BASE_DIR / "data" / "employees" / f"{employee_key}.json"
     if fp.exists():
         data = json.loads(fp.read_text(encoding="utf-8"))
@@ -191,6 +195,7 @@ def _get_cli_for_employee(employee_key: str) -> str:
 
 
 def _resolve_prompt(stage: dict, outputs: dict[str, str], theme: str) -> str:
+    """渲染阶段提示词模板：把 {theme}/{director} 等占位符替换为前序阶段的产出文本。"""
     tpl = stage["prompt_template"]
 
     var_map = {
@@ -210,6 +215,7 @@ def _resolve_prompt(stage: dict, outputs: dict[str, str], theme: str) -> str:
 
 
 def _build_final_doc(run_dir: Path, steps: list[StepResult], theme: str) -> Path:
+    """把所有成功步骤的产出按序拼成 99_final.md 汇总文档并落盘。"""
     parts: list[str] = [
         f"# 漫剧创作完整文档\n\n",
         f"**题材**: {theme}\n",
@@ -235,6 +241,7 @@ async def run_pipeline(
     cli_overrides: Optional[dict[str, str]] = None,
     skip_employees: Optional[list[str]] = None,
 ) -> PipelineRunResult:
+    """执行整条 CLI 创作流水线：按 PIPELINE_STAGES 顺序逐员工调 CLI，产出写入 data/pipeline-runs/<run_id>/，返回汇总结果。"""
     if not run_id:
         run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 

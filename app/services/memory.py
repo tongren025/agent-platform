@@ -1,3 +1,8 @@
+"""会话（短期记忆）文件存储。
+
+把每次对话的 ConversationSession 持久化为 data 下的 <session_id>.json，
+提供读取 / 列表过滤 / 保存 / 删除。是 agent 多轮上下文的落地层。
+"""
 from __future__ import annotations
 
 import json
@@ -12,15 +17,18 @@ logger = logging.getLogger(__name__)
 
 
 class ConversationMemoryStore:
+    """会话文件存储：每个会话一份 <session_dir>/<session_id>.json。"""
 
     def __init__(self, session_dir: str | None = None) -> None:
         self._dir = BASE_DIR / (session_dir or settings.agent.session_dir)
         self._dir.mkdir(parents=True, exist_ok=True)
 
     def _path_for(self, session_id: str) -> Path:
+        """会话 id → json 文件路径。"""
         return self._dir / f"{session_id}.json"
 
     def load_session(self, session_id: str) -> ConversationSession | None:
+        """读取单个会话；文件缺失或损坏都返回 None（损坏会告警）。"""
         fp = self._path_for(session_id)
         if not fp.exists():
             return None
@@ -39,6 +47,7 @@ class ConversationMemoryStore:
         team_code: str | None = None,
         include_archived: bool = False,
     ) -> list[ConversationSession]:
+        """列出会话，支持按员工/目标类型/团队过滤，默认排除已归档；按最近活跃排序后取前 limit 条。"""
         if not self._dir.exists():
             return []
 
@@ -63,6 +72,7 @@ class ConversationMemoryStore:
         return sessions[:limit]
 
     def save_session(self, session: ConversationSession) -> None:
+        """保存/覆盖会话，字段按别名序列化（与前端 camelCase 对齐）。"""
         fp = self._path_for(session.session_id)
         self._dir.mkdir(parents=True, exist_ok=True)
         data = session.model_dump(by_alias=True, mode="json")
@@ -71,6 +81,7 @@ class ConversationMemoryStore:
         )
 
     def delete_session(self, session_id: str) -> bool:
+        """删除会话文件，成功 True，本不存在 False。"""
         fp = self._path_for(session_id)
         if fp.exists():
             fp.unlink()

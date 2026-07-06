@@ -1,3 +1,4 @@
+// 路由总表：用户端页面（登录墙内）+ 管理端 /admin 页面（独立鉴权）。
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -15,6 +16,7 @@ import Runs from './pages/Runs';
 import Tasks from './pages/Tasks';
 import Pipeline from './pages/Pipeline';
 import Production from './pages/Production';
+import Canvas from './pages/Canvas';
 import ProductionHub from './pages/ProductionHub';
 import EpisodeDetail from './pages/EpisodeDetail';
 import Settings from './pages/Settings';
@@ -55,6 +57,7 @@ export default function App() {
           <Route path="/production/:pid" element={<ProductionHub />} />
           <Route path="/production/:pid/ep/:ep" element={<EpisodeDetail />} />
           <Route path="/production/:pid/pipeline" element={<Production />} />
+          <Route path="/canvas" element={<Canvas />} />
           <Route path="/trends" element={<SkillTracker />} />
           <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
           <Route path="/evolution" element={<Evolution />} />

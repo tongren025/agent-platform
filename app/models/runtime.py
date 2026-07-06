@@ -1,9 +1,11 @@
+"""运行时快照模型：把注册表定义解析为 agent 执行期实际可见的技能/工具/MCP 视图（按 scope 分组），供 prompt 编译与工具循环消费。"""
 from __future__ import annotations
 from typing import Optional
 from pydantic import BaseModel, Field
 
 
 class RuntimeSkill(BaseModel):
+    """运行时技能视图（含来源 binding_code 与树形子技能）。"""
     code: str
     binding_code: str = Field("", alias="bindingCode")
     name: str = ""
@@ -17,6 +19,7 @@ class RuntimeSkill(BaseModel):
 
 
 class RuntimeTool(BaseModel):
+    """运行时工具视图（input_schema 为 JSON Schema 字符串）。"""
     tool_code: str = Field("", alias="toolCode")
     binding_code: str = Field("", alias="bindingCode")
     name: str = ""
@@ -28,6 +31,7 @@ class RuntimeTool(BaseModel):
 
 
 class RuntimeMcpServer(BaseModel):
+    """运行时 MCP 服务器视图（stdio/http 连接参数）。"""
     server_code: str = Field("", alias="serverCode")
     binding_code: str = Field("", alias="bindingCode")
     name: str = ""
@@ -43,6 +47,7 @@ class RuntimeMcpServer(BaseModel):
 
 
 class TeamMemberSummary(BaseModel):
+    """队友摘要：注入提示词让 agent 知道可以委派给谁。"""
     employee_key: str = Field("", alias="employeeKey")
     name: str = ""
     description: Optional[str] = None
@@ -52,6 +57,7 @@ class TeamMemberSummary(BaseModel):
 
 
 class EmployeeRuntimeSnapshot(BaseModel):
+    """员工运行时快照：system prompt 块 + 按 scope 分组的技能/工具/MCP + 模型策略 + 团队上下文。由 snapshot.load_snapshot() 构建。"""
     employee_key: str = Field("", alias="employeeKey")
     system_prompt_block: Optional[str] = None
     skills_by_scope: dict[str, list[RuntimeSkill]] = Field(default_factory=dict)
@@ -68,6 +74,7 @@ class EmployeeRuntimeSnapshot(BaseModel):
 
 
 class PromptCompileResult(BaseModel):
+    """prompt 编译产物：最终 system prompt、响应指令、生效 scope 与可见工具集。"""
     system_prompt: str = ""
     response_instruction: str = ""
     active_scopes: list[str] = Field(default_factory=list)

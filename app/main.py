@@ -22,7 +22,7 @@ from app.core.errors import register_exception_handlers
 from app.core.observability import setup_metrics
 from app.core.rate_limit import limiter, rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from app.api import agent, ai_providers, evolution, knowledge_graph, memory_api, pipeline, production, registry, runs, scrape, sessions, skills, strategy_proxy, tasks, trend_sources, user_auth, workflow
+from app.api import agent, ai_providers, canvas, evolution, knowledge_graph, memory_api, pipeline, production, registry, runs, scrape, sessions, skills, strategy_proxy, tasks, trend_sources, user_auth, workflow
 
 import app.tools.builtin  # noqa: F401
 import app.tools.delegate  # noqa: F401
@@ -36,6 +36,7 @@ logger = get_logger(__name__)
 
 
 def _migrate_employees() -> None:
+    """启动时兜底迁移：给历史员工记录补齐 tags / source / created_at 缺省字段。"""
     from app.dependencies import employee_registry
 
     migrated = 0
@@ -63,6 +64,7 @@ def _migrate_employees() -> None:
 
 
 def _migrate_teams_and_seed() -> None:
+    """启动时团队迁移（roles → member_employee_keys 回填）并注入漫剧种子工作流（失败仅告警）。"""
     from app.dependencies import team_registry
 
     for team in team_registry.list_all():
@@ -82,6 +84,7 @@ def _migrate_teams_and_seed() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """FastAPI 生命周期：启动时执行数据迁移并拉起每日定时调度器，关闭时停止调度器。"""
     _migrate_employees()
     _migrate_teams_and_seed()
     from app.dependencies import daily_scheduler
@@ -116,6 +119,7 @@ app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
 
 @app.get("/healthcheck")
 def healthcheck():
+    """存活探针——供负载均衡 / docker-compose healthcheck 使用，不做依赖检查。"""
     return "ok"
 
 app.include_router(user_auth.router)
@@ -130,6 +134,7 @@ app.include_router(memory_api.router)
 app.include_router(workflow.router)
 app.include_router(pipeline.router)
 app.include_router(production.router)
+app.include_router(canvas.router)
 app.include_router(skills.router)
 app.include_router(knowledge_graph.router)
 app.include_router(evolution.router)
@@ -151,6 +156,7 @@ if wwwroot.exists():
 
     @app.get("/{full_path:path}")
     async def spa_fallback(request: Request, full_path: str):
+        """SPA 兜底路由：命中静态文件则直接返回，否则回退到 index.html 交给前端路由。"""
         file_path = wwwroot / full_path
         if file_path.is_file():
             return FileResponse(file_path)

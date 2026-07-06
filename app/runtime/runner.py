@@ -1,3 +1,4 @@
+"""Agent 运行器：把运行时快照装配成 loop 可执行的选项（工具 handler、模型策略、重试/降级配置），是 invocation 与 loop 之间的装配层。"""
 from __future__ import annotations
 
 import json
@@ -26,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class AgentRunResult:
+    """一次 agent 运行的完整结果（回复/token/轨迹/待审批），由 API 层转成响应。"""
     assistant_message: str = ""
     success: bool = True
     error_message: Optional[str] = None
@@ -39,6 +41,7 @@ class AgentRunResult:
 
 
 def _parse_schema(raw: Optional[str]) -> dict:
+    """解析工具的 JSON Schema 字符串；空或非法时返回空 object schema（工具仍可无参调用）。"""
     if not raw:
         return {"type": "object", "properties": {}}
     try:
@@ -53,11 +56,13 @@ def _build_tool_handler(
     extra_context: Optional[str],
     shared_deep_state: object | None = None,
 ) -> Optional[ToolHandler]:
+    """把注册表工具定义包装成 loop 的 ToolHandler：绑定已注册的处理器，未注册的给出提示文案。"""
     base_handler = get_handler(rt.tool_code)
     if base_handler is None:
         logger.debug("No handler registered for tool: %s", rt.tool_code)
 
         async def handler_fn(args: str, _code: str = rt.tool_code) -> str:
+            """未注册工具的兜底 handler：返回提示文案。"""
             return f"工具 '{_code}' 尚未注册处理函数。"
     else:
         async def handler_fn(
@@ -68,6 +73,7 @@ def _build_tool_handler(
             _h=base_handler,
             _ds=shared_deep_state,
         ) -> str:
+            """已注册工具的执行包装：构造 ToolContext 并调用对应 handler。"""
             ctx = ToolContext(_code, args, _emp, _extra, deep_state=_ds)
             return await _h.handle(ctx)
 
@@ -89,6 +95,7 @@ async def run_agent(
     extra_context: Optional[str] = None,
     existing_messages: Optional[list[dict]] = None,
 ) -> AgentRunResult:
+    """运行 agent：解析模型策略（含 fallback_models/重试参数）、构建工具 handler 列表，调 run_agent_loop 并汇总为 AgentRunResult。"""
     run_result = AgentRunResult(active_scopes=compiled_prompt.active_scopes)
 
     model_policy = snapshot.default_model_policy

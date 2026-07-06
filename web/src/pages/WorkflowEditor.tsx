@@ -1,3 +1,4 @@
+// 工作流编辑器：ReactFlow 画布拖拽节点连线，配置后保存/运行。
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactFlow, {

@@ -24,12 +24,14 @@ _MAX_RUNS = 50
 
 
 def _sanitize(key: str) -> str:
+    """校验 workflow_key 合法（非空、无斜杠/..），防路径穿越。"""
     if not key or _BAD_KEY_RE.search(key):
         raise ValueError(f"Invalid key: {key!r}")
     return key
 
 
 def _atomic_write(path: Path, text: str) -> None:
+    """原子写文件：先写临时文件再 os.replace，避免增量落盘时崩溃留下半截文件。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + f".tmp{os.getpid()}")
     tmp.write_text(text, encoding="utf-8")
@@ -37,14 +39,18 @@ def _atomic_write(path: Path, text: str) -> None:
 
 
 class WorkflowRunStore:
+    """工作流运行记录存储：按 workflow_key 分文件，保留最近 _MAX_RUNS 条（最新在前）。"""
+
     def __init__(self) -> None:
         self._dir = BASE_DIR / settings.workflow.run_dir
         self._dir.mkdir(parents=True, exist_ok=True)
 
     def _path(self, workflow_key: str) -> Path:
+        """workflow_key → json 文件路径。"""
         return self._dir / f"{_sanitize(workflow_key)}.json"
 
     def list(self, workflow_key: str) -> list[WorkflowRun]:
+        """读出某工作流的全部运行记录（最新在前）；缺失或损坏返回空列表。"""
         fp = self._path(workflow_key)
         if not fp.exists():
             return []
@@ -56,6 +62,7 @@ class WorkflowRunStore:
             return []
 
     def get(self, workflow_key: str, run_id: str) -> WorkflowRun | None:
+        """在某工作流的运行记录里按 run_id 查一条，找不到返回 None。"""
         for r in self.list(workflow_key):
             if r.run_id == run_id:
                 return r
@@ -74,6 +81,7 @@ class WorkflowRunStore:
         _atomic_write(self._path(run.workflow_key), json.dumps(data, ensure_ascii=False, indent=2))
 
     def delete_all(self, workflow_key: str) -> None:
+        """删除某工作流的全部运行记录文件（删除失败只告警）。"""
         fp = self._path(workflow_key)
         try:
             if fp.exists():

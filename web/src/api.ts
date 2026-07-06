@@ -1,3 +1,4 @@
+// 用户端 API 封装：统一 BASE 前缀、Bearer 凭证、错误信封解包；401 自动清 token 回登录页。
 import type { ApiResult, AgentRunRecord } from './types';
 import { userToken } from './userAuth';
 
@@ -263,6 +264,35 @@ export const api = {
   generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string }) =>
     request<any>(`/production/projects/${pid}/generate`, { method: 'POST', body: JSON.stringify(data) }),
   listStages: () => request<any[]>('/production/stages'),
+
+  // 自由画布
+  listCanvases: () => request<any[]>('/canvas/canvases'),
+  createCanvas: (name: string) => request<any>('/canvas/canvases', { method: 'POST', body: JSON.stringify({ name }) }),
+  getCanvas: (cid: string) => request<any>(`/canvas/canvases/${cid}`),
+  saveCanvas: (cid: string, data: { name?: string; nodes: any[]; edges: any[] }) =>
+    request<any>(`/canvas/canvases/${cid}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteCanvas: (cid: string) => request<any>(`/canvas/canvases/${cid}`, { method: 'DELETE' }),
+  listImageModels: () => request<any[]>('/canvas/image-models'),
+  canvasGenerate: (cid: string, data: { prompt: string; model: string; size?: string }) =>
+    request<{ url: string; model: string }>(`/canvas/canvases/${cid}/generate`, { method: 'POST', body: JSON.stringify(data) }),
+  canvasDerive: (cid: string, data: {
+    source_title?: string; source_content: string; source_stage?: string;
+    target_stage?: string; employee_key: string; instruction?: string; max_items?: number;
+  }) =>
+    request<{ items: { title: string; content: string; stage: string }[]; raw?: string }>(
+      `/canvas/canvases/${cid}/derive`, { method: 'POST', body: JSON.stringify(data) }),
+  uploadCanvasAsset: async (cid: string, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    const token = userToken.get();
+    const res = await fetch(`${BASE}/canvas/canvases/${cid}/upload`, {
+      method: 'POST', body: form,
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    });
+    const json = await res.json();
+    if (!res.ok || json.code !== 200) throw new Error(json.detail || json.message || '上传失败');
+    return json.data as { url: string };
+  },
 
   // AI 趋势雷达 (skill_tracker)
   listTrendQueries: () => request<any[]>('/skills/queries'),

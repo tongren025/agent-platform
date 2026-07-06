@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field
 from app.config import BASE_DIR
 from app.models.conversation import AgentRunRequest
 from app.models.production import (
-    STAGES, STAGE_KEYS, ROLES,
+    STAGES, STAGE_KEYS, STAGE_INSTRUCTIONS, ROLES,
     ProductionCard, ProductionProject, ProjectWithCards, ProjectMember,
 )
 from app.services.invocation import run_invocation
@@ -26,10 +26,12 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def _proj_dir(pid: str) -> Path:
+    """返回项目 pid 的数据目录路径（data/production/{pid}）。"""
     return DATA_DIR / pid
 
 
 def _load_project(pid: str) -> ProductionProject:
+    """从磁盘加载项目 project.json；不存在直接抛 404。"""
     f = _proj_dir(pid) / "project.json"
     if not f.exists():
         raise HTTPException(404, f"项目 {pid} 不存在")
@@ -37,12 +39,14 @@ def _load_project(pid: str) -> ProductionProject:
 
 
 def _save_project(proj: ProductionProject) -> None:
+    """把项目对象写回磁盘 project.json（目录不存在则创建）。"""
     d = _proj_dir(proj.project_id)
     d.mkdir(parents=True, exist_ok=True)
     (d / "project.json").write_text(proj.model_dump_json(indent=2), "utf-8")
 
 
 def _load_cards(pid: str) -> list[ProductionCard]:
+    """加载项目的全部生产卡片；cards.json 不存在时返回空列表。"""
     f = _proj_dir(pid) / "cards.json"
     if not f.exists():
         return []
@@ -51,6 +55,7 @@ def _load_cards(pid: str) -> list[ProductionCard]:
 
 
 def _save_cards(pid: str, cards: list[ProductionCard]) -> None:
+    """把项目卡片列表整体写回 cards.json（全量覆盖写）。"""
     d = _proj_dir(pid)
     d.mkdir(parents=True, exist_ok=True)
     (d / "cards.json").write_text(
@@ -60,10 +65,12 @@ def _save_cards(pid: str, cards: list[ProductionCard]) -> None:
 
 
 def _now() -> str:
+    """返回当前 UTC 时间的 ISO 格式字符串，作为统一时间戳。"""
     return datetime.now(timezone.utc).isoformat()
 
 
 def _compute_stats(cards: list[ProductionCard]) -> dict:
+    """统计卡片进度：按阶段/状态分组计数并计算整体完成率，供项目列表和 stats 接口复用。"""
     total = len(cards)
     by_stage: dict[str, dict] = {}
     by_status: dict[str, int] = {}
@@ -91,6 +98,7 @@ def _compute_stats(cards: list[ProductionCard]) -> dict:
 
 @router.get("/projects")
 def list_projects():
+    """GET /projects：列出全部生产项目，附带卡片数与进度统计。"""
     projects = []
     if DATA_DIR.exists():
         for d in sorted(DATA_DIR.iterdir()):
@@ -104,6 +112,7 @@ def list_projects():
 
 
 class CreateProjectReq(BaseModel):
+    """POST /projects 的请求体：新建项目的名称、素材来源与默认执行员工/团队。"""
     name: str
     description: str = ""
     source_type: str = "idea"
@@ -114,6 +123,7 @@ class CreateProjectReq(BaseModel):
 
 @router.post("/projects")
 def create_project(req: CreateProjectReq):
+    """POST /projects：创建项目（创建者自动成为 owner）；若带原始素材则自动生成一张 idea 阶段卡片。"""
     pid = str(uuid.uuid4())[:8]
     now = _now()
     proj = ProductionProject(
@@ -148,6 +158,7 @@ def create_project(req: CreateProjectReq):
 
 @router.get("/projects/{pid}")
 def get_project(pid: str):
+    """GET /projects/{pid}：返回项目详情 + 全部卡片 + 进度统计；老数据无成员时自动补 owner。"""
     proj = _load_project(pid)
     if not proj.members:
         proj.members = [ProjectMember(user_id="owner", name="创建者", role="owner", added_at=proj.created_at)]
@@ -159,6 +170,7 @@ def get_project(pid: str):
 
 
 class UpdateProjectReq(BaseModel):
+    """PUT /projects/{pid} 的请求体：全部字段可选，只更新传入的字段。"""
     name: Optional[str] = None
     description: Optional[str] = None
     source_type: Optional[str] = None
@@ -170,6 +182,7 @@ class UpdateProjectReq(BaseModel):
 
 @router.put("/projects/{pid}")
 def update_project(pid: str, req: UpdateProjectReq):
+    """PUT /projects/{pid}：按传入字段部分更新项目信息（settings 为合并而非覆盖）。"""
     proj = _load_project(pid)
     if req.name is not None:
         proj.name = req.name
@@ -192,6 +205,7 @@ def update_project(pid: str, req: UpdateProjectReq):
 
 @router.delete("/projects/{pid}")
 def delete_project(pid: str):
+    """DELETE /projects/{pid}：删除项目整个数据目录（含卡片与上传文件），幂等操作。"""
     import shutil
     d = _proj_dir(pid)
     if d.exists():
@@ -202,6 +216,7 @@ def delete_project(pid: str):
 # ── Project Members ──────────────────────────────────────────────
 
 class AddMemberReq(BaseModel):
+    """POST /projects/{pid}/members 的请求体：新成员的名称与角色（user_id 缺省则自动生成）。"""
     user_id: str = ""
     name: str
     role: str = "editor"
@@ -210,6 +225,7 @@ class AddMemberReq(BaseModel):
 
 @router.post("/projects/{pid}/members")
 def add_member(pid: str, req: AddMemberReq):
+    """POST /projects/{pid}/members：添加项目成员；角色非法或重名返 400。"""
     if req.role not in ROLES:
         raise HTTPException(400, f"无效角色: {req.role}，可选: {', '.join(ROLES)}")
     proj = _load_project(pid)
@@ -230,11 +246,13 @@ def add_member(pid: str, req: AddMemberReq):
 
 
 class UpdateMemberReq(BaseModel):
+    """PUT /projects/{pid}/members/{user_id} 的请求体：成员的新角色。"""
     role: str
 
 
 @router.put("/projects/{pid}/members/{user_id}")
 def update_member_role(pid: str, user_id: str, req: UpdateMemberReq):
+    """PUT /projects/{pid}/members/{user_id}：修改成员角色；不允许把最后一个 owner 降级（返 400），成员不存在返 404。"""
     if req.role not in ROLES:
         raise HTTPException(400, f"无效角色: {req.role}")
     proj = _load_project(pid)
@@ -253,6 +271,7 @@ def update_member_role(pid: str, user_id: str, req: UpdateMemberReq):
 
 @router.delete("/projects/{pid}/members/{user_id}")
 def remove_member(pid: str, user_id: str):
+    """DELETE /projects/{pid}/members/{user_id}：移除项目成员；不允许移除最后一个 owner（返 400），成员不存在返 404。"""
     proj = _load_project(pid)
     member = next((m for m in proj.members if m.user_id == user_id), None)
     if not member:
@@ -270,6 +289,7 @@ def remove_member(pid: str, user_id: str):
 # ── Cards ─────────────────────────────────────────────────────────
 
 class CreateCardReq(BaseModel):
+    """POST /projects/{pid}/cards 的请求体：新建卡片的阶段、标题内容、集数镜头号及提示词/素材列表。"""
     stage: str = "idea"
     title: str = ""
     content: str = ""
@@ -285,6 +305,7 @@ class CreateCardReq(BaseModel):
 
 @router.post("/projects/{pid}/cards")
 def add_card(pid: str, req: CreateCardReq):
+    """POST /projects/{pid}/cards：在项目下新建一张生产卡片；项目不存在返 404。"""
     _load_project(pid)
     cards = _load_cards(pid)
     now = _now()
@@ -311,6 +332,7 @@ def add_card(pid: str, req: CreateCardReq):
 
 
 class UpdateCardReq(BaseModel):
+    """PUT /cards/{card_id} 的请求体：全部字段可选，仅更新显式传入的字段。"""
     stage: Optional[str] = None
     title: Optional[str] = None
     content: Optional[str] = None
@@ -326,6 +348,7 @@ class UpdateCardReq(BaseModel):
 
 @router.put("/cards/{card_id}")
 def update_card(card_id: str, req: UpdateCardReq):
+    """PUT /cards/{card_id}：跨全部项目按 card_id 定位并部分更新卡片（以 model_fields_set 判断哪些字段被显式传入）；不存在返 404。"""
     provided = req.model_fields_set
     for d in DATA_DIR.iterdir():
         cards_file = d / "cards.json"
@@ -364,6 +387,7 @@ def update_card(card_id: str, req: UpdateCardReq):
 
 @router.delete("/cards/{card_id}")
 def delete_card(card_id: str):
+    """DELETE /cards/{card_id}：跨全部项目定位并删除卡片；不存在返 404。"""
     for d in DATA_DIR.iterdir():
         cards_file = d / "cards.json"
         if not cards_file.exists():
@@ -377,11 +401,13 @@ def delete_card(card_id: str):
 
 
 class BatchCreateCardReq(BaseModel):
+    """POST /projects/{pid}/cards/batch 的请求体：批量新建的卡片列表。"""
     cards: list[CreateCardReq]
 
 
 @router.post("/projects/{pid}/cards/batch")
 def batch_add_cards(pid: str, req: BatchCreateCardReq):
+    """POST /projects/{pid}/cards/batch：一次写入多张卡片并返回新建结果；项目不存在返 404。"""
     _load_project(pid)
     cards = _load_cards(pid)
     now = _now()
@@ -411,12 +437,14 @@ def batch_add_cards(pid: str, req: BatchCreateCardReq):
 
 
 class BatchMoveReq(BaseModel):
+    """POST /cards/batch-move 的请求体：要移动的卡片 ID 列表与目标阶段。"""
     card_ids: list[str]
     stage: str
 
 
 @router.post("/cards/batch-move")
 def batch_move_cards(req: BatchMoveReq):
+    """POST /cards/batch-move：跨项目批量把卡片移到目标阶段，返回实际移动的 ID 列表；阶段非法返 400。"""
     if req.stage not in STAGE_KEYS:
         raise HTTPException(400, f"无效阶段: {req.stage}")
     moved = []
@@ -438,11 +466,13 @@ def batch_move_cards(req: BatchMoveReq):
 
 
 class BatchDeleteReq(BaseModel):
+    """POST /cards/batch-delete 的请求体：要删除的卡片 ID 列表。"""
     card_ids: list[str]
 
 
 @router.post("/cards/batch-delete")
 def batch_delete_cards(req: BatchDeleteReq):
+    """POST /cards/batch-delete：跨项目批量删除卡片，返回实际删除的 ID 列表（不存在的 ID 静默跳过）。"""
     deleted = []
     for d in DATA_DIR.iterdir():
         cards_file = d / "cards.json"
@@ -458,12 +488,14 @@ def batch_delete_cards(req: BatchDeleteReq):
 
 
 class BatchUpdateStatusReq(BaseModel):
+    """POST /cards/batch-status 的请求体：要更新的卡片 ID 列表与目标状态。"""
     card_ids: list[str]
     status: str
 
 
 @router.post("/cards/batch-status")
 def batch_update_status(req: BatchUpdateStatusReq):
+    """POST /cards/batch-status：跨项目批量更新卡片状态，返回实际更新的 ID 列表。"""
     updated = []
     for d in DATA_DIR.iterdir():
         cards_file = d / "cards.json"
@@ -484,6 +516,7 @@ def batch_update_status(req: BatchUpdateStatusReq):
 
 @router.post("/projects/{pid}/cards/{card_id}/upload")
 async def upload_card_file(pid: str, card_id: str, file: UploadFile = File(...), file_type: str = "image"):
+    """POST /projects/{pid}/cards/{card_id}/upload：上传图片/视频到卡片，按 file_type 追加到 images 或 videos 列表；卡片不存在返 404。"""
     _load_project(pid)
     cards = _load_cards(pid)
     card = next((c for c in cards if c.card_id == card_id), None)
@@ -512,6 +545,7 @@ async def upload_card_file(pid: str, card_id: str, file: UploadFile = File(...),
 
 @router.post("/cards/{card_id}/move")
 def move_card(card_id: str, stage: str = "idea"):
+    """POST /cards/{card_id}/move：把单张卡片移到指定阶段；阶段非法返 400，卡片不存在返 404。"""
     if stage not in STAGE_KEYS:
         raise HTTPException(400, f"无效阶段: {stage}")
     for d in DATA_DIR.iterdir():
@@ -539,6 +573,7 @@ def search_cards(
     episode: Optional[int] = Query(None),
     assignee: Optional[str] = Query(None),
 ):
+    """GET /projects/{pid}/search：按关键词（匹配标题/内容/提示词）与阶段/状态/集数/负责人组合过滤卡片。"""
     cards = _load_cards(pid)
     results = []
     for c in cards:
@@ -563,6 +598,7 @@ def search_cards(
 
 @router.get("/projects/{pid}/stats")
 def get_project_stats(pid: str):
+    """GET /projects/{pid}/stats：返回项目进度统计，并按集（EPxx）细分各集进度。"""
     _load_project(pid)
     cards = _load_cards(pid)
     stats = _compute_stats(cards)
@@ -579,6 +615,7 @@ def get_project_stats(pid: str):
 # ── AI Generation ─────────────────────────────────────────────────
 
 class GenerateReq(BaseModel):
+    """POST /projects/{pid}/generate 的请求体：目标阶段、执行员工（缺省用项目默认）与额外生成要求。"""
     target_stage: str
     employee_key: str = ""
     extra_instruction: str = ""
@@ -586,6 +623,11 @@ class GenerateReq(BaseModel):
 
 @router.post("/projects/{pid}/generate")
 async def generate_stage(pid: str, req: GenerateReq):
+    """POST /projects/{pid}/generate：汇总前置阶段内容作为上下文，调用数字员工生成目标阶段卡片。
+
+    生成结果按 --- 分段拆成多张卡片，并**替换**该阶段已有卡片。
+    阶段非法/无前置内容/无可用员工返 400，AI 失败或空回复返 500。
+    """
     proj = _load_project(pid)
     cards = _load_cards(pid)
 
@@ -613,47 +655,7 @@ async def generate_stage(pid: str, req: GenerateReq):
     context = "\n\n".join(context_parts)
     target_name = next((s["name"] for s in STAGES if s["key"] == req.target_stage), req.target_stage)
 
-    stage_instructions = {
-        "script": (
-            "根据上面的创意/原著内容，写出完整的剧本。"
-            "按场景拆分，每个场景包含：场景编号、场景描述、角色、台词、情绪/氛围。"
-            "输出格式：每个场景用 --- 分隔，每个场景第一行是标题（如：场景1: xxx）。"
-        ),
-        "setting": (
-            "根据剧本内容，输出角色设定和场景设定的文字描述。\n"
-            "角色设定：每个角色的身份层（外貌、年龄、体型）、装备层（服装、武器、道具）、可变层（表情/情绪状态）。\n"
-            "场景设定：每个场景的空间结构、光影设计（主光源+补光）、色温、氛围。\n"
-            "输出格式：先角色后场景，每个用 --- 分隔，第一行标题（如：角色: 苍霖 或 场景: 废墟巷道）。"
-        ),
-        "design": (
-            "根据角色·场景设定的文字描述，输出视觉设计参考。\n"
-            "角色：正面全身定妆照描述、三视图要求、关键特征提示词。\n"
-            "场景：场景概念图描述、关键光影和色彩提示词。\n"
-            "道具：关键道具的外观描述和特效层。\n"
-            "输出格式：每个用 --- 分隔，第一行标题（如：角色设计: 苍霖 或 场景设计: 废墟巷道）。"
-        ),
-        "storyboard": (
-            "根据剧本、角色场景设定和视觉设计，拆分成分镜头脚本。\n"
-            "每个镜头包含：镜头编号、画面描述（引用角色设定和场景设定的视觉关键词）、"
-            "景别/角度、运镜方式（推/拉/摇/移/固定）、时长建议、角色动作、台词/旁白、音效。"
-            "输出格式：每个镜头用 --- 分隔，第一行标题（如：镜头01: xxx）。"
-        ),
-        "img_prompt": (
-            "根据分镜和视觉设计，为每个镜头生成一条图片生成提示词。\n"
-            "提示词要求：包含画面主体、环境、光线、构图、风格、画质关键词。\n"
-            "角色描述必须引用角色设定中的固定词，确保一致性。\n"
-            "竖屏 9:16 比例。\n"
-            "输出格式：每个镜头用 --- 分隔，第一行标题（如：镜头01），第二行起是提示词。"
-        ),
-        "vid_prompt": (
-            "根据分镜和图片提示词，为每个镜头生成一条视频生成提示词。\n"
-            "遵循 Seedance 2.0 格式：画面描述 + 动作 + 运镜 + 氛围。\n"
-            "规则：无负向词、单段 ≤6 秒、运镜与动作分离、八层结构。\n"
-            "输出格式：每个镜头用 --- 分隔，第一行标题（如：镜头01），第二行起是视频提示词。"
-        ),
-    }
-
-    instruction = stage_instructions.get(req.target_stage, f"根据前面的内容，生成{target_name}阶段的内容。")
+    instruction = STAGE_INSTRUCTIONS.get(req.target_stage, f"根据前面的内容，生成{target_name}阶段的内容。")
     if req.extra_instruction:
         instruction += f"\n\n额外要求：{req.extra_instruction}"
 
@@ -725,6 +727,7 @@ async def generate_stage(pid: str, req: GenerateReq):
 
 @router.get("/stages")
 def list_stages():
+    """GET /stages：返回生产流程的全部阶段定义（key/名称/顺序），供前端渲染看板列。"""
     return {"code": 200, "data": STAGES}
 
 
@@ -734,6 +737,7 @@ RESOURCE_DIR = BASE_DIR / "resouce"
 
 @router.get("/resource/{path:path}")
 def serve_resource(path: str):
+    """GET /resource/{path}：从 resouce 目录提供静态素材文件；带路径穿越防护（越界返 403），文件不存在返 404。"""
     file_path = RESOURCE_DIR / path
     if not file_path.exists() or not file_path.is_file():
         raise HTTPException(404, f"Resource not found: {path}")

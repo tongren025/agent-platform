@@ -1,3 +1,4 @@
+// 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。
 import { useEffect, useState, useCallback, useMemo, type DragEvent } from 'react';
 import {
   Button, Drawer, Empty, Input, message, Modal, Popconfirm, Progress,

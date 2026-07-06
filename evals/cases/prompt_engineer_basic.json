@@ -1,0 +1,11 @@
+{
+  "id": "prompt_engineer_basic",
+  "employeeKey": "comic-prompt-engineer",
+  "input": "为这个镜头写一条图片生成提示词：苍霖在矿洞底端缓缓睁眼，龙眼金色竖瞳特写，黑暗中只有一缕天光从头顶裂缝落下。",
+  "checks": [
+    { "type": "min_length", "value": 80 },
+    { "type": "contains", "value": "苍霖" },
+    { "type": "not_contains", "value": "抱歉" },
+    { "type": "not_contains", "value": "无法" }
+  ]
+}

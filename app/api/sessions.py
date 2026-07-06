@@ -16,6 +16,7 @@ router = APIRouter(prefix="/api/v1/agentapp/agent")
 
 
 class ArchiveSessionBody(BaseModel):
+    """归档/取消归档会话接口的请求体：archived=True 归档，False 恢复。"""
     archived: bool = True
 
 
@@ -27,6 +28,7 @@ def list_sessions(
     includeArchived: bool = Query(False, alias="includeArchived"),
     limit: int = Query(20, alias="limit"),
 ):
+    """GET /sessions：按员工/团队/目标类型过滤列出会话，默认排除已归档，取最近 limit 条。"""
     sessions = memory_store.list_sessions(
         employee_key=employeeKey,
         team_code=teamCode,
@@ -41,6 +43,7 @@ def list_sessions(
 
 @router.get("/sessions/{session_id}")
 def get_session(session_id: str):
+    """GET /sessions/{id}：查单个会话详情，不存在返 404。"""
     session = memory_store.load_session(session_id)
     if session is None:
         raise HTTPException(status_code=404, detail=f"Session not found: {session_id}")
@@ -49,6 +52,7 @@ def get_session(session_id: str):
 
 @router.post("/sessions/{session_id}/archive")
 def archive_session(session_id: str, body: ArchiveSessionBody):
+    """POST /sessions/{id}/archive：归档或取消归档一个会话。"""
     session = memory_store.load_session(session_id)
     if session is None:
         raise HTTPException(status_code=404, detail=f"Session not found: {session_id}")
@@ -59,6 +63,7 @@ def archive_session(session_id: str, body: ArchiveSessionBody):
 
 @router.delete("/sessions/{session_id}")
 def delete_session(session_id: str):
+    """DELETE /sessions/{id}：删除会话，不存在返 404。"""
     deleted = memory_store.delete_session(session_id)
     if not deleted:
         raise HTTPException(status_code=404, detail=f"Session not found: {session_id}")

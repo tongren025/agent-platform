@@ -27,7 +27,10 @@ _EVOLUTION_TIME = "04:00"
 
 
 class DailyScheduler:
+    """每日定时调度器：巡检并在到点时后台派发采集/学习/蒸馏/进化任务（边沿触发、当天去重）。"""
+
     def __init__(self) -> None:
+        """初始化调度状态：后台任务句柄、停止信号、各类在途集合与当天已完成集合。"""
         self._task: asyncio.Task | None = None
         self._stop = asyncio.Event()
         self._inflight: set[str] = set()        # 提示词采集在途
@@ -39,6 +42,7 @@ class DailyScheduler:
         self._last_date: str = ""
 
     def start(self) -> None:
+        """启动后台巡检任务（幂等：已启动则直接返回）。"""
         if self._task is not None:
             return
         self._stop.clear()
@@ -46,6 +50,7 @@ class DailyScheduler:
         logger.info("每日采集调度器已启动")
 
     async def stop(self) -> None:
+        """停止调度器：先发停止信号优雅等待（最多 5 秒），超时则强制取消任务。"""
         if self._task is None:
             return
         self._stop.set()
@@ -63,6 +68,7 @@ class DailyScheduler:
         logger.info("每日采集调度器已停止")
 
     async def _loop(self) -> None:
+        """巡检主循环：每 _TICK_SECONDS 秒 tick 一次，直到收到停止信号；单次 tick 异常只记录不中断。"""
         while not self._stop.is_set():
             try:
                 self._tick()
@@ -74,6 +80,7 @@ class DailyScheduler:
                 pass
 
     def _tick(self) -> None:
+        """单次巡检：跨天时重置当天标记，扫描采集/学习源，到点后扫描蒸馏(03:00)/进化(04:00)。"""
         from app.dependencies import learn_source_store, scrape_source_store
 
         now = datetime.now()
@@ -111,6 +118,7 @@ class DailyScheduler:
             dispatch(src)
 
     def _dispatch_scrape(self, src) -> None:
+        """把一个采集源标记为在途并后台派发采集任务（不阻塞巡检循环）。"""
         from app.services.scrape_runner import run_scrape
 
         code = src.source_code
@@ -118,6 +126,7 @@ class DailyScheduler:
         logger.info("定时触发采集：%s @ %s", code, src.schedule_time)
 
         async def _run() -> None:
+            """后台跑采集，无论成败最后都清除在途标记。"""
             try:
                 await run_scrape(src)
             except Exception:  # noqa: BLE001
@@ -128,6 +137,7 @@ class DailyScheduler:
         asyncio.create_task(_run(), name=f"scrape-{code}")
 
     def _dispatch_learn(self, src) -> None:
+        """把一个学习源标记为在途并后台派发文章学习任务。"""
         from app.services.learn_runner import run_learn
 
         code = src.source_code
@@ -135,6 +145,7 @@ class DailyScheduler:
         logger.info("定时触发文章学习：%s @ %s", code, src.schedule_time)
 
         async def _run() -> None:
+            """后台跑文章学习，无论成败最后都清除在途标记。"""
             try:
                 await run_learn(src)
             except Exception:  # noqa: BLE001
@@ -147,6 +158,7 @@ class DailyScheduler:
     # ── Deep Dream 蒸馏 ───────────────────────────────────
 
     def _scan_distillation(self) -> None:
+        """扫描全部启用员工，对当天未蒸馏且不在途者派发蒸馏。"""
         from app.dependencies import employee_registry
 
         for emp in employee_registry.list_all():
@@ -158,10 +170,12 @@ class DailyScheduler:
             self._dispatch_distill(k)
 
     def _dispatch_distill(self, emp_key: str) -> None:
+        """把一个员工标记为在途并后台派发蒸馏任务。"""
         self._inflight_distill.add(emp_key)
         logger.info("定时触发蒸馏：%s @ %s", emp_key, _DISTILLATION_TIME)
 
         async def _run() -> None:
+            """后台跑蒸馏，成功则记入当天已完成，最后清除在途标记。"""
             try:
                 from app.services.distillation import run_distillation
                 await run_distillation(emp_key)
@@ -176,6 +190,7 @@ class DailyScheduler:
     # ── 自我进化 ───────────────────────────────────────────
 
     def _scan_evolution(self) -> None:
+        """扫描全部启用员工，对当天未进化且不在途者派发自我进化分析。"""
         from app.dependencies import employee_registry
 
         for emp in employee_registry.list_all():
@@ -187,10 +202,12 @@ class DailyScheduler:
             self._dispatch_evolve(k)
 
     def _dispatch_evolve(self, emp_key: str) -> None:
+        """把一个员工标记为在途并后台派发自我进化任务。"""
         self._inflight_evolve.add(emp_key)
         logger.info("定时触发自我进化：%s @ %s", emp_key, _EVOLUTION_TIME)
 
         async def _run() -> None:
+            """后台跑自我进化分析，成功则记入当天已完成，最后清除在途标记。"""
             try:
                 from app.services.evolution import run_evolution_analysis
                 await run_evolution_analysis(emp_key)

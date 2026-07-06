@@ -1,3 +1,4 @@
+// 用户端路由守卫：校验 token 有效性，未登录跳 /login。
 import { useEffect, useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { userToken, userAuth } from '../userAuth';

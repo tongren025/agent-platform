@@ -1,3 +1,4 @@
+// 异步队列页：按 Job ID 追踪 arq 后台任务的状态与结果。
 import { useEffect, useState, useCallback } from 'react';
 import {
   Card, Table, Button, Tag, Space, message, Empty, Spin, Input,

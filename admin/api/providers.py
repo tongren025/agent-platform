@@ -13,12 +13,14 @@ router = APIRouter(prefix="/api/admin/providers", tags=["admin-providers"])
 
 
 def _mask_key(key: str) -> str:
+    """脱敏 API Key：只露前后各 4 位，其余打码——密钥明文绝不回传前端。"""
     if not key or len(key) <= 8:
         return "****"
     return key[:4] + "****" + key[-4:]
 
 
 class ProviderBody(BaseModel):
+    """服务商保存/更新请求体：apiKey 传空串表示"沿用已存的旧 key"（配合前端只显示掩码）。"""
     name: str
     endpoint: str
     apiKey: str = ""
@@ -28,6 +30,7 @@ class ProviderBody(BaseModel):
 
 @router.get("")
 def list_providers(_: dict = Depends(require_admin)):
+    """GET /api/admin/providers：列出全部 AI 服务商（含环境内置与后台托管，managed 字段区分）；apiKey 一律脱敏返回。"""
     providers = ai_service.list_all_providers()
     store = ai_service.store
     result = []
@@ -46,6 +49,7 @@ def list_providers(_: dict = Depends(require_admin)):
 
 @router.post("")
 def save_provider(body: ProviderBody, _: dict = Depends(require_admin)):
+    """POST /api/admin/providers：新建（同名则覆盖）托管服务商配置；返回脱敏后的保存结果。"""
     validate_key(body.name, label="provider name")
     data = {
         "name": body.name,
@@ -63,6 +67,7 @@ def save_provider(body: ProviderBody, _: dict = Depends(require_admin)):
 
 @router.put("/{name}")
 def update_provider(name: str, body: ProviderBody, _: dict = Depends(require_admin)):
+    """PUT /api/admin/providers/{name}：更新服务商；apiKey 留空时保留原 key，防止前端把掩码串回存覆盖真值。"""
     validate_key(name, label="provider name")
     existing = ai_service.store.get(name)
     api_key = body.apiKey
@@ -84,6 +89,7 @@ def update_provider(name: str, body: ProviderBody, _: dict = Depends(require_adm
 
 @router.delete("/{name}")
 def delete_provider(name: str, _: dict = Depends(require_admin)):
+    """DELETE /api/admin/providers/{name}：删除托管服务商；不存在返回 404（环境内置的服务商不在删除范围内）。"""
     validate_key(name, label="provider name")
     deleted = ai_service.store.delete(name)
     if not deleted:
@@ -93,6 +99,7 @@ def delete_provider(name: str, _: dict = Depends(require_admin)):
 
 @router.post("/{name}/test")
 def test_provider(name: str, _: dict = Depends(require_admin)):
+    """POST /api/admin/providers/{name}/test：用第一个已配模型发一条极短对话实测连通性；连不通不抛错，结果放 success/error 字段。"""
     validate_key(name, label="provider name")
     provider = None
     for p in ai_service.list_all_providers():
