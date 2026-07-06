@@ -5,6 +5,26 @@
 
 ---
 
+## [2026-07-06] chore: 每日 git 自动备份到 auto-backup 分支
+
+**动机**:工作树曾累积 183 个文件改动 4 天未提交,机器故障即全丢;
+系统里没有任何自动同步 GitHub 的机制(DailyScheduler 只跑采集/学习)。
+
+**变更点**
+- 新增 `scripts/git_auto_backup.ps1`:用临时 index 把工作树完整快照
+  (含未提交/未跟踪文件,遵循 .gitignore)提交到 `auto-backup` 分支并推送;
+  不碰 master / 真实暂存区 / 进行中的工作;与上次备份无差异时跳过。
+- 已实测:首次运行生成备份提交并推送 `origin/auto-backup` 成功。
+
+**影响面**
+- **远程新增分支** `auto-backup`(纯备份链,勿在其上开发;恢复文件用
+  `git checkout auto-backup -- <路径>`)。
+- **需手动注册一次**每日计划任务(管理员或本人终端执行):
+  `schtasks /Create /F /SC DAILY /ST 21:30 /TN "agent-platform-git-backup" /TR "pwsh -NoProfile -File D:\P\agent\scripts\git_auto_backup.ps1"`
+- 无代码行为 / 接口 / DB 变化。
+
+---
+
 ## [2026-07-06] docs: 知识库体系——全量中文注释 + 模块索引 + 架构导览
 
 **动机**：代码注释缺口大（451 处无 docstring），且没有"快速知道某模块干什么"的入口，

@@ -453,6 +453,13 @@ agent-platform/
 - ~~文件存储无锁~~ — **已解决**：`USE_DB_STORES=true` 时运行态切 PostgreSQL（事务保并发安全）；JSON 仍为默认（单人零依赖）
 - **节点类型待扩展** — 迭代（循环）、变量聚合、代码执行、HTTP 请求、子工作流等节点类型规划中
 
+## 代码备份
+
+`scripts/git_auto_backup.ps1` 会把工作树完整快照（含未提交改动）提交到 `auto-backup`
+分支并推送 GitHub，不影响 master 和进行中的工作。配合每日计划任务使用（注册命令见
+[docs/CHANGELOG.md](docs/CHANGELOG.md) 对应条目）；也可随时手动跑一次。
+误删文件时用 `git checkout auto-backup -- <路径>` 找回。
+
 ## 生产化里程碑（已完工）
 
 | 里程碑 | 内容 | 状态 |
