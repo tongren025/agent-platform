@@ -498,11 +498,8 @@ async def search_knowledge(
 ):
     """GET /employees/{key}/knowledge/search：知识库检索——配了向量检索走语义（M3），否则退化关键词。"""
     _validate_key(key)
-    if semantic_retriever is not None:
-        results = await semantic_retriever.search(key, q, top_k=top_k, source_type="knowledge")
-        if results:
-            return _ok([r.model_dump(by_alias=True, mode="json") for r in results])
-    results = knowledge_retriever.search(key, q, top_k=top_k)
+    from app.services.vector_store import retrieve_knowledge
+    results = await retrieve_knowledge(key, q, top_k=top_k)
     return _ok([r.model_dump(by_alias=True, mode="json") for r in results])
 
 

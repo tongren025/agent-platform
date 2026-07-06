@@ -139,8 +139,12 @@ def compile(
     # ── RAG: 知识库检索增强 ─────────────────────────────
     if user_query and snapshot.has_knowledge_base:
         try:
-            from app.dependencies import knowledge_retriever
-            snippets = knowledge_retriever.search(snapshot.employee_key, user_query, top_k=5)
+            # 优先用调用方预检索的片段（async 上下文可走向量优先，见 retrieve_knowledge）；
+            # 未传入时同步兜底关键词检索——compile 是同步函数，只能走关键词。
+            snippets = kb_snippets
+            if snippets is None:
+                from app.dependencies import knowledge_retriever
+                snippets = knowledge_retriever.search(snapshot.employee_key, user_query, top_k=5)
             if snippets:
                 kb_lines = []
                 for s in snippets:

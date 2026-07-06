@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "ai-video-generation": {
+      "source": "halt-catch-fire/skills",
+      "sourceType": "github",
+      "skillPath": "tools/video/ai-video-generation/SKILL.md",
+      "computedHash": "4b3676be1595da7a745804e01cdaa9b89ef1b4ac4db50120f37f240124d0ed67"
+    },
     "remotion-render": {
       "source": "halt-catch-fire/skills",
       "sourceType": "github",

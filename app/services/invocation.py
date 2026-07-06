@@ -98,9 +98,18 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         )
 
     # 2. 编译系统提示词
+    # 知识库 RAG：async 上下文预检索（向量优先兜底关键词），传给同步的 compile
+    kb_snippets = None
+    if snapshot.has_knowledge_base and request.user_input:
+        from app.services.vector_store import retrieve_knowledge
+        kb_snippets = await retrieve_knowledge(
+            request.employee_key, request.user_input, top_k=5
+        )
+
     compiled_prompt = compile(
         snapshot, scopes, request.structured_schema_json,
         user_query=request.user_input,
+        kb_snippets=kb_snippets,
     )
 
     user_message = request.user_input
