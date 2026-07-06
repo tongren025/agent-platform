@@ -1,5 +1,7 @@
 # 🎬 Agent Platform
 
+[English](README.en.md) | 简体中文
+
 **AI-powered anime/manga production pipeline — from script to final cut.**
 
 An open-source multi-agent platform for AI-driven short-form anime (漫剧) production. Features a 10-stage production kanban (script → character/scene design → storyboard → image prompts → video prompts → generation → final cut), DIFY-style visual workflow engine, and multi-agent collaboration with delegated task execution.
@@ -474,4 +476,4 @@ agent-platform/
 
 ## 许可证
 
-私有项目，仅供内部使用。
+[AGPL-3.0](LICENSE)。个人使用、自部署、二次开发完全自由;若基于本项目对外提供网络服务(含 SaaS),需按同协议开源你的修改。商业闭源授权请通过 Issue 联系。
