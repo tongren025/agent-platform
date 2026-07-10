@@ -10,6 +10,7 @@ import {
   FileTextOutlined, RetweetOutlined, SendOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../../theme';
+import { thumbUrl } from '../../media';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -125,7 +126,9 @@ export function ImageNode({ id, data, selected }: NodeProps) {
     <div style={{ ...cardStyle(!!selected), width: 264, overflow: 'hidden' }}>
       {data.url ? (
         <div className="nodrag" style={{ borderRadius: '11px 11px 0 0', overflow: 'hidden' }}>
-          <Image src={data.url} alt="" width="100%" style={{ display: 'block' }} />
+          {/* 节点宽 264，用 512 缩略图足够；点开预览才拉原图 */}
+          <Image src={thumbUrl(data.url, 512)} preview={{ src: data.url }} loading="lazy"
+            alt="" width="100%" style={{ display: 'block' }} />
         </div>
       ) : (
         <div style={{

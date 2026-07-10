@@ -34,6 +34,34 @@ Workbench 附件、画布图片形成割裂(那两条一直是好的)。
 
 ---
 
+## [2026-07-10] perf: 素材缩略图 + 懒加载 + 破图可见 —— 看板图片流量降 99.9%
+
+**动机**:上一条修复让图片终于能显示,随之暴露真正的代价——卡片缩略图只有 44×44,
+拉的却是 1.5~3.8MB 的原图,24 张合计 **65.3MB**。同时 `onError` 里的 `display='none'`
+把加载失败的图静默隐藏,正是它让"全站图片 401"这种级别的故障长期不可见。
+
+**变更点**
+- `app/api/production.py`:`serve_resource` 新增可选 `?w=64|128|256|512`,返回等比缩放的
+  WebP;磁盘缓存在 `data/thumb-cache/<w>/<sha1>.webp`,缓存键含源文件 mtime(源图替换即失效),
+  先写临时文件再原子改名(并发安全)。宽度白名单挡住 `?w=` 任意取值撑爆缓存;
+  宽度非法/格式不支持/原图本就更窄/Pillow 缺失时**一律 fail-open 回退原图**。
+  缩略图响应带 `Cache-Control: immutable`。
+- `web/src/media.ts`(新增):`thumbUrl(url, w)` 只对素材路由拼 `?w=`,外链与 `/uploads/`
+  原样返回;`onImageError()` 用灰底占位 + `title="图片加载失败"` 取代 `display='none'`。
+- 接入 4 处:`Production.tsx` 卡片缩略图(w=128,`loading="lazy"`)与详情抽屉大图
+  (w=512,`preview={{src:原图}}` 点开才拉原图);`EpisodeDetail.tsx` 两处同理(w=128 / w=256);
+  `components/canvas/CanvasNodes.tsx` 图片节点(w=512)。
+- `requirements.txt`:新增 `Pillow>=11.0.0`。
+
+**影响面**:`GET /production/resource/{path}` 新增可选查询参数 `?w=`,不传时行为完全不变(返回原图),
+向后兼容,存量卡片 URL 无需迁移。新增运行时目录 `data/thumb-cache/`(已被 `data/` 的 gitignore 覆盖)。
+验证:单张 2.40MB PNG → `?w=128` 2.7KB(128×85 WebP)、`?w=256` 7.5KB、`?w=512` 24.5KB;
+`?w=999` 正确回退原图 2.40MB;**24 张合计 65.3MB → 0.1MB(降 99.9%)**;
+缓存命中 16~29ms;浏览器 `<img>` 实测 `?w=128` 得到 128×85。
+`tsc --noEmit` 全仓零错误。
+
+---
+
 ## [2026-07-09] fix: 制作数据粒度从“镜头号”纠正为 G 生成单元
 
 **动机**:复查真实制作包后确认,现有数据不是「一张卡=一个镜头」,而是

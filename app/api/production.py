@@ -1,6 +1,7 @@
 """Production pipeline API — project & card CRUD + AI generation."""
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import uuid
@@ -13,6 +14,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from app.config import BASE_DIR
+from app.core.logging import get_logger
 from app.models.conversation import AgentRunRequest
 from app.models.production import (
     STAGES, STAGE_KEYS, STAGE_INSTRUCTIONS, ROLES,
@@ -21,6 +23,7 @@ from app.models.production import (
 from app.services.invocation import run_invocation
 
 router = APIRouter(prefix="/api/v1/agentapp/production", tags=["production"])
+logger = get_logger(__name__)
 
 DATA_DIR = BASE_DIR / "data" / "production"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -857,10 +860,51 @@ def list_stages():
 # ── Resource file serving ────────────────────────────────────────
 
 RESOURCE_DIR = BASE_DIR / "resouce"
+THUMB_CACHE_DIR = BASE_DIR / "data" / "thumb-cache"
+
+# 可生成缩略图的位图格式(gif 不动,避免丢动画)
+_THUMBABLE = {".png", ".jpg", ".jpeg", ".webp"}
+# 允许的缩略图宽度白名单——挡住 ?w= 任意取值把缓存目录撑爆
+_THUMB_WIDTHS = (64, 128, 256, 512)
+
+
+def _thumbnail_path(src: Path, width: int) -> Path | None:
+    """按(源文件路径 + mtime + 宽度)生成缓存键，返回缩略图路径；不该/不能生成时返回 None，调用方回退原图。
+
+    缓存落在 data/thumb-cache/<width>/<sha1>.webp；mtime 进 key，源图被替换后缓存自动失效。
+    """
+    try:
+        stat = src.stat()
+        digest = hashlib.sha1(f"{src}|{stat.st_mtime_ns}|{width}".encode("utf-8")).hexdigest()
+        out = THUMB_CACHE_DIR / str(width) / f"{digest}.webp"
+        if out.exists():
+            return out
+
+        from PIL import Image  # 延迟导入：Pillow 缺失时 fail-open 回退原图，不影响服务启动
+
+        with Image.open(src) as im:
+            if im.width <= width:
+                return None  # 原图本就比目标窄，放大没意义
+            im = im.convert("RGBA") if im.mode in ("P", "LA") else im
+            # 高度上限放宽到 4×宽，竖屏 9:16 素材不会被 thumbnail 的等比框裁小
+            im.thumbnail((width, width * 4), Image.Resampling.LANCZOS)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            tmp = out.with_name(f"{digest}.{uuid.uuid4().hex}.tmp")
+            im.save(tmp, "WEBP", quality=82, method=4)
+        tmp.replace(out)  # 先写临时文件再原子改名，避免并发请求读到半截文件
+        return out
+    except Exception:
+        logger.warning("缩略图生成失败，回退原图: %s (w=%s)", src, width, exc_info=True)
+        return None
+
 
 @router.get("/resource/{path:path}")
-def serve_resource(path: str):
-    """GET /resource/{path}：从 resouce 目录提供静态素材文件；带路径穿越防护（越界返 403），文件不存在返 404。"""
+def serve_resource(path: str, w: int | None = None):
+    """GET /resource/{path}：从 resouce 目录提供静态素材文件；带路径穿越防护（越界返 403），文件不存在返 404。
+
+    可选 ?w=64|128|256|512 返回等比缩放的 WebP 缩略图（磁盘缓存，按源文件 mtime 失效）。
+    宽度不在白名单、格式不支持、原图本就更窄或 Pillow 不可用时一律回退原图（fail-open）。
+    """
     file_path = RESOURCE_DIR / path
     if not file_path.exists() or not file_path.is_file():
         raise HTTPException(404, f"Resource not found: {path}")
@@ -868,6 +912,13 @@ def serve_resource(path: str):
     if not str(resolved).startswith(str(RESOURCE_DIR.resolve())):
         raise HTTPException(403, "Access denied")
     suffix = file_path.suffix.lower()
+
+    if w in _THUMB_WIDTHS and suffix in _THUMBABLE:
+        thumb = _thumbnail_path(resolved, w)
+        if thumb is not None:
+            return FileResponse(thumb, media_type="image/webp",
+                                headers={"Cache-Control": "public, max-age=31536000, immutable"})
+
     media_types = {
         ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
         ".gif": "image/gif", ".webp": "image/webp", ".mp4": "video/mp4",

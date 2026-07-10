@@ -12,6 +12,7 @@ import {
   CheckCircleOutlined, ClockCircleOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { thumbUrl, onImageError } from '../media';
 import { COLORS } from '../theme';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -256,9 +257,9 @@ export default function EpisodeDetail() {
                       marginTop: 8, height: 60, borderRadius: 6, overflow: 'hidden',
                       background: '#f5f5f5',
                     }}>
-                      <img src={imgCard.images[0]} alt=""
+                      <img src={thumbUrl(imgCard.images[0], 128)} alt="" loading="lazy" decoding="async"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                        onError={onImageError} />
                     </div>
                   ) : null;
                 })()}
@@ -356,7 +357,8 @@ export default function EpisodeDetail() {
                             <Image.PreviewGroup>
                               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                                 {card.images.map((url, i) => (
-                                  <Image key={i} src={url} width={120} height={120}
+                                  <Image key={i} src={thumbUrl(url, 256)} preview={{ src: url }} loading="lazy"
+                                    width={120} height={120}
                                     style={{ objectFit: 'cover', borderRadius: 8 }}
                                     fallback="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iIGZpbGw9IiNjY2MiIGZvbnQtc2l6ZT0iMTIiPuWbvueJh+WKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=" />
                                 ))}

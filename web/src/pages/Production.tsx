@@ -16,6 +16,7 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import { thumbUrl, onImageError } from '../media';
 import { COLORS } from '../theme';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -147,8 +148,9 @@ function CardThumbnails({ images }: { images: string[] }) {
           width: 44, height: 44, borderRadius: 6, overflow: 'hidden',
           border: `1px solid ${COLORS.border}`, flexShrink: 0,
         }}>
-          <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          <img src={thumbUrl(url, 128)} alt="" loading="lazy" decoding="async"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={onImageError} />
         </div>
       ))}
       {images.length > 3 && (
@@ -1144,7 +1146,8 @@ export default function Production() {
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                           {activeCard.images.map((url, i) => (
                             <div key={i} style={{ position: 'relative' }}>
-                              <Image src={url} alt=""
+                              {/* 列表用 512 宽缩略图，点开预览才拉原图（原图常达 1.5~3.8MB） */}
+                              <Image src={thumbUrl(url, 512)} alt="" preview={{ src: url }} loading="lazy"
                                 width={activeCard.images.length === 1 ? 300 : 150}
                                 style={{ borderRadius: 8, border: `1px solid ${COLORS.border}`, objectFit: 'cover' }}
                                 fallback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect fill='%23f0f0f0' width='150' height='150'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='12'%3E加载失败%3C/text%3E%3C/svg%3E"
