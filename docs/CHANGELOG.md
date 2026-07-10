@@ -5,6 +5,35 @@
 
 ---
 
+## [2026-07-10] fix: 制作看板图片全部渲染不出来 —— 素材路由挂在鉴权 API 下，<img> 带不了 token
+
+**动机**:用户反馈"图片都没有地方渲染出来,我用其他生图的图片都没渲染"。
+根因:卡片里存的图片 URL 是 `/api/v1/agentapp/production/resource/...`,落在 `/api/*` 下,
+而 `UserAuthMiddleware` 只豁免 `/api/v1/agentapp/auth/`,其余 `/api/*` 一律要求
+`Authorization: Bearer`。但浏览器的 `<img src>` / `<video src>` **永远不会带这个头**,
+于是每张图都吃 401。更隐蔽的是 `Production.tsx` 的 `onError` 把失败的图
+`display='none'` 静默隐藏,连破图图标都不显示,导致该 bug 长期不可见。
+`POST /projects/{pid}/cards/{id}/upload` 返回的 URL(production.py:612)也拼成这条
+gated 路由,所以用户手动上传的外部生图同样 401——与 `/uploads` 免鉴权静态挂载的
+Workbench 附件、画布图片形成割裂(那两条一直是好的)。
+
+**变更点**(`app/core/auth.py`)
+- 新增 `_READ_EXEMPT_PREFIXES`,对 `GET/HEAD /api/v1/agentapp/production/resource/`
+  豁免鉴权,供 `<img>/<video>` 直连;与 `app/main.py` 已有的 `/uploads` 免鉴权
+  StaticFiles 挂载保持一致的做法。
+- 写操作(上传)不受影响,仍需 `production:manage`;`serve_resource` 自带路径穿越防护。
+
+**影响面**:`resouce/` 目录下的素材文件对未登录请求可读(局域网内)——这是本次
+有意的取舍,换取 6 个媒体渲染点(看板缩略图/详情大图/视频、单集详情、画布节点)一次修好,
+前端零改动。其余所有 `/api/*` 读写端点鉴权不变。
+验证:24 张图片裸 GET 全部 200 + PNG(此前 24/24 全 401);
+`POST .../upload` 与 `GET /production/projects` 无 token 仍返回 401;
+浏览器 `new Image()` 加载成功(1536×1024, 357ms)。
+
+**已知遗留**:已由下一条「素材缩略图」修复。
+
+---
+
 ## [2026-07-09] fix: 制作数据粒度从“镜头号”纠正为 G 生成单元
 
 **动机**:复查真实制作包后确认,现有数据不是「一张卡=一个镜头」,而是

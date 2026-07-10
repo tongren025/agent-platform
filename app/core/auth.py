@@ -24,6 +24,12 @@ from admin.auth import parse_token
 
 _AUTH_EXEMPT_PREFIX = "/api/v1/agentapp/auth/"
 
+# 只读豁免:浏览器的 <img src> / <video src> 不会带 Authorization 头,
+# 素材若挂在鉴权路由下必然 401、图片永远渲染不出来。故对媒体路由的 GET/HEAD 放行,
+# 与 app.main 里已有的 /uploads 免鉴权 StaticFiles 挂载保持一致。
+# 写操作(上传)仍需 production:manage;serve_resource 自带路径穿越防护。
+_READ_EXEMPT_PREFIXES = ("/api/v1/agentapp/production/resource/",)
+
 # 写操作的前缀 → 所需权限。顺序即匹配顺序:更长/更具体的前缀放前面。
 _WRITE_PERMS: list[tuple[str, str]] = [
     ("/api/v1/agentapp/agent/ai-providers", "settings:manage"),
@@ -70,6 +76,9 @@ class UserAuthMiddleware(BaseHTTPMiddleware):
         if not path.startswith("/api/") or path.startswith(_AUTH_EXEMPT_PREFIX):
             return await call_next(request)
         if request.method == "OPTIONS":
+            return await call_next(request)
+        # 媒体文件的 GET/HEAD:供 <img>/<video> 直连,免鉴权
+        if request.method in _READ_METHODS and path.startswith(_READ_EXEMPT_PREFIXES):
             return await call_next(request)
 
         auth_header = request.headers.get("Authorization", "")
