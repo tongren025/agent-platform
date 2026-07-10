@@ -5,6 +5,120 @@
 
 ---
 
+## [2026-07-09] fix: 制作数据粒度从“镜头号”纠正为 G 生成单元
+
+**动机**:复查真实制作包后确认,现有数据不是「一张卡=一个镜头」,而是
+「一集 → G 生成单元(约 8~15s) → 单元内 0.5~2s 剪辑段」。原层级页把
+`shot_number=1..8` 显示成 S01..S08 镜头,制作看板单集列又用项目全局统计,
+导致剧本、分镜、提示词和看板进度的理解全部偏一层。
+
+**变更点**
+- `app/models/production.py`:把 `STAGE_INSTRUCTIONS` 从「15~20 beat / 4~6s 生成单元」
+  改为当前制作包实际规格:90s 成片、6~8 个 G 生成单元、G 内 0.5~2s 剪辑段;
+  `ProductionCard` docstring 明确 `shot_number` 是历史兼容字段,业务语义为 G 单元号,
+  `0` 表示一集级总表/头部/质检。
+- `app/api/production.py`:AI 生成落卡先尝试解析结构化 JSON,失败再按 `---` 分段;
+  自动识别标题/metadata 里的 `G1/G2`,写入 `metadata.unit_number/time_range/production_grain`;
+  `镜头拆分表/全局头部/质检报告/视觉母题/单元衔接` 自动落为 `shot_number=0` 的概览卡。
+- `web/src/pages/EpisodeDetail.tsx`:单集详情从 S 镜头改为 G 生成单元,抽屉标题/概览统计/空态全部跟随新语义。
+- `web/src/pages/Production.tsx`:具体集/全局资产视图始终展示完整 10 阶段列;阶段进度按当前视图卡片计算,
+  不再把项目全局统计套到单集列头;卡片详情和编辑表单改称 G 生成单元号。
+- `web/src/pages/ProductionHub.tsx`:剧集卡的数量指标从「镜头」改为「G单元」。
+- `tests/test_production_generate.py`:新增 G 单元元数据解析回归测试;保留旧式「镜头01」回复的顺延编号兼容测试。
+
+**影响面**:`POST /api/v1/agentapp/production/projects/{pid}/generate` 的响应卡片会新增
+`metadata.target_stage/production_grain/unit_number/time_range` 等字段;`shot_number` 字段名保持不变以兼容旧数据和前端,
+但 UI 与文档统一按 G 生成单元解释。旧卡片无需迁移。
+
+---
+
+## [2026-07-09] fix: 制作看板「全部」视图平铺上千卡片卡死 —— 默认聚焦当集 + 概览封顶
+
+**动机**:项目卡片规模涨到近 800 张(jiulu-s1 798 / jiulu-s2 768,已含 EP01-24),
+而 `Production.tsx` 的看板默认 `activeEpisode='all'`,会把**全部卡片跨 10 个阶段列一次性平铺**——
+每张卡还带一个 antd `Paragraph ellipsis`(逐张 DOM 测量截断),~800 张同步挂载直接把主线程铺死,
+用户反馈「制作看板加载不出来」。
+
+**变更点**(均在 `web/src/pages/Production.tsx`)
+- 切换项目时,大项目(>150 卡)默认落到第一集(无集则全局资产),避免开屏就渲染全部;
+  用 `initedViewPid` ref 记住已初始化的项目,生成/编辑后 `loadProject` 重跑不会重置用户手选的集数。
+- 「全部」概览每个阶段列封顶 24 张(`ALL_VIEW_CAP`),超出用「仅显示前 24 张 · 还有 N 张,切到具体集查看」
+  提示条代替(点击跳第一集),其余集视图不受影响、仍全量显示。
+
+**影响面**:仅前端制作看板 `/production` 渲染路径,不涉接口/数据/字段。
+实测 jiulu-s1(798 卡):开屏默认 EP01 渲染 41 张(原 798),主线程 15ms 秒开;
+手点「全部」渲染 157 张(9 列封顶,原 798),主线程 5ms 流畅。
+
+---
+
+## [2026-07-07] fix: 恢复知识库 RAG 检索链路(retrieve_knowledge 缺失 + compile 签名缺参)
+
+**动机**:所有带知识库的员工调 `/agent/run` 直接 500——`invocation.py` 在导入
+`vector_store` 里不存在的 `retrieve_knowledge`;补上后又暴露 `compile()` 签名没有
+`kb_snippets` 参数抛 TypeError;且更早之前 `prompt.py` 函数体引用未定义的
+`kb_snippets` 的 NameError 一直被 try/except 吞掉——即 RAG 注入实际静默失效已久。
+均为"向量优先预检索"半成品重构留下的断链,由运行剧本医生员工时发现。
+
+**变更点**
+- `app/services/vector_store.py`:新增模块级 `retrieve_knowledge()`——语义检索
+  (需 USE_DB_STORES + DashScope)优先,失败或无结果兜底关键词检索,fail-open 绝不抛出。
+- `app/runtime/prompt.py`:`compile()` 签名补 `kb_snippets` 可选参数(调用方预检索
+  片段),不传时保持函数内关键词兜底,行为向后兼容。
+
+**影响面**:`/agent/run`(带知识库员工从 500 恢复且知识注入生效)、
+`/registry/employees/{key}/knowledge/search`(从 500 恢复)、工作流智能体节点同链路。
+测试 122 全过(此前 `test_vector_store` 的"存量失败"即此 bug 的信号)。
+
+---
+
+## [2026-07-07] feat: 生成模板对齐高节奏竖屏漫剧方法论(逐 beat 剧本 / 七要素 / 八层结构)
+
+**动机**:剧本→提示词→图→视频逐级劣化,根因之一是 `STAGE_INSTRUCTIONS` 的剧本模板
+还是传统分场大纲格式,与实际采用的爆款方法论(1-2 秒一刀、一集 15-20 beat、
+嘴替台词、情绪过山车)不匹配——AI 按旧模板永远产不出能拍的剧本。
+
+**变更点**(`app/models/production.py` STAGE_INSTRUCTIONS,看板逐阶段生成与画布派生共用):
+- `script`:分场大纲 → **逐 beat 拍摄单**。硬性要求:前 3 秒钩子、15-20 beat/集
+  (每 beat 1-2s,情绪锚点可 hold 2-3s)、至少 1 反转、至少 1 句嘴替台词、结尾悬念;
+  每 beat 含秒数区间/画面/台词(≤10字)/情绪值/音效。
+- `storyboard`:新增**生成单元(4-6s)与剪辑 beat(1-2s)分离**,镜头标注覆盖哪些 beat
+  与目标可用秒;景别按情绪选择;运镜每镜一个、中英双写。
+- `img_prompt`:泛要求 → **七要素顺序组装** + 逐条检查清单(角色 DNA 固定词完整重复、
+  9:16、只用正向词、禁「快速/fast」)。
+- `vid_prompt`:简则 → **Seedance 2.0 八层结构** + 六条致命规则 + 每条标注
+  生成时长与目标剪辑 beat。
+- `setting` / `design` 模板不变。
+
+**影响面**:看板「AI 生成」与画布「AI 派生」在 script/storyboard/img_prompt/vid_prompt
+四个阶段的输出格式与质量标准变化;无 API/存储变更。
+
+---
+
+## [2026-07-07] feat: 看板 AI 生成改为按集 + 追加/替换,收起两处漫剧演示孤岛
+
+**动机**:①看板「AI 生成」原逻辑是**整阶段替换且不分集数**——对 EP01-10 混存的
+项目误点一次,十个集该阶段的卡片全部被删重建,等于不可用;②CLI 流水线页和
+13 节点漫剧演示工作流的产物都不进看板,是两座只添乱的功能孤岛。
+
+**变更点**
+- `app/api/production.py` `POST /projects/{pid}/generate`:请求体新增
+  `episode`(None=全局资产)和 `mode`(append 默认/replace)。按集生成时上下文
+  只取本集卡片+全局资产;append 只追加(镜头号接在本范围已有最大号之后),
+  replace 只删除**同阶段同集数**的旧卡片,其他集绝不触碰;新卡片落到指定集。
+  响应新增 `replaced`/`mode`/`episode` 字段。
+- 前端 `Production.tsx` 生成弹窗:新增集数输入(默认跟随当前集数 Tab)与
+  追加/替换单选(默认追加),替换时显示删除范围警告;`api.ts` 同步类型。
+- 收孤岛:`Layout.tsx`/`App.tsx` 移除「CLI 流水线」导航与路由(页面文件与
+  后端 `/api/v1/pipeline` 保留,可随时挂回);漫剧演示工作流改为
+  `SEED_DEMO_WORKFLOWS=true` 才种入(`app/core/settings.py` 新增开关,默认关,
+  `main.py` 启动逻辑加闸),已种入的数据文件不动,可在工作流页面手动删。
+
+**影响面**:`/production/generate` API(向后兼容:不传新字段时上下文行为不变,
+但落卡从"替换"改为"追加"——这是有意的安全默认);前端导航少一项;新部署
+默认无演示工作流。`.env.example`/README 已同步。
+
+---
+
 ## [2026-07-06] docs: 年度路线图 ROADMAP.md(2026-07 ~ 2027-06)
 
 **动机**:平台底座完工后进入"生产优先"阶段,需要一份进版本库的作战地图,

@@ -1,14 +1,14 @@
-// 单集详情页：该集全部镜头卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。
+// 单集详情页：该集全部 G 生成单元卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  Breadcrumb, Button, Card, Col, Collapse, Drawer, Empty, Image, Row,
+  Breadcrumb, Button, Card, Col, Drawer, Empty, Image, Row,
   Space, Spin, Tag, Tooltip, Typography, message, Tabs, Badge,
 } from 'antd';
 import {
   ArrowLeftOutlined, CopyOutlined, CheckOutlined, HomeOutlined,
-  PlayCircleOutlined, PictureOutlined, VideoCameraOutlined,
-  FileTextOutlined, EditOutlined, EyeOutlined, BarsOutlined,
+  PictureOutlined, VideoCameraOutlined,
+  FileTextOutlined, EditOutlined,
   CheckCircleOutlined, ClockCircleOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
@@ -16,7 +16,7 @@ import { COLORS } from '../theme';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const { Text, Title, Paragraph } = Typography;
+const { Text, Title } = Typography;
 
 interface CardItem {
   card_id: string; project_id: string; stage: string; title: string;
@@ -25,8 +25,8 @@ interface CardItem {
   status: string; assignee: string; created_at: string; updated_at: string;
 }
 
-interface ShotGroup {
-  shotNumber: number;
+interface UnitGroup {
+  unitNumber: number;
   cards: CardItem[];
   title: string;
   hasImages: boolean;
@@ -52,6 +52,14 @@ const STAGE_COLORS: Record<string, string> = {
   script: '#6366f1', storyboard: '#8b5cf6', img_prompt: '#10b981',
   vid_prompt: '#10b981', img_gen: '#f59e0b', vid_gen: '#f59e0b', final: '#ef4444',
 };
+
+function unitLabel(unitNumber: number): string {
+  return `G${unitNumber}`;
+}
+
+function cleanUnitTitle(title: string): string {
+  return title.replace(/^G\s*0*\d+\s*/i, '').trim() || title;
+}
 
 function CopyBtn({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -119,21 +127,21 @@ export default function EpisodeDetail() {
   const overviewCards = useMemo(() =>
     epCards.filter(c => c.shot_number === 0), [epCards]);
 
-  const shotGroups: ShotGroup[] = useMemo(() => {
-    const shotMap = new Map<number, CardItem[]>();
+  const unitGroups: UnitGroup[] = useMemo(() => {
+    const unitMap = new Map<number, CardItem[]>();
     for (const c of epCards) {
       if (c.shot_number <= 0) continue;
-      if (!shotMap.has(c.shot_number)) shotMap.set(c.shot_number, []);
-      shotMap.get(c.shot_number)!.push(c);
+      if (!unitMap.has(c.shot_number)) unitMap.set(c.shot_number, []);
+      unitMap.get(c.shot_number)!.push(c);
     }
 
-    return Array.from(shotMap.entries())
+    return Array.from(unitMap.entries())
       .sort(([a], [b]) => a - b)
       .map(([num, cards]) => {
         const scriptCard = cards.find(c => c.stage === 'script');
-        const title = scriptCard?.title || `Shot ${num}`;
+        const title = scriptCard?.title || `${unitLabel(num)} 生成单元`;
         return {
-          shotNumber: num,
+          unitNumber: num,
           cards,
           title,
           hasImages: cards.some(c => c.images.length > 0),
@@ -186,7 +194,7 @@ export default function EpisodeDetail() {
       {overviewCards.length > 0 && (
         <Card size="small" style={{ marginBottom: 20, borderRadius: 12 }}>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 13 }}>
-            <div><Text type="secondary">镜头数</Text> <Text strong>{shotGroups.length}</Text></div>
+            <div><Text type="secondary">生成单元</Text> <Text strong>{unitGroups.length}</Text></div>
             <div><Text type="secondary">卡片数</Text> <Text strong>{epCards.length}</Text></div>
             <div>
               <Text type="secondary">阶段覆盖</Text>{' '}
@@ -206,13 +214,13 @@ export default function EpisodeDetail() {
         </Card>
       )}
 
-      {/* ── 镜头列表 ── */}
-      {shotGroups.length === 0 ? (
-        <Empty description="该集暂无镜头数据" />
+      {/* ── 生成单元列表 ── */}
+      {unitGroups.length === 0 ? (
+        <Empty description="该集暂无生成单元数据" />
       ) : (
         <Row gutter={[12, 12]}>
-          {shotGroups.map(sg => (
-            <Col key={sg.shotNumber} xs={24} sm={12} md={8} lg={6}>
+          {unitGroups.map(sg => (
+            <Col key={sg.unitNumber} xs={24} sm={12} md={8} lg={6}>
               <Card
                 hoverable
                 size="small"
@@ -228,7 +236,7 @@ export default function EpisodeDetail() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Text strong style={{ fontSize: 13 }}>
-                    S{String(sg.shotNumber).padStart(2, '0')}
+                    {unitLabel(sg.unitNumber)}
                   </Text>
                   {sg.allDone ? (
                     <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 14 }} />
@@ -237,7 +245,7 @@ export default function EpisodeDetail() {
                   )}
                 </div>
                 <Text style={{ fontSize: 12, color: COLORS.slateDark, display: 'block', marginTop: 4 }} ellipsis>
-                  {sg.title.replace(/^Shot\d+\s*/, '')}
+                  {cleanUnitTitle(sg.title)}
                 </Text>
 
                 {/* 缩略图 */}
@@ -268,21 +276,21 @@ export default function EpisodeDetail() {
         </Row>
       )}
 
-      {/* ── 镜头详情 Drawer ── */}
+      {/* ── 生成单元详情 Drawer ── */}
       <Drawer
         open={!!drawerCard}
         onClose={() => setDrawerCard(null)}
         width={680}
-        title={drawerCard ? `S${String(drawerCard.shot_number).padStart(2, '0')} 资源详情` : ''}
+        title={drawerCard ? `${unitLabel(drawerCard.shot_number)} 生成单元资源` : ''}
       >
         {drawerCard && (() => {
-          const shotNum = drawerCard.shot_number;
-          const shotCards = epCards.filter(c => c.shot_number === shotNum);
+          const unitNum = drawerCard.shot_number;
+          const unitCards = epCards.filter(c => c.shot_number === unitNum);
 
           const tabItems = STAGE_ORDER
-            .filter(s => shotCards.some(c => c.stage === s))
+            .filter(s => unitCards.some(c => c.stage === s))
             .map(s => {
-              const stageCards = shotCards.filter(c => c.stage === s);
+              const stageCards = unitCards.filter(c => c.stage === s);
               return {
                 key: s,
                 label: (

@@ -64,7 +64,7 @@ def _migrate_employees() -> None:
 
 
 def _migrate_teams_and_seed() -> None:
-    """启动时团队迁移（roles → member_employee_keys 回填）并注入漫剧种子工作流（失败仅告警）。"""
+    """启动时团队迁移（roles → member_employee_keys 回填）；SEED_DEMO_WORKFLOWS=true 时才注入漫剧演示工作流（失败仅告警）。"""
     from app.dependencies import team_registry
 
     for team in team_registry.list_all():
@@ -76,8 +76,10 @@ def _migrate_teams_and_seed() -> None:
                 logger.info("Team %s: seeded %d members from roles", team.team_code, len(role_keys))
 
     try:
-        from app.services.seed_workflows import seed_comic_drama
-        seed_comic_drama()
+        from app.core.settings import settings as core_settings
+        if core_settings.seed_demo_workflows:
+            from app.services.seed_workflows import seed_comic_drama
+            seed_comic_drama()
     except Exception:
         logger.warning("种子工作流注入失败", exc_info=True)
 

@@ -66,7 +66,7 @@ $Trigger = New-ScheduledTaskTrigger -Daily -At $Time
 # 当前用户身份运行，无需最高权限
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
 
-$Settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd `
+$Settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -WakeToRun `
     -ExecutionTimeLimit (New-TimeSpan -Hours 1)
 
 # 已存在则先删，保证幂等

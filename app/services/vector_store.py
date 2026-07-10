@@ -213,6 +213,33 @@ class SemanticRetriever:
             session.close()
 
 
+async def retrieve_knowledge(
+    employee_key: str,
+    query: str,
+    top_k: int = 5,
+) -> list[KnowledgeSnippet]:
+    """模块级检索入口：向量语义优先，不可用或无结果时兜底关键词检索。
+
+    agent 运行前的 RAG 预检索（invocation）与知识搜索 API（registry）共用。
+    fail-open：任何一路失败都不抛出，最坏返回空列表，绝不阻断 agent 运行。
+    """
+    from app.dependencies import knowledge_retriever, semantic_retriever
+
+    snippets: list[KnowledgeSnippet] = []
+    if semantic_retriever is not None:
+        try:
+            snippets = await semantic_retriever.search(employee_key, query, top_k=top_k)
+        except Exception:
+            logger.warning("语义检索失败，回退关键词", exc_info=True)
+    if not snippets:
+        try:
+            snippets = knowledge_retriever.search(employee_key, query, top_k=top_k)
+        except Exception:
+            logger.warning("关键词检索失败", exc_info=True)
+            snippets = []
+    return snippets
+
+
 def _split_text(text: str, chunk_size: int, overlap: int) -> list[str]:
     """简单按字符数切片，段落边界优先。"""
     if len(text) <= chunk_size:

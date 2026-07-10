@@ -14,7 +14,6 @@ import ArticleLearn from './pages/ArticleLearn';
 import Memory from './pages/Memory';
 import Runs from './pages/Runs';
 import Tasks from './pages/Tasks';
-import Pipeline from './pages/Pipeline';
 import Production from './pages/Production';
 import Canvas from './pages/Canvas';
 import ProductionHub from './pages/ProductionHub';
@@ -52,7 +51,6 @@ export default function App() {
           <Route path="/memory" element={<Memory />} />
           <Route path="/runs" element={<Runs />} />
           <Route path="/tasks" element={<Tasks />} />
-          <Route path="/pipeline" element={<Pipeline />} />
           <Route path="/production" element={<Production />} />
           <Route path="/production/:pid" element={<ProductionHub />} />
           <Route path="/production/:pid/ep/:ep" element={<EpisodeDetail />} />

@@ -32,6 +32,10 @@ class CoreSettings(BaseSettings):
     # 用户端 API 强制鉴权(P0 修复):默认开。仅作应急逃生口,勿在生产关闭。
     user_api_auth: bool = True
 
+    # 演示种子:启动时注入 13 节点漫剧演示工作流。默认关——
+    # 演示运行结果不进制作看板,只会让生产入口显得混乱。
+    seed_demo_workflows: bool = False
+
     # 数据库(M1 起用)
     database_url: str = "postgresql+psycopg://agent:change-me-in-prod@postgres:5432/agent"
 

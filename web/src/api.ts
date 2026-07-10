@@ -261,7 +261,7 @@ export const api = {
     request<any>(`/production/projects/${pid}/members/${userId}`, { method: 'PUT', body: JSON.stringify({ role }) }),
   removeMember: (pid: string, userId: string) =>
     request<any>(`/production/projects/${pid}/members/${userId}`, { method: 'DELETE' }),
-  generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string }) =>
+  generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string; episode?: number | null; mode?: 'append' | 'replace' }) =>
     request<any>(`/production/projects/${pid}/generate`, { method: 'POST', body: JSON.stringify(data) }),
   listStages: () => request<any[]>('/production/stages'),
 

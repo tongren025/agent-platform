@@ -31,8 +31,13 @@ def compile(
     active_scopes: list[str],
     structured_schema_json: Optional[str] = None,
     user_query: Optional[str] = None,
+    kb_snippets: Optional[list] = None,
 ) -> PromptCompileResult:
-    """编译提示词：按 active_scopes 聚合可见技能/工具/MCP（去重），拼装 system prompt 与响应指令，返回 PromptCompileResult。"""
+    """编译提示词：按 active_scopes 聚合可见技能/工具/MCP（去重），拼装 system prompt 与响应指令，返回 PromptCompileResult。
+
+    kb_snippets：调用方预检索好的知识库片段（list[KnowledgeSnippet]，async 上下文
+    可走向量优先，见 vector_store.retrieve_knowledge）；不传则本函数内部同步兜底关键词检索。
+    """
     visible_skills: list[RuntimeSkill] = []
     visible_skill_trees: list[RuntimeSkill] = []
     visible_tools: list[RuntimeTool] = []

@@ -343,7 +343,7 @@ export default function Canvas() {
       message.warning(`筛选出 ${importFiltered.length} 张卡片,一次最多导入 60 张——请用集数/阶段缩小范围`);
       return;
     }
-    // 落位:现有节点最右侧再往右;按阶段分列,列内按镜头号排
+    // 落位:现有节点最右侧再往右;按阶段分列,列内按 G 单元号排
     const baseX = nodesRef.current.length > 0
       ? Math.max(...nodesRef.current.map((n) => n.position.x)) + 420 : 80;
     const baseY = 60;

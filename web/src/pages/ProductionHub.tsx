@@ -1,4 +1,4 @@
-// 制作项目层级总览：剧 → 集 → 镜头 → 资源逐级下钻的入口页。
+// 制作项目层级总览：剧 → 集 → G 生成单元 → 资源逐级下钻的入口页。
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -36,7 +36,7 @@ interface Project {
 interface EpisodeInfo {
   episode: number;
   title: string;
-  shotCount: number;
+  unitCount: number;
   stageProgress: Record<string, { total: number; done: number }>;
   thumbnail: string | null;
   totalCards: number;
@@ -186,7 +186,7 @@ export default function ProductionHub() {
 
     return Array.from(epNums).sort((a, b) => a - b).map(ep => {
       const epCards = cards.filter(c => c.episode === ep);
-      const shots = new Set(epCards.filter(c => c.shot_number > 0).map(c => c.shot_number));
+      const units = new Set(epCards.filter(c => c.shot_number > 0).map(c => c.shot_number));
 
       const stageProgress: Record<string, { total: number; done: number }> = {};
       for (const c of epCards) {
@@ -200,7 +200,7 @@ export default function ProductionHub() {
       return {
         episode: ep,
         title: extractEpisodeTitle(cards, ep),
-        shotCount: shots.size,
+        unitCount: units.size,
         stageProgress,
         thumbnail: firstImage?.images[0] || null,
         totalCards: epCards.length,
@@ -368,7 +368,7 @@ export default function ProductionHub() {
                           {ep.title || `第${ep.episode}集`}
                         </Text>
                         <div style={{ display: 'flex', gap: 12, marginTop: 6, fontSize: 12, color: COLORS.slate }}>
-                          <span>{ep.shotCount} 镜头</span>
+                          <span>{ep.unitCount} G单元</span>
                           <span>{ep.totalCards} 卡片</span>
                           <span>{pct}%</span>
                         </div>

@@ -1,7 +1,7 @@
 // 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。
-import { useEffect, useState, useCallback, useMemo, type DragEvent } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef, type DragEvent } from 'react';
 import {
-  Button, Drawer, Empty, Input, message, Modal, Popconfirm, Progress,
+  Button, Drawer, Empty, Input, message, Modal, Popconfirm, Progress, Radio,
   Select, Space, Spin, Tag, Tooltip, Typography, Badge, Image, Tabs, Checkbox, Avatar,
 } from 'antd';
 import {
@@ -187,6 +187,8 @@ export default function Production() {
   const [genTarget, setGenTarget] = useState('');
   const [genExtra, setGenExtra] = useState('');
   const [genEmpKey, setGenEmpKey] = useState('');
+  const [genEpisode, setGenEpisode] = useState<number | null>(null);
+  const [genMode, setGenMode] = useState<'append' | 'replace'>('append');
   const [addCardOpen, setAddCardOpen] = useState(false);
   const [addCardStage, setAddCardStage] = useState('idea');
   const [addCardForm, setAddCardForm] = useState({ title: '', content: '', episode: null as number | null, shot_number: 0 });
@@ -253,6 +255,20 @@ export default function Production() {
   useEffect(() => { if (!selectedPid && projects.length > 0) setSelectedPid(projects[0].project_id); }, [projects, selectedPid]);
   useEffect(() => { if (selectedPid) loadProject(selectedPid); }, [selectedPid, loadProject]);
 
+  // 切换项目时，大项目默认落到第一集（或全局资产），避免「全部」视图一次性平铺上千张卡片卡死。
+  // 用 ref 记住已初始化过的项目，避免生成/编辑后 loadProject 重跑时把用户手选的集数重置掉。
+  const initedViewPid = useRef<string>('');
+  useEffect(() => {
+    const pid = project?.project_id;
+    if (!pid || cards.length === 0) return;
+    if (initedViewPid.current === pid) return;
+    initedViewPid.current = pid;
+    if (cards.length > 150) {
+      if (episodes.length > 0) setActiveEpisode(String(episodes[0]));
+      else if (globalCards.length > 0) setActiveEpisode('global');
+    }
+  }, [project?.project_id, cards, episodes, globalCards]);
+
   // ── Handlers ──
   const handleCreateProject = async () => {
     if (!newProjForm.name.trim()) { message.warning('请输入项目名称'); return; }
@@ -299,8 +315,10 @@ export default function Production() {
         target_stage: genTarget,
         employee_key: genEmpKey || project?.employee_key || '',
         extra_instruction: genExtra,
+        episode: genEpisode,
+        mode: genMode,
       });
-      message.success(`已生成 ${res.generated} 张卡片`);
+      message.success(`已生成 ${res.generated} 张卡片${res.replaced ? `，替换 ${res.replaced} 张旧卡片` : ''}`);
       await loadProject(selectedPid);
     } catch (e: any) { message.error('生成失败: ' + e.message); }
     finally { setGenerating(''); setGenExtra(''); }
@@ -474,6 +492,9 @@ export default function Production() {
     setGenTarget(stageKey);
     setGenEmpKey(project?.employee_key || '');
     setGenExtra('');
+    // 默认跟随当前选中的集数 Tab；全部/全局视图默认落全局资产
+    setGenEpisode(activeEpisode !== 'all' && activeEpisode !== 'global' ? parseInt(activeEpisode) : null);
+    setGenMode('append');
     setGenDialogOpen(true);
   };
 
@@ -502,13 +523,14 @@ export default function Production() {
     return tabs;
   }, [cards, globalCards, episodes]);
 
-  const activeStages = useMemo(() => {
-    const usedStages = new Set(filteredCards.map(c => c.stage));
-    return stages.filter(s => usedStages.has(s.key));
-  }, [stages, filteredCards]);
-
   const stats = project?.stats;
-  const overallProgress = stats?.overall_progress ?? 0;
+  const overallProgress = useMemo(() => {
+    if (activeEpisode === 'all') return stats?.overall_progress ?? 0;
+    if (filteredCards.length === 0) return 0;
+    const done = filteredCards.filter(c => c.status === 'done').length;
+    return Math.round((done / filteredCards.length) * 100);
+  }, [activeEpisode, stats?.overall_progress, filteredCards]);
+  const progressLabel = activeEpisode === 'all' ? '总进度' : '当前视图进度';
 
   return (
     <div style={{
@@ -641,7 +663,7 @@ export default function Production() {
                 )}
                 <Text type="secondary" style={{ fontSize: 11 }}>{filteredCards.length}/{cards.length}</Text>
                 {overallProgress > 0 && (
-                  <Tooltip title={`总进度 ${overallProgress}%`}>
+                  <Tooltip title={`${progressLabel} ${overallProgress}%`}>
                     <Progress type="circle" percent={overallProgress} size={28}
                       strokeColor={overallProgress === 100 ? '#52c41a' : COLORS.iris}
                       format={p => <span style={{ fontSize: 10 }}>{p}</span>} />
@@ -702,13 +724,17 @@ export default function Production() {
               flex: 1, overflow: 'auto', padding: isNarrow ? '10px 4px' : '12px 10px',
               display: 'flex', gap: 10, minWidth: 0, minHeight: 0, background: '#f5f6fa',
             }}>
-              {(activeEpisode === 'all' ? stages : activeStages.length > 0 ? activeStages : stages).map(stage => {
+              {stages.map(stage => {
                 const sc = stageCards(stage.key);
+                // 「全部」概览每列封顶：只渲染前 ALL_VIEW_CAP 张，剩余用一行提示代替，
+                // 避免跨集合并后单列上百张卡片（含 antd Paragraph 省略号逐张 DOM 测量）把主线程铺死。
+                const ALL_VIEW_CAP = 24;
+                const overCap = activeEpisode === 'all' && sc.length > ALL_VIEW_CAP;
+                const visibleCards = overCap ? sc.slice(0, ALL_VIEW_CAP) : sc;
                 const color = STAGE_COLORS[stage.key] || COLORS.iris;
                 const isGenerating = generating === stage.key;
                 const isDragOver = dragOverStage === stage.key;
-                const stageStat = stats?.by_stage?.[stage.key];
-                const doneCount = stageStat?.done ?? sc.filter(c => c.status === 'done').length;
+                const doneCount = sc.filter(c => c.status === 'done').length;
                 return (
                   <div key={stage.key}
                     onDragOver={e => onDragOver(e, stage.key)}
@@ -761,7 +787,7 @@ export default function Production() {
                           <Text type="secondary" style={{ fontSize: 11 }}>AI 生成中...</Text>
                         </div>
                       )}
-                      {sc.map(card => {
+                      {visibleCards.map(card => {
                         const isSelected = selectedCards.has(card.card_id);
                         const st = STATUS_MAP[card.status] || STATUS_MAP.pending;
                         return (
@@ -830,6 +856,19 @@ export default function Production() {
                           </div>
                         );
                       })}
+                      {overCap && (
+                        <div
+                          role="button" tabIndex={0}
+                          onClick={() => episodes.length > 0 && setActiveEpisode(String(episodes[0]))}
+                          style={{
+                            padding: '10px 12px', textAlign: 'center', border: '1px dashed #d0d0d0',
+                            borderRadius: 8, background: '#fafbfd', cursor: 'pointer',
+                          }}>
+                          <Text type="secondary" style={{ fontSize: 11 }}>
+                            仅显示前 {ALL_VIEW_CAP} 张 · 还有 {sc.length - ALL_VIEW_CAP} 张，切到具体集查看
+                          </Text>
+                        </div>
+                      )}
                       {sc.length === 0 && !isGenerating && (
                         <div style={{
                           padding: '24px 12px', textAlign: 'center', border: '1px dashed #e0e0e0',
@@ -914,6 +953,31 @@ export default function Production() {
               style={{ width: '100%', marginTop: 4 }} placeholder="选择数字员工"
               options={employees.map(e => ({ value: e.employeeKey, label: e.name }))} />
           </div>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ flex: 1 }}>
+              <Text type="secondary" style={{ fontSize: 12 }}>集数（留空=全局资产）</Text>
+              <Input type="number" value={genEpisode ?? ''} placeholder="全局"
+                onChange={e => setGenEpisode(e.target.value ? parseInt(e.target.value) : null)}
+                style={{ marginTop: 4 }} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <Text type="secondary" style={{ fontSize: 12 }}>落卡方式</Text>
+              <Radio.Group value={genMode} onChange={e => setGenMode(e.target.value)}
+                style={{ marginTop: 8, display: 'block' }}>
+                <Radio value="append">追加</Radio>
+                <Radio value="replace">替换</Radio>
+              </Radio.Group>
+            </div>
+          </div>
+          {genMode === 'replace' && (
+            <Text type="warning" style={{ fontSize: 12 }}>
+              替换将删除{genEpisode != null ? ` EP${String(genEpisode).padStart(2, '0')} ` : '全局资产'}中
+              「{stages.find(s => s.key === genTarget)?.name}」阶段的全部旧卡片，其他集不受影响
+            </Text>
+          )}
+          <Text type="secondary" style={{ fontSize: 11 }}>
+            生成上下文 = {genEpisode != null ? `EP${String(genEpisode).padStart(2, '0')} 本集卡片 + 全局资产` : '全部卡片'}的前置阶段内容；新卡片落到{genEpisode != null ? `EP${String(genEpisode).padStart(2, '0')}` : '全局资产'}
+          </Text>
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>额外指令（可选）</Text>
             <TextArea value={genExtra} onChange={e => setGenExtra(e.target.value)}
@@ -929,7 +993,7 @@ export default function Production() {
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>标题</Text>
             <Input value={addCardForm.title} onChange={e => setAddCardForm(p => ({ ...p, title: e.target.value }))}
-              placeholder="例：场景1 / 角色：苍霖 / 镜头01" style={{ marginTop: 4 }} />
+              placeholder="例：G1 破云坠城 / 角色：苍霖" style={{ marginTop: 4 }} />
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
             <div style={{ flex: 1 }}>
@@ -939,7 +1003,7 @@ export default function Production() {
                 style={{ marginTop: 4 }} />
             </div>
             <div style={{ flex: 1 }}>
-              <Text type="secondary" style={{ fontSize: 12 }}>镜头号</Text>
+              <Text type="secondary" style={{ fontSize: 12 }}>生成单元号</Text>
               <Input type="number" value={addCardForm.shot_number}
                 onChange={e => setAddCardForm(p => ({ ...p, shot_number: parseInt(e.target.value) || 0 }))}
                 style={{ marginTop: 4 }} />
@@ -971,7 +1035,7 @@ export default function Production() {
                 </Tag>
                 {activeCard.episode != null && <Tag color="blue" style={{ margin: 0 }}>EP{String(activeCard.episode).padStart(2, '0')}</Tag>}
                 {activeCard.episode == null && <Tag color="purple" style={{ margin: 0 }}>全局资产</Tag>}
-                {activeCard.shot_number > 0 && <Tag style={{ fontSize: 11, margin: 0 }}>镜头 {activeCard.shot_number}</Tag>}
+                {activeCard.shot_number > 0 && <Tag style={{ fontSize: 11, margin: 0 }}>G{activeCard.shot_number}</Tag>}
               </div>
               <Space>
                 {editMode ? (
@@ -1032,7 +1096,7 @@ export default function Production() {
                         style={{ marginTop: 4 }} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <Text type="secondary" style={{ fontSize: 12 }}>镜头号</Text>
+                      <Text type="secondary" style={{ fontSize: 12 }}>生成单元号</Text>
                       <Input type="number" value={editForm.shot_number ?? activeCard.shot_number}
                         onChange={e => setEditForm(p => ({ ...p, shot_number: parseInt(e.target.value) || 0 }))}
                         style={{ marginTop: 4 }} />

@@ -2,10 +2,11 @@
 from __future__ import annotations
 
 import json
+import re
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query
 from fastapi.responses import FileResponse
@@ -67,6 +68,81 @@ def _save_cards(pid: str, cards: list[ProductionCard]) -> None:
 def _now() -> str:
     """返回当前 UTC 时间的 ISO 格式字符串，作为统一时间戳。"""
     return datetime.now(timezone.utc).isoformat()
+
+
+def _extract_json_payload(text: str) -> Any | None:
+    """尽量从 AI 回复中提取 JSON 载荷；失败时返回 None 走 Markdown 分段兼容路径。"""
+    raw = text.strip()
+    if raw.startswith("```"):
+        match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", raw, re.IGNORECASE)
+        if match:
+            raw = match.group(1).strip()
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return None
+
+
+def _coerce_int(value: Any) -> Optional[int]:
+    """把 JSON 字段或标题里的数字转成 int；无法解析时返回 None。"""
+    if value is None or value == "":
+        return None
+    if isinstance(value, int):
+        return value
+    match = re.search(r"\d+", str(value))
+    return int(match.group(0)) if match else None
+
+
+def _detect_generation_unit(title: str, metadata: dict) -> Optional[int]:
+    """识别 G1/G2 等生成单元编号；不把普通“镜头01”当成单元，避免旧回复误归类。"""
+    for key in ("unit_number", "generation_unit", "unit", "g", "shot_number"):
+        value = _coerce_int(metadata.get(key))
+        if value is not None:
+            return value
+    match = re.match(r"^\s*G\s*0*(\d+)(?:\b|[^\d])", title, re.IGNORECASE)
+    return int(match.group(1)) if match else None
+
+
+def _detect_time_range(text: str) -> str:
+    """从标题或正文里提取第一个 00:00-00:15 形式的时间范围。"""
+    match = re.search(r"(\d{1,2}:\d{2})\s*[-~—]\s*(\d{1,2}:\d{2})", text)
+    return f"{match.group(1)}-{match.group(2)}" if match else ""
+
+
+def _is_overview_card(title: str) -> bool:
+    """判断 AI 回复段是否是一集级总表/头部/质检等概览卡，概览卡固定落到单元号 0。"""
+    overview_words = ("镜头拆分表", "全局头部", "质检报告", "视觉母题", "单元衔接", "导演Brief")
+    return any(word in title for word in overview_words)
+
+
+def _sections_from_reply(reply: str) -> list[dict]:
+    """把 AI 回复统一成卡片草稿列表，优先结构化 JSON，失败回退到 --- Markdown 分段。"""
+    payload = _extract_json_payload(reply)
+    if payload is not None:
+        if isinstance(payload, dict):
+            items = payload.get("cards") or payload.get("items") or payload.get("sections") or []
+        else:
+            items = payload
+        if isinstance(items, list):
+            drafts = []
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                metadata = item.get("metadata") if isinstance(item.get("metadata"), dict) else {}
+                title = str(item.get("title") or item.get("name") or "生成卡片").strip()
+                body = str(item.get("content") or item.get("body") or item.get("text") or "").strip()
+                prompts = item.get("prompts") if isinstance(item.get("prompts"), list) else []
+                drafts.append({"title": title, "content": body, "prompts": prompts, "metadata": metadata})
+            if drafts:
+                return drafts
+
+    drafts = []
+    for section in [s.strip() for s in reply.split("---") if s.strip()]:
+        lines = section.strip().split("\n")
+        title = lines[0].strip().lstrip("#").strip() if lines else "生成卡片"
+        body = "\n".join(lines[1:]).strip() if len(lines) > 1 else section
+        drafts.append({"title": title, "content": body, "prompts": [], "metadata": {}})
+    return drafts
 
 
 def _compute_stats(cards: list[ProductionCard]) -> dict:
@@ -289,7 +365,7 @@ def remove_member(pid: str, user_id: str):
 # ── Cards ─────────────────────────────────────────────────────────
 
 class CreateCardReq(BaseModel):
-    """POST /projects/{pid}/cards 的请求体：新建卡片的阶段、标题内容、集数镜头号及提示词/素材列表。"""
+    """POST /projects/{pid}/cards 的请求体：新建卡片的阶段、标题内容、集数/G 单元号及提示词/素材列表。"""
     stage: str = "idea"
     title: str = ""
     content: str = ""
@@ -615,18 +691,25 @@ def get_project_stats(pid: str):
 # ── AI Generation ─────────────────────────────────────────────────
 
 class GenerateReq(BaseModel):
-    """POST /projects/{pid}/generate 的请求体：目标阶段、执行员工（缺省用项目默认）与额外生成要求。"""
+    """POST /projects/{pid}/generate 的请求体：目标阶段、执行员工（缺省用项目默认）与额外生成要求。
+
+    episode 限定生成范围（None=全局资产）：上下文只取该集卡片 + 全局资产，新卡片落到该集。
+    mode 控制落卡方式：append（默认）只追加不动已有卡片；replace 仅删除同阶段**同集数**的旧卡片。
+    """
     target_stage: str
     employee_key: str = ""
     extra_instruction: str = ""
+    episode: Optional[int] = None
+    mode: str = "append"
 
 
 @router.post("/projects/{pid}/generate")
 async def generate_stage(pid: str, req: GenerateReq):
     """POST /projects/{pid}/generate：汇总前置阶段内容作为上下文，调用数字员工生成目标阶段卡片。
 
-    生成结果按 --- 分段拆成多张卡片，并**替换**该阶段已有卡片。
-    阶段非法/无前置内容/无可用员工返 400，AI 失败或空回复返 500。
+    生成结果优先按结构化 JSON 解析，失败时按 --- 分段拆卡；G1/G2 标题会落到对应生成单元号。
+    按 req.mode 追加或替换（替换只影响同阶段同集数的卡片）。
+    阶段/模式非法、无前置内容、无可用员工返 400，AI 失败或空回复返 500。
     """
     proj = _load_project(pid)
     cards = _load_cards(pid)
@@ -634,8 +717,13 @@ async def generate_stage(pid: str, req: GenerateReq):
     target_idx = STAGE_KEYS.index(req.target_stage) if req.target_stage in STAGE_KEYS else -1
     if target_idx < 0:
         raise HTTPException(400, f"无效阶段: {req.target_stage}")
+    if req.mode not in ("append", "replace"):
+        raise HTTPException(400, f"无效模式: {req.mode}，可选: append / replace")
 
     prev_cards = [c for c in cards if STAGE_KEYS.index(c.stage) < target_idx]
+    if req.episode is not None:
+        # 按集生成：上下文只取本集卡片 + 全局资产（episode 为空的卡片）
+        prev_cards = [c for c in prev_cards if c.episode == req.episode or c.episode is None]
     if not prev_cards and not proj.source_content:
         raise HTTPException(400, "没有前置阶段的内容可供生成")
 
@@ -668,7 +756,8 @@ async def generate_stage(pid: str, req: GenerateReq):
     if not emp_key:
         raise HTTPException(400, "需要指定一个数字员工来执行生成")
 
-    prompt = f"你正在为项目「{proj.name}」生成{target_name}。\n\n{instruction}\n\n以下是已有的内容：\n\n{context}"
+    scope_label = f"EP{req.episode:02d}" if req.episode is not None else "全局资产"
+    prompt = f"你正在为项目「{proj.name}」（范围：{scope_label}）生成{target_name}。\n\n{instruction}\n\n以下是已有的内容：\n\n{context}"
 
     result = await run_invocation(AgentRunRequest(
         employeeKey=emp_key,
@@ -681,21 +770,50 @@ async def generate_stage(pid: str, req: GenerateReq):
     if not reply:
         raise HTTPException(500, "AI 未返回内容")
 
-    sections = [s.strip() for s in reply.split("---") if s.strip()]
+    drafts = _sections_from_reply(reply)
+    if not drafts:
+        raise HTTPException(500, "AI 返回内容无法拆成卡片")
+
     now = _now()
     new_cards = []
-    existing_stage_cards = [c for c in cards if c.stage == req.target_stage]
-    for ec in existing_stage_cards:
-        cards.remove(ec)
+    # 替换/续号都只作用于「同阶段 + 同集数」的卡片，其他集的卡片绝不触碰
+    scope_cards = [c for c in cards if c.stage == req.target_stage and c.episode == req.episode]
+    replaced = 0
+    if req.mode == "replace":
+        for ec in scope_cards:
+            cards.remove(ec)
+        replaced = len(scope_cards)
+        next_shot = 0
+    else:
+        next_shot = max((c.shot_number for c in scope_cards), default=0)
 
-    for i, section in enumerate(sections):
-        lines = section.strip().split("\n")
-        title = lines[0].strip().lstrip("#").strip() if lines else f"{target_name} {i+1}"
-        body = "\n".join(lines[1:]).strip() if len(lines) > 1 else section
+    for i, draft in enumerate(drafts):
+        title = draft["title"] or f"{target_name} {i+1}"
+        body = draft["content"]
+        metadata = dict(draft.get("metadata") or {})
+        parsed_unit = _detect_generation_unit(title, metadata)
+        if parsed_unit is None and _is_overview_card(title):
+            unit_number = 0
+        elif parsed_unit is not None:
+            unit_number = parsed_unit
+            next_shot = max(next_shot, unit_number)
+        else:
+            next_shot += 1
+            unit_number = next_shot
 
-        prompts = []
-        if req.target_stage in ("img_prompt", "vid_prompt"):
-            prompts = [body] if body else []
+        time_range = metadata.get("time_range") or _detect_time_range(f"{title}\n{body}")
+        metadata.update({
+            "target_stage": req.target_stage,
+            "production_grain": "episode_overview" if unit_number == 0 else "generation_unit",
+        })
+        if unit_number > 0:
+            metadata["unit_number"] = unit_number
+        if time_range:
+            metadata["time_range"] = time_range
+
+        prompts = [str(p).strip() for p in draft.get("prompts", []) if str(p).strip()]
+        if req.target_stage in ("img_prompt", "vid_prompt") and not prompts and body:
+            prompts = [body]
 
         card = ProductionCard(
             card_id=str(uuid.uuid4())[:8],
@@ -703,8 +821,10 @@ async def generate_stage(pid: str, req: GenerateReq):
             stage=req.target_stage,
             title=title,
             content=body,
-            shot_number=i + 1,
+            episode=req.episode,
+            shot_number=unit_number,
             prompts=prompts,
+            metadata=metadata,
             status="done",
             created_at=now,
             updated_at=now,
@@ -718,6 +838,9 @@ async def generate_stage(pid: str, req: GenerateReq):
 
     return {"code": 200, "data": {
         "generated": len(new_cards),
+        "replaced": replaced,
+        "mode": req.mode,
+        "episode": req.episode,
         "stage": req.target_stage,
         "cards": [c.model_dump() for c in new_cards],
     }}
