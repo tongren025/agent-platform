@@ -1,0 +1,25 @@
+{
+  "project_id": "jiulu-s1",
+  "name": "九陆纪元 · 第一季",
+  "description": "苍霖线入口篇 10集 · 三幕结构 · 竖屏9:16漫剧",
+  "source_type": "outline",
+  "source_content": "《九陆纪元》第一季 · 苍霖篇\n\n核心命题：没有人选你。但你还是站起来了。\n被世界删掉的人，最后去修复世界。\n\n第一幕「活着」EP01-03：巷子打斗→假觉醒被掐灭→艾拉救场→龙蛋\n第二幕「成长」EP04-07：养龙蒙太奇→苹果反转喜剧→青鸾数据残留→世界树信号\n第三幕「出发」EP08-10：选择离开烬龙陆→骑龙升空→九大陆剪影",
+  "employee_key": "",
+  "team_code": "comic-drama-team",
+  "members": [
+    {
+      "user_id": "owner",
+      "name": "创建者",
+      "role": "owner",
+      "avatar": "",
+      "added_at": "2026-06-25T09:00:00+00:00"
+    }
+  ],
+  "settings": {
+    "visibility": "private",
+    "allow_ai_generate": true,
+    "default_status": "pending"
+  },
+  "created_at": "2026-06-25T09:00:00+00:00",
+  "updated_at": "2026-06-25T09:00:00+00:00"
+}

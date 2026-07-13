@@ -1,0 +1,25 @@
+{
+  "project_id": "jiulu-s3",
+  "name": "九陆纪元 · 第三季",
+  "description": "潮生陆·巨神陆篇 24集 · 联结的代价 · 竖屏9:16高燃漫剧",
+  "source_type": "outline",
+  "source_content": "《九陆纪元》第三季 · 潮生陆·巨神陆\n主题：联结是有代价的。净化以'重启'之名用海啸删整块大陆。\n落潮生陆海啸灭城(记忆之海/沧澜)→记忆之海代价(重连要付记忆情感)→巨神陆(沉睡巨神/神国再临/牺牲)→五缕光丝·接S4冰封归墟",
+  "employee_key": "",
+  "team_code": "comic-drama-team",
+  "members": [
+    {
+      "user_id": "owner",
+      "name": "创建者",
+      "role": "owner",
+      "avatar": "",
+      "added_at": "2026-07-09T09:00:00+00:00"
+    }
+  ],
+  "settings": {
+    "visibility": "private",
+    "allow_ai_generate": true,
+    "default_status": "pending"
+  },
+  "created_at": "2026-07-09T09:00:00+00:00",
+  "updated_at": "2026-07-09T09:00:00+00:00"
+}

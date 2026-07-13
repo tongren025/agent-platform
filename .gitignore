@@ -11,7 +11,11 @@ web/node_modules/
 web/dist/
 
 # Runtime data (JSON file store, user-generated)
-data/
+data/*
+# 漫剧生产卡池纳入版本库（例外于上面的 data/ 忽略）；备份与日志仍不入库
+!data/production/
+data/production/**/*.bak*
+data/production/**/*_log.jsonl
 
 # C# build artifacts (legacy)
 src/*/bin/

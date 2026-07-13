@@ -1,0 +1,25 @@
+{
+  "project_id": "jiulu-s2",
+  "name": "九陆纪元 · 第二季",
+  "description": "青霄陆·星圣陆篇 24集 · 看清系统 · 竖屏9:16高燃漫剧",
+  "source_type": "outline",
+  "source_content": "《九陆纪元》第二季 · 青霄陆·星圣陆\n主题：谁有资格决定'存在'。系统以'净化/删除'抹平多元。\n落青霄陆(赛博火箭炮/医疗AI)→反击(青鸾入队/世界树在死是AI净化一环)→跨星圣陆(魔法阵浮空城/重逢艾拉/碎片是钥匙/神国显形/结盟修世界树)",
+  "employee_key": "",
+  "team_code": "comic-drama-team",
+  "members": [
+    {
+      "user_id": "owner",
+      "name": "创建者",
+      "role": "owner",
+      "avatar": "",
+      "added_at": "2026-07-09T09:00:00+00:00"
+    }
+  ],
+  "settings": {
+    "visibility": "private",
+    "allow_ai_generate": true,
+    "default_status": "pending"
+  },
+  "created_at": "2026-07-09T09:00:00+00:00",
+  "updated_at": "2026-07-09T09:00:00+00:00"
+}
