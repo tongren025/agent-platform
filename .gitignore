@@ -31,6 +31,10 @@ Thumbs.db
 # Sensitive config (contains API keys)
 appsettings.Development.json
 .env
+# 令牌暂存文件——曾有并行会话在仓库根写出过 _tok.txt(内含 live token),
+# 显式忽略,防止 git add -A 误纳入公开仓库。
+_tok.txt
+*_tok.txt
 
 # Grafana runtime data
 deploy/grafana/data/
