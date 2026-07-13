@@ -1,39 +1,43 @@
-// 路由总表：用户端页面（登录墙内）+ 管理端 /admin 页面（独立鉴权）。
+// 路由总表：用户端页面（登录墙内）+ 管理端 /admin 页面（独立鉴权）；页面按路由懒加载以缩短首屏时间。
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import Employees from './pages/Employees';
-import Templates from './pages/Templates';
-import Tools from './pages/Tools';
-import Teams from './pages/Teams';
-import Workflows from './pages/Workflows';
-import WorkflowEditor from './pages/WorkflowEditor';
-import Workbench from './pages/Workbench';
-import AutoLearn from './pages/AutoLearn';
-import ArticleLearn from './pages/ArticleLearn';
-import Memory from './pages/Memory';
-import Runs from './pages/Runs';
-import Tasks from './pages/Tasks';
-import Production from './pages/Production';
-import Canvas from './pages/Canvas';
-import ProductionHub from './pages/ProductionHub';
-import ProductionMatrix from './pages/ProductionMatrix';
-import EpisodeDetail from './pages/EpisodeDetail';
-import Settings from './pages/Settings';
-import SkillTracker from './pages/SkillTracker';
-import KnowledgeGraph from './pages/KnowledgeGraph';
-import Evolution from './pages/Evolution';
 import AdminLayout from './components/AdminLayout';
-import AdminLogin from './pages/admin/AdminLogin';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminUsers from './pages/admin/AdminUsers';
-import AdminRoles from './pages/admin/AdminRoles';
-import AdminProviders from './pages/admin/AdminProviders';
-import UserLogin from './pages/UserLogin';
 import UserAuthGuard from './components/UserAuthGuard';
+import { Spin } from 'antd';
+
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Employees = lazy(() => import('./pages/Employees'));
+const Templates = lazy(() => import('./pages/Templates'));
+const Tools = lazy(() => import('./pages/Tools'));
+const Teams = lazy(() => import('./pages/Teams'));
+const Workflows = lazy(() => import('./pages/Workflows'));
+const WorkflowEditor = lazy(() => import('./pages/WorkflowEditor'));
+const Workbench = lazy(() => import('./pages/Workbench'));
+const AutoLearn = lazy(() => import('./pages/AutoLearn'));
+const ArticleLearn = lazy(() => import('./pages/ArticleLearn'));
+const Memory = lazy(() => import('./pages/Memory'));
+const Runs = lazy(() => import('./pages/Runs'));
+const Tasks = lazy(() => import('./pages/Tasks'));
+const Production = lazy(() => import('./pages/Production'));
+const Canvas = lazy(() => import('./pages/Canvas'));
+const ProductionHub = lazy(() => import('./pages/ProductionHub'));
+const ProductionMatrix = lazy(() => import('./pages/ProductionMatrix'));
+const EpisodeDetail = lazy(() => import('./pages/EpisodeDetail'));
+const Settings = lazy(() => import('./pages/Settings'));
+const SkillTracker = lazy(() => import('./pages/SkillTracker'));
+const KnowledgeGraph = lazy(() => import('./pages/KnowledgeGraph'));
+const Evolution = lazy(() => import('./pages/Evolution'));
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
+const AdminRoles = lazy(() => import('./pages/admin/AdminRoles'));
+const AdminProviders = lazy(() => import('./pages/admin/AdminProviders'));
+const UserLogin = lazy(() => import('./pages/UserLogin'));
 
 export default function App() {
   return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}><div style={{ textAlign: 'center' }}><Spin size="large" /><div style={{ marginTop: 12, color: '#64748b' }}>正在打开页面</div></div></div>}>
     <Routes>
       <Route path="/login" element={<UserLogin />} />
       <Route element={<UserAuthGuard />}>
@@ -76,5 +80,6 @@ export default function App() {
         <Route path="providers" element={<AdminProviders />} />
       </Route>
     </Routes>
+    </Suspense>
   );
 }

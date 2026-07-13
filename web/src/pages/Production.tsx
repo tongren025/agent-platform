@@ -1,6 +1,6 @@
 // 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。
 import { useEffect, useState, useCallback, useMemo, useRef, type DragEvent } from 'react';
-import { Button, Drawer, Empty, Input, Modal, Popconfirm, Progress, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Badge, Image, Tabs, Checkbox, Avatar } from 'antd';
+import { Button, Drawer, Empty, Input, InputNumber, Modal, Popconfirm, Progress, Radio, Select, Space, Spin, Steps, Tag, Tooltip, Typography, Badge, Image, Tabs, Checkbox, Avatar } from 'antd';
 import { message } from '../ui';
 import {
   PlusOutlined, DeleteOutlined, CopyOutlined, CheckOutlined,
@@ -180,7 +180,11 @@ export default function Production() {
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
 
   const [newProjOpen, setNewProjOpen] = useState(false);
-  const [newProjForm, setNewProjForm] = useState({ name: '', description: '', sourceType: 'idea', sourceContent: '', employeeKey: '' });
+  const [newProjStep, setNewProjStep] = useState(0);
+  const [newProjForm, setNewProjForm] = useState({
+    name: '', description: '', sourceType: 'idea', sourceContent: '', employeeKey: '',
+    episodeCount: 24, episodeDurationSeconds: 90, aspectRatio: '9:16', visualStyle: '', budget: 0,
+  });
   const [cardDrawerOpen, setCardDrawerOpen] = useState(false);
   const [activeCard, setActiveCard] = useState<CardItem | null>(null);
   const [genDialogOpen, setGenDialogOpen] = useState(false);
@@ -276,11 +280,14 @@ export default function Production() {
       const data = await api.createProject({
         name: newProjForm.name, description: newProjForm.description,
         sourceType: newProjForm.sourceType, sourceContent: newProjForm.sourceContent,
-        employeeKey: newProjForm.employeeKey,
+        employeeKey: newProjForm.employeeKey, episodeCount: newProjForm.episodeCount,
+        episodeDurationSeconds: newProjForm.episodeDurationSeconds, aspectRatio: newProjForm.aspectRatio,
+        visualStyle: newProjForm.visualStyle, budget: newProjForm.budget,
       });
       message.success('项目已创建');
       setNewProjOpen(false);
-      setNewProjForm({ name: '', description: '', sourceType: 'idea', sourceContent: '', employeeKey: '' });
+      setNewProjStep(0);
+      setNewProjForm({ name: '', description: '', sourceType: 'idea', sourceContent: '', employeeKey: '', episodeCount: 24, episodeDurationSeconds: 90, aspectRatio: '9:16', visualStyle: '', budget: 0 });
       await loadProjects();
       setSelectedPid(data.project_id);
     } catch (e: any) { message.error(e.message); }
@@ -548,7 +555,7 @@ export default function Production() {
         <div style={{ padding: '14px 16px 10px', borderBottom: `1px solid ${COLORS.border}`, background: '#fff' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Text strong style={{ fontSize: 15 }}>制作项目</Text>
-            <Button type="primary" size="small" icon={<PlusOutlined />} onClick={() => setNewProjOpen(true)}>新建</Button>
+            <Button type="primary" size="small" icon={<PlusOutlined />} onClick={() => { setNewProjStep(0); setNewProjOpen(true); }}>新建</Button>
           </div>
         </div>
         <div style={{
@@ -893,41 +900,34 @@ export default function Production() {
       {/* ── Modals ── */}
 
       {/* New project */}
-      <Modal title="新建制作项目" open={newProjOpen} onCancel={() => setNewProjOpen(false)} onOk={handleCreateProject} okText="创建" width={560}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
-          <div>
-            <Text type="secondary" style={{ fontSize: 12 }}>项目名称</Text>
-            <Input value={newProjForm.name} onChange={e => setNewProjForm(p => ({ ...p, name: e.target.value }))}
-              placeholder="例：九陆纪元 · 第一季" style={{ marginTop: 4 }} />
-          </div>
-          <div>
-            <Text type="secondary" style={{ fontSize: 12 }}>简介</Text>
-            <Input value={newProjForm.description} onChange={e => setNewProjForm(p => ({ ...p, description: e.target.value }))}
-              placeholder="可选" style={{ marginTop: 4 }} />
-          </div>
-          <div>
-            <Text type="secondary" style={{ fontSize: 12 }}>素材类型</Text>
-            <Select value={newProjForm.sourceType} onChange={v => setNewProjForm(p => ({ ...p, sourceType: v }))}
-              style={{ width: '100%', marginTop: 4 }}
-              options={[
-                { value: 'idea', label: '创意/想法' },
-                { value: 'novel', label: '小说/原著' },
-                { value: 'script', label: '已有剧本' },
-                { value: 'outline', label: '大纲' },
-              ]} />
-          </div>
-          <div>
-            <Text type="secondary" style={{ fontSize: 12 }}>原始内容</Text>
-            <TextArea value={newProjForm.sourceContent} onChange={e => setNewProjForm(p => ({ ...p, sourceContent: e.target.value }))}
-              placeholder="粘贴你的创意、小说章节、或剧本大纲..." rows={8} style={{ marginTop: 4 }} />
-          </div>
-          <div>
-            <Text type="secondary" style={{ fontSize: 12 }}>AI 员工</Text>
-            <Select value={newProjForm.employeeKey} onChange={v => setNewProjForm(p => ({ ...p, employeeKey: v }))}
-              style={{ width: '100%', marginTop: 4 }} allowClear placeholder="选择一个数字员工"
-              options={employees.map(e => ({ value: e.employeeKey, label: e.name }))} />
-          </div>
-        </div>
+      <Modal title="新建制作项目" open={newProjOpen} onCancel={() => setNewProjOpen(false)} width={620}
+        footer={[
+          <Button key="cancel" onClick={() => setNewProjOpen(false)}>取消</Button>,
+          newProjStep > 0 && <Button key="prev" onClick={() => setNewProjStep(s => s - 1)}>上一步</Button>,
+          newProjStep < 2
+            ? <Button key="next" type="primary" onClick={() => {
+                if (newProjStep === 0 && !newProjForm.name.trim()) { message.warning('请输入项目名称'); return; }
+                setNewProjStep(s => s + 1);
+              }}>下一步</Button>
+            : <Button key="create" type="primary" onClick={handleCreateProject}>创建项目</Button>,
+        ]}>
+        <Steps size="small" current={newProjStep} items={[{ title: '项目目标' }, { title: '生产规格' }, { title: '素材与执行' }]} style={{ margin: '12px 0 24px' }} />
+        {newProjStep === 0 && <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <label><Text type="secondary">项目名称</Text><Input value={newProjForm.name} onChange={e => setNewProjForm(p => ({ ...p, name: e.target.value }))} placeholder="例：九陆纪元 · 第一季" style={{ marginTop: 5 }} /></label>
+          <label><Text type="secondary">项目简介</Text><Input value={newProjForm.description} onChange={e => setNewProjForm(p => ({ ...p, description: e.target.value }))} placeholder="一句话说明这一季讲什么" style={{ marginTop: 5 }} /></label>
+        </div>}
+        {newProjStep === 1 && <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <label><Text type="secondary">计划集数</Text><InputNumber min={1} max={500} value={newProjForm.episodeCount} onChange={v => setNewProjForm(p => ({ ...p, episodeCount: v || 1 }))} style={{ width: '100%', marginTop: 5 }} /></label>
+          <label><Text type="secondary">单集时长（秒）</Text><InputNumber min={5} max={3600} value={newProjForm.episodeDurationSeconds} onChange={v => setNewProjForm(p => ({ ...p, episodeDurationSeconds: v || 90 }))} style={{ width: '100%', marginTop: 5 }} /></label>
+          <label><Text type="secondary">画幅</Text><Select value={newProjForm.aspectRatio} onChange={v => setNewProjForm(p => ({ ...p, aspectRatio: v }))} options={[{ value: '9:16', label: '竖屏 9:16' }, { value: '16:9', label: '横屏 16:9' }, { value: '1:1', label: '方形 1:1' }]} style={{ width: '100%', marginTop: 5 }} /></label>
+          <label><Text type="secondary">预算（元，可选）</Text><InputNumber min={0} precision={2} value={newProjForm.budget} onChange={v => setNewProjForm(p => ({ ...p, budget: v || 0 }))} style={{ width: '100%', marginTop: 5 }} /></label>
+          <label style={{ gridColumn: '1 / -1' }}><Text type="secondary">视觉风格</Text><Input value={newProjForm.visualStyle} onChange={e => setNewProjForm(p => ({ ...p, visualStyle: e.target.value }))} placeholder="例：半写实东方幻想、电影光影、低描边" style={{ marginTop: 5 }} /></label>
+        </div>}
+        {newProjStep === 2 && <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <label><Text type="secondary">素材类型</Text><Select value={newProjForm.sourceType} onChange={v => setNewProjForm(p => ({ ...p, sourceType: v }))} style={{ width: '100%', marginTop: 5 }} options={[{ value: 'idea', label: '创意/想法' }, { value: 'novel', label: '小说/原著' }, { value: 'script', label: '已有剧本' }, { value: 'outline', label: '大纲' }]} /></label>
+          <label><Text type="secondary">原始内容</Text><TextArea value={newProjForm.sourceContent} onChange={e => setNewProjForm(p => ({ ...p, sourceContent: e.target.value }))} placeholder="粘贴创意、小说章节或剧本大纲；创建后可继续补充" rows={6} style={{ marginTop: 5 }} /></label>
+          <label><Text type="secondary">默认 AI 员工</Text><Select value={newProjForm.employeeKey} onChange={v => setNewProjForm(p => ({ ...p, employeeKey: v }))} style={{ width: '100%', marginTop: 5 }} allowClear placeholder="可稍后选择" options={employees.map(e => ({ value: e.employeeKey, label: e.name }))} /></label>
+        </div>}
       </Modal>
 
       {/* Edit project */}

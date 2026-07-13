@@ -1,352 +1,148 @@
-// 总览页：平台资源统计卡片与快捷入口。
-import { useEffect, useState } from 'react';
-import { Spin, Tag, Space, Typography, Avatar, Tooltip } from 'antd';
+// 总览页：以“继续制作、当前阻塞、下一步行动”为核心，而非罗列系统资源数量。
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Alert, Button, Card, Col, Empty, Progress, Result, Row, Skeleton, Space, Statistic, Tag, Typography } from 'antd';
 import {
-  UserOutlined, AppstoreOutlined, ToolOutlined, ThunderboltOutlined,
-  TeamOutlined, CloudServerOutlined, MessageOutlined, SettingOutlined,
-  ArrowRightOutlined, CheckCircleFilled, CloseCircleFilled,
-  RobotOutlined, BookOutlined, BulbOutlined,
+  ArrowRightOutlined, CheckCircleOutlined, CloudSyncOutlined, ExclamationCircleOutlined,
+  MessageOutlined, PlusOutlined, ReloadOutlined, VideoCameraOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../api';
+import { api, type TaskInfo } from '../api';
 import { COLORS } from '../theme';
-import type { Employee, Team } from '../types';
+import { hasPerm } from '../userAuth';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
-interface SystemInfo {
-  version: string;
-  python: string;
-  platform: string;
-  port: number;
-  providerCount: number;
-  modelCount: number;
-  delegationEnabled: boolean;
-  knowledgeEnabled: boolean;
-  shellEnabled: boolean;
-  runTimeout: number;
+interface Readiness {
+  units: number; spec_ready: number; with_image: number; with_video: number; delivered: number;
+  blockers: number; overall_progress: number; next_action: string;
+}
+
+interface ProjectSummary {
+  project_id: string; name: string; description: string; updated_at: string; cardCount: number;
+  episode_count?: number; aspect_ratio?: string; stats?: { readiness?: Readiness };
 }
 
 export default function Dashboard() {
-  const [data, setData] = useState<Record<string, number>>({});
-  const [sysInfo, setSysInfo] = useState<SystemInfo | null>(null);
-  const [providers, setProviders] = useState<any[]>([]);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [projects, setProjects] = useState<ProjectSummary[]>([]);
+  const [tasks, setTasks] = useState<TaskInfo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    Promise.all([
-      api.getOverview(),
-      api.getSystemInfo().catch(() => null),
-      api.listAiProviders().catch(() => []),
-      api.listEmployees().catch(() => []),
-      api.listTeams().catch(() => []),
-    ]).then(([ov, sys, prov, emp, tm]) => {
-      setData(ov); setSysInfo(sys); setProviders(prov); setEmployees(emp); setTeams(tm);
-    }).finally(() => setLoading(false));
+  const load = useCallback(async () => {
+    setLoading(true); setError('');
+    try {
+      const projectData = await api.listProjects();
+      setProjects(projectData);
+      // Redis/worker 是可选依赖；任务摘要异步补齐，不能拖住制作首页。
+      if (hasPerm('workbench:use')) api.listTasks(20).then(setTasks).catch(() => setTasks([]));
+    } catch (e: any) {
+      setError(e.message || '总览加载失败');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  if (loading) return <Spin size="large" style={{ display: 'block', marginTop: 120, textAlign: 'center' }} />;
+  useEffect(() => { load(); }, [load]);
 
-  const onlineCount = employees.filter(e => e.enabled).length;
-  const totalModels = providers.reduce((sum, p) => sum + (p.models?.length ?? 0), 0);
+  const sortedProjects = useMemo(() => [...projects].sort((a, b) =>
+    new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime()), [projects]);
+  const primary = sortedProjects[0];
+  const readiness = primary?.stats?.readiness;
+  const runningTasks = tasks.filter(t => ['queued', 'in_progress', 'deferred'].includes(t.status));
+  const failedTasks = tasks.filter(t => t.status === 'complete' && t.result && !t.result.success);
+  const totalBlockers = projects.reduce((sum, p) => sum + (p.stats?.readiness?.blockers || 0), 0);
+
+  if (loading) return <div style={{ maxWidth: 1280 }}><Skeleton active paragraph={{ rows: 12 }} /></div>;
+  if (error) return <Result status="error" title="总览暂时无法加载" subTitle={error}
+    extra={<Button type="primary" icon={<ReloadOutlined />} onClick={load}>重新加载</Button>} />;
 
   return (
-    <div>
-      {/* Hero section - welcome + primary CTA */}
-      <div style={{
-        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%)',
-        borderRadius: 18, padding: '36px 40px',
-        marginBottom: 28, position: 'relative', overflow: 'hidden',
-        color: '#fff',
-      }}>
-        {/* Background decoration */}
-        <div style={{
-          position: 'absolute', right: -30, top: -30,
-          width: 200, height: 200, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.06)',
-        }} />
-        <div style={{
-          position: 'absolute', right: 80, bottom: -40,
-          width: 120, height: 120, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.04)',
-        }} />
-
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 6, letterSpacing: '-0.02em' }}>
-            Agent Studio
-          </div>
-          <div style={{ fontSize: 15, opacity: 0.85, marginBottom: 24 }}>
-            {onlineCount} 名员工在线 · {teams.length} 个团队就绪 · {totalModels} 个 AI 模型可用
-          </div>
-
-          <div style={{ display: 'flex', gap: 12 }}>
-            <div
-              onClick={() => navigate('/workbench')}
-              style={{
-                padding: '12px 28px', borderRadius: 12, cursor: 'pointer',
-                background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)',
-                display: 'flex', alignItems: 'center', gap: 10,
-                fontWeight: 600, fontSize: 14, transition: 'background 0.2s',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.3)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.2)'; }}
-            >
-              <MessageOutlined style={{ fontSize: 16 }} />
-              开始对话
-            </div>
-            <div
-              onClick={() => navigate('/teams')}
-              style={{
-                padding: '12px 28px', borderRadius: 12, cursor: 'pointer',
-                background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)',
-                display: 'flex', alignItems: 'center', gap: 10,
-                fontWeight: 600, fontSize: 14, transition: 'background 0.2s',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.2)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.1)'; }}
-            >
-              <TeamOutlined style={{ fontSize: 16 }} />
-              查看团队
-            </div>
-          </div>
+    <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+        <div>
+          <Text type="secondary">创作工作台</Text>
+          <Title level={2} style={{ margin: '4px 0 6px' }}>今天继续把故事做完</Title>
+          <Text type="secondary">这里聚合最近项目、生产阻塞和后台任务。</Text>
         </div>
+        <Space>
+          {hasPerm('workbench:use') && <Button icon={<MessageOutlined />} onClick={() => navigate('/workbench')}>找数字员工</Button>}
+          {hasPerm('production:manage') && <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/production')}>进入制作</Button>}
+        </Space>
       </div>
 
-      {/* Compact metrics strip */}
-      <div style={{
-        display: 'flex', gap: 0, marginBottom: 28,
-        background: '#fff', borderRadius: 14, border: '1px solid #eef0f6',
-        overflow: 'hidden',
-      }}>
-        {[
-          { key: 'employees', label: '数字员工', icon: <UserOutlined />, color: COLORS.iris, route: '/employees' },
-          { key: 'teams', label: '团队', icon: <TeamOutlined />, color: COLORS.mint, route: '/teams' },
-          { key: 'roleTemplates', label: '角色模板', icon: <AppstoreOutlined />, color: '#8b5cf6', route: '/templates' },
-          { key: 'tools', label: '工具', icon: <ToolOutlined />, color: '#06b6d4', route: '/tools' },
-          { key: 'skills', label: '技能', icon: <ThunderboltOutlined />, color: '#f59e0b', route: '/tools' },
-          { key: 'mcpServers', label: 'MCP 服务', icon: <CloudServerOutlined />, color: '#ec4899', route: '/tools' },
-        ].map((item, i, arr) => (
-          <div
-            key={item.key}
-            onClick={() => navigate(item.route)}
-            style={{
-              flex: 1, padding: '18px 16px', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 12,
-              borderRight: i < arr.length - 1 ? '1px solid #eef0f6' : 'none',
-              transition: 'background 0.15s',
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = '#f8f9fc'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = ''; }}
-          >
-            <div style={{
-              color: item.color, fontSize: 16, opacity: 0.8,
-            }}>
-              {item.icon}
-            </div>
-            <div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', lineHeight: 1 }}>
-                {data[item.key] ?? 0}
-              </div>
-              <div style={{ fontSize: 11, color: COLORS.slate, marginTop: 2 }}>{item.label}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Two-column: Team overview + System info */}
-      <div style={{ display: 'flex', gap: 20 }}>
-        {/* Left: Team members preview */}
-        <div style={{ flex: 3, minWidth: 0 }}>
-          <div style={{
-            background: '#fff', borderRadius: 14, border: '1px solid #eef0f6',
-            padding: '24px 28px',
-          }}>
-            <div style={{
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              marginBottom: 20,
-            }}>
-              <div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b' }}>
-                  <RobotOutlined style={{ marginRight: 8, color: COLORS.iris }} />
-                  AI 员工
+      {primary && readiness ? (
+        <Card style={{ borderRadius: 18, marginBottom: 22, overflow: 'hidden' }} styles={{ body: { padding: 0 } }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.45fr 1fr' }}>
+            <div style={{ padding: '30px 34px', background: 'linear-gradient(135deg, #312e81, #6366f1)', color: '#fff' }}>
+              <Text style={{ color: 'rgba(255,255,255,.68)' }}>继续最近项目</Text>
+              <Title level={3} style={{ color: '#fff', margin: '8px 0 4px' }}>{primary.name}</Title>
+              <div style={{ color: 'rgba(255,255,255,.72)', marginBottom: 24 }}>{primary.description || '暂无项目简介'}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+                <Progress type="circle" percent={readiness.overall_progress} size={78}
+                  strokeColor="#a7f3d0" trailColor="rgba(255,255,255,.15)" format={p => <span style={{ color: '#fff' }}>{p}%</span>} />
+                <div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,.6)' }}>下一步</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, margin: '4px 0 12px' }}>{readiness.next_action}</div>
+                  <Button onClick={() => navigate(`/production/${primary.project_id}`)}>继续项目 <ArrowRightOutlined /></Button>
                 </div>
               </div>
-              <div
-                onClick={() => navigate('/employees')}
-                style={{
-                  fontSize: 13, color: COLORS.iris, cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', gap: 4,
-                }}
-              >
-                查看全部 <ArrowRightOutlined style={{ fontSize: 11 }} />
-              </div>
             </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {employees.slice(0, 6).map(emp => (
-                <div
-                  key={emp.employeeKey}
-                  onClick={() => navigate(`/workbench?employee=${encodeURIComponent(emp.employeeKey)}`)}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 14,
-                    padding: '12px 14px', borderRadius: 10, cursor: 'pointer',
-                    transition: 'background 0.15s', border: '1px solid #f5f6fa',
-                  }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = '#f8f9fc'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = ''; }}
-                >
-                  <div style={{
-                    width: 40, height: 40, borderRadius: 10, flexShrink: 0,
-                    background: `${COLORS.iris}10`, color: COLORS.iris,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 16, fontWeight: 700,
-                  }}>
-                    {emp.name[0]}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>{emp.name}</div>
-                    <div style={{
-                      fontSize: 12, color: COLORS.slate,
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}>
-                      {emp.employeeKey}
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
-                    {emp.hasKnowledgeBase && (
-                      <Tooltip title="有知识库">
-                        <BookOutlined style={{ fontSize: 13, color: COLORS.mint }} />
-                      </Tooltip>
-                    )}
-                    <div style={{
-                      width: 8, height: 8, borderRadius: '50%',
-                      background: emp.enabled ? '#22c55e' : '#d1d5db',
-                    }} />
-                  </div>
-                </div>
-              ))}
-              {employees.length > 6 && (
-                <div style={{ textAlign: 'center', padding: '8px 0' }}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>还有 {employees.length - 6} 名员工</Text>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right column */}
-        <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {/* Quick actions */}
-          <div style={{
-            background: '#fff', borderRadius: 14, border: '1px solid #eef0f6',
-            padding: '24px 24px',
-          }}>
-            <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 16 }}>
-              <ThunderboltOutlined style={{ marginRight: 8, color: '#f59e0b' }} />
-              快捷操作
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <div style={{ padding: '28px 30px' }}>
+              <Title level={5} style={{ marginTop: 0 }}>交付就绪度</Title>
               {[
-                { label: '对话', icon: <MessageOutlined />, route: '/workbench', color: COLORS.iris },
-                { label: '创建员工', icon: <UserOutlined />, route: '/employees', color: '#8b5cf6' },
-                { label: '管理工具', icon: <ToolOutlined />, route: '/tools', color: '#06b6d4' },
-                { label: '设置', icon: <SettingOutlined />, route: '/settings', color: COLORS.slate },
-              ].map(a => (
-                <div
-                  key={a.label}
-                  onClick={() => navigate(a.route)}
-                  style={{
-                    padding: '14px 14px', borderRadius: 10, cursor: 'pointer',
-                    border: '1px solid #f0f1f5', textAlign: 'center',
-                    transition: 'all 0.15s',
-                  }}
-                  onMouseEnter={e => {
-                    const el = e.currentTarget as HTMLDivElement;
-                    el.style.background = '#f8f9fc';
-                    el.style.borderColor = '#e0e3eb';
-                  }}
-                  onMouseLeave={e => {
-                    const el = e.currentTarget as HTMLDivElement;
-                    el.style.background = '';
-                    el.style.borderColor = '#f0f1f5';
-                  }}
-                >
-                  <div style={{ color: a.color, fontSize: 20, marginBottom: 6 }}>{a.icon}</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>{a.label}</div>
-                </div>
-              ))}
+                ['规格齐全', readiness.spec_ready, readiness.units, '#6366f1'],
+                ['已出图', readiness.with_image, readiness.units, '#10b981'],
+                ['已成视频', readiness.with_video, readiness.units, '#f59e0b'],
+                ['已交付', readiness.delivered, readiness.units, '#ef4444'],
+              ].map(([label, value, total, color]) => <div key={String(label)} style={{ marginTop: 13 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}><Text>{label}</Text><Text type="secondary">{value}/{total}</Text></div>
+                <Progress percent={Number(total) ? Math.round(Number(value) / Number(total) * 100) : 0} showInfo={false} strokeColor={String(color)} size="small" />
+              </div>)}
             </div>
           </div>
+        </Card>
+      ) : hasPerm('production:manage') ? (
+        <Card style={{ marginBottom: 22 }}><Empty description="还没有制作项目">
+          <Button type="primary" onClick={() => navigate('/production')}>创建第一个项目</Button>
+        </Empty></Card>
+      ) : null}
 
-          {/* System status - compact */}
-          <div style={{
-            background: '#fff', borderRadius: 14, border: '1px solid #eef0f6',
-            padding: '24px 24px',
-          }}>
-            <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 16 }}>
-              <SettingOutlined style={{ marginRight: 8, color: '#06b6d4' }} />
-              系统状态
+      {(totalBlockers > 0 || failedTasks.length > 0) && <Alert showIcon type="warning" style={{ marginBottom: 22 }}
+        message="有事项需要处理"
+        description={`${totalBlockers ? `${totalBlockers} 个生产单元存在断链。` : ''}${failedTasks.length ? ` ${failedTasks.length} 个后台任务执行失败。` : ''}`}
+        action={<Space>{totalBlockers > 0 && <Button size="small" onClick={() => navigate('/production/matrix')}>查看断链</Button>}{failedTasks.length > 0 && <Button size="small" onClick={() => navigate('/tasks')}>查看任务</Button>}</Space>} />}
+
+      <Row gutter={18}>
+        <Col span={16}>
+          <Card title={<span><VideoCameraOutlined /> 最近项目</span>} extra={hasPerm('production:manage') && <Button type="link" onClick={() => navigate('/production')}>查看全部</Button>}>
+            {sortedProjects.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : sortedProjects.slice(0, 4).map(p => {
+              const r = p.stats?.readiness;
+              return <button key={p.project_id} type="button" onClick={() => navigate(`/production/${p.project_id}`)} style={{
+                width: '100%', border: 0, borderBottom: '1px solid #f0f0f5', background: 'transparent', padding: '14px 4px',
+                display: 'grid', gridTemplateColumns: '1fr 240px 32px', gap: 16, alignItems: 'center', textAlign: 'left', cursor: 'pointer',
+              }}>
+                <div><Text strong>{p.name}</Text><div><Text type="secondary" style={{ fontSize: 12 }}>{r?.next_action || '等待生产计划'}</Text></div></div>
+                <Progress percent={r?.overall_progress || 0} size="small" strokeColor={COLORS.iris} />
+                <ArrowRightOutlined style={{ color: COLORS.slate }} />
+              </button>;
+            })}
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card title={<span><CloudSyncOutlined /> 后台任务</span>} extra={hasPerm('workbench:use') && <Button type="link" onClick={() => navigate('/tasks')}>任务中心</Button>}>
+            <Row gutter={12}>
+              <Col span={12}><Statistic title="进行中" value={runningTasks.length} prefix={<CloudSyncOutlined />} /></Col>
+              <Col span={12}><Statistic title="失败" value={failedTasks.length} valueStyle={failedTasks.length ? { color: COLORS.rose } : undefined} prefix={failedTasks.length ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />} /></Col>
+            </Row>
+            <div style={{ marginTop: 22 }}>
+              {runningTasks.length ? runningTasks.slice(0, 3).map(t => <div key={t.job_id} style={{ marginBottom: 10 }}>
+                <Text ellipsis style={{ maxWidth: '100%' }}>{t.user_input || t.employee_key || t.job_id}</Text><br /><Tag color="processing">{t.status === 'queued' ? '排队中' : '执行中'}</Tag>
+              </div>) : <Text type="secondary">当前没有正在执行的任务</Text>}
             </div>
-            {sysInfo ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                {[
-                  ['版本', `v${sysInfo.version}`, null],
-                  ['端口', String(sysInfo.port), null],
-                  ['供应商', `${sysInfo.providerCount} 个`, null],
-                  ['模型', `${sysInfo.modelCount} 个`, null],
-                  ['委派', null, sysInfo.delegationEnabled],
-                  ['知识库', null, sysInfo.knowledgeEnabled],
-                  ['Shell', null, sysInfo.shellEnabled],
-                ].map(([label, value, bool]) => (
-                  <div key={label as string} style={{
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    padding: '7px 0', borderBottom: '1px solid #f8f9fc',
-                  }}>
-                    <Text type="secondary" style={{ fontSize: 13 }}>{label}</Text>
-                    {value != null ? (
-                      <Text style={{ fontSize: 13, fontWeight: 500 }}>{value}</Text>
-                    ) : (
-                      bool ? (
-                        <CheckCircleFilled style={{ color: '#22c55e', fontSize: 14 }} />
-                      ) : (
-                        <CloseCircleFilled style={{ color: '#d1d5db', fontSize: 14 }} />
-                      )
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <Text type="secondary">加载中...</Text>
-            )}
-
-            {/* AI providers mini */}
-            {providers.length > 0 && (
-              <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #eef0f6' }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.slate, marginBottom: 10 }}>
-                  AI 供应商
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {providers.map(p => (
-                    <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Space size={6}>
-                        <div style={{
-                          width: 8, height: 8, borderRadius: '50%',
-                          background: p.enabled ? '#22c55e' : '#d1d5db',
-                        }} />
-                        <Text style={{ fontSize: 13 }}>{p.name}</Text>
-                      </Space>
-                      <Text type="secondary" style={{ fontSize: 12 }}>{p.models?.length ?? 0} 模型</Text>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 }

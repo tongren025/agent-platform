@@ -7,6 +7,7 @@ import zhCN from 'antd/locale/zh_CN';
 import { theme } from './theme';
 import { AntdMessageBridge } from './ui';
 import App from './App';
+import AppErrorBoundary from './components/AppErrorBoundary';
 import './global.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -16,7 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <AntdApp component={false}>
         <AntdMessageBridge />
         <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <App />
+          <AppErrorBoundary><App /></AppErrorBoundary>
         </BrowserRouter>
       </AntdApp>
     </ConfigProvider>

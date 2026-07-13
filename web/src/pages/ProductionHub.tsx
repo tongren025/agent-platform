@@ -39,6 +39,8 @@ interface EpisodeInfo {
   thumbnail: string | null;
   totalCards: number;
   doneCards: number;
+  readinessPercent: number;
+  nextAction: string;
 }
 
 /* ── 全局资产分组 ── */
@@ -194,6 +196,19 @@ export default function ProductionHub() {
       }
 
       const firstImage = epCards.find(c => c.images.length > 0);
+      const unitCards = Array.from(units).map(unit => epCards.filter(c => c.shot_number === unit));
+      const specReady = unitCards.filter(list => ['script', 'storyboard', 'img_prompt', 'vid_prompt'].every(stage => list.some(c => c.stage === stage))).length;
+      const withImage = unitCards.filter(list => list.some(c => c.images.length > 0)).length;
+      const withVideo = unitCards.filter(list => list.some(c => c.videos.length > 0)).length;
+      const delivered = unitCards.filter(list => list.some(c => c.stage === 'final' && c.status === 'done')).length;
+      const unitTotal = Math.max(units.size, 1);
+      const readinessPercent = Math.round(
+        specReady / unitTotal * 40 + withImage / unitTotal * 30 + withVideo / unitTotal * 20 + delivered / unitTotal * 10,
+      );
+      const nextAction = specReady < units.size ? `修复 ${units.size - specReady} 个断链`
+        : withImage < units.size ? `待出图 ${units.size - withImage}`
+          : withVideo < units.size ? `待视频 ${units.size - withVideo}`
+            : delivered < units.size ? '待成片交付' : '已交付';
 
       return {
         episode: ep,
@@ -203,15 +218,14 @@ export default function ProductionHub() {
         thumbnail: firstImage?.images[0] || null,
         totalCards: epCards.length,
         doneCards: epCards.filter(c => c.status === 'done').length,
+        readinessPercent,
+        nextAction,
       };
     });
   }, [cards]);
 
-  const overallProgress = useMemo(() => {
-    const epCards = cards.filter(c => c.episode != null);
-    if (epCards.length === 0) return 0;
-    return Math.round((epCards.filter(c => c.status === 'done').length / epCards.length) * 100);
-  }, [cards]);
+  const readiness = project?.stats?.readiness;
+  const overallProgress = readiness?.overall_progress ?? 0;
 
   if (loading && !project) {
     return <div style={{ display: 'flex', justifyContent: 'center', padding: 120 }}><Spin size="large" /></div>;
@@ -257,7 +271,7 @@ export default function ProductionHub() {
           <Card size="small" style={{ marginBottom: 20, borderRadius: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
               <div>
-                <Text type="secondary" style={{ fontSize: 12 }}>总进度</Text>
+                <Text type="secondary" style={{ fontSize: 12 }}>交付就绪度</Text>
                 <Progress percent={overallProgress} size="small" style={{ width: 160, margin: 0 }} />
               </div>
               <div>
@@ -272,6 +286,12 @@ export default function ProductionHub() {
                 <Text type="secondary" style={{ fontSize: 12 }}>全局资产</Text>
                 <div><Text strong>{globalCards.length}</Text> 项</div>
               </div>
+              {readiness && <>
+                <div><Text type="secondary" style={{ fontSize: 12 }}>规格齐全</Text><div><Text strong>{readiness.spec_ready}/{readiness.units}</Text></div></div>
+                <div><Text type="secondary" style={{ fontSize: 12 }}>已出图</Text><div><Text strong>{readiness.with_image}/{readiness.units}</Text></div></div>
+                <div><Text type="secondary" style={{ fontSize: 12 }}>已成视频</Text><div><Text strong>{readiness.with_video}/{readiness.units}</Text></div></div>
+                <Tag color={readiness.blockers ? 'error' : 'processing'}>{readiness.next_action}</Tag>
+              </>}
             </div>
           </Card>
 
@@ -322,8 +342,7 @@ export default function ProductionHub() {
           ) : (
             <Row gutter={[14, 14]}>
               {episodes.map(ep => {
-                const pct = ep.totalCards > 0
-                  ? Math.round((ep.doneCards / ep.totalCards) * 100) : 0;
+                const pct = ep.readinessPercent;
                 return (
                   <Col key={ep.episode} xs={24} sm={12} md={8} lg={6}>
                     <Card
@@ -368,8 +387,9 @@ export default function ProductionHub() {
                         <div style={{ display: 'flex', gap: 12, marginTop: 6, fontSize: 12, color: COLORS.slate }}>
                           <span>{ep.unitCount} G单元</span>
                           <span>{ep.totalCards} 卡片</span>
-                          <span>{pct}%</span>
+                           <span>{pct}% 就绪</span>
                         </div>
+                        <Text type="secondary" style={{ display: 'block', marginTop: 6, fontSize: 11 }}>{ep.nextAction}</Text>
                         <StageBar stages={ep.stageProgress} />
                       </div>
                     </Card>

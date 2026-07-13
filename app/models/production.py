@@ -127,6 +127,11 @@ class ProductionProject(BaseModel):
     source_content: str = ""
     employee_key: str = ""
     team_code: str = ""
+    episode_count: int = 0
+    episode_duration_seconds: int = 90
+    aspect_ratio: str = "9:16"
+    visual_style: str = ""
+    budget: float = 0
     members: list[ProjectMember] = Field(default_factory=list)
     settings: dict = Field(default_factory=lambda: {
         "visibility": "private",

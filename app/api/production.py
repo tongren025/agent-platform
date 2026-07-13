@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Query
+from fastapi import APIRouter, HTTPException, UploadFile, File, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -148,8 +148,75 @@ def _sections_from_reply(reply: str) -> list[dict]:
     return drafts
 
 
+SPEC_STAGES = ("script", "storyboard", "img_prompt", "vid_prompt")
+
+
+def _compute_readiness(cards: list[ProductionCard]) -> dict:
+    """按 G 生成单元计算真实生产就绪度，避免“文案卡已 done”被误报为成片完成。"""
+    units = sorted({
+        (c.episode, c.shot_number)
+        for c in cards
+        if c.episode is not None and c.shot_number > 0
+    })
+    if not units:
+        return {
+            "units": 0, "spec_ready": 0, "with_image": 0, "with_video": 0,
+            "delivered": 0, "spec_rate": 0, "image_rate": 0,
+            "video_rate": 0, "delivery_rate": 0, "overall_progress": 0,
+            "blockers": 0, "next_action": "先生成剧本与 G 生成单元",
+        }
+
+    spec_ready = with_image = with_video = delivered = 0
+    missing_spec = 0
+    for episode, unit in units:
+        unit_cards = [c for c in cards if c.episode == episode and c.shot_number == unit]
+        present = {c.stage for c in unit_cards}
+        missing = [stage for stage in SPEC_STAGES if stage not in present]
+        if not missing:
+            spec_ready += 1
+        else:
+            missing_spec += 1
+        if any(c.images for c in unit_cards):
+            with_image += 1
+        if any(c.videos for c in unit_cards):
+            with_video += 1
+        if any(c.stage == "final" and c.status == "done" for c in unit_cards):
+            delivered += 1
+
+    total = len(units)
+    spec_rate = round(spec_ready / total * 100)
+    image_rate = round(with_image / total * 100)
+    video_rate = round(with_video / total * 100)
+    delivery_rate = round(delivered / total * 100)
+    overall = round(spec_rate * 0.4 + image_rate * 0.3 + video_rate * 0.2 + delivery_rate * 0.1)
+    if missing_spec:
+        next_action = f"修复 {missing_spec} 个断链单元"
+    elif with_image < total:
+        next_action = f"完成剩余 {total - with_image} 个单元出图"
+    elif with_video < total:
+        next_action = f"完成剩余 {total - with_video} 个单元视频"
+    elif delivered < total:
+        next_action = "完成剪辑与成片交付"
+    else:
+        next_action = "项目已具备交付条件"
+    return {
+        "units": total,
+        "spec_ready": spec_ready,
+        "with_image": with_image,
+        "with_video": with_video,
+        "delivered": delivered,
+        "spec_rate": spec_rate,
+        "image_rate": image_rate,
+        "video_rate": video_rate,
+        "delivery_rate": delivery_rate,
+        "overall_progress": overall,
+        "blockers": missing_spec,
+        "next_action": next_action,
+    }
+
+
 def _compute_stats(cards: list[ProductionCard]) -> dict:
-    """统计卡片进度：按阶段/状态分组计数并计算整体完成率，供项目列表和 stats 接口复用。"""
+    """统计卡片状态与真实生产就绪度，供项目列表、首页和 stats 接口复用。"""
     total = len(cards)
     by_stage: dict[str, dict] = {}
     by_status: dict[str, int] = {}
@@ -165,11 +232,14 @@ def _compute_stats(cards: list[ProductionCard]) -> dict:
     for c in cards:
         by_status[c.status] = by_status.get(c.status, 0) + 1
     done_total = by_status.get("done", 0)
+    readiness = _compute_readiness(cards)
     return {
         "total": total,
         "by_stage": by_stage,
         "by_status": by_status,
-        "overall_progress": round(done_total / total * 100) if total else 0,
+        "card_status_progress": round(done_total / total * 100) if total else 0,
+        "overall_progress": readiness["overall_progress"],
+        "readiness": readiness,
     }
 
 
@@ -198,13 +268,21 @@ class CreateProjectReq(BaseModel):
     source_content: str = ""
     employee_key: str = ""
     team_code: str = ""
+    episode_count: int = Field(default=0, ge=0, le=500)
+    episode_duration_seconds: int = Field(default=90, ge=5, le=3600)
+    aspect_ratio: str = "9:16"
+    visual_style: str = ""
+    budget: float = Field(default=0, ge=0)
 
 
 @router.post("/projects")
-def create_project(req: CreateProjectReq):
+def create_project(req: CreateProjectReq, request: Request):
     """POST /projects：创建项目（创建者自动成为 owner）；若带原始素材则自动生成一张 idea 阶段卡片。"""
     pid = str(uuid.uuid4())[:8]
     now = _now()
+    username = getattr(request.state, "username", "owner")
+    user = getattr(request.state, "user", {}) or {}
+    display_name = user.get("displayName", username) if isinstance(user, dict) else username
     proj = ProductionProject(
         project_id=pid,
         name=req.name,
@@ -213,7 +291,12 @@ def create_project(req: CreateProjectReq):
         source_content=req.source_content,
         employee_key=req.employee_key,
         team_code=req.team_code,
-        members=[ProjectMember(user_id="owner", name="创建者", role="owner", added_at=now)],
+        episode_count=req.episode_count,
+        episode_duration_seconds=req.episode_duration_seconds,
+        aspect_ratio=req.aspect_ratio,
+        visual_style=req.visual_style,
+        budget=req.budget,
+        members=[ProjectMember(user_id=username, name=display_name, role="owner", added_at=now)],
         created_at=now,
         updated_at=now,
     )
@@ -256,6 +339,11 @@ class UpdateProjectReq(BaseModel):
     source_content: Optional[str] = None
     employee_key: Optional[str] = None
     team_code: Optional[str] = None
+    episode_count: Optional[int] = Field(default=None, ge=0, le=500)
+    episode_duration_seconds: Optional[int] = Field(default=None, ge=5, le=3600)
+    aspect_ratio: Optional[str] = None
+    visual_style: Optional[str] = None
+    budget: Optional[float] = Field(default=None, ge=0)
     settings: Optional[dict] = None
 
 
@@ -275,6 +363,16 @@ def update_project(pid: str, req: UpdateProjectReq):
         proj.employee_key = req.employee_key
     if req.team_code is not None:
         proj.team_code = req.team_code
+    if req.episode_count is not None:
+        proj.episode_count = req.episode_count
+    if req.episode_duration_seconds is not None:
+        proj.episode_duration_seconds = req.episode_duration_seconds
+    if req.aspect_ratio is not None:
+        proj.aspect_ratio = req.aspect_ratio
+    if req.visual_style is not None:
+        proj.visual_style = req.visual_style
+    if req.budget is not None:
+        proj.budget = req.budget
     if req.settings is not None:
         proj.settings.update(req.settings)
     proj.updated_at = _now()

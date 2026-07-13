@@ -56,6 +56,16 @@ export interface ArchivedCard {
   archive_reason: string;
 }
 
+export interface TaskInfo {
+  job_id: string;
+  status: string;
+  result: any;
+  enqueue_time: string | null;
+  employee_key?: string;
+  user_input?: string;
+  created_at?: number | null;
+}
+
 /** 文件上传等裸 fetch 用的鉴权头——FormData 请求不能设 Content-Type（浏览器要自己拼 boundary）。 */
 function authHeaders(): Record<string, string> {
   const token = userToken.get();
@@ -122,7 +132,10 @@ export const api = {
   // Tasks (异步队列)
   enqueueAgentRun: (data: { employeeKey: string; userInput: string; sessionId?: string }) =>
     request<{ job_id: string; status: string }>('/tasks/agent-run', { method: 'POST', body: JSON.stringify(data) }),
-  getTaskStatus: (jobId: string) => request<{ job_id: string; status: string; result: any; enqueue_time: string | null }>(`/tasks/${encodeURIComponent(jobId)}`),
+  listTasks: (limit = 50) => request<TaskInfo[]>(`/tasks?limit=${limit}`),
+  getTaskStatus: (jobId: string) => request<TaskInfo>(`/tasks/${encodeURIComponent(jobId)}`),
+  cancelTask: (jobId: string) => request<{ job_id: string; cancelled: boolean }>(`/tasks/${encodeURIComponent(jobId)}/cancel`, { method: 'POST' }),
+  retryTask: (jobId: string) => request<{ job_id: string; status: string }>(`/tasks/${encodeURIComponent(jobId)}/retry`, { method: 'POST' }),
 
   // Knowledge 语义搜索
   searchKnowledge: (key: string, q: string, topK = 5) =>
@@ -272,8 +285,8 @@ export const api = {
 
   // Production pipeline
   listProjects: () => request<any[]>('/production/projects'),
-  createProject: (data: { name: string; description?: string; sourceType?: string; sourceContent?: string; employeeKey?: string; teamCode?: string }) =>
-    request<any>('/production/projects', { method: 'POST', body: JSON.stringify({ source_type: data.sourceType, source_content: data.sourceContent, employee_key: data.employeeKey, team_code: data.teamCode, ...data }) }),
+  createProject: (data: { name: string; description?: string; sourceType?: string; sourceContent?: string; employeeKey?: string; teamCode?: string; episodeCount?: number; episodeDurationSeconds?: number; aspectRatio?: string; visualStyle?: string; budget?: number }) =>
+    request<any>('/production/projects', { method: 'POST', body: JSON.stringify({ source_type: data.sourceType, source_content: data.sourceContent, employee_key: data.employeeKey, team_code: data.teamCode, episode_count: data.episodeCount, episode_duration_seconds: data.episodeDurationSeconds, aspect_ratio: data.aspectRatio, visual_style: data.visualStyle, budget: data.budget, name: data.name, description: data.description }) }),
   getProject: (pid: string) => request<any>(`/production/projects/${pid}`),
   updateProject: (pid: string, data: any) =>
     request<any>(`/production/projects/${pid}`, { method: 'PUT', body: JSON.stringify(data) }),

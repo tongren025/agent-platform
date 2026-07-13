@@ -5,6 +5,40 @@
 
 ---
 
+## [2026-07-13] feat: 桌面端生产体验闭环——真实就绪度、行动首页、建项向导与用户任务中心
+
+**动机**:体验审计发现项目总览会把 AI 生成的文案卡直接视为 `done`，第一季显示 100%，
+但全链路实际只有 1/145 个 G 单元有图、视频尚未完成；首页主要展示员工/工具数量，
+无法回答“下一步做什么”；异步任务页还要求用户手工保存 Job ID。此次明确不处理移动端，
+集中修复桌面端核心生产旅程。
+
+**变更点**
+- `app/api/production.py`:新增按 G 单元计算的真实生产就绪度：规格齐全 40%、出图 30%、
+  视频 20%、成片交付 10%；保留 `card_status_progress` 供诊断，`overall_progress` 改为交付口径，
+  并返回断链数与下一步动作。
+- `app/models/production.py`、`web/src/pages/Production.tsx`:项目新增计划集数、单集时长、画幅、
+  视觉风格、预算字段；新建项目改为三步向导，并用当前登录用户作为真实 owner（不再写死
+  `owner/创建者`）。Pydantic 默认值保证旧 `project.json` 无需迁移。
+- `web/src/pages/ProductionHub.tsx`:项目和单集进度改用真实就绪度，展示规格/图/视频/交付数量，
+  不再以卡片 `done` 数制造 100% 假象。
+- `web/src/pages/Dashboard.tsx`:总览重做为最近项目、下一步、阻塞、后台任务；入口按当前权限显隐。
+- `app/api/tasks.py`、`web/src/pages/Tasks.tsx`:Redis 增加 30 天用户级任务索引与任务元数据；新增
+  `GET /tasks`、`POST /tasks/{id}/cancel`、`POST /tasks/{id}/retry`。任务中心自动列出当前用户任务、
+  每 5 秒刷新进行中状态，支持取消、失败重试和详情查看；按用户隔离任务元数据。
+- `web/src/components/Layout.tsx`:导航重组为“创作 / 资产 / 自动化 / 系统”，修复 `/production`
+  与 `/production/matrix` 同时高亮；导航、退出与折叠控制改为键盘可访问按钮。
+- `web/src/App.tsx`:全部业务页面改为路由级懒加载；新增全局错误边界和登录校验加载反馈，
+  避免渲染异常白屏和登录阶段空白。
+- `tests/test_production_readiness.py`:新增 3 个就绪度回归测试，锁住“文案 done != 成片完成”。
+
+**影响面**:用户端生产项目 API 响应中的 `stats.overall_progress` 语义变为真实交付就绪度；
+新增项目字段和 4 个任务 API；前端总览、制作项目、任务中心和主导航更新。Redis 不可用时任务中心
+显示可重试错误，不影响同步工作台与制作看板。无数据库表迁移，无环境变量变化，不涉及移动端布局。
+
+**验证**:`python -m pytest -q` 全量通过；`npm run build` 通过。路由拆包后各大型页面按需加载。
+
+---
+
 ## [2026-07-10] chore: 引入 Letta 有状态记忆运行时脚手架（尚未接线）
 
 **动机**:为后续接入 Letta（有状态 Agent 记忆运行时，:8283）预留脚手架。本条由推送前审计补记——

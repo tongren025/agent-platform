@@ -35,39 +35,41 @@ type NavSection = { title?: string; items: NavItem[] };
 
 const navSections: NavSection[] = [
   {
+    title: '创作',
     items: [
       { key: '/dashboard', icon: <DashboardOutlined />, label: '总览' },
-      { key: '/workbench', icon: <MessageOutlined />, label: '工作台', perm: 'workbench:use' },
       { key: '/production', icon: <VideoCameraOutlined />, label: '制作看板', perm: 'production:manage' },
       { key: '/production/matrix', icon: <TableOutlined />, label: '全链路对照', perm: 'production:manage' },
       { key: '/canvas', icon: <ExpandOutlined />, label: '自由画布', perm: 'production:manage' },
+      { key: '/workbench', icon: <MessageOutlined />, label: '数字员工工作台', perm: 'workbench:use' },
     ],
   },
   {
-    title: '资源',
+    title: '资产',
     items: [
       { key: '/employees', icon: <TeamOutlined />, label: '数字员工', perm: 'employee:manage' },
-      { key: '/teams', icon: <ApartmentOutlined />, label: '团队', perm: 'team:manage' },
-      { key: '/workflows', icon: <PartitionOutlined />, label: '工作流', perm: 'workflow:manage' },
       { key: '/templates', icon: <AppstoreOutlined />, label: '角色模板', perm: 'employee:manage' },
       { key: '/knowledge-graph', icon: <ShareAltOutlined />, label: '知识图谱', perm: 'employee:manage' },
+      { key: '/memory', icon: <BulbOutlined />, label: '记忆库', perm: 'employee:manage' },
     ],
   },
   {
-    title: '能力',
+    title: '自动化',
     items: [
-      { key: '/tools', icon: <ToolOutlined />, label: '工具 & MCP', perm: 'tool:manage' },
+      { key: '/teams', icon: <ApartmentOutlined />, label: '团队编排', perm: 'team:manage' },
+      { key: '/workflows', icon: <PartitionOutlined />, label: '工作流', perm: 'workflow:manage' },
       { key: '/auto-learn', icon: <ThunderboltOutlined />, label: '提示词采集', perm: 'employee:manage' },
       { key: '/article-learn', icon: <ReadOutlined />, label: '文章学习', perm: 'employee:manage' },
-      { key: '/memory', icon: <BulbOutlined />, label: '记忆', perm: 'employee:manage' },
       { key: '/trends', icon: <RocketOutlined />, label: 'AI 趋势', perm: 'employee:manage' },
       { key: '/evolution', icon: <RiseOutlined />, label: '自我进化', perm: 'employee:manage' },
       { key: '/runs', icon: <HistoryOutlined />, label: '运行记录', perm: 'workbench:use' },
-      { key: '/tasks', icon: <CloudSyncOutlined />, label: '异步队列', perm: 'workbench:use' },
+      { key: '/tasks', icon: <CloudSyncOutlined />, label: '任务中心', perm: 'workbench:use' },
     ],
   },
   {
+    title: '系统',
     items: [
+      { key: '/tools', icon: <ToolOutlined />, label: '工具 & MCP', perm: 'tool:manage' },
       { key: '/settings', icon: <SettingOutlined />, label: '设置', perm: 'settings:manage' },
     ],
   },
@@ -95,6 +97,9 @@ export default function Layout() {
   const visibleSections = navSections
     .map((s) => ({ ...s, items: s.items.filter((it) => !it.perm || hasPerm(it.perm)) }))
     .filter((s) => s.items.length > 0);
+  const currentNavKey = visibleSections.flatMap(s => s.items).map(i => i.key)
+    .filter(key => location.pathname === key || (key !== '/dashboard' && location.pathname.startsWith(`${key}/`)))
+    .sort((a, b) => b.length - a.length)[0];
 
   const logout = () => {
     userAuth.logout();
@@ -169,9 +174,11 @@ export default function Layout() {
               )}
 
               {section.items.map(item => {
-                const isActive = location.pathname === item.key || (item.key !== '/dashboard' && location.pathname.startsWith(item.key));
+                const isActive = currentNavKey === item.key;
                 const navItem = (
-                  <div
+                  <button
+                    type="button"
+                    aria-current={isActive ? 'page' : undefined}
                     key={item.key}
                     onClick={() => navigate(item.key)}
                     style={{
@@ -185,17 +192,18 @@ export default function Layout() {
                       color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
                       fontWeight: isActive ? 600 : 400,
                       position: 'relative',
+                      border: 0, width: '100%', fontFamily: 'inherit', textAlign: 'left',
                     }}
                     onMouseEnter={e => {
                       if (!isActive) {
-                        (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.05)';
-                        (e.currentTarget as HTMLDivElement).style.color = 'rgba(255,255,255,0.8)';
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                        e.currentTarget.style.color = 'rgba(255,255,255,0.8)';
                       }
                     }}
                     onMouseLeave={e => {
                       if (!isActive) {
-                        (e.currentTarget as HTMLDivElement).style.background = 'transparent';
-                        (e.currentTarget as HTMLDivElement).style.color = 'rgba(255,255,255,0.5)';
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
                       }
                     }}
                   >
@@ -212,7 +220,7 @@ export default function Layout() {
                     )}
                     <span style={{ fontSize: 16 }}>{item.icon}</span>
                     {!navCollapsed && <span style={{ fontSize: 14 }}>{item.label}</span>}
-                  </div>
+                  </button>
                 );
 
                 return navCollapsed ? (
@@ -228,7 +236,9 @@ export default function Layout() {
         </div>
 
         {/* Logout */}
-        <div
+        <button
+          type="button"
+          aria-label="退出登录"
           onClick={logout}
           style={{
             display: 'flex', alignItems: 'center', gap: 12,
@@ -238,16 +248,19 @@ export default function Layout() {
             borderTop: '1px solid rgba(255,255,255,0.06)',
             color: 'rgba(255,255,255,0.35)', fontSize: 13,
             transition: 'color 0.15s', flexShrink: 0,
+            border: 0, width: '100%', background: 'transparent', fontFamily: 'inherit',
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.color = COLORS.rose; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.color = 'rgba(255,255,255,0.35)'; }}
+          onMouseEnter={e => { e.currentTarget.style.color = COLORS.rose; }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}
         >
           <LogoutOutlined style={{ fontSize: 15 }} />
           {!navCollapsed && <span>退出登录</span>}
-        </div>
+        </button>
 
         {/* Collapse toggle */}
-        <div
+        <button
+          type="button"
+          aria-label={collapsed ? '展开导航' : '折叠导航'}
           onClick={() => setCollapsed(!collapsed)}
           style={{
             padding: '14px 0', display: 'flex', alignItems: 'center',
@@ -256,12 +269,13 @@ export default function Layout() {
             color: 'rgba(255,255,255,0.3)', fontSize: 14,
             transition: 'color 0.15s', flexShrink: 0,
             visibility: isNarrow ? 'hidden' : 'visible',
+            border: 0, width: '100%', background: 'transparent',
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.color = 'rgba(255,255,255,0.6)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.color = 'rgba(255,255,255,0.3)'; }}
+          onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.3)'; }}
         >
           {collapsed ? <RightOutlined /> : <LeftOutlined />}
-        </div>
+        </button>
       </div>
 
       {/* Main content */}
