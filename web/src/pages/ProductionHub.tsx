@@ -1,10 +1,8 @@
 // 制作项目层级总览：剧 → 集 → G 生成单元 → 资源逐级下钻的入口页。
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Breadcrumb, Button, Card, Col, Empty, Progress, Row, Select,
-  Space, Spin, Tag, Tooltip, Typography, Badge, Segmented, message,
-} from 'antd';
+import { Breadcrumb, Button, Card, Col, Empty, Progress, Row, Select, Space, Spin, Tag, Tooltip, Typography, Badge, Segmented } from 'antd';
+import { message } from '../ui';
 import {
   AppstoreOutlined, BarsOutlined, PlayCircleOutlined, PictureOutlined,
   VideoCameraOutlined, FileTextOutlined, UserOutlined, SettingOutlined,

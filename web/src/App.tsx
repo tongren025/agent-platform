@@ -17,6 +17,7 @@ import Tasks from './pages/Tasks';
 import Production from './pages/Production';
 import Canvas from './pages/Canvas';
 import ProductionHub from './pages/ProductionHub';
+import ProductionMatrix from './pages/ProductionMatrix';
 import EpisodeDetail from './pages/EpisodeDetail';
 import Settings from './pages/Settings';
 import SkillTracker from './pages/SkillTracker';
@@ -52,6 +53,8 @@ export default function App() {
           <Route path="/runs" element={<Runs />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/production" element={<Production />} />
+          {/* 必须排在 /production/:pid 之前，否则 "matrix" 会被当成 pid 匹配掉 */}
+          <Route path="/production/matrix" element={<ProductionMatrix />} />
           <Route path="/production/:pid" element={<ProductionHub />} />
           <Route path="/production/:pid/ep/:ep" element={<EpisodeDetail />} />
           <Route path="/production/:pid/pipeline" element={<Production />} />

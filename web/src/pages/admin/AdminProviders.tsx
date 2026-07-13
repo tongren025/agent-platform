@@ -1,8 +1,7 @@
 // 管理端 AI 供应商治理：供应商 CRUD 与连通性测试。
 import { useEffect, useState } from 'react';
-import {
-  Table, Tag, Space, Button, Modal, Form, Input, Switch, message, Spin, Popconfirm, Card, Row, Col,
-} from 'antd';
+import { Table, Tag, Space, Button, Modal, Form, Input, Switch, Spin, Popconfirm, Card, Row, Col } from 'antd';
+import { message } from '../../ui';
 import {
   PlusOutlined, ApiOutlined, CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined,
   DeleteOutlined, MinusCircleOutlined,

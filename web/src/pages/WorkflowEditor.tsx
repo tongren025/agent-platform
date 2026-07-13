@@ -6,7 +6,8 @@ import ReactFlow, {
   type Connection, type Edge, type Node, MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { Button, Space, message, Spin, Tag, Typography } from 'antd';
+import { Button, Space, Spin, Tag, Typography } from 'antd';
+import { message } from '../ui';
 import { ArrowLeftOutlined, SaveOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';

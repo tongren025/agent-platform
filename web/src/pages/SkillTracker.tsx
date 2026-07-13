@@ -1,9 +1,7 @@
 // AI 趋势雷达页：GitHub 趋势仓库追踪与 LLM 分析。
 import { useEffect, useState, useCallback } from 'react';
-import {
-  Card, Table, Button, Tabs, Tag, Space, message, Drawer, Spin,
-  Statistic, Empty, Typography, Tooltip, Progress,
-} from 'antd';
+import { Card, Table, Button, Tabs, Tag, Space, Drawer, Spin, Statistic, Empty, Typography, Tooltip, Progress, Input } from 'antd';
+import { message } from '../ui';
 import {
   ReloadOutlined, StarFilled, RiseOutlined, FireFilled,
   GithubOutlined, LinkOutlined, ClockCircleOutlined,
@@ -91,6 +89,14 @@ function fmtStars(n: number) {
   return String(n);
 }
 
+/** 距今天数；无法解析时返回 NaN。 */
+function daysSince(iso: string): number {
+  if (!iso) return NaN;
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return NaN;
+  return (Date.now() - t) / 86400000;
+}
+
 function fmtTime(iso: string) {
   if (!iso) return '-';
   const d = new Date(iso);
@@ -101,6 +107,46 @@ function DeltaTag({ delta }: { delta: number }) {
   const color = delta > 0 ? COLORS.mint : delta < 0 ? COLORS.rose : COLORS.slate;
   const sign = delta > 0 ? '+' : '';
   return <span style={{ color, fontWeight: 600 }}>{sign}{fmtStars(delta)}</span>;
+}
+
+// AI 报告里的仓库名统一渲染成可点击的仓库。
+// LLM 返回的名字理论上是 owner/repo，不符合该形态时退化成纯文本，避免跳到无效的 GitHub 页面。
+// 左键 = 打开详情抽屉（star 走势 / 涨星 / topics）；Ctrl/⌘/中键 = 保留浏览器原生的新标签页打开 GitHub。
+function RepoLink({ name, style, onDetail }: {
+  name: string;
+  style?: React.CSSProperties;
+  onDetail?: (fullName: string) => void;
+}) {
+  const trimmed = (name || '').trim();
+  if (!/^[\w.-]+\/[\w.-]+$/.test(trimmed)) return <span style={style}>{name}</span>;
+  const href = `https://github.com/${trimmed}`;
+  const link = (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      style={style}
+      onClick={e => {
+        if (!onDetail || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        e.preventDefault();
+        onDetail(trimmed);
+      }}
+    >
+      {name}
+    </a>
+  );
+  return onDetail ? <Tooltip title="点击看详情 · Ctrl/⌘+点击去 GitHub">{link}</Tooltip> : link;
+}
+
+// 详情抽屉里的一行「标签 + 内容」；content 为空时整行不渲染，避免出现一堆「—」
+function DetailRow({ label, children }: { label: string; children?: React.ReactNode }) {
+  if (children === null || children === undefined || children === '') return null;
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>{label}</Text>
+      <div style={{ fontSize: 13, lineHeight: 1.7 }}>{children}</div>
+    </div>
+  );
 }
 
 function SparkLine({ data }: { data: { stars: number }[] }) {
@@ -156,16 +202,196 @@ function LangBar({ languages }: { languages: Record<string, number> }) {
   );
 }
 
-function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading, data, onMount, columns, rowKey, titleField = 'title' }: {
+interface DigestPick {
+  id: string; source: string; title: string; url: string;
+  verdict: string; why: string; score: number; metrics?: string; domain?: string;
+}
+interface Digest {
+  generatedAt: string; model: string; picks: DigestPick[]; candidateCount: number;
+}
+
+const SOURCE_COLOR: Record<string, string> = {
+  'GitHub': '#24292f', 'Hacker News': '#ff6600', 'arXiv': '#b31b1b',
+  'Google News': '#4285f4', 'Reddit': '#ff4500',
+};
+
+/** 今日要点：只列没看过、且与兴趣画像相关的少数几条；点「已读」后永不再出现。 */
+function DigestPanel() {
+  const [digest, setDigest] = useState<Digest | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
+  const [marking, setMarking] = useState<string | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try { setDigest(await api.getDigest()); }
+    catch (e: any) { message.error('读取简报失败: ' + (e.message || '')); }
+    finally { setLoading(false); }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const regenerate = async () => {
+    setGenerating(true);
+    try {
+      setDigest(await api.makeDigest(true));
+      message.success('简报已重新生成');
+    } catch (e: any) { message.error('生成失败: ' + (e.message || '')); }
+    finally { setGenerating(false); }
+  };
+
+  // 已读是永久的：标记后该条目从候选池里彻底消失，不会再被选进任何一天的简报
+  const markRead = async (ids: string[], label: string) => {
+    setMarking(ids.length === 1 ? ids[0] : '__all__');
+    try {
+      const res = await api.markDigestRead(ids);
+      setDigest(res.digest);
+      message.success(`${label}，以后不会再出现`);
+    } catch (e: any) { message.error('标记失败: ' + (e.message || '')); }
+    finally { setMarking(null); }
+  };
+
+  const openProfile = async () => {
+    setProfileOpen(true);
+    if (!profile) {
+      try { setProfile(await api.getDigestProfile()); } catch { /* 抽屉里显示空 */ }
+    }
+  };
+
+  const saveProfile = async () => {
+    setSavingProfile(true);
+    try {
+      await api.saveDigestProfile(profile);
+      message.success('画像已保存，下次生成简报即生效');
+      setProfileOpen(false);
+    } catch (e: any) { message.error('保存失败: ' + (e.message || '')); }
+    finally { setSavingProfile(false); }
+  };
+
+  const picks = digest?.picks || [];
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <div style={{ color: COLORS.slate, fontSize: 13 }}>
+          从今天 {digest?.candidateCount ?? '—'} 条候选里，只挑你没看过、且和你在做的事相关的
+          {digest?.generatedAt && <> · 生成于 {fmtTime(digest.generatedAt)}</>}
+        </div>
+        <Space>
+          <Button icon={<BulbOutlined />} onClick={openProfile}>调整关注点</Button>
+          {picks.length > 0 && (
+            <Button
+              loading={marking === '__all__'}
+              onClick={() => markRead(picks.map(p => p.id), `${picks.length} 条已读`)}
+            >
+              全部已读
+            </Button>
+          )}
+          <Button type="primary" icon={<ExperimentOutlined />} loading={generating} onClick={regenerate}>
+            重新生成
+          </Button>
+        </Space>
+      </div>
+
+      {loading ? (
+        <Spin style={{ display: 'block', padding: 60, textAlign: 'center' }} />
+      ) : picks.length === 0 ? (
+        <Empty
+          description={
+            <span>
+              今天没有新的、与你相关的内容<br />
+              <span style={{ color: COLORS.slate, fontSize: 12 }}>
+                标记过已读的条目不会再出现。想换口味就改「调整关注点」，或点「重新生成」。
+              </span>
+            </span>
+          }
+          style={{ padding: 80 }}
+        />
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {picks.map(p => (
+            <Card key={p.id} size="small" style={{ borderRadius: 12, borderLeft: `3px solid ${SOURCE_COLOR[p.source] || COLORS.iris}` }}>
+              {/* 结论优先：先说这是什么、能拿来干什么，标题退居次要 */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.6, marginBottom: 6 }}>
+                    {p.verdict}
+                  </div>
+                  <div style={{ color: COLORS.slate, fontSize: 13, marginBottom: 8 }}>
+                    {p.why}
+                  </div>
+                  <Space size={6} wrap>
+                    <Tag style={{ fontSize: 11, borderRadius: 4, color: SOURCE_COLOR[p.source], borderColor: SOURCE_COLOR[p.source], background: 'transparent' }}>
+                      {p.source}
+                    </Tag>
+                    <a href={p.url} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>{p.title}</a>
+                    {p.metrics && <span style={{ fontSize: 11, color: COLORS.slate }}>· {p.metrics}</span>}
+                  </Space>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                  <Progress
+                    type="circle" percent={p.score * 10} size={40}
+                    strokeColor={p.score >= 9 ? COLORS.rose : p.score >= 7 ? COLORS.iris : COLORS.slate}
+                    format={() => `${p.score}`}
+                  />
+                  <Button size="small" loading={marking === p.id} onClick={() => markRead([p.id], '已读')}>
+                    已读
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      <Drawer title="调整关注点" open={profileOpen} onClose={() => setProfileOpen(false)} width={520}>
+        {profile ? (
+          <div>
+            <DetailRow label="你是谁 / 在做什么">
+              <Input.TextArea
+                value={profile.role} autoSize={{ minRows: 2 }}
+                onChange={e => setProfile({ ...profile, role: e.target.value })}
+              />
+            </DetailRow>
+            <DetailRow label="关注（每行一条）">
+              <Input.TextArea
+                value={(profile.interests || []).join('\n')} autoSize={{ minRows: 5 }}
+                onChange={e => setProfile({ ...profile, interests: e.target.value.split('\n').filter(Boolean) })}
+              />
+            </DetailRow>
+            <DetailRow label="明确不关注（每行一条）">
+              <Input.TextArea
+                value={(profile.not_interested || []).join('\n')} autoSize={{ minRows: 4 }}
+                onChange={e => setProfile({ ...profile, not_interested: e.target.value.split('\n').filter(Boolean) })}
+              />
+            </DetailRow>
+            <Button type="primary" block loading={savingProfile} onClick={saveProfile} style={{ marginTop: 12 }}>
+              保存（下次生成简报生效）
+            </Button>
+          </div>
+        ) : <Spin />}
+      </Drawer>
+    </div>
+  );
+}
+
+function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading, data, onMount, columns, rowKey, titleField = 'title', renderDetail, linkOf }: {
   sourceLabel: string; color: string;
   queries: { key: string; label: string }[];
   activeKey: string; onSelect: (k: string) => void;
   loading: boolean; data: any; onMount: () => void;
   columns: any[]; rowKey: (r: any) => string;
   titleField?: string;
+  // 详情抽屉：各源字段不同，由调用方决定抽屉里渲染什么、以及"原文链接"取哪个字段
+  renderDetail: (r: any) => React.ReactNode;
+  linkOf: (r: any) => string;
 }) {
   const [translations, setTranslations] = useState<Record<string, string>>({});
   const [translating, setTranslating] = useState(false);
+  const [detailItem, setDetailItem] = useState<any>(null);
 
   useEffect(() => { onMount(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { setTranslations({}); }, [activeKey]);
@@ -193,7 +419,15 @@ function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading
       return zh ? <span style={{ fontSize: 13, color: COLORS.slateDark }}>{zh}</span> : <span style={{ color: COLORS.slate }}>—</span>;
     },
   };
-  const finalColumns = hasTranslations ? [...columns.slice(0, 2), zhCol, ...columns.slice(2)] : columns;
+  const detailCol = {
+    title: '', width: 64,
+    render: (_: any, r: any) => (
+      // stopPropagation：详情按钮和整行点击都开抽屉，别触发两次
+      <Button size="small" type="link" onClick={e => { e.stopPropagation(); setDetailItem(r); }}>详情</Button>
+    ),
+  };
+  const withZh = hasTranslations ? [...columns.slice(0, 2), zhCol, ...columns.slice(2)] : columns;
+  const finalColumns = [...withZh, detailCol];
 
   return (
     <div>
@@ -230,12 +464,46 @@ function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading
       {loading ? (
         <Spin style={{ display: 'block', padding: 60, textAlign: 'center' }} />
       ) : data?.error ? (
-        <Empty description={data.error} style={{ padding: 60 }} />
+        <Empty description={data.error} style={{ padding: 60 }}>
+          <Button icon={<ReloadOutlined />} onClick={() => onSelect(activeKey)}>重试</Button>
+        </Empty>
       ) : data?.items?.length ? (
-        <Table dataSource={data.items} columns={finalColumns} rowKey={rowKey} pagination={{ pageSize: 15 }} size="small" />
+        <Table
+          dataSource={data.items}
+          columns={finalColumns}
+          rowKey={rowKey}
+          pagination={{ pageSize: 15 }}
+          size="small"
+          onRow={r => ({
+            onClick: e => {
+              // 行内已有 <a> 外链，点链接时不要顺带弹抽屉
+              if ((e.target as HTMLElement).closest('a')) return;
+              setDetailItem(r);
+            },
+            style: { cursor: 'pointer' },
+          })}
+        />
       ) : (
         <Empty description={`暂无 ${sourceLabel} 数据`} style={{ padding: 60 }} />
       )}
+
+      <Drawer
+        title={detailItem?.[titleField] || '详情'}
+        open={!!detailItem}
+        onClose={() => setDetailItem(null)}
+        width={520}
+      >
+        {detailItem && (
+          <div>
+            {renderDetail(detailItem)}
+            {linkOf(detailItem) && (
+              <Button type="primary" icon={<LinkOutlined />} href={linkOf(detailItem)} target="_blank" block style={{ marginTop: 20 }}>
+                打开原文
+              </Button>
+            )}
+          </div>
+        )}
+      </Drawer>
     </div>
   );
 }
@@ -249,6 +517,8 @@ export default function SkillTracker() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [detailRepo, setDetailRepo] = useState<Repo | null>(null);
+  const [detailQuery, setDetailQuery] = useState('');   // 该仓库所属领域(跨 query 查出来的)
+  const [lookupName, setLookupName] = useState('');     // 正在查/未查到的仓库名，用于空态与标题
   const [history, setHistory] = useState<{ takenAt: string; stars: number }[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
@@ -270,26 +540,33 @@ export default function SkillTracker() {
   const [redditSub, setRedditSub] = useState('MachineLearning');
   const [redditLoading, setRedditLoading] = useState(false);
 
-  const fetchHn = useCallback(async (q: string) => {
-    setHnLoading(true);
-    try { const d = await api.getHnList(q); setHnData(d); } catch { /* ok */ }
-    finally { setHnLoading(false); }
+  // 抓取失败必须显示原因。以前这里是 catch {/* ok */}——拉取失败和「真的没数据」
+  // 在界面上长得一模一样（都只显示"暂无数据"），故障可以静默存在很久。
+  // 失败时塞一个 { error } 进 data，SourcePanel 会把它渲染出来。
+  const fetchSource = useCallback(async (
+    label: string,
+    call: () => Promise<any>,
+    setData: (d: any) => void,
+    setLoading: (b: boolean) => void,
+  ) => {
+    setLoading(true);
+    try {
+      setData(await call());
+    } catch (e: any) {
+      setData({ error: `${label} 拉取失败：${e?.message || '未知错误'}` });
+    } finally {
+      setLoading(false);
+    }
   }, []);
-  const fetchArxiv = useCallback(async (cat: string) => {
-    setArxivLoading(true);
-    try { const d = await api.getArxivList(cat); setArxivData(d); } catch { /* ok */ }
-    finally { setArxivLoading(false); }
-  }, []);
-  const fetchNews = useCallback(async (q: string) => {
-    setNewsLoading(true);
-    try { const d = await api.getNewsList(q); setNewsData(d); } catch { /* ok */ }
-    finally { setNewsLoading(false); }
-  }, []);
-  const fetchReddit = useCallback(async (sub: string) => {
-    setRedditLoading(true);
-    try { const d = await api.getRedditList(sub); setRedditData(d); } catch { /* ok */ }
-    finally { setRedditLoading(false); }
-  }, []);
+
+  const fetchHn = useCallback((q: string) =>
+    fetchSource('Hacker News', () => api.getHnList(q), setHnData, setHnLoading), [fetchSource]);
+  const fetchArxiv = useCallback((cat: string) =>
+    fetchSource('arXiv', () => api.getArxivList(cat), setArxivData, setArxivLoading), [fetchSource]);
+  const fetchNews = useCallback((q: string) =>
+    fetchSource('Google News', () => api.getNewsList(q), setNewsData, setNewsLoading), [fetchSource]);
+  const fetchReddit = useCallback((sub: string) =>
+    fetchSource('Reddit', () => api.getRedditList(sub), setRedditData, setRedditLoading), [fetchSource]);
 
   const fetchQueries = useCallback(async () => {
     try {
@@ -352,12 +629,33 @@ export default function SkillTracker() {
 
   const openDetail = async (repo: Repo) => {
     setDetailRepo(repo);
+    setDetailQuery(activeQuery);
+    setLookupName(repo.full_name);
     setDrawerOpen(true);
     setHistoryLoading(true);
     try {
       const pts = await api.getRepoHistory(activeQuery, repo.full_name);
       setHistory(pts);
     } catch { setHistory([]); }
+    finally { setHistoryLoading(false); }
+  };
+
+  // AI 报告里的仓库可能来自任意 query（甚至不在榜单里），先跨 query 查一次再开抽屉
+  const openRepoByName = async (fullName: string) => {
+    setDrawerOpen(true);
+    setDetailRepo(null);
+    setHistory([]);
+    setDetailQuery('');
+    setHistoryLoading(true);
+    setLookupName(fullName);
+    try {
+      const found = await api.lookupRepo(fullName);
+      if (found?.repo) {
+        setDetailRepo(found.repo as Repo);
+        setDetailQuery(found.query);
+        setHistory(found.history || []);
+      }
+    } catch { /* 保持未找到态 */ }
     finally { setHistoryLoading(false); }
   };
 
@@ -399,6 +697,12 @@ export default function SkillTracker() {
 
   // ── Main tabs ──
   const mainTabItems = [
+    // 今日要点 —— 默认首屏。全景总览/榜单是"全部数据"，这里是"只给你看的结论"
+    {
+      key: 'digest',
+      label: <span><BulbOutlined style={{ color: '#f59e0b' }} /> 今日要点</span>,
+      children: <DigestPanel />,
+    },
     // 总览 tab
     {
       key: 'overview',
@@ -554,6 +858,13 @@ export default function SkillTracker() {
                 <Paragraph style={{ margin: 0, fontSize: 14, lineHeight: 1.8 }}>{analysis.summary}</Paragraph>
                 <div style={{ marginTop: 8, fontSize: 12, color: COLORS.slate }}>
                   模型：{analysis.model} · 生成于 {fmtTime(analysis.generatedAt)}
+                  {/* 自动同步每天重算报告。真过期了说明同步在悄悄失败——必须让它可见，
+                      否则又会重演「报告停在 10 天前而界面若无其事」。 */}
+                  {daysSince(analysis.generatedAt) > 2 && (
+                    <Tag color="warning" style={{ marginLeft: 8, fontSize: 11 }}>
+                      已 {Math.floor(daysSince(analysis.generatedAt))} 天未更新 · 自动同步可能失败了
+                    </Tag>
+                  )}
                 </div>
               </Card>
 
@@ -569,7 +880,11 @@ export default function SkillTracker() {
                         <Text strong>{track.name}</Text>
                         <div style={{ color: COLORS.slate, fontSize: 13, marginTop: 2 }}>{track.description}</div>
                         <Space size={4} style={{ marginTop: 6 }}>
-                          {track.representative_repos?.map(r => <Tag key={r} style={{ fontSize: 11, borderRadius: 4 }}>{r}</Tag>)}
+                          {track.representative_repos?.map(r => (
+                            <Tag key={r} style={{ fontSize: 11, borderRadius: 4, cursor: 'pointer' }}>
+                              <RepoLink name={r} onDetail={openRepoByName} />
+                            </Tag>
+                          ))}
                         </Space>
                       </div>
                     </div>
@@ -582,7 +897,7 @@ export default function SkillTracker() {
                 <Card size="small" title={<span><RiseOutlined style={{ color: COLORS.mint, marginRight: 6 }} />崛起中的新星</span>} style={{ borderRadius: 12 }}>
                   {analysis.rising_stars?.map((star, i) => (
                     <div key={i} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: i < (analysis.rising_stars?.length ?? 0) - 1 ? `1px solid ${COLORS.border}` : 'none' }}>
-                      <Text strong style={{ color: COLORS.iris }}>{star.repo_name}</Text>
+                      <RepoLink name={star.repo_name} style={{ color: COLORS.iris, fontWeight: 600 }} onDetail={openRepoByName} />
                       <div style={{ fontSize: 13, color: COLORS.slate, marginTop: 2 }}>{star.reason}</div>
                       <Tag style={{ marginTop: 4, fontSize: 11 }}>{star.growth_metric}</Tag>
                     </div>
@@ -687,6 +1002,24 @@ export default function SkillTracker() {
             },
           ]}
           rowKey={(r: any) => r.hnUrl || r.title}
+          linkOf={(r: any) => r.url || r.hnUrl}
+          renderDetail={(r: any) => (
+            <div>
+              <DetailRow label="作者">{r.author}</DetailRow>
+              <DetailRow label="热度 / 评论">
+                <Space size={16}>
+                  <span style={{ fontWeight: 600, color: '#ff6600' }}>{r.points} points</span>
+                  <span>{r.comments} 条评论</span>
+                </Space>
+              </DetailRow>
+              <DetailRow label="HN 讨论">
+                <a href={r.hnUrl} target="_blank" rel="noreferrer" style={{ color: '#ff6600' }}>{r.hnUrl}</a>
+              </DetailRow>
+              <DetailRow label="原文链接">
+                {r.url ? <a href={r.url} target="_blank" rel="noreferrer">{r.url}</a> : '（无外链，仅 HN 讨论帖）'}
+              </DetailRow>
+            </div>
+          )}
         />
       ),
     },
@@ -738,6 +1071,20 @@ export default function SkillTracker() {
             },
           ]}
           rowKey={(r: any) => r.absUrl || r.title}
+          linkOf={(r: any) => r.absUrl}
+          renderDetail={(r: any) => (
+            <div>
+              <DetailRow label={`作者（${r.authors?.length || 0} 人）`}>{r.authors?.join('、')}</DetailRow>
+              <DetailRow label="分类">
+                <Space size={4} wrap>{r.categories?.map((c: string) => <Tag key={c} style={{ fontSize: 11, borderRadius: 3 }}>{c}</Tag>)}</Space>
+              </DetailRow>
+              <DetailRow label="发布日期">{r.publishedAt?.slice(0, 10)}</DetailRow>
+              <DetailRow label="摘要">{r.summary}</DetailRow>
+              {r.pdfUrl && (
+                <Button icon={<FileTextOutlined />} href={r.pdfUrl} target="_blank" block>下载 PDF</Button>
+              )}
+            </div>
+          )}
         />
       ),
     },
@@ -781,6 +1128,21 @@ export default function SkillTracker() {
             },
           ]}
           rowKey={(r: any) => r.url || r.title}
+          linkOf={(r: any) => r.url}
+          renderDetail={(r: any) => (
+            <div>
+              <DetailRow label="来源">{r.source && <Tag style={{ borderRadius: 4 }}>{r.source}</Tag>}</DetailRow>
+              <DetailRow label="发布时间">
+                {(() => {
+                  if (!r.publishedAt) return null;
+                  try { return new Date(r.publishedAt).toLocaleString('zh-CN'); } catch { return r.publishedAt; }
+                })()}
+              </DetailRow>
+              <DetailRow label="链接">
+                <a href={r.url} target="_blank" rel="noreferrer" style={{ wordBreak: 'break-all' }}>{r.url}</a>
+              </DetailRow>
+            </div>
+          )}
         />
       ),
     },
@@ -828,6 +1190,22 @@ export default function SkillTracker() {
             },
           ]}
           rowKey={(r: any) => r.url || r.title}
+          linkOf={(r: any) => r.url}
+          renderDetail={(r: any) => (
+            <div>
+              <DetailRow label="作者">u/{r.author}</DetailRow>
+              <DetailRow label="投票 / 评论">
+                <Space size={16}>
+                  <span style={{ fontWeight: 600, color: '#ff4500' }}>{fmtStars(r.score)} 票</span>
+                  <span>{r.comments} 条评论</span>
+                </Space>
+              </DetailRow>
+              <DetailRow label="Flair">{r.flair && <Tag style={{ borderRadius: 3 }}>{r.flair}</Tag>}</DetailRow>
+              <DetailRow label="链接">
+                <a href={r.url} target="_blank" rel="noreferrer" style={{ wordBreak: 'break-all' }}>{r.url}</a>
+              </DetailRow>
+            </div>
+          )}
         />
       ),
     },
@@ -843,7 +1221,7 @@ export default function SkillTracker() {
             AI 趋势雷达
           </div>
           <div style={{ color: COLORS.slate, fontSize: 13, marginTop: 2 }}>
-            GitHub · Hacker News · arXiv · Google News · Reddit — 五大源头追踪 AI 前沿
+            五源追踪 AI 前沿 · 每天只把「你没看过且用得上」的几条挑出来给结论
           </div>
         </div>
         <Button icon={<ReloadOutlined spin={refreshing} />} loading={refreshing} onClick={handleRefresh} disabled={!activeQuery}>
@@ -857,9 +1235,26 @@ export default function SkillTracker() {
       </Card>
 
       {/* 详情抽屉 */}
-      <Drawer title={detailRepo?.full_name} open={drawerOpen} onClose={() => setDrawerOpen(false)} width={480}>
+      <Drawer title={detailRepo?.full_name || lookupName} open={drawerOpen} onClose={() => setDrawerOpen(false)} width={480}>
+        {!detailRepo && historyLoading && <Spin style={{ display: 'block', padding: 60, textAlign: 'center' }} />}
+        {!detailRepo && !historyLoading && lookupName && (
+          <Empty
+            description={<span>「{lookupName}」不在已收录的榜单数据里<br />(AI 报告可能提到了榜单之外的项目)</span>}
+            style={{ padding: 40 }}
+          >
+            <Button type="primary" icon={<LinkOutlined />} href={`https://github.com/${lookupName}`} target="_blank">
+              在 GitHub 上查看
+            </Button>
+          </Empty>
+        )}
         {detailRepo && (
           <div>
+            {detailQuery && (
+              <div style={{ marginBottom: 12 }}>
+                <Text type="secondary" style={{ fontSize: 12, marginRight: 6 }}>所属领域</Text>
+                <Tag color={COLORS.iris}>{QUERY_LABELS[detailQuery]?.label || detailQuery}</Tag>
+              </div>
+            )}
             <Paragraph style={{ color: COLORS.slate }}>{detailRepo.description}</Paragraph>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
               <Card size="small" style={{ borderRadius: 10 }}>

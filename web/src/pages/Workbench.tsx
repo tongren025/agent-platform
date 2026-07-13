@@ -1,9 +1,7 @@
 // 工作台：与数字员工/团队对话的主界面，含会话管理、附件、产出物与审批。
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import {
-  Badge, Button, Collapse, Divider, Drawer, Empty, Image, Input, List, message, Popconfirm,
-  Radio, Select, Space, Spin, Tag, Tooltip, Typography, Upload,
-} from 'antd';
+import { Badge, Button, Collapse, Divider, Drawer, Empty, Image, Input, List, Popconfirm, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Upload } from 'antd';
+import { message } from '../ui';
 import {
   CopyOutlined, CheckOutlined,
   DeleteOutlined, FileTextOutlined, InboxOutlined, RobotOutlined,

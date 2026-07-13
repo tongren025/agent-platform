@@ -1,9 +1,7 @@
 // CLI 流水线页：用本地 claude/gemini CLI 跑漫剧创作流水线（导演→编剧→美术…）。
 import { useState, useEffect } from 'react';
-import {
-  Card, Button, Input, Table, Tag, Space, Spin, Typography,
-  message, Collapse, Select, Modal, Alert,
-} from 'antd';
+import { Card, Button, Input, Table, Tag, Space, Spin, Typography, Collapse, Select, Modal, Alert } from 'antd';
+import { message } from '../ui';
 import {
   PlayCircleOutlined, CheckCircleOutlined, CloseCircleOutlined,
   FileTextOutlined, ThunderboltOutlined, ReloadOutlined,

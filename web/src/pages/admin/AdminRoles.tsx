@@ -1,6 +1,7 @@
 // 管理端角色管理：角色 CRUD 与权限勾选。
 import { useEffect, useState } from 'react';
-import { Table, Tag, Space, Button, Popconfirm, message, Spin, Modal, Form, Input, Checkbox } from 'antd';
+import { Table, Tag, Space, Button, Popconfirm, Spin, Modal, Form, Input, Checkbox } from 'antd';
+import { message } from '../../ui';
 import { PlusOutlined } from '@ant-design/icons';
 import { adminApi, type PlatformRole, type PermissionDef } from '../../adminApi';
 import { COLORS } from '../../theme';

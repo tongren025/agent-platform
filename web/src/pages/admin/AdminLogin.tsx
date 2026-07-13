@@ -1,7 +1,8 @@
 // 管理端登录页：管理员账号换管理端独立 token。
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Input, message } from 'antd';
+import { Button, Input } from 'antd';
+import { message } from '../../ui';
 import { LockOutlined, UserOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { adminApi, adminToken } from '../../adminApi';
 import { COLORS } from '../../theme';

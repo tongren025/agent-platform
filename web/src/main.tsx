@@ -2,18 +2,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { theme } from './theme';
+import { AntdMessageBridge } from './ui';
 import App from './App';
 import './global.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ConfigProvider locale={zhCN} theme={theme}>
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <App />
-      </BrowserRouter>
+      {/* AntdApp 提供 message 等的主题上下文；Bridge 把实例灌给 ./ui 的代理，业务代码从 ./ui 导入 message */}
+      <AntdApp component={false}>
+        <AntdMessageBridge />
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <App />
+        </BrowserRouter>
+      </AntdApp>
     </ConfigProvider>
   </React.StrictMode>,
 );

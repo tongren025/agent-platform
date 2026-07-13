@@ -1,9 +1,7 @@
 // 记忆管理页：查看/增删员工的语义、经验、行为三类长期记忆，触发提取与蒸馏。
 import { useEffect, useState, useCallback } from 'react';
-import {
-  Card, Select, Tabs, Table, Button, Modal, Form, Input, InputNumber,
-  Tag, Space, Popconfirm, message, Statistic, Row, Col, Empty, Spin,
-} from 'antd';
+import { Card, Select, Tabs, Table, Button, Modal, Form, Input, InputNumber, Tag, Space, Popconfirm, Statistic, Row, Col, Empty, Spin } from 'antd';
+import { message } from '../ui';
 import {
   BulbOutlined, ExperimentOutlined, ThunderboltOutlined,
   PlusOutlined, DeleteOutlined, ReloadOutlined,

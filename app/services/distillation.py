@@ -93,6 +93,30 @@ def _save_logs(emp_key: str, logs: list[DistillationLog]) -> None:
     _atomic_write(_log_path(emp_key), json.dumps(data, ensure_ascii=False, indent=2))
 
 
+def last_run_at(employee_key: str) -> datetime | None:
+    """最近一次蒸馏（成功或失败都算）的时间；无记录返回 None。
+
+    供调度器做**跨进程重启**的当天去重：调度器的 `_distill_done_today` 只活在内存里，
+    进程一重启就忘光，于是每次重启都把全部员工重跑一遍（每次都是十几秒的 LLM 调用）。
+    失败也计入"今天已尝试"，避免失败后每 30 秒重试一整天；
+    需要立刻重跑走 `POST /memory/{key}/distill` 手动触发。
+    """
+    p = _log_path(employee_key)
+    if not p.exists():
+        return None
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    stamps = [d.get("ranAt") for d in data if d.get("ranAt")]
+    if not stamps:
+        return None
+    try:
+        return datetime.fromisoformat(max(stamps).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
 def list_distillation_logs(emp_key: str) -> list[DistillationLog]:
     """列出某员工的蒸馏历史日志。"""
     return _load_logs(emp_key)

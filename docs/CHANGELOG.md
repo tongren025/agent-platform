@@ -5,6 +5,339 @@
 
 ---
 
+## [2026-07-10] fix: 蒸馏/进化每次重启都重跑全部员工 —— 今日实测 316 次，应为 22 次
+
+**动机**:上一轮启动后端时发现日志里每次都在刷「定时触发蒸馏 × 11 / 定时触发自我进化 × 11」。
+查证:`DailyScheduler._distill_done_today` / `_evolve_done_today` **只活在内存里**,
+进程一重启就忘光,于是每次重启都把全部启用员工重跑一遍。
+实测当天累计:**蒸馏 151 次 + 自我进化 165 次 = 316 次 LLM 调用,而应为 11 + 11 = 22 次**
+(单次蒸馏 11~17 秒,约合半小时以上的无效 LLM 时间)。开发期反复重启后端会持续放大。
+
+同时暴露一个**潜伏的失败重试循环**:`_dispatch_distill` / `_dispatch_evolve` 只在**成功**时
+写入 `done_today`,失败则不写——下一次 30 秒巡检又会重新派发,即失败一次就会重试一整天。
+(今天恰好 316 次全部成功,所以这个坑没被触发,但它一直在。)
+
+**变更点**
+- `app/services/distillation.py` / `app/services/evolution.py`:各新增 `last_run_at(employee_key)`,
+  从**已落盘的运行日志**(`distillation_logs.json` / `run_logs.json`,两者都已有 `ranAt`,
+  且**失败路径也会落盘**)推导最近一次运行时间。不新增任何状态文件——
+  与趋势同步的 `is_query_fresh()` 同一套思路:让产出自己成为幂等依据。
+- `app/services/scheduler.py`:
+  - 新增 `_ran_on(last, today)`。日志里的 `ranAt` 是 UTC(带 `Z`),而调度器按**本地日期**
+    判断"今天",必须先 `astimezone()`;用 `>=` 而非 `==` 以对付时钟回拨(宁可少跑一次,不要疯狂重跑)。
+  - `_scan_distillation` / `_scan_evolution` 先查落盘日志,当天已跑过则跳过并写入内存缓存
+    (免得每 30 秒重读 11 个文件)。
+  - `_dispatch_*` 的 `done_today` 标记从「仅成功」改到 `finally`——**失败也算今天已尝试**,
+    堵住 30 秒重试循环。需要立刻重跑走已有的手动端点
+    (`POST /memory/{key}/distill`、`POST /evolution/{key}/analyze`)。
+- `tests/test_scheduler_daily_idempotency.py`(新增,10 例):锁住最易回归的两处——
+  UTC→本地日期换算(含跨日、时钟回拨、naive datetime),以及"失败也算跑过";
+  另覆盖日志损坏时退化为"没跑过"而不是打挂整个巡检。
+
+**影响面**:纯调度行为,无 API / 数据 / 前端变更。
+行为变化:同一天内每个员工的蒸馏与进化**最多各执行一次**(此前每次进程启动都会各执行一次),
+且失败当天不再自动重试。
+
+**验证**:`pytest` 全过(exit 0),新增 10 例全绿。
+实机重启后端:启动日志里 11 个员工的「定时触发蒸馏/自我进化」**全部消失**,只剩趋势同步(跳过 8 个 query);
+盘上运行日志计数 **蒸馏 151→151、进化 165→165,本次重启新增 0 次**(修复前应各 +11);
+持续观察 70 秒(跨 2 个 30 秒巡检周期),无任何蒸馏/进化派发、无 `chat/completions` 调用。
+
+---
+
+## [2026-07-10] feat: 今日要点 —— 个人化增量简报（先给结论 · 看过即永久消失）
+
+**动机**:用户原话——「我每天都去看 100 多个我也看不过来」「你可以直接给我结论吗」
+「我看了你就看了,下次报告就不要给我了,不然我每天看重复的也没意义」。
+实测候选池当前 **184 条**,而现有 `/skills/analyze` 全景报告是**无状态、无画像**的:
+每天把同一批数据重算一遍,既不知道你是谁,也不记得你看过什么。三个诉求一个都没满足。
+
+**变更点**
+- 新增 `app/services/trend_digest.py`,与全景报告明确分工:
+  - **兴趣画像**(`data/trends/profile.json`):默认按用户真实工作预填(竖屏 AI 漫剧 + 自建 Agent 平台),
+    含 `not_interested` 负向清单。泛泛的"AI 爱好者"画像过滤不掉任何东西,所以默认值必须具体。
+  - **已读永久化**(`data/trends/seen.json`):标记后该条目从**候选池**里剔除,
+    而不只是从当前这份简报里隐藏——重新生成、换一天、重跑 LLM 都不会再出现。带 180 天 TTL GC。
+  - **先减法再送 LLM**:先剔已读、再按源配额取样,而不是每天把同样的东西喂给模型重算。
+  - 提示词要求**先给结论**(这是什么、能拿来干什么),而非复述标题;并强制「宁缺毋滥,
+    没有值得看的就返回空数组」,最多 6 条。
+- `app/api/skills.py`:新增 `GET/POST /skills/digest`、`POST /skills/digest/read`、
+  `GET/PUT /skills/digest/profile`。
+- `app/services/scheduler.py`:每日同步后自动生成简报(失败不影响榜单与全景报告)。
+- `web/src/pages/SkillTracker.tsx`:新增「今日要点」并设为**默认首屏**。
+  卡片以结论为主标题、原标题降级为副链接;每条带相关度环形分与「已读」按钮,
+  另有「全部已读」与「调整关注点」抽屉(可编辑画像三段)。空态明确告知"已读的不会再出现"。
+- `web/src/api.ts`:新增 5 个简报接口。
+
+**踩到并修掉的坑**:粗排信号直接比数字大小,GitHub 的 `79000⭐` 会碾压 HN 的 `534 points`,
+截断后候选池里其他四个源**一条都不剩**,五源追踪名存实亡。
+改为**按源配额**取样(GitHub 32,其余各 12),保证每个源都有机会参赛。
+
+**影响面**:新增 5 个端点,均在 `/skills/digest` 前缀下,不改动任何既有接口。
+新增运行时目录 `data/trends/`(已被 `data/` 的 gitignore 覆盖——画像与已读记录属个人数据,不进版本库)。
+趋势页默认 tab 由「全景总览」改为「今日要点」。
+
+**验证**:`pytest` exit 0;`tsc --noEmit` 零错误。
+候选池实测 184 条(GitHub 124 / Hacker News 40 / arXiv 20)→ 配额取样 56 条送 LLM → 入选 6 条。
+浏览器实测完整闭环:默认落在「今日要点」渲染 6 张卡、结论居首;
+点某条「已读」→ 该条立即消失(6→5);刷新页面仍为 5 条;
+**强制 `POST /digest?force=true` 重跑 LLM 后,`candidateCount` 由 184 降为 183,该条目未再出现**;
+「全部已读」→ 卡片清零并显示空态文案。「调整关注点」抽屉正确回填 role/6 项关注/4 项不关注。
+测试结束后已把 `seen.json` 重置为空(清掉 7 条测试标记)并重新生成干净简报。
+
+---
+
+## [2026-07-10] perf/fix: 趋势雷达体检 —— 产出无限增长、GITHUB_TOKEN 死配置、静默吞异常
+
+**动机**:用户问"趋势雷达完善了吗,还有什么问题"。逐项实测,查出四个真问题,
+其中两个是**会随时间恶化的定时炸弹**,一个是**配置写了等于没写**,一个是**故障不可见**。
+
+**变更点**
+1. **`_latest_per_query()` 每次 API 调用全量 parse 产出目录**(实测 70 份 / 3.5MB / **38ms**)。
+   而 `queries` / `list` / `summary` / `repo-lookup` 四个端点各调一次,开一次页面就是 ~150ms 纯解析。
+   按每天 8 份增长,一年后 ~2900 份、~1.5s/请求。
+   → `app/api/skills.py` 加进程内缓存,签名 =(文件数, 最新 mtime_ns),只 stat 不读内容;
+   同步写入新文件后签名自然变化,缓存自动失效。实测 **38ms → 2.9ms(13×)**,增删均能正确失效。
+2. **产出目录无保留策略**。→ 新增 `skill_tracker/retention.py`:每个 query 只留最近 5 份
+   `skills_*.json`,同步成功后由调度器调用。
+   ⚠️ **`output/snapshots/` 永不清理** —— star 走势历史只存在于快照,GitHub 不提供历史 star 数,
+   删掉不可再生。dry-run 实测:删 30 份、释放 1.01MB、每个 query 的最新一份均在保留集内、快照零触碰。
+3. **`GITHUB_TOKEN` 写进 `.env` 完全不生效**(静默陷阱)。全仓无 `load_dotenv`,
+   pydantic-settings 只把 `.env` 读进对象、不写 `os.environ`,而 `skill_tracker.GitHubClient`
+   走 `os.getenv("GITHUB_TOKEN")`。实测当前为**匿名调用,限流 10 次/分钟**,
+   而一次全量同步要打 **16 次** search(8 query × 2)——全靠 403 后 sleep 硬扛。
+   → `app/core/settings.py` 新增 `github_token` 字段 + `export_to_env()` 回灌 `os.environ`,
+   且**不覆盖真实环境变量**(真实 env 优先)。`.env.example` / README 补文档。
+4. **前端静默吞异常**:四个源 tab 的 `catch { /* ok */ }` 让"拉取失败"和"真的没数据"
+   在界面上长得一模一样(都只显示"暂无数据")——与之前 `<img onError → display:none>`
+   把全站图片 401 藏了很久是同一个病。
+   → `SkillTracker.tsx` 抽出 `fetchSource()`,失败时把原因写进 `data.error` 并渲染出来 + 「重试」按钮。
+5. **AI 报告过期无提示**:自动同步若哪天悄悄失败,报告会无声停在旧日期(正是最初"10 天没更新"那个病)。
+   → 报告元信息行在 `generatedAt` 超过 2 天时显示黄色 Tag「已 N 天未更新 · 自动同步可能失败了」。
+
+**影响面**:无 API 契约变更。新增环境变量 `GITHUB_TOKEN`(可选,留空=匿名,行为同今天)。
+新增运行时行为:同步成功后清理旧 `skills_*.json`。前端四个源 tab 的失败态由「暂无数据」改为「错误原因 + 重试」。
+
+**验证**:`pytest` exit 0;`tsc --noEmit` 零错误。
+缓存:冷 39.1ms → 命中 2.89ms,写入/删除文件后均自动失效。
+Token:未配置时不污染 `os.environ`;配置后 `GitHubClient` 变为已认证;真实 env 不被 `.env` 覆盖。
+浏览器实测:拦截 HN 请求模拟 `ECONNRESET` → 界面显示「Hacker News 拉取失败:ECONNRESET…」+ 重试按钮
+(不再伪装成"暂无数据");点重试恢复出 15 行数据、错误态消失。
+把 `analysis_cache.json` 的 `generatedAt` 临时改到 10 天前 → 出现「已 10 天未更新」黄标;
+还原后(与备份逐字节一致)警示消失、元信息行显示「生成于 2026-07-10 11:47」。
+
+---
+
+## [2026-07-10] fix: antd 静态 message 主题告警根治 + wwwroot 构建产物更新到最新
+
+**动机**:体检第三轮。①antd v5 静态 `message.xxx()` 拿不到 ConfigProvider 上下文,
+**每次调用都在控制台刷一条 error 级告警**(29 个文件在用),污染所有调试;
+②`wwwroot/` 构建产物停在当天 12:54,此后一整天的前端修复(缩略图/矩阵页/导出/复制)
+从 `:8000` 直连全都看不到。
+
+**变更点**
+- `web/src/ui.tsx`(新增):message 上下文桥——`<AntdApp>` + `<AntdMessageBridge/>`
+  把带上下文的实例灌进模块级 Proxy,业务代码只改 import 源、调用方式不变,
+  桥未挂载时兜底回静态实现。`main.tsx` 挂 `<AntdApp component={false}>`。
+- 脚本批量改写 29 个文件:`import { message } from 'antd'` → `from '<rel>/ui'`,
+  只动 import 行;残留静态导入 0,tsc 全仓零错误。
+- `npm run build` 重建 `wwwroot/`(index.html 已带 no-cache,浏览器自动拿新 bundle)。
+- `README.md`:制作看板一节补齐缩略图 `?w=`、全链路对照页、孤儿卡归档、提示词批量导出。
+
+**影响面**:纯前端;message 行为不变但开始跟随主题。
+验证:登录页空表单触发 message 弹出正常,console **零错误**(修复前每条 message 一条 error);
+新 bundle 从 `:8000` 返回 200 且 index.html 引用与磁盘一致。
+
+---
+
+## [2026-07-10] fix: 卡片上传"写 data/ 读 resouce/"目录错位——上传成功但图必 404
+
+**动机**:体检第二轮发现的地雷。`upload_card_file` 把文件写进
+`data/production/<pid>/uploads/`,返回的 URL 却是
+`/production/resource/production/<pid>/uploads/...`——而 `serve_resource`
+只从 `resouce/` 读。**只要上传一张图,GET 必 404**,配合前端曾经的
+`display:none` onError,又是一个静默故障。目前盘上无存量上传文件、
+卡片无此类 URL 引用,说明上传链路(叠加此前的 401 丢头问题)从未成功用过——
+两个 bug 互相掩护,修掉一个才暴露另一个。
+
+**变更点**
+- `app/api/production.py` `serve_resource`:`resouce/` 下找不到且路径以
+  `production/` 开头时,回退到 `DATA_DIR` 下读(剥前缀直拼,不依赖目录名),
+  路径穿越防护按各自根目录分别校验。写路径与 URL 均不动,存量兼容。
+- `app/services/knowledge.py` `_emp_dir`:employee_key 拦 `/` `\\` `..`,
+  防目录穿越写文件(端点层已有 `_validate_key`,此为服务层纵深防御)。
+- 新增 `tests/test_production_upload_serving.py` 三条回归:
+  ①上传后按返回 URL GET 必须 200 且字节一致;②媒体 GET 免鉴权(<img> 场景);
+  ③路径穿越用 %2e%2e 编码形式打服务端(裸 ../ 会被 httpx 在客户端折叠,测不到防护)。
+
+**影响面**:上传→回显链路首次真正可用。测试 133 → 136 全过。
+
+---
+
+## [2026-07-10] fix/feat: 系统体检批量修——上传丢鉴权头、提示词无法复制、整集提示词导出
+
+**动机**:全面体检发现三类问题:(A)三个文件上传接口没带 Authorization,鉴权开着必 401;
+(B)提示词正文都存在卡片 `content` 字段,而复制按钮只认 `prompts` 数组——全库 1870 张卡
+里 prompts 非空的仅 5 张,即 img_prompt/vid_prompt 卡上**根本不显示复制按钮**,
+只能手动划选;且没有按集批量导出,798 张卡逐张复制不现实;(C)若干样式/缓存小problems。
+
+**变更点**
+- `web/src/api.ts`:新增 `authHeaders()`,补齐 `uploadKnowledge` / `uploadFile`(工作台附件)/
+  `uploadCardFile`(制作卡片图/视频,**用户回传生图的主通道**)三处裸 fetch 的 Bearer 头
+  (canvas 上传原本就带,其余三处为漏改)。
+- `web/src/pages/Production.tsx`:看板卡面复制按钮回退 `content`——prompts 为空时复制正文。
+  实测 EP01 视图从 0 个复制按钮变为 21 个(首帧 11 + 视频 10)。
+- `web/src/pages/EpisodeDetail.tsx`:①单元抽屉每张卡标题旁新增内容复制按钮;
+  ②顶栏新增「导出提示词」——整集级头部卡 + G1..Gn 的首帧/末帧/视频提示词按生成顺序
+  拼成 markdown,一键下载并复制(EP01 实测 21 个条目 / ~14.7K 字),服务
+  "从平台成批拿提示词去小云雀/即梦生成"的真实工作流。
+- `app/api/production.py`:素材原图响应加 `Cache-Control: max-age=3600`
+  (抽屉/预览不再每次重拉 MB 级原图;缩略图仍 immutable)。
+- `web/src/components/Layout.tsx`:「提示词采集」图标改 ⚡,不再与「文章学习」重复。
+- `web/src/pages/ProductionMatrix.tsx`:表格高度随视口(原固定 520px 大屏浪费/小屏溢出)。
+
+**影响面**:无接口签名变化。上传三处从"鉴权开启即 401"恢复可用。
+**已知未修**(记录在案):antd 静态 `message` 主题告警(23 个文件调用,需引入 App 上下文,
+改动面大收益小,暂缓);`user_auth.py` `/me` 为占位接口(前端未使用)。
+
+**验证**:tsc 全仓零错误;原图响应头 `max-age=3600`、缩略图 `immutable` 实测生效;
+EpisodeDetail 导出按钮实点出 toast 且下载触发;单元抽屉复制按钮 3 个/tab;
+看板 EP01 卡面复制按钮 0 → 21。
+
+---
+
+## [2026-07-10] feat: 全链路对照页 —— 季 × 集 × G 生成单元 一屏铺开，断链/无图一眼可见
+
+**动机**:用户"看麻了"——制作看板按阶段竖切成 10 列,同一个 G 生成单元的
+剧本 / 分镜 / 首帧提示词 / 视频提示词 散在四列里,无法回答"这一集哪些单元还没图"
+"哪个单元断链了"。实际数据是干净的:`shot_number` 就是 G 单元号(`0` = 整集级卡),
+四个阶段靠 `(project, episode, shot_number)` 天然可 join,只是从没有横向对齐的视图。
+
+**变更点**
+- `app/api/production.py`:新增 `GET /production/matrix`。跨全部项目返回
+  「季 → 集 → G 单元」对照表,每个单元一行,聚合它在 script / storyboard /
+  img_prompt / vid_prompt 四个 spec 阶段的卡片数与已产出的图/视频数。
+  只回统计量不回卡片正文——三季 2000+ 张卡压成 ~360 行(86.7KB / 218ms)。
+  首帧与末帧锁(FLF)同属 img_prompt 阶段,靠标题「末帧」区分并分列;
+  **`missing` 按排除末帧锁后的首帧张数判断**,否则只有一张孤儿末帧锁的单元会被误判为齐全。
+- `web/src/pages/ProductionMatrix.tsx`(新增):虚拟滚动表格,行 = G 单元,
+  列 = 剧本/分镜/首帧提示词/末帧锁/视频提示词/图/视频。必需环节缺失显示红 ✗ 并提示"链路断在这里";
+  顶部按季切换 + 「只看断链」「只看没图」筛选 + 出图进度条;点行下钻到单集详情。
+- `web/src/api.ts`:新增 `getMatrix()` 与 `MatrixProject` / `MatrixRow` 类型。
+- `web/src/App.tsx`:新增路由 `/production/matrix`,**必须排在 `/production/:pid` 之前**,
+  否则 `matrix` 会被当作 pid 匹配掉。`components/Layout.tsx` 增加「全链路对照」导航项。
+
+**影响面**:新增一个只读端点与一个前端页面,不改动任何既有接口/数据/字段。
+
+**验证**:端点实测 361 行 / 86.7KB / 218ms;页面虚拟滚动仅渲染视口内 15 行(DOM 643 节点);
+「只看断链」筛出 2 行;`tsc --noEmit` 全仓零错误。
+
+**这份数据暴露出来的真相**(未改动数据,仅呈现):
+- 三季 361 个 G 生成单元里 **359 个四阶段齐全,0 个有成图、0 个有成片**——全部停在 spec 阶段。
+- `jiulu-s1` EP16 / EP17 各有一张孤儿 `G6末帧锁(FLF)` 卡挂在 `shot_number=6` 上,
+  而这两集实际只有 G1–G5,其余四个阶段全空。疑似编号错位或 G6 从未写完,待作者确认。
+
+---
+
+## [2026-07-10] feat: 孤儿卡归档区 —— 一卡一文件、永不删除、随时可恢复
+
+**动机**:上一条对照页照出两张孤儿卡(挂在不存在的 G 单元上、四个 spec 阶段全空)。
+它们有真实内容(末帧锁提示词全文),删了可惜,留着又永远在"断链"里刷屏。
+用户明确要求:「孤儿可以有个归档文件夹,里面放好,不要删了」。
+
+**孤儿卡的定义**:某个 `shot_number > 0` 的 G 单元,其 script / storyboard /
+首帧 img_prompt / vid_prompt **四个 spec 阶段全为空**,则该单元实际不存在,
+挂在它上面的卡片即为孤儿。判断首帧张数时必须排除末帧锁(FLF)——两者同属
+`img_prompt` 阶段,只能靠标题「末帧」区分。
+
+**变更点**
+- `app/api/production.py`:抽出 `_first_frame_count` / `_unit_missing_stages` / `_orphan_cards`
+  三个 helper(矩阵端点与孤儿识别共用,消除重复判定逻辑);矩阵行新增 `orphan` 字段。
+  新增四个端点:
+  - `GET /production/orphans` —— 跨项目列出孤儿卡,附该集实际存在的 G 单元号,
+    便于判断是编号错位还是该单元从未写完。
+  - `POST /production/projects/{pid}/archive` —— 把卡片从 `cards.json` 移入
+    `data/production/<pid>/archive/<card_id>.json`,一卡一文件、肉眼可读,
+    附 `archived_at` / `archive_reason`。**幂等**:重复归档同一张不报错。
+  - `GET /production/projects/{pid}/archive` —— 列出归档区(按归档时间倒序)。
+  - `POST /production/projects/{pid}/archive/{card_id}/restore` —— 移回 `cards.json` 并删除归档文件;
+    卡片已存在则只清理归档文件,不产生重复卡。
+- `web/src/pages/ProductionMatrix.tsx`:孤儿存在时顶部显示告警条 →「查看并归档」弹窗
+  (先看清每张卡的内容、所在集、该集实际单元号,再 Popconfirm 确认,**绝不静默移动**);
+  工具栏新增带计数徽标的「归档区」抽屉,可逐张「恢复」。
+- `web/src/api.ts`:新增 `listOrphans` / `archiveCards` / `listArchive` / `restoreCard`
+  与 `OrphanCard` / `ArchivedCard` 类型。
+
+**影响面**:新增运行时目录 `data/production/<pid>/archive/`(已被 `data/` 的 gitignore 覆盖)。
+归档会触发 `_save_cards` 整体重写 `cards.json`——这是仓库既有行为,
+会给缺省字段的旧卡补上模型默认值(本次为 781 张补 `assignee: ""`),**不删键、不改值**。
+
+**验证**(在真实数据 `jiulu-s1` 上,操作前已备份):
+往返测试 归档 → 矩阵断链归零 → 恢复 → 孤儿重现 → 再归档 → 重复归档幂等,全部通过。
+UI 全流程实测:告警条「发现 2 张孤儿卡」→ 弹窗列出两张(标注"该集实际只有 G1–G5")→
+归档 → 告警条消失、归档区徽标 2 → 抽屉里「恢复」一张 → 告警条变「发现 1 张」→ 再归档。
+一致性:原始 798 张 = `cards.json` 796 + `archive/` 2,**零丢失**;
+归档文件逐字段等于原卡。`tsc --noEmit` 全仓零错误。
+
+**待作者决定**:两张 `G6末帧锁` 现暂存归档区。若本意是 G5 的末帧锁写错编号,
+可恢复后把 `shot_number` 改成 5;若 EP16/EP17 本该有 G6,则需补齐该单元其余四个阶段。
+
+---
+
+## [2026-07-10] feat: 趋势雷达自动同步 + 处处可点详情（同步幂等 · index.html 禁缓存）
+
+**动机**:用户要「AI 分析 + 自动同步 + 点得进详情」,实测三项全有缺口:
+1. **AI 报告 10 天没更新** —— `analysis_cache.json` 停在 `2026-06-29`。`daily_run.py` 只拉榜单、
+   完全不碰报告,而 `POST /analyze` 又有「同一天复用缓存」逻辑,于是除非手点「重新生成」,报告永不刷新。
+2. **自动同步半残** —— Windows 计划任务 `SkillTrackerDaily` 确实在跑(今天 03:00 result=0),
+   但 `DEFAULT_QUERIES` 只有 5 个,而前端 `QUERY_LABELS` 有 8 个。
+   `agent skill` / `claude skill` / `skill` 三个 tab 的快照自 06-29 起就断更了,UI 上完全看不出来。
+3. **详情只有「项目榜单」有** —— HN / arXiv / 新闻 / Reddit 四个 tab 与 AI 报告里的条目全无详情入口。
+
+**变更点**
+- `app/core/settings.py`:新增 `TRENDS_AUTO_SYNC`(默认 **开**)与 `TRENDS_SYNC_TIME`(默认 `02:00`)。
+  趋势页的价值全靠数据新鲜度,默认关等于交付一份过期快照,故此处不沿用「新开关默认关」的惯例。
+- `skill_tracker/daily_run.py`:`DEFAULT_QUERIES` 补齐到 8 个,与前端 `QUERY_LABELS` 一一对应,
+  并声明为趋势 query 的**唯一事实来源**(后端调度器从这里导入)。
+- `app/services/scheduler.py`:新增趋势同步任务(边沿触发 + 当天去重,与蒸馏/进化同一套语义)。
+  到点后逐个 query 刷新(单个失败不中断),只要有一个成功就 `generate_analysis(force=True)` 重算报告;
+  全部失败则不标记当天完成,留给下轮巡检重试。
+- `app/api/skills.py`:把分析报告逻辑从路由里抽出为 `generate_analysis(force=False)`,只抛普通异常、
+  由路由层翻译成 HTTP 码,这样调度器可直接复用;`force=True` 绕过「同一天复用缓存」。
+  新增 `GET /skills/repo-lookup?fullName=` —— 跨全部 query 查仓库记录 + star 走势
+  (AI 报告是跨领域汇总的,它提到的仓库未必落在当前选中的 query 里,不能复用 `/list` 的结果);
+  查不到返回 `data=null`,前端据此降级为纯外链。
+- `web/src/pages/SkillTracker.tsx`:`RepoLink` 左键改为打开详情抽屉,Ctrl/⌘/Shift+点击仍走 GitHub 新标签页;
+  抽屉新增「所属领域」并支持 loading / 未收录两种空态。`SourcePanel` 新增 `renderDetail` + `linkOf`,
+  四个源 tab 统一获得「详情」列 + 整行点击 → 抽屉(点行内 `<a>` 不触发,避免和外链打架)。
+- `web/src/api.ts`:新增 `lookupRepo()`。
+
+**把两个「手工活」消灭在代码里**(否则等于把运维负担转嫁给用户):
+- **同步幂等** —— `app/api/skills.py` 新增 `is_query_fresh(query)`;调度器与 `daily_run.py` 两个入口
+  都先判当天是否已有产出,有则跳过(`daily_run` 加 `-f/--force` 可强制)。这样后端调度器与
+  Windows 计划任务 `SkillTrackerDaily` **并存也不会重复打 GitHub**,不再需要人工去关掉其中一个。
+  (改动前实测当天 `skills_*.json` 出现 13 份 = 计划任务 5 + 调度器 8,即白拉一遍。)
+- **`index.html` 禁缓存** —— `app/main.py` 的 SPA 兜底对 `index.html` 下发
+  `Cache-Control: no-cache, must-revalidate`。`index.html` 引用的是内容 hash 化的 bundle,
+  一旦被浏览器缓存就会一直去取旧 hash;而重新 build 后旧 bundle 已被 `emptyOutDir` 删除,
+  于是 `/assets` 404、页面白屏,用户只能 `Ctrl+Shift+R` 自救(本仓库当天已实际踩中一次)。
+  hash 化的 `assets/` 仍由 StaticFiles 带 ETag 返回,可长期缓存。**前端发版后不再需要硬刷新。**
+
+**影响面**:新增 `GET /api/v1/agentapp/skills/repo-lookup` 一个只读端点;
+`POST /skills/analyze` 行为不变(仍复用当天缓存)。新增两个环境变量,`.env.example` / README 已同步。
+`/` 与所有前端路由的响应头新增 `Cache-Control`;`daily_run.py` 默认行为由「无条件重拉」改为「当天幂等」。
+
+**验证**:后端热重载后调度器实拉成功——8 个 query 全部产出当天快照(含此前断更的 3 个),
+`analysis_cache.json` 由 `2026-06-29` 刷新为当天;123 个测试全过。
+浏览器实测:报告里点 `DietrichGebert/ponytail` 打开抽屉,跨 query 正确识别为「AI 智能体」领域,
+展示 79k Stars / 4.3k Forks / 近期 +321 / Topics / star 走势图,且不跳转离开 `/trends`;
+HN 行点击弹出详情(作者/热度/评论/HN 讨论/原文链接)且「打开原文」为 `target=_blank` 外链;
+`repo-lookup` 查不存在的仓库返回 `null`。
+幂等:`python -m skill_tracker.daily_run` 空转——跳过 8 个、0 次 GitHub 调用、exit 0。
+缓存:`GET /trends` 响应头含 `Cache-Control: must-revalidate, no-cache`,`/assets/index-*.js` 带 ETag。
+
+---
+
 ## [2026-07-10] fix: 制作看板图片全部渲染不出来 —— 素材路由挂在鉴权 API 下，<img> 带不了 token
 
 **动机**:用户反馈"图片都没有地方渲染出来,我用其他生图的图片都没渲染"。
@@ -59,6 +392,32 @@ Workbench 附件、画布图片形成割裂(那两条一直是好的)。
 `?w=999` 正确回退原图 2.40MB;**24 张合计 65.3MB → 0.1MB(降 99.9%)**;
 缓存命中 16~29ms;浏览器 `<img>` 实测 `?w=128` 得到 128×85。
 `tsc --noEmit` 全仓零错误。
+
+---
+
+## [2026-07-10] fix: AI 趋势报告里的仓库名可点击 + 修复 wwwroot 构建产物错位
+
+**动机**:用户反馈 AI 趋势雷达「AI 分析报告」页"点不动"。排查后是两个独立问题:
+(1) 报告里的仓库名用 `COLORS.iris` 染成蓝色、看着像超链接,但实际渲染成
+`<Text>` / `<Tag>` 纯文本,没有 `href`——点了当然没反应;而同页「项目榜单」
+「Hacker News」「arXiv」等 tab 的仓库/文章名都是真链接,只有报告 tab 不一致。
+(2) `wwwroot/index.html` 引用的 `assets/index-Cn0bRRc8.js` 在磁盘上不存在
+(实际只有 `index-sWZwkiHE.js`),疑似两次并发 `vite build` 竞争 `emptyOutDir` 所致。
+后端 `/assets` 是独立 `StaticFiles` 挂载,不会走 SPA 兜底,该请求直接 404,
+**导致 `:8000` 冷加载出白屏**(用户当时看到的是浏览器缓存里的旧 bundle)。
+
+**变更点**
+- `web/src/pages/SkillTracker.tsx`:新增 `RepoLink` 组件,把仓库名统一渲染为
+  指向 `https://github.com/<owner>/<repo>` 的链接;仅当名字匹配 `owner/repo`
+  形态时才生成链接,否则退化为纯文本,避免 LLM 返回非仓库名时跳到无效页面。
+  应用于「热门技术方向」的 `representative_repos` 标签与「崛起中的新星」的 `repo_name`。
+- 重新执行 `npm run build`(输出到 `../wwwroot`),清掉孤儿 bundle,使
+  `index.html` 与 `assets/` 重新自洽。
+
+**影响面**:纯前端展示层改动,无 API / 表 / 配置变更。
+`wwwroot/assets/` 为构建产物(gitignore),仅 `wwwroot/index.html` 的 script hash 变化。
+验证:`/trends` 报告页 12 个仓库名全部渲染为 `<a href="https://github.com/...">`;
+`/assets/index-BfBeuJES.js` 返回 200,旧的 `index-Cn0bRRc8.js` 返回 404(佐证修复前确为白屏)。
 
 ---
 

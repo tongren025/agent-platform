@@ -1,9 +1,7 @@
 // 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。
 import { useEffect, useState, useCallback, useMemo, useRef, type DragEvent } from 'react';
-import {
-  Button, Drawer, Empty, Input, message, Modal, Popconfirm, Progress, Radio,
-  Select, Space, Spin, Tag, Tooltip, Typography, Badge, Image, Tabs, Checkbox, Avatar,
-} from 'antd';
+import { Button, Drawer, Empty, Input, Modal, Popconfirm, Progress, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Badge, Image, Tabs, Checkbox, Avatar } from 'antd';
+import { message } from '../ui';
 import {
   PlusOutlined, DeleteOutlined, CopyOutlined, CheckOutlined,
   RobotOutlined, RightOutlined, EditOutlined, EyeOutlined,
@@ -827,7 +825,9 @@ export default function Production() {
                                 <Tooltip title={st.label}>
                                   <span style={{ color: st.color, fontSize: 12 }}>{st.icon}</span>
                                 </Tooltip>
-                                {PROMPT_STAGES.has(card.stage) && card.prompts.length > 0 && <CopyBtn text={card.prompts.join('\n\n')} />}
+                                {/* 提示词正文几乎都存在 content（prompts 数组是历史字段，全库仅个位数卡片非空），复制按钮必须回退 content */}
+                                {PROMPT_STAGES.has(card.stage) && (card.prompts.length > 0 || card.content) &&
+                                  <CopyBtn text={card.prompts.length > 0 ? card.prompts.join('\n\n') : card.content} />}
                               </div>
                             </div>
                             {activeEpisode === 'all' && (

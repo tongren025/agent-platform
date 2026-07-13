@@ -1,10 +1,7 @@
 // 提示词采集页：采集源 CRUD、手动触发、已采提示词与历史查看。
 import { useEffect, useState } from 'react';
-import {
-  Card, Table, Button, Modal, Form, Input, Select, Switch, InputNumber,
-  TimePicker, Tag, Space, Popconfirm, message, Drawer, Row, Col, Tooltip,
-  Empty, Typography, Alert, Statistic, Image, Spin,
-} from 'antd';
+import { Card, Table, Button, Modal, Form, Input, Select, Switch, InputNumber, TimePicker, Tag, Space, Popconfirm, Drawer, Row, Col, Tooltip, Empty, Typography, Alert, Statistic, Image, Spin } from 'antd';
+import { message } from '../ui';
 import {
   PlusOutlined, ReloadOutlined, EditOutlined, DeleteOutlined,
   ThunderboltOutlined, PictureOutlined, CopyOutlined, HeartFilled,

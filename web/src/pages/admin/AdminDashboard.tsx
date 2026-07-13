@@ -1,6 +1,7 @@
 // 管理端总览：平台资源与用户统计。
 import { useEffect, useState } from 'react';
-import { Card, Col, Row, Spin, Statistic, message } from 'antd';
+import { Card, Col, Row, Spin, Statistic } from 'antd';
+import { message } from '../../ui';
 import {
   TeamOutlined,
   ApartmentOutlined,

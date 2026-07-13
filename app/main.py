@@ -156,13 +156,20 @@ if wwwroot.exists():
     if (wwwroot / "assets").exists():
         app.mount("/assets", StaticFiles(directory=str(wwwroot / "assets")), name="assets")
 
+    # index.html 里引用的是带内容 hash 的 bundle(assets/index-<hash>.js)。
+    # 一旦浏览器把 index.html 缓存住，就会一直去取旧 hash 的 bundle——
+    # 而重新 build 后旧 bundle 已被 emptyOutDir 删掉，于是 /assets 直接 404、页面白屏，
+    # 用户只能靠 Ctrl+Shift+R 自救。所以 index.html 必须每次revalidate。
+    # (hash 化的 assets/ 由 StaticFiles 带 etag 返回，可以安全地长期缓存。)
+    _INDEX_NO_CACHE = {"Cache-Control": "no-cache, must-revalidate"}
+
     @app.get("/{full_path:path}")
     async def spa_fallback(request: Request, full_path: str):
         """SPA 兜底路由：命中静态文件则直接返回，否则回退到 index.html 交给前端路由。"""
         file_path = wwwroot / full_path
-        if file_path.is_file():
+        if file_path.is_file() and file_path.name != "index.html":
             return FileResponse(file_path)
-        return FileResponse(wwwroot / "index.html")
+        return FileResponse(wwwroot / "index.html", headers=_INDEX_NO_CACHE)
 
 
 # ── Main ────────────────────────────────────────────────────────────

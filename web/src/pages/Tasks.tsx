@@ -1,9 +1,7 @@
 // 异步队列页：按 Job ID 追踪 arq 后台任务的状态与结果。
 import { useEffect, useState, useCallback } from 'react';
-import {
-  Card, Table, Button, Tag, Space, message, Empty, Spin, Input,
-  Drawer, Typography, Descriptions, Statistic, Row, Col,
-} from 'antd';
+import { Card, Table, Button, Tag, Space, Empty, Spin, Input, Drawer, Typography, Descriptions, Statistic, Row, Col } from 'antd';
+import { message } from '../ui';
 import { ThunderboltOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { api } from '../api';
 

@@ -25,11 +25,34 @@ SNAPSHOT_DIR = OUTPUT_DIR / "snapshots"
 
 # ── 读取产出 ────────────────────────────────────────────────────────
 
-def _latest_per_query() -> dict[str, dict]:
-    """每个 query 取 generated_at 最新的一份 skills_*.json。"""
-    latest: dict[str, dict] = {}
+# _latest_per_query 会被 queries / list / summary / repo-lookup 四个端点各调一次，
+# 而它要 parse 目录下每一份 skills_*.json（当前 70 份 ≈ 38ms，且随天数线性增长）。
+# 用「文件数 + 最新 mtime」当签名做进程内缓存：同步写入新文件后签名自然变化，缓存自动失效。
+_latest_cache: tuple[tuple[int, int], dict[str, dict]] | None = None
+
+
+def _output_signature() -> tuple[int, int]:
+    """产出目录的廉价指纹（文件数, 最新 mtime_ns）——只 stat 不读内容。"""
     if not OUTPUT_DIR.exists():
-        return latest
+        return (0, 0)
+    files = list(OUTPUT_DIR.glob("skills_*.json"))
+    if not files:
+        return (0, 0)
+    return (len(files), max(f.stat().st_mtime_ns for f in files))
+
+
+def _latest_per_query() -> dict[str, dict]:
+    """每个 query 取 generated_at 最新的一份 skills_*.json（带进程内缓存）。"""
+    global _latest_cache
+
+    if not OUTPUT_DIR.exists():
+        return {}
+
+    sig = _output_signature()
+    if _latest_cache is not None and _latest_cache[0] == sig:
+        return _latest_cache[1]
+
+    latest: dict[str, dict] = {}
     for f in OUTPUT_DIR.glob("skills_*.json"):
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
@@ -38,7 +61,22 @@ def _latest_per_query() -> dict[str, dict]:
         q = data.get("query", "?")
         if q not in latest or data.get("generated_at", "") > latest[q].get("generated_at", ""):
             latest[q] = data
+
+    _latest_cache = (sig, latest)
     return latest
+
+
+def is_query_fresh(query: str, on_date: str | None = None) -> bool:
+    """该 query 的最新产出是否就是指定日期（默认今天）。
+
+    幂等护栏：趋势同步可能被多个入口触发（后端调度器 / Windows 计划任务 / CLI），
+    靠它跳过当天已经拉过的 query，避免重复消耗 GitHub 配额。
+    """
+    data = _latest_per_query().get(query)
+    if not data:
+        return False
+    target = on_date or datetime.now().strftime("%Y-%m-%d")
+    return data.get("generated_at", "")[:10] == target
 
 
 def _snap_slug(query: str) -> str:
@@ -81,24 +119,59 @@ def list_skills(query: str = Query(..., description="要查看的 query")):
     })
 
 
+def _history_points(query: str, full_name: str) -> list[dict]:
+    """某仓库在某 query 历次快照里的 star 走势点。"""
+    slug_dir = SNAPSHOT_DIR / _snap_slug(query)
+    points: list[dict] = []
+    if not slug_dir.exists():
+        return points
+    for f in sorted(slug_dir.glob("*.json")):
+        try:
+            snap = json.loads(f.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        stars = snap.get("stars", {}).get(full_name)
+        if stars is not None:
+            points.append({"takenAt": snap.get("taken_at", ""), "stars": stars})
+    return points
+
+
 @router.get("/repo-history")
 def repo_history(
     query: str = Query(...),
     fullName: str = Query(..., description="owner/repo"),
 ):
     """某仓库在历次快照里的 star 走势，用于详情趋势图。"""
-    slug_dir = SNAPSHOT_DIR / _snap_slug(query)
-    points = []
-    if slug_dir.exists():
-        for f in sorted(slug_dir.glob("*.json")):
-            try:
-                snap = json.loads(f.read_text(encoding="utf-8"))
-            except (json.JSONDecodeError, OSError):
-                continue
-            stars = snap.get("stars", {}).get(fullName)
-            if stars is not None:
-                points.append({"takenAt": snap.get("taken_at", ""), "stars": stars})
-    return _ok(points)
+    return _ok(_history_points(query, fullName))
+
+
+@router.get("/repo-lookup")
+def repo_lookup(fullName: str = Query(..., description="owner/repo")):
+    """跨全部 query 查一个仓库的完整记录 + star 走势。
+
+    AI 分析报告是跨领域汇总的，它提到的仓库不一定落在当前选中的 query 里，
+    所以不能复用 /list 的结果——必须在所有 query 的最新产出中查找。
+    查不到（例如 LLM 提到了榜单外的项目）返回 data=null，前端据此降级为纯外链。
+    """
+    best: dict | None = None
+    best_query = ""
+    for q, data in _latest_per_query().items():
+        for bucket in ("top_starred", "fastest_growing", "real_growth"):
+            for r in data.get(bucket, []):
+                if r.get("full_name") != fullName:
+                    continue
+                # 同名可能出现在多个 query / 多个榜单，取字段最全的一条
+                # （real_growth 里的记录额外带 delta / delta_per_day）
+                if best is None or len(r) > len(best):
+                    best, best_query = r, q
+
+    if best is None:
+        return _ok(None)
+    return _ok({
+        "repo": best,
+        "query": best_query,
+        "history": _history_points(best_query, fullName),
+    })
 
 
 class RefreshReq(BaseModel):
@@ -218,55 +291,54 @@ def _build_analysis_summary() -> str:
     return "\n".join(lines)
 
 
-@router.post("/analyze")
-async def analyze_trends():
-    """用 LLM 生成 AI 趋势分析报告。"""
+class NoTrendDataError(RuntimeError):
+    """尚无任何 query 的趋势数据，无法生成分析报告。"""
+
+
+async def generate_analysis(force: bool = False) -> dict:
+    """用 LLM 生成 AI 趋势分析报告并落盘缓存。
+
+    force=False 时同一天内直接复用缓存（HTTP 手动触发用）；
+    force=True 时无视缓存强制重生成（每日自动同步用，数据刚刷新过必须重算）。
+
+    与 FastAPI 解耦：只抛普通异常，由路由层翻译成 HTTP 状态码，
+    这样定时调度器也能直接调用。
+    """
     from app.dependencies import ai_service
 
     summary = _build_analysis_summary()
     if not summary:
-        raise HTTPException(404, "暂无趋势数据，请先刷新至少一个查询")
+        raise NoTrendDataError("暂无趋势数据，请先刷新至少一个查询")
 
-    # 检查缓存（同一天只生成一次）
-    if _ANALYSIS_CACHE_PATH.exists():
+    if not force and _ANALYSIS_CACHE_PATH.exists():
         try:
             cache = json.loads(_ANALYSIS_CACHE_PATH.read_text(encoding="utf-8"))
-            cache_date = cache.get("generatedAt", "")[:10]
-            if cache_date == datetime.now().strftime("%Y-%m-%d"):
-                return _ok(cache)
-        except Exception:
+            if cache.get("generatedAt", "")[:10] == datetime.now().strftime("%Y-%m-%d"):
+                return cache
+        except Exception:  # noqa: BLE001 缓存损坏就当没有，继续重生成
             pass
 
-    try:
-        client, model = ai_service.get_default_client()
-    except Exception as exc:
-        raise HTTPException(500, f"无法获取 AI 客户端: {exc}")
+    client, model = ai_service.get_default_client()
 
     prompt = _ANALYSIS_PROMPT.format(data_summary=summary)
-    try:
-        resp = await asyncio.to_thread(
-            lambda: client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": "你是 AI 行业分析师。只返回 JSON，不要解释。"},
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.3,
-                max_tokens=4000,
-            )
+    resp = await asyncio.to_thread(
+        lambda: client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "你是 AI 行业分析师。只返回 JSON，不要解释。"},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.3,
+            max_tokens=4000,
         )
-        raw = resp.choices[0].message.content or "{}"
-    except Exception as exc:
-        raise HTTPException(502, f"LLM 调用失败: {exc}")
+    )
+    raw = resp.choices[0].message.content or "{}"
 
-    try:
-        start = raw.find("{")
-        end = raw.rfind("}") + 1
-        if start < 0 or end <= start:
-            raise ValueError("无 JSON")
-        report = json.loads(raw[start:end])
-    except Exception as exc:
-        raise HTTPException(500, f"分析报告 JSON 解析失败: {exc}")
+    start = raw.find("{")
+    end = raw.rfind("}") + 1
+    if start < 0 or end <= start:
+        raise ValueError("LLM 未返回 JSON")
+    report = json.loads(raw[start:end])
 
     report["generatedAt"] = datetime.now().isoformat()
     report["model"] = model
@@ -275,8 +347,20 @@ async def analyze_trends():
     _ANALYSIS_CACHE_PATH.write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+    return report
 
-    return _ok(report)
+
+@router.post("/analyze")
+async def analyze_trends():
+    """用 LLM 生成 AI 趋势分析报告（同一天复用缓存）。"""
+    try:
+        return _ok(await generate_analysis())
+    except NoTrendDataError as exc:
+        raise HTTPException(404, str(exc))
+    except (ValueError, json.JSONDecodeError) as exc:
+        raise HTTPException(500, f"分析报告 JSON 解析失败: {exc}")
+    except Exception as exc:  # noqa: BLE001 LLM 客户端 / 网络
+        raise HTTPException(502, f"LLM 调用失败: {exc}")
 
 
 @router.get("/analyze")
@@ -289,6 +373,56 @@ def get_analysis():
         return _ok(cache)
     except Exception:
         return _ok(None)
+
+
+# ── 个人化每日简报 ──────────────────────────────────────────────────
+# 与 /analyze 的全景报告分工：全景报告是"今天整个领域怎么样"，每天高度重复；
+# 简报是"今天有哪几条值得你看"，看过即消失，不重复。
+
+class MarkReadReq(BaseModel):
+    """标记已读的条目 id 列表（POST /digest/read）。"""
+    ids: list[str]
+
+
+@router.get("/digest")
+def get_digest():
+    """读当前简报（已剔除已读条目）。不触发 LLM。"""
+    from app.services import trend_digest
+    return _ok(trend_digest.read_digest())
+
+
+@router.post("/digest")
+async def make_digest(force: bool = Query(False, description="true=无视当天缓存强制重生成")):
+    """生成简报：剔除已读 → 按画像挑选 → 只回结论。"""
+    from app.services import trend_digest
+    try:
+        return _ok(await trend_digest.generate_digest(force=force))
+    except (ValueError, json.JSONDecodeError) as exc:
+        raise HTTPException(500, f"简报 JSON 解析失败: {exc}")
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(502, f"LLM 调用失败: {exc}")
+
+
+@router.post("/digest/read")
+def mark_digest_read(req: MarkReadReq):
+    """标记已读——这些条目以后永不再出现在简报里。"""
+    from app.services import trend_digest
+    added = trend_digest.mark_seen(req.ids)
+    return _ok({"marked": added, "digest": trend_digest.read_digest()})
+
+
+@router.get("/digest/profile")
+def get_digest_profile():
+    """读兴趣画像（决定简报挑什么）。"""
+    from app.services import trend_digest
+    return _ok(trend_digest.load_profile())
+
+
+@router.put("/digest/profile")
+def put_digest_profile(profile: dict):
+    """更新兴趣画像；下次生成简报即生效。"""
+    from app.services import trend_digest
+    return _ok(trend_digest.save_profile(profile))
 
 
 @router.get("/summary")

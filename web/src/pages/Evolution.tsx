@@ -1,9 +1,7 @@
 // 自我进化页：查看/采纳/拒绝 LLM 分析会话后产出的改进洞察。
 import { useCallback, useEffect, useState } from 'react';
-import {
-  Button, Card, Collapse, Descriptions, Empty, message, Progress,
-  Select, Space, Spin, Statistic, Table, Tag, Typography,
-} from 'antd';
+import { Button, Card, Collapse, Descriptions, Empty, Progress, Select, Space, Spin, Statistic, Table, Tag, Typography } from 'antd';
+import { message } from '../ui';
 import {
   CheckOutlined, CloseOutlined, ExperimentOutlined,
   RiseOutlined, ThunderboltOutlined, ToolOutlined,

@@ -9,9 +9,8 @@ import ReactFlow, {
   type Connection, type Edge, type Node, MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import {
-  Button, Empty, Input, message, Modal, Popconfirm, Select, Space, Spin, Typography,
-} from 'antd';
+import { Button, Empty, Input, Modal, Popconfirm, Select, Space, Spin, Typography } from 'antd';
+import { message } from '../ui';
 import {
   PlusOutlined, DeleteOutlined, SaveOutlined, UploadOutlined,
   FileTextOutlined, ImportOutlined, BranchesOutlined,

@@ -1,6 +1,7 @@
 // 管理端用户管理：平台用户 CRUD、改角色、启停、重置密码。
 import { useEffect, useState } from 'react';
-import { Table, Tag, Space, Button, Switch, Popconfirm, message, Spin, Modal, Form, Input, Select } from 'antd';
+import { Table, Tag, Space, Button, Switch, Popconfirm, Spin, Modal, Form, Input, Select } from 'antd';
+import { message } from '../../ui';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { adminApi, type PlatformUser, type PlatformRole } from '../../adminApi';
 import { COLORS } from '../../theme';

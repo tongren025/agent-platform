@@ -4,6 +4,64 @@ import { userToken } from './userAuth';
 
 const BASE = '/api/v1/agentapp';
 
+/** 全链路矩阵：一个项目（季）的概要。 */
+export interface MatrixProject {
+  project_id: string;
+  name: string;
+  episode_count: number;
+  card_count: number;
+}
+
+/** 全链路矩阵：一个 G 生成单元一行，值为该单元在各阶段的卡片数。 */
+export interface MatrixRow {
+  project_id: string;
+  project_name: string;
+  episode: number;
+  unit: number;
+  title: string;
+  script: number;
+  storyboard: number;
+  img_prompt: number;   // 首帧提示词（不含末帧锁）
+  flf: number;          // 末帧锁 FLF
+  vid_prompt: number;
+  images: number;
+  videos: number;
+  missing: string[];    // 四个 spec 阶段里缺哪些
+  orphan: boolean;      // 四个阶段全缺 = 该 G 单元不存在，这些卡是孤儿
+  ep_level_cards: number;
+}
+
+/** 孤儿卡：挂在一个不存在的 G 单元上，四个 spec 阶段全空。 */
+export interface OrphanCard {
+  card_id: string;
+  project_id: string;
+  project_name: string;
+  episode: number;
+  shot_number: number;
+  stage: string;
+  title: string;
+  content: string;
+  episode_units: number[];  // 该集实际存在的 G 单元号，用于判断是否编号错位
+}
+
+/** 归档区里的卡片：原卡内容 + 归档时间与原因。 */
+export interface ArchivedCard {
+  card_id: string;
+  episode: number | null;
+  shot_number: number;
+  stage: string;
+  title: string;
+  content: string;
+  archived_at: string;
+  archive_reason: string;
+}
+
+/** 文件上传等裸 fetch 用的鉴权头——FormData 请求不能设 Content-Type（浏览器要自己拼 boundary）。 */
+function authHeaders(): Record<string, string> {
+  const token = userToken.get();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = userToken.get();
   const res = await fetch(`${BASE}${path}`, {
@@ -108,7 +166,7 @@ export const api = {
   uploadKnowledge: async (key: string, file: File) => {
     const form = new FormData();
     form.append('file', file);
-    const res = await fetch(`${BASE}/registry/employees/${key}/knowledge`, { method: 'POST', body: form });
+    const res = await fetch(`${BASE}/registry/employees/${key}/knowledge`, { method: 'POST', body: form, headers: authHeaders() });
     const json = await res.json();
     if (json.code !== 200) throw new Error(json.message || 'upload failed');
     return json.data;
@@ -194,7 +252,7 @@ export const api = {
   uploadFile: async (file: File) => {
     const form = new FormData();
     form.append('file', file);
-    const res = await fetch(`${BASE}/agent/upload`, { method: 'POST', body: form });
+    const res = await fetch(`${BASE}/agent/upload`, { method: 'POST', body: form, headers: authHeaders() });
     const json = await res.json();
     if (json.code !== 200) throw new Error(json.message || 'upload failed');
     return json.data as { fileId: string; fileName: string; fileSize: number; ext: string; isImage: boolean; isText: boolean; textContent: string; url: string };
@@ -236,7 +294,7 @@ export const api = {
   uploadCardFile: async (pid: string, cardId: string, file: File, fileType: 'image' | 'video' = 'image') => {
     const form = new FormData();
     form.append('file', file);
-    const resp = await fetch(`${BASE}/production/projects/${pid}/cards/${cardId}/upload?file_type=${fileType}`, { method: 'POST', body: form });
+    const resp = await fetch(`${BASE}/production/projects/${pid}/cards/${cardId}/upload?file_type=${fileType}`, { method: 'POST', body: form, headers: authHeaders() });
     const json = await resp.json();
     if (!resp.ok || json.code !== 200) throw new Error(json.detail || 'Upload failed');
     return json.data;
@@ -264,6 +322,19 @@ export const api = {
   generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string; episode?: number | null; mode?: 'append' | 'replace' }) =>
     request<any>(`/production/projects/${pid}/generate`, { method: 'POST', body: JSON.stringify(data) }),
   listStages: () => request<any[]>('/production/stages'),
+  /** 跨季全链路对照矩阵：每个 G 生成单元一行，只回统计量不回卡片正文。 */
+  getMatrix: () => request<{ projects: MatrixProject[]; rows: MatrixRow[] }>('/production/matrix'),
+  /** 跨季列出孤儿卡：挂在四个 spec 阶段全空的 G 单元上的卡片。 */
+  listOrphans: () => request<OrphanCard[]>('/production/orphans'),
+  /** 归档卡片（移入 archive/ 目录，不删除，可恢复）。 */
+  archiveCards: (pid: string, cardIds: string[], reason?: string) =>
+    request<{ archived: number; cards: string[] }>(`/production/projects/${pid}/archive`,
+      { method: 'POST', body: JSON.stringify({ card_ids: cardIds, ...(reason ? { reason } : {}) }) }),
+  /** 列出某项目归档区的卡片。 */
+  listArchive: (pid: string) => request<ArchivedCard[]>(`/production/projects/${pid}/archive`),
+  /** 把归档卡片恢复回 cards.json。 */
+  restoreCard: (pid: string, cardId: string) =>
+    request<{ restored: string }>(`/production/projects/${pid}/archive/${cardId}/restore`, { method: 'POST' }),
 
   // 自由画布
   listCanvases: () => request<any[]>('/canvas/canvases'),
@@ -299,11 +370,25 @@ export const api = {
   listTrends: (query: string) => request<any>(`/skills/list?query=${encodeURIComponent(query)}`),
   getRepoHistory: (query: string, fullName: string) =>
     request<any[]>(`/skills/repo-history?query=${encodeURIComponent(query)}&fullName=${encodeURIComponent(fullName)}`),
+  // 跨全部 query 查仓库(AI 报告里的项目未必属于当前选中的 query);查不到返回 null
+  lookupRepo: (fullName: string) =>
+    request<{ repo: any; query: string; history: { takenAt: string; stars: number }[] } | null>(
+      `/skills/repo-lookup?fullName=${encodeURIComponent(fullName)}`,
+    ),
   refreshTrends: (query: string, limit = 15, recentDays = 180) =>
     request<any>('/skills/refresh', { method: 'POST', body: JSON.stringify({ query, limit, recentDays }) }),
   analyzeTrends: () => request<any>('/skills/analyze', { method: 'POST' }),
   getAnalysis: () => request<any>('/skills/analyze'),
   getTrendSummary: () => request<any>('/skills/summary'),
+
+  // 个人化每日简报：只回没看过且与画像相关的几条，标记已读后永不再出现
+  getDigest: () => request<any>('/skills/digest'),
+  makeDigest: (force = false) => request<any>(`/skills/digest?force=${force}`, { method: 'POST' }),
+  markDigestRead: (ids: string[]) =>
+    request<any>('/skills/digest/read', { method: 'POST', body: JSON.stringify({ ids }) }),
+  getDigestProfile: () => request<any>('/skills/digest/profile'),
+  saveDigestProfile: (profile: any) =>
+    request<any>('/skills/digest/profile', { method: 'PUT', body: JSON.stringify(profile) }),
 
   // 多源趋势
   getHnQueries: () => request<any[]>('/trend-sources/hn/queries'),

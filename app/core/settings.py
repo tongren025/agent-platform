@@ -36,6 +36,12 @@ class CoreSettings(BaseSettings):
     # 演示运行结果不进制作看板,只会让生产入口显得混乱。
     seed_demo_workflows: bool = False
 
+    # AI 趋势自动同步:每天到点批量刷 GitHub 榜单并重生成 AI 分析报告。
+    # 默认开——趋势页的价值全靠数据新鲜度,关掉就退化成一份过期快照。
+    # 若仍在用 Windows 计划任务 SkillTrackerDaily,请关掉其中一个,避免一天拉两次。
+    trends_auto_sync: bool = True
+    trends_sync_time: str = "02:00"  # 本地时间 HH:MM,早于蒸馏(03:00)/进化(04:00)
+
     # 数据库(M1 起用)
     database_url: str = "postgresql+psycopg://agent:change-me-in-prod@postgres:5432/agent"
 
@@ -50,6 +56,12 @@ class CoreSettings(BaseSettings):
 
     # LLM / Embedding(M3 起用,国内 DashScope)
     dashscope_api_key: str = ""
+
+    # GitHub 趋势拉取。匿名限流 10 次/分钟,而一次全量同步要打 16 次(8 query × 2 次 search),
+    # 极易触发 403 靠 sleep 硬扛。配置 token 后提升到 30 次/分钟。
+    # 注意:skill_tracker.GitHubClient 走 os.getenv 读它(CLI 单独跑时也要能用),
+    # 而 pydantic-settings 只把 .env 读进对象、不写 os.environ——故需 export_to_env() 显式回灌。
+    github_token: str = ""
 
     # 日志
     log_level: str = "INFO"
@@ -79,3 +91,19 @@ def get_settings() -> CoreSettings:
 
 
 settings = get_settings()
+
+
+def export_to_env() -> None:
+    """把少数需要被「不认识 CoreSettings 的第三方/独立模块」读到的配置回灌进 os.environ。
+
+    pydantic-settings 只把 .env 解析进对象，不会写 os.environ；
+    而 skill_tracker.GitHubClient 是可脱离后端单独跑的 CLI 组件，只认 os.getenv("GITHUB_TOKEN")。
+    不覆盖真实环境变量（真实 env 优先级更高）。
+    """
+    import os
+
+    if settings.github_token and not os.environ.get("GITHUB_TOKEN"):
+        os.environ["GITHUB_TOKEN"] = settings.github_token
+
+
+export_to_env()

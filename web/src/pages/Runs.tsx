@@ -1,9 +1,7 @@
 // 运行记录页（可观测）：每次 agent 运行的 token/成本/轨迹审计 + 员工月度配额用量。
 import { useEffect, useState, useCallback } from 'react';
-import {
-  Card, Select, Table, Button, Tag, Space, message, Progress,
-  Statistic, Row, Col, Empty, Spin, Drawer, Typography, Descriptions,
-} from 'antd';
+import { Card, Select, Table, Button, Tag, Space, Progress, Statistic, Row, Col, Empty, Spin, Drawer, Typography, Descriptions } from 'antd';
+import { message } from '../ui';
 import { ReloadOutlined, HistoryOutlined } from '@ant-design/icons';
 import { api } from '../api';
 import type { AgentRunRecord } from '../types';

@@ -32,7 +32,9 @@ class KnowledgeStore:
         self._allowed_exts = set(cfg.knowledge_supported_extensions)
 
     def _emp_dir(self, employee_key: str) -> Path:
-        """员工的知识库目录。"""
+        """员工的知识库目录。key 来自 URL 路径参数，先拦掉分隔符/父目录引用，防目录穿越写文件。"""
+        if not employee_key or any(s in employee_key for s in ("/", "\\", "..")):
+            raise ValueError(f"非法 employee_key: {employee_key!r}")
         return self._root / employee_key
 
     def _index_path(self, employee_key: str) -> Path:

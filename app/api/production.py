@@ -857,6 +857,228 @@ def list_stages():
     return {"code": 200, "data": STAGES}
 
 
+# ── 全链路对照矩阵 / 孤儿卡归档 ──────────────────────────────────
+#
+# 一个 G 生成单元从剧本到成片要依次经过 CHAIN_STAGES 四个 spec 阶段。
+# 归档 = 把卡片从 cards.json 移到 data/production/<pid>/archive/<card_id>.json。
+# 一卡一文件，肉眼可读、可直接翻看，永不删除；随时可 restore 回 cards.json。
+
+CHAIN_STAGES = ("script", "storyboard", "img_prompt", "vid_prompt")
+
+
+def _archive_dir(pid: str) -> Path:
+    """项目 pid 的归档目录（data/production/{pid}/archive）。"""
+    return _proj_dir(pid) / "archive"
+
+
+def _list_archived(pid: str) -> list[dict]:
+    """读出该项目归档目录里的全部卡片（按归档时间倒序）；目录不存在返回空。"""
+    d = _archive_dir(pid)
+    if not d.exists():
+        return []
+    items = []
+    for f in d.glob("*.json"):
+        try:
+            items.append(json.loads(f.read_text("utf-8")))
+        except Exception:
+            logger.warning("归档文件读取失败，跳过: %s", f, exc_info=True)
+    return sorted(items, key=lambda x: x.get("archived_at", ""), reverse=True)
+
+
+def _first_frame_count(unit_cards: list[ProductionCard]) -> int:
+    """该单元的「首帧提示词」张数：img_prompt 阶段里排除掉末帧锁(FLF)的部分。
+
+    首帧与末帧锁同属 img_prompt 阶段，只能靠标题区分。判断单元是否断链必须用这个数，
+    否则只剩一张末帧锁的孤儿单元会被误判为「img_prompt 阶段有卡」。
+    """
+    ip = [c for c in unit_cards if c.stage == "img_prompt"]
+    return len(ip) - sum(1 for c in ip if "末帧" in c.title)
+
+
+def _unit_missing_stages(unit_cards: list[ProductionCard]) -> list[str]:
+    """返回该 G 单元缺失的 spec 阶段列表（img_prompt 按首帧张数判断）。"""
+    counts = {
+        "script": sum(1 for c in unit_cards if c.stage == "script"),
+        "storyboard": sum(1 for c in unit_cards if c.stage == "storyboard"),
+        "img_prompt": _first_frame_count(unit_cards),
+        "vid_prompt": sum(1 for c in unit_cards if c.stage == "vid_prompt"),
+    }
+    return [s for s, n in counts.items() if n == 0]
+
+
+def _orphan_cards(cards: list[ProductionCard]) -> list[ProductionCard]:
+    """找出孤儿卡：挂在某个 G 单元号上、但该单元四个 spec 阶段全空的卡片。
+
+    典型来源是编号错位——例如 jiulu-s1 EP16/EP17 各有一张 `G6末帧锁`，
+    而这两集实际只有 G1~G5。这类卡有真实内容，不该删；但它不属于任何单元，
+    在逐单元下钻的视图里永远露不出来。
+    """
+    out: list[ProductionCard] = []
+    for ep in {c.episode for c in cards if c.episode is not None}:
+        ep_cards = [c for c in cards if c.episode == ep]
+        for u in {c.shot_number for c in ep_cards if c.shot_number > 0}:
+            uc = [c for c in ep_cards if c.shot_number == u]
+            if len(_unit_missing_stages(uc)) == len(CHAIN_STAGES):
+                out.extend(uc)
+    return sorted(out, key=lambda c: (c.episode or 0, c.shot_number))
+
+
+@router.get("/matrix")
+def production_matrix():
+    """GET /matrix：跨全部项目返回「季 → 集 → G 生成单元」的链路对照表。
+
+    每个 G 单元一行，聚合它在四个 spec 阶段各有几张卡、以及已产出的图/视频数。
+    只回统计量不回卡片正文——三季 2000+ 张卡压成 ~340 行，前端可一屏铺开。
+    shot_number == 0 的整集级卡（导演Brief/拆分表/质检等）不计入 G 单元，另按集汇总。
+    """
+    rows: list[dict] = []
+    projects: list[dict] = []
+    if not DATA_DIR.exists():
+        return {"code": 200, "data": {"projects": [], "rows": []}}
+
+    for d in sorted(DATA_DIR.iterdir()):
+        f = d / "project.json"
+        if not f.exists():
+            continue
+        proj = ProductionProject.model_validate_json(f.read_text("utf-8"))
+        cards = _load_cards(proj.project_id)
+        episodes = sorted({c.episode for c in cards if c.episode is not None})
+        projects.append({
+            "project_id": proj.project_id,
+            "name": proj.name,
+            "episode_count": len(episodes),
+            "card_count": len(cards),
+        })
+
+        for ep in episodes:
+            ep_cards = [c for c in cards if c.episode == ep]
+            # 整集级卡：shot_number == 0，如 导演Brief / 镜头拆分表 / 质检报告
+            ep_level = [c for c in ep_cards if c.shot_number == 0]
+            units = sorted({c.shot_number for c in ep_cards if c.shot_number > 0})
+            for u in units:
+                uc = [c for c in ep_cards if c.shot_number == u]
+                by_stage = {s: [c for c in uc if c.stage == s] for s in CHAIN_STAGES}
+                flf = sum(1 for c in by_stage["img_prompt"] if "末帧" in c.title)
+                missing = _unit_missing_stages(uc)
+                title = next((c.title for c in by_stage["script"]), "") or next((c.title for c in uc), "")
+                rows.append({
+                    "project_id": proj.project_id,
+                    "project_name": proj.name,
+                    "episode": ep,
+                    "unit": u,
+                    "title": title,
+                    "script": len(by_stage["script"]),
+                    "storyboard": len(by_stage["storyboard"]),
+                    "img_prompt": _first_frame_count(uc),
+                    "flf": flf,
+                    "vid_prompt": len(by_stage["vid_prompt"]),
+                    "images": sum(len(c.images) for c in uc),
+                    "videos": sum(len(c.videos) for c in uc),
+                    "missing": missing,
+                    # 四个 spec 阶段全缺 = 该单元不存在，这些卡是孤儿
+                    "orphan": len(missing) == len(CHAIN_STAGES),
+                    "ep_level_cards": len(ep_level),
+                })
+
+    return {"code": 200, "data": {"projects": projects, "rows": rows}}
+
+
+@router.get("/orphans")
+def list_orphans():
+    """GET /orphans：跨全部项目列出孤儿卡（挂在四个 spec 阶段全空的 G 单元上的卡片）。
+
+    附带该集实际存在的 G 单元号，便于判断是编号错位还是该单元从未写完。
+    """
+    out: list[dict] = []
+    if not DATA_DIR.exists():
+        return {"code": 200, "data": out}
+
+    for d in sorted(DATA_DIR.iterdir()):
+        f = d / "project.json"
+        if not f.exists():
+            continue
+        proj = ProductionProject.model_validate_json(f.read_text("utf-8"))
+        cards = _load_cards(proj.project_id)
+        for c in _orphan_cards(cards):
+            siblings = sorted({
+                x.shot_number for x in cards
+                if x.episode == c.episode and x.shot_number > 0 and x.shot_number != c.shot_number
+            })
+            out.append({
+                **c.model_dump(),
+                "project_id": proj.project_id,
+                "project_name": proj.name,
+                "episode_units": siblings,
+            })
+    return {"code": 200, "data": out}
+
+
+class ArchiveReq(BaseModel):
+    """POST /projects/{pid}/archive 的请求体：要归档的卡片与原因。"""
+    card_ids: list[str]
+    reason: str = "孤儿卡：所属 G 单元不存在"
+
+
+@router.post("/projects/{pid}/archive")
+def archive_cards(pid: str, req: ArchiveReq):
+    """POST /projects/{pid}/archive：把卡片从 cards.json 移入归档目录，一卡一文件。
+
+    不是删除——原始卡片内容原样保留，另附 archived_at / archive_reason，可随时 restore。
+    card_id 不在该项目里则跳过（幂等：重复归档同一张不会报错）。
+    """
+    _load_project(pid)  # 项目不存在直接 404
+    cards = _load_cards(pid)
+    wanted = set(req.card_ids)
+    to_archive = [c for c in cards if c.card_id in wanted]
+    if not to_archive:
+        return {"code": 200, "data": {"archived": 0, "cards": []}}
+
+    d = _archive_dir(pid)
+    d.mkdir(parents=True, exist_ok=True)
+    now = _now()
+    for c in to_archive:
+        payload = {**c.model_dump(), "archived_at": now, "archive_reason": req.reason}
+        (d / f"{c.card_id}.json").write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), "utf-8")
+
+    _save_cards(pid, [c for c in cards if c.card_id not in wanted])
+    logger.info("归档 %d 张卡片到 %s：%s", len(to_archive), d, req.reason)
+    return {"code": 200, "data": {
+        "archived": len(to_archive),
+        "cards": [c.card_id for c in to_archive],
+    }}
+
+
+@router.get("/projects/{pid}/archive")
+def list_archive(pid: str):
+    """GET /projects/{pid}/archive：列出该项目归档目录里的全部卡片（按归档时间倒序）。"""
+    _load_project(pid)
+    return {"code": 200, "data": _list_archived(pid)}
+
+
+@router.post("/projects/{pid}/archive/{card_id}/restore")
+def restore_card(pid: str, card_id: str):
+    """POST /projects/{pid}/archive/{card_id}/restore：把归档卡片移回 cards.json 并删除归档文件。
+
+    卡片已在 cards.json 中（重复恢复）则只清理归档文件，不产生重复卡。
+    """
+    _load_project(pid)
+    f = _archive_dir(pid) / f"{card_id}.json"
+    if not f.exists():
+        raise HTTPException(404, f"归档中没有这张卡片: {card_id}")
+
+    payload = json.loads(f.read_text("utf-8"))
+    payload.pop("archived_at", None)
+    payload.pop("archive_reason", None)
+
+    cards = _load_cards(pid)
+    if not any(c.card_id == card_id for c in cards):
+        cards.append(ProductionCard.model_validate(payload))
+        _save_cards(pid, cards)
+    f.unlink()
+    return {"code": 200, "data": {"restored": card_id}}
+
+
 # ── Resource file serving ────────────────────────────────────────
 
 RESOURCE_DIR = BASE_DIR / "resouce"
@@ -906,10 +1128,17 @@ def serve_resource(path: str, w: int | None = None):
     宽度不在白名单、格式不支持、原图本就更窄或 Pillow 不可用时一律回退原图（fail-open）。
     """
     file_path = RESOURCE_DIR / path
+    allowed_root = RESOURCE_DIR
+    if not file_path.is_file() and path.startswith("production/"):
+        # 卡片上传的文件写在 data/production/<pid>/uploads/，而返回的 URL 沿用
+        # resource/production/ 前缀——resouce/ 下找不到时回退到 data/ 读，
+        # 否则上传成功的图 GET 必 404（写读目录不一致的历史遗留）。
+        file_path = DATA_DIR / path[len("production/"):]
+        allowed_root = DATA_DIR
     if not file_path.exists() or not file_path.is_file():
         raise HTTPException(404, f"Resource not found: {path}")
     resolved = file_path.resolve()
-    if not str(resolved).startswith(str(RESOURCE_DIR.resolve())):
+    if not str(resolved).startswith(str(allowed_root.resolve())):
         raise HTTPException(403, "Access denied")
     suffix = file_path.suffix.lower()
 
@@ -924,4 +1153,7 @@ def serve_resource(path: str, w: int | None = None):
         ".gif": "image/gif", ".webp": "image/webp", ".mp4": "video/mp4",
         ".webm": "video/webm", ".pdf": "application/pdf",
     }
-    return FileResponse(resolved, media_type=media_types.get(suffix, "application/octet-stream"))
+    # 原图给 1 小时缓存：素材文件基本不原地改写（改了也是换文件名），
+    # 避免抽屉/预览每次重拉 MB 级原图；不敢给 immutable，路径没有内容指纹。
+    return FileResponse(resolved, media_type=media_types.get(suffix, "application/octet-stream"),
+                        headers={"Cache-Control": "public, max-age=3600"})

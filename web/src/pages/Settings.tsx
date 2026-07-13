@@ -1,9 +1,7 @@
 // 设置页：AI 供应商配置（endpoint/key/模型列表）与系统信息。
 import { useEffect, useState } from 'react';
-import {
-  Card, Col, Row, Spin, Tag, Space, Typography, Descriptions, Table, Switch,
-  Button, Modal, Form, Input, Select, InputNumber, Popconfirm, message, Divider, Alert,
-} from 'antd';
+import { Card, Col, Row, Spin, Tag, Space, Typography, Descriptions, Table, Switch, Button, Modal, Form, Input, Select, InputNumber, Popconfirm, Divider, Alert } from 'antd';
+import { message } from '../ui';
 import {
   ApiOutlined, SettingOutlined, SafetyCertificateOutlined,
   CloudServerOutlined, PlusOutlined, DeleteOutlined,

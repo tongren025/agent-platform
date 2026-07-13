@@ -1,9 +1,7 @@
 // 团队管理页：团队 CRUD、成员编排与队长设置。
 import { useEffect, useState } from 'react';
-import {
-  Card, Button, Modal, Form, Input, Select, Space, Popconfirm, message, Tag, Avatar,
-  Typography, Badge, Tooltip, Row, Col, Empty,
-} from 'antd';
+import { Card, Button, Modal, Form, Input, Select, Space, Popconfirm, Tag, Avatar, Typography, Badge, Tooltip, Row, Col, Empty } from 'antd';
+import { message } from '../ui';
 import {
   PlusOutlined, TeamOutlined, CrownOutlined, UserOutlined, EditOutlined,
   DeleteOutlined, SettingOutlined, BookOutlined, BulbOutlined,

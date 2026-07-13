@@ -1,8 +1,7 @@
 // 工作流列表页：工作流 CRUD 入口与运行历史。
 import { useEffect, useState } from 'react';
-import {
-  Button, Modal, Form, Input, message, Empty, Spin, Tag, Popconfirm, Space, Typography,
-} from 'antd';
+import { Button, Modal, Form, Input, Empty, Spin, Tag, Popconfirm, Space, Typography } from 'antd';
+import { message } from '../ui';
 import {
   PlusOutlined, EditOutlined, DeleteOutlined, PlayCircleOutlined, ReloadOutlined, ApartmentOutlined,
 } from '@ant-design/icons';

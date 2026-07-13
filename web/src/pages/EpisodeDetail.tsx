@@ -1,15 +1,13 @@
 // 单集详情页：该集全部 G 生成单元卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Breadcrumb, Button, Card, Col, Drawer, Empty, Image, Row,
-  Space, Spin, Tag, Tooltip, Typography, message, Tabs, Badge,
-} from 'antd';
+import { Breadcrumb, Button, Card, Col, Drawer, Empty, Image, Row, Space, Spin, Tag, Tooltip, Typography, Tabs, Badge } from 'antd';
+import { message } from '../ui';
 import {
   ArrowLeftOutlined, CopyOutlined, CheckOutlined, HomeOutlined,
   PictureOutlined, VideoCameraOutlined,
   FileTextOutlined, EditOutlined,
-  CheckCircleOutlined, ClockCircleOutlined,
+  CheckCircleOutlined, ClockCircleOutlined, DownloadOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 import { thumbUrl, onImageError } from '../media';
@@ -160,6 +158,36 @@ export default function EpisodeDetail() {
     return Array.from(eps).sort((a, b) => a - b);
   }, [allCards]);
 
+  // 导出本集提示词包：整集级头部卡 + 每个 G 单元的首帧/视频提示词，按生成顺序拼成 markdown。
+  // 服务真实工作流——从平台成批拿提示词去小云雀/即梦生成，不用逐卡手动复制。
+  const exportPrompts = () => {
+    const PROMPT_ORDER: [string, string][] = [['img_prompt', '首帧/末帧提示词'], ['vid_prompt', '视频提示词']];
+    const lines: string[] = [`# EP${String(epNum).padStart(2, '0')}《${epTitle}》提示词包`, ''];
+    // 整集级卡（全局头部/视觉母题等）放最前，生成时通常要拼在每条前面
+    for (const [stage, label] of PROMPT_ORDER) {
+      for (const c of overviewCards.filter(x => x.stage === stage)) {
+        lines.push(`## [整集] ${label} · ${c.title}`, '', c.content, '');
+      }
+    }
+    for (const g of unitGroups) {
+      for (const [stage, label] of PROMPT_ORDER) {
+        for (const c of g.cards.filter(x => x.stage === stage)) {
+          lines.push(`## G${g.unitNumber} · ${label} · ${c.title}`, '', c.content, '');
+          for (const p of c.prompts) lines.push(p, '');
+        }
+      }
+    }
+    const text = lines.join('\n');
+    const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `EP${String(epNum).padStart(2, '0')}_提示词包.md`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    navigator.clipboard?.writeText(text).catch(() => { /* 剪贴板不可用时仅下载 */ });
+    message.success('提示词包已下载并复制到剪贴板');
+  };
+
   if (loading && allCards.length === 0) {
     return <div style={{ display: 'flex', justifyContent: 'center', padding: 120 }}><Spin size="large" /></div>;
   }
@@ -178,6 +206,9 @@ export default function EpisodeDetail() {
           </Title>
         </div>
         <Space>
+          <Tooltip title="整集级头部 + 每个 G 单元的首帧/视频提示词，按顺序拼成 markdown，下载并复制">
+            <Button icon={<DownloadOutlined />} onClick={exportPrompts}>导出提示词</Button>
+          </Tooltip>
           <Button icon={<ArrowLeftOutlined />}
             disabled={!totalEps.length || epNum <= totalEps[0]}
             onClick={() => navigate(`/production/${pid}/ep/${epNum - 1}`)}>
@@ -309,9 +340,13 @@ export default function EpisodeDetail() {
                       <div key={card.card_id} style={{ marginBottom: 16 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                           <Text strong>{card.title}</Text>
-                          <Tag color={card.status === 'done' ? 'success' : 'warning'}>
-                            {card.status === 'done' ? '已完成' : '待制作'}
-                          </Tag>
+                          <Space size={4}>
+                            {/* 提示词正文存在 content 字段，必须能一键复制去生成端 */}
+                            {card.content && <CopyBtn text={card.content} />}
+                            <Tag color={card.status === 'done' ? 'success' : 'warning'}>
+                              {card.status === 'done' ? '已完成' : '待制作'}
+                            </Tag>
+                          </Space>
                         </div>
 
                         {/* 内容 */}

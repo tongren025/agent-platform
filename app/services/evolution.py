@@ -133,6 +133,28 @@ def _save_run_logs(emp_key: str, logs: list[EvolutionRunLog]) -> None:
     _atomic_write(_run_logs_path(emp_key), json.dumps(data, ensure_ascii=False, indent=2))
 
 
+def last_run_at(employee_key: str) -> datetime | None:
+    """最近一次进化分析（成功或失败都算）的时间；无记录返回 None。
+
+    与 `distillation.last_run_at` 同理：供调度器做跨进程重启的当天去重。
+    需要立刻重跑走 `POST /evolution/{key}/analyze` 手动触发。
+    """
+    p = _run_logs_path(employee_key)
+    if not p.exists():
+        return None
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    stamps = [d.get("ranAt") for d in data if d.get("ranAt")]
+    if not stamps:
+        return None
+    try:
+        return datetime.fromisoformat(max(stamps).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
 def _get_recent_sessions(emp_key: str, days: int) -> list[dict]:
     """取近 days 天、消息数≥2 的会话，压成带预览的摘要 dict（最多 20 条）供 LLM 分析。"""
     from app.dependencies import memory_store
