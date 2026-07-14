@@ -56,7 +56,7 @@
 | [sessions.py](../app/api/sessions.py) | 会话管理 API。 |
 | [skills.py](../app/api/skills.py) | GitHub Skill 榜单 API — 读 skill_tracker 的产出，并支持手动触发拉取。 |
 | [strategy_proxy.py](../app/api/strategy_proxy.py) | 策略文件解析代理：把用户端上传/查询请求转发到管理端(:8001)的策略接口。 |
-| [tasks.py](../app/api/tasks.py) | M4 异步任务 API —— 入队 + 状态查询。 |
+| [tasks.py](../app/api/tasks.py) | M4 异步任务 API —— 入队、用户任务列表、状态查询、取消与重试。 |
 | [trend_sources.py](../app/api/trend_sources.py) | 多源 AI 趋势聚合 — Hacker News / arXiv / Google News RSS / Reddit。 |
 | [user_auth.py](../app/api/user_auth.py) | 用户端登录接口——与管理端共用同一套用户存储和 token 签发。 |
 | [workflow.py](../app/api/workflow.py) | 工作流编排 API。 |
@@ -140,6 +140,7 @@
 | [memory.py](../app/services/memory.py) | 会话（短期记忆）文件存储。 |
 | [memory_db.py](../app/services/memory_db.py) | 对话会话的 PostgreSQL 仓储 —— M1 迁移，接口镜像 JSON 版 ConversationMemoryStore。 |
 | [memory_extractor.py](../app/services/memory_extractor.py) | 后台记忆提取器。 |
+| [production_quality.py](../app/services/production_quality.py) | 漫剧生产提示词的静态质量门禁。 |
 | [registry.py](../app/services/registry.py) | 通用文件型注册表（Registry）。 |
 | [run_store.py](../app/services/run_store.py) | agent 运行记录存储 —— 每次 run 一份 JSON，供事后审计成本与行为。 |
 | [run_store_db.py](../app/services/run_store_db.py) | 运行记录的 PostgreSQL 仓储 —— M1 迁移，接口镜像 JSON 版 AgentRunStore。 |
@@ -148,6 +149,7 @@
 | [scrape_store.py](../app/services/scrape_store.py) | 采集相关的文件型持久化存储。 |
 | [scraper.py](../app/services/scraper.py) | 网页提示词采集器。 |
 | [seed_workflows.py](../app/services/seed_workflows.py) | 种子工作流：把 9 人漫剧团队的真实「编剧→设计→生成」流水线编码成一张 WorkflowDefinition， |
+| [trend_digest.py](../app/services/trend_digest.py) | 个人化趋势简报。 |
 | [user_store.py](../app/services/user_store.py) | 平台用户与角色存储——JSON 文件持久化，admin 和 user 两端共用。 |
 | [vector_store.py](../app/services/vector_store.py) | M3 向量存储与语义检索 —— pgvector 存取 + DashScope embedding。 |
 | [workflow_executor.py](../app/services/workflow_executor.py) | 工作流执行引擎：对 WorkflowDefinition（DAG）做 ready-set 遍历。 |
@@ -197,10 +199,12 @@
 |------|--------|
 | [adminApi.ts](../web/src/adminApi.ts) | 管理端 API 封装：走 /api/admin/*（代理到 :8001），带管理端独立 token。 |
 | [api.ts](../web/src/api.ts) | 用户端 API 封装：统一 BASE 前缀、Bearer 凭证、错误信封解包；401 自动清 token 回登录页。 |
-| [App.tsx](../web/src/App.tsx) | 路由总表：用户端页面（登录墙内）+ 管理端 /admin 页面（独立鉴权）。 |
+| [App.tsx](../web/src/App.tsx) | 路由总表：用户端页面（登录墙内）+ 管理端 /admin 页面（独立鉴权）；页面按路由懒加载以缩短首屏时间。 |
 | [main.tsx](../web/src/main.tsx) | 前端入口：挂载 React 根组件，套 antd 中文语言包与主题配置。 |
+| [media.ts](../web/src/media.ts) | 素材媒体工具：缩略图 URL 拼接 + 加载失败的可见占位。 |
 | [theme.ts](../web/src/theme.ts) | 全局配色常量 COLORS + antd 主题定制（主色/圆角/组件级覆盖）。 |
 | [types.ts](../web/src/types.ts) | 前后端共享的 TypeScript 类型定义（与后端 Pydantic 模型的 camelCase 契约一一对应）。 |
+| [ui.tsx](../web/src/ui.tsx) | antd message 的上下文桥。 |
 | [userAuth.ts](../web/src/userAuth.ts) | 用户端登录态：token 存取、登录/校验/登出、权限缓存与 hasPerm() 判断。 |
 | [vite-env.d.ts](../web/src/vite-env.d.ts) | <reference types="vite/client" /> |
 
@@ -209,6 +213,7 @@
 | 文件 | 干什么 |
 |------|--------|
 | [AdminLayout.tsx](../web/src/components/AdminLayout.tsx) | 管理端布局：独立导航与鉴权守卫，与用户端完全隔离。 |
+| [AppErrorBoundary.tsx](../web/src/components/AppErrorBoundary.tsx) | 全局错误边界：避免单个页面渲染异常导致整站白屏，给用户明确恢复入口。 |
 | [Layout.tsx](../web/src/components/Layout.tsx) | 用户端主布局：左侧导航（按权限显隐）+ 内容区；含折叠与窄屏适配。 |
 | [TraceList.tsx](../web/src/components/TraceList.tsx) | 工具调用轨迹展示组件：逐轮显示工具名/参数/结果/成败。 |
 | [UserAuthGuard.tsx](../web/src/components/UserAuthGuard.tsx) | 用户端路由守卫：校验 token 有效性，未登录跳 /login。 |
@@ -217,7 +222,7 @@
 
 | 文件 | 干什么 |
 |------|--------|
-| [CanvasNodes.tsx](../web/src/components/canvas/CanvasNodes.tsx) | 自由画布节点组件:提示词节点(PromptNode)与图片节点(ImageNode)。 |
+| [CanvasNodes.tsx](../web/src/components/canvas/CanvasNodes.tsx) | 自由画布节点组件:数据节点(DataNode,主角)与图片节点(ImageNode)。 |
 
 ### `web/src/components/workflow/`
 
@@ -234,20 +239,21 @@
 |------|--------|
 | [ArticleLearn.tsx](../web/src/pages/ArticleLearn.tsx) | 文章学习页：学习源 CRUD、手动触发、学习历史（网页→LLM 总结→知识库+记忆）。 |
 | [AutoLearn.tsx](../web/src/pages/AutoLearn.tsx) | 提示词采集页：采集源 CRUD、手动触发、已采提示词与历史查看。 |
-| [Canvas.tsx](../web/src/pages/Canvas.tsx) | 自由画布 —— 无限拼贴空间:提示词节点 → 文生图 → 图片节点,连线记录血缘。 |
-| [Dashboard.tsx](../web/src/pages/Dashboard.tsx) | 总览页：平台资源统计卡片与快捷入口。 |
+| [Canvas.tsx](../web/src/pages/Canvas.tsx) | 自由画布 —— 数据的可视化生成台。 |
+| [Dashboard.tsx](../web/src/pages/Dashboard.tsx) | 总览页：以“继续制作、当前阻塞、下一步行动”为核心，而非罗列系统资源数量。 |
 | [Employees.tsx](../web/src/pages/Employees.tsx) | 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、知识库上传。 |
-| [EpisodeDetail.tsx](../web/src/pages/EpisodeDetail.tsx) | 单集详情页：该集全部镜头卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。 |
+| [EpisodeDetail.tsx](../web/src/pages/EpisodeDetail.tsx) | 单集详情页：该集全部 G 生成单元卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。 |
 | [Evolution.tsx](../web/src/pages/Evolution.tsx) | 自我进化页：查看/采纳/拒绝 LLM 分析会话后产出的改进洞察。 |
 | [KnowledgeGraph.tsx](../web/src/pages/KnowledgeGraph.tsx) | 知识图谱页：员工/工具/技能/团队/工作流的关系可视化。 |
 | [Memory.tsx](../web/src/pages/Memory.tsx) | 记忆管理页：查看/增删员工的语义、经验、行为三类长期记忆，触发提取与蒸馏。 |
 | [Pipeline.tsx](../web/src/pages/Pipeline.tsx) | CLI 流水线页：用本地 claude/gemini CLI 跑漫剧创作流水线（导演→编剧→美术…）。 |
 | [Production.tsx](../web/src/pages/Production.tsx) | 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。 |
-| [ProductionHub.tsx](../web/src/pages/ProductionHub.tsx) | 制作项目层级总览：剧 → 集 → 镜头 → 资源逐级下钻的入口页。 |
+| [ProductionHub.tsx](../web/src/pages/ProductionHub.tsx) | 制作项目层级总览：剧 → 集 → G 生成单元 → 资源逐级下钻的入口页。 |
+| [ProductionMatrix.tsx](../web/src/pages/ProductionMatrix.tsx) | 全链路对照矩阵：季 → 集 → G 生成单元 → 剧本/分镜/首帧/末帧/视频提示词/图/视频，一屏铺开。 |
 | [Runs.tsx](../web/src/pages/Runs.tsx) | 运行记录页（可观测）：每次 agent 运行的 token/成本/轨迹审计 + 员工月度配额用量。 |
 | [Settings.tsx](../web/src/pages/Settings.tsx) | 设置页：AI 供应商配置（endpoint/key/模型列表）与系统信息。 |
 | [SkillTracker.tsx](../web/src/pages/SkillTracker.tsx) | AI 趋势雷达页：GitHub 趋势仓库追踪与 LLM 分析。 |
-| [Tasks.tsx](../web/src/pages/Tasks.tsx) | 异步队列页：按 Job ID 追踪 arq 后台任务的状态与结果。 |
+| [Tasks.tsx](../web/src/pages/Tasks.tsx) | 任务中心：自动列出当前用户任务并刷新状态，保留 Job ID 查询作为兼容入口。 |
 | [Teams.tsx](../web/src/pages/Teams.tsx) | 团队管理页：团队 CRUD、成员编排与队长设置。 |
 | [Templates.tsx](../web/src/pages/Templates.tsx) | 角色模板页：浏览模板并一键套用创建员工。 |
 | [Tools.tsx](../web/src/pages/Tools.tsx) | 工具 & MCP 管理页：工具定义与 MCP 服务器的 CRUD。 |

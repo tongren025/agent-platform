@@ -82,8 +82,8 @@ PIPELINE_STAGES: list[dict] = [
         "name": "编剧·剧本",
         "file": "02_screenwriter.md",
         "prompt_template": (
-            "你是编剧。根据导演的创作简报，写出完整的分集剧本"
-            "（每集分场、场景描写、角色动作、对白）：\n\n{director}"
+            "你是编剧。根据导演简报写可生产的逐镜剧本。按 G 组织，但把每个连续生成子段限制为 2-6 秒；"
+            "写清可见动作因果、台词、音效和资产需求：\n\n{director}"
         ),
         "depends_on": ["01_director.md"],
     },
@@ -93,8 +93,8 @@ PIPELINE_STAGES: list[dict] = [
         "name": "角色设计",
         "file": "03_character_design.md",
         "prompt_template": (
-            "你是角色设计师。根据剧本设计所有角色"
-            "（外形、服装、性格、标志性特征、色彩方案）：\n\n{screenwriter}"
+            "你是角色设计师。根据剧本建立所有角色的 R 编号、版本 ID、适用集数、母版引用、"
+            "固定身份层和可变层，并输出本集角色版本清单：\n\n{screenwriter}"
         ),
         "depends_on": ["02_screenwriter.md"],
     },
@@ -104,8 +104,8 @@ PIPELINE_STAGES: list[dict] = [
         "name": "场景设计",
         "file": "04_scene_design.md",
         "prompt_template": (
-            "你是场景设计师。根据剧本设计所有主要场景"
-            "（环境、光线、氛围、关键道具、色调）：\n\n{screenwriter}"
+            "你是场景设计师。根据剧本建立可行动的 SCENE 资产卡，写清入口出口、前中后景、"
+            "永久地标、行动/遮挡区、轴线、主辅光方向和低噪点场景提示词：\n\n{screenwriter}"
         ),
         "depends_on": ["02_screenwriter.md"],
     },
@@ -115,8 +115,8 @@ PIPELINE_STAGES: list[dict] = [
         "name": "分镜",
         "file": "05_storyboard.md",
         "prompt_template": (
-            "你是分镜师。根据剧本制作分镜"
-            "（镜头号、景别、构图、角色位置、动作、转场）：\n\n{screenwriter}"
+            "你是分镜师。根据剧本制作逐镜分镜。每镜必须写镜头号、scene/R版本、时间码、"
+            "前中后景、画面位置、起始姿态、身体部位动作、结束姿态、视线/运动方向、唯一运镜和连续性：\n\n{screenwriter}"
         ),
         "depends_on": ["02_screenwriter.md"],
     },
@@ -126,8 +126,8 @@ PIPELINE_STAGES: list[dict] = [
         "name": "提示词工程",
         "file": "06_prompt_engineer.md",
         "prompt_template": (
-            "你是提示词工程师。把以下设定转化为可直接出图的中文绘图提示词"
-            "（分角色、场景、关键帧三组，每条提示词完整可用）：\n\n"
+            "你是提示词工程师。把以下设定转化为结构化图片/视频提示词。正向 prompts 与"
+            "negative_prompts 分离；一主体、最多三道具、一特效；视频按 2-6 秒子段输出：\n\n"
             "【角色设定】\n{character_design}\n\n"
             "【场景设定】\n{scene_design}\n\n"
             "【分镜】\n{storyboard}"

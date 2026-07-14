@@ -48,7 +48,7 @@ def root():
     return JSONResponse({
         "service": "Agent Admin Service",
         "note": "这是管理端 API（纯后端，不含界面）。管理控制台界面在前端的 /admin 路由。",
-        "console_ui": "开发环境: http://127.0.0.1:5188/admin/login ；生产环境: 用户端同源的 /admin",
+        "console_ui": "开发环境: http://127.0.0.1:5173/admin/login ；生产环境: 用户端同源的 /admin",
         "api_docs": "/docs",
         "healthcheck": "/healthcheck",
     })

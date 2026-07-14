@@ -61,7 +61,8 @@ services:
       REDIS_URL: redis://redis:6379/0
       LOG_JSON: "true"
     volumes:
-      - app_data:/app/data
+      - ./data:/app/data
+      - ./resouce:/app/resouce:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -83,7 +84,8 @@ services:
       REDIS_URL: redis://redis:6379/0
       LOG_JSON: "true"
     volumes:
-      - app_data:/app/data
+      - ./data:/app/data
+      - ./resouce:/app/resouce:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -105,7 +107,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       LOG_JSON: "true"
     volumes:
-      - app_data:/app/data
+      - ./data:/app/data
     depends_on:
       postgres:
         condition: service_healthy
@@ -138,6 +140,5 @@ services:
 volumes:
   pg_data:
   redis_data:
-  app_data:
   certbot_www:
   certbot_certs:

@@ -88,8 +88,19 @@ fi
 if [ -d "${INSTALL_DIR}/.git" ]; then
     log "更新代码..."
     cd "${INSTALL_DIR}"
+    # data/ 和 resouce/ 是 bind mount 的运行时数据，不受 git 管理；
+    # git reset --hard 只影响被 git 跟踪的文件（data/production/ 的 cards.json）。
+    # 服务器上可能已有通过 UI 修改的卡片数据，先备份再 reset。
+    if [ -d "data/production" ]; then
+        cp -r data/production /tmp/agent-production-backup 2>/dev/null || true
+    fi
     git fetch origin
     git reset --hard "origin/${BRANCH}"
+    # 恢复服务器上已有的生产数据（优先保留服务器版本）
+    if [ -d /tmp/agent-production-backup ]; then
+        cp -rn /tmp/agent-production-backup/* data/production/ 2>/dev/null || true
+        rm -rf /tmp/agent-production-backup
+    fi
 else
     log "克隆仓库..."
     git clone --depth 1 -b "${BRANCH}" "${REPO_URL}" "${INSTALL_DIR}"
@@ -148,6 +159,17 @@ ENVEOF
     warn "管理端密码: ${ADMIN_PASS}  ← 请记下！之后 cat /opt/agent-platform/.env 可查"
 else
     log ".env 已存在，跳过生成"
+fi
+
+# ── 6.5 确保 bind mount 目录存在 ─────────────────────────────
+mkdir -p "${INSTALL_DIR}/data" "${INSTALL_DIR}/resouce"
+if [ -z "$(ls -A ${INSTALL_DIR}/data/employees 2>/dev/null)" ]; then
+    warn "data/ 目录为空——员工/团队/工作流等数据缺失。"
+    warn "请在本地执行: bash scripts/sync-assets.sh"
+fi
+if [ -z "$(ls -A ${INSTALL_DIR}/resouce 2>/dev/null)" ]; then
+    warn "resouce/ 目录为空——图片将无法显示。"
+    warn "请在本地执行: bash scripts/sync-assets.sh"
 fi
 
 # ── 7. 构建 & 启动 ────────────────────────────────────────

@@ -4,8 +4,8 @@
 1. slowapi：IP 维度的请求频率限制（防刷），挂在 FastAPI app 级别。
 2. 员工 token 配额：月度 token 上限（防滥用），在 invocation 前检查。
 
-配额存储跟随 use_db_stores 开关：关 = 内存计数器（进程重启归零，单人自用够了）；
-开 = Redis INCRBY + EXPIRE（跨进程、重启不丢）。
+配额存储当前为进程内存计数器（重启归零，单人自用够了）——与 use_db_stores 开关无关；
+Redis INCRBY + EXPIRE 的跨进程持久方案属规划项，尚未实现。
 """
 from __future__ import annotations
 

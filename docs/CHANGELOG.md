@@ -5,6 +5,147 @@
 
 ---
 
+## [2026-07-14] fix: 部署后数据全空——data/resouce bind mount + 同步脚本
+
+**问题**：部署后员工/团队/工作流等数据全空，制作看板图片也全部 404。
+
+**根因**：
+- 所有注册表（员工/团队/工作流/工具/技能/知识库）存在 `data/` 目录的 JSON 文件里，
+  但 `data/*` 在 `.gitignore` 里不入库（仅 `data/production/` 例外）。
+- 素材文件在 `resouce/` 目录，同样被 `.gitignore` 排除。
+- `docker-compose.prod.yml` 用 Docker named volume `app_data:/app/data`，
+  首次创建后为空（git 仓库里没有这些文件），导致部署后容器无数据可读。
+
+**修复**：
+- `docker-compose.prod.yml`：
+  - `app_data` named volume → `./data:/app/data` bind mount（app/admin/worker 三个服务）
+  - 新增 `./resouce:/app/resouce:ro` bind mount（app/admin）
+  - 删除 `app_data` volume 声明
+- `scripts/sync-assets.sh`（新增）：rsync 同步 `data/` + `resouce/` 到远程服务器，
+  bind mount 使容器立刻可读取，无需重启。
+- `scripts/deploy-server.sh`：
+  - 部署时自动 `mkdir -p data/ resouce/`，数据/素材为空时给出警告
+  - `git reset --hard` 前备份 `data/production/`（防止覆盖服务器上新增的卡片数据）
+
+**影响面**：生产部署配置变更；首次部署后需执行 `bash scripts/sync-assets.sh`
+同步数据和素材到服务器。后续在服务器 UI 上创建的数据直接写入宿主机目录，持久化。
+
+---
+
+## [2026-07-14] feat: GC 概念宣传片项目类型 + 生产提示词 v2 重写
+
+**动机**：制作看板的分镜/图片提示词/视频提示词质量差——分镜堆砌通用影视理论、图片提示词
+用编号分段而非自然语言、视频提示词把整个 G 单元镜头列表塞进一张卡（14s/7-9 镜头），
+视频模型根本无法理解。同时需要先做 GC（概念宣传片）验证视觉风格再铺正剧。
+
+**STAGE_INSTRUCTIONS v2 重写** (`app/models/production.py`)
+- `storyboard`：删除所有通用影视理论模板，每镜头只写 6 项（画面内容/角色动作-身体部位级/
+  景别+运镜/光影/时长≤6s/承接），禁止不可画短语和重复影视规则。
+- `img_prompt`：七要素合并为一段流畅中文（无①②③标签），附具体范例，禁止负面描述。
+- `vid_prompt`：关键改动——「一张卡 = 一次提交给视频模型的完整提示词，不是整个 G 的镜头
+  列表」。附完整单卡范例。致命规则：一卡一动作≤6s/不得多镜头序列/无负面词/无"快速"/
+  角色描述每卡重复/G>6s 必须拆多张子段卡。
+
+**GC 概念宣传片** (`app/models/production.py` + `app/api/production.py` + `web/src/pages/Production.tsx`)
+- 新增 `GC_STAGES`（8 阶段，跳过 setting/design）、`GC_STAGE_KEYS`、`GC_STAGE_INSTRUCTIONS`。
+- GC 剧本指令：挑 3-5 个最炸视觉瞬间，15-30s 总时长，末尾必须是悬念钩子。
+- `generate_stage` 按 `source_type=="gc"` 动态选用 GC 阶段/指令。
+- `get_project` 返回 GC 专属 8 阶段定义。
+- 前端创建项目 modal 第一步新增"GC 概念宣传片"选项，选中后自动设 1 集/30s，隐藏集数/时长。
+
+**影响面**
+- API：`POST /projects` 接受 `source_type: "gc"`；`GET /projects/{pid}` 对 GC 项目返回 8 阶段。
+- API：`POST /projects/{pid}/generate` 对 GC 项目使用 GC 专属指令。
+- 前端：制作看板创建流程、看板阶段列渲染。
+- 数据：已有项目不受影响（`source_type` 非 `"gc"` 走原 10 阶段）。
+
+---
+
+## [2026-07-14] docs: 文档体检大修——新增 RUNBOOK/脚本清单,修复文档与代码相反的硬伤
+
+**动机**:四路并行审计(启动真相/脚本清单/未入档目录/README 偏差)发现:启动知识散落在
+README 中段、CHANGELOG 与代码注释里,没有一页能照抄命令起服务;31 个脚本仅 7 个有文档;
+多处文档说法与代码**相反**(不存在的端点、已解决却仍列为限制的条目、声称 Redis 实为内存的
+docstring、必然构建失败的 Dockerfile COPY)。
+
+**新增文档**
+- `docs/RUNBOOK.md`:启动与排障手册——零配置最短路径(admin/admin123 直接登录,LLM 供应商可
+  事后配)、端口坑(`python -m app.main` 起在 5311 / 鲜克隆直连 :8000 白屏)、配置双轨制键表、
+  可选服务矩阵(不起 PG/Redis/DashScope 会怎样)、常见报错→解法表、data/ 27 子目录地图
+  (哪些可删/哪些不可再生)、根目录文件辨析。
+- `scripts/README.md`:31 个脚本清单(用途/跑法/一次性 vs 可复用/破坏性),含危险区警告
+  (`_gen_cards_v3/v4.py` 会全量覆盖现有 4062 卡卡池;`merge_cards.py` 输入文件已失踪不可运行)。
+
+**修复的文档-代码硬伤**
+- `Dockerfile`:`COPY --from=web-build /web/dist/` 改为 `/wwwroot/`——vite outDir 是 `../wwwroot`,
+  原写法镜像构建必失败,README 宣称的 Docker 一键启动实际不可用。
+- `admin/main.py`:根路径指引里的过期前端端口 5188 → 5173。
+- `app/core/rate_limit.py`:docstring 声称"USE_DB_STORES 开=Redis INCRBY 配额"与实现相反,
+  改为如实描述(纯内存计数、重启归零,Redis 方案为规划项)。
+- `app/services/workflow_nodes.py`:删除"OpenAI 同步调用、并行实际串行"的过期注释
+  (runner.py 已用 AsyncOpenAI 真并发)。
+- 根目录 `main.py`:死桩("Hello from agent!")改为指路牌,打印真实启动命令并指向 RUNBOOK。
+
+**同步更新的既有文档**
+- `README.md`:节点类型 7→11(补迭代/HTTP/代码/子工作流四行);删除不存在的
+  `POST /run/approve` 与 `GET /ai-models`(改为 `/run` 携带 approvalDecision、`/agent/ai-providers`);
+  API 前缀标注 pipeline 例外;production 表补 matrix/orphans/archive/search;已知限制两条改"已解决";
+  内置示例改为五季 4062 卡现状;快速开始加零配置说明、5311 端口警告与 worker 启动;文档导航
+  与项目结构注脚补 RUNBOOK/scripts 清单/七个未入档顶层目录。
+- `WORKFLOW_ENGINE.md`:节点表 7→11 种;删除已过期的"同步调用"限制。
+- `docs/ROADMAP.md`:盘点数字修正(372 卡→五季 4062 卡、118→131 测试、7→11 节点);
+  §3.1 LLM 韧性改窄为"仅剩 canvas/scraper 两条旁路"(主链路重试/fallback 已在 loop.py 落地)。
+- `CLAUDE.md` / `AGENTS.md`:头部加互为镜像的同步提醒;删除不存在的 `app/repositories/`;
+  M2-M6 里程碑补 ✅。
+- `.env.example`:REDIS_URL 补本机直连注释、补 ADMIN_PORT 键。
+- `docs/MODULE_INDEX.md`:重新生成(120 后端模块 + 49 前端文件)。
+
+**影响面**:一处容器构建修复(Dockerfile COPY)、两处代码内字符串/注释/docstring 修正,无接口、
+无行为、无数据变化;其余全部为文档。ROADMAP 的 KPI"S1 成片 0/10"十集口径与卡池 24 集结构
+不一致,属业务口径决策,本次未改动待老板拍板。
+
+---
+
+## [2026-07-13] fix: 漫剧生产提示词与分镜质量门禁整改
+
+**动机**:实物审计发现现有分镜大量使用“一句话剧情概述”和不可绘制的模板句，场景/首帧提示词
+同时堆叠暗部、裂纹、锁链、碎石、反光与粒子，导致画面高频噪点和主体失焦；视频任务存在单条
+10~18 秒但质检仍判 PASS、前期角色混用后期服装、九宫格/速度线被默认使用等问题。
+
+**变更点**
+- `app/models/production.py`:重写剧本、角色场景、分镜、图片与视频阶段模板；生成时长与画幅改为
+  使用项目配置；G 单元必须拆成 2~6 秒连续生成子段；分镜强制包含前中后景、画面位置、起止姿态、
+  视线/运动方向和连续性；图片加入“一主体/三道具/一特效”降噪预算；图片/视频优先输出结构化 JSON。
+- `app/services/production_quality.py`、`app/api/production.py`:新增确定性静态质量门禁，扫描抽象分镜、
+  缺失生产字段、正向提示词中的负向措辞、高频纹理过载、视频高风险运动词和超 6 秒连续段；不合格
+  草稿保留但状态改为 `review`，卡片 metadata 返回具体返工项，避免再次伪报 `done`。
+- `ProductionCard`:新增独立 `negative_prompts` 字段；默认不生成负向提示词，供应商明确支持时才单独
+  保存，禁止与正向 `prompts/content` 拼接。旧卡无需迁移，Pydantic 默认空列表兼容。
+- `scripts/refresh_comic_profiles.py`:统一刷新编剧、角色、场景、分镜、提示词、关键帧和质检员工的职责
+  与输出规范，保留已有项目知识库，并同步本地工作流提示词。分镜改为先消费角色版本与场景资产，
+  关键帧按需要选择单首帧或 FLF，不再默认九宫格；质检缺少实际图/视频时必须标记“未检”。
+- `app/services/seed_workflows.py`、`app/runtime/cli_pipeline.py`:新建工作流和 CLI 流水线同步采用上述规范；
+  工作流依赖调整为“编剧 → 角色/场景 → 分镜 → 提示词”，避免分镜脱离资产版本并行生成。
+- `web/src/pages/Production.tsx`、`web/src/pages/EpisodeDetail.tsx`:展示静态质检返工原因和独立负向
+  提示词；`review` 显示为“待复核”；导出提示词包时将负向内容放入明确分隔的独立章节。
+- `tests/test_production_quality.py`、`tests/test_production_generate.py`:覆盖一句话分镜、纹理过载、负向
+  混入、超 6 秒视频、状态降级和项目时长/画幅注入。
+- `scripts/rewrite_storyboards_v2.py`、`data/production/jiulu-s1..s5/cards.json`:将五季全部现有逐 G
+  分镜升级为 V2 详细执行格式。保留原剧情、景别、运镜、光影和音效，新增主体画面位置、前中后景、
+  屏幕轴线、起始姿态、逐时动作节拍、结束姿态、首末帧承接和逐镜验收；长 G 改为逐镜独立生成后
+  剪辑，移除“一次生成全部可用/零丢弃”和“环境自行演进”等不可执行表述。
+- `tests/test_storyboard_rewrite.py`:锁定分镜迁移后的生产字段、手部关节级动作、群像节拍、台词与手部
+  错峰表演，并防止“触发”误判为手部动作、代词盖过装置主体等语义回归。
+
+**影响面**:生产卡片新增可选响应字段 `negative_prompts`；AI 生成卡片可能从 `done` 变为 `review`，
+并在 `metadata.quality_gate` 返回返工原因；无数据库迁移、环境变量或端口变化。五季 719 张历史分镜卡
+已原位升级（共 5228 镜），其他历史卡片与图片不覆盖，后续重生成时应用新规范。
+
+**验证**:`python -m pytest -q` 全量 156 项通过；`python -m compileall -q app scripts/rewrite_storyboards_v2.py scripts/refresh_comic_profiles.py`
+通过；`web/npm run build` 通过（仅保留既有大 chunk 提示）；`git diff --check` 通过。
+
+---
+
 ## [2026-07-13] feat: 桌面端生产体验闭环——真实就绪度、行动首页、建项向导与用户任务中心
 
 **动机**:体验审计发现项目总览会把 AI 生成的文案卡直接视为 `done`，第一季显示 100%，

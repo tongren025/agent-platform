@@ -42,7 +42,7 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ### 可视化工作流引擎（类 DIFY）
 - **DAG 画布编辑器** — 基于 ReactFlow 的拖拽式流程图编辑，连线即定义执行顺序
-- **7 种节点类型**：
+- **11 种节点类型**：
 
   | 节点 | 作用 |
   |------|------|
@@ -52,6 +52,10 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
   | **条件分支** | if/else 规则路由（支持 12 种比较运算符） |
   | **文本拼装** | 用 `{{node.field}}` 变量模板组合文本，零 token 消耗 |
   | **工具调用** | 调用已注册的工具 / MCP 服务 |
+  | **迭代** | 对 JSON 数组逐项调用员工（可限流并行），汇总结果 |
+  | **HTTP 请求** | 调用外部 API，响应注入变量池 |
+  | **代码** | Python 表达式数据变换（AST 白名单，绝不 exec/import），零 token |
+  | **子工作流** | 嵌套执行另一条工作流（深度上限 3） |
   | **结束** | 汇总输出并返回最终结果 |
 
 - **变量系统** — `{{start.topic}}`、`{{writer.output}}` 等变量在节点间传递数据
@@ -86,9 +90,9 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
   `output/snapshots/` 永不清理：star 历史走势只存在于快照里，GitHub 不提供历史 star 数，删了不可再生
 
 ### 制作看板（Production Pipeline）
-- **10 阶段流水线** — 创意/原著 → 剧本 → 角色·场景 → 视觉设计 → 分镜 → 图片提示词 → 视频提示词 → 生图 → 生视频 → 成片
+- **10 阶段流水线** — 创意/原著 → 剧本 → 角色·场景 → 视觉设计 → 分镜 → 图片提示词 → 视频提示词 → 生图 → 生视频 → 成片；GC（概念宣传片）项目自动切换为 8 阶段（跳过角色·场景和视觉设计）
 - **真实交付就绪度** — 项目/剧集进度不再按“已生成文案卡”计 100%，而是按规格齐全 40% + 出图 30% + 视频 20% + 成片交付 10% 计算；首页直接提示断链、待出图、待视频或待交付的下一步动作
-- **结构化建项向导** — 新建项目分三步填写目标、计划集数、单集时长、画幅、视觉风格、预算、原始素材与默认 AI 员工；旧项目字段缺失时保持兼容
+- **结构化建项向导** — 新建项目分三步填写目标、计划集数、单集时长、画幅、视觉风格、预算、原始素材与默认 AI 员工；支持 GC（概念宣传片）项目类型，选择后自动设 1 集/30s 并隐藏集数时长；旧项目字段缺失时保持兼容
 - **层级下钻视图** — `剧 → 全局资产/剧集网格 → 单集 G 生成单元 → 按阶段资源`逐级展开（`/production/:pid`），与平铺流水线视图（`/production/:pid/pipeline`）随时切换
 - **按集组织** — Episode Tab 切换（全局资产 / EP01 / EP02...），全局角色场景跨集共享
 - **文字设定与视觉设计分离** — 先定义角色场景的文字设定（身份层/装备层/可变层），再做视觉三视图和概念图
@@ -119,6 +123,8 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 | 文档 | 回答什么问题 |
 |------|------------|
+| [docs/RUNBOOK.md](docs/RUNBOOK.md) | **怎么把项目跑起来**:零配置最短路径、端口坑、配置双轨制、常见报错解法、data/ 目录地图、根目录文件辨析 |
+| [scripts/README.md](scripts/README.md) | 全部 31 个脚本的清单:用途/跑法/一次性还是可复用/是否破坏性 |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | **未来一年目标与方向**:KPI、季度计划、优化项、欠账、机会与不做清单 |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统怎么运转的（分层 + 5 条核心数据流）、**想改 X 去哪个文件**速查表 |
 | [docs/MODULE_INDEX.md](docs/MODULE_INDEX.md) | 全部 160+ 模块的一句话职责索引（自动生成：`python -m scripts.gen_module_index`） |
@@ -192,10 +198,14 @@ docker compose up -d --build
 
 ### 方式二：本地开发（以下 1-5 步）
 
+> **零配置就能跑**：不建 `.env`、不建 `appsettings.Development.json`、不起 PG/Redis，后端照样启动，
+> 默认账号 **admin / admin123**。LLM 供应商可以事后在管理端 UI 配置（落盘 `data/ai-providers/`）。
+> 端口坑、可选服务矩阵、常见报错解法见 **[docs/RUNBOOK.md](docs/RUNBOOK.md)**。
+
 ### 环境要求
 - Python 3.12+
 - Node.js 18+
-- 一个兼容 OpenAI API 格式的 LLM 服务（需要配 endpoint 和 API Key）
+- 一个兼容 OpenAI API 格式的 LLM 服务（需要配 endpoint 和 API Key；可事后在管理端 UI 配）
 
 ### 1. 克隆仓库
 
@@ -248,6 +258,10 @@ pip install -r requirements.txt
 uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
+> ⚠️ 不要用 `python -m app.main` 启动——它读业务配置 `Port` 默认起在 **5311**，前端代理会对不上。
+> 管理端（可选）：`uvicorn admin.main:app --port 8001 --reload`；
+> 异步任务 worker（可选，需 Redis）：`python -m app.tasks.worker`——不起它任务中心的任务会一直排队。
+
 ### 4. 启动前端
 
 ```bash
@@ -276,7 +290,7 @@ agent-platform/
 │   ├── models/                   # Pydantic 数据模型
 │   │   ├── registry.py           #   员工/团队/工具/技能/模板定义
 │   │   ├── workflow.py           #   工作流/节点/边/运行记录
-│   │   ├── production.py         #   制作看板模型（10阶段流水线/卡片/项目）
+│   │   ├── production.py         #   制作看板模型（10阶段+GC 8阶段流水线/卡片/项目/STAGE_INSTRUCTIONS）
 │   │   ├── conversation.py       #   对话请求/响应
 │   │   ├── knowledge.py          #   知识库文档
 │   │   ├── learn.py              #   文章学习源
@@ -292,7 +306,7 @@ agent-platform/
 │   │   └── infra_tools.py        #   平台基础设施工具注册
 │   ├── services/                 # 业务服务
 │   │   ├── workflow_executor.py  #   工作流 DAG 执行引擎（Kahn 遍历）
-│   │   ├── workflow_nodes.py     #   7 种节点执行器（插件注册表）
+│   │   ├── workflow_nodes.py     #   11 种节点执行器（插件注册表）
 │   │   ├── workflow_store.py     #   工作流运行记录存储
 │   │   ├── seed_workflows.py     #   种子工作流（漫剧创作流水线）
 │   │   ├── invocation.py         #   员工调用（审批、委派、循环）
@@ -359,10 +373,14 @@ agent-platform/
 ```
 
 > **M0–M6 生产化新增**（未列入上图）：`app/core/`（settings/logging/db/queue/rate_limit/embedding/metrics 基础设施）、`app/tasks/`（arq worker）、`admin/`（管理端服务 :8001）、`app/models/db/`（ORM）、`migrations/`（Alembic）、`tests/`、`deploy/`（Prometheus/Grafana 置备）、`docker-compose.yml` + `Dockerfile`。详见 [docs/CHANGELOG.md](docs/CHANGELOG.md)。
+>
+> **其它顶层目录**（上图与注脚之外）：`scripts/`（31 个脚本，[清单](scripts/README.md)）、`skill_tracker/`（GitHub 榜单工具，趋势雷达数据源）、`evals/`（LLM 输出回归评测）、`automations/`（Claude 定时自动化的持久记忆）、`wwwroot/`（前端构建产物挂载点）、`resouce/`（本地媒体素材根，目录名拼写即如此，gitignore）、`docs/`（RUNBOOK/ARCHITECTURE/MODULE_INDEX/ROADMAP/CHANGELOG）。逐一解释见 [docs/RUNBOOK.md](docs/RUNBOOK.md) §7。
 
 ## API 概览
 
-所有 API 前缀：`/api/v1/agentapp`
+API 前缀：`/api/v1/agentapp`（唯一例外：pipeline 组用 `/api/v1/pipeline`）。
+后端共挂载 18 组 router、约 175 个端点，下表只列高频组——canvas / trends / skills /
+memory / evolution / ai-providers / auth 登录等完整端点以 `app/api/` 代码与 `/docs`（Swagger）为准。
 
 ### 注册表（`/registry`）
 | 方法 | 路径 | 说明 |
@@ -381,11 +399,10 @@ agent-platform/
 ### 智能体（`/agent`）
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| POST | `/run` | 运行智能体对话 |
-| POST | `/run/approve` | 审批通过后继续执行 |
+| POST | `/run` | 运行智能体对话（携带 `approvalDecision` 字段可恢复审批挂起的运行，无独立 approve 端点） |
 | GET | `/sessions` | 列出会话 |
 | GET | `/sessions/{id}` | 获取会话详情 |
-| GET | `/ai-models` | 列出可用 AI 模型 |
+| GET | `/agent/ai-providers` | 列出可用 AI 供应商与模型 |
 | GET | `/agent/runs` | 运行记录列表（Token/成本/耗时） |
 | GET | `/agent/quota/{employee_key}` | 员工本月 token 用量与配额 |
 
@@ -411,6 +428,7 @@ agent-platform/
 | DELETE | `/{key}` | 删除工作流 |
 | POST | `/{key}/run` | 运行工作流 |
 | GET | `/{key}/runs` | 运行历史 |
+| GET | `/{key}/runs/{run_id}` | 单次运行详情 |
 | GET | `/node-types` | 可用节点类型列表 |
 
 ### 制作看板（`/production`）
@@ -423,9 +441,15 @@ agent-platform/
 | POST | `/projects/{pid}/cards` | 添加卡片 |
 | PUT | `/cards/{id}` | 更新卡片 |
 | DELETE | `/cards/{id}` | 删除卡片 |
-| POST | `/projects/{pid}/generate` | AI 生成指定阶段卡片（`episode` 按集、`mode` 追加/替换） |
+| POST | `/projects/{pid}/generate` | AI 生成指定阶段卡片（`episode` 按集、`mode` 追加/替换；生成结果过静态质量门禁，不合格降级 `review`） |
 | GET | `/stages` | 获取 10 阶段定义 |
-| GET | `/resource/{path}` | 静态资源文件服务（图片/视频） |
+| GET | `/matrix` | 跨项目「季 → 集 → G 单元」全链路对照矩阵 |
+| GET | `/orphans` | 孤儿卡列表（挂在不存在 G 单元上的卡片） |
+| POST | `/projects/{pid}/archive` | 归档卡片（一卡一文件，可恢复不删除；`GET` 同路径列归档，`/{card_id}/restore` 恢复） |
+| GET | `/projects/{pid}/search` | 关键词 + 阶段/状态/集数/负责人组合过滤卡片 |
+| GET | `/resource/{path}` | 静态资源文件服务（图片/视频，`?w=` 缩略图） |
+
+> production 组共 27 个端点，成员管理 / 批量移动/删除/改状态 / 卡片上传等其余端点见 `app/api/production.py`。
 
 ### 自动学习（`/scrape`）
 | 方法 | 路径 | 说明 |
@@ -470,24 +494,24 @@ agent-platform/
 
 在「工作流」页面可以看到并直接运行这条流水线。
 
-### 制作看板 — 九陆纪元 S1 制作包
+### 制作看板 — 九陆纪元五季制作卡池
 
-附带一套完整的竖屏漫剧制作数据（`_gen_cards_v4.py` 生成），演示 10 阶段流水线：
+附带完整的竖屏漫剧生产数据：**五季 120 集共 4062 张卡**（`data/production/jiulu-s1..s5`，已入版本库），演示 10 阶段流水线：
 
 ```
 创意/原著 → 剧本 → 角色·场景 → 视觉设计 → 分镜 → 图片提示词 → 视频提示词 → 生图 → 生视频 → 成片
 ```
 
-- 全局资产 18 张卡片（3 个角色设定 + 三视图、2 个场景设定 + 概念图、道具图集、九大陆场景）
-- EP01 完整制作包按 G 生成单元组织（导演 Brief → 镜头拆分表 → G 单元剧本 → 光效/动作设定 → G 单元分镜板 → 图片提示词 → 视频提示词 + 质检报告）
-- EP02-10 待做概要各 1 张
+- 每集按 G 生成单元组织（导演 Brief → 镜头拆分表 → G 单元剧本 → 分镜 → 首帧/末帧锁图片提示词 → ≤6 秒子段视频提示词 → 质检）
+- 分镜卡已全量升级 v2 详细版（起止姿态/前中后景/画面位置/连续性锚点，可直接绘制）
+- 卡池由多轮脚本生成与修复演进而来，生成链路见 [scripts/README.md](scripts/README.md)（注意其中的危险区说明）
 
 ## 已知限制（v1）
 
-- **LLM 调用同步** — 底层 OpenAI SDK 调用为同步模式，并行节点实际串行执行（引擎已支持并行，待迁移 AsyncOpenAI 即可自动并发）
+- ~~LLM 调用同步~~ — **已解决**：agent 主链路已迁 AsyncOpenAI（含超时、指数退避重试、同供应商换模型、跨供应商 fallback），并行节点真并发；仅画布生图（`canvas.py`）与网页抓取总结（`scraper.py`）两条旁路仍为同步裸调
 - **无 SSE 实时推送** — 运行状态通过轮询获取，暂无 Server-Sent Events 实时更新
 - ~~文件存储无锁~~ — **已解决**：`USE_DB_STORES=true` 时运行态切 PostgreSQL（事务保并发安全）；JSON 仍为默认（单人零依赖）
-- **节点类型待扩展** — 迭代（循环）、变量聚合、代码执行、HTTP 请求、子工作流等节点类型规划中
+- ~~节点类型待扩展~~ — **已扩展**：迭代（循环）、HTTP 请求、代码执行、子工作流均已上线（共 11 种节点）；仅变量聚合节点仍在规划
 
 ## 代码备份
 

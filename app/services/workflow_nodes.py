@@ -116,9 +116,6 @@ class AgentExecutor(NodeExecutor):
         if not user_input.strip():
             user_input = resolve_template("{{start.output}}", ctx.variables) or "(无输入)"
 
-        # 注意：v1 已知限制——loop.py 里 OpenAI 调用是同步的，故并行 fan-out 的多个 agent
-        # 节点实际会串行（不会真正并发）。这里仍 await run_invocation 保证正确性；
-        # 待底层换成 AsyncOpenAI 后即可自动并发，无需改本文件。
         # 不透传 __delegation_stack：工作流跳数不计入 delegation_max_depth（用 max_steps 约束），
         # 每个 agent 节点内部的 delegate 调用从空栈开始计深度。
         from app.models.conversation import AgentRunRequest

@@ -174,3 +174,34 @@ def test_invalid_mode_rejected(prod_env):
         json={"target_stage": "script", "mode": "overwrite", "employee_key": "e1"},
     )
     assert r.status_code == 400
+
+
+def test_generation_marks_quality_failures_for_review(prod_env):
+    """不完整的一句话分镜仍会保存，但必须进入审核并返回质量问题，不能伪装 done。"""
+    client, _ = prod_env
+    pid = _create_project_with_cards(client)
+    r = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "storyboard", "episode": 1, "mode": "replace", "employee_key": "e1"},
+    )
+    data = r.json()["data"]
+    assert data["quality_issue_count"] > 0
+    assert all(card["status"] == "review" for card in data["cards"])
+    assert all(not card["metadata"]["quality_gate"]["passed"] for card in data["cards"])
+
+
+def test_project_runtime_constraints_are_injected_into_generation_prompt(prod_env):
+    """生成必须使用项目自身时长和画幅，不再把 90 秒/9:16 写死。"""
+    client, captured = prod_env
+    pid = _create_project_with_cards(client)
+    client.put(
+        f"/api/v1/agentapp/production/projects/{pid}",
+        json={"episode_duration_seconds": 42, "aspect_ratio": "16:9"},
+    )
+    client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "storyboard", "episode": 1, "employee_key": "e1"},
+    )
+    prompt = captured["prompts"][-1]
+    assert "单集目标时长 42 秒" in prompt
+    assert "画幅 16:9" in prompt

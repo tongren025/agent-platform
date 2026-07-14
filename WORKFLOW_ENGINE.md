@@ -24,7 +24,7 @@
 - `WorkflowEdge`：`{source, target, sourceHandle}`，`sourceHandle` 用于 condition 分支。
 - `WorkflowRun` / `NodeStepResult`：运行记录与逐节点明细，`data/workflow-runs/<key>.json`（原子写、封顶 50）。
 
-### 节点类型（v1，`app/services/workflow_nodes.py`，插件式注册表）
+### 节点类型（11 种，`app/services/workflow_nodes.py`，插件式注册表）
 | 类型 | 作用 |
 |------|------|
 | `start` | 入口，声明输入字段，播种 `{{start.x}}` |
@@ -33,14 +33,18 @@
 | `condition` | if/else 分支（安全枚举比较器，**绝不 eval**） |
 | `template` | 用 `{{node.field}}` 拼装文本，不耗 token |
 | `tool` | 调用已注册的工具 / MCP |
+| `iteration` | 循环：对 JSON 数组逐项调用指定员工（`maxParallel` 限流），汇总结果 |
+| `http` | HTTP 请求：调用外部 API，响应注入变量池 |
+| `code` | Python 表达式做数据变换（AST 白名单 + 受限 builtins，**绝不 exec/import**），不耗 token |
+| `sub-workflow` | 子工作流：执行另一条工作流并注入其输出（嵌套深度上限 3） |
 | `end` | 汇总最终输出 |
 
 ### 执行引擎（`app/services/workflow_executor.py`）
 - Kahn ready-set 遍历；变量池 `variables[nodeKey] = {field: value}`。
 - `{{node.field}}` 解析见 `app/runtime/template.py`，缺失 → 空串（fail-soft）。
 - 分支剪枝：condition 只激活一条出边；菱形 join 在任一分支到达即触发，死分支整支 `skipped`。
-- 就绪批次 `asyncio.gather` 并发（**已知 v1 限制**：底层 OpenAI 调用同步，故 LLM 节点实际串行；
-  换成 AsyncOpenAI 后即自动并发，无需改引擎）。
+- 就绪批次 `asyncio.gather` 并发（底层已迁 AsyncOpenAI——`app/runtime/runner.py` 以
+  `async_client=True` 取客户端，并行 agent 节点为真并发）。
 - 兜底：`max_steps`（默认 50）、节点级超时、整体超时（API 层 `wait_for` + 504）、
   节点 `onError ∈ {stop|continue}`、输出落盘截断 2000 字。
 

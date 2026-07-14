@@ -1,5 +1,7 @@
 # AGENTS.md — agent-platform 项目指令
 
+> ⚠️ 本文件与 `CLAUDE.md` 互为逐字镜像(本份给 Codex 等其它 agent 读)。**改任意一份必须同步另一份。**
+
 本文件为在本仓库(`agent-platform`,数字员工/漫剧生产平台)工作的所有人
 与 AI 会话提供硬性约定。进版本库、团队共享,不依赖任何人的记性。
 
@@ -25,13 +27,13 @@
 - 管理端 API:`admin/`(FastAPI,:8001)—— 用户/角色/供应商治理,独立进程独立鉴权
 - 前端:`web/`(React + Vite + antd),构建产物由 app 的 SPA fallback 提供
 - 基础设施层:`app/core/`(配置/日志/中间件/异常/DB/可观测)
-- 数据层:`app/models/db/`(ORM)+ `app/repositories/`(仓储)+ `migrations/`(Alembic)
+- 数据层:`app/models/db/`(ORM)+ `migrations/`(Alembic);JSON/PG 双实现的切换集中在 `app/dependencies.py`
 - 编排:`docker-compose.yml`(PostgreSQL+pgvector / Redis / app / admin / Prometheus / Grafana)
 
 ## 生产化里程碑(进度见 docs/CHANGELOG.md)
 
-M0 工程地基 ✅ · M1 数据层→PostgreSQL ✅ · M2 LLM 调用治理 · M3 RAG 向量化 ·
-M4 异步任务队列 · M5 鉴权/限流/配额 · M6 可观测性闭环。**不做多租户。**
+M0 工程地基 ✅ · M1 数据层→PostgreSQL ✅ · M2 LLM 调用治理 ✅ · M3 RAG 向量化 ✅ ·
+M4 异步任务队列 ✅ · M5 鉴权/限流/配额 ✅ · M6 可观测性闭环 ✅(全部完工 2026-07-01)。**不做多租户。**
 
 ## 约定
 

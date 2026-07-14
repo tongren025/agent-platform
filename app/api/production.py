@@ -18,9 +18,11 @@ from app.core.logging import get_logger
 from app.models.conversation import AgentRunRequest
 from app.models.production import (
     STAGES, STAGE_KEYS, STAGE_INSTRUCTIONS, ROLES,
+    GC_STAGES, GC_STAGE_KEYS, GC_STAGE_INSTRUCTIONS,
     ProductionCard, ProductionProject, ProjectWithCards, ProjectMember,
 )
 from app.services.invocation import run_invocation
+from app.services.production_quality import evaluate_production_draft
 
 router = APIRouter(prefix="/api/v1/agentapp/production", tags=["production"])
 logger = get_logger(__name__)
@@ -135,7 +137,9 @@ def _sections_from_reply(reply: str) -> list[dict]:
                 title = str(item.get("title") or item.get("name") or "生成卡片").strip()
                 body = str(item.get("content") or item.get("body") or item.get("text") or "").strip()
                 prompts = item.get("prompts") if isinstance(item.get("prompts"), list) else []
-                drafts.append({"title": title, "content": body, "prompts": prompts, "metadata": metadata})
+                negative_prompts = item.get("negative_prompts") if isinstance(item.get("negative_prompts"), list) else []
+                drafts.append({"title": title, "content": body, "prompts": prompts,
+                               "negative_prompts": negative_prompts, "metadata": metadata})
             if drafts:
                 return drafts
 
@@ -144,7 +148,7 @@ def _sections_from_reply(reply: str) -> list[dict]:
         lines = section.strip().split("\n")
         title = lines[0].strip().lstrip("#").strip() if lines else "生成卡片"
         body = "\n".join(lines[1:]).strip() if len(lines) > 1 else section
-        drafts.append({"title": title, "content": body, "prompts": [], "metadata": {}})
+        drafts.append({"title": title, "content": body, "prompts": [], "negative_prompts": [], "metadata": {}})
     return drafts
 
 
@@ -327,7 +331,8 @@ def get_project(pid: str):
         _save_project(proj)
     cards = _load_cards(pid)
     stats = _compute_stats(cards)
-    result = ProjectWithCards(**proj.model_dump(), cards=cards, stats=stats)
+    stage_defs = GC_STAGES if proj.source_type == "gc" else STAGES
+    result = ProjectWithCards(**proj.model_dump(), cards=cards, stages=stage_defs, stats=stats)
     return {"code": 200, "data": result.model_dump()}
 
 
@@ -815,15 +820,19 @@ async def generate_stage(pid: str, req: GenerateReq):
     proj = _load_project(pid)
     cards = _load_cards(pid)
 
-    target_idx = STAGE_KEYS.index(req.target_stage) if req.target_stage in STAGE_KEYS else -1
+    is_gc = proj.source_type == "gc"
+    stage_keys = GC_STAGE_KEYS if is_gc else STAGE_KEYS
+    stage_defs = GC_STAGES if is_gc else STAGES
+    instructions_map = GC_STAGE_INSTRUCTIONS if is_gc else STAGE_INSTRUCTIONS
+
+    target_idx = stage_keys.index(req.target_stage) if req.target_stage in stage_keys else -1
     if target_idx < 0:
         raise HTTPException(400, f"无效阶段: {req.target_stage}")
     if req.mode not in ("append", "replace"):
         raise HTTPException(400, f"无效模式: {req.mode}，可选: append / replace")
 
-    prev_cards = [c for c in cards if STAGE_KEYS.index(c.stage) < target_idx]
+    prev_cards = [c for c in cards if c.stage in stage_keys and stage_keys.index(c.stage) < target_idx]
     if req.episode is not None:
-        # 按集生成：上下文只取本集卡片 + 全局资产（episode 为空的卡片）
         prev_cards = [c for c in prev_cards if c.episode == req.episode or c.episode is None]
     if not prev_cards and not proj.source_content:
         raise HTTPException(400, "没有前置阶段的内容可供生成")
@@ -831,10 +840,10 @@ async def generate_stage(pid: str, req: GenerateReq):
     context_parts = []
     if proj.source_content:
         context_parts.append(f"## 项目原始素材\n{proj.source_content}")
-    for stage_key in STAGE_KEYS[:target_idx]:
+    for stage_key in stage_keys[:target_idx]:
         stage_cards = sorted([c for c in prev_cards if c.stage == stage_key], key=lambda x: x.shot_number)
         if stage_cards:
-            stage_name = next((s["name"] for s in STAGES if s["key"] == stage_key), stage_key)
+            stage_name = next((s["name"] for s in stage_defs if s["key"] == stage_key), stage_key)
             context_parts.append(f"## {stage_name}")
             for sc in stage_cards:
                 context_parts.append(f"### {sc.title}\n{sc.content}")
@@ -842,9 +851,12 @@ async def generate_stage(pid: str, req: GenerateReq):
                     context_parts.append("提示词:\n" + "\n".join(f"- {p}" for p in sc.prompts))
 
     context = "\n\n".join(context_parts)
-    target_name = next((s["name"] for s in STAGES if s["key"] == req.target_stage), req.target_stage)
+    target_name = next((s["name"] for s in stage_defs if s["key"] == req.target_stage), req.target_stage)
 
-    instruction = STAGE_INSTRUCTIONS.get(req.target_stage, f"根据前面的内容，生成{target_name}阶段的内容。")
+    instruction = instructions_map.get(
+        req.target_stage,
+        STAGE_INSTRUCTIONS.get(req.target_stage, f"根据前面的内容，生成{target_name}阶段的内容。"),
+    )
     if req.extra_instruction:
         instruction += f"\n\n额外要求：{req.extra_instruction}"
 
@@ -858,7 +870,11 @@ async def generate_stage(pid: str, req: GenerateReq):
         raise HTTPException(400, "需要指定一个数字员工来执行生成")
 
     scope_label = f"EP{req.episode:02d}" if req.episode is not None else "全局资产"
-    prompt = f"你正在为项目「{proj.name}」（范围：{scope_label}）生成{target_name}。\n\n{instruction}\n\n以下是已有的内容：\n\n{context}"
+    project_constraints = (
+        f"项目规格：单集目标时长 {proj.episode_duration_seconds} 秒；画幅 {proj.aspect_ratio}；"
+        f"视觉风格：{proj.visual_style or '沿用已锁定 Art Bible'}。"
+    )
+    prompt = f"你正在为项目「{proj.name}」（范围：{scope_label}）生成{target_name}。\n{project_constraints}\n\n{instruction}\n\n以下是已有的内容：\n\n{context}"
 
     result = await run_invocation(AgentRunRequest(
         employeeKey=emp_key,
@@ -913,8 +929,15 @@ async def generate_stage(pid: str, req: GenerateReq):
             metadata["time_range"] = time_range
 
         prompts = [str(p).strip() for p in draft.get("prompts", []) if str(p).strip()]
+        negative_prompts = [str(p).strip() for p in draft.get("negative_prompts", []) if str(p).strip()]
         if req.target_stage in ("img_prompt", "vid_prompt") and not prompts and body:
             prompts = [body]
+        quality_issues = evaluate_production_draft(req.target_stage, title, body, prompts)
+        metadata["quality_gate"] = {
+            "passed": not quality_issues,
+            "issues": quality_issues,
+            "note": "静态门禁通过不等于实际图片/视频视觉验收通过",
+        }
 
         card = ProductionCard(
             card_id=str(uuid.uuid4())[:8],
@@ -925,8 +948,9 @@ async def generate_stage(pid: str, req: GenerateReq):
             episode=req.episode,
             shot_number=unit_number,
             prompts=prompts,
+            negative_prompts=negative_prompts,
             metadata=metadata,
-            status="done",
+            status="done" if not quality_issues else "review",
             created_at=now,
             updated_at=now,
         )
@@ -944,6 +968,9 @@ async def generate_stage(pid: str, req: GenerateReq):
         "episode": req.episode,
         "stage": req.target_stage,
         "cards": [c.model_dump() for c in new_cards],
+        "quality_issue_count": sum(
+            len(c.metadata.get("quality_gate", {}).get("issues", [])) for c in new_cards
+        ),
     }}
 
 
