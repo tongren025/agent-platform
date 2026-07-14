@@ -1,8 +1,8 @@
 # ─────────────────────────────────────────────────────────────
 # 生产部署（2 vCPU / 2 GiB）：精简版，去掉 Prometheus + Grafana。
 #   启动:  docker compose -f docker-compose.prod.yml up -d --build
-#   前端:  http://<IP>
-#   管理端: http://<IP>:8001
+#   前端:  https://aikirito.cloud
+#   管理端: https://aikirito.cloud:8001
 # ─────────────────────────────────────────────────────────────
 services:
   postgres:
@@ -120,9 +120,12 @@ services:
     image: nginx:alpine
     restart: unless-stopped
     volumes:
-      - ./deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/nginx/_active.conf:/etc/nginx/conf.d/default.conf:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_certs:/etc/letsencrypt:ro
     ports:
       - "80:80"
+      - "443:443"
       - "8001:8001"
     depends_on:
       - app
@@ -136,3 +139,5 @@ volumes:
   pg_data:
   redis_data:
   app_data:
+  certbot_www:
+  certbot_certs:

@@ -77,10 +77,11 @@ if command -v ufw &> /dev/null; then
     log "配置防火墙..."
     ufw --force enable 2>/dev/null || true
     ufw allow 22/tcp   # SSH
-    ufw allow 80/tcp   # HTTP（用户端）
+    ufw allow 80/tcp   # HTTP
+    ufw allow 443/tcp  # HTTPS
     ufw allow 8001/tcp # 管理端
     ufw reload
-    log "防火墙已配置: 22, 80, 8001"
+    log "防火墙已配置: 22, 80, 443, 8001"
 fi
 
 # ── 5. 拉取代码 ───────────────────────────────────────────
@@ -138,8 +139,8 @@ GITHUB_TOKEN=
 LOG_LEVEL=INFO
 LOG_JSON=true
 
-# CORS（生产收窄到实际域名,临时先开放）
-CORS_ORIGINS=*
+# CORS
+CORS_ORIGINS=https://aikirito.cloud,https://www.aikirito.cloud
 ENVEOF
 
     chmod 600 "${INSTALL_DIR}/.env"
@@ -152,6 +153,15 @@ fi
 # ── 7. 构建 & 启动 ────────────────────────────────────────
 log "构建并启动服务（首次较慢，需拉取镜像+编译前端）..."
 cd "${INSTALL_DIR}"
+
+# compose 挂载 _active.conf；根据证书状态选用 HTTP 或 HTTPS 版
+if [ -f "/etc/letsencrypt/live/aikirito.cloud/fullchain.pem" ]; then
+    cp deploy/nginx/default.conf deploy/nginx/_active.conf
+else
+    log "证书尚未就绪，先以 HTTP 模式启动..."
+    cp deploy/nginx/default-http-only.conf deploy/nginx/_active.conf
+fi
+
 docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
 
 # ── 8. 等待数据库就绪 → 跑迁移 ────────────────────────────
@@ -166,7 +176,48 @@ done
 log "执行数据库迁移..."
 docker compose -f docker-compose.prod.yml exec -T app alembic upgrade head || warn "迁移失败或无迁移可执行"
 
-# ── 9. 健康检查 ───────────────────────────────────────────
+# ── 9. HTTPS 证书（Let's Encrypt）──────────────────────────
+DOMAIN="aikirito.cloud"
+CERT_PATH="/etc/letsencrypt/live/${DOMAIN}/fullchain.pem"
+
+if [ ! -f "${CERT_PATH}" ]; then
+    log "申请 HTTPS 证书..."
+    apt-get install -y -qq certbot > /dev/null
+
+    # 先停 nginx 释放 80 端口给 certbot standalone 验证
+    docker compose -f docker-compose.prod.yml stop nginx 2>/dev/null || true
+
+    certbot certonly --standalone --non-interactive --agree-tos \
+        --email kiritott@proton.me \
+        -d "${DOMAIN}" -d "www.${DOMAIN}" \
+        && log "证书申请成功" \
+        || warn "证书申请失败，将以 HTTP 模式运行"
+
+    if [ -f "${CERT_PATH}" ]; then
+        # 把宿主机证书同步到 Docker volume
+        docker volume create --name agent-platform_certbot_certs 2>/dev/null || true
+        docker run --rm \
+            -v agent-platform_certbot_certs:/certs \
+            -v /etc/letsencrypt:/src:ro \
+            alpine sh -c "cp -rL /src/* /certs/"
+
+        # 切到 HTTPS nginx 配置
+        cp deploy/nginx/default.conf deploy/nginx/_active.conf
+
+        # 自动续期 cron（每周一 03:00）
+        cat > /etc/cron.d/certbot-renew <<'CRON'
+0 3 * * 1 root certbot renew --quiet && docker run --rm -v agent-platform_certbot_certs:/certs -v /etc/letsencrypt:/src:ro alpine sh -c "cp -rL /src/* /certs/" && cd /opt/agent-platform && docker compose -f docker-compose.prod.yml exec -T nginx nginx -s reload
+CRON
+        log "自动续期 cron 已配置"
+    fi
+
+    # 重启 nginx
+    docker compose -f docker-compose.prod.yml up -d nginx
+else
+    log "证书已存在，跳过申请"
+fi
+
+# ── 10. 健康检查 ──────────────────────────────────────────
 log "验证服务状态..."
 sleep 3
 docker compose -f docker-compose.prod.yml ps
@@ -174,13 +225,18 @@ docker compose -f docker-compose.prod.yml ps
 echo ""
 log "════════════════════════════════════════════════"
 log "  部署完成！"
-log "  用户端:  http://47.85.46.171"
-log "  管理端:  http://47.85.46.171:8001"
+if [ -f "${CERT_PATH}" ]; then
+    log "  用户端:  https://aikirito.cloud"
+    log "  管理端:  https://aikirito.cloud:8001"
+else
+    log "  用户端:  http://47.85.46.171"
+    log "  管理端:  http://47.85.46.171:8001"
+    warn "  HTTPS 未就绪，域名解析生效后重跑此脚本即可申请证书"
+fi
 log "  配置:    ${INSTALL_DIR}/.env"
 log "════════════════════════════════════════════════"
 echo ""
 warn "请手动完成:"
 echo "  1. 在 .env 里填写 DASHSCOPE_API_KEY（LLM 功能需要）"
 echo "  2. 填完后重启: cd ${INSTALL_DIR} && docker compose -f docker-compose.prod.yml restart app admin worker"
-echo "  3. 如需 HTTPS，绑定域名后可加 certbot"
 echo ""

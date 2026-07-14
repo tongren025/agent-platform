@@ -40,6 +40,9 @@ appsettings.Development.json
 _tok.txt
 *_tok.txt
 
+# Nginx 运行时配置(deploy 脚本按证书状态生成)
+deploy/nginx/_active.conf
+
 # Grafana runtime data
 deploy/grafana/data/
 
@@ -57,3 +60,4 @@ wwwroot/assets/
 
 # CodeGraph local index cache
 .codegraph/
+_v3_work/
