@@ -9,9 +9,12 @@ import {
   SafetyCertificateOutlined,
   LogoutOutlined,
   ApiOutlined,
+  MenuOutlined,
+  CloseOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../theme';
 import { adminApi, adminToken } from '../adminApi';
+import { useResponsive } from '../hooks/useResponsive';
 
 const navItems = [
   { key: '/admin/dashboard', icon: <DashboardOutlined />, label: '系统总览' },
@@ -25,6 +28,8 @@ export default function AdminLayout() {
   const location = useLocation();
   const [checked, setChecked] = useState(false);
   const [username, setUsername] = useState('');
+  const { isMobile } = useResponsive();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // 路由守卫：进入任意 /admin/* 页面先校验 token 是否仍有效
   useEffect(() => {
@@ -52,25 +57,57 @@ export default function AdminLayout() {
     navigate('/admin/login', { replace: true });
   };
 
+  const handleNav = (key: string) => {
+    navigate(key);
+    if (isMobile) setDrawerOpen(false);
+  };
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', width: '100vw', overflowX: 'hidden' }}>
-      {/* Sidebar — 管理端用偏冷的深色调，与用户端区分 */}
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100vw', overflowX: 'hidden' }}>
+      {/* Mobile header */}
+      {isMobile && (
+        <div style={{
+          height: 52, display: 'flex', alignItems: 'center', padding: '0 16px',
+          background: COLORS.slateDark, position: 'sticky', top: 0, zIndex: 101,
+          gap: 12, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <button type="button" onClick={() => setDrawerOpen(!drawerOpen)} style={{
+            background: 'none', border: 0, color: '#fff', fontSize: 18, cursor: 'pointer', padding: 4,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            {drawerOpen ? <CloseOutlined /> : <MenuOutlined />}
+          </button>
+          <SafetyCertificateOutlined style={{ color: COLORS.iris, fontSize: 18 }} />
+          <div style={{ color: '#fff', fontWeight: 700, fontSize: 15 }}>管理控制台</div>
+        </div>
+      )}
+
+      {/* Backdrop */}
+      {isMobile && drawerOpen && (
+        <div onClick={() => setDrawerOpen(false)} style={{
+          position: 'fixed', inset: 0, top: 52, background: 'rgba(0,0,0,0.5)',
+          zIndex: 199, transition: 'opacity 0.2s',
+        }} />
+      )}
+
+      {/* Sidebar */}
       <div
         style={{
           width: 240,
           background: `linear-gradient(180deg, ${COLORS.slateDark} 0%, #1e293b 100%)`,
           borderRight: '1px solid rgba(255,255,255,0.05)',
           position: 'fixed',
-          left: 0,
-          top: 0,
+          left: isMobile ? (drawerOpen ? 0 : -240) : 0,
+          top: isMobile ? 52 : 0,
           bottom: 0,
-          zIndex: 100,
+          zIndex: isMobile ? 200 : 100,
           display: 'flex',
           flexDirection: 'column',
+          transition: isMobile ? 'left 0.25s ease' : 'none',
         }}
       >
-        {/* Brand */}
-        <div
+        {/* Brand — hidden on mobile (shown in header) */}
+        {!isMobile && <div
           style={{
             height: 64,
             display: 'flex',
@@ -99,7 +136,7 @@ export default function AdminLayout() {
             <div style={{ color: '#fff', fontWeight: 700, fontSize: 15, lineHeight: 1.2 }}>管理控制台</div>
             <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 10 }}>Admin Console</div>
           </div>
-        </div>
+        </div>}
 
         {/* Navigation */}
         <div style={{ flex: 1, padding: '12px' }}>
@@ -108,7 +145,7 @@ export default function AdminLayout() {
             return (
               <div
                 key={item.key}
-                onClick={() => navigate(item.key)}
+                onClick={() => handleNav(item.key)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -174,15 +211,15 @@ export default function AdminLayout() {
       {/* Main content */}
       <div
         style={{
-          marginLeft: 240,
+          marginLeft: isMobile ? 0 : 240,
           flex: 1,
-          width: 'calc(100vw - 240px)',
+          width: isMobile ? '100vw' : 'calc(100vw - 240px)',
           minWidth: 0,
           background: COLORS.canvas,
-          minHeight: '100vh',
+          minHeight: isMobile ? 'calc(100vh - 52px)' : '100vh',
         }}
       >
-        <div style={{ padding: 28, minWidth: 0 }}>
+        <div style={{ padding: isMobile ? 12 : 28, minWidth: 0 }}>
           <Outlet />
         </div>
       </div>

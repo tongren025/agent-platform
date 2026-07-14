@@ -14,6 +14,8 @@ import {
   BulbOutlined,
   LeftOutlined,
   RightOutlined,
+  MenuOutlined,
+  CloseOutlined,
   PartitionOutlined,
   VideoCameraOutlined,
   TableOutlined,
@@ -78,19 +80,24 @@ const navSections: NavSection[] = [
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const pageIsWorkspace = location.pathname === '/workbench' || location.pathname === '/production' || location.pathname === '/canvas';
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 900px)');
+    const mobile = window.matchMedia('(max-width: 768px)');
     const sync = () => setIsNarrow(media.matches);
-    sync();
+    const syncMobile = () => { setIsMobile(mobile.matches); if (!mobile.matches) setDrawerOpen(false); };
+    sync(); syncMobile();
     media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
+    mobile.addEventListener('change', syncMobile);
+    return () => { media.removeEventListener('change', sync); mobile.removeEventListener('change', syncMobile); };
   }, []);
 
-  const navCollapsed = collapsed || isNarrow;
+  const navCollapsed = isMobile ? false : (collapsed || isNarrow);
   const siderWidth = navCollapsed ? 64 : 240;
 
   // 按当前用户权限过滤导航;整段为空的分组连标题一起隐藏
@@ -106,24 +113,61 @@ export default function Layout() {
     navigate('/login', { replace: true });
   };
 
+  const handleNav = (key: string) => {
+    navigate(key);
+    if (isMobile) setDrawerOpen(false);
+  };
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', width: '100vw', overflowX: 'hidden' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100vw', overflowX: 'hidden' }}>
+      {/* Mobile header */}
+      {isMobile && (
+        <div style={{
+          height: 52, display: 'flex', alignItems: 'center', padding: '0 16px',
+          background: COLORS.ink, position: 'sticky', top: 0, zIndex: 101,
+          gap: 12, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <button type="button" onClick={() => setDrawerOpen(!drawerOpen)} style={{
+            background: 'none', border: 0, color: '#fff', fontSize: 20, cursor: 'pointer', padding: 4,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            {drawerOpen ? <CloseOutlined /> : <MenuOutlined />}
+          </button>
+          <div style={{
+            width: 28, height: 28, borderRadius: 8,
+            background: `linear-gradient(135deg, ${COLORS.iris}, ${COLORS.irisLight})`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 13, fontWeight: 800, color: '#fff',
+          }}>A</div>
+          <div style={{ color: '#fff', fontWeight: 700, fontSize: 15 }}>Agent Studio</div>
+        </div>
+      )}
+
+      {/* Backdrop */}
+      {isMobile && drawerOpen && (
+        <div onClick={() => setDrawerOpen(false)} style={{
+          position: 'fixed', inset: 0, top: 52, background: 'rgba(0,0,0,0.5)',
+          zIndex: 199, transition: 'opacity 0.2s',
+        }} />
+      )}
+
       {/* Sidebar */}
       <div
         style={{
-          width: siderWidth,
+          width: isMobile ? 260 : siderWidth,
           background: `linear-gradient(180deg, ${COLORS.inkLight} 0%, ${COLORS.ink} 100%)`,
           borderRight: '1px solid rgba(255,255,255,0.04)',
           overflow: 'hidden auto',
           position: 'fixed',
-          left: 0, top: 0, bottom: 0,
-          zIndex: 100,
-          transition: 'width 0.2s',
+          left: isMobile ? (drawerOpen ? 0 : -260) : 0,
+          top: isMobile ? 52 : 0, bottom: 0,
+          zIndex: isMobile ? 200 : 100,
+          transition: isMobile ? 'left 0.25s ease' : 'width 0.2s',
           display: 'flex', flexDirection: 'column',
         }}
       >
-        {/* Brand */}
-        <div style={{
+        {/* Brand — hidden on mobile (shown in header) */}
+        {!isMobile && <div style={{
           height: 64, display: 'flex', alignItems: 'center',
           justifyContent: navCollapsed ? 'center' : 'flex-start',
           padding: navCollapsed ? '0' : '0 20px',
@@ -149,7 +193,7 @@ export default function Layout() {
               </div>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Navigation */}
         <div style={{ flex: 1, padding: navCollapsed ? '12px 8px' : '12px 12px' }}>
@@ -180,7 +224,7 @@ export default function Layout() {
                     type="button"
                     aria-current={isActive ? 'page' : undefined}
                     key={item.key}
-                    onClick={() => navigate(item.key)}
+                    onClick={() => handleNav(item.key)}
                     style={{
                       display: 'flex', alignItems: 'center',
                       gap: 12, padding: navCollapsed ? '10px 0' : '10px 12px',
@@ -268,7 +312,7 @@ export default function Layout() {
             borderTop: '1px solid rgba(255,255,255,0.06)',
             color: 'rgba(255,255,255,0.3)', fontSize: 14,
             transition: 'color 0.15s', flexShrink: 0,
-            visibility: isNarrow ? 'hidden' : 'visible',
+            visibility: (isNarrow || isMobile) ? 'hidden' : 'visible',
             border: 0, width: '100%', background: 'transparent',
           }}
           onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; }}
@@ -280,16 +324,16 @@ export default function Layout() {
 
       {/* Main content */}
       <div style={{
-        marginLeft: siderWidth,
+        marginLeft: isMobile ? 0 : siderWidth,
         flex: 1,
-        width: `calc(100vw - ${siderWidth}px)`,
+        width: isMobile ? '100vw' : `calc(100vw - ${siderWidth}px)`,
         minWidth: 0,
-        transition: 'margin-left 0.2s',
+        transition: isMobile ? 'none' : 'margin-left 0.2s',
         background: COLORS.canvas,
-        minHeight: '100vh',
+        minHeight: isMobile ? 'calc(100vh - 52px)' : '100vh',
         overflowX: 'hidden',
       }}>
-        <div style={{ padding: pageIsWorkspace ? (isNarrow ? '8px' : '14px') : (isNarrow ? '16px' : '28px'), minWidth: 0 }}>
+        <div style={{ padding: pageIsWorkspace ? (isMobile ? '6px' : isNarrow ? '8px' : '14px') : (isMobile ? '12px' : isNarrow ? '16px' : '28px'), minWidth: 0 }}>
           <Outlet />
         </div>
       </div>
