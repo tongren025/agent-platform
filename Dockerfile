@@ -33,8 +33,17 @@ COPY app/ ./app/
 COPY admin/ ./admin/
 COPY appsettings.json ./appsettings.json
 
+# 数据库迁移
+COPY alembic.ini ./alembic.ini
+COPY migrations/ ./migrations/
+
+# 种子数据(production cards 等,首次启动时写入 named volume)
+COPY data/ ./data/
+
 # 前端构建产物(app.main 通过 SPA fallback 提供)
-COPY --from=web-build /web/dist/ ./wwwroot/
+# 注意:vite 的 outDir 是 ../wwwroot(web/vite.config.ts),stage1 WORKDIR=/web,
+# 产物实际落在 /wwwroot 而不是 /web/dist——COPY 源写错会直接构建失败。
+COPY --from=web-build /wwwroot/ ./wwwroot/
 
 EXPOSE 8000 8001
 

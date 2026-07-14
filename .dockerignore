@@ -15,8 +15,9 @@ __pycache__/
 web/node_modules/
 web/dist/
 
-# 运行期数据与密钥
-data/
+# 运行期数据与密钥(放行 production 种子数据)
+data/*
+!data/production/
 .env
 appsettings.Development.json
 *.log
