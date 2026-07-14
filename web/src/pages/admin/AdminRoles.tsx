@@ -5,8 +5,10 @@ import { message } from '../../ui';
 import { PlusOutlined } from '@ant-design/icons';
 import { adminApi, type PlatformRole, type PermissionDef } from '../../adminApi';
 import { COLORS } from '../../theme';
+import { useResponsive } from '../../hooks/useResponsive';
 
 export default function AdminRoles() {
+  const { isMobile } = useResponsive();
   const [list, setList] = useState<PlatformRole[]>([]);
   const [perms, setPerms] = useState<PermissionDef[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,9 +124,9 @@ export default function AdminRoles() {
 
   return (
     <div>
-      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{ marginBottom: isMobile ? 16 : 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0, color: COLORS.slateDark }}>角色管理</h1>
+          <h1 style={{ fontSize: isMobile ? 20 : 24, fontWeight: 700, margin: 0, color: COLORS.slateDark }}>角色管理</h1>
           <div style={{ color: COLORS.slate, fontSize: 14, marginTop: 4 }}>定义角色及其权限，用户通过角色获得对应操作权限</div>
         </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新增角色</Button>
@@ -133,7 +135,7 @@ export default function AdminRoles() {
       {loading ? (
         <div style={{ textAlign: 'center', padding: 80 }}><Spin size="large" /></div>
       ) : (
-        <Table rowKey="roleCode" columns={columns} dataSource={list} pagination={false} size="middle" />
+        <Table rowKey="roleCode" columns={columns} dataSource={list} pagination={false} size="middle" scroll={{ x: 'max-content' }} />
       )}
 
       <Modal
@@ -143,7 +145,7 @@ export default function AdminRoles() {
         onCancel={() => setOpen(false)}
         destroyOnHidden
         forceRender
-        width={520}
+        width={isMobile ? '100%' : 520}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item label="角色标识" name="roleCode" rules={[{ required: true, message: '请输入角色标识' }]}>

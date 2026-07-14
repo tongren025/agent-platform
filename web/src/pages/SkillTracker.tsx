@@ -12,6 +12,7 @@ import {
   GlobalOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 import { COLORS } from '../theme';
 
 const { Text, Paragraph } = Typography;
@@ -224,6 +225,7 @@ function DigestPanel() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [savingProfile, setSavingProfile] = useState(false);
+  const { isMobile } = useResponsive();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -275,7 +277,7 @@ function DigestPanel() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div style={{ color: COLORS.slate, fontSize: 13 }}>
           从今天 {digest?.candidateCount ?? '—'} 条候选里，只挑你没看过、且和你在做的事相关的
           {digest?.generatedAt && <> · 生成于 {fmtTime(digest.generatedAt)}</>}
@@ -347,7 +349,7 @@ function DigestPanel() {
         </div>
       )}
 
-      <Drawer title="调整关注点" open={profileOpen} onClose={() => setProfileOpen(false)} width={520}>
+      <Drawer title="调整关注点" open={profileOpen} onClose={() => setProfileOpen(false)} width={isMobile ? '100%' : 520}>
         {profile ? (
           <div>
             <DetailRow label="你是谁 / 在做什么">
@@ -392,6 +394,7 @@ function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading
   const [translations, setTranslations] = useState<Record<string, string>>({});
   const [translating, setTranslating] = useState(false);
   const [detailItem, setDetailItem] = useState<any>(null);
+  const { isMobile } = useResponsive();
 
   useEffect(() => { onMount(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { setTranslations({}); }, [activeKey]);
@@ -491,7 +494,7 @@ function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading
         title={detailItem?.[titleField] || '详情'}
         open={!!detailItem}
         onClose={() => setDetailItem(null)}
-        width={520}
+        width={isMobile ? '100%' : 520}
       >
         {detailItem && (
           <div>
@@ -539,6 +542,7 @@ export default function SkillTracker() {
   const [redditData, setRedditData] = useState<any>(null);
   const [redditSub, setRedditSub] = useState('MachineLearning');
   const [redditLoading, setRedditLoading] = useState(false);
+  const { isMobile } = useResponsive();
 
   // 抓取失败必须显示原因。以前这里是 catch {/* ok */}——拉取失败和「真的没数据」
   // 在界面上长得一模一样（都只显示"暂无数据"），故障可以静默存在很久。
@@ -841,7 +845,7 @@ export default function SkillTracker() {
       label: <span><ExperimentOutlined style={{ color: '#8b5cf6' }} /> AI 分析报告</span>,
       children: (
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
             <div style={{ color: COLORS.slate, fontSize: 13 }}>
               基于全部领域的趋势数据，用 AI 生成深度洞察报告
             </div>
@@ -893,7 +897,7 @@ export default function SkillTracker() {
               </Card>
 
               {/* 新兴项目 & 技术转变 并排 */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
                 <Card size="small" title={<span><RiseOutlined style={{ color: COLORS.mint, marginRight: 6 }} />崛起中的新星</span>} style={{ borderRadius: 12 }}>
                   {analysis.rising_stars?.map((star, i) => (
                     <div key={i} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: i < (analysis.rising_stars?.length ?? 0) - 1 ? `1px solid ${COLORS.border}` : 'none' }}>
@@ -917,7 +921,7 @@ export default function SkillTracker() {
               {/* 语言洞察 */}
               {analysis.language_insights && (
                 <Card size="small" style={{ borderRadius: 12, background: '#fafbfe' }}>
-                  <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: isMobile ? 16 : 24, alignItems: isMobile ? 'flex-start' : 'center', flexWrap: 'wrap' }}>
                     <div>
                       <Text type="secondary" style={{ fontSize: 12 }}>主导语言</Text>
                       <div style={{ fontWeight: 600, fontSize: 16 }}>{analysis.language_insights.dominant}</div>
@@ -1214,7 +1218,7 @@ export default function SkillTracker() {
   return (
     <div>
       {/* 页头 */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em' }}>
             <RocketOutlined style={{ marginRight: 8, color: COLORS.iris }} />
@@ -1235,7 +1239,7 @@ export default function SkillTracker() {
       </Card>
 
       {/* 详情抽屉 */}
-      <Drawer title={detailRepo?.full_name || lookupName} open={drawerOpen} onClose={() => setDrawerOpen(false)} width={480}>
+      <Drawer title={detailRepo?.full_name || lookupName} open={drawerOpen} onClose={() => setDrawerOpen(false)} width={isMobile ? '100%' : 480}>
         {!detailRepo && historyLoading && <Spin style={{ display: 'block', padding: 60, textAlign: 'center' }} />}
         {!detailRepo && !historyLoading && lookupName && (
           <Empty
@@ -1256,7 +1260,7 @@ export default function SkillTracker() {
               </div>
             )}
             <Paragraph style={{ color: COLORS.slate }}>{detailRepo.description}</Paragraph>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12, marginBottom: 20 }}>
               <Card size="small" style={{ borderRadius: 10 }}>
                 <Statistic title="Stars" value={detailRepo.stars} formatter={v => fmtStars(Number(v))} prefix={<StarFilled style={{ color: '#faad14' }} />} />
               </Card>
@@ -1277,7 +1281,7 @@ export default function SkillTracker() {
                 <Space wrap size={4}>{detailRepo.topics.map(t => <Tag key={t} style={{ fontSize: 11, borderRadius: 4 }}>{t}</Tag>)}</Space>
               </div>
             )}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 24, fontSize: 13 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 8, marginBottom: 24, fontSize: 13 }}>
               <div><Text type="secondary">创建于</Text><div>{fmtTime(detailRepo.created_at)}</div></div>
               <div><Text type="secondary">最近推送</Text><div>{fmtTime(detailRepo.pushed_at)}</div></div>
             </div>

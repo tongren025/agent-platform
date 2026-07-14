@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { Text, Title } = Typography;
 
@@ -141,6 +142,7 @@ function StageBar({ stages }: { stages: Record<string, { total: number; done: nu
 export default function ProductionHub() {
   const navigate = useNavigate();
   const { pid } = useParams<{ pid: string }>();
+  const { isMobile } = useResponsive();
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedPid, setSelectedPid] = useState(pid || '');
@@ -232,9 +234,9 @@ export default function ProductionHub() {
   }
 
   return (
-    <div style={{ padding: '20px 28px', maxWidth: 1400 }}>
+    <div style={{ padding: isMobile ? '12px' : '20px 28px', maxWidth: 1400 }}>
       {/* ── 顶栏 ── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: isMobile ? 12 : 0 }}>
         <div>
           <Breadcrumb items={[
             { title: <><HomeOutlined /> 制作</> },
@@ -252,7 +254,7 @@ export default function ProductionHub() {
             <Select
               value={selectedPid}
               onChange={v => { setSelectedPid(v); navigate(`/production/${v}`); }}
-              style={{ width: 200 }}
+              style={{ width: isMobile ? '100%' : 200 }}
               options={projects.map(p => ({ value: p.project_id, label: p.name }))}
             />
           )}

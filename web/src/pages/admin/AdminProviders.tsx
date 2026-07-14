@@ -8,8 +8,10 @@ import {
 } from '@ant-design/icons';
 import { adminApi, type AdminProvider, type TestResult } from '../../adminApi';
 import { COLORS } from '../../theme';
+import { useResponsive } from '../../hooks/useResponsive';
 
 export default function AdminProviders() {
+  const { isMobile } = useResponsive();
   const [list, setList] = useState<AdminProvider[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -221,7 +223,7 @@ export default function AdminProviders() {
 
   return (
     <div>
-      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0, color: COLORS.slateDark }}>AI 服务商</h1>
           <div style={{ color: COLORS.slate, fontSize: 14, marginTop: 4 }}>
@@ -234,7 +236,7 @@ export default function AdminProviders() {
       </div>
 
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
-        <Col xs={8}>
+        <Col xs={24} sm={8}>
           <Card size="small">
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10, background: `${COLORS.iris}1a`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
@@ -247,7 +249,7 @@ export default function AdminProviders() {
             </div>
           </Card>
         </Col>
-        <Col xs={8}>
+        <Col xs={24} sm={8}>
           <Card size="small">
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10, background: '#ecfdf51a', color: COLORS.mint, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
@@ -260,7 +262,7 @@ export default function AdminProviders() {
             </div>
           </Card>
         </Col>
-        <Col xs={8}>
+        <Col xs={24} sm={8}>
           <Card size="small">
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10, background: `${COLORS.irisLight}1a`, color: COLORS.irisLight, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
@@ -276,11 +278,11 @@ export default function AdminProviders() {
       </Row>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: 80 }}>
+        <div style={{ textAlign: 'center', padding: isMobile ? 40 : 80 }}>
           <Spin size="large" />
         </div>
       ) : (
-        <Table rowKey="name" columns={columns} dataSource={list} pagination={{ pageSize: 20 }} size="middle" />
+        <Table rowKey="name" columns={columns} dataSource={list} pagination={{ pageSize: 20 }} size="middle" scroll={{ x: 'max-content' }} />
       )}
 
       <Modal
@@ -290,7 +292,7 @@ export default function AdminProviders() {
         onCancel={() => setOpen(false)}
         destroyOnHidden
         forceRender
-        width={560}
+        width={isMobile ? '100%' : 560}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item label="名称" name="name" rules={[{ required: true, message: '请输入服务商名称' }]}>

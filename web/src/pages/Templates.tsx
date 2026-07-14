@@ -4,6 +4,7 @@ import { Card, Row, Col, Tag, Button, Modal, Form, Input, Spin, Empty, Space } f
 import { message } from '../ui';
 import type { RoleTemplate } from '../types';
 import { api } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 
 const categoryColors: Record<string, string> = {
   '通用': 'blue',
@@ -21,6 +22,7 @@ function Templates() {
   const [currentCode, setCurrentCode] = useState('');
   const [applying, setApplying] = useState(false);
   const [form] = Form.useForm();
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     api.listTemplates()
@@ -67,11 +69,11 @@ function Templates() {
   return (
     <div>
       {Object.entries(grouped).map(([category, items]) => (
-        <div key={category} style={{ marginBottom: 32 }}>
-          <h3 style={{ marginBottom: 16 }}>{category}</h3>
+        <div key={category} style={{ marginBottom: isMobile ? 16 : 32 }}>
+          <h3 style={{ marginBottom: isMobile ? 8 : 16 }}>{category}</h3>
           <Row gutter={[16, 16]}>
             {items.map((t) => (
-              <Col span={8} key={t.templateCode}>
+              <Col xs={24} sm={12} md={8} key={t.templateCode}>
                 <Card
                   title={
                     <Space>
@@ -119,6 +121,7 @@ function Templates() {
         confirmLoading={applying}
         okText="确认"
         cancelText="取消"
+        width={isMobile ? '100%' : 520}
       >
         <Form form={form} layout="vertical">
           <Form.Item

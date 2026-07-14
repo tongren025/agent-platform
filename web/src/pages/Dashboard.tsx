@@ -6,6 +6,7 @@ import {
   MessageOutlined, PlusOutlined, ReloadOutlined, VideoCameraOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useResponsive } from '../hooks/useResponsive';
 import { api, type TaskInfo } from '../api';
 import { COLORS } from '../theme';
 import { hasPerm } from '../userAuth';
@@ -24,6 +25,7 @@ interface ProjectSummary {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { isMobile } = useResponsive();
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [tasks, setTasks] = useState<TaskInfo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ export default function Dashboard() {
 
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <Text type="secondary">创作工作台</Text>
           <Title level={2} style={{ margin: '4px 0 6px' }}>今天继续把故事做完</Title>
@@ -73,12 +75,12 @@ export default function Dashboard() {
 
       {primary && readiness ? (
         <Card style={{ borderRadius: 18, marginBottom: 22, overflow: 'hidden' }} styles={{ body: { padding: 0 } }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.45fr 1fr' }}>
-            <div style={{ padding: '30px 34px', background: 'linear-gradient(135deg, #312e81, #6366f1)', color: '#fff' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.45fr 1fr' }}>
+            <div style={{ padding: isMobile ? '20px 16px' : '30px 34px', background: 'linear-gradient(135deg, #312e81, #6366f1)', color: '#fff' }}>
               <Text style={{ color: 'rgba(255,255,255,.68)' }}>继续最近项目</Text>
               <Title level={3} style={{ color: '#fff', margin: '8px 0 4px' }}>{primary.name}</Title>
               <div style={{ color: 'rgba(255,255,255,.72)', marginBottom: 24 }}>{primary.description || '暂无项目简介'}</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 18, flexWrap: 'wrap' }}>
                 <Progress type="circle" percent={readiness.overall_progress} size={78}
                   strokeColor="#a7f3d0" trailColor="rgba(255,255,255,.15)" format={p => <span style={{ color: '#fff' }}>{p}%</span>} />
                 <div>
@@ -88,7 +90,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '28px 30px' }}>
+            <div style={{ padding: isMobile ? '20px 16px' : '28px 30px' }}>
               <Title level={5} style={{ marginTop: 0 }}>交付就绪度</Title>
               {[
                 ['规格齐全', readiness.spec_ready, readiness.units, '#6366f1'],
@@ -114,13 +116,13 @@ export default function Dashboard() {
         action={<Space>{totalBlockers > 0 && <Button size="small" onClick={() => navigate('/production/matrix')}>查看断链</Button>}{failedTasks.length > 0 && <Button size="small" onClick={() => navigate('/tasks')}>查看任务</Button>}</Space>} />}
 
       <Row gutter={18}>
-        <Col span={16}>
+        <Col xs={24} md={16}>
           <Card title={<span><VideoCameraOutlined /> 最近项目</span>} extra={hasPerm('production:manage') && <Button type="link" onClick={() => navigate('/production')}>查看全部</Button>}>
             {sortedProjects.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : sortedProjects.slice(0, 4).map(p => {
               const r = p.stats?.readiness;
               return <button key={p.project_id} type="button" onClick={() => navigate(`/production/${p.project_id}`)} style={{
                 width: '100%', border: 0, borderBottom: '1px solid #f0f0f5', background: 'transparent', padding: '14px 4px',
-                display: 'grid', gridTemplateColumns: '1fr 240px 32px', gap: 16, alignItems: 'center', textAlign: 'left', cursor: 'pointer',
+                display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 240px 32px', gap: isMobile ? 8 : 16, alignItems: 'center', textAlign: 'left', cursor: 'pointer',
               }}>
                 <div><Text strong>{p.name}</Text><div><Text type="secondary" style={{ fontSize: 12 }}>{r?.next_action || '等待生产计划'}</Text></div></div>
                 <Progress percent={r?.overall_progress || 0} size="small" strokeColor={COLORS.iris} />
@@ -129,7 +131,7 @@ export default function Dashboard() {
             })}
           </Card>
         </Col>
-        <Col span={8}>
+        <Col xs={24} md={8}>
           <Card title={<span><CloudSyncOutlined /> 后台任务</span>} extra={hasPerm('workbench:use') && <Button type="link" onClick={() => navigate('/tasks')}>任务中心</Button>}>
             <Row gutter={12}>
               <Col span={12}><Statistic title="进行中" value={runningTasks.length} prefix={<CloudSyncOutlined />} /></Col>

@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { Text, Paragraph } = Typography;
 
@@ -28,6 +29,7 @@ const STATUS_CONFIG: Record<string, { color: string; label: string }> = {
 interface Employee { employeeKey: string; name: string }
 
 export default function Evolution() {
+  const { isMobile } = useResponsive();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [empKey, setEmpKey] = useState('');
   const [insights, setInsights] = useState<any[]>([]);
@@ -94,9 +96,9 @@ export default function Evolution() {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
         <div>
-          <div style={{ fontSize: 22, fontWeight: 700 }}>
+          <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700 }}>
             <RiseOutlined style={{ marginRight: 8, color: COLORS.iris }} />
             自我进化
           </div>
@@ -104,12 +106,12 @@ export default function Evolution() {
             自动审视对话历史，生成改进建议——提示词优化、行为规则、技能与工具推荐
           </div>
         </div>
-        <Space>
+        <Space wrap>
           <Select
             value={empKey || undefined}
             onChange={setEmpKey}
             placeholder="选择员工"
-            style={{ width: 200 }}
+            style={{ width: isMobile ? '100%' : 200, minWidth: 140 }}
             options={employees.map(e => ({ value: e.employeeKey, label: e.name }))}
           />
           <Button
@@ -131,7 +133,7 @@ export default function Evolution() {
       ) : (
         <>
           {/* 统计卡片 */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: isMobile ? 10 : 16, marginBottom: 24 }}>
             <Card size="small" style={{ borderRadius: 12 }}>
               <Statistic title="待审核" value={pending.length} valueStyle={{ color: COLORS.iris }} />
             </Card>
@@ -157,16 +159,16 @@ export default function Evolution() {
                   const cfg = TYPE_CONFIG[ins.type] || TYPE_CONFIG.prompt_improve;
                   return (
                     <Card key={ins.insightId} size="small" style={{ borderRadius: 12, borderLeft: `3px solid ${cfg.color}` }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'stretch' : 'flex-start', gap: isMobile ? 12 : 0 }}>
                         <div style={{ flex: 1 }}>
-                          <Space style={{ marginBottom: 8 }}>
+                          <Space wrap style={{ marginBottom: 8 }}>
                             <Tag color={cfg.color} icon={cfg.icon}>{cfg.label}</Tag>
                             <Text strong>{ins.title}</Text>
                           </Space>
                           <Paragraph style={{ margin: '8px 0', color: COLORS.slate }}>
                             {ins.content}
                           </Paragraph>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: isMobile ? 8 : 16 }}>
                             <Text type="secondary" style={{ fontSize: 12 }}>
                               理由：{ins.rationale}
                             </Text>
@@ -179,7 +181,7 @@ export default function Evolution() {
                             />
                           </div>
                         </div>
-                        <Space style={{ marginLeft: 16 }}>
+                        <Space style={{ marginLeft: isMobile ? 0 : 16 }}>
                           <Button type="primary" icon={<CheckOutlined />} size="small"
                             onClick={() => handleAccept(ins.insightId)} style={{ background: COLORS.mint, borderColor: COLORS.mint }}>
                             采纳
@@ -209,6 +211,7 @@ export default function Evolution() {
                     dataSource={resolved}
                     rowKey="insightId"
                     size="small"
+                    scroll={isMobile ? { x: 600 } : undefined}
                     pagination={{ pageSize: 10 }}
                     columns={[
                       {
@@ -246,6 +249,7 @@ export default function Evolution() {
                     dataSource={[...runLogs].reverse()}
                     rowKey="logId"
                     size="small"
+                    scroll={isMobile ? { x: 700 } : undefined}
                     pagination={{ pageSize: 10 }}
                     columns={[
                       {

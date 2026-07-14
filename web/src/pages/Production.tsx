@@ -107,7 +107,7 @@ const PROMPT_STAGES = new Set(['img_prompt', 'vid_prompt']);
 interface StageInfo { key: string; name: string; order: number; auto: boolean }
 interface CardItem {
   card_id: string; project_id: string; stage: string; title: string;
-  content: string; episode: number | null; shot_number: number; prompts: string[];
+  content: string; episode: number | null; shot_number: number; prompts: string[]; negative_prompts?: string[];
   images: string[]; videos: string[]; metadata: Record<string, any>;
   status: string; assignee: string; created_at: string; updated_at: string;
 }
@@ -545,12 +545,34 @@ export default function Production() {
       height: isNarrow ? 'calc(100vh - 16px)' : 'calc(100vh - 56px)',
       gap: 0, minWidth: 0, overflow: 'hidden',
     }}>
-      {/* ── Left: Project list ── */}
+      {/* ── Mobile: Project selector ── */}
+      {isNarrow && (
+        <div style={{
+          padding: '8px 12px', background: '#fff',
+          borderBottom: `1px solid ${COLORS.border}`,
+          display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0,
+        }}>
+          <Select
+            value={selectedPid || undefined}
+            onChange={(v: string) => { setSelectedPid(v); setActiveEpisode('all'); setSelectedCards(new Set()); }}
+            style={{ flex: 1 }} size="small" placeholder="选择项目"
+            options={projects.map(p => ({ value: p.project_id, label: `${p.name} (${p.cardCount ?? 0})` }))}
+          />
+          {selectedPid && (
+            <Button type="text" size="small" icon={<AppstoreOutlined />}
+              onClick={() => navigate(`/production/${selectedPid}`)}
+              style={{ color: COLORS.iris }} />
+          )}
+          <Button type="primary" size="small" icon={<PlusOutlined />}
+            onClick={() => { setNewProjStep(0); setNewProjOpen(true); }}>新建</Button>
+        </div>
+      )}
+
+      {/* ── Left: Project list (desktop) ── */}
       <div style={{
-        width: isNarrow ? '100%' : 260, height: isNarrow ? 150 : 'auto',
-        borderRight: isNarrow ? 'none' : `1px solid ${COLORS.border}`,
-        borderBottom: isNarrow ? `1px solid ${COLORS.border}` : 'none',
-        background: '#fafbfd', display: 'flex', flexDirection: 'column', flexShrink: 0,
+        width: 260,
+        borderRight: `1px solid ${COLORS.border}`,
+        background: '#fafbfd', display: isNarrow ? 'none' : 'flex', flexDirection: 'column', flexShrink: 0,
       }}>
         <div style={{ padding: '14px 16px 10px', borderBottom: `1px solid ${COLORS.border}`, background: '#fff' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -653,7 +675,7 @@ export default function Production() {
                 <Input prefix={<SearchOutlined style={{ color: '#bbb' }} />} placeholder="搜索卡片..."
                   value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                   allowClear size="small"
-                  style={{ width: 180 }} />
+                  style={{ width: isNarrow ? '100%' : 180 }} />
                 <Select size="small" value={statusFilter} onChange={v => setStatusFilter(v ?? '')}
                   placeholder="状态" allowClear style={{ width: 100 }}
                   options={[
@@ -682,8 +704,8 @@ export default function Production() {
             {/* ── Batch action bar ── */}
             {selectedCards.size > 0 && (
               <div style={{
-                padding: '6px 20px', background: `${COLORS.iris}08`, borderBottom: `1px solid ${COLORS.iris}20`,
-                display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0,
+                padding: isNarrow ? '6px 12px' : '6px 20px', background: `${COLORS.iris}08`, borderBottom: `1px solid ${COLORS.iris}20`,
+                display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, flexWrap: 'wrap',
               }}>
                 <Text strong style={{ fontSize: 12, color: COLORS.iris }}>已选 {selectedCards.size} 张</Text>
                 <Select size="small" placeholder="批量移动到..." style={{ width: 150 }}
@@ -730,6 +752,8 @@ export default function Production() {
             <div style={{
               flex: 1, overflow: 'auto', padding: isNarrow ? '10px 4px' : '12px 10px',
               display: 'flex', gap: 10, minWidth: 0, minHeight: 0, background: '#f5f6fa',
+              scrollSnapType: isNarrow ? 'x mandatory' : undefined,
+              WebkitOverflowScrolling: 'touch',
             }}>
               {stages.map(stage => {
                 const sc = stageCards(stage.key);
@@ -748,14 +772,15 @@ export default function Production() {
                     onDragLeave={onDragLeave}
                     onDrop={e => onDrop(e, stage.key)}
                     style={{
-                      minWidth: isNarrow ? 'calc(100vw - 96px)' : 250,
-                      maxWidth: isNarrow ? 'calc(100vw - 96px)' : 290,
+                      minWidth: isNarrow ? 'calc(100vw - 48px)' : 250,
+                      maxWidth: isNarrow ? 'calc(100vw - 48px)' : 290,
                       flex: '0 0 auto', display: 'flex', flexDirection: 'column',
                       background: isDragOver ? `${color}10` : '#fff',
                       borderRadius: 12, overflow: 'hidden',
                       border: isDragOver ? `2px dashed ${color}` : '1px solid #eee',
                       transition: 'all .2s',
                       boxShadow: '0 1px 3px rgba(0,0,0,.04)',
+                      scrollSnapAlign: isNarrow ? 'start' : undefined,
                     }}>
                     {/* Column header */}
                     <div style={{ padding: '10px 12px 6px', flexShrink: 0 }}>
@@ -900,7 +925,7 @@ export default function Production() {
       {/* ── Modals ── */}
 
       {/* New project */}
-      <Modal title="新建制作项目" open={newProjOpen} onCancel={() => setNewProjOpen(false)} width={620}
+      <Modal title="新建制作项目" open={newProjOpen} onCancel={() => setNewProjOpen(false)} width={isNarrow ? '100%' : 620}
         footer={[
           <Button key="cancel" onClick={() => setNewProjOpen(false)}>取消</Button>,
           newProjStep > 0 && <Button key="prev" onClick={() => setNewProjStep(s => s - 1)}>上一步</Button>,
@@ -913,25 +938,27 @@ export default function Production() {
         ]}>
         <Steps size="small" current={newProjStep} items={[{ title: '项目目标' }, { title: '生产规格' }, { title: '素材与执行' }]} style={{ margin: '12px 0 24px' }} />
         {newProjStep === 0 && <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <label><Text type="secondary">项目名称</Text><Input value={newProjForm.name} onChange={e => setNewProjForm(p => ({ ...p, name: e.target.value }))} placeholder="例：九陆纪元 · 第一季" style={{ marginTop: 5 }} /></label>
-          <label><Text type="secondary">项目简介</Text><Input value={newProjForm.description} onChange={e => setNewProjForm(p => ({ ...p, description: e.target.value }))} placeholder="一句话说明这一季讲什么" style={{ marginTop: 5 }} /></label>
+          <label><Text type="secondary">项目类型</Text><Select value={newProjForm.sourceType} onChange={v => { const isGc = v === 'gc'; setNewProjForm(p => ({ ...p, sourceType: v, ...(isGc ? { episodeCount: 1, episodeDurationSeconds: 30 } : {}) })); }} style={{ width: '100%', marginTop: 5 }} options={[{ value: 'idea', label: '剧集 · 创意/想法' }, { value: 'novel', label: '剧集 · 小说/原著' }, { value: 'script', label: '剧集 · 已有剧本' }, { value: 'outline', label: '剧集 · 大纲' }, { value: 'gc', label: 'GC 概念宣传片' }]} /></label>
+          <label><Text type="secondary">项目名称</Text><Input value={newProjForm.name} onChange={e => setNewProjForm(p => ({ ...p, name: e.target.value }))} placeholder={newProjForm.sourceType === 'gc' ? '例：九陆纪元 · 概念预告' : '例：九陆纪元 · 第一季'} style={{ marginTop: 5 }} /></label>
+          <label><Text type="secondary">项目简介</Text><Input value={newProjForm.description} onChange={e => setNewProjForm(p => ({ ...p, description: e.target.value }))} placeholder={newProjForm.sourceType === 'gc' ? '30秒抓住观众——核心卖点是什么' : '一句话说明这一季讲什么'} style={{ marginTop: 5 }} /></label>
         </div>}
-        {newProjStep === 1 && <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        {newProjStep === 1 && <div style={{ display: 'grid', gridTemplateColumns: isNarrow ? '1fr' : '1fr 1fr', gap: 16 }}>
+          {newProjForm.sourceType !== 'gc' && <>
           <label><Text type="secondary">计划集数</Text><InputNumber min={1} max={500} value={newProjForm.episodeCount} onChange={v => setNewProjForm(p => ({ ...p, episodeCount: v || 1 }))} style={{ width: '100%', marginTop: 5 }} /></label>
           <label><Text type="secondary">单集时长（秒）</Text><InputNumber min={5} max={3600} value={newProjForm.episodeDurationSeconds} onChange={v => setNewProjForm(p => ({ ...p, episodeDurationSeconds: v || 90 }))} style={{ width: '100%', marginTop: 5 }} /></label>
+          </>}
           <label><Text type="secondary">画幅</Text><Select value={newProjForm.aspectRatio} onChange={v => setNewProjForm(p => ({ ...p, aspectRatio: v }))} options={[{ value: '9:16', label: '竖屏 9:16' }, { value: '16:9', label: '横屏 16:9' }, { value: '1:1', label: '方形 1:1' }]} style={{ width: '100%', marginTop: 5 }} /></label>
           <label><Text type="secondary">预算（元，可选）</Text><InputNumber min={0} precision={2} value={newProjForm.budget} onChange={v => setNewProjForm(p => ({ ...p, budget: v || 0 }))} style={{ width: '100%', marginTop: 5 }} /></label>
           <label style={{ gridColumn: '1 / -1' }}><Text type="secondary">视觉风格</Text><Input value={newProjForm.visualStyle} onChange={e => setNewProjForm(p => ({ ...p, visualStyle: e.target.value }))} placeholder="例：半写实东方幻想、电影光影、低描边" style={{ marginTop: 5 }} /></label>
         </div>}
         {newProjStep === 2 && <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <label><Text type="secondary">素材类型</Text><Select value={newProjForm.sourceType} onChange={v => setNewProjForm(p => ({ ...p, sourceType: v }))} style={{ width: '100%', marginTop: 5 }} options={[{ value: 'idea', label: '创意/想法' }, { value: 'novel', label: '小说/原著' }, { value: 'script', label: '已有剧本' }, { value: 'outline', label: '大纲' }]} /></label>
-          <label><Text type="secondary">原始内容</Text><TextArea value={newProjForm.sourceContent} onChange={e => setNewProjForm(p => ({ ...p, sourceContent: e.target.value }))} placeholder="粘贴创意、小说章节或剧本大纲；创建后可继续补充" rows={6} style={{ marginTop: 5 }} /></label>
+          <label><Text type="secondary">{newProjForm.sourceType === 'gc' ? '概念描述' : '原始内容'}</Text><TextArea value={newProjForm.sourceContent} onChange={e => setNewProjForm(p => ({ ...p, sourceContent: e.target.value }))} placeholder={newProjForm.sourceType === 'gc' ? '描述你想要展示的核心视觉瞬间、世界观亮点和情绪钩子' : '粘贴创意、小说章节或剧本大纲；创建后可继续补充'} rows={6} style={{ marginTop: 5 }} /></label>
           <label><Text type="secondary">默认 AI 员工</Text><Select value={newProjForm.employeeKey} onChange={v => setNewProjForm(p => ({ ...p, employeeKey: v }))} style={{ width: '100%', marginTop: 5 }} allowClear placeholder="可稍后选择" options={employees.map(e => ({ value: e.employeeKey, label: e.name }))} /></label>
         </div>}
       </Modal>
 
       {/* Edit project */}
-      <Modal title="编辑项目" open={editProjectOpen} onCancel={() => setEditProjectOpen(false)} onOk={handleUpdateProject} okText="保存" width={480}>
+      <Modal title="编辑项目" open={editProjectOpen} onCancel={() => setEditProjectOpen(false)} onOk={handleUpdateProject} okText="保存" width={isNarrow ? '100%' : 480}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>项目名称</Text>
@@ -947,7 +974,7 @@ export default function Production() {
       {/* Generate dialog */}
       <Modal title={`AI 生成: ${stages.find(s => s.key === genTarget)?.name || ''}`}
         open={genDialogOpen} onCancel={() => setGenDialogOpen(false)} onOk={handleGenerate}
-        okText="开始生成" okButtonProps={{ icon: <ThunderboltOutlined /> }} width={480}>
+        okText="开始生成" okButtonProps={{ icon: <ThunderboltOutlined /> }} width={isNarrow ? '100%' : 480}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>执行员工</Text>
@@ -990,7 +1017,7 @@ export default function Production() {
 
       {/* Add card */}
       <Modal title={`新建卡片 — ${stages.find(s => s.key === addCardStage)?.name || ''}`}
-        open={addCardOpen} onCancel={() => setAddCardOpen(false)} onOk={handleAddCard} okText="创建" width={480}>
+        open={addCardOpen} onCancel={() => setAddCardOpen(false)} onOk={handleAddCard} okText="创建" width={isNarrow ? '100%' : 480}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>标题</Text>
@@ -1021,14 +1048,14 @@ export default function Production() {
 
       {/* ── Card detail drawer ── */}
       <Drawer title={null} open={cardDrawerOpen}
-        onClose={() => { setCardDrawerOpen(false); setEditMode(false); setEditForm({}); }} width={680}
+        onClose={() => { setCardDrawerOpen(false); setEditMode(false); setEditForm({}); }} width={isNarrow ? '100%' : 680}
         styles={{ header: { display: 'none' }, body: { padding: 0 } }}
       >
         {activeCard && (
           <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Drawer header */}
             <div style={{
-              padding: '14px 20px', borderBottom: `1px solid ${COLORS.border}`,
+              padding: isNarrow ? '12px 14px' : '14px 20px', borderBottom: `1px solid ${COLORS.border}`,
               display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -1058,7 +1085,7 @@ export default function Production() {
             </div>
 
             {/* Drawer body */}
-            <div style={{ flex: 1, overflow: 'auto', padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ flex: 1, overflow: 'auto', padding: isNarrow ? 14 : 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
               {/* Title & move */}
               {!editMode && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1270,6 +1297,33 @@ export default function Production() {
                       ))}
                     </div>
                   )}
+                  {(activeCard.negative_prompts?.length ?? 0) > 0 && (
+                    <div>
+                      <Text strong style={{ fontSize: 13, marginBottom: 8, display: 'block' }}>
+                        供应商负向提示词 <Tag color="orange">独立字段，不会拼入正向提示词</Tag>
+                      </Text>
+                      {activeCard.negative_prompts!.map((p, i) => (
+                        <div key={i} style={{
+                          background: '#fff7e6', border: '1px solid #ffd591', borderRadius: 10,
+                          padding: '12px 16px', paddingRight: 48, marginBottom: 8, position: 'relative',
+                          fontSize: 13, lineHeight: 1.6, whiteSpace: 'pre-wrap',
+                        }}>
+                          <div style={{ position: 'absolute', top: 8, right: 8 }}><CopyBtn text={p} /></div>
+                          {p}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {(activeCard.metadata?.quality_gate?.issues?.length ?? 0) > 0 && (
+                    <div style={{ background: '#fff2f0', border: '1px solid #ffccc7', borderRadius: 10, padding: 14 }}>
+                      <Text strong type="danger">自动质检未通过</Text>
+                      <ul style={{ margin: '8px 0 0', paddingLeft: 20 }}>
+                        {activeCard.metadata.quality_gate.issues.map((issue: { code: string; message: string }) => (
+                          <li key={issue.code}><Text type="danger">{issue.message}</Text></li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -1278,7 +1332,7 @@ export default function Production() {
       </Drawer>
 
       {/* ── Project Settings Drawer ── */}
-      <Drawer title="项目设置" open={settingsOpen} onClose={() => setSettingsOpen(false)} width={480}>
+      <Drawer title="项目设置" open={settingsOpen} onClose={() => setSettingsOpen(false)} width={isNarrow ? '100%' : 480}>
         {project && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {/* Info */}
@@ -1404,7 +1458,7 @@ export default function Production() {
       </Drawer>
 
       {/* Add member modal */}
-      <Modal title="添加成员" open={addMemberOpen} onCancel={() => setAddMemberOpen(false)} onOk={handleAddMember} okText="添加" width={400}>
+      <Modal title="添加成员" open={addMemberOpen} onCancel={() => setAddMemberOpen(false)} onOk={handleAddMember} okText="添加" width={isNarrow ? '100%' : 400}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>成员名称</Text>

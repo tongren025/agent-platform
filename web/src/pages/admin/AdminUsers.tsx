@@ -5,8 +5,10 @@ import { message } from '../../ui';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { adminApi, type PlatformUser, type PlatformRole } from '../../adminApi';
 import { COLORS } from '../../theme';
+import { useResponsive } from '../../hooks/useResponsive';
 
 export default function AdminUsers() {
+  const { isMobile } = useResponsive();
   const [list, setList] = useState<PlatformUser[]>([]);
   const [roles, setRoles] = useState<PlatformRole[]>([]);
   const [loading, setLoading] = useState(true);
@@ -138,28 +140,28 @@ export default function AdminUsers() {
 
   return (
     <div>
-      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{ marginBottom: isMobile ? 16 : 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0, color: COLORS.slateDark }}>用户管理</h1>
+          <h1 style={{ fontSize: isMobile ? 20 : 24, fontWeight: 700, margin: 0, color: COLORS.slateDark }}>用户管理</h1>
           <div style={{ color: COLORS.slate, fontSize: 14, marginTop: 4 }}>管理可以登录本平台的用户账号</div>
         </div>
-        <Space>
+        <Space wrap>
           <Input
             prefix={<SearchOutlined style={{ color: COLORS.slate }} />}
             placeholder="搜索用户"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             allowClear
-            style={{ width: 200 }}
+            style={{ width: isMobile ? '100%' : 200, minWidth: 160 }}
           />
           <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新增用户</Button>
         </Space>
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: 80 }}><Spin size="large" /></div>
+        <div style={{ textAlign: 'center', padding: isMobile ? 40 : 80 }}><Spin size="large" /></div>
       ) : (
-        <Table rowKey="userId" columns={columns} dataSource={filtered} pagination={{ pageSize: 20 }} size="middle" />
+        <Table rowKey="userId" columns={columns} dataSource={filtered} pagination={{ pageSize: 20 }} size="middle" scroll={{ x: 'max-content' }} />
       )}
 
       <Modal
@@ -169,7 +171,7 @@ export default function AdminUsers() {
         onCancel={() => setOpen(false)}
         destroyOnHidden
         forceRender
-        width={480}
+        width={isMobile ? '100%' : 480}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item label="用户名" name="username" rules={[{ required: true, message: '请输入用户名' }]}>

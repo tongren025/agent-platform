@@ -12,6 +12,7 @@ import {
   VideoCameraOutlined, WarningOutlined, InboxOutlined, UndoOutlined,
 } from '@ant-design/icons';
 import { api, type MatrixProject, type MatrixRow, type OrphanCard, type ArchivedCard } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 import { COLORS } from '../theme';
 
 const { Text, Title, Paragraph } = Typography;
@@ -41,6 +42,7 @@ function Cell({ n, required }: { n: number; required: boolean }) {
 
 export default function ProductionMatrix() {
   const navigate = useNavigate();
+  const { isMobile } = useResponsive();
   const [projects, setProjects] = useState<MatrixProject[]>([]);
   const [rows, setRows] = useState<MatrixRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -167,13 +169,13 @@ export default function ProductionMatrix() {
   }
 
   return (
-    <div style={{ padding: 16, height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+    <div style={{ padding: isMobile ? 8 : 16, height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <Title level={4} style={{ margin: '0 0 4px' }}>全链路对照</Title>
       <Text type="secondary" style={{ fontSize: 12 }}>
         主键 = 季 × 集 × G 生成单元。一行走完剧本 → 分镜 → 首帧 → 视频提示词 → 成图 → 成片，断在哪里一眼可见。
       </Text>
 
-      <Space style={{ margin: '14px 0 10px' }} wrap>
+      <Space style={{ margin: isMobile ? '8px 0 6px' : '14px 0 10px', flexWrap: 'wrap' }} wrap>
         <Segmented value={pid} onChange={v => setPid(v as string)}
           options={projects.map(p => ({
             value: p.project_id,
@@ -206,16 +208,16 @@ export default function ProductionMatrix() {
             <Text strong style={{ color: '#389e0d' }}>{stats.specDone}</Text>
             {stats.gaps > 0 && <Badge count={`断链 ${stats.gaps}`} style={{ backgroundColor: '#cf1322', marginLeft: 6 }} />}
           </span>
-          <span style={{ minWidth: 200 }}>
+          <span style={{ minWidth: isMobile ? 140 : 200 }}>
             <Text type="secondary" style={{ fontSize: 12 }}>出图进度 </Text>
             <Progress percent={Math.round(100 * stats.withImg / stats.units)} size="small"
-              format={() => `${stats.withImg}/${stats.units}`} style={{ width: 150 }}
+              format={() => `${stats.withImg}/${stats.units}`} style={{ width: isMobile ? 100 : 150 }}
               strokeColor={stats.withImg === 0 ? '#d9d9d9' : COLORS.iris} />
           </span>
         </Space>
       )}
 
-      <div style={{ flex: 1, minHeight: 0 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowX: 'auto' }}>
         <Table<MatrixRow>
           rowKey={r => `${r.project_id}-${r.episode}-${r.unit}`}
           dataSource={visible}
@@ -223,7 +225,7 @@ export default function ProductionMatrix() {
           size="small"
           pagination={false}
           virtual
-          scroll={{ x: 1080, y: Math.max(400, window.innerHeight - 340) }}
+          scroll={{ x: 1080, y: Math.max(300, window.innerHeight - (isMobile ? 400 : 340)) }}
           onRow={r => ({
             style: { cursor: 'pointer' },
             onClick: () => navigate(`/production/${r.project_id}/ep/${r.episode}`),
@@ -233,7 +235,7 @@ export default function ProductionMatrix() {
       </div>
 
       {/* 孤儿卡：先看清内容再决定归档，绝不静默移动 */}
-      <Modal title={`孤儿卡（${myOrphans.length}）`} open={orphanOpen} width={720}
+      <Modal title={`孤儿卡（${myOrphans.length}）`} open={orphanOpen} width={isMobile ? '100%' : 720}
         onCancel={() => setOrphanOpen(false)}
         footer={[
           <Button key="c" onClick={() => setOrphanOpen(false)}>取消</Button>,
@@ -269,7 +271,7 @@ export default function ProductionMatrix() {
 
       {/* 归档区：永不删除，一卡一文件存在 data/production/<pid>/archive/ */}
       <Drawer title={`归档区 · ${projects.find(p => p.project_id === pid)?.name || ''}`}
-        open={archiveOpen} onClose={() => setArchiveOpen(false)} width={560}>
+        open={archiveOpen} onClose={() => setArchiveOpen(false)} width={isMobile ? '100%' : 560}>
         <Text type="secondary" style={{ fontSize: 12 }}>
           归档不是删除。卡片以 <Text code>data/production/{pid}/archive/&lt;card_id&gt;.json</Text> 原样保存，随时可恢复。
         </Text>

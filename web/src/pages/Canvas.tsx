@@ -16,6 +16,7 @@ import {
   FileTextOutlined, ImportOutlined, BranchesOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 import { CanvasCtx, DataNode, ImageNode, STAGE_META, type CanvasActions } from '../components/canvas/CanvasNodes';
 
 const { Text } = Typography;
@@ -46,6 +47,20 @@ const edgeDefaults = {
 };
 
 export default function Canvas() {
+  const { isMobile } = useResponsive();
+
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 32, textAlign: 'center' }}>
+        <div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🖥️</div>
+          <h2 style={{ marginBottom: 8 }}>请在桌面端使用</h2>
+          <p style={{ color: '#888' }}>画布功能需要更大的屏幕，请在电脑上打开此页面。</p>
+        </div>
+      </div>
+    );
+  }
+
   const [canvases, setCanvases] = useState<CanvasSummary[]>([]);
   const [currentId, setCurrentId] = useState('');
   const [loading, setLoading] = useState(false);

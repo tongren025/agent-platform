@@ -1,6 +1,7 @@
 // CLI 流水线页：用本地 claude/gemini CLI 跑漫剧创作流水线（导演→编剧→美术…）。
 import { useState, useEffect } from 'react';
 import { Card, Button, Input, Table, Tag, Space, Spin, Typography, Collapse, Select, Modal, Alert } from 'antd';
+import { useResponsive } from '../hooks/useResponsive';
 import { message } from '../ui';
 import {
   PlayCircleOutlined, CheckCircleOutlined, CloseCircleOutlined,
@@ -69,6 +70,7 @@ const CLI_COLORS: Record<string, string> = {
 };
 
 export default function Pipeline() {
+  const { isMobile } = useResponsive();
   const [theme, setTheme] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RunResult | null>(null);
@@ -150,7 +152,7 @@ export default function Pipeline() {
       {/* CLI 状态 */}
       {cliStatus && (
         <Card size="small" style={{ marginBottom: 16 }}>
-          <Space size="large">
+          <Space size="large" wrap>
             <Text strong>CLI 状态:</Text>
             {Object.entries(cliStatus.available).map(([name, ok]) => (
               <Tag
@@ -198,6 +200,7 @@ export default function Pipeline() {
                   dataSource={cliStatus.stages}
                   rowKey="employeeKey"
                   pagination={false}
+                  scroll={{ x: 'max-content' }}
                   columns={[
                     { title: '顺序', dataIndex: 'order', width: 60 },
                     { title: '角色', dataIndex: 'name', width: 140 },
@@ -209,7 +212,7 @@ export default function Pipeline() {
                           size="small"
                           value={cliOverrides[row.employeeKey] || row.defaultCli}
                           onChange={v => setCliOverrides(prev => ({ ...prev, [row.employeeKey]: v }))}
-                          style={{ width: 120 }}
+                          style={{ width: isMobile ? '100%' : 120 }}
                         >
                           <Option value="claude">Claude</Option>
                           <Option value="gemini">Gemini</Option>
@@ -245,7 +248,7 @@ export default function Pipeline() {
         <Card
           title={`运行结果: ${result.runId}`}
           extra={
-            <Space>
+            <Space wrap>
               <Tag color={result.success ? 'success' : 'error'}>
                 {result.success ? '成功' : '部分失败'}
               </Tag>
@@ -266,6 +269,7 @@ export default function Pipeline() {
             dataSource={result.steps}
             rowKey="employeeKey"
             pagination={false}
+            scroll={{ x: 'max-content' }}
             columns={[
               { title: '角色', dataIndex: 'name', width: 140 },
               {
@@ -327,6 +331,7 @@ export default function Pipeline() {
             dataSource={runs}
             rowKey="runId"
             pagination={{ pageSize: 10 }}
+            scroll={{ x: 'max-content' }}
             columns={[
               { title: 'ID', dataIndex: 'runId', width: 180 },
               { title: '题材', dataIndex: 'theme', ellipsis: true },
@@ -361,16 +366,16 @@ export default function Pipeline() {
         open={finalModalOpen}
         onCancel={() => setFinalModalOpen(false)}
         footer={null}
-        width={900}
+        width={isMobile ? '100%' : 900}
       >
         <pre style={{
           whiteSpace: 'pre-wrap',
           maxHeight: '70vh',
           overflow: 'auto',
-          fontSize: 13,
+          fontSize: isMobile ? 12 : 13,
           lineHeight: 1.6,
           background: '#fafafa',
-          padding: 16,
+          padding: isMobile ? 8 : 16,
           borderRadius: 8,
         }}>
           {finalDoc}

@@ -1,6 +1,7 @@
 // 单集详情页：该集全部 G 生成单元卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useResponsive } from '../hooks/useResponsive';
 import { Breadcrumb, Button, Card, Col, Drawer, Empty, Image, Row, Space, Spin, Tag, Tooltip, Typography, Tabs, Badge } from 'antd';
 import { message } from '../ui';
 import {
@@ -19,7 +20,7 @@ const { Text, Title } = Typography;
 
 interface CardItem {
   card_id: string; project_id: string; stage: string; title: string;
-  content: string; episode: number | null; shot_number: number; prompts: string[];
+  content: string; episode: number | null; shot_number: number; prompts: string[]; negative_prompts?: string[];
   images: string[]; videos: string[]; metadata: Record<string, any>;
   status: string; assignee: string; created_at: string; updated_at: string;
 }
@@ -92,6 +93,7 @@ function StagePill({ stage, done }: { stage: string; done: boolean }) {
 export default function EpisodeDetail() {
   const navigate = useNavigate();
   const { pid, ep } = useParams<{ pid: string; ep: string }>();
+  const { isMobile } = useResponsive();
   const epNum = parseInt(ep || '1');
 
   const [allCards, setAllCards] = useState<CardItem[]>([]);
@@ -174,6 +176,10 @@ export default function EpisodeDetail() {
         for (const c of g.cards.filter(x => x.stage === stage)) {
           lines.push(`## G${g.unitNumber} · ${label} · ${c.title}`, '', c.content, '');
           for (const p of c.prompts) lines.push(p, '');
+          if ((c.negative_prompts?.length ?? 0) > 0) {
+            lines.push('### 供应商负向提示词（独立使用，不拼入正向提示词）', '');
+            for (const p of c.negative_prompts!) lines.push(p, '');
+          }
         }
       }
     }
@@ -193,9 +199,9 @@ export default function EpisodeDetail() {
   }
 
   return (
-    <div style={{ padding: '20px 28px', maxWidth: 1400 }}>
+    <div style={{ padding: isMobile ? '12px 10px' : '20px 28px', maxWidth: 1400 }}>
       {/* ── 顶栏 ── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
         <div>
           <Breadcrumb items={[
             { title: <span style={{ cursor: 'pointer' }} onClick={() => navigate(`/production/${pid}`)}><HomeOutlined /> {projectName}</span> },
@@ -205,7 +211,7 @@ export default function EpisodeDetail() {
             EP{String(epNum).padStart(2, '0')}《{epTitle}》
           </Title>
         </div>
-        <Space>
+        <Space wrap>
           <Tooltip title="整集级头部 + 每个 G 单元的首帧/视频提示词，按顺序拼成 markdown，下载并复制">
             <Button icon={<DownloadOutlined />} onClick={exportPrompts}>导出提示词</Button>
           </Tooltip>
@@ -312,7 +318,7 @@ export default function EpisodeDetail() {
       <Drawer
         open={!!drawerCard}
         onClose={() => setDrawerCard(null)}
-        width={680}
+        width={isMobile ? '100%' : 680}
         title={drawerCard ? `${unitLabel(drawerCard.shot_number)} 生成单元资源` : ''}
       >
         {drawerCard && (() => {
@@ -343,8 +349,8 @@ export default function EpisodeDetail() {
                           <Space size={4}>
                             {/* 提示词正文存在 content 字段，必须能一键复制去生成端 */}
                             {card.content && <CopyBtn text={card.content} />}
-                            <Tag color={card.status === 'done' ? 'success' : 'warning'}>
-                              {card.status === 'done' ? '已完成' : '待制作'}
+                            <Tag color={card.status === 'done' ? 'success' : card.status === 'review' ? 'processing' : 'warning'}>
+                              {card.status === 'done' ? '已完成' : card.status === 'review' ? '待复核' : '待制作'}
                             </Tag>
                           </Space>
                         </div>
@@ -382,6 +388,25 @@ export default function EpisodeDetail() {
                             ))}
                           </div>
                         )}
+                        {(card.negative_prompts?.length ?? 0) > 0 && (
+                          <div style={{ marginBottom: 10 }}>
+                            <Text type="warning" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+                              供应商负向提示词（独立字段）
+                            </Text>
+                            {card.negative_prompts!.map((p, i) => (
+                              <div key={i} style={{ background: '#fff7e6', border: '1px solid #ffd591', borderRadius: 8, padding: '10px 14px', fontSize: 12, whiteSpace: 'pre-wrap', marginBottom: 6 }}>
+                                {p}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {(card.metadata?.quality_gate?.issues?.length ?? 0) > 0 && (
+                          <div style={{ background: '#fff2f0', border: '1px solid #ffccc7', borderRadius: 8, padding: '8px 12px', marginBottom: 10 }}>
+                            <Text type="danger" style={{ fontSize: 12 }}>
+                              自动质检：{card.metadata.quality_gate.issues.map((issue: { message: string }) => issue.message).join('；')}
+                            </Text>
+                          </div>
+                        )}
 
                         {/* 图片 */}
                         {card.images.length > 0 && (
@@ -411,7 +436,7 @@ export default function EpisodeDetail() {
                             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                               {card.videos.map((url, i) => (
                                 <video key={i} src={url} controls
-                                  style={{ maxWidth: 280, borderRadius: 8, background: '#000' }} />
+                                  style={{ maxWidth: isMobile ? '100%' : 280, borderRadius: 8, background: '#000' }} />
                               ))}
                             </div>
                           </div>

@@ -11,6 +11,7 @@ import { message } from '../ui';
 import { ArrowLeftOutlined, SaveOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 import WorkflowNodeCard from '../components/workflow/WorkflowNodeCard';
 import NodeConfigDrawer from '../components/workflow/NodeConfigDrawer';
 import RunPanel from '../components/workflow/RunPanel';
@@ -26,6 +27,7 @@ function genId(type: string): string {
 export default function WorkflowEditor() {
   const { key = '' } = useParams();
   const navigate = useNavigate();
+  const { isMobile } = useResponsive();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -137,6 +139,18 @@ export default function WorkflowEditor() {
     workflowKey: key, name: meta.name || key, description: meta.description ?? null, teamCode: meta.teamCode ?? null,
     nodes: allWfNodes, edges: [] as any, enabled: true, sortOrder: 0, createdAt: '', updatedAt: '',
   }), [key, meta, allWfNodes]);
+
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 32, textAlign: 'center' }}>
+        <div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🖥️</div>
+          <h2 style={{ marginBottom: 8 }}>请在桌面端使用</h2>
+          <p style={{ color: '#888' }}>工作流编辑器需要更大的屏幕，请在电脑上打开此页面。</p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) return <Spin size="large" style={{ display: 'block', marginTop: 120, textAlign: 'center' }} />;
 

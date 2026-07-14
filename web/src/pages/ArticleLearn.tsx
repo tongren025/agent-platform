@@ -10,6 +10,7 @@ import {
 import dayjs from 'dayjs';
 import { api } from '../api';
 import { COLORS } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { Text, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -22,6 +23,7 @@ const STATUS_MAP: Record<string, { color: string; text: string }> = {
 };
 
 export default function ArticleLearn() {
+  const { isMobile } = useResponsive();
   const [sources, setSources] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -135,9 +137,9 @@ export default function ArticleLearn() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
         <Typography.Title level={4} style={{ margin: 0 }}>自动学习 · 文章学习</Typography.Title>
-        <Space>
+        <Space wrap>
           <Button icon={<ReloadOutlined />} onClick={fetchAll}>刷新</Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新建学习源</Button>
         </Space>
@@ -149,22 +151,23 @@ export default function ArticleLearn() {
         description="系统每天定时（默认凌晨 2 点）抓取你配置的文章网址，用 LLM（大语言模型）总结成专业知识，自动写入「注入员工」的知识库与长期记忆。适合让某个员工持续吸收某领域的公开文章。"
       />
 
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={8}><Card size="small" style={{ borderRadius: 10 }}><Statistic title="学习源" value={sources.length} prefix={<ReadOutlined />} /></Card></Col>
-        <Col span={8}><Card size="small" style={{ borderRadius: 10 }}><Statistic title="累计学习文章" value={totalLearned} prefix={<ThunderboltOutlined />} /></Card></Col>
-        <Col span={8}><Card size="small" style={{ borderRadius: 10 }}><Statistic title="启用中" value={sources.filter(s => s.enabled).length} prefix={<ClockCircleOutlined />} /></Card></Col>
+      <Row gutter={[16, 12]} style={{ marginBottom: 16 }}>
+        <Col xs={24} sm={8}><Card size="small" style={{ borderRadius: 10 }}><Statistic title="学习源" value={sources.length} prefix={<ReadOutlined />} /></Card></Col>
+        <Col xs={24} sm={8}><Card size="small" style={{ borderRadius: 10 }}><Statistic title="累计学习文章" value={totalLearned} prefix={<ThunderboltOutlined />} /></Card></Col>
+        <Col xs={24} sm={8}><Card size="small" style={{ borderRadius: 10 }}><Statistic title="启用中" value={sources.filter(s => s.enabled).length} prefix={<ClockCircleOutlined />} /></Card></Col>
       </Row>
 
       <Card style={{ borderRadius: 12 }}>
         <Table rowKey="sourceCode" columns={columns as any} dataSource={sources} loading={loading} pagination={false}
+          scroll={{ x: 'max-content' }}
           locale={{ emptyText: <Empty description="还没有学习源，点击右上角新建" /> }} />
       </Card>
 
-      <Modal title={editing ? '编辑学习源' : '新建学习源'} open={modalOpen} onOk={handleSave} onCancel={() => setModalOpen(false)} confirmLoading={saving} destroyOnHidden forceRender width={640}>
+      <Modal title={editing ? '编辑学习源' : '新建学习源'} open={modalOpen} onOk={handleSave} onCancel={() => setModalOpen(false)} confirmLoading={saving} destroyOnHidden forceRender width={isMobile ? '100%' : 640}>
         <Form form={form} layout="vertical">
           <Row gutter={16}>
-            <Col span={12}><Form.Item label="标识 (sourceCode)" name="sourceCode" rules={[{ required: true, message: '请输入唯一标识' }, { pattern: /^[\w-]+$/, message: '只允许字母数字 _ -' }]}><Input placeholder="如 design-blogs" disabled={!!editing} /></Form.Item></Col>
-            <Col span={12}><Form.Item label="名称" name="name" rules={[{ required: true, message: '请输入名称' }]}><Input placeholder="如 设计灵感周刊" /></Form.Item></Col>
+            <Col xs={24} sm={12}><Form.Item label="标识 (sourceCode)" name="sourceCode" rules={[{ required: true, message: '请输入唯一标识' }, { pattern: /^[\w-]+$/, message: '只允许字母数字 _ -' }]}><Input placeholder="如 design-blogs" disabled={!!editing} /></Form.Item></Col>
+            <Col xs={24} sm={12}><Form.Item label="名称" name="name" rules={[{ required: true, message: '请输入名称' }]}><Input placeholder="如 设计灵感周刊" /></Form.Item></Col>
           </Row>
           <Form.Item label="注入员工" name="targetEmployeeKey" rules={[{ required: true, message: '请选择员工' }]} extra="学习到的知识写入该员工的知识库 + 长期记忆">
             <Select showSearch optionFilterProp="label" placeholder="选择一个数字员工"
@@ -177,14 +180,14 @@ export default function ArticleLearn() {
             <Input placeholder="如 漫剧分镜设计" />
           </Form.Item>
           <Row gutter={16}>
-            <Col span={8}><Form.Item label="每日学习时间" name="scheduleTime" rules={[{ required: true }]}><TimePicker format="HH:mm" style={{ width: '100%' }} minuteStep={5} /></Form.Item></Col>
-            <Col span={8}><Form.Item label="单次最多学习" name="maxArticles"><InputNumber min={1} max={50} style={{ width: '100%' }} /></Form.Item></Col>
-            <Col span={8}><Form.Item label="启用定时" name="enabled" valuePropName="checked"><Switch /></Form.Item></Col>
+            <Col xs={24} sm={8}><Form.Item label="每日学习时间" name="scheduleTime" rules={[{ required: true }]}><TimePicker format="HH:mm" style={{ width: '100%' }} minuteStep={5} /></Form.Item></Col>
+            <Col xs={24} sm={8}><Form.Item label="单次最多学习" name="maxArticles"><InputNumber min={1} max={50} style={{ width: '100%' }} /></Form.Item></Col>
+            <Col xs={24} sm={8}><Form.Item label="启用定时" name="enabled" valuePropName="checked"><Switch /></Form.Item></Col>
           </Row>
         </Form>
       </Modal>
 
-      <Drawer title={`运行历史 · ${historySource?.name ?? ''}`} open={historyOpen} onClose={() => setHistoryOpen(false)} width={640}>
+      <Drawer title={`运行历史 · ${historySource?.name ?? ''}`} open={historyOpen} onClose={() => setHistoryOpen(false)} width={isMobile ? '100%' : 640}>
         {historyLoading ? <div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
           : history.length === 0 ? <Empty description="暂无运行记录" />
           : history.map((h, i) => (
@@ -225,7 +228,7 @@ export default function ArticleLearn() {
         title={articleDetail?.title || '文章详情'}
         open={!!articleDetail}
         onClose={() => setArticleDetail(null)}
-        width={720}
+        width={isMobile ? '100%' : 720}
         extra={
           <Space>
             <Button size="small" type={detailTab === 'original' ? 'primary' : 'default'} icon={<FileTextOutlined />} onClick={() => setDetailTab('original')}>原文</Button>
@@ -236,7 +239,7 @@ export default function ArticleLearn() {
         {articleDetail && (
           <>
             {articleDetail.url && (
-              <div style={{ marginBottom: 12, padding: '8px 12px', background: '#fafafa', borderRadius: 8 }}>
+              <div style={{ marginBottom: 12, padding: isMobile ? '6px 8px' : '8px 12px', background: '#fafafa', borderRadius: 8 }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>来源：</Text>
                 <a href={articleDetail.url} target="_blank" rel="noreferrer" style={{ fontSize: 12, marginLeft: 4 }}>{articleDetail.url}</a>
               </div>

@@ -6,9 +6,11 @@ import { message } from '../ui';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { COLORS } from '../theme';
 import { userAuth } from '../userAuth';
+import { useResponsive } from '../hooks/useResponsive';
 
 export default function UserLogin() {
   const navigate = useNavigate();
+  const { isMobile } = useResponsive();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -43,11 +45,13 @@ export default function UserLogin() {
     >
       <div
         style={{
-          width: 380,
+          width: isMobile ? '100%' : 380,
+          maxWidth: 380,
           background: COLORS.white,
-          borderRadius: 18,
-          padding: '40px 36px',
+          borderRadius: isMobile ? 12 : 18,
+          padding: isMobile ? '24px 16px' : '40px 36px',
           boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
+          margin: isMobile ? '0 16px' : undefined,
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: 28 }}>

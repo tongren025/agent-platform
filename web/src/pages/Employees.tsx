@@ -4,6 +4,7 @@ import { Table, Button, Modal, Form, Input, Switch, Select, Tag, Space, Popconfi
 import { message } from '../ui';
 import { PlusOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
+import { useResponsive } from '../hooks/useResponsive';
 import { api } from '../api';
 import { COLORS } from '../theme';
 import type { Employee } from '../types';
@@ -31,6 +32,7 @@ export default function Employees() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailEmp, setDetailEmp] = useState<Employee | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isMobile } = useResponsive();
 
   const fetchAll = async () => {
     setLoading(true);
@@ -208,7 +210,7 @@ export default function Employees() {
 
   return (
     <div>
-      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: isMobile ? 12 : 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 26, fontWeight: 700, letterSpacing: '-0.02em', color: '#1e293b' }}>
             数字员工
@@ -217,9 +219,9 @@ export default function Employees() {
         </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新建员工</Button>
       </div>
-      <Table rowKey="employeeKey" columns={columns} dataSource={list} loading={loading} pagination={{ pageSize: 20 }} />
+      <Table rowKey="employeeKey" columns={columns} dataSource={list} loading={loading} pagination={{ pageSize: 20 }} scroll={{ x: 'max-content' }} />
 
-      <Modal title={editing ? '编辑员工' : '新建员工'} open={open} onOk={handleSave} onCancel={closeEditor} destroyOnHidden forceRender width={720}>
+      <Modal title={editing ? '编辑员工' : '新建员工'} open={open} onOk={handleSave} onCancel={closeEditor} destroyOnHidden forceRender width={isMobile ? '100%' : 720}>
         <Form form={form} layout="vertical">
           <Form.Item label="员工标识" name="employeeKey" rules={[{ required: true, message: '请输入员工标识' }]}>
             <Input disabled={!!editing} placeholder="唯一标识，创建后不可修改" />
@@ -247,17 +249,17 @@ export default function Employees() {
           </Form.Item>
           <Divider orientation="left" plain style={{ fontSize: 13 }}>模型配置</Divider>
           <Row gutter={16}>
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12}>
               <Form.Item label="模型" name="modelId">
                 <Select showSearch placeholder="选择 AI 模型"
                   options={aiProviders.flatMap(p => (p.models ?? []).map((m: any) => ({ label: `${m.modelName || m.modelId}  (${p.name})`, value: m.modelId || m.modelName })))}
                 />
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col xs={12} sm={12} md={6}>
               <Form.Item label="温度" name="temperature"><Slider min={0} max={2} step={0.1} /></Form.Item>
             </Col>
-            <Col span={6}>
+            <Col xs={12} sm={12} md={6}>
               <Form.Item label="最大 Token" name="maxTokens"><InputNumber min={256} max={128000} step={256} style={{ width: '100%' }} /></Form.Item>
             </Col>
           </Row>
@@ -267,7 +269,7 @@ export default function Employees() {
         </Form>
       </Modal>
 
-      <Modal title={`员工详情 — ${detailEmp?.name ?? ''}`} open={detailOpen} onCancel={() => setDetailOpen(false)} footer={null} width={640}>
+      <Modal title={`员工详情 — ${detailEmp?.name ?? ''}`} open={detailOpen} onCancel={() => setDetailOpen(false)} footer={null} width={isMobile ? '100%' : 640}>
         {detailEmp && (
           <Descriptions column={1} bordered size="small">
             <Descriptions.Item label="员工标识">{detailEmp.employeeKey}</Descriptions.Item>
@@ -287,7 +289,7 @@ export default function Employees() {
         )}
       </Modal>
 
-      <Modal title={`知识库管理 — ${knowledgeEmp?.name ?? ''}`} open={knowledgeOpen} onCancel={() => setKnowledgeOpen(false)} footer={null} width={600}>
+      <Modal title={`知识库管理 — ${knowledgeEmp?.name ?? ''}`} open={knowledgeOpen} onCancel={() => setKnowledgeOpen(false)} footer={null} width={isMobile ? '100%' : 600}>
         <Upload.Dragger
           beforeUpload={(file) => { handleUploadKnowledge(file); return false; }}
           showUploadList={false}
@@ -298,7 +300,7 @@ export default function Employees() {
           <p style={{ color: COLORS.slate, fontSize: 12 }}>支持 .txt, .md, .pdf 等文本格式</p>
         </Upload.Dragger>
         <Table
-          rowKey="docId" dataSource={knowledgeDocs} pagination={false} size="small"
+          rowKey="docId" dataSource={knowledgeDocs} pagination={false} size="small" scroll={{ x: 'max-content' }}
           columns={[
             { title: '文件名', dataIndex: 'fileName', key: 'fileName' },
             { title: '片段数', dataIndex: 'chunkCount', key: 'chunkCount', render: (v: number) => v ?? '-' },

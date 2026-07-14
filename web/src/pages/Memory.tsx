@@ -8,6 +8,7 @@ import {
   CoffeeOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { TextArea } = Input;
 
@@ -35,6 +36,7 @@ export default function Memory() {
   const [form] = Form.useForm();
   const [distillLogs, setDistillLogs] = useState<any[]>([]);
   const [distilling, setDistilling] = useState(false);
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     api.listEmployees().then(setEmployees).catch(() => {});
@@ -224,9 +226,9 @@ export default function Memory() {
       <Card
         title="长期记忆管理"
         extra={
-          <Space>
+          <Space wrap>
             <Select
-              style={{ width: 240 }}
+              style={{ width: isMobile ? '100%' : 240 }}
               placeholder="选择数字员工"
               value={selectedEmp || undefined}
               onChange={setSelectedEmp}
@@ -241,14 +243,14 @@ export default function Memory() {
         {!selectedEmp ? (
           <Empty description="请选择一个数字员工查看其长期记忆" />
         ) : loading ? (
-          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+          <div style={{ textAlign: 'center', padding: isMobile ? '32px 0' : '60px 0' }}>
             <Spin />
             <div style={{ marginTop: 10, color: '#64748b', fontSize: 13 }}>加载中...</div>
           </div>
         ) : (
           <>
-            <Row gutter={16} style={{ marginBottom: 24 }}>
-              <Col span={8}>
+            <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+              <Col xs={24} sm={12} md={8}>
                 <Card size="small">
                   <Statistic
                     title="语义记忆（事实/偏好）"
@@ -258,7 +260,7 @@ export default function Memory() {
                   />
                 </Card>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Card size="small">
                   <Statistic
                     title="经验记忆（成功模式）"
@@ -268,7 +270,7 @@ export default function Memory() {
                   />
                 </Card>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Card size="small">
                   <Statistic
                     title="行为记忆（习得规则）"
@@ -292,7 +294,7 @@ export default function Memory() {
                     <Button type="dashed" icon={<PlusOutlined />} onClick={() => openAddModal('semantic')} style={{ marginBottom: 12 }}>
                       手动添加
                     </Button>
-                    <Table dataSource={semanticData} columns={semanticColumns} rowKey="memoryId" size="small" pagination={{ pageSize: 10 }} />
+                    <Table dataSource={semanticData} columns={semanticColumns} rowKey="memoryId" size="small" pagination={{ pageSize: 10 }} scroll={{ x: 'max-content' }} />
                   </>
                 ),
               },
@@ -307,7 +309,7 @@ export default function Memory() {
                     <Button type="dashed" icon={<PlusOutlined />} onClick={() => openAddModal('episodic')} style={{ marginBottom: 12 }}>
                       手动添加
                     </Button>
-                    <Table dataSource={episodicData} columns={episodicColumns} rowKey="memoryId" size="small" pagination={{ pageSize: 10 }} />
+                    <Table dataSource={episodicData} columns={episodicColumns} rowKey="memoryId" size="small" pagination={{ pageSize: 10 }} scroll={{ x: 'max-content' }} />
                   </>
                 ),
               },
@@ -322,7 +324,7 @@ export default function Memory() {
                     <Button type="dashed" icon={<PlusOutlined />} onClick={() => openAddModal('procedural')} style={{ marginBottom: 12 }}>
                       手动添加
                     </Button>
-                    <Table dataSource={proceduralData} columns={proceduralColumns} rowKey="memoryId" size="small" pagination={{ pageSize: 10 }} />
+                    <Table dataSource={proceduralData} columns={proceduralColumns} rowKey="memoryId" size="small" pagination={{ pageSize: 10 }} scroll={{ x: 'max-content' }} />
                   </>
                 ),
               },
@@ -359,6 +361,7 @@ export default function Memory() {
                       rowKey="logId"
                       size="small"
                       pagination={{ pageSize: 10 }}
+                      scroll={{ x: 'max-content' }}
                       columns={[
                         {
                           title: '时间', dataIndex: 'ranAt', width: 160,
@@ -402,6 +405,7 @@ export default function Memory() {
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         onOk={() => form.submit()}
+        width={isMobile ? '100%' : 520}
         destroyOnHidden
         forceRender
       >

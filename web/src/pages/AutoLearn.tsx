@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { api } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { Text, Paragraph } = Typography;
 
@@ -35,6 +36,7 @@ const STATUS_MAP: Record<string, { color: string; text: string }> = {
 };
 
 export default function AutoLearn() {
+  const { isMobile } = useResponsive();
   const [sources, setSources] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -279,7 +281,7 @@ export default function AutoLearn() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
         <Typography.Title level={4} style={{ margin: 0 }}>自动学习 · 提示词采集</Typography.Title>
         <Space>
           <Button icon={<ReloadOutlined />} onClick={fetchAll}>刷新</Button>
@@ -299,18 +301,18 @@ export default function AutoLearn() {
         }
       />
 
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={8}>
+      <Row gutter={[16, 12]} style={{ marginBottom: 16 }}>
+        <Col xs={24} sm={8}>
           <Card size="small" style={{ borderRadius: 10 }}>
             <Statistic title="采集源" value={sources.length} prefix={<ThunderboltOutlined />} />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col xs={12} sm={8}>
           <Card size="small" style={{ borderRadius: 10 }}>
             <Statistic title="累计提示词" value={totalCollected} prefix={<PictureOutlined />} />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col xs={12} sm={8}>
           <Card size="small" style={{ borderRadius: 10 }}>
             <Statistic title="启用中" value={sources.filter(s => s.enabled).length} prefix={<ClockCircleOutlined />} />
           </Card>
@@ -324,6 +326,7 @@ export default function AutoLearn() {
           dataSource={sources}
           loading={loading}
           pagination={false}
+          scroll={{ x: 800 }}
           locale={{ emptyText: <Empty description="还没有采集源，点击右上角新建" /> }}
         />
       </Card>
@@ -337,16 +340,16 @@ export default function AutoLearn() {
         confirmLoading={saving}
         destroyOnHidden
         forceRender
-        width={640}
+        width={isMobile ? '100%' : 640}
       >
         <Form form={form} layout="vertical">
           <Row gutter={16}>
-            <Col span={12}>
+            <Col xs={24} sm={12}>
               <Form.Item label="标识 (sourceCode)" name="sourceCode" rules={[{ required: true, message: '请输入唯一标识' }]}>
                 <Input placeholder="如 jimeng-daily" disabled={!!editing} />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} sm={12}>
               <Form.Item label="名称" name="name" rules={[{ required: true, message: '请输入名称' }]}>
                 <Input placeholder="如 即梦每日灵感" />
               </Form.Item>
@@ -372,17 +375,17 @@ export default function AutoLearn() {
             />
           </Form.Item>
           <Row gutter={16}>
-            <Col span={8}>
+            <Col xs={12} sm={8}>
               <Form.Item label="每日采集时间" name="scheduleTime" rules={[{ required: true }]}>
                 <TimePicker format="HH:mm" style={{ width: '100%' }} minuteStep={5} />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={12} sm={8}>
               <Form.Item label="单次最多抓取" name="maxItems">
                 <InputNumber min={1} max={100} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={8}>
               <Form.Item label="启用定时" name="enabled" valuePropName="checked">
                 <Switch />
               </Form.Item>
@@ -402,16 +405,16 @@ export default function AutoLearn() {
         }
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        width={760}
+        width={isMobile ? '100%' : 760}
       >
         {promptsLoading ? (
-          <div style={{ textAlign: 'center', padding: '60px 0' }}><Spin size="large" /></div>
+          <div style={{ textAlign: 'center', padding: isMobile ? '30px 0' : '60px 0' }}><Spin size="large" /></div>
         ) : prompts.length === 0 ? (
           <Empty description="还没有采集到提示词，先点「立即采集」" />
         ) : (
           <Row gutter={[12, 12]}>
             {prompts.map((p) => (
-              <Col span={12} key={p.externalId}>
+              <Col xs={24} sm={12} key={p.externalId}>
                 <Card
                   size="small"
                   style={{ borderRadius: 10, height: '100%' }}

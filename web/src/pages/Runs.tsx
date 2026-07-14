@@ -4,6 +4,7 @@ import { Card, Select, Table, Button, Tag, Space, Progress, Statistic, Row, Col,
 import { message } from '../ui';
 import { ReloadOutlined, HistoryOutlined } from '@ant-design/icons';
 import { api } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 import type { AgentRunRecord } from '../types';
 
 const { Text, Paragraph } = Typography;
@@ -17,6 +18,7 @@ function statusTag(r: AgentRunRecord) {
 }
 
 export default function Runs() {
+  const { isMobile } = useResponsive();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [runs, setRuns] = useState<AgentRunRecord[]>([]);
   const [loading, setLoading] = useState(false);
@@ -100,9 +102,9 @@ export default function Runs() {
       <Card
         title={<span><HistoryOutlined /> 运行记录（可观测）</span>}
         extra={
-          <Space>
+          <Space wrap>
             <Select
-              style={{ width: 200 }}
+              style={{ width: isMobile ? '100%' : 200, minWidth: 120 }}
               placeholder="全部员工"
               allowClear
               value={empFilter || undefined}
@@ -110,7 +112,7 @@ export default function Runs() {
               options={employees.map(e => ({ value: e.employeeKey, label: e.name || e.employeeKey }))}
             />
             <Select
-              style={{ width: 120 }}
+              style={{ width: isMobile ? '100%' : 120, minWidth: 100 }}
               value={successFilter}
               onChange={setSuccessFilter}
               options={[
@@ -127,12 +129,12 @@ export default function Runs() {
           每次 agent 运行都会落一条记录——事后审计成本、token、走了哪条工具链、为什么失败。
         </div>
 
-        <Row gutter={16} style={{ marginBottom: 20 }}>
-          <Col span={6}><Card size="small"><Statistic title="运行数" value={total} /></Card></Col>
-          <Col span={6}><Card size="small"><Statistic title="成功率" value={successRate} suffix="%"
+        <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
+          <Col xs={12} sm={6}><Card size="small"><Statistic title="运行数" value={total} /></Card></Col>
+          <Col xs={12} sm={6}><Card size="small"><Statistic title="成功率" value={successRate} suffix="%"
             valueStyle={{ color: successRate >= 90 ? '#52c41a' : successRate >= 60 ? '#fa8c16' : '#f5222d' }} /></Card></Col>
-          <Col span={6}><Card size="small"><Statistic title="Token 合计" value={totalTokens} /></Card></Col>
-          <Col span={6}><Card size="small">
+          <Col xs={12} sm={6}><Card size="small"><Statistic title="Token 合计" value={totalTokens} /></Card></Col>
+          <Col xs={12} sm={6}><Card size="small">
             {hasCost
               ? <Statistic title="成本合计" value={totalCost} precision={4} prefix="$" />
               : <Statistic title="成本合计" value="未配价目" valueStyle={{ fontSize: 16, color: '#999' }} />}
@@ -153,7 +155,7 @@ export default function Runs() {
         )}
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+          <div style={{ textAlign: 'center', padding: isMobile ? '32px 0' : '60px 0' }}>
             <Spin /><div style={{ marginTop: 10, color: '#64748b', fontSize: 13 }}>加载中...</div>
           </div>
         ) : total === 0 ? (
@@ -164,6 +166,7 @@ export default function Runs() {
             columns={columns as any}
             rowKey="runId"
             size="small"
+            scroll={{ x: 'max-content' }}
             pagination={{ pageSize: 20, showSizeChanger: false }}
           />
         )}
@@ -173,11 +176,11 @@ export default function Runs() {
         title={detail ? `运行详情 · ${empName(detail.employeeKey)}` : '运行详情'}
         open={!!detail}
         onClose={() => setDetail(null)}
-        width={720}
+        width={isMobile ? '100%' : 720}
       >
         {detail && (
           <>
-            <Descriptions column={2} size="small" bordered style={{ marginBottom: 16 }}>
+            <Descriptions column={isMobile ? 1 : 2} size="small" bordered style={{ marginBottom: 16 }}>
               <Descriptions.Item label="Run ID" span={2}>{detail.runId}</Descriptions.Item>
               <Descriptions.Item label="会话">{detail.sessionId || '-'}</Descriptions.Item>
               <Descriptions.Item label="模型">{detail.model || '-'}</Descriptions.Item>
@@ -204,6 +207,7 @@ export default function Runs() {
                 columns={traceColumns as any}
                 rowKey="_k"
                 size="small"
+                scroll={{ x: 'max-content' }}
                 pagination={false}
                 expandable={{
                   expandedRowRender: (t: any) => (

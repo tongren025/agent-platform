@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { Text } = Typography;
 
@@ -147,6 +148,7 @@ function radialLayout(
 }
 
 export default function KnowledgeGraph() {
+  const { isMobile } = useResponsive();
   const [loading, setLoading] = useState(true);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -174,6 +176,18 @@ export default function KnowledgeGraph() {
     setSelected(node.data as KGNodeData);
     setDrawerOpen(true);
   }, []);
+
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 32, textAlign: 'center' }}>
+        <div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🖥️</div>
+          <h2 style={{ marginBottom: 8 }}>请在桌面端使用</h2>
+          <p style={{ color: '#888' }}>知识图谱需要更大的屏幕，请在电脑上打开此页面。</p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return <Spin size="large" style={{ display: 'block', padding: 120, textAlign: 'center' }} />;

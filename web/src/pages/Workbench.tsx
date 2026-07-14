@@ -11,6 +11,7 @@ import {
   ReloadOutlined, StopOutlined,
 } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
+import { useResponsive } from '../hooks/useResponsive';
 import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import { api } from '../api';
@@ -140,6 +141,7 @@ export default function Workbench() {
   const abortRef = useRef<AbortController | null>(null);
   const msgEndRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     Promise.all([api.listAgentEmployees(), api.listTeams().catch(() => [])]).then(([emp, tm]) => {
@@ -288,6 +290,18 @@ export default function Workbench() {
     : employees.map((e) => ({ label: e.name, value: e.employeeKey }));
 
   const rightWidth = rightCollapsed ? 0 : 320;
+
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 32, textAlign: 'center' }}>
+        <div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🖥️</div>
+          <h2 style={{ marginBottom: 8 }}>请在桌面端使用</h2>
+          <p style={{ color: '#888' }}>工作台需要更大的屏幕，请在电脑上打开此页面。</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="wb-root" style={{ display: 'flex', height: 'calc(100vh - 56px)', background: COLORS.canvas, borderRadius: 14, overflow: 'hidden', border: `1px solid ${COLORS.border}` }}>

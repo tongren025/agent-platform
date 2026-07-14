@@ -4,10 +4,12 @@ import { Tabs, Table, Button, Modal, Form, Input, Space, Popconfirm, Tag, Spin }
 import { message } from '../ui';
 import { PlusOutlined } from '@ant-design/icons';
 import { api } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { TextArea } = Input;
 
 export default function Tools() {
+  const { isMobile } = useResponsive();
   const [tools, setTools] = useState<any[]>([]);
   const [skills, setSkills] = useState<any[]>([]);
   const [mcpServers, setMcpServers] = useState<any[]>([]);
@@ -81,7 +83,7 @@ export default function Tools() {
     } catch (e: any) { if (e.message) message.error(e.message); }
   };
 
-  if (loading) return <Spin size="large" style={{ display: 'block', marginTop: 120, textAlign: 'center' }} />;
+  if (loading) return <Spin size="large" style={{ display: 'block', marginTop: isMobile ? 48 : 120, textAlign: 'center' }} />;
 
   return (
     <>
@@ -91,10 +93,10 @@ export default function Tools() {
           label: `工具 (${tools.length})`,
           children: (
             <>
-              <div style={{ marginBottom: 12, textAlign: 'right' }}>
+              <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => { setToolEditing(null); toolForm.resetFields(); setToolOpen(true); }}>添加工具</Button>
               </div>
-              <Table rowKey="toolCode" dataSource={tools} pagination={false} columns={[
+              <Table rowKey="toolCode" dataSource={tools} pagination={false} scroll={isMobile ? { x: 'max-content' } : undefined} columns={[
                 { title: '工具编码', dataIndex: 'toolCode', key: 'toolCode' },
                 { title: '名称', dataIndex: 'name', key: 'name' },
                 { title: '描述', dataIndex: 'description', key: 'description', ellipsis: true },
@@ -122,10 +124,10 @@ export default function Tools() {
           label: `技能 (${skills.length})`,
           children: (
             <>
-              <div style={{ marginBottom: 12, textAlign: 'right' }}>
+              <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => { setSkillEditing(null); skillForm.resetFields(); setSkillOpen(true); }}>添加技能</Button>
               </div>
-              <Table rowKey="code" dataSource={skills} pagination={false} columns={[
+              <Table rowKey="code" dataSource={skills} pagination={false} scroll={isMobile ? { x: 'max-content' } : undefined} columns={[
                 { title: '编码', dataIndex: 'code', key: 'code' },
                 { title: '名称', dataIndex: 'name', key: 'name' },
                 { title: '摘要', dataIndex: 'summary', key: 'summary', ellipsis: true },
@@ -154,10 +156,10 @@ export default function Tools() {
           label: `MCP 服务器 (${mcpServers.length})`,
           children: (
             <>
-              <div style={{ marginBottom: 12, textAlign: 'right' }}>
+              <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => { setMcpEditing(null); mcpForm.resetFields(); setMcpOpen(true); }}>添加 MCP 服务器</Button>
               </div>
-              <Table rowKey="serverCode" dataSource={mcpServers} pagination={false} columns={[
+              <Table rowKey="serverCode" dataSource={mcpServers} pagination={false} scroll={isMobile ? { x: 'max-content' } : undefined} columns={[
                 { title: '编码', dataIndex: 'serverCode', key: 'serverCode' },
                 { title: '名称', dataIndex: 'name', key: 'name' },
                 { title: '传输类型', dataIndex: 'transportType', key: 'transportType', render: (v: string) => <Tag color={v === 'sse' ? 'green' : 'blue'}>{v || 'stdio'}</Tag> },
@@ -189,7 +191,7 @@ export default function Tools() {
       ]} />
 
       {/* Tool Modal */}
-      <Modal title={toolEditing ? '编辑工具' : '添加工具'} open={toolOpen} onOk={handleSaveTool} onCancel={() => setToolOpen(false)} destroyOnHidden forceRender width={600}>
+      <Modal title={toolEditing ? '编辑工具' : '添加工具'} open={toolOpen} onOk={handleSaveTool} onCancel={() => setToolOpen(false)} destroyOnHidden forceRender width={isMobile ? '100%' : 600}>
         <Form form={toolForm} layout="vertical">
           <Form.Item label="工具编码" name="toolCode" rules={[{ required: true }]}><Input disabled={!!toolEditing} /></Form.Item>
           <Form.Item label="名称" name="name" rules={[{ required: true }]}><Input /></Form.Item>
@@ -199,7 +201,7 @@ export default function Tools() {
       </Modal>
 
       {/* Skill Modal */}
-      <Modal title={skillEditing ? '编辑技能' : '添加技能'} open={skillOpen} onOk={handleSaveSkill} onCancel={() => setSkillOpen(false)} destroyOnHidden forceRender width={600}>
+      <Modal title={skillEditing ? '编辑技能' : '添加技能'} open={skillOpen} onOk={handleSaveSkill} onCancel={() => setSkillOpen(false)} destroyOnHidden forceRender width={isMobile ? '100%' : 600}>
         <Form form={skillForm} layout="vertical">
           <Form.Item label="编码" name="code" rules={[{ required: true }]}><Input disabled={!!skillEditing} /></Form.Item>
           <Form.Item label="名称" name="name" rules={[{ required: true }]}><Input /></Form.Item>
@@ -209,7 +211,7 @@ export default function Tools() {
       </Modal>
 
       {/* MCP Modal */}
-      <Modal title={mcpEditing ? '编辑 MCP 服务器' : '添加 MCP 服务器'} open={mcpOpen} onOk={handleSaveMcp} onCancel={() => setMcpOpen(false)} destroyOnHidden forceRender width={640}>
+      <Modal title={mcpEditing ? '编辑 MCP 服务器' : '添加 MCP 服务器'} open={mcpOpen} onOk={handleSaveMcp} onCancel={() => setMcpOpen(false)} destroyOnHidden forceRender width={isMobile ? '100%' : 640}>
         <Form form={mcpForm} layout="vertical">
           <Form.Item label="服务器编码" name="serverCode" rules={[{ required: true }]}><Input disabled={!!mcpEditing} /></Form.Item>
           <Form.Item label="名称" name="name" rules={[{ required: true }]}><Input /></Form.Item>

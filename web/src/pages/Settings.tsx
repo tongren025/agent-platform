@@ -9,6 +9,7 @@ import {
   CloseCircleOutlined, EyeOutlined, EyeInvisibleOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { Title, Text } = Typography;
 
@@ -43,6 +44,7 @@ interface AiProvider {
 }
 
 export default function Settings() {
+  const { isMobile } = useResponsive();
   const [sysInfo, setSysInfo] = useState<SystemInfo | null>(null);
   const [providers, setProviders] = useState<AiProvider[]>([]);
   const [loading, setLoading] = useState(true);
@@ -180,7 +182,7 @@ export default function Settings() {
         style={{ borderRadius: 12, marginBottom: 16 }}
       >
         {providers.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px 0' }}>
+          <div style={{ textAlign: 'center', padding: isMobile ? '20px 0' : '40px 0' }}>
             <Text type="secondary" style={{ fontSize: 14 }}>尚未配置任何 AI 供应商</Text>
             <br /><br />
             <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>添加第一个供应商</Button>
@@ -235,7 +237,7 @@ export default function Settings() {
                   style={{ marginBottom: 12 }}
                 />
               )}
-              <Descriptions size="small" column={3}>
+              <Descriptions size="small" column={isMobile ? 1 : 3}>
                 <Descriptions.Item label="Endpoint">
                   <Text code style={{ fontSize: 12 }}>{p.endpoint}</Text>
                 </Descriptions.Item>
@@ -333,7 +335,7 @@ export default function Settings() {
         confirmLoading={saving}
         destroyOnHidden
         forceRender
-        width={720}
+        width={isMobile ? '100%' : 720}
       >
         <Form form={form} layout="vertical" preserve={false}>
           <Form.Item label="供应商名称" name="name" rules={[{ required: true, message: '请输入供应商名称' }]}>
@@ -359,23 +361,23 @@ export default function Settings() {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <Row key={key} gutter={8} align="middle" style={{ marginBottom: 8 }}>
-                    <Col span={8}>
+                  <Row key={key} gutter={[8, 8]} align="middle" style={{ marginBottom: 8 }}>
+                    <Col xs={24} sm={8}>
                       <Form.Item {...restField} name={[name, 'modelName']} noStyle>
                         <Input placeholder="模型名称" />
                       </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col xs={24} sm={8}>
                       <Form.Item {...restField} name={[name, 'modelId']} noStyle>
                         <Input placeholder="模型 ID" />
                       </Form.Item>
                     </Col>
-                    <Col span={5}>
+                    <Col xs={16} sm={5}>
                       <Form.Item {...restField} name={[name, 'timeoutMinutes']} noStyle>
                         <InputNumber placeholder="超时(分)" min={1} max={120} style={{ width: '100%' }} />
                       </Form.Item>
                     </Col>
-                    <Col span={3} style={{ textAlign: 'center' }}>
+                    <Col xs={8} sm={3} style={{ textAlign: 'center' }}>
                       {fields.length > 1 && (
                         <Button type="text" danger icon={<DeleteOutlined />} onClick={() => remove(name)} />
                       )}

@@ -4,6 +4,7 @@ import { Alert, Button, Card, Col, Descriptions, Drawer, Empty, Input, Popconfir
 import { CloseCircleOutlined, RedoOutlined, ReloadOutlined, SearchOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { api, type TaskInfo } from '../api';
 import { message } from '../ui';
+import { useResponsive } from '../hooks/useResponsive';
 
 const { Text, Title } = Typography;
 const ACTIVE = new Set(['queued', 'in_progress', 'deferred']);
@@ -17,6 +18,7 @@ function statusTag(status: string, result?: any) {
 }
 
 export default function Tasks() {
+  const { isMobile } = useResponsive();
   const [tasks, setTasks] = useState<TaskInfo[]>([]);
   const [jobId, setJobId] = useState('');
   const [detail, setDetail] = useState<TaskInfo | null>(null);
@@ -84,26 +86,26 @@ export default function Tasks() {
   ];
 
   return <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
       <div><Title level={3} style={{ margin: 0 }}><ThunderboltOutlined /> 任务中心</Title><Text type="secondary">自动追踪当前账号提交的后台任务，每 5 秒刷新进行中任务。</Text></div>
       <Space>
-        <Input value={jobId} onChange={e => setJobId(e.target.value)} onPressEnter={lookup} placeholder="兼容查询 Job ID" suffix={<SearchOutlined onClick={lookup} />} style={{ width: 250 }} />
+        <Input value={jobId} onChange={e => setJobId(e.target.value)} onPressEnter={lookup} placeholder="兼容查询 Job ID" suffix={<SearchOutlined onClick={lookup} />} style={{ width: isMobile ? '100%' : 250 }} />
         <Button icon={<ReloadOutlined />} loading={loading} onClick={() => load()}>刷新</Button>
       </Space>
     </div>
 
     {error && <Alert type="error" showIcon message="任务队列暂时不可用" description={error} action={<Button size="small" onClick={() => load()}>重试</Button>} style={{ marginBottom: 18 }} />}
     <Row gutter={16} style={{ marginBottom: 18 }}>
-      <Col span={6}><Card><Statistic title="排队中" value={stats.queued} /></Card></Col>
-      <Col span={6}><Card><Statistic title="执行中" value={stats.running} valueStyle={stats.running ? { color: '#1677ff' } : undefined} /></Card></Col>
-      <Col span={6}><Card><Statistic title="已完成" value={stats.done} valueStyle={{ color: '#52c41a' }} /></Card></Col>
-      <Col span={6}><Card><Statistic title="失败" value={stats.failed} valueStyle={stats.failed ? { color: '#cf1322' } : undefined} /></Card></Col>
+      <Col xs={12} sm={12} md={6}><Card><Statistic title="排队中" value={stats.queued} /></Card></Col>
+      <Col xs={12} sm={12} md={6}><Card><Statistic title="执行中" value={stats.running} valueStyle={stats.running ? { color: '#1677ff' } : undefined} /></Card></Col>
+      <Col xs={12} sm={12} md={6}><Card><Statistic title="已完成" value={stats.done} valueStyle={{ color: '#52c41a' }} /></Card></Col>
+      <Col xs={12} sm={12} md={6}><Card><Statistic title="失败" value={stats.failed} valueStyle={stats.failed ? { color: '#cf1322' } : undefined} /></Card></Col>
     </Row>
     <Card>
-      {!loading && tasks.length === 0 ? <Empty description="当前账号还没有后台任务" /> : <Table rowKey="job_id" loading={loading} dataSource={tasks} columns={columns as any} pagination={{ pageSize: 20, hideOnSinglePage: true }} />}
+      {!loading && tasks.length === 0 ? <Empty description="当前账号还没有后台任务" /> : <Table rowKey="job_id" loading={loading} dataSource={tasks} columns={columns as any} pagination={{ pageSize: 20, hideOnSinglePage: true }} scroll={{ x: 'max-content' }} />}
     </Card>
 
-    <Drawer title="任务详情" open={!!detail} onClose={() => setDetail(null)} width={680}>
+    <Drawer title="任务详情" open={!!detail} onClose={() => setDetail(null)} width={isMobile ? '100%' : 680}>
       {detail && <>
         <Descriptions column={1} bordered size="small">
           <Descriptions.Item label="Job ID"><Text copyable>{detail.job_id}</Text></Descriptions.Item>

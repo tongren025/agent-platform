@@ -6,6 +6,7 @@ import {
   PlusOutlined, EditOutlined, DeleteOutlined, PlayCircleOutlined, ReloadOutlined, ApartmentOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useResponsive } from '../hooks/useResponsive';
 import { api } from '../api';
 import { COLORS } from '../theme';
 import RunPanel from '../components/workflow/RunPanel';
@@ -20,6 +21,7 @@ export default function Workflows() {
   const [form] = Form.useForm();
   const [runWf, setRunWf] = useState<WorkflowDefinition | null>(null);
   const navigate = useNavigate();
+  const { isMobile } = useResponsive();
 
   const fetchAll = async () => {
     setLoading(true);
@@ -55,7 +57,7 @@ export default function Workflows() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isMobile ? 16 : 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 26, fontWeight: 700, letterSpacing: '-0.02em', color: '#1e293b' }}>工作流编排</h1>
           <Text type="secondary">把多个数字员工编排成可视化流程（DIFY 式节点图）</Text>
@@ -71,9 +73,9 @@ export default function Workflows() {
       ) : list.length === 0 ? (
         <Empty description="还没有工作流，点右上角新建" style={{ marginTop: 80 }} />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? '100%' : '300px'}, 1fr))`, gap: isMobile ? 12 : 16 }}>
           {list.map((wf) => (
-            <div key={wf.workflowKey} style={{ background: '#fff', border: '1px solid #eef0f6', borderRadius: 14, padding: 20 }}>
+            <div key={wf.workflowKey} style={{ background: '#fff', border: '1px solid #eef0f6', borderRadius: 14, padding: isMobile ? 14 : 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                 <div style={{
                   width: 40, height: 40, borderRadius: 10, background: `${COLORS.iris}12`, color: COLORS.iris,
@@ -106,7 +108,7 @@ export default function Workflows() {
         </div>
       )}
 
-      <Modal title="新建工作流" open={createOpen} onOk={handleCreate} onCancel={() => setCreateOpen(false)} destroyOnHidden forceRender>
+      <Modal title="新建工作流" open={createOpen} onOk={handleCreate} onCancel={() => setCreateOpen(false)} destroyOnHidden forceRender width={isMobile ? '100%' : 520}>
         <Form form={form} layout="vertical">
           <Form.Item label="标识 (workflowKey)" name="workflowKey" rules={[{ required: true, message: '请输入唯一标识' }, { pattern: /^[\w-]+$/, message: '只允许字母数字 _ -' }]}>
             <Input placeholder="如 comic-pipeline" />

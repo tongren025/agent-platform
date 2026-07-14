@@ -8,6 +8,7 @@ import {
   ThunderboltOutlined, RobotOutlined, SwapOutlined, ArrowRightOutlined, ApartmentOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useResponsive } from '../hooks/useResponsive';
 import { api } from '../api';
 import { COLORS } from '../theme';
 import type { Employee, Team } from '../types';
@@ -167,6 +168,7 @@ export default function Teams() {
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [teamForm] = Form.useForm();
   const navigate = useNavigate();
+  const { isMobile } = useResponsive();
 
   const fetchData = async () => {
     setLoading(true);
@@ -282,7 +284,7 @@ export default function Teams() {
   return (
     <div>
       {/* Page header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 26, fontWeight: 700, letterSpacing: '-0.02em', color: '#1e293b' }}>
             AI 团队
@@ -297,8 +299,8 @@ export default function Teams() {
       {/* Team selector - horizontal tabs */}
       {teams.length > 0 && (
         <div style={{
-          display: 'flex', gap: 12, marginBottom: 32, overflowX: 'auto',
-          padding: '4px 0',
+          display: 'flex', gap: isMobile ? 8 : 12, marginBottom: 32, overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch', padding: '4px 0',
         }}>
           {teams.map(team => {
             const isActive = selectedTeam?.teamCode === team.teamCode;
@@ -308,9 +310,9 @@ export default function Teams() {
                 key={team.teamCode}
                 onClick={() => setSelectedTeam(team)}
                 style={{
-                  padding: '14px 22px', borderRadius: 12, cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', gap: 14,
-                  minWidth: 200, flexShrink: 0,
+                  padding: isMobile ? '12px 16px' : '14px 22px', borderRadius: 12, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 14,
+                  minWidth: isMobile ? 160 : 200, flexShrink: 0,
                   transition: 'all 0.2s',
                   background: isActive ? COLORS.iris : '#fff',
                   color: isActive ? '#fff' : '#1e293b',
@@ -343,17 +345,17 @@ export default function Teams() {
           {/* Team toolbar */}
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            marginBottom: 24,
+            marginBottom: 24, flexWrap: 'wrap', gap: 12,
           }}>
-            <div>
-              <span style={{ fontSize: 20, fontWeight: 600, color: '#1e293b' }}>{selectedTeam.name}</span>
+            <div style={{ minWidth: 0 }}>
+              <span style={{ fontSize: isMobile ? 18 : 20, fontWeight: 600, color: '#1e293b' }}>{selectedTeam.name}</span>
               {(selectedTeam as any).description && (
                 <Text type="secondary" style={{ marginLeft: 12, fontSize: 13 }}>
                   {(selectedTeam as any).description}
                 </Text>
               )}
             </div>
-            <Space size={8}>
+            <Space size={8} wrap>
               {selectedTeam.defaultWorkflowKey && (
                 <Button
                   type="primary" ghost icon={<ApartmentOutlined />}
@@ -373,10 +375,10 @@ export default function Teams() {
           {/* Leader banner - full width */}
           {leader && (
             <div style={{
-              background: '#fff', borderRadius: 16, padding: '28px 32px',
+              background: '#fff', borderRadius: 16, padding: isMobile ? '20px 16px' : '28px 32px',
               border: '1px solid #eef0f6',
               marginBottom: 32,
-              display: 'flex', gap: 24, alignItems: 'center',
+              display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 16 : 24, alignItems: isMobile ? 'flex-start' : 'center',
               position: 'relative', overflow: 'hidden',
             }}>
               {/* Accent bar */}
@@ -425,7 +427,7 @@ export default function Teams() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: 20, flexShrink: 0, alignSelf: 'flex-start' }}>
+              <div style={{ display: 'flex', gap: 20, flexShrink: 0, alignSelf: isMobile ? 'stretch' : 'flex-start', flexWrap: 'wrap' }}>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: 22, fontWeight: 700, color: '#1e293b' }}>
                     {memoryStats[leader.employeeKey]
@@ -456,7 +458,7 @@ export default function Teams() {
           {stageGroups.length > 1 && (
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              gap: 0, marginBottom: 28, padding: '0 40px',
+              gap: 0, marginBottom: 28, padding: isMobile ? '0' : '0 40px', flexWrap: 'wrap',
             }}>
               {stageGroups.map((group, i) => (
                 <div key={group.label} style={{ display: 'flex', alignItems: 'center' }}>
@@ -517,7 +519,7 @@ export default function Teams() {
       )}
 
       {/* Create/Edit Team Modal */}
-      <Modal title={editingTeam ? '编辑团队' : '新建团队'} open={teamModalOpen} onOk={handleSaveTeam} onCancel={() => setTeamModalOpen(false)} destroyOnHidden forceRender width={500}>
+      <Modal title={editingTeam ? '编辑团队' : '新建团队'} open={teamModalOpen} onOk={handleSaveTeam} onCancel={() => setTeamModalOpen(false)} destroyOnHidden forceRender width={isMobile ? '100%' : 500}>
         <Form form={teamForm} layout="vertical">
           <Form.Item label="团队编码" name="teamCode" rules={[{ required: true }]}>
             <Input disabled={!!editingTeam} placeholder="唯一标识" />
@@ -535,7 +537,7 @@ export default function Teams() {
       </Modal>
 
       {/* Add Members Modal */}
-      <Modal title={`添加成员到「${selectedTeam?.name ?? ''}」`} open={addMemberOpen} onOk={handleAddMembers} onCancel={() => setAddMemberOpen(false)} okText="添加" width={500}>
+      <Modal title={`添加成员到「${selectedTeam?.name ?? ''}」`} open={addMemberOpen} onOk={handleAddMembers} onCancel={() => setAddMemberOpen(false)} okText="添加" width={isMobile ? '100%' : 500}>
         <Select
           mode="multiple" style={{ width: '100%' }} placeholder="选择要添加的员工"
           value={addKeys} onChange={setAddKeys}
