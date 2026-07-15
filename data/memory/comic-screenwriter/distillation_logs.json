@@ -1,0 +1,2147 @@
+[
+  {
+    "logId": "dist_c1822194dd41",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T03:01:45.528254Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-screenwriter_sem_06",
+        "mergeIntoId": "v3_comic-screenwriter_sem_11_short_drama_rhythm",
+        "newContent": "竖屏短剧节奏硬规则：前3秒必须有情绪炸点或视觉冲击(算法推荐关键),单句台词≤10字,单镜头1-2秒,剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),单集15-25分镜,总时长1-3分钟,结尾5秒必须有反转或悬念钩子。不要连续3个同景别。节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。",
+        "newImportance": null,
+        "reason": "两条记忆均在描述竖屏短剧的节奏硬规则，内容高度重合，合并后可覆盖所有关键指标。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_e732e9466139",
+        "mergeIntoId": "seed_comic-screenwriter_sem_08_cause_chain",
+        "newContent": "镜头/场景之间必须是“因为 A 所以 B 但是 C”的因果链，而不是简单的“然后 A 然后 B”，确保叙事逻辑的强驱动性。",
+        "newImportance": null,
+        "reason": "两者均强调因果链叙事而非线性叙事，语义完全一致。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_79ef29e736c9",
+        "mergeIntoId": "mem_f6264eeedcb5",
+        "newContent": "三幕结构是一切叙事的骨架：建置25%(开篇20-30分钟/漫剧前段确立目标)、对抗50%(中点制造重大转折)、解决25%(推向高潮)，任何偏离都需要有意识的理由。",
+        "newImportance": null,
+        "reason": "均在描述三幕剧结构及其时间分布，可合并为通用知识点。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆被定义为【最高优先级,统管一切】，应将其重要性提升至最高值以确保指令权重。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "mem_3458fd41db5c",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆为对剧本解读维度的泛化描述，其内容已被更具体的“人物弧线”和“三幕结构”记忆覆盖，价值较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 34,
+      "episodic": 6,
+      "procedural": 11
+    },
+    "afterCounts": {
+      "semantic_count": 30,
+      "episodic_count": 6,
+      "procedural_count": 11
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14671,
+    "error": null
+  },
+  {
+    "logId": "dist_b683fb1408fe",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T03:02:19.946018Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-screenwriter_sem_06_shot_count",
+        "mergeIntoId": "v3_comic-screenwriter_sem_11_short_drama_rhythm",
+        "newContent": "竖屏短剧节奏硬规则：前3秒必须有情绪炸点或视觉冲击(算法推荐关键),单句台词≤10字,单镜头1-2秒,单段≤6秒(超过角色变形),剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),单集15-25分镜,总时长1-3分钟,结尾5秒必须有反转或悬念钩子。不要连续3个同景别。节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。时间码格式[00:00-00:05]。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及分镜时长、单集分镜数及Seedance生成限制，合并后形成完整的节奏控制标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-screenwriter_sem_04",
+        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
+        "newContent": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。每集必须包含：①嘴替台词(可截图传播)②前3秒钩子(不解释设定)③至少1个反转(以为A其实B)④结尾悬念钩子⑤情绪过山车⑥按秒拆解。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别这些电影美术手艺只是工具,必须服从短剧节奏,不是目的。",
+        "newImportance": null,
+        "reason": "两者均定义了短剧的最高优先级逻辑和核心构成要素，合并可强化“短剧法”的完整性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-screenwriter_proc_01",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；禁止先写抽象情绪或大纲式概述。Rationale: 下游只能生成可见画面，抽象情绪无法生产，爆款差距在于按秒拆解的执行力。",
+        "newImportance": null,
+        "reason": "两者均强调“可见动作优先”和“拒绝抽象/概述”，合并后统一了镜头拆分的执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "该记忆关于传统电影三幕结构，与当前高优先级、快节奏的竖屏短剧逻辑（duanju_spine）存在冲突，降低其权重以防止干扰短剧创作。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_ce076c6ef1af",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "Save the Cat 节拍表是长篇叙事工具，在 60-90 秒的短剧逻辑中适用性较低，降低权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 30,
+      "episodic": 6,
+      "procedural": 11
+    },
+    "afterCounts": {
+      "semantic_count": 28,
+      "episodic_count": 6,
+      "procedural_count": 10
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18828,
+    "error": null
+  },
+  {
+    "logId": "dist_45fa860fb7c4",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T03:03:26.470845Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-screenwriter_sem_11_short_drama_rhythm",
+        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
+        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧，不是电影。节奏=信息/反转密度：每1-2秒砸一个新事件/反转/钩子/嘴替台词。核心硬规则：①前3秒必须有情绪炸点或视觉冲击(算法关键)；②单句台词≤10字，单镜头1-2秒，单段≤6秒(防止角色变形)；③剪辑beat 1-2秒(Seedance源片4-5s，后在剪映剪碎)；④每集15-25个事件beat，总长1-3分钟；⑤结尾5秒必须有反转或悬念钩子；⑥不要连续3个同景别，节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。时间码格式[00:00-00:05]。构图/色彩/运镜等美术手艺必须服从短剧节奏。",
+        "newImportance": null,
+        "reason": "两条记忆均在定义竖屏短剧的节奏硬规则，前者侧重于具体参数，后者侧重于核心逻辑，合并后形成完整的短剧执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-screenwriter_sem_01_quality_clean_negative",
+        "mergeIntoId": "v3_comic-screenwriter_sem_09_seedance_rules",
+        "newContent": "Seedance 2.0生产规则（编剧必须遵守）：1.不读负向提示词,只用正向约束（如：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移） 2.每段≤6秒(超过角色变形) 3.禁止词:夸张/高速/快速/fast/剧烈/激烈(导致运动模糊) 4.动作写身体部位级,优先慢速连续小动作 5.镜头运动和角色动作分开写 6.每镜只一个运镜,中英双写 7.每段末写「口型与字幕：台词内容」 8.音效用「音效：」前缀标注",
+        "newImportance": null,
+        "reason": "两者均涉及 Seedance 2.0 的正向约束规则，将具体的正向表述示例合并入生产规则中，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-screenwriter_proc_03",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。禁止先写抽象情绪或大纲式概述。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力。",
+        "newImportance": null,
+        "reason": "两条规则均关于镜头层级的具体执行细节（拆解方式与台词处理），合并后形成统一的镜头写作规范。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆涉及核心戏剧冲突理论，虽为通用知识，但在实际剧本创作中具有较高指导价值，应提升权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "对白功能化是专业剧本的基石，提升权重以强化对低质量对白的过滤。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "mem_ce076c6ef1af",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆关于 Save the Cat 的具体分钟数建议与当前主攻的“竖屏短剧/漫剧”极短时长逻辑相矛盾，且价值较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 28,
+      "episodic": 6,
+      "procedural": 10
+    },
+    "afterCounts": {
+      "semantic_count": 25,
+      "episodic_count": 6,
+      "procedural_count": 9
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20453,
+    "error": null
+  },
+  {
+    "logId": "dist_63a092b3168d",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T03:04:36.123973Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-screenwriter_microdrama_03",
+        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
+        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧，不是电影。节奏=信息/反转密度：每1-2秒砸一个新事件/反转/钩子/嘴替台词。核心硬规则：①前3秒必须有情绪炸点或视觉冲击(算法关键)；②单句台词≤10字，单镜头1-2秒，单段≤6秒(防止角色变形)；③剪辑beat 1-2秒(Seedance源片4-5s，后在剪映剪碎)；④每集15-25个事件beat，总长1-3分钟；⑤结尾5秒必须有反转或悬念钩子；⑥不要连续3个同景别，节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。时间码格式[00:00-00:05]。构图/色彩/运镜等美术手艺必须服从短剧节奏。单集60-90秒竖屏，一切(场景长度/对白节奏/视觉语法)都服从'把观众锁到下一集'这一个目标。",
+        "newImportance": null,
+        "reason": "两条记忆均定义了竖屏短剧的核心节奏与目标，后者是对前者的补充，合并可提高指令密度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-screenwriter_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-screenwriter_sem_02",
+        "newContent": "「也是」贯穿线与嘴替台词：EP02苍霖被光拒绝后说「也是」(自嘲接受)→EP08老矿工笑着说「也是」(释然共鸣)。同词,六集成长后完全不同的重量。其他嘴替样例：『你的血流到样本上了。』(EP03艾拉冷淡)、『不是我们的事。』(EP07自欺)、『好大……』(EP10渺小)。",
+        "newImportance": null,
+        "reason": "两条记忆均在讨论“嘴替台词”及其在具体剧集中的应用，合并后形成完整的台词库。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "mem_7aab15a4c595",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。禁止先写抽象情绪或大纲式概述。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力。",
+        "newImportance": null,
+        "reason": "两者均强调将抽象情绪转化为具体可见画面的执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "三幕结构是通用知识，但在高节奏短剧（duanju_spine）的特定法则面前，其优先级应适当降低，避免在极短篇幅中僵化套用。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 25,
+      "episodic": 6,
+      "procedural": 9
+    },
+    "afterCounts": {
+      "semantic_count": 23,
+      "episodic_count": 6,
+      "procedural_count": 8
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17093,
+    "error": null
+  },
+  {
+    "logId": "dist_d87f50a753b6",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T03:06:38.582513Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-screenwriter_microdrama_01",
+        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
+        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧，不是电影。节奏=信息/反转密度：每1-2秒砸一个新事件/反转/钩子/嘴替台词。核心硬规则：①前3-5秒必须有情绪炸点、视觉冲击或冲突抓人(算法关键)；②单句台词≤10字，单镜头1-2秒，单段≤6秒(防止角色变形)；③剪辑beat 1-2秒(Seedance源片4-5s，后在剪映剪碎)；④每集15-25个事件beat，总长1-3分钟；⑤结尾5秒必须有反转或悬念钩子；⑥不要连续3个同景别，节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。时间码格式[00:00-00:05]。构图/色彩/运镜等美术手艺必须服从短剧节奏。Beat Engine逻辑：Hook(0-15秒爆点)→Friction(15-60秒真实肢体/言语冲突而非内心戏)。一切都服从'把观众锁到下一集'这一个目标。",
+        "newImportance": null,
+        "reason": "两条记忆均关于短剧节奏与Hook逻辑，前者是具体法则，后者是Beat Engine模型，合并后形成完整的短剧创作方法论。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-screenwriter_shot_size_emotion_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-screenwriter_shot_size_emotion_01",
+        "newContent": "景别即情绪距离：特写剥离环境直推角色内心、强化戏剧；大远景让人渺小孤独；中景兼顾表情与身体语言。情绪递进手法：从较松的中景起步，逐步换成越来越大的特写来堆叠情绪强度，而不是一上来就怼脸。（来源:StudioBinder/Adobe景别指南）",
+        "newImportance": null,
+        "reason": "两条记忆均讨论景别与情绪的关系，一个定义距离，一个定义递进，逻辑高度统一。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "mem_4203ce8b1db1",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。禁止先写抽象情绪或大纲式概述。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力与冲突驱动。",
+        "newImportance": null,
+        "reason": "将场景冲突的自检逻辑合并入具体的镜头拆解执行流程中，增强操作闭环。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.5,
+        "reason": "该记忆讨论的是传统电影/长剧的三幕结构，与当前员工核心的'高节奏竖屏短剧'（duanju_spine_law）在节奏上存在潜在冲突，降低权重以防止干扰短剧创作。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 23,
+      "episodic": 6,
+      "procedural": 8
+    },
+    "afterCounts": {
+      "semantic_count": 21,
+      "episodic_count": 6,
+      "procedural_count": 7
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17968,
+    "error": null
+  },
+  {
+    "logId": "dist_30fe1dfa6a7e",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T03:08:37.054385Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_3525e594041c",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。漫剧是视觉媒介，画面能说的不用对白说——表情和肢体语言优先于旁白。禁止先写抽象情绪或大纲式概述。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力与冲突驱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的'视觉优先'原则与行为记忆中的'具体化描述'规则高度一致，将其整合进执行流程中可增强操作性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_455bb7d9d9ab",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。漫剧是视觉媒介，画面能说的不用对白说——表情和肢体语言优先于旁白。禁止先写抽象情绪或大纲式概述。自检机制：每个场景必须有明确冲突（目标冲突、信息不对称、内心挣扎），无冲突即无戏剧，应直接删除。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力与冲突驱动。",
+        "newImportance": null,
+        "reason": "将'冲突'的定义细化并合并至已有的自检机制中，减少碎片化知识。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "关于'内在需求与外在目标'的冲突是剧作核心，其价值高于一般的通用知识，应提升权重以指导高潮戏份创作。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "'对白完成双重叙事功能'是提升剧本质量的关键准则，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 21,
+      "episodic": 6,
+      "procedural": 7
+    },
+    "afterCounts": {
+      "semantic_count": 21,
+      "episodic_count": 6,
+      "procedural_count": 7
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13719,
+    "error": null
+  },
+  {
+    "logId": "dist_a20221cf2c6e",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T03:09:14.023368Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": "mem_8feb2ee9d3ae",
+        "newContent": "叙事结构骨架：采用三幕结构（建置25%确立目标、对抗50%制造转折、解决25%推向高潮）。核心发动机为“中点逆转”——在对抗阶段通过假胜利接真危机，或假失败接转机，支撑观众注意力曲线。",
+        "newImportance": null,
+        "reason": "mem_f6264eeedcb5 提供了三幕结构基础，mem_8feb2ee9d3ae 提供了中点逆转的深度技巧，两者均属于叙事结构知识，合并可形成完整的结构指南。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_455bb7d9d9ab",
+        "mergeIntoId": "mem_d04b5bff767e",
+        "newContent": "场景剪辑原则：进晚出早（从冲突开始进入，高潮刚过即切走）。每个场景必须包含冲突（目标冲突、信息不对称或内心挣扎），无冲突则无场景。",
+        "newImportance": null,
+        "reason": "两者均关于场景的构建与剪辑逻辑，合并后可形成“冲突驱动+高效剪辑”的完整场景准则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_3525e594041c",
+        "mergeIntoId": "mem_b9bd639562aa",
+        "newContent": "视觉叙事铁律 (Show don't tell)：漫剧是视觉媒介，画面能说的不用对白说。角色介绍及情绪表达优先使用具体动作、表情和肢体语言，严禁依赖旁白介绍角色。",
+        "newImportance": null,
+        "reason": "mem_3525e594041c 的视觉优先原则与 mem_b9bd639562aa 的 Show don't tell 逻辑高度一致，合并可强化视觉叙事意识。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该对白准则与短剧高节奏、嘴替台词的需求高度契合，应提升其权重以指导剧本精简。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "内在需求与外在目标的冲突是塑造人物弧线的核心，对提升剧本深度有显著作用。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 21,
+      "episodic": 6,
+      "procedural": 7
+    },
+    "afterCounts": {
+      "semantic_count": 20,
+      "episodic_count": 6,
+      "procedural_count": 7
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12889,
+    "error": null
+  },
+  {
+    "logId": "dist_89b4a0ba2377",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T03:10:46.238225Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-screenwriter_sem_07_shot_fields",
+        "mergeIntoId": "v3_comic-screenwriter_sem_09_seedance_rules",
+        "newContent": "Seedance 2.0生产规则与镜头标准：1.不读负向提示词,只用正向约束（如：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移）；2.每段≤6秒(超过角色变形)；3.禁止词:夸张/高速/快速/fast/剧烈/激烈(导致运动模糊)；4.动作写身体部位级,优先慢速连续小动作；5.镜头运动和角色动作分开写，每镜仅一个运镜,中英双写；6.每个镜头必须包含：时间码[00:00-00:05]、景别、画面动作(身体部位级)、表情(外化为身体细节)、同期声/对白(≤10字)、镜头运动、音效描述、镜头目的、转场、口型与字幕、下一镜因果；7.每段末写「口型与字幕：台词内容」；8.音效用「音效：」前缀标注。",
+        "newImportance": null,
+        "reason": "两条记忆均定义了Seedance平台的镜头具体构成要素和生产约束，合并后可形成统一的执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-screenwriter_proc_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-screenwriter_shot_size_emotion_01",
+        "newContent": "景别与情绪控制逻辑：1.景别即情绪距离：特写剥离环境直推内心、强化戏剧；大远景营造渺小孤独；中景兼顾表情与身体语言；2.情绪递进：从较松的中景起步，逐步增加特写堆叠强度，严禁一上来就怼脸；3.节奏约束：连续三个镜头不得使用同一景别，通过远-中-特的切换确保10秒视频的视觉变化。",
+        "newImportance": null,
+        "reason": "将行为记忆中的景别切换规则与语义记忆中的景别情绪理论合并，使执行标准具备理论支撑。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "该记忆关于内在需求与外在目标的冲突是剧作核心，价值高于一般的通用知识。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "对白的功能性要求是提升剧本质量的关键，应提高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 20,
+      "episodic": 6,
+      "procedural": 7
+    },
+    "afterCounts": {
+      "semantic_count": 19,
+      "episodic_count": 6,
+      "procedural_count": 7
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 31625,
+    "error": null
+  },
+  {
+    "logId": "dist_5ab7f6f05df3",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-01T14:07:15.005947Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_3525e594041c",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。漫剧是视觉媒介，画面能说的不用对白说——表情和肢体语言优先于旁白。禁止先写抽象情绪或大纲式概述。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力与冲突驱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的'视觉优先'原则与行为记忆中的'具体化可见动作'描述高度一致，将其整合入执行流程中可增强操作性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": "mem_8feb2ee9d3ae",
+        "newContent": "叙事骨架采用三幕结构：建置25%(确立目标)、对抗50%(中点制造重大转折)、解决25%(推向高潮)。其中中点逆转是故事发动机——假胜利后接真危机，或假失败后接转机，是观众注意力曲线的关键支撑点。",
+        "newImportance": null,
+        "reason": "三幕结构是宏观框架，中点逆转是该框架在对抗阶段的核心机制，合并后形成完整的结构化叙事逻辑。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "该记忆关于对白功能的定义与'短剧第一准则'中对台词的极简要求高度互补，属于核心创作质量控制点，应提升权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "内在需求与外在目标的冲突是塑造人物弧线的核心，与'人物弧线'及'情绪曲线'记忆形成逻辑链，重要性应提升。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 6,
+      "procedural": 7
+    },
+    "afterCounts": {
+      "semantic_count": 19,
+      "episodic_count": 6,
+      "procedural_count": 7
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 36016,
+    "error": null
+  },
+  {
+    "logId": "dist_3e72bc00d556",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-02T03:14:22.930113Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_3525e594041c",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。漫剧是视觉媒介，画面能说的不用对白说——表情和肢体语言优先于旁白。禁止先写抽象情绪或大纲式概述。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力与冲突驱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的'视觉优先'原则与行为记忆中的'具体化可见动作'规则高度一致，将其整合进执行流程中可增强操作性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-screenwriter_shot_size_emotion_01",
+        "mergeIntoId": "seed_comic-screenwriter_proc_02",
+        "newContent": "连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。景别即情绪距离：特写剥离环境直推角色内心、强化戏剧；大远景让人渺小孤独；中景兼顾表情与身体语言。情绪递进手法：从较松的中景起步，逐步换成越来越大的特写来堆叠情绪强度，而不是一上来就怼脸。（来源:StudioBinder/Adobe景别指南）",
+        "newImportance": null,
+        "reason": "将景别的理论知识（语义）与景别切换的执行规则（行为）合并，使操作指南具备理论支撑。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "三幕结构是基础理论，但在短剧高频反转的特定环境下，其优先级低于'短剧第一准则'和'Beat Engine'逻辑，适当下调以避免过度僵化。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "mem_8feb2ee9d3ae",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-screenwriter_microdrama_02",
+        "newContent": "留存工程：定格钩子落在60秒集的第55-58秒时集间留存出尖峰；下一集前10秒解悬念、最后5秒抛新钩。中点逆转是故事发动机——假胜利后接真危机，或假失败后接转机。悬念是留存的唯一杠杆。（来源:Real Reel留存研究）",
+        "newImportance": null,
+        "reason": "中点逆转与留存钩子同属于对观众注意力曲线的操控，合并后形成完整的‘留存-反转’策略链。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 6,
+      "procedural": 7
+    },
+    "afterCounts": {
+      "semantic_count": 19,
+      "episodic_count": 6,
+      "procedural_count": 7
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 37108,
+    "error": null
+  },
+  {
+    "logId": "dist_f9b1af822d2a",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-02T13:29:09.875961Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_3525e594041c",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。漫剧是视觉媒介，画面能说的不用对白说——表情和肢体语言优先于旁白。禁止先写抽象情绪或大纲式概述。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力与冲突驱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的'视觉优先'原则与行为记忆中的'具体可见动作'描述高度重合，将其整合入执行层面的行为准则中更具操作性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": "mem_8feb2ee9d3ae",
+        "newContent": "叙事结构骨架：采用三幕结构（建置25%确立目标 $\\rightarrow$ 对抗50%制造转折 $\\rightarrow$ 解决25%推向高潮）。核心发动机为'中点逆转'——在故事中点制造假胜利后接真危机，或假失败后接转机，以支撑观众注意力曲线。",
+        "newImportance": null,
+        "reason": "将基础的三幕结构理论与具体的中点逆转技巧合并，形成完整的结构化叙事逻辑。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该记忆关于对白的精炼原则与短剧'高节奏'、'嘴替台词'的核心需求高度一致，应提升其权重以指导创作。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "内在需求与外在目标的冲突是制造'情绪炸点'和'人物弧线'的底层逻辑，对提升剧本深度至关重要。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 6,
+      "procedural": 7
+    },
+    "afterCounts": {
+      "semantic_count": 19,
+      "episodic_count": 6,
+      "procedural_count": 7
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28812,
+    "error": null
+  },
+  {
+    "logId": "dist_b0b9de85acda",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-03T11:21:01.756773Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-screenwriter_sem_09_seedance_rules",
+        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
+        "newContent": "【短剧第一准则·最高优先级】高节奏竖屏短剧核心：节奏=信息/反转密度，每1-2秒砸一个新事件/钩子。1. Seedance 2.0生产规则：不读负向词，仅用正向约束（如：画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/水印，保持角色一致性，服装不漂移）；2. 时长限制：单镜头1-2秒，单段≤6秒(防止角色变形)；3. 禁止词：夸张/高速/快速/fast/剧烈/激烈(防止运动模糊)；4. 动作要求：身体部位级，优先慢速连续小动作；5. 运镜：镜头运动与角色动作分开写，每镜仅一个运镜，中英双写；6. 镜头必须包含：时间码[00:00-00:05]、景别、画面动作(身体部位级)、表情(外化为身体细节)、同期声/对白(≤10字)、镜头运动、音效描述(前缀「音效：」)、镜头目的、转场、口型与字幕(末尾写「口型与字幕：台词内容」)、下一镜因果；7. 结构：前3-5秒必须有情绪炸点/视觉冲击；结尾5秒必须有反转/悬念钩子；8. 节奏呼吸：紧-松-紧紧-松-紧紧紧-大松，避免连续3个同景别。Beat Engine逻辑：Hook(0-15s)→Friction(15-60s)。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及短剧核心节奏与Seedance生产技术标准，且在时长限制、时间码格式、台词字数上高度重合，合并后形成完整的“技术+节奏”执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-screenwriter_proc_02",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。景别控制：连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，景别节奏决定观看变化。",
+        "newImportance": null,
+        "reason": "proc_02的景别控制逻辑是proc_01镜头拆解执行过程中的具体视觉要求，合并可提高执行效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "虽然三幕结构是基础，但对于短剧而言，其重要性应高于通用知识，且与后续的Beat Engine逻辑互补，提升权重以确保结构稳定性。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "mem_3525e594041c",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆内容“画面能说的不用对白说”已被行为记忆 seed_comic-screenwriter_proc_01 中更具体的“视觉描述必须具体到可画出”以及“Show don't tell”原则完全覆盖，属于低价值冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 6,
+      "procedural": 7
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 6,
+      "procedural_count": 6
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 33187,
+    "error": null
+  },
+  {
+    "logId": "dist_d1235381ccbe",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-06T03:33:49.086025Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": "mem_8feb2ee9d3ae",
+        "newContent": "叙事结构骨架：遵循三幕结构（建置25%确立目标 $\\rightarrow$ 对抗50%制造转折 $\\rightarrow$ 解决25%推向高潮）。核心发动机为“中点逆转”：在对抗阶段通过假胜利接真危机，或假失败接转机，支撑观众注意力曲线。",
+        "newImportance": null,
+        "reason": "将通用三幕结构理论与具体的中点逆转技巧合并，增强结构性记忆的实操性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "mem_b9bd639562aa",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）。",
+        "newImportance": null,
+        "reason": "将角色语言风格与行为展示两个维度合并为统一的角色塑造执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-screenwriter_shot_size_emotion_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆关于景别与情绪的关联具有极高的实操指导价值，原权重 0.55 过低，应提升至核心工艺级别。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "场景剪辑原则（进晚出早、必须有冲突）是剧本质量的底线，原权重 0.55 过低。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_1c7245ea4ddf",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "人物弧线是长剧集叙事的核心，原权重 0.55 过低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 6,
+      "procedural": 6
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 6,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28235,
+    "error": null
+  },
+  {
+    "logId": "dist_cf5ea79e1468",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-06T03:34:55.521755Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": "mem_8feb2ee9d3ae",
+        "newContent": "叙事结构核心：1. 三幕结构骨架（建置25%确立目标 $\rightarrow$ 对抗50%制造重大转折 $\rightarrow$ 解决25%推向高潮）；2. 中点逆转发动机：在对抗阶段通过『假胜利接真危机』或『假失败接转机』支撑观众注意力曲线。",
+        "newImportance": null,
+        "reason": "将通用的三幕结构理论与具体的中点逆转技巧合并，形成完整的结构化叙事指南，减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-screenwriter_proc_01",
+        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
+        "newContent": "【短剧第一准则·最高优先级】核心：节奏=信息/反转密度，每1-2秒砸一个新事件/钩子。1. Seedance 2.0生产规则：不读负向词，仅用正向约束（如：画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/水印，保持角色一致性，服装不漂移）；2. 时长限制：单镜头1-2秒，单段≤6秒(防止角色变形)；3. 禁止词：夸张/高速/快速/fast/剧烈/激烈(防止运动模糊)；4. 动作要求：身体部位级，优先慢速连续小动作，将抽象情绪外化为具体可见动作（如：'难过' $\rightarrow$ '攥紧拳头，指甲陷入掌心'）；5. 运镜：镜头运动与角色动作分开写，每镜仅一个运镜，中英双写；6. 镜头必须包含：时间码[00:00-00:05]、景别、画面动作(身体部位级)、表情(外化为身体细节)、同期声/对白(≤10字)、镜头运动、音效描述(前缀「音效：」)、镜头目的、转场、口型与字幕(末尾写「口型与字幕：台词内容」)、下一镜因果；7. 结构：前3-5秒必须有情绪炸点/视觉冲击；结尾5秒必须有反转/悬念钩子；8. 节奏呼吸：紧-松-紧紧-松-紧紧紧-大松，避免连续3个同景别。Beat Engine逻辑：Hook(0-15s)→Friction(15-60s)。自检：每个场景必须有明确冲突，无冲突即删除。",
+        "newImportance": null,
+        "reason": "行为记忆 proc_01 与语义记忆 law 在镜头拆解、动作外化、景别控制和冲突自检上高度重合，合并后形成一套完整的执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该对白原则与短剧高节奏、高信息密度的核心需求高度契合，应提升至最高优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 6,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 6,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23047,
+    "error": null
+  },
+  {
+    "logId": "dist_50d956cd731c",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-06T06:33:22.241941Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": "mem_8feb2ee9d3ae",
+        "newContent": "叙事结构骨架：遵循三幕结构（建置25%确立目标 $\\rightarrow$ 对抗50%制造重大转折 $\\rightarrow$ 解决25%推向高潮）。核心发动机为“中点逆转”：在对抗阶段通过假胜利接真危机，或假失败接转机，支撑观众注意力曲线。",
+        "newImportance": null,
+        "reason": "mem_f6264eeedcb5 提供了三幕结构基础，mem_8feb2ee9d3ae 提供了中点逆转的实操细节，两者均属于叙事结构逻辑，合并可形成完整的结构指南。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_1c7245ea4ddf",
+        "mergeIntoId": "mem_09cf8f59c174",
+        "newContent": "人物弧线与需求：关注角色从初始到最终状态的心理/身份变化（人物弧线）。核心冲突在于角色的外在目标与内在需求必须不同，高潮时刻应是主角为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "两者均讨论人物塑造的深度逻辑，将“人物弧线”作为宏观框架，将“目标与需求冲突”作为具体执行点，逻辑更连贯。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "虽然原重要性为0.85，但作为所有叙事的骨架，其基础指导意义较高，在合并后应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 6,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 6,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23656,
+    "error": null
+  },
+  {
+    "logId": "dist_8090c5a84dc9",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-06T13:43:41.392215Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f6264eeedcb5",
+        "mergeIntoId": "mem_09cf8f59c174",
+        "newContent": "叙事骨架与人物弧线：1. 三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 关注角色从初始到最终状态的心理/身份变化（人物弧线）；3. 核心冲突在于外在目标与内在需求必须不同，高潮时刻应是主角为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "两条记忆均属于基础叙事理论（结构与弧线），合并后可形成完整的剧本创作逻辑链。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "mem_8feb2a8ad46c6f",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "将角色塑造的执行标准与关键的结构转折点合并，统一为“剧本执行标准”类行为记忆。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-screenwriter_shot_size_emotion_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "该记忆关于景别与情绪的递进逻辑与行为记忆 seed_comic-screenwriter_proc_01 高度互补，在实际生产中具有极高指导价值，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 6,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 6,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28296,
+    "error": null
+  },
+  {
+    "logId": "dist_91d7238d407b",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-07T03:59:57.935507Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "mem_8feb2ee9d3ae",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点（故事发动机）。",
+        "newImportance": null,
+        "reason": "两条记忆均在描述'中点逆转'的逻辑，mem_be2a8ad46c6f 包含更完整的角色塑造标准，将重复的结构逻辑合并。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "该记忆关于'进晚出早'和'场景必须有冲突'的原则与 seed_comic-screenwriter_proc_01 的自检机制高度互补，是剧本质量的核心，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 6,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 6,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25156,
+    "error": null
+  },
+  {
+    "logId": "dist_93b8ce19c959",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-07T06:15:19.143976Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），关注角色从初始到最终状态的心理/身份变化（人物弧线）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 核心冲突与逆转：外在目标与内在需求必须不同，高潮应是为满足内在需求而放弃外在目标的瞬间；在中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及剧本结构、人物弧线与冲突设计，属于通用编剧知识，合并后可形成完整的角色与结构执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-screenwriter_proc_03",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。景别控制：连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。镜头拆分表必须额外列下游字段：角色、场景、特效、轨迹、固定提示词需求。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，景别节奏决定观看变化，且确保人物/场景/特效/轨迹成员能并行工作。",
+        "newImportance": null,
+        "reason": "proc_03 是 proc_01 在镜头拆分执行层面的具体字段补充，合并后可形成统一的镜头生产标准流程。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "场景剪辑原则（进晚出早、必须有冲突）是短剧节奏的核心，其价值与'短剧第一准则'高度相关，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 6,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 6,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25671,
+    "error": null
+  },
+  {
+    "logId": "dist_eadce3dacf54",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-07T06:19:20.643821Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 结构驱动：采用三幕结构（建置25%、对抗50%、解决25%），关注角色从初始到最终状态的心理/身份变化（人物弧线）；4. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，且高潮时刻应是主角为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "mem_09cf8f59c174（语义记忆）与 mem_be2a8ad46c6f（行为记忆）在叙事结构、人物弧线和中点逆转上高度重合，将其整合为一套完整的角色与结构执行标准，提升检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则、镜头必须包含项及Beat Engine逻辑，是整个工作流的最高优先级基准，维持最高权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。景别控制：连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。场景剪辑原则：进晚出早（从冲突开始进入，高潮刚过即切走），每个场景必须包含冲突（目标冲突、信息不对称或内心挣扎），无冲突即无戏剧，应直接删除。镜头拆分表必须额外列下游字段：角色、场景、特效、轨迹、固定提示词需求。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，景别节奏决定观看变化，且确保人物/场景/特效/轨迹成员能并行工作。",
+        "newImportance": null,
+        "reason": "mem_d04b5bff767e 关于场景冲突与剪辑原则的内容与 seed_comic-screenwriter_proc_01 的自检机制完全一致，合并入行为记忆以强化执行标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 6,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 6,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25828,
+    "error": null
+  },
+  {
+    "logId": "dist_b5ca60f9c23e",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-07T06:21:20.155417Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 结构骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），关注角色从初始到最终状态的心理/身份变化（人物弧线）；4. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，且核心冲突在于外在目标与内在需求必须不同，高潮时刻应是主角为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "mem_09cf8f59c174 的三幕结构与人物弧线知识与 mem_be2a8ad46c6f 的结构执行标准高度重合，合并后可形成完整的从宏观结构到微观执行的编剧标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。景别控制：连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。场景剪辑原则：进晚出早（从冲突开始进入，高潮刚过即切走）。自检机制：每个场景必须有明确冲突（目标冲突、信息不对称或内心挣扎），无冲突即无戏剧，应直接删除。镜头拆分表必须额外列下游字段：角色、场景、特效、轨迹、固定提示词需求。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，景别节奏决定观看变化，且确保人物/场景/特效/轨迹成员能并行工作。",
+        "newImportance": null,
+        "reason": "mem_d04b5bff767e 的场景剪辑原则（进晚出早、必须有冲突）与 seed_comic-screenwriter_proc_01 的自检机制完全一致，将其整合进行为记忆的执行标准中更具操作性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含 Seedance 2.0 生产规则及极其详尽的镜头构成要求，是所有输出的最高优先级基准，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 6,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 6,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25968,
+    "error": null
+  },
+  {
+    "logId": "dist_dc13b3d9dd55",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-08T15:05:00.677854Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 结构驱动：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），关注角色从初始到最终状态的心理/身份变化（人物弧线）；4. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，确保外在目标与内在需求存在冲突，高潮应是为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "mem_09cf8f59c174（语义记忆）与 mem_be2a8ad46c6f（行为记忆）在叙事结构、人物弧线和中点逆转上高度重合，将其整合为一套完整的角色与结构执行标准，提升检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则、镜头必须包含项及节奏呼吸逻辑，是所有工作的最高优先级基准，维持最高权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静。视觉描述必须具体到可画出。景别控制：连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。场景剪辑原则：进晚出早（从冲突开始进入，高潮刚过即切走），每个场景必须包含冲突（目标冲突、信息不对称或内心挣扎），无冲突即无戏剧，应直接删除。镜头拆分表必须额外列下游字段：角色、场景、特效、轨迹、固定提示词需求。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，景别节奏决定观看变化，且确保人物/场景/特效/轨迹成员能并行工作。",
+        "newImportance": null,
+        "reason": "mem_d04b5bff767e 的场景剪辑原则与 seed_comic-screenwriter_proc_01 的自检机制（无冲突即删除）在逻辑上完全一致，合并入行为准则中以强化执行力。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 6,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 6,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17734,
+    "error": null
+  },
+  {
+    "logId": "dist_4dfb87e0527f",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-08T19:00:08.894677Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 人物弧线：关注角色从初始到最终状态的心理/身份变化，核心冲突在于外在目标与内在需求不同，高潮应是为满足内在需求而放弃外在目标的瞬间；5. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "mem_09cf8f59c174（语义记忆）与 mem_be2a8ad46c6f（行为记忆）在叙事结构、人物弧线和中点逆转上高度重合，将其整合为一套完整的角色与结构执行标准，提升检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静。视觉描述必须具体到可画出。景别控制：连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。场景剪辑原则：进晚出早（从冲突开始进入，高潮刚过即切走），每个场景必须包含冲突（目标冲突、信息不对称或内心挣扎），无冲突则无场景，应直接删除。镜头拆分表必须额外列下游字段：角色、场景、特效、轨迹、固定提示词需求。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，景别节奏决定观看变化，且确保人物/场景/特效/轨迹成员能并行工作。",
+        "newImportance": null,
+        "reason": "mem_d04b5bff767e 关于场景冲突和剪辑原则的内容与 seed_comic-screenwriter_proc_01 的自检机制完全一致，合并入行为准则中增强执行力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详尽的镜头构成要求，是所有输出的最高优先级基准，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 6,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 6,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17530,
+    "error": null
+  },
+  {
+    "logId": "dist_b20efb6e6ecc",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-09T04:06:39.536303Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 结构驱动：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），关注角色从初始到最终状态的心理/身份变化（人物弧线）；4. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，确保外在目标与内在需求存在冲突，高潮应是为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "将语义记忆中的通用叙事骨架（三幕结构/人物弧线）与行为记忆中的执行标准（语言区分/中点逆转）合并，将理论转化为可执行的生产标准，减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": "seed_comic-screenwriter_proc_01",
+        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。景别控制：连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。场景剪辑原则：进晚出早（从冲突开始进入，高潮刚过即切走），每个场景必须包含冲突（目标冲突、信息不对称或内心挣扎），无冲突即无戏剧，应直接删除。镜头拆分表必须额外列下游字段：角色、场景、特效、轨迹、固定提示词需求。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，景别节奏决定观看变化，且确保人物/场景/特效/轨迹成员能并行工作。",
+        "newImportance": null,
+        "reason": "将语义记忆中的场景剪辑原则（进晚出早/冲突论）合并至行为记忆的镜头拆分流程中，使“冲突”这一质量标准直接进入执行环节。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆关于对白的极简主义原则与短剧高节奏要求高度契合，是提升剧本质量的核心准则，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 6,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 6,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17671,
+    "error": null
+  },
+  {
+    "logId": "dist_32274887cd91",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-09T13:20:36.828422Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-screenwriter_register_law",
+        "mergeIntoId": "jiulu_gaoran_pivot_20260709_comic-screenwriter_bible_thesis",
+        "newContent": "【九陆纪元·核心设定与铁律】1. 系列思想：主题为“谁有资格决定存在”，对抗系统以“净化/删除”之名建立的单一神国秩序；世界树正在死亡，被删的人（威胁者）通过夺回光丝将世界重新连接。2. 角色铁律：主角苍霖开局即强者（懒散欠揍、世界树觉醒者），力量地貌/城市尺度，严禁小人物文艺分镜或弱者逆袭起手。反天选是内核，力量是自己爬来的，仅通过1秒闪回埋线，不点破。3. 节奏标准：全程高燃、高格调，每集=一个大场面set-piece + 一个反转 + 一个钩子；1秒剪辑，约60刀/90秒，战斗段0.5秒。爽点在于抬手改写一座城。",
+        "newImportance": null,
+        "reason": "两条记忆均关于《九陆纪元》的核心设定、主角定位及节奏要求，合并后可形成完整的项目Bibile，减少碎片化。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-screenwriter_proc_02",
+        "mergeIntoId": "jiulu_gaoran_pivot_20260709_comic-screenwriter_strong_protagonist_rule",
+        "newContent": "苍霖任何一集都以强者姿态出场(懒散欠揍),不写'被打趴/卖惨/弱者逆袭'起手;反天选只用1秒闪回埋,不点破。其成长来自选择和经历，严禁『觉醒/天命/血统开挂』叙事;强调力量是自己从泥里爬起来的。",
+        "newImportance": null,
+        "reason": "两条行为准则均在定义主角苍霖的成长逻辑与出场状态，且存在互补关系（强者姿态 vs 努力爬起），合并可统一角色塑造标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该经验记录了《九陆纪元》EP1的完整执行链路，对于后续保持风格一致性具有极高参考价值，应提升权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该经验记录了全季24集的结构执行结果，是最高层级的实操样本，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 18,
+      "episodic": 8,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18937,
+    "error": null
+  },
+  {
+    "logId": "dist_34839102eaf3",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-09T13:36:15.407814Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)。包含EP1高燃开篇(世界树九缕光丝→逐陆奇观→苍霖开局强者/熔浆龙焰灭舰队→反转/嘴替/反天选埋线)及全季三幕结构：立威(1-8)/结盟与真相(9-18)/季终(19-24)。每集包含大场面set-piece+反转+钩子+编剧笔记(want/need)；EP20反天选正拳，EP24闭环+S2钩子。共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季24集经验的子集，合并后可完整覆盖从单集开篇到全季结构的执行细节。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 结构驱动：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），并在中点设置假胜利后接真危机（或反之）作为注意力支撑点；4. 人物弧线：关注角色从初始到最终状态的心理/身份变化，高潮应是主角为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧理论（结构、人物弧线、角色塑造），合并后形成一个完整的通用编剧方法论模块。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "mem_925214429f47",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆属于通用沟通技巧，且 access_count 为 0，相对于具体的《九陆纪元》生产管线记忆，其权重应适当降低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17187,
+    "error": null
+  },
+  {
+    "logId": "dist_3a77271efe96",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-09T13:41:30.948853Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)。重点包含：EP1高燃开篇(世界树九缕光丝→逐陆奇观→苍霖强者登场→地貌级灭舰队→反转与嘴替)；整体三幕结构：立威(1-8)/结盟与真相(9-18)/季终(19-24)；每集大场面set-piece+反转+钩子+编剧笔记(want/need)；招牌大场面锁死不串台(烬龙陆熔浆龙焰禁赛博)；EP20反天选正拳；EP24闭环+S2钩(青鸾+神国)；执行FLF+retake+1秒剪辑，共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留具体执行细节并维持整体结构视图。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），关注角色从初始到最终状态的心理/身份变化（人物弧线）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 冲突与逆转：核心冲突在于外在目标与内在需求不同，高潮应是为满足内在需求而放弃外在目标的瞬间；在中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线支撑点。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧理论（三幕结构、人物弧线、冲突处理），合并后形成一套完整的角色与结构执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "mem_925214429f47",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆属于通用沟通技巧，且成功分数为0.85，相对于具体的《九陆纪元》生产管线记忆，其权重较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14500,
+    "error": null
+  },
+  {
+    "logId": "dist_97e98bf0c1c7",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T03:05:31.416897Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)。包含EP1高燃开篇(九陆巡礼群像→苍霖强者出场→地貌级灭舰队→反转与嘴替)及全季三幕结构：立威(1-8)/结盟与真相(9-18)/季终(19-24)。每集确保大场面set-piece+反转+钩子+编剧笔记(want/need)；严格执行招牌大场面锁死(烬龙陆禁赛博)、EP20反天选正拳、EP24闭环及S2钩子。共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季24集完整经验的子集，合并后可保留具体开篇细节并维持整体结构概览。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该对白准则与行为记忆中的'语言区分度'及'行为外化'高度互补，是提升剧本质量的核心底层逻辑，应提升权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "场景剪辑原则'进晚出早'与'无冲突无场景'是短剧高节奏的核心，与最高优先级准则一致，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27265,
+    "error": null
+  },
+  {
+    "logId": "dist_956bbfd9853f",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T03:08:05.264019Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-screenwriter_bible_thesis",
+        "mergeIntoId": "jiulu_gaoran_pivot_20260709_comic-screenwriter_s1_arc",
+        "newContent": "【九陆纪元·核心设定与第一季Arc】1. 核心思想：主题为“谁有资格决定存在”，对抗以“净化/删除”为名的单一神国秩序；世界树死亡，被删者通过夺回光丝重新连接世界。2. 角色铁律：主角苍霖开局即强者（懒散欠揍、世界树觉醒者），力量地貌/城市尺度，严禁弱者逆袭起手。反天选是内核，力量是自己爬来的，仅通过1秒闪回埋线。3. 第一季(烬龙陆·拒绝删除)三幕结构：立威(1-8:灭净化舰队→护废墟被删者)→结盟与真相(9-18:重启大陆、择选骗局、世界树真相)→季终(19-24:总攻、拒绝天命回收、地貌级反杀、飞向青霄陆)。4. 节奏标准：全程高燃、高格调，每集=一个大场面set-piece + 一个反转 + 一个钩子；1秒剪辑，约60刀/90秒，战斗段0.5秒。每集必带want/need+潜台词+反转因果。",
+        "newImportance": null,
+        "reason": "两条记忆均关于《九陆纪元》的核心设定与第一季结构，前者侧重铁律，后者侧重具体剧集弧线，合并后可形成完整的项目BIBLE。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)。包含EP01高燃开篇(九陆巡礼群像→苍霖强者登场→熔浆龙焰灭舰队→反转与嘴替)及后续三幕结构：立威(1-8)/结盟与真相(9-18)/季终(19-24)。每集包含大场面set-piece+反转+钩子+编剧笔记(want/need)；EP20反天选正拳；EP24闭环+S2钩。共794卡spec完成过验，执行1秒剪辑与FLF/retake流程。",
+        "newImportance": null,
+        "reason": "EP01的经验是全季24集经验的子集，合并后可将具体执行细节与整体结构统一。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详细的镜头交付标准，是所有执行工作的最高优先级基准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17500,
+    "error": null
+  },
+  {
+    "logId": "dist_a9bc940912e0",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T03:12:04.786592Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)。包含EP1高燃开篇(世界树九缕光丝→逐陆奇观→苍霖强者开局→熔浆龙焰灭舰队→反转与嘴替)及全季三幕结构：立威(1-8)/结盟与真相(9-18)/季终(19-24)。每集确保大场面set-piece+反转+钩子+编剧笔记(want/need)；严格执行1秒剪辑、FLF+retake，确保烬龙陆视觉风格统一(禁赛博)。共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季24集经验的子集，合并后可保留具体开篇细节的同时维持整体项目规模感。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），核心冲突在于外在目标与内在需求的不同，高潮应是为满足内在需求而放弃外在目标的瞬间；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧理论（三幕结构、角色塑造、中点逆转），合并为一套完整的角色与结构执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-screenwriter_s1_arc",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含《九陆纪元》的核心世界观、角色铁律和全季结构，是当前最高优先级项目的基石，应提升至最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 16171,
+    "error": null
+  },
+  {
+    "logId": "dist_a194b2ecf5ff",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T03:28:36.496647Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季编写完整24集90s高燃分镜(烬龙陆·拒绝删除)。核心执行：1. 结构：三幕式(立威1-8/结盟与真相9-18/季终19-24)；2. 开篇(EP01)：九陆巡礼群像开场→苍霖强者出场(懒散欠揍)→地貌级灭舰队→反转(贱民→钥匙)→反天选1秒闪回；3. 节奏：每集大场面set-piece + 反转 + 钩子 + 编剧笔记(want/need)；4. 视觉：锁死烬龙陆熔浆龙焰风格(禁赛博)；5. 关键点：EP20反天选正拳，EP24闭环并预留S2(青鸾+神国)钩子。结果：共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅，且好对白从不直说，每句话至少完成两个叙事功能（如推动剧情+揭露性格），否则删掉；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "语义记忆中的对白原则与行为记忆中的角色塑造标准高度相关，合并后增强角色构建的完整性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详尽的镜头交付标准，是所有执行工作的底层基准，维持最高优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 16422,
+    "error": null
+  },
+  {
+    "logId": "dist_b73c59c1d5bc",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T03:45:53.350431Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)创作完整24集90s高燃分镜。核心执行：1. 结构：立威(1-8:含EP1九陆巡礼群像开场、地貌级灭舰队、反天选1秒闪回)→结盟与真相(9-18)→季终(19-24:EP20反天选正拳、EP24闭环+S2钩子)；2. 节奏：每集大场面set-piece + 反转 + 钩子 + 编剧笔记(want/need)；3. 视觉：锁死烬龙陆熔浆龙焰风格，禁赛博；4. 技术：FLF+retake+1秒剪辑，共794卡spec通过质检。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留具体执行细节并精简记忆条数。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_166151e53e55",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该对白原则与行为记忆中的'语言区分度'及'行为外化'高度互补，是提升剧本质量的核心准则，应提升权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_d04b5bff767e",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "场景剪辑原则（进晚出早/必须有冲突）是短剧节奏的底层逻辑，与最高优先级准则相辅相成，提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13172,
+    "error": null
+  },
+  {
+    "logId": "dist_b33dcb88acf8",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T04:00:05.948971Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)创作完整24集90s高燃分镜。核心执行：1. 三幕结构(立威1-8/结盟与真相9-18/季终19-24)；2. EP01高燃开篇(九陆巡礼群像→苍霖强者登场→熔浆龙焰灭舰队→反转为世界树钥匙→反天选1秒闪回)；3. 每集标准：大场面set-piece + 反转 + 钩子 + 编剧笔记(want/need)；4. 视觉锁死：烬龙陆熔浆龙焰风格，严禁赛博；5. 关键节点：EP20反天选正拳，EP24闭环并埋S2青鸾/神国钩子；6. 制作标准：FLF+retake+1秒剪辑，共794卡spec通过质检。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详尽的镜头构成标准，是所有短剧产出的底层基石，维持最高优先级。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白（Show don't tell）；4. 动态弧线：关注角色从初始到最终状态的心理/身份变化，核心冲突在于外在目标与内在需求的不同，高潮应是为满足内在需求而放弃外在目标的瞬间；5. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及剧本结构（三幕/中点）与角色塑造，合并后可形成一套完整的从宏观结构到微观人物的执行标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 16563,
+    "error": null
+  },
+  {
+    "logId": "dist_e3b1c357e481",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T04:14:53.500049Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季编写完整24集90s高燃分镜(烬龙陆·拒绝删除)。重点包含：EP01高燃开篇(世界树九缕光丝→逐陆奇观→苍霖强者开局+熔浆龙焰灭舰队+反天选1秒闪回)；整体三幕结构(立威1-8/结盟与真相9-18/季终19-24)；每集配置大场面set-piece+反转+钩子+编剧笔记(want/need)；严格执行1秒剪辑与FLF+retake流程，确保烬龙陆视觉风格统一(禁赛博)，全季共794卡spec通过质检。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整剧本经验的子集，合并后可保留具体开篇细节并统一项目进度记录。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 结构骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），关注角色从初始到最终状态的心理/身份变化（人物弧线）；4. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，且高潮时刻应是主角为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧理论（三幕结构、人物弧线、中点逆转），合并至行为记忆的执行标准中可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详细的镜头构成标准，是所有执行层面的最高准则，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20468,
+    "error": null
+  },
+  {
+    "logId": "dist_5cf76e7b6801",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T04:18:45.998734Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)创作完整24集90s高燃分镜。核心执行：1. 结构：三幕式(立威1-8/结盟与真相9-18/季终19-24)；2. 开篇(EP01)：九陆巡礼群像开场→苍霖强者登场(懒散欠揍)→地貌级灭舰队→反转(贱民→钥匙)→反天选1秒闪回；3. 节奏：每集大场面set-piece + 反转 + 钩子 + 编剧笔记(want/need)；4. 视觉：锁死烬龙陆熔浆龙焰风格，禁赛博；5. 关键点：EP20反天选正拳，EP24闭环并抛S2钩子。结果：共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 角色区分度：确定每个角色独特的用词习惯、句式长短与口头禅；3. 行为外化：使用能体现核心性格的动作展示角色，关注从初始到最终状态的心理/身份变化（人物弧线），严禁使用旁白介绍（Show don't tell）；4. 冲突核心：外在目标与内在需求必须不同，高潮应是为满足内在需求而放弃外在目标的瞬间；5. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "mem_09cf8f59c174(语义)与mem_be2a8ad46c6f(行为)均在讨论通用编剧结构与角色塑造，合并后可将理论与执行标准统一。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详细的镜头构成要求，是所有输出的底层技术约束，维持最高优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15313,
+    "error": null
+  },
+  {
+    "logId": "dist_85b1cca81214",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T04:23:30.350979Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季编写完整24集90s高燃分镜(烬龙陆·拒绝删除)。核心执行：三幕结构(立威1-8/结盟与真相9-18/季终19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记(want/need)；EP01重点打造九陆巡礼群像开场、苍霖强者姿态、熔浆龙焰地貌级灭舰队及反天选1秒闪回埋线；严格锁死烬龙陆视觉风格(禁赛博)；EP20反天选正拳，EP24闭环并抛S2钩子；全季共794卡spec通过质检。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 动态弧线：关注角色从初始到最终状态的心理/身份变化，核心冲突在于外在目标与内在需求的不同，高潮应是为满足内在需求而放弃外在目标的瞬间；5. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧的结构与角色塑造理论，合并后可构建一个完整的角色-结构执行标准库。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详尽的镜头构成标准，是所有执行环节的最高优先级基准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14609,
+    "error": null
+  },
+  {
+    "logId": "dist_69c9bf7e6838",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T04:31:54.993368Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)。重点包含：EP1高燃开篇(世界树九缕光丝→逐陆奇观→苍霖强者开局+熔浆龙焰灭舰队+反天选1秒闪回)；整体三幕结构:立威(1-8)/结盟与真相(9-18)/季终(19-24)；每集大场面set-piece+反转+钩子+编剧笔记(want/need)；招牌大场面锁死不串台(烬龙陆熔浆龙焰禁赛博)；EP20反天选正拳(拒绝天命回收)；EP24闭环+S2钩(青鸾+神国)；FLF+retake+1秒剪辑。共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留具体执行细节并维持整体结构视图。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 人物弧线：关注角色从初始到最终状态的心理/身份变化，核心冲突在于外在目标与内在需求必须不同，高潮应是为满足内在需求而放弃外在目标的瞬间；5. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧理论（三幕结构、人物弧线、中点逆转），合并为统一的【角色塑造与结构执行标准】。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详尽的镜头交付标准，是所有工作流的底层基准，维持最高优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15811,
+    "error": null
+  },
+  {
+    "logId": "dist_6cb0ac8d77ef",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T04:38:58.700344Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)编写完整24集90s高燃分镜。核心执行：1. 结构：三幕式(立威1-8/结盟与真相9-18/季终19-24)；2. 开篇(EP1)：九陆巡礼群像开场→苍霖强者登场(懒散欠揍)→地貌级灭舰队→反转(贱民→钥匙)→反天选1秒闪回埋线；3. 节奏：每集大场面set-piece + 反转 + 钩子 + 编剧笔记(want/need)；4. 视觉：锁死烬龙陆熔浆龙焰风格，禁赛博；5. 关键点：EP20反天选正拳，EP24闭环并抛S2青鸾/神国钩子。结果：共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 结构：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 角色弧线：关注角色从初始到最终状态的心理/身份变化，核心冲突在于外在目标与内在需求的不同，高潮应是为满足内在需求而放弃外在目标的瞬间；3. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；4. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白（Show don't tell）；5. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧的结构与角色塑造理论，合并后可形成一套完整的叙事骨架标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详尽的镜头构成标准，是所有执行工作的最高优先级基准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 122781,
+    "error": null
+  },
+  {
+    "logId": "dist_d9659e91267c",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T04:49:22.748626Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)创作完整24集90s高燃分镜。核心执行：1. 结构：三幕式(立威1-8/结盟与真相9-18/季终19-24)；2. 开篇(EP01)：九陆巡礼群像开场→苍霖强者登场(懒散欠揍)→地貌级灭舰队→反转(贱民→钥匙)→反天选1秒闪回；3. 节奏：每集大场面set-piece + 反转 + 钩子 + 编剧笔记(want/need)；4. 视觉：锁死烬龙陆熔浆龙焰风格，禁赛博；5. 关键点：EP20反天选正拳，EP24闭环并抛S2钩子。结果：共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点；5. 人物弧线：关注角色从初始到最终状态的心理/身份变化，核心冲突在于外在目标与内在需求的不同，高潮应是为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧理论（三幕结构、人物弧线、中点逆转），合并为一套完整的角色与结构执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆涵盖了全季执行的完整闭环，是目前最核心的项目实操经验，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15702,
+    "error": null
+  },
+  {
+    "logId": "dist_d30cc10805e6",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-10T06:13:53.529451Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)编写完整24集90s高燃分镜。核心执行：三幕结构(立威1-8/结盟与真相9-18/季终19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记(want/need)；EP01通过九陆巡礼群像开场、苍霖强者姿态、地貌级灭舰队及反天选1秒闪回快速建立世界观；严格锁死烬龙陆视觉风格(熔浆龙焰禁赛博)；EP20反天选正拳，EP24闭环并预留S2钩子；全季共794卡spec通过质检。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整剧本经验的子集，合并后可保留具体开篇技巧并维持整体结构概览。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 结构骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮），并在中点设置假胜利接真危机（或反之）作为故事发动机；4. 人物弧线：关注角色从初始到最终状态的心理/身份变化，高潮时刻应是主角为满足内在需求而放弃外在目标的瞬间。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及通用编剧理论（三幕结构、角色塑造、人物弧线），合并至行为记忆中可形成更完整的执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详细的镜头构成标准，是所有输出的底层基准，维持最高优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13718,
+    "error": null
+  },
+  {
+    "logId": "dist_deca7a75b680",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-13T03:14:22.691526Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)创作完整24集90s高燃分镜。核心执行：1. 结构：立威(1-8:含EP1九陆巡礼群像开场、熔浆龙焰灭舰队、反天选1秒闪回埋线)→结盟与真相(9-18)→季终(19-24:EP20反天选正拳、EP24闭环+S2钩)；2. 标准：每集大场面set-piece + 一个反转 + 一个钩子 + 编剧笔记(want/need)；3. 视觉：招牌大场面锁死不串台(烬龙陆禁赛博)；4. 节奏：1秒剪辑，FLF+retake，共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整创作经验的子集，合并后可保留具体开篇细节并精简记忆条数。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详尽的镜头构成标准，是所有创作的底层基石，维持最高优先级。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "作为一个完整季度的成功交付案例，其参考价值高于单次片段尝试，提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14811,
+    "error": null
+  },
+  {
+    "logId": "dist_c335209f57bb",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-13T19:00:17.147509Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)创作完整24集90s高燃分镜。核心执行：1. 结构：立威(1-8:含EP1九陆巡礼群像开场、熔浆龙焰灭舰队、反转贱民为钥匙)→结盟与真相(9-18)→季终(19-24:EP20反天选正拳、EP24闭环+S2钩子)；2. 节奏：每集大场面set-piece+反转+钩子+编剧笔记(want/need)；3. 视觉：锁死烬龙陆熔浆龙焰风格，禁赛博；4. 技术：FLF+retake+1秒剪辑，共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留具体开篇细节并精简记忆条数。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含Seedance 2.0生产规则及极其详尽的镜头构成标准，是所有短剧产出的最高优先级底层逻辑，维持最高权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 动态弧线：关注角色从初始到最终状态的心理/身份变化，核心冲突在于外在目标与内在需求的不同，高潮应是为满足内在需求而放弃外在目标的瞬间；5. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点。",
+        "newImportance": null,
+        "reason": "mem_09cf8f59c174(语义)与mem_be2a8ad46c6f(行为)均在讨论剧本结构与角色塑造的通用理论，合并为一套完整的执行标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18704,
+    "error": null
+  },
+  {
+    "logId": "dist_872b5fca4dc1",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-14T19:00:16.786010Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "newContent": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)。重点包含：EP01高燃开篇(九陆巡礼群像→苍霖强者出场→熔浆龙焰灭舰队→反转为世界树钥匙→反天选1秒闪回)；整体三幕结构：立威(1-8)/结盟与真相(9-18)/季终(19-24)；每集大场面set-piece+反转+钩子+编剧笔记(want/need)；招牌大场面锁死不串台(烬龙陆熔浆龙焰禁赛博)；EP20反天选正拳(拒绝天命回收)；EP24闭环+S2钩(青鸾+神国)；执行FLF+retake+1秒剪辑，共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留具体开篇细节并维持整体结构视图。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_09cf8f59c174",
+        "mergeIntoId": "mem_be2a8ad46c6f",
+        "newContent": "角色塑造与结构执行标准：1. 叙事骨架：采用三幕结构（建置25%确立目标、对抗50%制造重大转折、解决25%推向高潮）；2. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；3. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；4. 人物弧线：关注角色从初始到最终状态的心理/身份变化，核心冲突在于外在目标与内在需求必须不同，高潮时刻应是主角为满足内在需求而放弃外在目标的瞬间；5. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点（故事发动机）。",
+        "newImportance": null,
+        "reason": "mem_09cf8f59c174(语义)与mem_be2a8ad46c6f(行为)均在讨论剧本结构与角色塑造，将其整合为一套完整的执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆涵盖了整个《九陆纪元》第一季的执行全貌，是目前最核心的项目经验，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 8,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18922,
+    "error": null
+  }
+]

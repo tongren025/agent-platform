@@ -1,0 +1,12 @@
+[
+  {
+    "userId": "u_2f375851",
+    "username": "admin",
+    "passwordHash": "pbkdf2:204764a92e7ed2610c738559de957a50:5319302c4c2b350f5091bca1d0c61d8ed13c47c17b6ea2f8bde0fabc1b61d66c",
+    "displayName": "系统管理员",
+    "role": "admin",
+    "enabled": true,
+    "createdAt": "2026-06-30T04:11:27.917570+00:00",
+    "lastLoginAt": "2026-07-14T07:58:11.638096+00:00"
+  }
+]

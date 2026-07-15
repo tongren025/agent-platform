@@ -1,0 +1,61 @@
+[
+  {
+    "docId": "d1546ad9e860bf27",
+    "fileName": "vfx-light-guide.md",
+    "extension": ".md",
+    "sizeBytes": 959,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "0c9b029b5316396d",
+    "fileName": "canon-vfx.md",
+    "extension": ".md",
+    "sizeBytes": 546,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "視覺效果"
+    ]
+  },
+  {
+    "docId": "972c6d19e3029f6c",
+    "fileName": "canon-color.md",
+    "extension": ".md",
+    "sizeBytes": 599,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "色彩理論"
+    ]
+  },
+  {
+    "docId": "9c5d8eb607b441bf",
+    "fileName": "craft-lighting.md",
+    "extension": ".md",
+    "sizeBytes": 881,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/film lighting",
+      "三点布光与伦勃朗光"
+    ]
+  },
+  {
+    "docId": "d9e7519fb03939eb",
+    "fileName": "craft-film_color.md",
+    "extension": ".md",
+    "sizeBytes": 794,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/NoFilmSchool·Color in Film",
+      "电影色彩叙事"
+    ]
+  }
+]

@@ -1,0 +1,109 @@
+[
+  {
+    "docId": "52b73f548913d611",
+    "fileName": "seedance-full-guide.md",
+    "extension": ".md",
+    "sizeBytes": 3507,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "d54e14a199f8a69c",
+    "fileName": "canon-composition.md",
+    "extension": ".md",
+    "sizeBytes": 709,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "構圖"
+    ]
+  },
+  {
+    "docId": "66bd9ed9071711e8",
+    "fileName": "canon-color.md",
+    "extension": ".md",
+    "sizeBytes": 599,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "色彩理論"
+    ]
+  },
+  {
+    "docId": "71694ceb86d497f2",
+    "fileName": "canon-montage.md",
+    "extension": ".md",
+    "sizeBytes": 908,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "蒙太奇"
+    ]
+  },
+  {
+    "docId": "a7e401ece3c26235",
+    "fileName": "craft-ai_consistency.md",
+    "extension": ".md",
+    "sizeBytes": 1113,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "neolemon/Artlist/Vidu·AI Character Consistency",
+      "AI视频角色一致性工作流"
+    ]
+  },
+  {
+    "docId": "12b946bfd5c42f21",
+    "fileName": "craft-film_color.md",
+    "extension": ".md",
+    "sizeBytes": 794,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/NoFilmSchool·Color in Film",
+      "电影色彩叙事"
+    ]
+  },
+  {
+    "docId": "d1606d5ed32ca870",
+    "fileName": "craft-camera_emotion.md",
+    "extension": ".md",
+    "sizeBytes": 796,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/NoFilmSchool·Camera Movement",
+      "运镜情绪语义"
+    ]
+  },
+  {
+    "docId": "0f8603d9d413dea9",
+    "fileName": "craft2-diffusion_prompt.md",
+    "extension": ".md",
+    "sizeBytes": 1154,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "FlowHunt/Portkey·Stable Diffusion Prompting",
+      "扩散模型提示词工程"
+    ]
+  },
+  {
+    "docId": "1c637633a15f3b1c",
+    "fileName": "craft2-microdrama.md",
+    "extension": ".md",
+    "sizeBytes": 1037,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "Vitrina/Real Reel/Filmustage·Micro Drama 2026",
+      "竖屏微短剧结构"
+    ]
+  }
+]

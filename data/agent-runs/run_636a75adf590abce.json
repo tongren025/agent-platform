@@ -1,0 +1,18 @@
+{
+  "runId": "run_636a75adf590abce",
+  "sessionId": "ses_f3bb5aa0e51edce7",
+  "employeeKey": "script-doctor",
+  "workflowKey": null,
+  "model": "Gemma-4-31B-IT-NVFP4",
+  "success": true,
+  "iterations": 1,
+  "promptTokens": 3495,
+  "completionTokens": 481,
+  "totalTokens": 3976,
+  "costUsd": null,
+  "elapsedMilliseconds": 8608,
+  "errorMessage": null,
+  "pendingApproval": false,
+  "traces": [],
+  "createdAt": "2026-07-07T06:23:38.954755Z"
+}

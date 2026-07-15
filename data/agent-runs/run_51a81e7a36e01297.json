@@ -1,0 +1,18 @@
+{
+  "runId": "run_51a81e7a36e01297",
+  "sessionId": "ses_7e42a9c8f1c6ba1b",
+  "employeeKey": "comic-storyboard",
+  "workflowKey": null,
+  "model": "Gemma-4-31B-IT-NVFP4",
+  "success": true,
+  "iterations": 1,
+  "promptTokens": 4414,
+  "completionTokens": 334,
+  "totalTokens": 4748,
+  "costUsd": null,
+  "elapsedMilliseconds": 6359,
+  "errorMessage": null,
+  "pendingApproval": false,
+  "traces": [],
+  "createdAt": "2026-07-06T06:35:58.529253Z"
+}

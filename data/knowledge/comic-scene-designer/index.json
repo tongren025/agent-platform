@@ -1,0 +1,97 @@
+[
+  {
+    "docId": "9f0e16420022f351",
+    "fileName": "scene-bible.md",
+    "extension": ".md",
+    "sizeBytes": 1586,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "eee12d043fb91883",
+    "fileName": "canon-composition.md",
+    "extension": ".md",
+    "sizeBytes": 709,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "構圖"
+    ]
+  },
+  {
+    "docId": "b6247750889405b3",
+    "fileName": "canon-perspective.md",
+    "extension": ".md",
+    "sizeBytes": 745,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "透視"
+    ]
+  },
+  {
+    "docId": "fe98c7e9e35f1f3a",
+    "fileName": "canon-color.md",
+    "extension": ".md",
+    "sizeBytes": 599,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "色彩理論"
+    ]
+  },
+  {
+    "docId": "7db9f8874e4bb4dd",
+    "fileName": "canon-concept_art.md",
+    "extension": ".md",
+    "sizeBytes": 550,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "概念藝術"
+    ]
+  },
+  {
+    "docId": "9471c271955e1596",
+    "fileName": "craft-lighting.md",
+    "extension": ".md",
+    "sizeBytes": 881,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/film lighting",
+      "三点布光与伦勃朗光"
+    ]
+  },
+  {
+    "docId": "da0a3fe21b8f5930",
+    "fileName": "craft-film_color.md",
+    "extension": ".md",
+    "sizeBytes": 794,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/NoFilmSchool·Color in Film",
+      "电影色彩叙事"
+    ]
+  },
+  {
+    "docId": "53044390ed467eb2",
+    "fileName": "craft2-env_layer.md",
+    "extension": ".md",
+    "sizeBytes": 830,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "CreativeBloq/Evenant",
+      "环境景深分层"
+    ]
+  }
+]

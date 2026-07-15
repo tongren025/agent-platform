@@ -1,0 +1,41 @@
+[
+  {
+    "roleCode": "admin",
+    "name": "管理员",
+    "description": "系统管理员，拥有所有权限",
+    "permissions": [
+      "system:admin",
+      "employee:manage",
+      "team:manage",
+      "workflow:manage",
+      "tool:manage",
+      "workbench:use",
+      "production:manage",
+      "settings:manage"
+    ],
+    "builtIn": true
+  },
+  {
+    "roleCode": "editor",
+    "name": "编辑",
+    "description": "可管理数字员工、团队、工作流等，但不能管理用户和角色",
+    "permissions": [
+      "employee:manage",
+      "team:manage",
+      "workflow:manage",
+      "tool:manage",
+      "workbench:use",
+      "production:manage"
+    ],
+    "builtIn": true
+  },
+  {
+    "roleCode": "viewer",
+    "name": "只读",
+    "description": "只能查看和使用工作台",
+    "permissions": [
+      "workbench:use"
+    ],
+    "builtIn": true
+  }
+]

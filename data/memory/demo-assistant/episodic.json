@@ -1,0 +1,14 @@
+[
+  {
+    "memoryId": "mem_f9c130a07c89",
+    "employeeKey": "demo-assistant",
+    "observation": "用户要做产品宣传短视频",
+    "action": "使用电影感+慢镜头+暖色调的提示词组合",
+    "result": "用户非常满意",
+    "successScore": 0.9,
+    "sourceSession": "",
+    "accessCount": 0,
+    "createdAt": "2026-06-23T07:00:19.696489Z",
+    "lastAccessed": null
+  }
+]

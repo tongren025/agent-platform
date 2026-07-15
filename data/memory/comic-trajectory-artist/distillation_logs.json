@@ -1,0 +1,1464 @@
+[
+  {
+    "logId": "dist_1eb5faf5c1e9",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-01T03:05:37.421349Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_shot_size_emotion_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_01",
+        "newContent": "景别×情绪：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。特写剥离环境直推角色内心，大远景强化孤独感。每镜只一个运镜,中英双写。",
+        "newImportance": null,
+        "reason": "两条记忆均在讨论景别与情绪的对应关系，前者为具体参数，后者为理论支撑，合并可增强实用性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_camera_emotion_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "newContent": "运镜情绪组合拳:dolly in+浅景深=世界只剩这个(用于角色顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。",
+        "newImportance": null,
+        "reason": "两者均涉及运镜(Dolly/Crane等)与具体情绪的映射，合并可将理论应用到具体组合拳中。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_proc_02",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_02",
+        "newContent": "动作描述先写受力来源，再写身体部位级动作链，最后写结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇，以避免Seedance产生运动模糊。",
+        "newImportance": null,
+        "reason": "两条记忆均关于动作描述的规范，一条强调力学因果，一条强调AI生成稳定性，合并后形成完整的动作撰写标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "虽然是基础理论，但在短剧高节奏环境下，蒙太奇的逻辑是构建叙事的核心，重要性应高于一般的知识点。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "同上，提升蒙太奇相关知识的权重以指导剪辑节奏。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "同上，提升蒙太奇相关知识的权重以指导剪辑节奏。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 24,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 22,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 16750,
+    "error": null
+  },
+  {
+    "logId": "dist_fe2aa4de6a51",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-01T03:10:03.023296Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_01",
+        "newContent": "蒙太奇通过组合不同地点/角度/距离的镜头产生'第三种动作'（库里肖夫效应），分镜的意义在于镜与镜的关系。交叉剪辑用于呈现同步多线索情节，创造性地理用剪辑拼出现实中不存在的空间关联。（来源:维基百科·蒙太奇）",
+        "newImportance": null,
+        "reason": "两条记忆均关于蒙太奇基础理论，且来源一致，可合并为统一的理论知识块。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_03",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_01",
+        "newContent": "蒙太奇通过组合不同地点/角度/距离的镜头产生'第三种动作'（库里肖夫效应），分镜的意义在于镜与镜的关系。交叉剪辑用于呈现同步多线索情节，创造性地理用剪辑拼出现实中不存在的空间关联。镜头并列直接决定影片节奏与叙事时空，剪辑是创造电影时间/空间的主要手段而非记录。（来源:维基百科·蒙太奇）",
+        "newImportance": null,
+        "reason": "三条关于蒙太奇的维基百科条目高度相关，合并后可形成完整的理论体系。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_04",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_02",
+        "newContent": "动作描述先写受力来源，再写身体部位级动作链，最后写结果；优先慢速连续小动作，严禁使用「快速/fast」「剧烈/夸张」等词汇，以避免Seedance产生运动模糊。建议改用「缓慢/轻微/小幅度/逐渐/平稳」。",
+        "newImportance": null,
+        "reason": "语义记忆中的禁止词列表与行为记忆中的动作描述规则在逻辑上完全一致，将具体词汇禁令合并入操作流程中更具实用价值。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_camera_emotion_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆区分了dolly与zoom的情绪差异，对于精准控制AI视频运镜具有较高的实操指导意义，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 22,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 20,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12843,
+    "error": null
+  },
+  {
+    "logId": "dist_8aa64cba22c6",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-01T03:10:47.168436Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_01",
+        "newContent": "景别×情绪与运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。常用20运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。特写剥离环境直推角色内心，大远景强化孤独感。每镜只一个运镜,中英双写。",
+        "newImportance": null,
+        "reason": "两条记忆均关于镜头语言（景别、运镜及其情绪映射），合并可提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_04",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_02",
+        "newContent": "动作描述先写受力来源，再写身体部位级动作链，最后写结果；严禁使用「快速/fast/剧烈/夸张」等词汇（会导致运动模糊），改用「缓慢/轻微/小幅度/逐渐/平稳」，优先慢速连续小动作。动作真实感来自力学因果。",
+        "newImportance": null,
+        "reason": "语义记忆中的禁止词限制与行为记忆中的动作描述规范高度重合，将具体词汇禁令整合进操作流程中更具实用价值。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_02",
+        "newContent": "动画12原则核心：1.Timing=两姿势间的帧数=速度，AI视频中慢速连续小动作更稳不变形。2.体积守恒：挤压拉伸时变宽必变矮、变高必变瘦，否则动作假。通过这两点赋予物体重量和弹性。",
+        "newImportance": null,
+        "reason": "同属动画12原则的底层逻辑，合并为统一的动画物理准则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.5,
+        "reason": "该记忆为通用电影理论，在极高节奏的短剧生产实践中优先级较低，下调权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 20,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 18,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 30843,
+    "error": null
+  },
+  {
+    "logId": "dist_35a8987fcd9e",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-01T14:07:16.239016Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "newContent": "景别×情绪与运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。常用20运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。运镜情绪组合拳:dolly in+浅景深=世界只剩这个(顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。每镜只一个运镜,中英双写。",
+        "newImportance": null,
+        "reason": "两条记忆均关于景别、运镜与情绪的映射关系，合并后形成完整的运镜情绪知识库。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_04",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_02",
+        "newContent": "动作描述先写受力来源，再写身体部位级动作链，最后写结果；优先慢速连续小动作，严禁使用「快速/fast/剧烈/夸张」等词汇，以避免Seedance产生运动模糊。动作真实感来自力学因果。",
+        "newImportance": null,
+        "reason": "语义记忆中的禁止词限制与行为记忆中的动作描述规范在逻辑上高度一致，合并至行为记忆以强化执行力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.3,
+        "reason": "该记忆为通用电影理论，在极高节奏的短剧生产环境下实用性较低，降低权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_06_trajectory_required",
+        "mergeIntoId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "newContent": "每个动作镜头必须有轨迹；打斗镜头必须标攻击线、闪避线、压制线、镜头运动线；魔法镜头必须标法阵出现位置、扩张方向、命中方向和粒子残留方向。",
+        "newImportance": null,
+        "reason": "两者均定义了不同场景下必须标注的轨迹类型，合并为统一的轨迹标注规范。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 18,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 34967,
+    "error": null
+  },
+  {
+    "logId": "dist_b3a0c8db1b70",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-02T03:14:24.186032Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "newContent": "景别×情绪与运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。常用20运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。运镜情绪组合拳:dolly in+浅景深=世界只剩这个(顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。【核心约束】：镜头运动和角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及运镜库与运镜约束，合并后可形成完整的“运镜库+执行规范”知识块。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_04",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_02",
+        "newContent": "动作描述先写受力来源，再写身体部位级动作链，最后写结果；优先慢速连续小动作，严禁使用「快速/fast」「剧烈/夸张」等词汇，以避免Seedance产生运动模糊。",
+        "newImportance": null,
+        "reason": "语义记忆中的禁词表与行为记忆中的动作描述规范高度重合，将禁词具体化到执行流程中更具实操价值。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.1,
+        "reason": "该记忆为纯理论知识，与当前高节奏短剧的实操链路（Seedance/剪映）关联度极低，降低权重以减少干扰。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 35827,
+    "error": null
+  },
+  {
+    "logId": "dist_81dd390ce8be",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-02T13:29:10.978406Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_04",
+        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "newContent": "景别×情绪与运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。常用20运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。运镜情绪组合拳:dolly in+浅景深=世界只剩这个(顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。【核心约束】：镜头运动和角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写。禁止使用「快速/fast」等词汇以避免运动模糊，改用「缓慢/轻微/小幅度/逐渐/平稳」，优先慢速连续小动作。",
+        "newImportance": null,
+        "reason": "将禁止词约束直接整合进运镜库的核心约束中，提高检索效率，避免碎片化。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_proc_01",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。",
+        "newImportance": null,
+        "reason": "将运镜的参数化要求与轨迹表的结构要求合并，统一轨迹图的输出标准。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "重要性极低(0.1)，且内容为通用电影理论，与当前短剧高频节奏、具体执行链路的实操性记忆不匹配，属于低价值冗余信息。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_camera_emotion_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆区分了dolly与zoom的情绪差异，对提升短剧质感至关重要，原权重(0.7)偏低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27843,
+    "error": null
+  },
+  {
+    "logId": "dist_1272d2ca7908",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-03T11:21:03.074049Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_camera_emotion_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "newContent": "景别×情绪与运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。常用20运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。【核心区分】：dolly(物理移动)产生视差纵深、zoom(变焦)是空间压缩，情绪完全不同不可混用；tracking平行跟随制造'与角色同行'的沉浸感。运镜情绪组合拳:dolly in+浅景深=世界只剩这个(顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。【核心约束】：镜头运动和角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写。禁止使用「快速/fast」等词汇以避免运动模糊，改用「缓慢/轻微/小幅度/逐渐/平稳」，优先慢速连续小动作。",
+        "newImportance": null,
+        "reason": "将具体的dolly/zoom/tracking区分理论合并入综合运镜库，增强知识结构的完整性，减少碎片化。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_02",
+        "newContent": "动画12原则核心：1.Timing=两姿势间的帧数=速度，AI视频中慢速连续小动作更稳不变形。2.体积守恒：挤压拉伸时变宽必变矮、变高必变瘦，否则动作假。3.运动轨迹：自然运动走弧线不走直线，且要有预备动作(Anticipation)和缓入缓出，避免机器人感。通过这些原则赋予物体重量、弹性与生命力。",
+        "newImportance": null,
+        "reason": "两条记忆均属于动画12原则的碎片化知识点，合并为统一的动画原则指南。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_shot_size_emotion_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆提供了具体的情绪递进手法，对实际创作有指导意义，其价值高于基础的理论碎片，适当提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 11,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 31765,
+    "error": null
+  },
+  {
+    "logId": "dist_06973a10032c",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-06T03:33:50.502569Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_shot_size_emotion_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "newContent": "景别×情绪与运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。【情绪递进】：从较松的中景起步，逐步换成越来越大的特写来堆叠情绪强度，而非直接怼脸。常用20运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。【核心区分】：dolly(物理移动)产生视差纵深、zoom(变焦)是空间压缩，情绪完全不同不可混用；tracking平行跟随制造'与角色同行'的沉浸感。运镜情绪组合拳:dolly in+浅景深=世界只剩这个(顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。【核心约束】：镜头运动和角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写。禁止使用「快速/fast」等词汇以避免运动模糊，改用「缓慢/轻微/小幅度/逐渐/平稳」，优先慢速连续小动作。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及景别与情绪的映射关系，将具体的情绪递进手法合并入综合运镜库，增强知识结构的完整性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.75,
+        "reason": "该记忆涉及的动画12原则（体积守恒、预备动作）与行为记忆中关于‘动作真实感’和‘力学因果’的逻辑高度互补，提升其重要性以支持底层动作设计。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 11,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 10,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26860,
+    "error": null
+  },
+  {
+    "logId": "dist_99ce77166a66",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-06T03:34:56.622019Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-trajectory-artist_sem_04_no_grid_keyframe",
+        "newContent": "正片级关键图质量标准：必须使用正向约束词（Seedance 2.0不读负向词），确保画面干净无描边、无墨线、无裂纹、无草稿线、无脏黑边、无死黑阴影、无文字水印，保持角色一致性与服装不漂移。严禁使用宫格或多面板作为正片图，优先单张干净行动图，避免分格线和脏线。",
+        "newImportance": null,
+        "reason": "两条记忆均关于正片关键图的视觉质量与纯净度约束，合并后可形成统一的质量验收标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆提供的动画12原则与行为记忆中的'力学因果'及'慢速连续动作'高度互补，提升其重要性以增强动作生成的理论支撑。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 10,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21842,
+    "error": null
+  },
+  {
+    "logId": "dist_c63a3cefb9e4",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-06T06:33:23.483509Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线（含法阵出现位置、扩张方向、命中方向和粒子残留方向）和因果说明。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。",
+        "newImportance": null,
+        "reason": "语义记忆中的轨迹要求与行为记忆中的轨迹说明表规则高度重合，将具体标注项合并入操作流程中，提高执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_02",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_02",
+        "newContent": "动作描述遵循力学因果：先写受力来源，再写身体部位级动作链，最后写结果。应用动画12原则：Timing控制速度（AI视频中慢速连续小动作更稳）、体积守恒（挤压拉伸时宽矮/高瘦互补）、运动轨迹走弧线并包含预备动作(Anticipation)与缓入缓出。严禁使用「快速/剧烈/夸张」等词汇，以避免Seedance产生运动模糊。",
+        "newImportance": null,
+        "reason": "将动画理论（语义）直接转化为动作描述的执行标准（行为），使理论指导实践，减少冗余记忆。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.97,
+        "reason": "该记忆包含极其详尽的运镜库、情绪映射及核心约束，是生成提示词的基石，重要性应提升至与工作流同级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22452,
+    "error": null
+  },
+  {
+    "logId": "dist_dd68d40ddf09",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-06T13:43:42.542120Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明（含法阵出现位置、扩张方向、命中方向和粒子残留方向）。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。",
+        "newImportance": null,
+        "reason": "语义记忆中的轨迹要求与行为记忆中的轨迹说明表规则高度重合，将其整合进具体的操作流程(procedural)中更具执行力。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_02",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_02",
+        "newContent": "动作描述遵循力学因果：先写受力来源，再写身体部位级动作链，最后写结果。应用动画12原则：1.Timing(帧数控制速度)确保慢速连续小动作以防变形；2.体积守恒(挤压拉伸时宽矮/高瘦互补)；3.运动轨迹走弧线并包含预备动作(Anticipation)与缓入缓出。严禁使用「快速/剧烈/夸张」等词汇，以避免Seedance产生运动模糊。",
+        "newImportance": null,
+        "reason": "动画12原则是动作描述的底层理论支撑，将其与具体的动作描述行为规则合并，可将理论直接转化为可执行的指令标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "交付目录属于行政/流程类信息，相对于核心的视觉准则和动作逻辑，其对AI生成质量的直接影响较低，适当下调权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27171,
+    "error": null
+  },
+  {
+    "logId": "dist_9bd685d3d395",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-07T03:59:59.128932Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_animation12_02",
+        "mergeIntoId": "seed_comic-trajectory-artist_sem_08_continuity_pose",
+        "newContent": "【动作连续性与动画原则】1.姿态衔接：上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。2.动画12原则应用：Timing决定速度（AI视频中慢速连续小动作更稳）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出，赋予物体重量与生命力。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及动作的物理真实感与连续性，将动画12原则作为底层理论合并入连续性质量标准中，增强语义关联。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-trajectory-artist_proc_02",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。动作描述需遵循：先写受力来源 $\\rightarrow$ 身体部位级动作链 $\\rightarrow$ 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。",
+        "newImportance": null,
+        "reason": "proc_01定义了表格结构，proc_02定义了描述逻辑，两者均属于轨迹说明表的撰写规范，合并后可形成完整的操作指南。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24125,
+    "error": null
+  },
+  {
+    "logId": "dist_4406d34e7567",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-07T06:15:20.256384Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明（含法阵出现位置、扩张方向、命中方向和粒子残留方向）。动作描述需遵循：先写受力来源 $\\rightarrow$ 身体部位级动作链 $\\rightarrow$ 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。",
+        "newImportance": null,
+        "reason": "语义记忆中的轨迹要求与行为记忆中的轨迹说明表规则高度重合，将其整合进具体的操作流程（Procedural）中更具执行力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "该记忆仅为目录结构定义，属于低频参考的行政性标准，相对于核心视觉与节奏准则，其重要性较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24516,
+    "error": null
+  },
+  {
+    "logId": "dist_a1562a1175ed",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-07T06:19:21.735922Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明（魔法镜头需额外标法阵出现位置、扩张方向、命中方向和粒子残留方向）。动作描述需遵循：先写受力来源 $\\rightarrow$ 身体部位级动作链 $\\rightarrow$ 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。",
+        "newImportance": null,
+        "reason": "语义记忆中的轨迹要求与行为记忆中的轨迹说明表规则高度重合，将具体的技术要求合并入操作流程中，提高执行效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "该记忆仅为目录结构定义，属于低频参考的行政性标准，不影响核心创作逻辑，降低权重以优化检索优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24547,
+    "error": null
+  },
+  {
+    "logId": "dist_a2bc4c2cb2ec",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-07T06:21:21.245151Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明（包括法阵出现位置、扩张方向、命中方向和粒子残留方向）。动作描述需遵循：先写受力来源 $\\rightarrow$ 身体部位级动作链 $\\rightarrow$ 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。",
+        "newImportance": null,
+        "reason": "语义记忆中的轨迹要求与行为记忆中的轨迹说明表规则高度重合，将具体标注项合并入执行流程中可提高操作效率。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "重要性极低(0.4)，且属于纯目录结构定义，在核心创作逻辑面前价值较低，可由工具链文档替代。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24547,
+    "error": null
+  },
+  {
+    "logId": "dist_7b98382f6e1c",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-08T15:05:01.868045Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-trajectory-artist_proc_03",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。动作描述需遵循：先写受力来源 → 身体部位级动作链 → 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。且镜头运动必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场），以避免视频晃动或无目的乱动。",
+        "newImportance": null,
+        "reason": "proc_03 是 proc_01 中关于运镜描述的补充逻辑，合并后可形成完整的轨迹说明操作标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12968,
+    "error": null
+  },
+  {
+    "logId": "dist_c4db20e8130c",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-08T19:00:10.047816Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线（含法阵出现位置、扩张方向、命中方向和粒子残留方向）和因果说明。动作描述需遵循：先写受力来源 → 身体部位级动作链 → 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。且镜头运动必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场），以避免视频晃动或无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的轨迹要求与行为记忆中的轨迹说明表高度重合，将其整合进具体的操作流程（procedural）中更具执行价值。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 7968,
+    "error": null
+  },
+  {
+    "logId": "dist_e360a82fa6c4",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-09T04:06:40.648399Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线（含法阵出现位置、扩张方向、命中方向和粒子残留方向）和因果说明。动作描述需遵循：先写受力来源 → 身体部位级动作链 → 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。且镜头运动必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场），以避免视频晃动或无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的轨迹要求与行为记忆中的轨迹说明表高度重合，将其整合进具体的执行流程（procedural）中更具操作性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_08_continuity_pose",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆涵盖了动作连续性和动画12原则，是确保AI视频不崩坏的核心底层逻辑，重要性应与短剧第一准则持平。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14297,
+    "error": null
+  },
+  {
+    "logId": "dist_aa64765a912d",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-09T13:20:38.154694Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_08_continuity_pose",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【动作连续性与轨迹执行标准】1. 轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。2. 动作描述遵循：受力来源 → 身体部位级动作链 → 结果；确保上一镜结束姿态能接下一镜起始姿态，受力方向、身体重心与镜头方向一致。3. 动画原则：应用Timing（慢速连续小动作更稳）、体积守恒（挤压拉伸互补）、运动轨迹走弧线并包含预备动作(Anticipation)与缓入缓出。4. 禁忌：严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。5. 运镜：每镜仅限一个中英双写运镜（如『缓慢推进(dolly in)』），需提供机位高度/焦段/速度/角度参数，并说明服务目的（如压迫、跟随、揭示空间），以避免无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作连续性原则与行为记忆中的轨迹说明表规则在执行逻辑上高度重合，合并后可将理论原则直接转化为可操作的执行标准，提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "该记忆属于基础链路定义，相对于核心的短剧准则、视觉风格和运镜逻辑，其权重可适当下调，不影响核心创作逻辑。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11875,
+    "error": null
+  },
+  {
+    "logId": "dist_8611a40da098",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-09T13:36:16.364424Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_08_continuity_pose",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹说明表：必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。2. 动作链逻辑：遵循「受力来源 → 身体部位级动作链 → 结果」；确保上一镜结束姿态能接下一镜起始姿态，受力方向、身体重心和镜头方向不矛盾。3. 动画原则：应用Timing（慢速连续小动作更稳）、体积守恒（挤压拉伸互补）、运动轨迹走弧线且需预备动作(Anticipation)与缓入缓出。4. 词汇约束：严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊，优先使用「缓慢/轻微/小幅度/逐渐/平稳」。5. 运镜规范：每镜只标一个运镜，中英双写（如『缓慢推进(dolly in)』），提供机位高度/焦段/速度/角度参数，并说明服务目的（如压迫、跟随、揭示空间），以避免无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作连续性原则与行为记忆中的轨迹说明表在执行逻辑上高度重合，将其整合为一套完整的执行标准可提高检索效率并增强操作一致性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "该记忆仅描述文件映射关系，属于基础工程配置，相比于核心的视觉风格和节奏准则，其对创作质量的直接影响较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12797,
+    "error": null
+  },
+  {
+    "logId": "dist_82cb2bc1bd43",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-09T13:41:32.032841Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_08_continuity_pose",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹说明与动作连续性准则】1. 轨迹表要求：逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。2. 动作链逻辑：遵循「受力来源 → 身体部位级动作链 → 结果」；确保上一镜结束姿态能接下一镜起始姿态，受力方向、身体重心与镜头方向一致。3. 动画原则：应用Timing（慢速连续小动作更稳）、体积守恒（挤压拉伸互补）、运动轨迹走弧线并包含预备动作(Anticipation)与缓入缓出。4. 词汇约束：严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。5. 运镜规范：每镜仅标一个中英双写运镜（如『缓慢推进(dolly in)』），提供机位高度/焦段/速度/角度参数，并说明服务目的（如压迫、跟随、揭示空间），以避免无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作连续性原则与行为记忆中的轨迹说明表在执行逻辑上高度重合，合并后可形成一套完整的从理论到执行的动作控制标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆仅描述文件映射关系，属于基础工程配置，相对于核心的视觉与节奏准则，其权重可适当降低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9655,
+    "error": null
+  },
+  {
+    "logId": "dist_2ac63421eba6",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T03:05:32.569305Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_08_continuity_pose",
+        "mergeIntoId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "newContent": "【动作与轨迹连续性原则】1. 轨迹标定：每个动作镜头必须有轨迹；打斗标攻击线、闪避线、压制线、镜头运动线；魔法标法阵位置、扩张方向、命中方向和粒子残留方向。2. 姿态衔接：上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（AI视频中慢速连续小动作更稳）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出，赋予物体重量与生命力。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及动作的连续性、轨迹与物理逻辑，合并后可形成完整的“动作逻辑标准”，提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "该记忆仅描述基础文件链路，属于通用工程常识，相对于核心的视觉与节奏准则，其重要性较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26186,
+    "error": null
+  },
+  {
+    "logId": "dist_3129aa0fcaae",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T03:08:06.189269Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【动作轨迹与执行标准】1. 轨迹标定：必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线及因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作逻辑：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须衔接下一镜起始姿态，受力方向与重心不可矛盾。3. 动画原则：Timing决定速度，优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。运动轨迹走弧线而非直线，需包含预备动作(Anticipation)与缓入缓出。4. 运镜约束：每镜仅限一个运镜，中英双写（如『缓慢推进(dolly in)』），提供机位高度/焦段/速度/角度参数，且必须说明服务目的（如压迫、跟随、揭示空间），以避免无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，将其整合进行为记忆(procedural)可形成更完整的执行标准，减少冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "该记忆仅描述基础文件链路，属于通用工程常识，对AI生成核心能力的贡献度较低，降低权重以优化检索优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10000,
+    "error": null
+  },
+  {
+    "logId": "dist_047e50ec4ce1",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T03:12:05.870121Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.3,
+        "reason": "该记忆仅描述基础文件链路，属于通用工程配置，对艺术创作核心逻辑贡献较低，且重要性已处于低位，进一步下调以优化检索权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12766,
+    "error": null
+  },
+  {
+    "logId": "dist_32226bdf3358",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T03:28:37.565327Z",
+    "actions": [
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "重要性极低 (0.3)，且仅描述基础文件映射关系，属于通用工程常识而非核心领域知识，可由工具链文档替代。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作连续性执行标准】1. 轨迹标定：逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线及因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链描述：遵循『受力来源 → 身体部位级动作链 → 结果』；确保上一镜结束姿态能衔接下一镜起始姿态，受力方向与重心不矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」以避免Seedance运动模糊）；体积守恒（挤压拉伸互补）；运动轨迹走弧线并包含预备动作(Anticipation)与缓入缓出。4. 运镜规范：每镜仅限一个运镜，中英双写（如『缓慢推进(dolly in)』），需提供机位高度/焦段/速度/角度参数，并明确服务目的（如压迫、跟随、揭示空间），以避免无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，将理论原则合并入执行流程中，可提高指令触发的完整性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12875,
+    "error": null
+  },
+  {
+    "logId": "dist_cd61f8c846ab",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T03:45:54.642737Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链描述：遵循「受力来源 → 身体部位级动作链 → 结果」；确保上一镜结束姿态能接下一镜起始姿态，受力方向、身体重心和镜头方向不矛盾。3. 动画原则：Timing决定速度，优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。体积守恒（挤压拉伸互补），运动轨迹走弧线并包含预备动作(Anticipation)与缓入缓出。4. 运镜规范：每镜仅限一个运镜，中英双写（如『缓慢推进(dolly in)』），并提供机位高度/焦段/速度/角度参数，且必须说明服务目的（如压迫、跟随、揭示空间），以避免无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，将其整合为一套完整的执行标准，提高检索效率并消除冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该记忆包含极其详细的运镜库与情绪映射，是视觉语言的核心，其价值在实际应用中高于一般的质量标准，提升权重以确保优先调用。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11890,
+    "error": null
+  },
+  {
+    "logId": "dist_b1c47ffa891c",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T04:00:07.118833Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链描述：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出。4. 运镜约束：每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数，且必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场）。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，合并后可将理论原则直接转化为可执行的标准化操作流程，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11577,
+    "error": null
+  },
+  {
+    "logId": "dist_958ee8daa4f7",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T04:14:54.440150Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链条：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出。4. 运镜规范：每镜只标一个运镜，中英双写（如『缓慢推进(dolly in)』），提供机位高度/焦段/速度/角度参数，并说明服务目的（如压迫、跟随、揭示空间），以避免视频晃动或无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，合并后可将理论原则与执行标准统一，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19468,
+    "error": null
+  },
+  {
+    "logId": "dist_ed34ce772803",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T04:18:46.921483Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链条：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出。4. 运镜规范：每镜仅限一个运镜，中英双写（如『缓慢推进(dolly in)』），提供机位高度/焦段/速度/角度参数，并说明服务目的（如压迫、跟随、揭示空间），以避免视频晃动或无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，且均指向Seedance的执行细节，合并后可形成一套完整的从理论到执行的动作标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9594,
+    "error": null
+  },
+  {
+    "logId": "dist_e037c57136d6",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T04:23:31.417994Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链逻辑：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」以避免Seedance运动模糊）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出。4. 运镜规范：每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数，且必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场）。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，且均指向Seedance的执行细节，合并后可形成一套完整的从理论到执行的动作管线。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10360,
+    "error": null
+  },
+  {
+    "logId": "dist_eb83cc644fd1",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T04:31:55.912944Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链逻辑：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须能接下一镜起始姿态，受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出。4. 运镜规范：每镜只标一个运镜，中英双写（如『缓慢推进(dolly in)』），提供机位高度/焦段/速度/角度参数，并说明服务目的（如压迫、跟随、揭示空间），以避免视频晃动或无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，且均指向Seedance的执行标准，合并后可将理论原则直接转化为操作流程，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10171,
+    "error": null
+  },
+  {
+    "logId": "dist_89b6c71c8be0",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T04:38:59.808050Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链条：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（AI视频中慢速连续小动作更稳）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出。4. 约束：优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数，且必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场）。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，将其整合为一套完整的执行标准，提高检索效率并消除冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8577,
+    "error": null
+  },
+  {
+    "logId": "dist_96848476d0c8",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T04:48:57.618450Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链描述：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出。4. 运镜约束：每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数，且必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场）。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，将其整合为一套完整的执行标准，可提高检索效率并消除冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13578,
+    "error": null
+  },
+  {
+    "logId": "dist_6ec2ea6c4a1b",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T04:49:23.832602Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链条：遵循「受力来源 → 身体部位级动作链 → 结果」；上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出，赋予物体重量与生命力。4. 运镜规范：每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,提供机位高度/焦段/速度/角度参数，且必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场）。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，且均指向Seedance的执行标准，合并后可将理论原则直接转化为操作流程，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12328,
+    "error": null
+  },
+  {
+    "logId": "dist_5bf6b5699610",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-10T06:13:54.598225Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【轨迹与动作执行标准】1. 轨迹标定：轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。魔法需标法阵位置、扩张方向、命中方向和粒子残留方向。2. 动作链描述：遵循「受力来源 → 身体部位级动作链 → 结果」；确保上一镜结束姿态能接下一镜起始姿态，受力方向、身体重心和镜头方向不矛盾。3. 动画原则：Timing决定速度（优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出，赋予物体重量与生命力。",
+        "newImportance": null,
+        "reason": "语义记忆中的动作轨迹原则与行为记忆中的轨迹说明表规则高度重合，将其整合为一套完整的执行标准，消除冗余并增强操作性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆包含极其详尽的运镜库、情绪映射及核心约束（如中英双写、禁止fast），是生成提示词的核心基准，重要性应提升至最高级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11625,
+    "error": null
+  },
+  {
+    "logId": "dist_ddc62e47f3d1",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-13T03:14:24.007137Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【运镜库与执行标准】1. 景别×情绪：大远景=渺小/孤独(crane down)、远景=格局(tracking)、全景=客观建立(static)、中景=对话日常(dolly in)、近景=情绪(dolly in)、特写=高情绪(static+震动)、微距=奇观(dolly in)。情绪递进应从中景起步逐步至特写。2. 常用运镜：dolly in/out, zoom in/out, tracking, truck, arc, crane up/down, boom, pan, tilt, dutch angle, 360 orbit, static, handheld, whip pan, bird's eye, low angle。3. 核心区分：dolly(物理移动)产生视差纵深，zoom(变焦)是空间压缩，不可混用；tracking平行跟随制造沉浸感。4. 轨迹说明表标准：必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。动作描述遵循：受力来源 → 身体部位级动作链 → 结果。5. 约束：每镜仅限一个运镜，中英双写（如『缓慢推进(dolly in)』），提供机位高度/焦段/速度/角度参数。严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊，优先使用「缓慢/轻微/小幅度/逐渐/平稳」。镜头运动必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场）。",
+        "newImportance": null,
+        "reason": "语义记忆中的运镜库与行为记忆中的轨迹说明表在执行层面高度重合，均涉及运镜定义、禁词及Seedance适配标准，合并后可形成一套完整的从‘理论-库-执行’的闭环操作指南。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13469,
+    "error": null
+  },
+  {
+    "logId": "dist_52b33ad288ab",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-13T19:00:18.300174Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【运镜与动作执行标准】1. 运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。2. 核心区分：dolly(物理移动)产生视差纵深、zoom(变焦)是空间压缩，不可混用；tracking平行跟随制造沉浸感。3. 运镜组合：dolly in+浅景深=顿悟/恐惧/决心；crane down+雨=命运降临；static+寂静=极痛；tracking+背影=跟不上；whip pan=时空转换；dutch angle+底光=世界崩塌。4. 轨迹说明表要求：逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。动作描述遵循：受力来源 → 身体部位级动作链 → 结果。5. 核心约束：镜头运动与角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写（如『缓慢推进(dolly in)』），并提供机位高度/焦段/速度/角度参数。禁止使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊，优先使用「缓慢/轻微/小幅度/逐渐/平稳」的慢速连续小动作。所有运镜必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场）。",
+        "newImportance": null,
+        "reason": "语义记忆中的运镜库与行为记忆中的运镜执行标准高度互补且目标一致，合并后可将‘理论库’与‘操作规程’统一，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13186,
+    "error": null
+  },
+  {
+    "logId": "dist_0e40de1aa8aa",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-14T19:00:17.883785Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【运镜与动作执行标准】1. 运镜库：大远景=渺小/孤独(crane down)、远景=格局(tracking)、全景=客观建立(static)、中景=对话日常(dolly in)、近景=情绪(dolly in)、特写=高情绪(static+震动)、微距=奇观(dolly in)。【情绪递进】：从中景起步，逐步增加特写强度。常用运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。【核心区分】：dolly(物理移动)产生视差纵深、zoom(变焦)是空间压缩，不可混用；tracking平行跟随制造沉浸感。2. 轨迹说明表：必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。动作描述遵循：受力来源 → 身体部位级动作链 → 结果。3. 核心约束：镜头运动和角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写（如『缓慢推进(dolly in)』），并提供机位高度/焦段/速度/角度参数。禁止使用「快速/fast/剧烈/夸张」等词汇以避免Seedance运动模糊，统一改用「缓慢/轻微/小幅度/逐渐/平稳」，优先慢速连续小动作。镜头运动必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场）。",
+        "newImportance": null,
+        "reason": "语义记忆中的运镜库与行为记忆中的运镜执行标准高度重合，且均涉及Seedance的运动模糊约束，合并后可形成一套完整的从‘理论-库-执行’的闭环操作指南。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13296,
+    "error": null
+  }
+]

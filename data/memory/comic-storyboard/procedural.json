@@ -1,0 +1,46 @@
+[
+  {
+    "memoryId": "jiulu_gaoran_pivot_20260709_comic-storyboard_gaoran_shot_rule",
+    "employeeKey": "comic-storyboard",
+    "rule": "开场不从主角小角落起,先用九陆巡礼群像立世界观再俯冲落主角;每集第一秒即城市/地貌级量级,禁止拉跨起手。",
+    "rationale": "用户三次点名:要全程高燃、格调门槛高、开头带一下大陆让观众知道世界观;之前贴地无脸小场面被骂卡拉米。",
+    "confidence": 0.97,
+    "activationCount": 0,
+    "sourceSession": "jiulu_gaoran_pivot_20260709",
+    "createdAt": "2026-07-09T08:02:22.940028Z",
+    "updatedAt": "2026-07-09T08:02:22.940028Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-storyboard_proc_01",
+    "employeeKey": "comic-storyboard",
+    "rule": "把剧本拆成带编号的分镜表,每镜含景别/主体/动作/运镜/时长/情绪,下游按Shot编号对齐。",
+    "rationale": "Shot编号是一人团队各角色协同的唯一锚点。",
+    "confidence": 0.95,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-06-30T11:44:56.150698Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-storyboard_proc_02",
+    "employeeKey": "comic-storyboard",
+    "rule": "前3秒第1镜必须是情绪炸点或强视觉,不能用建立镜头慢热。",
+    "rationale": "竖屏短剧前3秒决定留存。",
+    "confidence": 0.93,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-06-30T11:44:56.150698Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-storyboard_proc_03",
+    "employeeKey": "comic-storyboard",
+    "rule": "按景别×情绪选镜:高情绪用特写+static,孤独感用大远景+crane down。",
+    "rationale": "景别本身就是情绪语言。",
+    "confidence": 0.92,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-06-30T11:44:56.150698Z"
+  }
+]

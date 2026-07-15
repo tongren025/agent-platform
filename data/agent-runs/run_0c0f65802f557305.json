@@ -1,0 +1,18 @@
+{
+  "runId": "run_0c0f65802f557305",
+  "sessionId": "ses_392481075d8e852e",
+  "employeeKey": "recharge-strategy-assistant",
+  "workflowKey": null,
+  "model": "Gemma-4-31B-IT-NVFP4",
+  "success": true,
+  "iterations": 1,
+  "promptTokens": 3555,
+  "completionTokens": 732,
+  "totalTokens": 4287,
+  "costUsd": null,
+  "elapsedMilliseconds": 12561,
+  "errorMessage": null,
+  "pendingApproval": false,
+  "traces": [],
+  "createdAt": "2026-07-14T06:38:31.906291Z"
+}

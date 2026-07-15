@@ -1,0 +1,18 @@
+{
+  "runId": "run_29ad4f0f69dc7c60",
+  "sessionId": "ses_fe4b79b7674c42e7",
+  "employeeKey": "script-doctor",
+  "workflowKey": null,
+  "model": "gpt-4o",
+  "success": false,
+  "iterations": 0,
+  "promptTokens": 0,
+  "completionTokens": 0,
+  "totalTokens": 0,
+  "costUsd": null,
+  "elapsedMilliseconds": 0,
+  "errorMessage": "无法解析模型: gpt-4o",
+  "pendingApproval": false,
+  "traces": [],
+  "createdAt": "2026-07-07T06:21:46.368222Z"
+}

@@ -1,0 +1,28 @@
+{
+  "sessionId": "ses_fe4b79b7674c42e7",
+  "employeeKey": "script-doctor",
+  "targetType": "employee",
+  "teamCode": null,
+  "title": "ping",
+  "archived": false,
+  "messages": [
+    {
+      "role": "user",
+      "content": "ping",
+      "timestamp": "2026-07-07T06:21:46.368222Z",
+      "toolName": null
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2026-07-07T06:21:46.368222Z",
+      "toolName": null
+    }
+  ],
+  "artifacts": [],
+  "compressedSummary": null,
+  "createdAt": "2026-07-07T06:21:46.368222Z",
+  "lastActiveAt": "2026-07-07T06:21:46.368222Z",
+  "metadata": {},
+  "pendingApproval": null
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "memoryId": "jiulu_gaoran_pivot_20260709_comic-director_gaoran_shot_rule",
+    "employeeKey": "comic-director",
+    "rule": "开场不从主角小角落起,先用九陆巡礼群像立世界观再俯冲落主角;每集第一秒即城市/地貌级量级,禁止拉跨起手。",
+    "rationale": "用户三次点名:要全程高燃、格调门槛高、开头带一下大陆让观众知道世界观;之前贴地无脸小场面被骂卡拉米。",
+    "confidence": 0.97,
+    "activationCount": 0,
+    "sourceSession": "jiulu_gaoran_pivot_20260709",
+    "createdAt": "2026-07-09T08:02:22.930615Z",
+    "updatedAt": "2026-07-09T08:02:22.930615Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-director_proc_01",
+    "employeeKey": "comic-director",
+    "rule": "每集开工前必须先确认情绪锚点、嘴替台词及整体情绪曲线（确保有落差而非恒定），随后输出详细的制作说明和任务拆分清单再委派成员；成员交稿后必须严格按验收标准审稿，不合格必须点名返工字段，严禁一次性串流水而无质量闸；最终回答必须诚实区分“已完成”“可进入生成”“需要返工”，严禁将半成品包装成交付；任何下游输入缺失必须在 brief 中补齐或标注假设，以防止团队散写导致无法合成制作包。",
+    "rationale": "情绪过山车是漫剧留人的核心,平铺直叙会掉人。",
+    "confidence": 0.95,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-07-02T03:14:59.946621Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-director_proc_02",
+    "employeeKey": "comic-director",
+    "rule": "跨集复用资产(角色母版/场景母版)必须引用同一ID,不允许下游各画各的。",
+    "rationale": "一人团队的一致性靠总导演的资产编号纪律保证。",
+    "confidence": 0.94,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-06-30T11:44:56.150698Z"
+  }
+]

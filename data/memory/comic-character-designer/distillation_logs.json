@@ -1,0 +1,1848 @@
+[
+  {
+    "logId": "dist_f4cfc56a66ad",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-01T03:02:00.217435Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_sem_02",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，暗金属法杖/铁管式施法媒介。",
+        "newImportance": null,
+        "reason": "两条记忆均定义艾拉的角色外观，前者侧重于整体方向，后者补充了具体身体特征（蓝瞳、肤色）及R编号，合并后形成完整角色定义。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_sem_05",
+        "mergeIntoId": "seed_comic-character-designer_sem_02_style_core",
+        "newContent": "九陆纪元视觉核心（所有提示词必带风格锚点）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
+        "newImportance": null,
+        "reason": "两者内容完全一致，仅一个定义为核心，一个定义为必带锚点，合并以消除冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_05aa727317b1",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_01",
+        "newContent": "R3苍霖设定：16岁少年/黑色短碎发凌乱/左脸颊竖向旧伤疤/偏瘦有韧劲/深褐近黑瞳孔/偏暗肤色。三阶段服装：EP01-03早期=破烂灰褐麻布短衣/赤脚/胸口布条绑龙骨碎片；EP04-08中期=同上+旧毯子当披风；EP09-10后期=深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚。辨识特征：旧疤+龙骨碎片。表情外化：隐忍=牙关咬紧眼眶泛红不流泪，空洞=瞳孔微放大嘴唇微张。每镜必完整复述。",
+        "newImportance": null,
+        "reason": "mem_05aa727317b1 提供了更详细的身体特征和表情外化描述，而 sem_01 提供了关键的时间线阶段变化，合并后形成完整的角色资产库。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-character-designer_color_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-character-designer_film_color_01",
+        "newContent": "色彩是叙事决策而非装饰：配色必须对齐角色/主题/情绪，暖色/冷色触发不同心理联想。整片应先做color script规划色调随情绪走向变化。（来源:StudioBinder/维基百科）",
+        "newImportance": null,
+        "reason": "两者均讨论色彩作为情绪工具的叙事功能，合并后增强理论支撑。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-character-designer_concept_art_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-character-designer_concept_art_01",
+        "newContent": "概念艺术（Concept Art）=用插画把想法视觉化，是视觉开发(visual development)的源头，直接关联分镜与接景。位于3D/正式制作之前，作用是给后续所有环节提供统一的视觉参考与灵感。（来源:维基百科）",
+        "newImportance": null,
+        "reason": "两条记忆均定义概念艺术，内容互补，合并后逻辑更完整。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 34,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 29,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20891,
+    "error": null
+  },
+  {
+    "logId": "dist_cfa3bc4232b7",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-01T03:02:38.775276Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "newContent": "Seedance 2.0角色管理与质量规则：1.绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。2.每个角色分配R编号(R1=艾拉,R2=巨龙,R3=...),全剧统一。3.角色固定词必须逐字复制到每条提示词,禁止缩写或写「同上」。4.固定词使用具体名词,禁用「漂亮的」等抽象形容词。",
+        "newImportance": null,
+        "reason": "两条记忆均关于Seedance 2.0的正向约束规则和负向词禁用，合并后可提高指令密度，减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_shape_language_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-character-designer_shape_language_01",
+        "newContent": "形状语言与剪影验收：1.形状心理：圆=友善柔软安全，方=稳定可靠/英雄导师，三角=动感攻击/反派。2.剪影测试：通过形状决定剪影、比例、服装、五官，确保仅凭剪影即可识别身份性格，这是角色设计的行业验收标准。（来源:CharacterBazaar/vsquad）",
+        "newImportance": null,
+        "reason": "两条记忆均讨论形状语言及其在角色设计中的应用，逻辑上属于同一知识点。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_costume_01",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-character-designer_costume_02",
+        "newContent": "服装叙事理论：服装是角色开口前的名片，通过颜色/面料/破损/合身度在第一眼传达身份与处境。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 $\rightarrow$ 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。苍霖早中后期服装正是此法。（来源:Studiovity/AMPAS）",
+        "newImportance": null,
+        "reason": "均关于服装设计对角色叙事的影响，合并后将通用理论与具体案例（苍霖）结合。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_expression_02",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-character-designer_expression_01",
+        "newContent": "表情设计准则：1.核心三件套：眉/眼/嘴承担最大情绪表达，先定这三者再加细节。2.普世情绪组合：怒=眉锁下压+抿唇，惧=睁眼扬眉微张嘴，惊=扬眉瞪眼张嘴。要求表情必须一眼可读（1/12秒内识别）。（来源:AnimeOutline/Clip Studio）",
+        "newImportance": null,
+        "reason": "均关于表情设计的具体执行方法，合并后形成完整的从结构到情绪的指南。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_anatomy_02",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-character-designer_anatomy_01",
+        "newContent": "人体比例基准：成人约7.5-8头高(女7.5)，肩宽男2-2.5头/女2头；自然下垂时肘对腰、腕对裆。理想比例仅为基准，可通过有依据地偏离（如Q版大头/英雄8.5头）来创造风格。（来源:TheDrawingSource/Anatomy Masterclass）",
+        "newImportance": null,
+        "reason": "均关于人体比例，将标准比例与风格化偏离合并。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-character-designer_color_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-character-designer_color_01",
+        "newContent": "色彩理论基础：1.三属性：色相/明度/饱和度，通过独立调整其中一项控制画面。2.对比关系：互补色（色轮相对）制造最大对比张力，类似色（色轮相邻）自然和谐。冲突场景用互补，统一氛围用类似。（来源:维基百科）",
+        "newImportance": null,
+        "reason": "均属于基础色彩理论知识点。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 29,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 23,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24639,
+    "error": null
+  },
+  {
+    "logId": "dist_baca5f34ab1c",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-01T03:03:46.936584Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_10_master_image",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例 2.装备层(场景内固定,跨场景可切换)=服装结构/标志物/武器法器/材质/配色 3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡 4.母版图层=正面全身定妆照(白色背景,清晰五官和服装细节),作为@图片锚定,是工业化生产角色一致性的基础。每层有明确的变化规则,防止角色漂移。",
+        "newImportance": null,
+        "reason": "母版图机制是CHAR四层结构中的第四层，合并后逻辑更完整，减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_proc_02",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色都要有：R编号、母版图提示词(含正面/侧面/背面三视图供下游@图片引用)、正向固定词(2-3个核心视觉识别特征)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 不写负向提示词。",
+        "newImportance": null,
+        "reason": "三视图母版要求与角色设定标准流程高度重合，合并至通用流程中。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_costume_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该理论直接指导了R3苍霖的三阶段服装设计，具有实际应用价值，应提升权重。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-character-designer_concept_art_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "纯定义性知识，在已有具体工作流（母版图、CHAR层）的情况下，该通用定义价值极低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 23,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 21,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12061,
+    "error": null
+  },
+  {
+    "logId": "dist_74c04e7ec722",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-01T03:04:53.233754Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_08_dragon_lock",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。严禁糊成黑影。",
+        "newImportance": null,
+        "reason": "将巨龙的通用视觉细节与三阶段成长设定合并，消除冗余并增强阶段性描述的完整度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_sem_06",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写（如：苍霖左脸竖疤+胸口龙骨碎片;艾拉银蓝高光+暗金属法杖;龙的熔金龙瞳），作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "将具体的视觉符号执行要求合并到资产库结构理论中，使理论与实践结合。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_film_color_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-character-designer_film_color_02",
+        "newContent": "色彩叙事理论：色彩是叙事决策而非装饰，需通过color script规划色调随情绪变化。暖冷色心理具有双面性：暖色既是温暖也是愤怒，冷色既是平静也是悲伤孤独，具体含义由饱和度、明度及语境决定。（来源:No Film School/StudioBinder）",
+        "newImportance": null,
+        "reason": "合并两条关于色彩心理和叙事决策的碎片化知识，形成完整的色彩理论记忆。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_costume_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆解释了苍霖服装设计的底层逻辑，对维持角色成长弧线的一致性具有较高指导价值，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 21,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 18,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15186,
+    "error": null
+  },
+  {
+    "logId": "dist_ca536f0ea80b",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-01T03:06:56.561684Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-character-designer_color_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-character-designer_film_color_02",
+        "newContent": "色彩叙事与理论：1.基础属性：通过色相/明度/饱和度独立控制画面；利用互补色制造张力（冲突场景），类似色营造和谐（统一氛围）。2.叙事决策：色彩非装饰，需通过color script规划随情绪变化。暖冷色具有双面性（如暖色既是温暖也是愤怒），具体含义由饱和度、明度及语境决定。（来源:No Film School/StudioBinder/Wikipedia）",
+        "newImportance": null,
+        "reason": "将基础色彩理论与进阶色彩叙事理论合并，消除冗余，形成从基础到应用的完整知识链。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_proc_01",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词。",
+        "newImportance": null,
+        "reason": "将具体的DNA词数量要求和分阶段变化规则整合进角色设定标准流程中，提高执行一致性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_shape_language_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "形状语言是角色设计的行业验收标准，其价值高于一般的基础人体比例知识，应适当提升权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_expression_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "表情设计直接影响短剧的“情绪钩子”和识别速度，在快节奏短剧环境下重要性增加。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 18,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11843,
+    "error": null
+  },
+  {
+    "logId": "dist_26e12810a63e",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-01T03:09:26.928420Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。固定词必须逐字复制，禁用「漂亮的」等抽象形容词。",
+        "newImportance": null,
+        "reason": "语义记忆中的平台规则与行为记忆中的角色构建流程高度重合，将具体约束词合并至执行流程中可提高操作一致性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_202606030_comic-character-designer_anatomy_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "人体比例基准属于通用基础知识，在已有具体角色DNA和CHAR四层结构约束的情况下，其作为独立记忆的检索价值较低。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_07_aila_magic",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。",
+        "newImportance": null,
+        "reason": "将角色的视觉外观与专属特效合并，形成完整的角色视觉资产定义。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10641,
+    "error": null
+  },
+  {
+    "logId": "dist_d4c64083929a",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-01T03:10:46.480681Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色管理与质量执行标准：1.绝对禁止负向提示词，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。2.每个角色分配R编号(R1=艾拉,R2=巨龙,R3=...),全剧统一。3.角色固定词必须逐字复制到每条提示词,禁止缩写或写「同上」。4.固定词使用具体名词,禁用抽象形容词。5.每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，合并为一套完整的执行标准，提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_anatomy_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "人体比例基准属于通用基础知识，在已有具体角色DNA和CHAR四层结构约束的情况下，其作为独立记忆的权重较低。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_costume_02",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 $\rightarrow$ 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写（如：苍霖左脸竖疤+胸口龙骨碎片;艾拉银蓝高光+暗金属法杖;龙的熔金龙瞳），作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "服装叙事理论直接支撑了CHAR资产库的“装备层”设计逻辑，合并后使工作流具备理论支撑。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 31484,
+    "error": null
+  },
+  {
+    "logId": "dist_037887a631f6",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-01T14:07:15.319559Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与Seedance 2.0质量规则：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 固定词必须逐字复制到每条提示词,禁止缩写或写「同上」。4. 固定词使用具体名词,禁用「漂亮的」等抽象形容词。",
+        "newImportance": null,
+        "reason": "语义记忆中的平台规则与行为记忆中的角色构建流程高度重合，合并后可形成一套完整的从规则到执行的标准化角色资产工作流。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_anatomy_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.2,
+        "reason": "人体比例基准属于通用基础知识，在已有具体角色DNA和CHAR四层结构约束的情况下，其作为独立记忆的检索价值极低。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_sem_04",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆为EP08的一次性角色(老矿工)，不具备长期复用价值，且不属于核心角色库，属于低价值临时记忆。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 35500,
+    "error": null
+  },
+  {
+    "logId": "dist_eb1b1ca4ff1b",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-02T03:14:23.262841Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建标准：1.每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2.绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。3.固定词必须逐字复制，禁用「漂亮的」等抽象形容词。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，合并后可将平台底层约束直接转化为可执行的生产标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_anatomy_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.1,
+        "reason": "人体比例基准属于通用美术常识，在AI生成环境下依赖度低，且当前重要性已极低，进一步下调以降低检索权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。经验：上述字段为不可漂移核心，必须逐字复制以保证跨镜头识别度。",
+        "newImportance": null,
+        "reason": "将具体的经验教训（防止服装漂移）直接固化到角色设定中，将episodic转化为更高效的semantic。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。经验：必须强制列出头、颈、翼、爪、鳞片等具体结构，严禁糊成黑影，确保动作轨迹可落点。",
+        "newImportance": null,
+        "reason": "将防止“糊成黑块”的经验直接整合进角色分阶段设定中，提高执行效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 36922,
+    "error": null
+  },
+  {
+    "logId": "dist_a5b6b1e2c0f7",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-02T13:29:10.160217Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与Seedance 2.0质量规则：1. 绝对禁止负向提示词，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。2. 每个角色必须包含：R编号（全剧统一）、母版图提示词（含三视图）、正向固定词（5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型）、CHAR四层结构（身份层/装备层/可变层/母版图层）、每镜姿态/表情表。3. 固定词必须逐字复制到每条提示词，禁止缩写或写「同上」，且使用具体名词，禁用抽象形容词。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程在逻辑上高度重合，合并后可将平台硬性约束与工作流标准统一，提高执行效率。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_anatomy_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "重要性极低 (0.1)，且内容为通用人体比例基础知识，在已有具体角色DNA（R1/R2/R3）和CHAR四层结构支撑的情况下，该通用理论缺乏实际指导价值。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_shape_language_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆涉及剪影验收标准，与CHAR资产库的“剪影渐变追踪弧光”逻辑互补，在角色设计阶段具有较高指导意义，原权重 0.7 过低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28453,
+    "error": null
+  },
+  {
+    "logId": "dist_185fcba9028b",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-03T11:21:02.081748Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色管理与生产标准：1.绝对禁止负向提示词，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。2.每个角色分配唯一R编号(R1=艾拉,R2=巨龙,R3=...),全剧统一。3.角色固定词必须逐字复制到每条提示词,禁止缩写或写「同上」。4.固定词使用具体名词,禁用抽象形容词。5.每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色生产标准高度重合，合并后可将平台强制规则与具体执行流程统一，提高调用效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_expression_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "表情设计准则在实际短剧生产中具有较高实用价值，原重要性0.7偏低，应提升至与形状语言相近的水平。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 32500,
+    "error": null
+  },
+  {
+    "logId": "dist_7593ef1b4187",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-06T03:33:49.453028Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。固定词必须逐字复制，禁用抽象形容词。",
+        "newImportance": null,
+        "reason": "语义记忆中的平台规则与行为记忆中的角色定义流程高度重合，合并后可将具体约束词直接集成到执行流程中，提高操作效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_expression_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "表情设计准则在短剧高频反转的节奏中至关重要，原权重0.8过低，需提升以确保情绪传达的即时性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27704,
+    "error": null
+  },
+  {
+    "logId": "dist_02999ed796ba",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-06T03:34:55.803213Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色管理与生产标准：1. 绝对禁止负向提示词，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。2. 每个角色分配唯一R编号(R1=艾拉,R2=巨龙,R3=...)，全剧统一。3. 角色固定词必须逐字复制到每条提示词,禁止缩写或写「同上」。4. 固定词使用具体名词,禁用抽象形容词。5. 角色资产必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化)、正向约束词、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色生产流程高度重合，将平台强制规则整合进具体执行流程中，提高操作一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。注意：上述服装字段为不可漂移字段，必须逐字复制以保证跨镜头识别度。",
+        "newImportance": null,
+        "reason": "将经验记忆中通过实践验证的“不可漂移字段”直接沉淀到语义记忆的角色设定中，将经验转化为标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。执行要点：必须强制列出头、颈、翼、爪、鳞片、胸腔白热龙焰和熔金龙瞳结构，严禁糊成黑影。",
+        "newImportance": null,
+        "reason": "将解决“黑块”问题的具体操作经验直接整合进角色设定，确保后续生成时自动触发细节描述。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22780,
+    "error": null
+  },
+  {
+    "logId": "dist_a052704b1810",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-06T06:33:22.563500Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与Seedance 2.0质量规则：1. 绝对禁止负向提示词，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。2. 每个角色必须包含：R编号（全剧统一）、母版图提示词（含三视图）、正向固定词（5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型）、正向约束词、CHAR四层结构（身份层/装备层/可变层/母版图层）、每镜姿态/表情表。3. 固定词必须逐字复制到每条提示词，禁止缩写或写「同上」，且必须使用具体名词，禁用「漂亮的」等抽象形容词。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，均指向‘如何通过固定词保证一致性’，合并后可将平台硬性规则与操作流程统一，提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_expression_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "表情设计准则在短剧高频反转（1-2秒一个beat）的节奏下至关重要，原重要性0.8偏低，需提升以确保情绪表达的即时可读性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_shape_language_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "剪影验收是角色一致性的底层逻辑，与CHAR四层结构互补，应提升权重以指导角色设计阶段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23389,
+    "error": null
+  },
+  {
+    "logId": "dist_29ee11ec1132",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-06T13:43:41.680051Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-character-designer_proc_01",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "proc_01 的核心逻辑（固定词锁定与逐字复制）已包含在 proc_02 的角色资产构建要求中，合并可提高执行流程的连贯性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_expression_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "表情设计准则与短剧的高节奏（1/12秒识别）直接相关，应提升其重要性以匹配短剧第一准则。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27921,
+    "error": null
+  },
+  {
+    "logId": "dist_bd65b7352850",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-07T03:59:58.245267Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与Seedance 2.0质量规则：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 固定词必须逐字复制到每条提示词,禁止缩写或写「同上」且禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，且两者均强调‘禁止负向词’和‘逐字复制’，合并后可将平台硬性约束直接转化为执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。经验教训：必须将上述服装细节写成不可漂移字段，以解决跨镜头服装漂移问题。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对语义记忆sem_06的补丁，将具体的服装细节（月牙发饰、晶体腰链）直接整合进角色定义中，可提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。经验教训：严禁糊成黑影，必须强制列出头、颈、翼、爪、鳞片、胸腔白热龙焰和熔金龙瞳结构，确保动作轨迹和特效能落到具体部位。",
+        "newImportance": null,
+        "reason": "经验记忆epi_02是对R2龙设定的具体执行优化，将其合并入语义设定中可确保在生成提示词时直接应用该结构化要求。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25235,
+    "error": null
+  },
+  {
+    "logId": "dist_ca06a1a0d537",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-07T06:15:19.426243Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，禁止缩写或写「同上」，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance 2.0规则与行为记忆中的角色生成流程高度重合，将具体的正向约束词和禁止项合并入执行流程，提高操作一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。⚠️ 经验：上述服装细节必须作为不可漂移字段逐字写入，以防止跨镜头服装漂移。",
+        "newImportance": null,
+        "reason": "将关于艾拉服装漂移的经验教训直接整合进角色设定语义记忆中，将经验转化为标准设定。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。⚠️ 经验：必须强制列出头、颈、翼、爪、鳞片等具体结构，严禁糊成黑影，确保动作轨迹和特效能落到具体部位。",
+        "newImportance": null,
+        "reason": "将巨龙画面糊成黑块的经验教训整合进角色设定，强化结构化描述的要求。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25453,
+    "error": null
+  },
+  {
+    "logId": "dist_72ec132673ae",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-07T06:19:20.919119Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance 2.0质量规则与行为记忆中的角色生成流程高度重合，将具体的正向约束词库合并入执行流程，增强操作指引的完整性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。⚠️ 核心视觉DNA词必须作为不可漂移字段逐字复制，防止服装漂移。",
+        "newImportance": null,
+        "reason": "将经验记忆中关于艾拉服装漂移的解决方案直接沉淀到语义记忆的角色设定中，将“经验”转化为“标准”。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。执行要求：必须强制列出头、颈、翼、爪、鳞片等具体结构，严禁糊成黑影。",
+        "newImportance": null,
+        "reason": "将巨龙画面模糊的经验教训直接合并至角色设定，确保生成时强制执行结构化描述。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25562,
+    "error": null
+  },
+  {
+    "logId": "dist_c988f98b23f8",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-07T06:21:20.430804Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，禁用「漂亮的」等抽象形容词，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance 2.0规则与行为记忆中的角色构建流程高度重合，将具体约束词合并入执行流程可提高操作一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。⚠️ 经验：上述字段为不可漂移字段，必须逐字复制以保证跨镜头识别度。",
+        "newImportance": null,
+        "reason": "将针对艾拉的经验教训（防止服装漂移）直接沉淀到其语义设定中，将经验转化为标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。⚠️ 经验：必须强制列出头、颈、翼、爪、鳞片、胸腔白热龙焰和熔金龙瞳结构，严禁糊成黑影。",
+        "newImportance": null,
+        "reason": "将巨龙防止“糊成黑块”的经验直接整合进角色阶段性设定中。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25703,
+    "error": null
+  },
+  {
+    "logId": "dist_ed7ad5c90eb5",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-08T15:05:00.981817Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色生成流程高度重合，将具体约束词合并入执行流程，提高操作一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。⚠️ 核心视觉DNA词必须逐字复制，防止服装漂移。",
+        "newImportance": null,
+        "reason": "将经验记忆中验证有效的“不可漂移字段”直接固化到语义记忆的角色设定中，将经验转化为标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。执行要求：必须强制列出头、颈、翼、爪、鳞片等具体结构，严禁糊成黑影。",
+        "newImportance": null,
+        "reason": "将巨龙防止糊块的经验直接整合进角色分阶段设定中，增强可执行性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18859,
+    "error": null
+  },
+  {
+    "logId": "dist_c7d108c040a1",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-08T19:00:09.183660Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，禁止缩写或写「同上」，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色生成流程高度重合，将平台底层约束直接整合进执行流程中，提高操作一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。⚠️ 核心视觉DNA（战斗装/外摆/绑带/长靴/发饰/腰链）为不可漂移字段，每镜必须逐字复述。",
+        "newImportance": null,
+        "reason": "将针对艾拉的经验教训（防止服装漂移）直接转化为语义记忆中的角色定义，使经验沉淀为标准设定。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。⚠️ 强制列出头、颈、翼、爪、鳞片、胸腔白热龙焰和熔金龙瞳结构，严禁糊成黑影。",
+        "newImportance": null,
+        "reason": "将巨龙画面模糊的经验教训直接整合进角色阶段性设定中，增强提示词的结构化约束。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19328,
+    "error": null
+  },
+  {
+    "logId": "dist_ada2e4cee75c",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-09T04:06:39.824190Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，禁止缩写或写「同上」，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance 2.0质量规则与行为记忆中的角色生成流程高度重合，将具体约束词合并入执行流程，提高操作一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。经验教训：上述字段为不可漂移字段，必须逐字复制以保证跨镜头识别度。",
+        "newImportance": null,
+        "reason": "将针对艾拉的经验教训（episodic）直接沉淀到其语义设定（semantic）中，将经验转化为标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。执行要点：必须强制列出头、颈、翼、爪、鳞片、胸腔白热龙焰和熔金龙瞳结构，严禁糊成黑影。",
+        "newImportance": null,
+        "reason": "将巨龙防糊的经验教训直接整合进角色分阶段设定中，增强可执行性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19421,
+    "error": null
+  },
+  {
+    "logId": "dist_902f32045e75",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-09T13:20:37.174783Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，禁止缩写或写「同上」，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance 2.0规则与行为记忆中的角色生成流程高度重合，将具体约束词合并入执行流程中可提高操作一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。注意：上述服装细节为不可漂移字段，必须逐字复制以保证跨镜头识别度。",
+        "newImportance": null,
+        "reason": "将经验记忆中验证有效的“不可漂移字段”直接固化到语义记忆的角色设定中，将经验转化为知识。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。执行要求：必须强制列出头、颈、翼、爪、鳞片等具体结构，严禁糊成黑影，确保动作轨迹和特效能落到具体部位。",
+        "newImportance": null,
+        "reason": "将解决“黑块”问题的具体操作经验合并至角色设定中，增强设定的可执行性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19906,
+    "error": null
+  },
+  {
+    "logId": "dist_a3dd1c4a2380",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-09T13:36:15.642670Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与Seedance 2.0质量规则：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 复制原则：角色固定词必须逐字复制到每条提示词,禁止缩写或写「同上」；使用具体名词,禁用「漂亮的」等抽象形容词。4. 执行顺序：必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的平台规则与行为记忆中的角色构建流程高度重合，且两者均强调‘禁止负向词’和‘逐字复制’，合并后可形成一套完整的从规则到执行的标准化操作指南。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "交付目录属于行政/流程类信息，相对于核心的视觉设定和短剧节奏准则，其对AI生成质量的直接影响较低，适当下调权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13546,
+    "error": null
+  },
+  {
+    "logId": "dist_d3013a964c89",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-09T13:41:31.225738Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与Seedance 2.0质量规则：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 复制原则：角色固定词必须逐字复制到每条提示词,禁止缩写或写「同上」；使用具体名词,禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，且两者均强调'禁止负向词'和'逐字复制'，合并后可形成从规则到执行的完整闭环。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_03_delivery_tree",
+        "mergeIntoId": "seed_comic-character-designer_sem_05_toolchain",
+        "newContent": "comic-drama-tool 落地链路与交付标准：1. 资源映射：提示词输出需映射至 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场。2. 10秒制作包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。",
+        "newImportance": null,
+        "reason": "交付目录结构是工具链落地链路的最终产出形式，合并后使工具链记忆从'流程'到'交付物'完整化。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 12,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12967,
+    "error": null
+  },
+  {
+    "logId": "dist_a9ce258dc39f",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T03:05:31.707699Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁令：绝对禁止使用负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。3. 复制原则：固定词必须逐字复制到每条提示词，禁止缩写或写「同上」，且必须使用具体名词，禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，且两者均涉及‘禁止负向词’和‘固定词复制’，合并后可将平台底层规则与执行流程统一，提高调用效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "（在原proc_02基础上增加经验补丁）：执行时必须先写不可漂移字段，再写可变化字段。经验证明：将黑蓝战斗装、透明纱质外摆、大腿绑带、膝上长靴、月牙发饰、晶体腰链等具体视觉元素定义为不可漂移字段，可显著提高跨镜头识别度，防止服装漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对行为记忆proc_02中‘不可漂移字段’的具体实践验证，将其转化为行为准则中的具体示例，能增强AI在实际操作时的执行精度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。执行要点：为防止画面糊成黑块，必须强制列出头、颈、翼、爪、鳞片、胸腔白热龙焰和熔金龙瞳的具体结构，确保动作轨迹和特效能落到具体部位。",
+        "newImportance": null,
+        "reason": "经验记忆epi_02是对R2龙设定在生成时的补丁，将其直接合并入语义设定中，可使AI在调用角色设定时直接携带避坑指南。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 12,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 12,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27063,
+    "error": null
+  },
+  {
+    "logId": "dist_2d3eef6c5f02",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T03:08:05.498488Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁令：绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 复制原则：固定词必须逐字复制到每条提示词,禁止缩写或写「同上」；使用具体名词,禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的proc_02在执行逻辑上高度重合，将平台规则直接整合进操作流程中可提高执行效率，减少冗余检索。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。注意：上述服装及饰品为不可漂移字段，必须在每镜提示词中完整复述以保证跨镜头识别度。",
+        "newImportance": null,
+        "reason": "将经验记忆(episodic)中关于艾拉服装漂移的解决方案直接沉淀为语义记忆(semantic)的设定，将“经验”转化为“标准”。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "newContent": "R2龙三阶段设定：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。执行要点：必须强制列出头、颈、翼、爪、鳞片、胸腔白热龙焰和熔金龙瞳结构，严禁糊成黑影，确保动作轨迹和特效能落到具体部位。",
+        "newImportance": null,
+        "reason": "将巨龙防止黑块的经验直接整合进角色设定中，增强设定的可执行性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 12,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 12,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19360,
+    "error": null
+  },
+  {
+    "logId": "dist_85f7d03c5f99",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T03:12:05.061130Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_06_aila_lock",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词。执行时必须先写不可漂移字段（如R1艾拉：黑长发银蓝高光,蓝瞳,偏白肤,黑蓝露肩星环法师战斗装,透明纱质外摆,大腿绑带,膝上长靴,月牙发饰,晶体腰链,暗金属法杖/铁管式施法媒介），再写可变化字段，且必须逐字复制不可漂移字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "将具体的角色固定词实例（艾拉）合并入通用角色生产流程（proc_02）中，作为不可漂移字段的执行范本，减少冗余且增强流程可操作性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_sem_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 $\\rightarrow$ 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。实例(R3苍霖)：EP01-03早期=破烂灰褐麻布短衣/赤脚/胸口布条绑龙骨碎片；EP04-08中期=同上+旧毯子当披风；EP09-10后期=深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚。3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写（如：苍霖左脸竖疤+胸口龙骨碎片;艾拉银蓝高光+暗金属法杖;龙的熔金龙瞳），作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "将具体的角色阶段性设定（苍霖）合并入其对应的理论框架（CHAR四层结构）中，使理论与实例统一，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_sem_03",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 $\\rightarrow$ 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。实例(R3苍霖)：EP01-03早期=破烂灰褐麻布短衣/赤脚/胸口布条绑龙骨碎片；EP04-08中期=同上+旧毯子当披风；EP09-10后期=深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚。实例(R2龙)：EP04幼龙=巴掌大/鳞片稀疏湿润/锋利小角冠/半透明翼膜薄如蝉翼/熔金龙瞳圆润；EP05-07少龙=猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星；EP09-10巨龙=马大可骑乘/宽阔翼展/半透明翼膜可见血管/锋利角冠/长吻/颈部鳞片/胸腔白热龙焰/熔金龙瞳/爪尖火星。3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写（如：苍霖左脸竖疤+胸口龙骨碎片;艾拉银蓝高光+暗金属法杖;龙的熔金龙瞳），作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "将巨龙的三阶段设定合并入CHAR四层结构，统一管理所有角色的进化路径与视觉锚点。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 12,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 10,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26422,
+    "error": null
+  },
+  {
+    "logId": "dist_71ba90440f28",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T03:28:36.771173Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁令：禁止使用负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。3. 执行细节：固定词必须逐字复制到每条提示词，禁止缩写或写「同上」；使用具体名词，禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程在逻辑上高度重合，均指向‘如何通过正向约束保证角色一致性’，合并后可将平台底层规则与具体操作流程统一，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。注意：上述服装及饰品为不可漂移字段，必须在每镜提示词中完整复述以保证跨镜头识别度（经验证明：完整复述可有效解决服装漂移问题，提高识别度）。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对语义记忆sem_06的实践验证，将‘观察-行动-结果’直接转化为语义记忆中的‘注意’项，可将经验内化为知识，减少冗余存储。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 10,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 10,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15780,
+    "error": null
+  },
+  {
+    "logId": "dist_83c703a88eff",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T03:45:53.657115Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁令：禁止使用负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 复制原则：固定词必须逐字复制到每条提示词,禁止缩写或写「同上」；使用具体名词,禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，且两者均强调‘禁止负向词’和‘逐字复制’，合并后可将平台底层规则直接转化为可执行的操作流程。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
+        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络，必须干净层次分明。经验教训：上述服装及饰品为不可漂移字段，必须在每镜提示词中完整复述，严禁随意改写，以解决多镜头素材服装漂移问题，确保跨镜头识别度。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对语义记忆sem_06的实践验证，将‘观察-行动-结果’直接整合进角色定义中，可提高调用效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 10,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 10,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14217,
+    "error": null
+  },
+  {
+    "logId": "dist_d4f1f0718a77",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T04:00:06.247935Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_06_aila_lock",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "将具体的角色DNA定义（艾拉）合并入通用的CHAR资产库结构中，使角色定义与管理逻辑统一，减少碎片化记忆，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词。执行时必须先写不可漂移字段（如艾拉的黑蓝战斗装、透明纱质外摆、大腿绑带等），再写可变化字段，且必须逐字复制不可漂移字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "经验记忆（epi_01）中关于防止服装漂移的行动已转化为标准操作流程（proc_02），将具体经验直接沉淀为行为准则。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 10,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20266,
+    "error": null
+  },
+  {
+    "logId": "dist_396c474c72e0",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T04:14:53.745230Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 视觉DNA：定义5-8个正向固定词（需标注分阶段变化如R3服装/R2体型），必须逐字复制到每条提示词，禁止缩写或写「同上」，禁用抽象形容词。3. 质量约束：绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。4. 执行逻辑：先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，均涉及R编号、正向约束和不可漂移字段的执行逻辑，合并后可形成一个完整的从‘标准’到‘执行’的闭环指南。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01记录的关于艾拉服装漂移的解决方案已在语义记忆sem_11的DNA锚点中具体实现，将经验直接转化为语义知识库，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20281,
+    "error": null
+  },
+  {
+    "logId": "dist_be3ec86eba76",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T04:18:46.228023Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 提示词规则：绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 稳定性要求：固定词必须具体(禁用「漂亮的」等抽象词)且逐字复制到每条提示词,禁止缩写或写「同上」。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，且两者均强调禁止负向词和固定词逐字复制，合并后可将平台硬性规则直接转化为执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01关于艾拉服装漂移的解决方案已在语义记忆sem_11的DNA锚点中具体体现，将经验直接沉淀为语义资产，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18406,
+    "error": null
+  },
+  {
+    "logId": "dist_f4bd0ecc73c5",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T04:23:30.625074Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 提示词规则：绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 一致性维护：固定词必须逐字复制到每条提示词,禁止缩写或写「同上」；使用具体名词,禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，合并后可将平台底层约束与具体执行步骤统一，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对艾拉服装漂移的解决方案，其结果已直接体现在语义记忆sem_11的DNA锚点定义中，将经验直接沉淀为知识标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18765,
+    "error": null
+  },
+  {
+    "logId": "dist_f5e64439ce36",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T04:31:55.224369Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 绝对禁令：禁止使用负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。3. 复制原则：固定词必须逐字复制到每条提示词，禁止缩写或写「同上」，禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，且两者均强调‘禁止负向提示词’和‘逐字复制’，合并后可将平台硬性约束直接转化为执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对R1艾拉服装漂移的解决方案，其结论（将具体服装项设为不可漂移字段）已在语义记忆sem_11的DNA锚点中实现，将经验直接沉淀为知识点。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19813,
+    "error": null
+  },
+  {
+    "logId": "dist_758e6295e4a6",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T04:38:58.978843Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 核心禁令：绝对禁止使用负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。3. 写入规范：固定词必须逐字复制到每条提示词，禁止缩写或写「同上」，禁用「漂亮的」等抽象形容词。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，将平台底层规则整合进具体执行流程中，可提高指令执行效率并减少冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含具体的角色DNA锚点（R1, R2, R3），是生产过程中防止角色漂移的最核心资产，重要性应提升至最高。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24186,
+    "error": null
+  },
+  {
+    "logId": "dist_d28710c40f40",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T04:49:23.029920Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 视觉DNA：必须包含5-8个正向固定词(标注分阶段变化如R3服装/R2体型)，且必须逐字复制到每条提示词，禁止缩写或写「同上」，禁用抽象形容词。3. 质量约束：绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。4. 执行逻辑：先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，合并后可将平台底层限制与具体执行步骤统一，提高调用效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对R1艾拉服装漂移的修正，其结果已体现在语义记忆sem_11的DNA锚点中，将经验直接转化为知识点，增强记忆鲁棒性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19000,
+    "error": null
+  },
+  {
+    "logId": "dist_56e28d1b00af",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-10T06:13:53.799551Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 提示词规则：绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 稳定性要求：固定词必须具体(禁用「漂亮的」等抽象词)且逐字复制到每条提示词,禁止缩写或写「同上」。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，将平台底层规则整合进具体执行流程中，可提高调用效率并减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对R1艾拉服装漂移的修正，其结论已直接体现在语义记忆sem_11的DNA锚点中，将经验直接转化为知识标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18219,
+    "error": null
+  },
+  {
+    "logId": "dist_223e8a509c79",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-13T03:14:23.007605Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形/人体比例正确/画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印/服装不漂移)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 核心禁令：⚠️ 绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束。3. 复制原则：固定词必须逐字复制到每条提示词，禁止缩写或写「同上」，且必须使用具体名词，禁用「漂亮的」等抽象形容词。4. 执行顺序：必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，且两者均强调‘禁止负向词’和‘逐字复制’，合并后可将平台硬性约束直接转化为可执行的操作流程。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对艾拉服装漂移的解决方案，其核心结论（将具体服装项设为不可漂移字段）已经体现在语义记忆sem_11的DNA锚点定义中，将经验直接沉淀为语义定义可提高调用效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22484,
+    "error": null
+  },
+  {
+    "logId": "dist_19ca7da77b9f",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-13T19:00:17.412504Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 核心DNA：定义5-8个正向固定词(需标注分阶段变化如R3服装/R2体型)，必须逐字复制到每条提示词，禁止缩写或写「同上」，禁用抽象形容词。3. 质量约束：绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。4. 执行逻辑：先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，将平台底层规则整合进具体执行流程中，可提高调用效率并减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对R1艾拉服装漂移的解决方案，其结论已直接体现在语义记忆sem_11的DNA锚点中，将经验转化为具体的知识点可增强稳定性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22233,
+    "error": null
+  },
+  {
+    "logId": "dist_bb733b26d6ee",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-14T19:00:17.036912Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 提示词规则：绝对禁止负向提示词，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。3. 稳定性要求：固定词必须使用具体名词(禁用抽象形容词)，且必须逐字复制到每条提示词，禁止缩写或写「同上」。执行时必须先写不可漂移字段，再写可变化字段，不依赖模型临场理解。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的proc_02在执行逻辑上高度重合，将平台规则直接整合进操作流程，可提高执行效率并减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对艾拉服装漂移的修正，其结论已直接体现在sem_11的DNA锚点定义中，将经验直接转化为语义标准可消除重复。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21562,
+    "error": null
+  }
+]

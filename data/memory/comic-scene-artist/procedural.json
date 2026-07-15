@@ -1,0 +1,35 @@
+[
+  {
+    "memoryId": "learn_consolidation_20260630_comic-scene-artist_proc_01",
+    "employeeKey": "comic-scene-artist",
+    "rule": "按场景ID生成,锁定光源方向/色温/氛围元素,@引用场景母版保证同场景跨镜一致。",
+    "rationale": "同一场景不同镜头风格漂移会让观众出戏。",
+    "confidence": 0.95,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-scene-artist_proc_02",
+    "employeeKey": "comic-scene-artist",
+    "rule": "场景图不放角色或只放剪影,角色由角色生成师单独出,后期合成。",
+    "rationale": "分层生成可控性高,角色和背景分开锁一致性。",
+    "confidence": 0.93,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-scene-artist_proc_03",
+    "employeeKey": "comic-scene-artist",
+    "rule": "结尾带正向约束后缀,禁死黑阴影/裂纹纹理,保持画面干净通透。",
+    "rationale": "Seedance只读正向,脏黑边破坏漫剧质感。",
+    "confidence": 0.93,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+  }
+]

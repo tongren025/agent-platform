@@ -1,0 +1,502 @@
+[
+  {
+    "logId": "evo_49de4e74d6e8",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-29T13:12:23.952616Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_a4923c5edb0f",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-29T13:50:01.483734Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_2f2aac7fbafe",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T01:56:06.717715Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_278eb8df0f61",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T01:59:08.087948Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_ddfe5b88ada7",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T01:59:29.483095Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_dcac86049838",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T04:07:10.053065Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_728d73553793",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T04:13:15.714813Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_6d4d3909347a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T04:13:21.020331Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_370ad534df6e",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T04:13:50.958593Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_8cdaa79c6313",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T04:15:55.805233Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_249c49a441fc",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T10:46:32.663739Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_2632bdd6fbd2",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-06-30T10:51:14.997661Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_5298de8adc26",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:10:58.452046Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_be3bb25c0eca",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T14:07:28.585710Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_738f845f8b22",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-02T03:14:37.153939Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_86a96871cf63",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-02T13:29:11.835316Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_98d7aef59c71",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-03T11:21:04.116151Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_fb11b5e1975a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-06T03:33:51.637910Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_1053242c0c2d",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-06T03:34:57.457563Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_87f392504404",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-06T06:33:24.419800Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_4b006df1c5e6",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-06T13:43:43.443422Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_d0c4513dd519",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-07T04:00:00.033165Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_7608a77b6466",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-07T06:15:21.130149Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_3c065f31c751",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-07T06:19:22.591148Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_1e3e5a828a93",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-07T06:21:22.101741Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_396e49f8949e",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-08T15:05:14.704003Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_ddd566641f12",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-08T20:00:21.022253Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_6f732787d3ee",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T04:06:54.716192Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_e772d2be995c",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T13:20:49.543316Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_c2ae5e3778e0",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T13:36:27.714178Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_65cdfd21dc63",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T13:36:52.325605Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_2f2e90140f77",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T13:41:41.247524Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_3dbf0b2c2831",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:05:42.161378Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_2ea0f4cb0c5e",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:05:58.533552Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_08cfb0f865fd",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:08:15.348317Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_e8d2695f7a91",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:12:18.512617Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_01a4293dea3d",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:28:50.347214Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_1793cd8e4fb8",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:46:06.311990Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_b8191c9e9dcb",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:00:18.019981Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_7050a80f80d6",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:15:13.787613Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_8484070b81d5",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:18:55.863202Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_428d8e0b037b",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:23:41.711821Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_f88412db8567",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:32:05.924190Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_f7b8b5532ceb",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:39:08.206249Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_2a1f5c4fb688",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:49:11.029957Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_611b95aab4cb",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:49:36.019325Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_c817e00412e8",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T06:14:06.140702Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_0c52ecd8f56e",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-13T03:14:37.397436Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_bb6d74d85b36",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-13T20:00:26.988622Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_dccdcdf7e5e3",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-14T20:00:24.735326Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  }
+]

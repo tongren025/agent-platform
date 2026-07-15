@@ -1,0 +1,85 @@
+[
+  {
+    "docId": "8571bfcec7531449",
+    "fileName": "shot-keyframe-guide.md",
+    "extension": ".md",
+    "sizeBytes": 1476,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "bc78c98144f7a7b5",
+    "fileName": "canon-montage.md",
+    "extension": ".md",
+    "sizeBytes": 908,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "蒙太奇"
+    ]
+  },
+  {
+    "docId": "63b19f9f59f289bc",
+    "fileName": "canon-composition.md",
+    "extension": ".md",
+    "sizeBytes": 709,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "構圖"
+    ]
+  },
+  {
+    "docId": "4b39d9baf5dc058c",
+    "fileName": "craft-storyboard_craft.md",
+    "extension": ".md",
+    "sizeBytes": 810,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/Videomaker·Storyboarding",
+      "分镜制作法"
+    ]
+  },
+  {
+    "docId": "495b50c770dd07ae",
+    "fileName": "craft-shot_size_emotion.md",
+    "extension": ".md",
+    "sizeBytes": 705,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/Adobe·Shot Sizes",
+      "景别情绪强度"
+    ]
+  },
+  {
+    "docId": "cf888fc56021bf5f",
+    "fileName": "craft-camera_emotion.md",
+    "extension": ".md",
+    "sizeBytes": 796,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/NoFilmSchool·Camera Movement",
+      "运镜情绪语义"
+    ]
+  },
+  {
+    "docId": "db7462b51a5680c1",
+    "fileName": "craft2-microdrama.md",
+    "extension": ".md",
+    "sizeBytes": 1037,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "Vitrina/Real Reel/Filmustage·Micro Drama 2026",
+      "竖屏微短剧结构"
+    ]
+  }
+]

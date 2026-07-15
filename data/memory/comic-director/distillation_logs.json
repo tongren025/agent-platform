@@ -1,0 +1,1953 @@
+[
+  {
+    "logId": "dist_9c7d6ff63878",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:01:25.654250Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_04",
+        "mergeIntoId": "seed_comic-director_sem_03",
+        "newContent": "10秒制作包标准目录为：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。",
+        "newImportance": null,
+        "reason": "两条记忆内容完全一致，均为交付目录标准，仅ID不同。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-director_microdrama_03",
+        "mergeIntoId": "duanju_spine_20260630_comic-director_law",
+        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧(单集60-90s)，不是电影。核心目标是'把观众锁到下一集'。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词，绝不靠氛围或漂亮镜头撑时间。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别等电影美术手艺必须服从短剧节奏。",
+        "newImportance": null,
+        "reason": "两条记忆均在定义竖屏短剧的底层逻辑与节奏，合并后强化了时长标准与核心目标。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-director_production_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "通用电影制作三阶段知识过于宽泛，对AI员工在具体Seedance工作流中的指导价值极低。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-director_production_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "通用导演定义知识，与已有具体的'总导演'工作流记忆重复且缺乏实操指导意义。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 32,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 29,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15828,
+    "error": null
+  },
+  {
+    "logId": "dist_6520f58196b7",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:02:02.330960Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_04",
+        "mergeIntoId": "seed_comic-director_sem_03",
+        "newContent": "10秒制作包标准目录为：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。",
+        "newImportance": null,
+        "reason": "两条记忆内容完全一致，均为交付目录标准，执行冗余合并。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_01_quality_clean_negative",
+        "mergeIntoId": "v3_comic-director_sem_09_seedance_rules",
+        "newContent": "Seedance 2.0生产硬规则（总导演审稿必用）：1.不读负向提示词,只用正向约束词（如：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移） 2.每段≤6秒(超过角色变形) 3.镜头运动和角色动作分开描述 4.每镜只一个运镜,中英双写 5.禁止词:夸张/高速/快速/fast/剧烈/激烈 6.八层框架:素材声明→镜头标签→景别主体→动作→运镜→光影→音频→全局收尾 7.光影描述是质量ROI最高元素 8.音效用「音效：」前缀标注",
+        "newImportance": null,
+        "reason": "seed_comic-director_sem_01 是对 v3_comic-director_sem_09 中第一条规则的具体正向表述补充，合并后可增强规则的可执行性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "虽然是基础理论，但在AI视频工作流中，其重要性高于纯理论知识，但低于生产硬规则，适当上调以保证在分镜阶段被激活。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "同上，情绪距离规则是导演核心能力，应提升权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "同上，180度轴线是保证视频连贯性的铁律，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 29,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 28,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15235,
+    "error": null
+  },
+  {
+    "logId": "dist_ac42e8aead98",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:03:08.544540Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_04",
+        "mergeIntoId": "seed_comic-director_sem_03",
+        "newContent": "10秒制作包标准目录为：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。",
+        "newImportance": null,
+        "reason": "两条记忆内容完全一致，均为交付目录标准，执行去重合并。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-director_montage_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-director_montage_01",
+        "newContent": "蒙太奇通过组合不同地点/角度/距离的镜头产生'第三种动作'（库里肖夫效应），分镜的意义在于镜与镜的关系。交叉剪辑用于呈现同步多线情节，创造性地理可拼出现实不存在的空间关联。",
+        "newImportance": null,
+        "reason": "同属蒙太奇基础知识点，合并为一条综合知识条目以减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-director_montage_03",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-director_montage_01",
+        "newContent": "蒙太奇通过组合不同地点/角度/距离的镜头产生'第三种动作'（库里肖夫效应），分镜的意义在于镜与镜的关系。交叉剪辑用于呈现同步多线情节，创造性地理可拼出现实不存在的空间关联。剪辑是创造电影时间/空间的主要手段，直接决定叙事节奏。",
+        "newImportance": null,
+        "reason": "同属蒙太奇基础知识点，进一步整合叙事逻辑。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "分镜草图理论在AI生成流中优先级低于具体的资产锁定和提示词工程。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "情绪距离规则属于通用电影理论，在具体AI执行指令中权重较低。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "180度轴线规则在AI生成视频中虽重要，但优先级低于一致性硬解法。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 28,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 26,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15703,
+    "error": null
+  },
+  {
+    "logId": "dist_3f59ed3202ad",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:04:22.724468Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_04",
+        "mergeIntoId": "seed_comic-director_sem_03",
+        "newContent": "10秒制作包标准目录为 00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。",
+        "newImportance": null,
+        "reason": "两条记忆内容完全一致，均为交付目录标准，执行去重合并。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-director_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-director_sem_08_director_review",
+        "newContent": "总导演审稿与生产硬规则：1.禁止词(夸张/高速/快速/fast/剧烈/激烈)；2.不读负向提示词,只用正向约束词(如：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移)；3.每段≤6秒(超过角色变形)；4.镜头运动和角色动作分开描述，每镜仅一个运镜(中英双写)；5.八层框架:素材声明→镜头标签→景别主体→动作→运镜→光影→音频→全局收尾；6.光影描述是质量ROI最高元素；7.音效用「音效：」前缀标注；8.重点检查：动作因果、角色漂移、场景方向、特效干净度、轨迹线、R编号、口型与字幕行、文件完整性。",
+        "newImportance": null,
+        "reason": "生产硬规则与审稿重点高度重合，合并后形成一套完整的质量控制标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-director_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "该记忆为通用电影理论，在具体的AI短剧生产管线中实用性较低，降低权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 26,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 25,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11250,
+    "error": null
+  },
+  {
+    "logId": "dist_929788de999b",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:06:24.798197Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_04",
+        "mergeIntoId": "seed_comic-director_sem_03",
+        "newContent": "10秒制作包标准目录为 00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。",
+        "newImportance": null,
+        "reason": "两条记忆内容完全一致，均为交付目录标准，执行去重合并。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-director_sem_12_hook_rhythm",
+        "mergeIntoId": "duanju_spine_20260630_comic-director_law",
+        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧(单集60-90s)，核心目标是'把观众锁到下一集'。节奏=信息/反转密度：前3秒必须有情绪炸点，每1-2秒砸一个新事件/反转/钩子/嘴替台词，单句台词≤10字，一集15-25个事件beat。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎)，开口即钩子，结尾5秒必须有反转或悬念钩子。战斗场景用仙侠三段式：蓄力(2-3s)→爆发(3-5s)→余韵(2-3s),必须指定特效类型。构图/色彩/布光/运镜/景别等电影美术手艺必须服从短剧节奏。",
+        "newImportance": null,
+        "reason": "两条记忆均关于短剧节奏硬规则，合并后形成一个完整的、从宏观准则到微观执行的节奏指南。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-director_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆为通用电影理论知识，重要性极低(0.4)，且与当前高度实操化的AI短剧生产流不匹配，属于低价值冗余信息。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 25,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 23,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11688,
+    "error": null
+  },
+  {
+    "logId": "dist_ce6162d36e35",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:07:51.880851Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_04",
+        "mergeIntoId": "seed_comic-director_sem_03_delivery_tree",
+        "newContent": "10秒制作包标准目录为：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。",
+        "newImportance": null,
+        "reason": "两条记忆内容完全一致，均为交付目录标准，仅 ID 不同。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "分镜基础理论在实际AI视频生产链路中虽重要，但优先级低于具体的AI一致性控制方案，适当提升以匹配其作为基础理论的价值。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "同上，提升基础分镜理论的重要性以确保在执行时被正确调用。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "同上，提升基础分镜理论的重要性以确保在执行时被正确调用。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 23,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 22,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9516,
+    "error": null
+  },
+  {
+    "logId": "dist_18592015b7dc",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:08:18.041795Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-director_microdrama_01",
+        "mergeIntoId": "duanju_spine_20260630_comic-director_law",
+        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧(单集60-90s)，核心目标是'把观众锁到下一集'。节奏=信息/反转密度：前3-5秒必须有情绪炸点/冲突抓人，每1-2秒砸一个新事件/反转/钩子/嘴替台词，单句台词≤10字，一集15-25个事件beat。Beat Engine结构：Hook(0-15秒爆点)→Friction(15-60秒真实肢体/言语冲突，禁止纯内心戏)。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎)，开口即钩子，结尾5秒必须有反转或悬念钩子。战斗场景用仙侠三段式：蓄力(2-3s)→爆发(3-5s)→余韵(2-3s),必须指定特效类型。构图/色彩/布光/运镜/景别等电影美术手艺必须服从短剧节奏。",
+        "newImportance": null,
+        "reason": "两条记忆均关于短剧节奏与钩子设计，前者为核心准则，后者提供了具体的Beat Engine结构，合并可增强执行精度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_ai_consistency_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-director_ai_consistency_02",
+        "newContent": "AI角色漂移根因在于每个clip独立生成且解读不一。保一致性的硬解法：先备3-5张参考图(正面+3/4侧+全身服装+道具单独)做成转面母版，提示词只写动作和环境、不再重抄角色外貌——由参考图负责长相。（来源:AI Magicx/neolemon/Artlist一致性工作流）",
+        "newImportance": null,
+        "reason": "一条是问题定义，一条是解决方案，合并为“问题+对策”的完整知识点。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如只说“做EP01第1段”或“做EP08”且未给情绪定位）。Action: 自动补齐段落brief（钩子、交付目录、各角色任务、情绪锚点如EP08=决然离开、嘴替台词等），并要求编剧先拆镜头。Result: 团队成员围绕同一情绪和制作目标工作，质检一次通过，避免散写。",
+        "newImportance": null,
+        "reason": "两条经验记忆均关于“用户指令模糊时的自动补齐机制”，逻辑一致，合并可提升经验泛化能力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "分镜基础理论在实际AI视频生产中虽重要，但优先级低于资产锁死和一致性控制，适当提升以匹配其在专业工作流中的地位。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 22,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 20,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17015,
+    "error": null
+  },
+  {
+    "logId": "dist_21891c168927",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:08:59.990562Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_ai_consistency_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-director_ai_consistency_02",
+        "newContent": "AI角色漂移根因在于每个clip独立生成且解读不一。保一致性的硬解法：1. 建立转面母版：备3-5张参考图(正面+3/4侧+全身服装+道具单独)，提示词仅描述动作和环境，由参考图负责长相；2. 运动控制：锁首帧+尾帧(first/end frame)控制运动起止，配合锁定风格和稳定布光，确保跨镜一致性。（来源:AI Magicx/neolemon/Artlist/Kittl AI一致性工作流）",
+        "newImportance": null,
+        "reason": "两条记忆均探讨AI视频一致性的技术方案，分别涵盖了“静态资产锚定”与“动态起止控制”，合并后可形成完整的AI一致性技术链路。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-director_proc_02",
+        "mergeIntoId": "v3_comic-director_sem_10_workflow_step0",
+        "newContent": "工作流Step 0「锁基准资产」必须在任何分镜前完成：每个角色生成母版图1张(作为@图片锚定),找风格视频锁成@视频1(写「画风动作严格对齐@视频1的风格」),全剧控制10个核心场景。跨集复用资产必须引用同一ID，严禁下游重复绘制。没有基准资产的制作包不允许进入生成阶段。",
+        "newImportance": null,
+        "reason": "行为记忆中的资产引用纪律与语义记忆中的Step 0资产锁定在逻辑上完全一致，将行为准则合并入语义工作流定义中，增强执行力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆关于分镜草图的通用性描述较高，相对于具体的短剧节奏准则（0.99）和质量硬规则（0.98），其在当前AI生成流中的权重应适当下调。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 20,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 19,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12014,
+    "error": null
+  },
+  {
+    "logId": "dist_5c1b6f678ced",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T03:10:45.763922Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-director_proc_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_proc_01",
+        "newContent": "每集开工前必须先确认情绪锚点、嘴替台词及整体情绪曲线（确保有落差而非恒定），随后输出详细的制作说明和任务拆分清单再委派成员；任何下游输入缺失必须在 brief 中补齐或标注假设，以防止团队散写导致无法合成制作包。",
+        "newImportance": null,
+        "reason": "两条记忆均关于“开工前的准备与委派流程”，前者侧重任务拆分，后者侧重情绪锚点，合并后可形成完整的“情绪+任务”双驱动委派机制。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-director_proc_02",
+        "mergeIntoId": "v3_comic-director_sem_10_workflow_step0",
+        "newContent": "工作流Step 0「锁基准资产」必须在任何分镜前完成：每个角色生成母版图1张(作为@图片锚定),找风格视频锁成@视频1,全剧控制10个核心场景。跨集复用资产必须严格引用同一ID，不允许下游自行创作，无基准资产的制作包不允许进入生成阶段。",
+        "newImportance": null,
+        "reason": "行为记忆中的资产引用纪律与语义记忆中的Step 0 资产锁定在逻辑上完全一致，将行为准则整合进语义工作流中，提高执行效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "分镜基础理论虽重要，但在AI生成流中，其优先级应略高于纯理论，但低于具体的AI一致性控制方案。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 19,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 31985,
+    "error": null
+  },
+  {
+    "logId": "dist_94cd1e841270",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-01T14:07:14.336925Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-director_proc_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_proc_01",
+        "newContent": "每集开工前必须先确认情绪锚点、嘴替台词及整体情绪曲线（确保有落差而非恒定），随后输出详细的制作说明和任务拆分清单再委派成员；成员交稿后必须严格按验收标准审稿，不合格必须点名返工字段，严禁一次性串流水而无质量闸；任何下游输入缺失必须在 brief 中补齐或标注假设，以防止团队散写导致无法合成制作包。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及总导演对生产流程的质量把控与任务委派，合并后形成从“前置定义”到“中途质检”的完整闭环。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-director_sem_10_workflow_step0",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_proc_02",
+        "newContent": "跨集复用资产(角色母版/场景母版)必须引用同一ID，不允许下游各画各的。工作流Step 0「锁基准资产」必须在任何分镜前完成：每个角色生成母版图1张(作为@图片锚定),找风格视频锁成@视频1(写「画风动作严格对齐@视频1的风格」),全剧控制10个核心场景。没有基准资产的制作包不允许进入生成阶段。",
+        "newImportance": null,
+        "reason": "语义记忆中的Step 0资产锁定与行为记忆中的资产ID引用逻辑高度一致，将具体操作步骤合并入行为准则中，增强执行力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "分镜草图绘制属于基础美术常识，相对于短剧节奏准则和AI一致性硬解法，其在AI驱动工作流中的权重较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 19,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 36547,
+    "error": null
+  },
+  {
+    "logId": "dist_0aaf3749afe2",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-02T03:14:22.304811Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-director_storyboard_craft_02",
+        "newContent": "分镜创作准则：1. 情绪距离规则：镜头越近情绪越深（远景孤立，近景共情），选景别本质是选情绪距离；2. 构图焦点：先画缩略草图试构图/角度/节奏，用箭头标运动，画面必须有明确焦点以防止注意力分散。（来源:StudioBinder/Videomaker）",
+        "newImportance": null,
+        "reason": "两条记忆均属于分镜基础理论（Storyboard Craft），且重要性较低且相似，合并为统一的分镜创作准则可提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-director_proc_03",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_proc_01",
+        "newContent": "每集开工前必须先确认情绪锚点、嘴替台词及整体情绪曲线（确保有落差而非恒定），随后输出详细的制作说明和任务拆分清单再委派成员；成员交稿后必须严格按验收标准审稿，不合格必须点名返工字段，严禁一次性串流水而无质量闸；最终回答必须诚实区分“已完成”“可进入生成”“需要返工”，严禁将半成品包装成交付；任何下游输入缺失必须在 brief 中补齐或标注假设，以防止团队散写导致无法合成制作包。",
+        "newImportance": null,
+        "reason": "两者均涉及交付质量控制与审稿流程，将“状态诚实交付”合并入整体的“质量闸”流程中，使行为逻辑更完整。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "180度轴线规则是视频连贯性的铁律，在AI生成视频中对于防止观众方向错乱至关重要，应提升其重要性以增强约束力。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 18,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 37671,
+    "error": null
+  },
+  {
+    "logId": "dist_f3f6efe9fac9",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-02T13:29:09.314311Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_06_director_flow",
+        "mergeIntoId": "seed_comic-director_sem_07_director_delegate_contract",
+        "newContent": "总导演工作流：1. 定义本段钩子、情绪曲线、风险和交付目录；2. 委派任务时必须提供上游材料、输出文件名、验收标准和失败条件，严禁模糊指令（如“帮我做一下”）；3. 依次分派编剧、人物、场景、特效、轨迹、视频提示词、质检。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及总导演的委派逻辑与工作流，合并后形成从“定义目标”到“具体执行”的完整闭环。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-director_storyboard_craft_03",
+        "newContent": "分镜创作铁律：1. 180度轴线规则：机位必须保持在动作轴线同一侧，防止方向错乱；2. 情绪距离规则：镜头越近情绪越深（远景孤立，近景共情），选景别即选情绪距离；3. 构图焦点：先画缩略草图试构图/角度/节奏，用箭头标运动，确保画面有明确焦点。",
+        "newImportance": null,
+        "reason": "均属于分镜创作的专业工艺准则，合并为统一的“分镜创作铁律”提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "合并了情绪距离和构图焦点后，该条目成为分镜核心指南，价值提升。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 18,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 29264,
+    "error": null
+  },
+  {
+    "logId": "dist_ddc23bd881a8",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-03T11:21:01.098555Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如仅说“做EP01第1段”或“做EP08”），未提供详细brief或情绪定位。Action: 自动补齐段落brief（包含钩子、情绪锚点、嘴替台词、交付目录及角色任务），并要求编剧先拆镜头。Result: 确保下游成员围绕同一情绪目标和制作标准工作，防止散写，质检一次通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均关于“在用户指令模糊时，总导演通过自动补齐详细brief来引导团队”，逻辑高度一致，合并可增强经验通用性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "场景定义是视觉一致性的基石，其重要性应与工作流和风格核心对齐，原0.9略低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 33453,
+    "error": null
+  },
+  {
+    "logId": "dist_786dcfe3860b",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-06T03:33:48.398653Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如仅说“做EP01第1段”或“做EP08”），缺乏具体情绪定位或详细需求。Action: 自动补齐段落Brief（包含钩子、情绪锚点、嘴替台词、交付目录及角色任务），并要求编剧先拆镜头。Result: 确保下游成员围绕同一情绪目标和制作标准工作，防止散写，质检一次通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均在处理“用户指令模糊”时的应对策略，核心逻辑一致，合并后可增强应对模糊需求的通用性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-director_sem_10_workflow_step0",
+        "mergeIntoId": "seed_comic-director_sem_03_delivery_tree",
+        "newContent": "10秒制作包标准目录与前置条件：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。【硬性前置】Step 0「锁基准资产」必须在分镜前完成：每个角色生成母版图1张(@图片锚定),风格视频锁成@视频1,全剧控制10个核心场景。无基准资产不允许进入生成阶段。",
+        "newImportance": null,
+        "reason": "Step 0的基准资产锁定与交付目录在逻辑上属于同一个生产链路的输入与输出标准，合并可提高工作流检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_ai_consistency_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "AI角色一致性是漫剧生产的最高技术痛点，该记忆提供了具体的硬解法（转面母版+首尾帧控制），其价值高于目前的0.9。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28827,
+    "error": null
+  },
+  {
+    "logId": "dist_b46f489518bd",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-06T03:34:54.960753Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如仅说“做EP01第1段”或“做EP08”），未提供具体情绪定位或详细Brief。 Action: 自动补齐段落Brief（包含钩子、情绪锚点、嘴替台词、交付目录及角色任务），并要求编剧先拆镜头。 Result: 确保下游成员围绕同一情绪目标和制作标准工作，防止散写，质检一次通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均关于“处理用户模糊指令”的应对模式，逻辑一致，合并后可增强该行为模式的泛化能力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "该记忆包含分镜铁律（180度轴线、情绪距离），是确保视觉质量的底层逻辑，其价值高于目前的0.85。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23438,
+    "error": null
+  },
+  {
+    "logId": "dist_7e4c27c43f96",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-06T06:33:21.612432Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_07_director_delegate_contract",
+        "mergeIntoId": "seed_comic-director_sem_03_delivery_tree",
+        "newContent": "总导演工作流与交付标准：1.【前置锁基准】Step 0必须完成角色母版图(@图片锚定)、风格视频(@视频1)及10个核心场景锁定，否则禁止进入生成阶段；2.【任务委派】定义本段钩子、情绪曲线、风险和交付目录；委派时必须提供上游材料、输出文件名、验收标准和失败条件，严禁模糊指令；3.【交付目录】10秒制作包标准：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告；4.【执行顺序】依次分派编剧、人物、场景、特效、轨迹、视频提示词、质检。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及总导演的工作流、任务分派与交付物定义，合并后形成从'前置条件→委派逻辑→交付标准'的完整闭环。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "【经验：应对模糊指令】当用户仅给出简单指令（如“做EP01第1段”或“做EP08”）且缺失情绪定位/具体要求时，总导演应自动补齐段落brief（包含钩子、情绪锚点、嘴替台词、交付目录及各角色任务），并要求编剧先拆镜头。结果：确保下游成员围绕同一情绪和制作目标工作，避免散写，质检一次通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均在处理'用户指令模糊'时的应对策略，合并后增强了应对模式的通用性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24297,
+    "error": null
+  },
+  {
+    "logId": "dist_27329bc614fc",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-06T13:43:40.825246Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "分镜铁律（轴线、情绪距离、构图焦点）是确保短剧视觉质量的底层逻辑，其重要性应与生产硬规则对齐。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28796,
+    "error": null
+  },
+  {
+    "logId": "dist_d3060472eaf4",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-07T03:59:57.331574Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如仅说“做EP01第1段”或“做EP08”），未提供具体段落brief或情绪定位。Action: 自动补齐关键信息（包括钩子、情绪锚点、嘴替台词、交付目录及角色任务），并要求编剧先拆镜头。Result: 确保下游成员围绕统一的制作目标和情绪曲线工作，避免散写，质检一次通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均在处理“用户指令模糊”时的补齐机制，逻辑一致，合并后可增强该行为模式的泛化能力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "该记忆属于具体工具链路定义，相对于核心创作准则（Law）和质量标准（Quality），其优先级略低，且易随工具版本更新而失效。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25703,
+    "error": null
+  },
+  {
+    "logId": "dist_5f938c8e42ff",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-07T06:15:18.574810Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如仅说“做EP01第1段”或“做EP08”），缺乏具体段落brief或情绪定位。Action: 自动补齐关键信息（钩子、情绪锚点、嘴替台词、交付目录、角色任务），并要求编剧先拆镜头。Result: 确保下游成员围绕同一制作目标和情绪曲线工作，防止散写，质检一次性通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向同一个行为模式：在面对用户模糊指令时，通过总导演主动补齐关键制作要素来确保团队协同一致。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该记忆定义了工具链的物理落地链路，是语义记忆转化为实际交付物的桥梁，其重要性应与工作流(workflow)对齐。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26078,
+    "error": null
+  },
+  {
+    "logId": "dist_f1c66e9f8540",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-07T06:19:20.070481Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-director_sem_11_platform_select",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.97,
+        "reason": "该记忆涉及具体工具链选型（即梦 vs 可灵），是决定最终产出质量和效率的底层技术路径，重要性应提升至与工作流同级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26188,
+    "error": null
+  },
+  {
+    "logId": "dist_fc96c76428c3",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-07T06:21:19.589145Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-director_microdrama_02",
+        "mergeIntoId": "duanju_spine_20260630_comic-director_law",
+        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧(单集60-90s)，核心目标是'把观众锁到下一集'。节奏=信息/反转密度：前3-5秒必须有情绪炸点/冲突抓人，每1-2秒砸一个新事件/反转/钩子/嘴替台词，单句台词≤10字，一集15-25个事件beat。Beat Engine结构：Hook(0-15秒爆点)→Friction(15-60秒真实肢体/言语冲突，禁止纯内心戏)。留存工程：定格钩子落在60秒集的第55-58秒时集间留存出尖峰；下一集前10秒解悬念、最后5秒抛新钩。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎)，开口即钩子，结尾5秒必须有反转或悬念钩子。战斗场景用仙侠三段式：蓄力(2-3s)→爆发(3-5s)→余韵(2-3s),必须指定特效类型。构图/色彩/布光/运镜/景别等电影美术手艺必须服从短剧节奏。",
+        "newImportance": null,
+        "reason": "两条记忆均关于短剧节奏与留存钩子，前者定义结构，后者定义具体时间点，合并后形成完整的留存逻辑闭环。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "【观察】用户指令模糊（如仅说“做EP01第1段”或“做EP08”且缺失情绪定位）。【行动】总导演必须自动补齐段落 brief：包括钩子、情绪锚点（如EP08=决然离开）、嘴替台词、交付目录及各角色任务，并要求编剧先拆镜头。【结果】确保下游成员围绕同一情绪和制作目标工作，避免散写，质检一次通过。",
+        "newImportance": null,
+        "reason": "两条经验记忆均在处理“用户指令模糊”时的补齐机制，逻辑一致，合并可增强该行为模式的泛化能力。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26437,
+    "error": null
+  },
+  {
+    "logId": "dist_524f566ab33c",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-08T15:05:00.032860Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如仅说“做EP01第1段”或“做EP08”），未提供具体情绪定位或详细需求。Action: 自动补齐段落Brief（包含钩子、情绪锚点、嘴替台词、交付目录及角色任务），并要求编剧先拆镜头。Result: 确保下游成员围绕同一情绪目标和制作标准工作，防止散写，质检一次通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均关于“在用户指令模糊时，总导演通过自动补齐Brief来对齐团队目标”，逻辑高度一致，合并可增强经验的普适性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "该记忆为单一的质量细节约束，相比于整体工作流和核心视觉准则，其全局影响力较低，适当下调权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14812,
+    "error": null
+  },
+  {
+    "logId": "dist_e40a4a5edb19",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-08T19:00:08.325836Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如仅说“做EP01第1段”或“做EP08”），未提供详细brief或情绪定位。Action: 总导演自动补齐关键信息：包括段落钩子、情绪锚点（如EP08的决然离开/寂静处理）、嘴替台词、交付目录及各角色任务，并要求编剧先拆镜头。Result: 确保下游成员围绕同一情绪与制作目标工作，避免散写，质检一次性通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均关于“在用户指令模糊时，总导演通过自动补齐Brief来对齐团队目标”的模式，逻辑高度一致，合并后可增强该行为模式的泛化能力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆属于具体的执行细节（禁止宫格图），相比于整体工作流和视觉核心，其战略重要性较低，适当下调权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10530,
+    "error": null
+  },
+  {
+    "logId": "dist_899a31043e96",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-09T04:06:38.939418Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "Observation: 用户指令模糊（如仅说“做EP01第1段”或“做EP08”），缺乏具体情绪定位或详细brief。Action: 自动补齐段落brief（包含钩子、情绪锚点、嘴替台词、交付目录及各角色任务），并要求编剧先拆镜头。Result: 确保下游成员围绕同一制作目标和情绪曲线工作，防止散写，质检一次通过率显著提升。",
+        "newImportance": null,
+        "reason": "两条经验记忆均关于“在用户指令模糊时，总导演通过自动补齐详细Brief来对齐团队目标”，逻辑高度一致，合并后可增强经验的普适性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆属于具体的执行细节（禁止宫格图），相比于整体工作流和视觉核心，其战略重要性较低，适当下调权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15937,
+    "error": null
+  },
+  {
+    "logId": "dist_8bd9d31c529f",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-09T13:20:36.130956Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季完成全24集(含EP1高燃开篇)90s分镜。核心逻辑：三幕结构(立威1-8/结盟与真相9-18/季终19-24)；开篇采用'九陆巡礼'群像立世界观(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)；主角苍霖设定为强者(懒散欠揍/世界树钥匙)；每集包含大场面set-piece+反转+钩子+编剧笔记；严格执行招牌大场面锁死不串台(如烬龙陆熔浆龙焰禁赛博)；EP20回收反天选正拳，EP24闭环并预留S2钩子。全季共794卡spec通过质检，端点序列化完成。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季24集经验的子集，合并后可形成从单集到全季的完整执行链路，减少冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.5,
+        "reason": "该记忆仅为单一的技术细节禁令，且重要性已较低，进一步下调以优化检索权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13656,
+    "error": null
+  },
+  {
+    "logId": "dist_f0aafe01ad8f",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-09T13:36:14.935789Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点包含EP1烬龙陆开篇)。结构采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)。核心执行点：1. 九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)立世界观；2. 苍霖开局强者设定(懒散欠揍/世界树钥匙/反天选1秒闪回)；3. 招牌大场面锁死不串台(如烬龙陆熔浆龙焰禁赛博)；4. 每集配置set-piece+反转+钩子+编剧笔记。结果：共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "重要性极低(0.5)，且其内容（禁止宫格图）已包含在总导演审稿硬规则(seed_comic-director_sem_08_director_review)的质量控制逻辑中。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且在行为记忆中被多次验证为避免“卡拉米”的关键，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15500,
+    "error": null
+  },
+  {
+    "logId": "dist_fed73a18144f",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-09T13:41:30.391395Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点涵盖EP01烬龙陆开篇)。结构采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)。核心执行：九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)立世界观；主角苍霖开局即强者(懒散欠揍)；每集包含大场面set-piece+反转+钩子+编剧笔记；严格锁死招牌大场面不串台(如烬龙陆熔浆龙焰禁赛博)；EP20反天选正拳，EP24闭环并埋S2钩子。共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP01的经验是第一季24集完整经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级基调（高燃/高格调/反小人物文艺），是所有创作的底层逻辑，维持最高权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-director_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "短剧节奏准则是生产力的核心，与项目基调同等重要，提升至最高权重以确保执行不走样。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11485,
+    "error": null
+  },
+  {
+    "logId": "dist_337627976ad2",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T03:05:30.803037Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点：烬龙陆·拒绝删除)。结构采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)。核心执行点：1. 九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)；2. 塑造苍霖为开局强者(懒散欠揍/世界树钥匙/反天选1秒闪回)；3. 每集配置大场面set-piece+反转+钩子+编剧笔记；4. 招牌大场面锁死不串台(如烬龙陆熔浆龙焰禁赛博)；5. 采用FLF+retake+1秒剪辑节奏。结果：共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的'九陆巡礼'逻辑高度一致，应维持最高权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_realm_spectacle_lock",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "视觉母题的锁死是防止生产事故的关键，重要性应提升至与质量规则同级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27921,
+    "error": null
+  },
+  {
+    "logId": "dist_859d153e6bfa",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T03:08:04.774863Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季完成全24集(含EP01高燃开篇)90s分镜设计。核心逻辑：三幕结构(立威/结盟与真相/季终)；每集包含大场面set-piece+反转+钩子+编剧笔记；严格执行“九陆巡礼”开场(世界树光丝→逐陆奇观→俯冲落点)；主角苍霖设定为强者(懒散欠揍/世界树钥匙)；招牌大场面锁死不串台(如烬龙陆熔浆龙焰禁赛博)；EP20反天选回收，EP24闭环并预留S2钩子；全量794卡spec通过质检，端点序列化完成。",
+        "newImportance": null,
+        "reason": "EP01的经验是全季24集经验的子集，合并后可形成从单集到全季的完整交付链路记录。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与后续多个行为记忆和经验记忆高度关联，维持最高权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_realm_spectacle_lock",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "视觉母题的锁死是防止AI生成漂移的关键，重要性应略微提升以增强约束力。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12375,
+    "error": null
+  },
+  {
+    "logId": "dist_be467805306d",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T03:12:04.234746Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_realm_spectacle_lock",
+        "mergeIntoId": "jiulu_gaoran_pivot_20260709_comic-director_world_opening_device",
+        "newContent": "【九陆纪元·世界观开场与招牌奇观锁死】1. 开场装置：九陆巡礼群像立世界观(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟→落点烬龙陆废墟→主角登场)，先定世界尺度与危机，再进正片。2. 各陆招牌视觉母题(禁止串台)：烬龙陆=熔浆龙焰/龙骨废墟(禁赛博); 星圣陆=魔法阵浮空城/碎星环/星轨炮; 青霄陆=赛博火箭炮/机械穹顶/数据洪流/净化光束; 潮生陆=海啸卷城/百米浪墙; 归墟陆=虫潮遮天。提示词必须包含：尺度(城市/地貌级)+体积光+粒子+冲击波。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及九陆纪元的视觉奇观定义，前者定义具体母题，后者定义开场呈现逻辑，合并后可形成完整的“世界观视觉呈现指南”。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季(烬龙陆·拒绝删除)创作完整24集90s高燃分镜。核心执行：1. 结构：三幕式(立威1-8/结盟与真相9-18/季终19-24)，每集包含大场面set-piece+反转+钩子。2. 开篇(EP01)：采用九陆巡礼群像开场，确立强主角(苍霖)设定，通过熔浆龙焰地貌级场面与反天选1秒闪回埋线，完成高格调起手。3. 关键点：招牌大场面锁死不串台，EP20回收拒绝天命，EP24闭环并抛S2钩子。共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是S1整体经验的子集，合并后可将单集突破点整合进整体季度的执行逻辑中。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-director_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了短剧的核心节奏与留存工程，是所有生产活动的底层逻辑，维持最高优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17967,
+    "error": null
+  },
+  {
+    "logId": "dist_cdd6b489e189",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T03:28:35.948425Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季完成全24集90s高燃分镜(重点涵盖烬龙陆·拒绝删除)。结构上采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记。开篇EP01通过九陆巡礼群像(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)立世界观，确立主角苍霖强者人设(懒散欠揍)及地貌级视觉冲击(熔浆龙焰灭舰队)，并埋入反天选1秒闪回线。全季共794卡spec通过质检，确保招牌大场面不串台，端点序列化完成。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季(S1)经验的子集，合并后可将具体的开篇策略与整体的季级结构整合，提高记忆密度。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与后续行为记忆高度关联，维持最高权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_world_opening_device",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "世界观开场装置是项目视觉基调的核心，重要性应与视觉核心(style_core)持平。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14532,
+    "error": null
+  },
+  {
+    "logId": "dist_56315a6cb45c",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T03:45:52.682302Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点涵盖烬龙陆·拒绝删除)。核心执行：三幕结构(立威1-8/结盟与真相9-18/季终19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记；开篇采用九陆巡礼群像(世界树九缕光丝→逐陆奇观→八缕熄灭俯冲坠废墟)快速立世界观；主角苍霖设定为强者(懒散欠揍/世界树钥匙)；视觉锁死招牌大场面(烬龙陆熔浆龙焰禁赛博)；EP20回收反天选正拳，EP24闭环并埋S2钩子；采用FLF+retake+1秒剪辑，共794卡spec通过质检。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的开场规则高度互补，维持最高权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_world_opening_device",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "世界观开场装置是项目的核心视觉资产，重要性应略高于普通知识点。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13875,
+    "error": null
+  },
+  {
+    "logId": "dist_20459544f73a",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T04:00:05.324997Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季完成24集90s高燃分镜(烬龙陆·拒绝删除)。核心执行：三幕结构(立威1-8/结盟与真相9-18/季终19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记；开篇采用九陆巡礼群像(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)快速立世界观；主角苍霖设定为强者(懒散欠揍)且具备反天选埋线；招牌大场面锁死不串台(烬龙陆熔浆龙焰禁赛博)；EP20回收反天选正拳，EP24闭环并抛S2钩子(青鸾+神国)；采用FLF+retake+1秒剪辑，共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季24集完整经验的子集，合并后可保留从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的shot_rule高度互补，应维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13625,
+    "error": null
+  },
+  {
+    "logId": "dist_e5eab088a6a8",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T04:14:53.025072Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(烬龙陆·拒绝删除)。核心执行：三幕结构(立威1-8/结盟与真相9-18/季终19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记；严格执行九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)以立世界观；主角苍霖设定为懒散欠揍的强者，通过熔浆龙焰地貌级灭舰队等大场面锁死视觉母题(禁赛博)；包含反天选1秒闪回埋线及EP20/24关键闭环。共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季全集经验的子集，合并后可保留具体的开场执行细节并统一为季级交付经验。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的shot_rule高度互补，维持最高权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "当用户指令模糊（如仅说“做EP01第1段”或“做EP08”）且缺失情绪定位/具体需求时，总导演必须自动补齐：1. 段落Brief（钩子、情绪锚点、嘴替台词）；2. 交付目录与各角色任务拆分；3. 具体的执行细节（如EP08的决然离开、寂静处理、背影不回头）。结果：确保下游成员围绕同一情绪和制作目标工作，避免散写，质检一次通过。",
+        "newImportance": null,
+        "reason": "两条记忆均描述了“面对模糊指令时通过自动补齐Brief来确保团队一致性”的相同行为模式，合并后增强了应对策略的完整性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20984,
+    "error": null
+  },
+  {
+    "logId": "dist_1b8f41bba3f0",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T04:18:45.528098Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(烬龙陆·拒绝删除)。核心执行：三幕结构(立威1-8/结盟与真相9-18/季终19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记；开篇采用九陆巡礼群像(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)立世界观，确立主角苍霖强者人设(懒散欠揍)及地貌级视觉冲击(熔浆龙焰禁赛博)；EP20回收反天选正拳，EP24闭环并埋S2钩子。共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留从单集到全季的执行细节，减少冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与后续行为记忆高度相关，维持最高权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_sem_05",
+        "newContent": "第一季10集三幕结构：第一幕活着(EP01-03)/第二幕成长(EP04-07)/第三幕出发(EP08-10)。苍霖线为入口，其余角色留后季。核心情感线通过「也是」一词贯穿：EP02自嘲接受→EP08释然共鸣，体现六集后的成长重量。",
+        "newImportance": null,
+        "reason": "将具体的台词伏笔（也是）合并入整体的故事结构记忆中，使故事逻辑更完整。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21406,
+    "error": null
+  },
+  {
+    "logId": "dist_dc1253b54663",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T04:23:29.804298Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点包含EP1烬龙陆开篇)。结构：三幕立威(1-8)/结盟与真相(9-18)/季终(19-24)；核心逻辑：九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)立世界观，主角苍霖开局即强者(懒散欠揍)，每集大场面set-piece+反转+钩子+编剧笔记；招牌大场面锁死不串台(烬龙陆熔浆龙焰禁赛博)；EP20反天选正拳，EP24闭环+S2钩(青鸾+神国)；采用FLF+retake+1秒剪辑，共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的开场规则高度一致，应维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12000,
+    "error": null
+  },
+  {
+    "logId": "dist_46e951af2d5e",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T04:31:54.511492Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点涵盖烬龙陆·拒绝删除)。结构上采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)。每集包含大场面set-piece+反转+钩子+编剧笔记。开篇采用九陆巡礼群像(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)快速立世界观，确立主角苍霖强者人设(懒散欠揍)及地貌级视觉冲击(熔浆龙焰禁赛博)。EP20反天选正拳，EP24闭环并埋S2钩子。全季共794卡spec通过质检，实现端点序列化。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季24集经验的子集，合并后可将单集细节与整体结构统一，减少冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的'禁止拉跨起手'高度一致，应维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11561,
+    "error": null
+  },
+  {
+    "logId": "dist_6572a5b1692f",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T04:38:58.130887Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作了完整24集(含EP1高燃开篇)90s分镜。核心执行：三幕结构(立威/结盟/季终)；每集包含大场面set-piece+反转+钩子；开场采用九陆巡礼群像(世界树九缕光丝→逐陆奇观→坠落废墟)确立世界尺度；主角苍霖设定为懒散强者，通过1秒闪回埋线反天选；严格执行烬龙陆熔浆龙焰视觉母题(禁赛博)；全季共794卡spec通过质检，实现端点序列化。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季(S1)经验的子集，合并后可形成从单集到全季的完整交付链路记录。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的开场规则高度互补，应维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10296,
+    "error": null
+  },
+  {
+    "logId": "dist_f2417b4d8599",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T04:48:55.911744Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点涵盖烬龙陆·拒绝删除)。结构采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记。核心执行点：九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)立世界观，主角苍霖开局即强者(懒散欠揍)，强调地貌级量级(如熔浆龙焰灭舰队)，严禁赛博串台。EP20反天选正拳，EP24闭环并埋S2钩子(青鸾+神国)。共794卡spec完成过验，采用FLF+retake+1秒剪辑节奏。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季24集完整经验的子集，合并后可保留从单集到全季的完整执行逻辑，减少冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的开场规则高度互补，应维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15296,
+    "error": null
+  },
+  {
+    "logId": "dist_b40b96f69858",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T04:49:22.194588Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点含EP1烬龙陆开篇)。结构：三幕立威(1-8)/结盟与真相(9-18)/季终(19-24)；核心逻辑：九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)立世界观，主角苍霖开局即强者(懒散欠揍)，每集大场面set-piece+反转+钩子+编剧笔记；视觉锁死：烬龙陆熔浆龙焰禁赛博；EP20反天选正拳，EP24闭环+S2钩(青鸾+神国)；执行标准：FLF+retake+1秒剪辑，共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是全季24集经验的子集，合并后可形成从单集到全季的完整交付链路记录。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的开场规则高度一致，应维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14000,
+    "error": null
+  },
+  {
+    "logId": "dist_6e435bba1d68",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-10T06:13:52.981384Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点涵盖烬龙陆·拒绝删除)。结构采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)。核心执行点：1. 开篇采用九陆巡礼群像(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)快速立世界观；2. 主角苍霖设定为强者(懒散欠揍)+反天选1秒闪回埋线；3. 每集配置大场面set-piece+反转+钩子+编剧笔记；4. 视觉锁死：烬龙陆熔浆龙焰禁赛博；5. 节奏控制：1秒剪辑、FLF+retake，共794卡spec完成过验。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可形成从单集到全季的完整执行链路，减少冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的shot_rule高度互补，维持最高权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-director_proc_01",
+        "mergeIntoId": "seed_comic-director_sem_03_delivery_tree",
+        "newContent": "【总导演工作流与交付标准】1.【前置锁基准】Step 0必须完成角色/场景母版图及风格视频，确认情绪锚点、嘴替台词及整体情绪曲线(确保落差而非恒定)，否则禁止进入生成阶段；2.【任务委派】定义本段钩子、情绪曲线、风险和交付目录；提供上游材料、输出文件名、验收标准和失败条件，严禁模糊指令；3.【交付目录】10秒制作包标准：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告；4.【执行顺序】依次分派编剧→人物→场景→特效→轨迹→视频提示词→质检；5.【质量闸口】成员交稿必须严格按标准审稿，不合格点名返工，诚实区分“已完成/可生成/需返工”，严禁半成品交付。",
+        "newImportance": null,
+        "reason": "将具体的执行流程(semantic)与管理规则(procedural)合并，形成一套完整的从“情绪定义-任务分派-交付质检”的闭环工作流。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 16811,
+    "error": null
+  },
+  {
+    "logId": "dist_2f8be03e77d8",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-13T03:14:22.042700Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜（含EP1烬龙陆开篇）。结构采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)；每集包含大场面set-piece+反转+钩子+编剧笔记。核心执行点：九陆巡礼群像开场（世界树九缕光丝→逐陆奇观→坠落废墟）立世界观，主角苍霖开局即强者（懒散欠揍），锁死招牌视觉母题（烬龙陆熔浆龙焰禁赛博），采用1秒剪辑与FLF/retake机制。共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留从单集到全季的完整执行链路。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的shot_rule互补，应维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15422,
+    "error": null
+  },
+  {
+    "logId": "dist_17b54576aae3",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-13T19:00:16.632950Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "为《九陆纪元》第一季创作完整24集90s高燃分镜(重点包含烬龙陆·拒绝删除)。结构采用三幕式：立威(1-8)/结盟与真相(9-18)/季终(19-24)。每集包含大场面set-piece+反转+钩子+编剧笔记。开篇采用九陆巡礼群像(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)快速立世界观，主角苍霖开局即强者(懒散欠揍)，视觉锁死烬龙陆熔浆龙焰(禁赛博)，包含反天选1秒闪回埋线。共794卡spec完成过验，端点序列化OK。",
+        "newImportance": null,
+        "reason": "EP1的经验是第一季完整24集经验的子集，合并后可保留从单集到全季的完整执行逻辑。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_sem_05",
+        "newContent": "第一季10集三幕结构：第一幕活着(EP01-03)/第二幕成长(EP04-07)/第三幕出发(EP08-10)。苍霖线为入口，其余角色留后季。情绪曲线设计为落差而非恒定：EP02/EP07为低谷，EP04/EP09为最高点，EP05纯喜剧，EP10安静收尾。核心情感线通过「也是」一词贯穿：EP02自嘲接受→EP08释然共鸣，体现六集后的成长重量。",
+        "newImportance": null,
+        "reason": "两条记忆均关于第一季10集的结构与情绪规划，合并后形成完整的剧作蓝图。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的shot_rule高度互补，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 12,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17750,
+    "error": null
+  },
+  {
+    "logId": "dist_612854750849",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-14T19:00:16.258815Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "newContent": "【九陆纪元 S1 全集创作经验】为《九陆纪元》第一季创作了24集(含EP01高燃开篇)90s分镜，共794卡spec。核心策略：1. 结构：三幕式(立威1-8/结盟与真相9-18/季终19-24)；2. 开篇：采用九陆巡礼群像立世界观(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)直接落点烬龙陆，确立高格调门槛；3. 角色：苍霖开局即强者(懒散欠揍)，通过反转(贱民→世界树钥匙)与1秒闪回埋线；4. 视觉：锁死招牌大场面(烬龙陆熔浆龙焰禁赛博)，每集包含set-piece+反转+钩子；5. 节奏：FLF+retake+1秒剪辑，确保端点序列化通过质检。",
+        "newImportance": null,
+        "reason": "EP01的经验是全季(S1)经验的子集，合并后可形成从单集到全季的完整创作链路记录。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了项目的最高优先级铁律，且与行为记忆中的shot_rule互补，维持最高权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
+        "newContent": "【任务补齐经验】当用户指令模糊（如仅说“做EP01第1段”或“做EP08”）时，总导演必须自动补齐关键维度：1. 结构Brief：钩子、情绪定位（如EP08=决然离开）、嘴替台词（如“也是”）；2. 交付标准：明确交付目录、各角色任务分工；3. 执行路径：要求编剧先拆镜头。结果：确保下游围绕同一目标产出，避免散写，质检一次通过。",
+        "newImportance": null,
+        "reason": "两条记忆均描述了“面对模糊指令时通过自动补齐Brief来确保团队一致性”的行为模式，逻辑高度一致。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 12,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 12,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18375,
+    "error": null
+  }
+]

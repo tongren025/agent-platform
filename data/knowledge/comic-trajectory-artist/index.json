@@ -1,0 +1,61 @@
+[
+  {
+    "docId": "ac3a1f8b36a67f9d",
+    "fileName": "seedance-full-guide.md",
+    "extension": ".md",
+    "sizeBytes": 3507,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "0ab7a86a0b3c2f28",
+    "fileName": "canon-montage.md",
+    "extension": ".md",
+    "sizeBytes": 908,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "蒙太奇"
+    ]
+  },
+  {
+    "docId": "99c5063bcc8f3f7d",
+    "fileName": "craft-camera_emotion.md",
+    "extension": ".md",
+    "sizeBytes": 796,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/NoFilmSchool·Camera Movement",
+      "运镜情绪语义"
+    ]
+  },
+  {
+    "docId": "01d3acc3bb65b282",
+    "fileName": "craft-animation12.md",
+    "extension": ".md",
+    "sizeBytes": 791,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "Adobe/Wikipedia·Twelve basic principles of animation",
+      "动画12原则"
+    ]
+  },
+  {
+    "docId": "d8e606e645d40f8f",
+    "fileName": "craft-shot_size_emotion.md",
+    "extension": ".md",
+    "sizeBytes": 705,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/Adobe·Shot Sizes",
+      "景别情绪强度"
+    ]
+  }
+]

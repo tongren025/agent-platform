@@ -1,0 +1,866 @@
+[
+  {
+    "runId": "wfr_d157bb1636c9b513",
+    "workflowKey": "test-diamond",
+    "status": "success",
+    "inputs": {
+      "score": 1
+    },
+    "variables": {
+      "start": {
+        "score": 1
+      },
+      "s": {
+        "score": 1,
+        "output": "{\"score\": 1}",
+        "text": "{\"score\": 1}"
+      },
+      "c": {
+        "output": "lo",
+        "text": "lo"
+      },
+      "B": {
+        "output": "low path 1",
+        "text": "low path 1"
+      },
+      "J": {
+        "output": "joined:[][low path 1]",
+        "text": "joined:[][low path 1]"
+      },
+      "e": {
+        "output": "joined:[][low path 1]",
+        "text": "joined:[][low path 1]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{\"score\": 1}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "c",
+        "type": "condition",
+        "status": "success",
+        "output": "lo",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "A",
+        "type": "template",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "B",
+        "type": "template",
+        "status": "success",
+        "output": "low path 1",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "J",
+        "type": "template",
+        "status": "success",
+        "output": "joined:[][low path 1]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "success",
+        "output": "joined:[][low path 1]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "joined:[][low path 1]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-25T03:08:45.214743Z",
+    "finishedAt": "2026-06-25T03:08:45.273343Z"
+  },
+  {
+    "runId": "wfr_64e0d0a817d639e4",
+    "workflowKey": "test-diamond",
+    "status": "success",
+    "inputs": {
+      "score": 10
+    },
+    "variables": {
+      "start": {
+        "score": 10
+      },
+      "s": {
+        "score": 10,
+        "output": "{\"score\": 10}",
+        "text": "{\"score\": 10}"
+      },
+      "c": {
+        "output": "hi",
+        "text": "hi"
+      },
+      "A": {
+        "output": "high path 10",
+        "text": "high path 10"
+      },
+      "J": {
+        "output": "joined:[high path 10][]",
+        "text": "joined:[high path 10][]"
+      },
+      "e": {
+        "output": "joined:[high path 10][]",
+        "text": "joined:[high path 10][]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{\"score\": 10}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "c",
+        "type": "condition",
+        "status": "success",
+        "output": "hi",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "A",
+        "type": "template",
+        "status": "success",
+        "output": "high path 10",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "B",
+        "type": "template",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "J",
+        "type": "template",
+        "status": "success",
+        "output": "joined:[high path 10][]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "success",
+        "output": "joined:[high path 10][]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "joined:[high path 10][]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-25T03:08:44.374218Z",
+    "finishedAt": "2026-06-25T03:08:45.204654Z"
+  },
+  {
+    "runId": "wfr_6754c3a5c826996e",
+    "workflowKey": "test-diamond",
+    "status": "success",
+    "inputs": {
+      "score": 1
+    },
+    "variables": {
+      "start": {
+        "score": 1
+      },
+      "s": {
+        "score": 1,
+        "output": "{\"score\": 1}",
+        "text": "{\"score\": 1}"
+      },
+      "c": {
+        "output": "lo",
+        "text": "lo"
+      },
+      "B": {
+        "output": "low path 1",
+        "text": "low path 1"
+      },
+      "J": {
+        "output": "joined:[][low path 1]",
+        "text": "joined:[][low path 1]"
+      },
+      "e": {
+        "output": "joined:[][low path 1]",
+        "text": "joined:[][low path 1]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{\"score\": 1}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "c",
+        "type": "condition",
+        "status": "success",
+        "output": "lo",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "A",
+        "type": "template",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "B",
+        "type": "template",
+        "status": "success",
+        "output": "low path 1",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "J",
+        "type": "template",
+        "status": "success",
+        "output": "joined:[][low path 1]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "success",
+        "output": "joined:[][low path 1]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "joined:[][low path 1]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T11:05:22.478772Z",
+    "finishedAt": "2026-06-24T11:05:22.544917Z"
+  },
+  {
+    "runId": "wfr_0e77b509e2698a74",
+    "workflowKey": "test-diamond",
+    "status": "success",
+    "inputs": {
+      "score": 10
+    },
+    "variables": {
+      "start": {
+        "score": 10
+      },
+      "s": {
+        "score": 10,
+        "output": "{\"score\": 10}",
+        "text": "{\"score\": 10}"
+      },
+      "c": {
+        "output": "hi",
+        "text": "hi"
+      },
+      "A": {
+        "output": "high path 10",
+        "text": "high path 10"
+      },
+      "J": {
+        "output": "joined:[high path 10][]",
+        "text": "joined:[high path 10][]"
+      },
+      "e": {
+        "output": "joined:[high path 10][]",
+        "text": "joined:[high path 10][]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{\"score\": 10}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "c",
+        "type": "condition",
+        "status": "success",
+        "output": "hi",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "A",
+        "type": "template",
+        "status": "success",
+        "output": "high path 10",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "B",
+        "type": "template",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "J",
+        "type": "template",
+        "status": "success",
+        "output": "joined:[high path 10][]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "success",
+        "output": "joined:[high path 10][]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "joined:[high path 10][]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T11:05:21.642843Z",
+    "finishedAt": "2026-06-24T11:05:22.459726Z"
+  },
+  {
+    "runId": "wfr_ed2a9a706e9ebec5",
+    "workflowKey": "test-diamond",
+    "status": "success",
+    "inputs": {
+      "score": 1
+    },
+    "variables": {
+      "start": {
+        "score": 1
+      },
+      "s": {
+        "score": 1,
+        "output": "{\"score\": 1}",
+        "text": "{\"score\": 1}"
+      },
+      "c": {
+        "output": "lo",
+        "text": "lo"
+      },
+      "B": {
+        "output": "low path 1",
+        "text": "low path 1"
+      },
+      "J": {
+        "output": "joined:[][low path 1]",
+        "text": "joined:[][low path 1]"
+      },
+      "e": {
+        "output": "joined:[][low path 1]",
+        "text": "joined:[][low path 1]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{\"score\": 1}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "c",
+        "type": "condition",
+        "status": "success",
+        "output": "lo",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "A",
+        "type": "template",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "B",
+        "type": "template",
+        "status": "success",
+        "output": "low path 1",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "J",
+        "type": "template",
+        "status": "success",
+        "output": "joined:[][low path 1]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "success",
+        "output": "joined:[][low path 1]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "joined:[][low path 1]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T10:53:47.566501Z",
+    "finishedAt": "2026-06-24T10:53:47.665122Z"
+  },
+  {
+    "runId": "wfr_7d327d5d80967051",
+    "workflowKey": "test-diamond",
+    "status": "success",
+    "inputs": {
+      "score": 10
+    },
+    "variables": {
+      "start": {
+        "score": 10
+      },
+      "s": {
+        "score": 10,
+        "output": "{\"score\": 10}",
+        "text": "{\"score\": 10}"
+      },
+      "c": {
+        "output": "hi",
+        "text": "hi"
+      },
+      "A": {
+        "output": "high path 10",
+        "text": "high path 10"
+      },
+      "J": {
+        "output": "joined:[high path 10][]",
+        "text": "joined:[high path 10][]"
+      },
+      "e": {
+        "output": "joined:[high path 10][]",
+        "text": "joined:[high path 10][]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{\"score\": 10}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "c",
+        "type": "condition",
+        "status": "success",
+        "output": "hi",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "A",
+        "type": "template",
+        "status": "success",
+        "output": "high path 10",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "B",
+        "type": "template",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "J",
+        "type": "template",
+        "status": "success",
+        "output": "joined:[high path 10][]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "success",
+        "output": "joined:[high path 10][]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "joined:[high path 10][]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T10:53:46.808872Z",
+    "finishedAt": "2026-06-24T10:53:47.556503Z"
+  },
+  {
+    "runId": "wfr_60ade4eda7a3b98c",
+    "workflowKey": "test-diamond",
+    "status": "success",
+    "inputs": {
+      "score": 1
+    },
+    "variables": {
+      "start": {
+        "score": 1
+      },
+      "s": {
+        "score": 1,
+        "output": "{\"score\": 1}",
+        "text": "{\"score\": 1}"
+      },
+      "c": {
+        "output": "lo",
+        "text": "lo"
+      },
+      "B": {
+        "output": "low path 1",
+        "text": "low path 1"
+      },
+      "J": {
+        "output": "joined:[][low path 1]",
+        "text": "joined:[][low path 1]"
+      },
+      "e": {
+        "output": "joined:[][low path 1]",
+        "text": "joined:[][low path 1]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{\"score\": 1}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "c",
+        "type": "condition",
+        "status": "success",
+        "output": "lo",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "A",
+        "type": "template",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "B",
+        "type": "template",
+        "status": "success",
+        "output": "low path 1",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "J",
+        "type": "template",
+        "status": "success",
+        "output": "joined:[][low path 1]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "success",
+        "output": "joined:[][low path 1]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "joined:[][low path 1]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-23T18:27:13.269477Z",
+    "finishedAt": "2026-06-23T18:27:13.319847Z"
+  },
+  {
+    "runId": "wfr_d204911deb4b31ea",
+    "workflowKey": "test-diamond",
+    "status": "success",
+    "inputs": {
+      "score": 10
+    },
+    "variables": {
+      "start": {
+        "score": 10
+      },
+      "s": {
+        "score": 10,
+        "output": "{\"score\": 10}",
+        "text": "{\"score\": 10}"
+      },
+      "c": {
+        "output": "hi",
+        "text": "hi"
+      },
+      "A": {
+        "output": "high path 10",
+        "text": "high path 10"
+      },
+      "J": {
+        "output": "joined:[high path 10][]",
+        "text": "joined:[high path 10][]"
+      },
+      "e": {
+        "output": "joined:[high path 10][]",
+        "text": "joined:[high path 10][]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{\"score\": 10}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "c",
+        "type": "condition",
+        "status": "success",
+        "output": "hi",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "A",
+        "type": "template",
+        "status": "success",
+        "output": "high path 10",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "B",
+        "type": "template",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "J",
+        "type": "template",
+        "status": "success",
+        "output": "joined:[high path 10][]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "success",
+        "output": "joined:[high path 10][]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "joined:[high path 10][]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-23T18:27:12.567952Z",
+    "finishedAt": "2026-06-23T18:27:13.260720Z"
+  }
+]

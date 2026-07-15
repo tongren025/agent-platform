@@ -1,0 +1,101 @@
+[
+  {
+    "memoryId": "mem_0ee7ff062653",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "在为 Seedance 2.0 编写提示词时，必须严格遵守“三层结构”输出法，确保包含全局设定、时间轴细节和可直接用于生成的文件定义。",
+    "rationale": "用户对输出格式有极强的规范要求，结构化的输出能直接对接其工作流，提高生产效率。",
+    "confidence": 1.0,
+    "activationCount": 1,
+    "sourceSession": "ses_1211078d3a79ebf1",
+    "createdAt": "2026-06-30T13:19:24.855353Z",
+    "updatedAt": "2026-06-30T14:15:19.419049Z"
+  },
+  {
+    "memoryId": "v3_proc_02_no_negative_ever",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "永远不写负向提示词/negative prompt。Seedance 2.0完全不读。所有禁止项用正向表述：不要水印→画面干净无遮挡,不要模糊→面部清晰细节锐利,不要变形→保持人体比例正确面部一致。",
+    "rationale": "Seedance 2.0底层架构不支持negative prompt,写了不仅无效还浪费宝贵的60-100词配额。多个独立来源确认。",
+    "confidence": 1.0,
+    "activationCount": 0,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "createdAt": "2026-06-25T14:00:00Z",
+    "updatedAt": "2026-06-25T14:00:00Z"
+  },
+  {
+    "memoryId": "v3_proc_01_eight_layer_order",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "提示词必须严格按八层顺序组装（每层缺一即为不合格）：素材声明(@引用+R编号) → 镜头标签(每段≤6秒) → 景别与主体(2-3个静态特征) → 动作(身体部位级+幅度+速度) → 运镜(每镜只一个,中英双写) → 场景光影(方向+色温+氛围) → 音频(对话/音效) → 全局收尾(风格锚+约束词)。",
+    "rationale": "八层框架来自生产实战验证,比纯S-A-C-S-C更完整。每层都有明确职责,缺任何一层都会降低生成质量。",
+    "confidence": 0.99,
+    "activationCount": 0,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "createdAt": "2026-06-25T14:00:00Z",
+    "updatedAt": "2026-07-01T14:07:51.221155Z"
+  },
+  {
+    "memoryId": "v3_proc_03_copy_not_rewrite",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "角色固定词和场景固定词必须逐字复制粘贴,绝对不可为了文采或简洁改写任何一个字。每条提示词都独立包含完整视觉DNA描述,配合@图片1锚定,禁止写「同上」。",
+    "rationale": "改写是角色漂移和场景漂移的第一来源。模型对固定词非常敏感,少一个修饰词就可能换脸换衣服。",
+    "confidence": 0.99,
+    "activationCount": 0,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "createdAt": "2026-06-25T14:00:00Z",
+    "updatedAt": "2026-07-01T14:07:51.234168Z"
+  },
+  {
+    "memoryId": "v3_proc_04_action_body_part",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "动作写身体部位级+程度量化,不写文学描述。优先慢速连续小动作,补充动作间过渡。禁止词：夸张/高速/快速/fast/剧烈/激烈。情绪必须外化为身体细节：悲伤→肩膀微颤,眼眶泛红,手指攥紧衣角。每镜≤3个连续动作,打斗拆单人序列。",
+    "rationale": "「快速」导致运动模糊,「夸张」导致肢体变形。身体部位级描述AI能准确执行,文学修辞AI无法解析。",
+    "confidence": 0.99,
+    "activationCount": 0,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "createdAt": "2026-06-25T14:00:00Z",
+    "updatedAt": "2026-06-25T14:00:00Z"
+  },
+  {
+    "memoryId": "v3_proc_05_camera_one_per_shot",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "每镜只写一个运镜动作,中英双写(如「缓慢推进(dolly in)」)。镜头运动和角色动作分开描述,不混写。竖屏9:16构图强调主体居中偏下(lower third)。",
+    "rationale": "多个运镜叠加会导致模型困惑产出不稳定。中英双写增加模型理解准确度。镜头动作混写让模型分不清谁在动。",
+    "confidence": 0.99,
+    "activationCount": 0,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "createdAt": "2026-06-25T14:00:00Z",
+    "updatedAt": "2026-06-25T14:00:00Z"
+  },
+  {
+    "memoryId": "v3_proc_06_segment_6s_max",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "单段不超过6秒,时间码格式[00:00-00:05]。15秒分3段。每段末尾写「口型与字幕：台词内容」。竖屏短剧前3秒必须有情绪炸点,单句台词≤10字,结尾5秒必须有反转或悬念。",
+    "rationale": "超过6秒的连续描述会导致角色变形。前3秒炸点是竖屏短剧平台算法推荐的关键因素。",
+    "confidence": 0.98,
+    "activationCount": 0,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "createdAt": "2026-06-25T14:00:00Z",
+    "updatedAt": "2026-06-25T14:00:00Z"
+  },
+  {
+    "memoryId": "v3_proc_07_style_video_anchor",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "风格锁定最强手段：找一段风格视频锁成@视频1,全局写「画风动作严格对齐@视频1的风格」。比逐镜头写风格词高效100倍。先锁基准图再批量：角色母版1张+场景母版1张→后续所有画面基于母版生成。控制在10个核心场景。",
+    "rationale": "@视频引用的风格锁定能力远强于纯文字风格词。母版图机制是工业化生产一致性的基础。",
+    "confidence": 0.98,
+    "activationCount": 0,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "createdAt": "2026-06-25T14:00:00Z",
+    "updatedAt": "2026-06-25T14:00:00Z"
+  },
+  {
+    "memoryId": "v3_proc_08_light_is_king",
+    "employeeKey": "comic-prompt-engineer",
+    "rule": "光影描述是质量ROI最高的元素。不写「自然光」,写「主光从左上方打来带暖色补光反射,黄金时段逆光捕捉空气中的灰尘颗粒」。具体到光源方向+色温+反射效果。国风用暖金红色调,赛博用冷蓝紫色调。",
+    "rationale": "八层框架作者实测：光影描述每词质量提升超过任何其他元素。抽象光影词AI无法执行,具体参数化的光影AI能精确还原。",
+    "confidence": 0.97,
+    "activationCount": 0,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "createdAt": "2026-06-25T14:00:00Z",
+    "updatedAt": "2026-06-25T14:00:00Z"
+  }
+]

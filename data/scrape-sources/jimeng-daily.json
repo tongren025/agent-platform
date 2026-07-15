@@ -1,0 +1,17 @@
+{
+  "sourceCode": "jimeng-daily",
+  "name": "即梦每日灵感",
+  "platform": "jimeng",
+  "url": "https://jimeng.jianying.com/ai-tool/home/",
+  "targetEmployeeKey": "demo-assistant",
+  "scheduleTime": "09:00",
+  "maxItems": 40,
+  "enabled": true,
+  "lastRunAt": "2026-07-15T01:00:28.806720Z",
+  "lastStatus": "success",
+  "lastMessage": "抓取 20 条，新增 9 条，累计 154 条。",
+  "lastNewCount": 9,
+  "totalCollected": 154,
+  "createdAt": "2026-06-23T05:02:04.768229Z",
+  "updatedAt": "2026-07-15T01:00:28.806720Z"
+}

@@ -1,0 +1,502 @@
+[
+  {
+    "logId": "evo_24f2a57e2bbe",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-29T13:12:24.039411Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_1a9b7d37e112",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-29T13:50:01.563786Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_684fe149b338",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T01:56:06.880153Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_bc8d68953d53",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T01:59:08.173642Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_a0a57393ab9a",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T01:59:29.561337Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_4033ffcb09e9",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T04:07:10.135048Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_a4173c5cb34b",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T04:13:15.800785Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_cab69346fc80",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T04:13:21.117216Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_7ddf8ec6bba8",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T04:13:51.064644Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_75c98b11ef31",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T04:15:55.887803Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_35e50b101530",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T10:46:32.860069Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_b584f0c0cac8",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T10:51:15.519685Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_6b2bd1e92b37",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-01T03:11:09.881719Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 7735,
+    "error": null
+  },
+  {
+    "logId": "evo_03456bac5931",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-01T14:07:40.958970Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9750,
+    "error": null
+  },
+  {
+    "logId": "evo_72cb80e6cc03",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-02T03:14:50.108758Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9625,
+    "error": null
+  },
+  {
+    "logId": "evo_134046bd6d85",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-02T13:29:27.609031Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10906,
+    "error": null
+  },
+  {
+    "logId": "evo_ce724ac87ef0",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-03T11:21:19.325337Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15156,
+    "error": null
+  },
+  {
+    "logId": "evo_0ac0583b87c5",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-06T03:34:06.659329Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10436,
+    "error": null
+  },
+  {
+    "logId": "evo_d081a42a02e9",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-06T03:35:09.800905Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8485,
+    "error": null
+  },
+  {
+    "logId": "evo_c3c0fc1d3e77",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-06T06:33:37.360248Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8436,
+    "error": null
+  },
+  {
+    "logId": "evo_8bfa72f71f4a",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-06T13:43:58.679041Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10875,
+    "error": null
+  },
+  {
+    "logId": "evo_83dfa38e2bb3",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-07T04:00:14.095385Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8843,
+    "error": null
+  },
+  {
+    "logId": "evo_fd845080b4ea",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-07T06:15:36.036897Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8562,
+    "error": null
+  },
+  {
+    "logId": "evo_1a25a87aded7",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-07T06:19:35.860217Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10343,
+    "error": null
+  },
+  {
+    "logId": "evo_5bcb528d6d9b",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-07T06:21:35.407425Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10296,
+    "error": null
+  },
+  {
+    "logId": "evo_08de88886f54",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-08T15:05:14.779592Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_b8bfc4a4618f",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-08T20:00:21.136937Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_2246012bd4cd",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T04:06:54.815024Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_9045422cdfa3",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T13:20:49.679342Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_35731d9d405f",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T13:36:27.815680Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_f261bd384cd9",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T13:36:52.422492Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_d8e9b6c3651a",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T13:41:41.345852Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_bc4acdf8f122",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:05:42.204741Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_4c1583c7340e",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:05:58.630869Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_06724f7cef27",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:08:15.443894Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_406f44fa85b1",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:12:18.606038Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_7022e763990c",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:28:50.390324Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_fb05e8de6276",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:46:06.405545Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_cb16ecf15b91",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:00:18.115767Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_fcad917d42dc",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:15:13.881312Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_6716af9262bb",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:18:55.956979Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_ad9148fca616",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:23:41.754592Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_a2f53aae9ac0",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:32:06.020696Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_2d4fc3ec8af2",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:39:08.336875Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_e61236834f5c",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:49:11.148098Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_1ae1e9406ccb",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:49:36.118876Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_eeb92e759a84",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T06:14:06.183073Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_67dfb0dba1b2",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-13T03:14:37.439220Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_1af9bda5c82d",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-13T20:00:27.030145Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_56d4a8c1c28b",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-14T20:00:24.790815Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  }
+]

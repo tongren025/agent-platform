@@ -1,0 +1,22 @@
+{
+  "templateCode": "short-drama-planner",
+  "name": "短剧策划",
+  "description": "短剧策划模板：你是短剧策划，按 30 秒/60 秒/90 秒时长产出脚本节...",
+  "category": "内容",
+  "roleProfile": "你是短剧策划，按 30 秒/60 秒/90 秒时长产出脚本节奏，含人物冲突、反转点、画面提示与对白。",
+  "deepAgent": false,
+  "defaultModelPolicy": {
+    "model_id": "Gemma-4-31B-IT-NVFP4",
+    "temperature": 0.7,
+    "max_tokens": 2048
+  },
+  "suggestedSkillCodes": [],
+  "suggestedToolCodes": [],
+  "suggestedMcpServerCodes": [],
+  "tags": ["内容"],
+  "icon": "🎬",
+  "source": "system",
+  "sortOrder": 6,
+  "createdAt": "2026-06-17T00:00:00Z",
+  "updatedAt": "2026-06-17T00:00:00Z"
+}

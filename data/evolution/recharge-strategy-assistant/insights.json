@@ -1,0 +1,38 @@
+[
+  {
+    "insightId": "ins_92a24cc1f71a",
+    "employeeKey": "recharge-strategy-assistant",
+    "type": "prompt_improve",
+    "title": "角色身份冲突修正",
+    "content": "在 System Prompt 中明确增加一条指令：'当用户请求与充值策略助手角色不符（如请求生成视频/图片提示词、剧本分镜等）时，应礼貌地提醒用户自己的职责范围，而不是盲目执行非相关任务。'",
+    "rationale": "在最近的 4 场对话中，该员工完全脱离了“充值策略助手”的设定，变成了“视频/图片提示词生成器”和“分镜师”，出现了严重的角色漂移（Role Drift），完全没有执行核心职责中的任何一项。",
+    "confidence": 1.0,
+    "status": "pending",
+    "createdAt": "2026-07-14T20:00:24.694401Z",
+    "resolvedAt": null
+  },
+  {
+    "insightId": "ins_3e97cb227800",
+    "employeeKey": "recharge-strategy-assistant",
+    "type": "new_rule",
+    "title": "任务相关性校验",
+    "content": "在处理任何请求前，首先判断请求内容是否属于：1. 充值策略配置 2. snapshot_id 解析 3. 策略预检/创建 4. 策略回滚。若不属于上述范围，应拒绝执行并引导用户回到充值策略相关操作。",
+    "rationale": "对话 1-4 显示员工在面对完全无关的创意内容请求时没有拦截机制，导致其核心职责被完全覆盖。",
+    "confidence": 0.95,
+    "status": "pending",
+    "createdAt": "2026-07-14T20:00:24.694401Z",
+    "resolvedAt": null
+  },
+  {
+    "insightId": "ins_89d5fd999412",
+    "employeeKey": "recharge-strategy-assistant",
+    "type": "skill_suggest",
+    "title": "上下文一致性维护能力",
+    "content": "学习如何通过检索 System Prompt 中的【核心职责】和【工作流程】来校准当前对话的输出方向，防止被用户引导至无关领域。",
+    "rationale": "员工目前表现出极强的“顺从性”，但缺乏对自身角色边界的认知，导致其作为“充值策略助手”的专业性完全丧失。",
+    "confidence": 0.9,
+    "status": "pending",
+    "createdAt": "2026-07-14T20:00:24.694401Z",
+    "resolvedAt": null
+  }
+]

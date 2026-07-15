@@ -1,0 +1,255 @@
+{
+  "sortOrder": 0,
+  "createdAt": "2026-06-25T00:00:00.000000Z",
+  "updatedAt": "2026-06-25T03:06:39.067620Z",
+  "workflowKey": "comic-drama-10s",
+  "name": "10秒漫剧制作包流水线",
+  "description": "用户输入「EP/段/秒数/内容」→ 总导演拆解 → 编剧分镜 → 并行（人物+场景+特效+轨迹）→ 视频提示词整合 → 质检 → 交付完整制作包",
+  "teamCode": "comic-drama-team",
+  "nodes": [
+    {
+      "nodeKey": "start",
+      "type": "start",
+      "name": "制作包输入",
+      "position": {
+        "x": 40,
+        "y": 300
+      },
+      "config": {
+        "inputs": [
+          {
+            "name": "segment",
+            "label": "段落（如 EP01 0-10秒）",
+            "required": true
+          },
+          {
+            "name": "content",
+            "label": "内容描述（如 巨龙开场和艾拉战斗）"
+          },
+          {
+            "name": "focus",
+            "label": "重点要求（如 轨迹要细、特效要干净）"
+          }
+        ]
+      }
+    },
+    {
+      "nodeKey": "director",
+      "type": "agent",
+      "name": "总导演·拆解",
+      "position": {
+        "x": 280,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-director",
+        "userInputTemplate": "请分析以下制作包需求并输出制作说明：\n\n段落：{{start.segment}}\n内容：{{start.content}}\n重点：{{start.focus}}\n\n请判断：\n1. 本段核心钩子是什么？\n2. 需要几张人物图、几张场景图？\n3. 是否需要打斗轨迹？是否需要特效分层？\n4. 产出制作说明和任务拆分清单。\n\n请严格按你的角色长期记忆和质量底线输出；必须带文件名/模块标题、验收自检和返工风险，不要只写泛泛建议。",
+        "onError": "stop"
+      }
+    },
+    {
+      "nodeKey": "writer",
+      "type": "agent",
+      "name": "编剧分镜·拆镜头",
+      "position": {
+        "x": 520,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-screenwriter",
+        "userInputTemplate": "根据导演的制作说明，把以下内容拆成 5-8 个短镜头：\n\n段落：{{start.segment}}\n内容：{{start.content}}\n\n导演制作说明：\n{{director.output}}\n\n请产出：10秒剧本提示词 + 镜头拆分表\n\n请严格按你的角色长期记忆和质量底线输出；必须带文件名/模块标题、验收自检和返工风险，不要只写泛泛建议。",
+        "onError": "stop"
+      }
+    },
+    {
+      "nodeKey": "character",
+      "type": "agent",
+      "name": "人物设定",
+      "position": {
+        "x": 800,
+        "y": 100
+      },
+      "config": {
+        "employeeKey": "comic-character-designer",
+        "userInputTemplate": "根据以下镜头拆分表，为本段涉及的所有角色准备人物固定提示词：\n\n{{writer.output}}\n\n请严格按你的角色长期记忆和质量底线输出；必须带文件名/模块标题、验收自检和返工风险，不要只写泛泛建议。",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "scene",
+      "type": "agent",
+      "name": "场景美术",
+      "position": {
+        "x": 800,
+        "y": 260
+      },
+      "config": {
+        "employeeKey": "comic-scene-designer",
+        "userInputTemplate": "根据以下镜头拆分表，为本段的主场景准备场景行动图和场景提示词：\n\n{{writer.output}}\n\n请严格按你的角色长期记忆和质量底线输出；必须带文件名/模块标题、验收自检和返工风险，不要只写泛泛建议。",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "vfx",
+      "type": "agent",
+      "name": "特效设计",
+      "position": {
+        "x": 800,
+        "y": 420
+      },
+      "config": {
+        "employeeKey": "comic-vfx-designer",
+        "userInputTemplate": "根据以下镜头拆分表，定义每个镜头的特效层（主光效、辅助粒子、转场特效）：\n\n{{writer.output}}\n\n请严格按你的角色长期记忆和质量底线输出；必须带文件名/模块标题、验收自检和返工风险，不要只写泛泛建议。",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "trajectory",
+      "type": "agent",
+      "name": "动作轨迹",
+      "position": {
+        "x": 800,
+        "y": 580
+      },
+      "config": {
+        "employeeKey": "comic-trajectory-artist",
+        "userInputTemplate": "根据以下镜头拆分表，为每个镜头设计动作轨迹（打斗要标攻击线/闪避线/压制线，魔法要标法阵位置/扩张方向）：\n\n{{writer.output}}\n\n请严格按你的角色长期记忆和质量底线输出；必须带文件名/模块标题、验收自检和返工风险，不要只写泛泛建议。",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "compose",
+      "type": "template",
+      "name": "四路汇总",
+      "position": {
+        "x": 1100,
+        "y": 300
+      },
+      "config": {
+        "template": "===== 人物固定提示词 =====\n{{character.output}}\n\n===== 场景提示词 =====\n{{scene.output}}\n\n===== 特效提示词与分层说明 =====\n{{vfx.output}}\n\n===== 动作轨迹说明 =====\n{{trajectory.output}}\n\n===== 原始镜头拆分表 =====\n{{writer.output}}"
+      }
+    },
+    {
+      "nodeKey": "prompt",
+      "type": "agent",
+      "name": "AI视频提示词·整合",
+      "position": {
+        "x": 1380,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-prompt-engineer",
+        "userInputTemplate": "把以下所有上游产出整合为每镜头独立的视频生成提示词 + 一条整段10秒合并提示词：\n\n{{compose.output}}\n\n请严格按你的角色长期记忆和质量底线输出；必须带文件名/模块标题、验收自检和返工风险，不要只写泛泛建议。",
+        "onError": "stop"
+      }
+    },
+    {
+      "nodeKey": "qa",
+      "type": "agent",
+      "name": "质检",
+      "position": {
+        "x": 1660,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-qa-inspector",
+        "userInputTemplate": "请对以下完整制作包进行质检，输出质检报告：\n\n段落：{{start.segment}}\n\n导演制作说明：\n{{director.output}}\n\n编剧镜头拆分：\n{{writer.output}}\n\n人物设定：\n{{character.output}}\n\n场景美术：\n{{scene.output}}\n\n特效设计：\n{{vfx.output}}\n\n动作轨迹：\n{{trajectory.output}}\n\n视频提示词：\n{{prompt.output}}\n\n请严格按你的角色长期记忆和质量底线输出；必须带文件名/模块标题、验收自检和返工风险，不要只写泛泛建议。",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "end",
+      "type": "end",
+      "name": "制作包交付",
+      "position": {
+        "x": 1920,
+        "y": 300
+      },
+      "config": {
+        "outputTemplate": "# {{start.segment}} 制作包\n\n## 导演制作说明\n{{director.output}}\n\n## 镜头拆分\n{{writer.output}}\n\n## 人物固定提示词\n{{character.output}}\n\n## 场景提示词\n{{scene.output}}\n\n## 特效提示词\n{{vfx.output}}\n\n## 动作轨迹\n{{trajectory.output}}\n\n## 视频生成提示词\n{{prompt.output}}\n\n## 质检报告\n{{qa.output}}"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "edgeId": "start->director",
+      "source": "start",
+      "target": "director",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "director->writer",
+      "source": "director",
+      "target": "writer",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "writer->character",
+      "source": "writer",
+      "target": "character",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "writer->scene",
+      "source": "writer",
+      "target": "scene",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "writer->vfx",
+      "source": "writer",
+      "target": "vfx",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "writer->trajectory",
+      "source": "writer",
+      "target": "trajectory",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "character->compose",
+      "source": "character",
+      "target": "compose",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "scene->compose",
+      "source": "scene",
+      "target": "compose",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "vfx->compose",
+      "source": "vfx",
+      "target": "compose",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "trajectory->compose",
+      "source": "trajectory",
+      "target": "compose",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "compose->prompt",
+      "source": "compose",
+      "target": "prompt",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "prompt->qa",
+      "source": "prompt",
+      "target": "qa",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "qa->end",
+      "source": "qa",
+      "target": "end",
+      "sourceHandle": null
+    }
+  ],
+  "enabled": true,
+  "ownerUserId": null
+}

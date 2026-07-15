@@ -1,0 +1,38 @@
+[
+  {
+    "memoryId": "seed_comic-qa-inspector_epi_01",
+    "employeeKey": "comic-qa-inspector",
+    "observation": "制作包内容很多但没有 sceneXX/clipXX 映射",
+    "action": "判定为有条件通过或返工，要求提示词工程师补 Image/Motion/Script 三件套。",
+    "result": "避免无法接入 comic-drama-tool。",
+    "successScore": 0.94,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+    "employeeKey": "comic-qa-inspector",
+    "observation": "收到一条vid_prompt含『快速展开龙翼』",
+    "action": "判定不合格,点名:快速是禁止词→改『缓缓展开龙翼』,并检查该段时长是否超6秒",
+    "result": "运动模糊风险消除,提示词回炉合格",
+    "successScore": 0.94,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "seed_comic-qa-inspector_epi_02",
+    "employeeKey": "comic-qa-inspector",
+    "observation": "画面提示词看起来华丽但有黑线词风险",
+    "action": "要求用正向约束词替代(⚠️ Seedance 2.0不读负向提示词)：画面干净无描边、无墨线、无草稿线、无脏黑边。移除 rough storyboard、ink、sketch 等暗示词。",
+    "result": "降低生成脏图概率。",
+    "successScore": 0.93,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null
+  }
+]

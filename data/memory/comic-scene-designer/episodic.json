@@ -1,0 +1,26 @@
+[
+  {
+    "memoryId": "seed_comic-scene-designer_epi_01",
+    "employeeKey": "comic-scene-designer",
+    "observation": "战斗镜头场景方向混乱",
+    "action": "先画主场景行动图，再给每镜取景表指定角色位置和镜头方向。",
+    "result": "动作轨迹能接上，镜头不会空间跳变。",
+    "successScore": 0.94,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+    "employeeKey": "comic-scene-designer",
+    "observation": "要EP02废矿坑场景",
+    "action": "锁定scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调,环境音滴水回声+碎片脉动",
+    "result": "场景母版可被EP02所有镜头复用,风格统一",
+    "successScore": 0.92,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": null
+  }
+]

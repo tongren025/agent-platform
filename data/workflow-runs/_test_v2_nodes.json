@@ -1,0 +1,96 @@
+[
+  {
+    "runId": "wfr_4e2a56c6b52e21d2",
+    "workflowKey": "_test_v2_nodes",
+    "status": "success",
+    "inputs": {
+      "test": true
+    },
+    "variables": {
+      "start": {
+        "test": true,
+        "output": "{\"test\": true}",
+        "text": "{\"test\": true}"
+      },
+      "code1": {
+        "output": "[{\"ep\": 1, \"title\": \"第1集\"}, {\"ep\": 2, \"title\": \"第2集\"}, {\"ep\": 3, \"title\": \"第3集\"}]",
+        "text": "[{\"ep\": 1, \"title\": \"第1集\"}, {\"ep\": 2, \"title\": \"第2集\"}, {\"ep\": 3, \"title\": \"第3集\"}]",
+        "items": [
+          {
+            "ep": 1,
+            "title": "第1集"
+          },
+          {
+            "ep": 2,
+            "title": "第2集"
+          },
+          {
+            "ep": 3,
+            "title": "第3集"
+          }
+        ],
+        "count": 3
+      },
+      "tpl": {
+        "output": "生成了 3 集数据",
+        "text": "生成了 3 集数据"
+      },
+      "end": {
+        "output": "生成了 3 集数据 | 数据: [{\"ep\": 1, \"title\": \"第1集\"}, {\"ep\": 2, \"title\": \"第2集\"}, {\"ep\": 3, \"title\": \"第3集\"}]",
+        "text": "生成了 3 集数据 | 数据: [{\"ep\": 1, \"title\": \"第1集\"}, {\"ep\": 2, \"title\": \"第2集\"}, {\"ep\": 3, \"title\": \"第3集\"}]"
+      }
+    },
+    "steps": [
+      {
+        "nodeKey": "start",
+        "type": "start",
+        "status": "success",
+        "output": "{\"test\": true}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "code1",
+        "type": "code",
+        "status": "success",
+        "output": "[{\"ep\": 1, \"title\": \"第1集\"}, {\"ep\": 2, \"title\": \"第2集\"}, {\"ep\": 3, \"title\": \"第3集\"}]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tpl",
+        "type": "template",
+        "status": "success",
+        "output": "生成了 3 集数据",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "end",
+        "type": "end",
+        "status": "success",
+        "output": "生成了 3 集数据 | 数据: [{\"ep\": 1, \"title\": \"第1集\"}, {\"ep\": 2, \"title\": \"第2集\"}, {\"ep\": 3, \"title\": \"第3集\"}]",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": "生成了 3 集数据 | 数据: [{\"ep\": 1, \"title\": \"第1集\"}, {\"ep\": 2, \"title\": \"第2集\"}, {\"ep\": 3, \"title\": \"第3集\"}]",
+    "error": null,
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-25T07:00:52.843235Z",
+    "finishedAt": "2026-06-25T07:00:52.871569Z"
+  }
+]

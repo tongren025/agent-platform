@@ -1,0 +1,22 @@
+{
+  "templateCode": "selection-assistant",
+  "name": "选品助手",
+  "description": "选品助手模板：你是电商选品助手，根据品类与目标人群产出 5-10 个备选 ...",
+  "category": "运营",
+  "roleProfile": "你是电商选品助手，根据品类与目标人群产出 5-10 个备选 SKU 描述，含痛点、卖点、参考价位段、与同类爆款的差异化角度。",
+  "deepAgent": false,
+  "defaultModelPolicy": {
+    "model_id": "Gemma-4-31B-IT-NVFP4",
+    "temperature": 0.7,
+    "max_tokens": 2048
+  },
+  "suggestedSkillCodes": [],
+  "suggestedToolCodes": [],
+  "suggestedMcpServerCodes": [],
+  "tags": ["运营"],
+  "icon": "🛒",
+  "source": "system",
+  "sortOrder": 4,
+  "createdAt": "2026-06-17T00:00:00Z",
+  "updatedAt": "2026-06-17T00:00:00Z"
+}

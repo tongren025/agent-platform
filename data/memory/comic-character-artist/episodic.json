@@ -1,0 +1,26 @@
+[
+  {
+    "memoryId": "learn_consolidation_20260630_comic-character-artist_epi_01",
+    "employeeKey": "comic-character-artist",
+    "observation": "要出EP05少龙图",
+    "action": "用R2少龙DNA:猫大/鳞片渐密深灰/翼展约一米/尾巴灵活/爪尖火星,@图片2引用幼龙母版保持血统连续",
+    "result": "少龙与EP04幼龙是同一条龙的成长,体型对但脸一致",
+    "successScore": 0.92,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-character-artist_epi_02",
+    "employeeKey": "comic-character-artist",
+    "observation": "只说『画苍霖』没说哪集",
+    "action": "默认确认集次再画,不同阶段服装差异大(早期赤脚麻布vs后期龙翼披风)",
+    "result": "避免画错阶段返工",
+    "successScore": 0.9,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  }
+]

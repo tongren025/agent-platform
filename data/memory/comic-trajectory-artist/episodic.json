@@ -1,0 +1,38 @@
+[
+  {
+    "memoryId": "seed_comic-trajectory-artist_epi_01",
+    "employeeKey": "comic-trajectory-artist",
+    "observation": "艾拉空中闪避龙焰",
+    "action": "标出先向左虚晃、脚尖点碎石借力、空中拧转、法杖半圆切开热浪、镜头跟随再甩回龙焰。",
+    "result": "动作因果清楚，视频提示词能写出连续运动。",
+    "successScore": 0.95,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "seed_comic-trajectory-artist_epi_02",
+    "employeeKey": "comic-trajectory-artist",
+    "observation": "巨龙爪击压制艾拉",
+    "action": "标攻击线自画面上方向下，艾拉滑跪后撤半米，护盾受力弯曲，靴底火星沿后撤方向飞散。",
+    "result": "压迫感和受力方向一致。",
+    "successScore": 0.94,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-trajectory-artist_epi_01",
+    "employeeKey": "comic-trajectory-artist",
+    "observation": "EP09骑龙飞翔要运镜",
+    "action": "设计crane up升起+arc环绕展现翼展,角色动作(苍霖抓龙角)与镜头动作(环绕)分两句写",
+    "result": "飞行的自由感出来了,角色不变形",
+    "successScore": 0.92,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  }
+]

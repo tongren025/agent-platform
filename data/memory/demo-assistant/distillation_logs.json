@@ -1,0 +1,1296 @@
+[
+  {
+    "logId": "dist_af86efd7cc9e",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:01:41.492570Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_4589ed5a6c46",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面",
+        "newImportance": null,
+        "reason": "两条记忆内容高度重复，仅在措辞上略有差异，合并以消除冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "经验记忆 mem_f9c130a07c89 证实了该偏好在实际应用中获得了高满意度，应提升其权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 2,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 4031,
+    "error": null
+  },
+  {
+    "logId": "dist_505c49110b4d",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:02:17.573247Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "经验记忆 mem_f9c130a07c89 验证了该偏好在实际产品宣传场景中获得了高满意度，增强了该语义记忆的可靠性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 2358,
+    "error": null
+  },
+  {
+    "logId": "dist_e56e36d4f6fb",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:03:24.263156Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "经验记忆 mem_f9c130a07c89 验证了该偏好在实际应用中能获得高满意度，增强了语义记忆的权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 2186,
+    "error": null
+  },
+  {
+    "logId": "dist_f1dabd0c4363",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:04:33.983298Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "经验记忆 mem_f9c130a07c89 验证了该偏好在实际应用中获得了极高满意度，应提升其权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 2125,
+    "error": null
+  },
+  {
+    "logId": "dist_b8882f126596",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:06:36.497120Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "经验记忆 mem_f9c130a07c89 的高成功率验证了该语义偏好的准确性，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 2078,
+    "error": null
+  },
+  {
+    "logId": "dist_e265fa83be08",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:08:35.067113Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "经验记忆 mem_f9c130a07c89 的高成功率验证了该偏好的实际价值，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 1968,
+    "error": null
+  },
+  {
+    "logId": "dist_8ad1770c6c2f",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:09:12.012509Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "经验记忆 mem_f9c130a07c89 的高成功率验证了该语义偏好的准确性，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 2000,
+    "error": null
+  },
+  {
+    "logId": "dist_33dcc90ba167",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T03:10:45.994225Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "经验记忆 mem_f9c130a07c89 的高成功率验证了该语义偏好的准确性，维持最高权重。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面；在产品宣传短视频场景下，结合慢镜头效果用户满意度极高。",
+        "newImportance": null,
+        "reason": "将具体的成功经验（episodic）蒸馏为更泛化的语义偏好（semantic），提高记忆检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 31703,
+    "error": null
+  },
+  {
+    "logId": "dist_46303342c322",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-01T14:07:14.695867Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面；在产品宣传短视频场景下，使用“电影感+慢镜头+暖色调”的提示词组合，用户满意度极高。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）中的具体成功案例与语义记忆（semantic）中的偏好描述高度重合，将其转化为更完整的语义偏好可提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 36063,
+    "error": null
+  },
+  {
+    "logId": "dist_be3610b0ab9b",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-02T03:14:22.634999Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面；在产品宣传短视频场景下，经实践验证使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度（成功率0.9）。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）中的具体案例已转化为语义记忆（semantic）中的通用偏好，将具体实践结果合并至偏好描述中可增强语义记忆的证据权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 37141,
+    "error": null
+  },
+  {
+    "logId": "dist_2373132adc48",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-02T13:29:09.589073Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面；在产品宣传短视频场景下，经实践验证（成功率0.9）使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 描述的是同一事实的不同维度（具体案例 vs 概括规律），将具体经验蒸馏进语义记忆可提高检索效率并保留成功率量化指标。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28953,
+    "error": null
+  },
+  {
+    "logId": "dist_fdbbfb98dd1a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-03T11:21:01.457230Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 描述的是同一事实的实例与结论，将具体经验蒸馏进语义偏好中可提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 33047,
+    "error": null
+  },
+  {
+    "logId": "dist_dc4aef35213a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-06T03:33:48.763452Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并内化为通用偏好，将其合并以减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28375,
+    "error": null
+  },
+  {
+    "logId": "dist_ee534042d377",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-06T03:34:55.233187Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）中的具体案例已完全被语义记忆（semantic）中的概括性结论所覆盖，将具体经验蒸馏至语义记忆中以提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23125,
+    "error": null
+  },
+  {
+    "logId": "dist_c8125f2be1ff",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-06T06:33:21.916345Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并内化为通用偏好，保留语义记忆即可，避免冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23906,
+    "error": null
+  },
+  {
+    "logId": "dist_eb09da36ec62",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-06T13:43:41.108232Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）的内容已完全被语义记忆（semantic）概括并内化，将其合并以减少冗余并强化语义权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28453,
+    "error": null
+  },
+  {
+    "logId": "dist_c244933745ba",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-07T03:59:57.623713Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）中的具体案例已完全被语义记忆（semantic）中的通用偏好所概括，将其合并以减少冗余并强化语义记忆的证据支撑。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25360,
+    "error": null
+  },
+  {
+    "logId": "dist_81bcec38e8b0",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-07T06:15:18.863665Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 在内容上高度重合，前者是后者的具体实践案例，将其蒸馏至语义记忆中可提高检索效率并保留核心结论。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25764,
+    "error": null
+  },
+  {
+    "logId": "dist_ced5a4a28a1a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-07T06:19:20.357969Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 已被完全抽象并整合进语义记忆 mem_3dbb51e63cbe 中，保留语义记忆即可实现知识沉淀，删除冗余的单次经验记录。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25875,
+    "error": null
+  },
+  {
+    "logId": "dist_b499b5d76fe3",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-07T06:21:19.871660Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并量化，将具体经验蒸馏至语义偏好中以提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25875,
+    "error": null
+  },
+  {
+    "logId": "dist_c6fc5aa7dbdc",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-08T15:05:00.353140Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 内容高度重合，将具体经验转化为通用偏好，提升检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14453,
+    "error": null
+  },
+  {
+    "logId": "dist_af7e6ce1966a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-08T19:00:08.610471Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 已被抽象为语义记忆 mem_3dbb51e63cbe，两者内容高度重合，将具体经验合并入通用偏好以减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 7266,
+    "error": null
+  },
+  {
+    "logId": "dist_ac5c42656c30",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T04:06:39.233142Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 在内容上高度重合，前者是后者的具体实践案例，将其蒸馏并合并入语义记忆以提升知识密度。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15610,
+    "error": null
+  },
+  {
+    "logId": "dist_86b4392636cf",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T13:20:36.521604Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 在内容上高度重合，前者是后者的具体实例，应将具体经验蒸馏并整合进语义偏好中，以减少冗余并强化知识点。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13203,
+    "error": null
+  },
+  {
+    "logId": "dist_4e4b8471955a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T13:36:15.173593Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）的内容已完全被语义记忆（semantic）的概括性结论所覆盖，将具体案例转化为通用偏好以降低存储冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12656,
+    "error": null
+  },
+  {
+    "logId": "dist_9893611c540a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T13:36:41.904671Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）中的具体案例已完全被语义记忆（semantic）中的通用偏好规则所覆盖，将其蒸馏至语义记忆中以提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10546,
+    "error": null
+  },
+  {
+    "logId": "dist_81c1e1fd8733",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-09T13:41:30.666188Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）中的具体案例已完全被语义记忆（semantic）中的通用偏好所概括，将其合并以减少冗余并强化语义权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10702,
+    "error": null
+  },
+  {
+    "logId": "dist_b78f938d674a",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:05:31.113847Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 的内容高度重合，将具体经验转化为结构化语义记忆以提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27546,
+    "error": null
+  },
+  {
+    "logId": "dist_b32bcc603b9c",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:08:05.009322Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并量化，将其转化为语义记忆可提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10452,
+    "error": null
+  },
+  {
+    "logId": "dist_acbe52f302b8",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:12:04.513684Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 在内容上高度重合，前者是后者的具体实例，将其蒸馏至语义记忆中可提高检索效率并保留核心结论。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14140,
+    "error": null
+  },
+  {
+    "logId": "dist_0aa82f2d5b4c",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:28:36.225717Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并内化为通用偏好，保留语义记忆即可。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14203,
+    "error": null
+  },
+  {
+    "logId": "dist_8e24943e1203",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T03:45:53.011277Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆（episodic）中的具体案例已完全被语义记忆（semantic）中的通用偏好规律所覆盖，将其合并以减少冗余并强化语义权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13436,
+    "error": null
+  },
+  {
+    "logId": "dist_abaa0ad8c721",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:00:05.632916Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并内化，将其合并以减少冗余并强化语义权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12516,
+    "error": null
+  },
+  {
+    "logId": "dist_4886b53d4455",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:14:53.258134Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并量化，将具体经验蒸馏至通用偏好中以减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20656,
+    "error": null
+  },
+  {
+    "logId": "dist_20c0214cf4b7",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:18:45.767070Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并内化，将其合并以减少冗余并强化语义权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10218,
+    "error": null
+  },
+  {
+    "logId": "dist_882ca0e52277",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:23:30.078808Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 描述的是同一事件的实例与结论，经验已转化为语义规律，可合并以减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11688,
+    "error": null
+  },
+  {
+    "logId": "dist_9f7805309918",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:31:54.751370Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 内容高度重合，将具体经验转化为结构化语义记忆，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11296,
+    "error": null
+  },
+  {
+    "logId": "dist_056ad6c90166",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:38:58.415984Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 的内容高度重合，将具体的成功案例转化为结构化的语义偏好，可提高检索效率并减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9968,
+    "error": null
+  },
+  {
+    "logId": "dist_f06d6271f28f",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:48:56.200317Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并内化为通用偏好，将其合并以减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14968,
+    "error": null
+  },
+  {
+    "logId": "dist_2e975b1b4534",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T04:49:22.471082Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 内容高度重合，前者是后者的具体实例，将其蒸馏进语义记忆可提高检索效率并保留成功经验。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13688,
+    "error": null
+  },
+  {
+    "logId": "dist_fd01cd72e1f6",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-10T06:13:53.253725Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 与语义记忆 mem_3dbb51e63cbe 的内容高度重合，将具体的成功案例转化为结构化的语义偏好，提升记忆检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12952,
+    "error": null
+  },
+  {
+    "logId": "dist_62b26cf27668",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-13T03:14:22.371131Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 的概括性结论所覆盖，将具体经验蒸馏至语义偏好中以提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15094,
+    "error": null
+  },
+  {
+    "logId": "dist_47fedd6e7c15",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-13T19:00:16.905132Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并量化，将具体经验蒸馏至通用偏好中以减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8280,
+    "error": null
+  },
+  {
+    "logId": "dist_9ad6fd158448",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-14T19:00:16.531339Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并内化为通用偏好，将具体经验合并入语义记忆以减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8046,
+    "error": null
+  }
+]

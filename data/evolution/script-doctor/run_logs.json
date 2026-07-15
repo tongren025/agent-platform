@@ -1,0 +1,292 @@
+[
+  {
+    "logId": "evo_0c11795cb236",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-07T04:00:27.129184Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_f172ae560fee",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-07T06:15:21.106136Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_e346a2ffac07",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-07T06:19:22.568729Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_d0e82a9af8ec",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-07T06:21:22.079042Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_e7099d262ab6",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-08T15:05:02.807186Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11875,
+    "error": null
+  },
+  {
+    "logId": "evo_4e46d444dd5e",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-08T20:00:11.080607Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9906,
+    "error": null
+  },
+  {
+    "logId": "evo_3a21cde32f6b",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-09T04:06:41.772418Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12922,
+    "error": null
+  },
+  {
+    "logId": "evo_11b311620508",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-09T13:20:39.802719Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9703,
+    "error": null
+  },
+  {
+    "logId": "evo_7dc7abbe29d7",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-09T13:36:17.063958Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10625,
+    "error": null
+  },
+  {
+    "logId": "evo_f07f85380004",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-09T13:36:43.779776Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8516,
+    "error": null
+  },
+  {
+    "logId": "evo_17426774b77e",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-09T13:41:32.851936Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8358,
+    "error": null
+  },
+  {
+    "logId": "evo_16eb313363c3",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T03:05:31.720698Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10438,
+    "error": null
+  },
+  {
+    "logId": "evo_2b82ed5c55c4",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T03:05:33.513768Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24983,
+    "error": null
+  },
+  {
+    "logId": "evo_6944f6b16367",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T03:08:06.904971Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8405,
+    "error": null
+  },
+  {
+    "logId": "evo_1d7dbd3dd2c2",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T03:12:06.694297Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11797,
+    "error": null
+  },
+  {
+    "logId": "evo_cd96de953e5c",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T03:28:38.372910Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11953,
+    "error": null
+  },
+  {
+    "logId": "evo_3b92e8012ea7",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T03:45:55.850063Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10438,
+    "error": null
+  },
+  {
+    "logId": "evo_74d9e43f9d55",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T04:00:08.350803Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9641,
+    "error": null
+  },
+  {
+    "logId": "evo_7e552b7fcda1",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T04:14:55.149947Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18609,
+    "error": null
+  },
+  {
+    "logId": "evo_e8af79d1ba90",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T04:18:47.624834Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8202,
+    "error": null
+  },
+  {
+    "logId": "evo_b8480099dbac",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T04:23:32.228070Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9469,
+    "error": null
+  },
+  {
+    "logId": "evo_663fae45a277",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T04:31:56.621069Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9265,
+    "error": null
+  },
+  {
+    "logId": "evo_4095ea2f1aa4",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T04:39:00.662501Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 7514,
+    "error": null
+  },
+  {
+    "logId": "evo_62b177f2793b",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T04:48:58.474581Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12531,
+    "error": null
+  },
+  {
+    "logId": "evo_c727063024f4",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T04:49:24.663345Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11327,
+    "error": null
+  },
+  {
+    "logId": "evo_aa4abc36fb5c",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-10T06:13:55.411840Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10718,
+    "error": null
+  },
+  {
+    "logId": "evo_a974e4601fe0",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-13T03:14:25.019004Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12375,
+    "error": null
+  },
+  {
+    "logId": "evo_b91584ab859b",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-13T20:00:17.992546Z",
+    "sessionsAnalyzed": 3,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8985,
+    "error": null
+  },
+  {
+    "logId": "evo_90997cc6a4c9",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-14T20:00:24.711656Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  }
+]

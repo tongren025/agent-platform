@@ -1,0 +1,79 @@
+{
+  "generatedAt": "2026-07-15T02:01:52.825331",
+  "model": "Gemma-4-31B-IT-NVFP4",
+  "picks": [
+    {
+      "id": "github:punkpeye/awesome-mcp-servers",
+      "source": "GitHub",
+      "title": "punkpeye/awesome-mcp-servers",
+      "url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "detail": "A collection of MCP servers.",
+      "metrics": "90760⭐",
+      "domain": "topic:mcp",
+      "verdict": "MCP 协议服务器集合，可快速扩展 Agent 的外部工具能力。",
+      "why": "直接命中其关注的 MCP 协议与 Agent 平台自建需求。",
+      "score": 10
+    },
+    {
+      "id": "github:obra/superpowers",
+      "source": "GitHub",
+      "title": "obra/superpowers",
+      "url": "https://github.com/obra/superpowers",
+      "detail": "An agentic skills framework & software development methodology that works.",
+      "metrics": "254612⭐, Shell",
+      "domain": "agent skill",
+      "verdict": "一套 Agent 技能框架与软件开发方法论，侧重于可复用的 Skill 构建。",
+      "why": "符合其对 Agent 框架及可复用 Skill/方法论的关注。",
+      "score": 9
+    },
+    {
+      "id": "github:browser-use/browser-use",
+      "source": "GitHub",
+      "title": "browser-use/browser-use",
+      "url": "https://github.com/browser-use/browser-use",
+      "detail": "🌐 Make websites accessible for AI agents. Automate tasks online with ease.",
+      "metrics": "104735⭐, Python",
+      "domain": "AI agent",
+      "verdict": "允许 AI Agent 直接操作浏览器的库，实现复杂的网页端长程任务。",
+      "why": "与其自建 Agent 平台中关于长程任务执行的功能需求高度相关。",
+      "score": 9
+    },
+    {
+      "id": "github:langgenius/dify",
+      "source": "GitHub",
+      "title": "langgenius/dify",
+      "url": "https://github.com/langgenius/dify",
+      "detail": "Production-ready platform for agentic workflow development.",
+      "metrics": "148822⭐, TypeScript",
+      "domain": "topic:mcp",
+      "verdict": "生产级 Agent 工作流开发平台，支持 RAG 和可视化编排。",
+      "why": "作为自建 Agent 平台的对标参考，涵盖 RAG 和工作流核心关注点。",
+      "score": 8
+    },
+    {
+      "id": "github:multica-ai/andrej-karpathy-skills",
+      "source": "GitHub",
+      "title": "multica-ai/andrej-karpathy-skills",
+      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+      "detail": "A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's observations on LLM coding pitfalls.",
+      "metrics": "192037⭐",
+      "domain": "claude skill",
+      "verdict": "基于 Karpathy 观察的 Claude Code 行为优化配置文件，提升代码生成质量。",
+      "why": "属于提示词工程与可复用 Skill 的实操案例。",
+      "score": 8
+    },
+    {
+      "id": "github:x1xhlol/system-prompts-and-models-of-ai-tools",
+      "source": "GitHub",
+      "title": "x1xhlol/system-prompts-and-models-of-ai-tools",
+      "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
+      "detail": "FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, Leap.new, Lovable, Manus, NotionAI, Orchids.app, Perplexity, Poke, Qoder, Replit, Same.dev, Trae, Traycer AI, VSCode Agent, Warp.de",
+      "metrics": "141917⭐",
+      "domain": "AI agent",
+      "verdict": "主流 AI 编程工具（Cursor, Devin 等）的系统提示词汇总。",
+      "why": "提供顶尖 Agent 的提示词工程参考，有助于优化其自建平台的指令集。",
+      "score": 8
+    }
+  ],
+  "candidateCount": 288
+}

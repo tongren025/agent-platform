@@ -1,0 +1,662 @@
+[
+  {
+    "runId": "wfr_0f558596f22b881b",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "员工 comic-director 未绑定工具 'knowledge_query'，拒绝调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-25T03:08:53.492492Z",
+    "finishedAt": "2026-06-25T03:08:53.514614Z"
+  },
+  {
+    "runId": "wfr_9084e80db13e6134",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "工具节点必须指定 employeeKey 以授权该工具调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-25T03:08:53.457455Z",
+    "finishedAt": "2026-06-25T03:08:53.480513Z"
+  },
+  {
+    "runId": "wfr_6abc2f9d7f19bf54",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "工具 'execute' 不允许在工作流节点中直接调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-25T03:08:52.634767Z",
+    "finishedAt": "2026-06-25T03:08:53.445458Z"
+  },
+  {
+    "runId": "wfr_e2a4670b02cdce5c",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "员工 comic-director 未绑定工具 'knowledge_query'，拒绝调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T11:05:22.449704Z",
+    "finishedAt": "2026-06-24T11:05:22.478772Z"
+  },
+  {
+    "runId": "wfr_c4ef527d5507e58f",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "工具节点必须指定 employeeKey 以授权该工具调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T11:05:22.416133Z",
+    "finishedAt": "2026-06-24T11:05:22.437707Z"
+  },
+  {
+    "runId": "wfr_07de8927eb2bd053",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "工具 'execute' 不允许在工作流节点中直接调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T11:05:21.627599Z",
+    "finishedAt": "2026-06-24T11:05:22.407705Z"
+  },
+  {
+    "runId": "wfr_f86ee0b44c634eea",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "员工 comic-director 未绑定工具 'knowledge_query'，拒绝调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T10:53:47.721123Z",
+    "finishedAt": "2026-06-24T10:53:47.745127Z"
+  },
+  {
+    "runId": "wfr_17ce383f86994888",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "工具节点必须指定 employeeKey 以授权该工具调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T10:53:47.684120Z",
+    "finishedAt": "2026-06-24T10:53:47.708316Z"
+  },
+  {
+    "runId": "wfr_aa9d41fcb11cb993",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "工具 'execute' 不允许在工作流节点中直接调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-24T10:53:46.891872Z",
+    "finishedAt": "2026-06-24T10:53:47.673120Z"
+  },
+  {
+    "runId": "wfr_4bed73064f5881c8",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "员工 comic-director 未绑定工具 'knowledge_query'，拒绝调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-23T18:27:50.671305Z",
+    "finishedAt": "2026-06-23T18:27:50.687308Z"
+  },
+  {
+    "runId": "wfr_a51c9714b7ae5029",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "工具节点必须指定 employeeKey 以授权该工具调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-23T18:27:50.649721Z",
+    "finishedAt": "2026-06-23T18:27:50.664305Z"
+  },
+  {
+    "runId": "wfr_19ec2dab07d8ffb8",
+    "workflowKey": "test-tool-sec",
+    "status": "failed",
+    "inputs": {},
+    "variables": {
+      "start": {},
+      "s": {
+        "output": "{}",
+        "text": "{}"
+      },
+      "tool": {}
+    },
+    "steps": [
+      {
+        "nodeKey": "s",
+        "type": "start",
+        "status": "success",
+        "output": "{}",
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "tool",
+        "type": "tool",
+        "status": "failed",
+        "output": null,
+        "error": "工具 'execute' 不允许在工作流节点中直接调用",
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      },
+      {
+        "nodeKey": "e",
+        "type": "end",
+        "status": "skipped",
+        "output": null,
+        "error": null,
+        "elapsedMs": 0,
+        "traces": [],
+        "promptTokens": 0,
+        "completionTokens": 0
+      }
+    ],
+    "finalOutput": null,
+    "error": "节点失败，按 onError=stop 中止运行",
+    "totalPromptTokens": 0,
+    "totalCompletionTokens": 0,
+    "startedAt": "2026-06-23T18:27:49.976938Z",
+    "finishedAt": "2026-06-23T18:27:50.642878Z"
+  }
+]

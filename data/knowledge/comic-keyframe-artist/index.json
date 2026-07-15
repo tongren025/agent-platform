@@ -1,0 +1,109 @@
+[
+  {
+    "docId": "c40e99001592e340",
+    "fileName": "shot-keyframe-guide.md",
+    "extension": ".md",
+    "sizeBytes": 1476,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "c7f2f200bae8e38b",
+    "fileName": "canon-composition.md",
+    "extension": ".md",
+    "sizeBytes": 709,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "構圖"
+    ]
+  },
+  {
+    "docId": "26841611caef8aa8",
+    "fileName": "canon-montage.md",
+    "extension": ".md",
+    "sizeBytes": 908,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "蒙太奇"
+    ]
+  },
+  {
+    "docId": "574970e62b99b9ae",
+    "fileName": "craft-lighting.md",
+    "extension": ".md",
+    "sizeBytes": 881,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/film lighting",
+      "三点布光与伦勃朗光"
+    ]
+  },
+  {
+    "docId": "0fc93174e52c3bb3",
+    "fileName": "craft-shot_size_emotion.md",
+    "extension": ".md",
+    "sizeBytes": 705,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/Adobe·Shot Sizes",
+      "景别情绪强度"
+    ]
+  },
+  {
+    "docId": "994650e63a9f8807",
+    "fileName": "craft-ai_consistency.md",
+    "extension": ".md",
+    "sizeBytes": 1113,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "neolemon/Artlist/Vidu·AI Character Consistency",
+      "AI视频角色一致性工作流"
+    ]
+  },
+  {
+    "docId": "11c6e034a7f65b46",
+    "fileName": "craft-animation12.md",
+    "extension": ".md",
+    "sizeBytes": 791,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "Adobe/Wikipedia·Twelve basic principles of animation",
+      "动画12原则"
+    ]
+  },
+  {
+    "docId": "c1fbea88eed48946",
+    "fileName": "craft2-expression.md",
+    "extension": ".md",
+    "sizeBytes": 793,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "AnimeOutline/ClipStudio",
+      "面部表情"
+    ]
+  },
+  {
+    "docId": "b22977ce990fdeba",
+    "fileName": "craft2-env_layer.md",
+    "extension": ".md",
+    "sizeBytes": 830,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "CreativeBloq/Evenant",
+      "环境景深分层"
+    ]
+  }
+]

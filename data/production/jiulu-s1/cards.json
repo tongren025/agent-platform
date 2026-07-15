@@ -3678,7 +3678,9 @@
     "episode": 5,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_a2073d83-7f09-4c79-b984-e3c5ad6e2125.png"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
@@ -3688,7 +3690,7 @@
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T00:51:34.055531+08:00"
+    "updated_at": "2026-07-14T22:45:09.3901968Z"
   },
   {
     "card_id": "e05-ip06",
@@ -3699,13 +3701,15 @@
     "episode": 5,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_a2073d83-7f09-4c79-b984-e3c5ad6e2125.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T01:23:47.220837+08:00"
+    "updated_at": "2026-07-14T22:45:09.3901968Z"
   },
   {
     "card_id": "e05-vp06",
@@ -3750,7 +3754,9 @@
     "episode": 5,
     "shot_number": 7,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_ca41d683-3c99-45f8-a71c-8e3daae12fd6.png"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
@@ -3760,7 +3766,7 @@
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-10T19:39:31.490991+08:00"
+    "updated_at": "2026-07-15T00:47:17.01942Z"
   },
   {
     "card_id": "e05-ip07",
@@ -3771,13 +3777,15 @@
     "episode": 5,
     "shot_number": 7,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_ca41d683-3c99-45f8-a71c-8e3daae12fd6.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T01:23:47.220837+08:00"
+    "updated_at": "2026-07-15T00:47:17.01942Z"
   },
   {
     "card_id": "e05-vp07",
@@ -3824,13 +3832,15 @@
     "episode": 5,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_a2073d83-7f09-4c79-b984-e3c5ad6e2125.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T01:24:29.182122+08:00"
+    "updated_at": "2026-07-14T22:45:09.3901968Z"
   },
   {
     "card_id": "e06-brief",
@@ -3960,7 +3970,9 @@
     "episode": 6,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_0b3986e0-7dd4-47b9-ac90-4ef8afae3bff.png"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
@@ -3970,7 +3982,7 @@
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T00:49:48.871417+08:00"
+    "updated_at": "2026-07-15T01:50:57.9018009Z"
   },
   {
     "card_id": "e06-ip01",
@@ -3981,13 +3993,15 @@
     "episode": 6,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_0b3986e0-7dd4-47b9-ac90-4ef8afae3bff.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T01:23:47.220837+08:00"
+    "updated_at": "2026-07-15T01:50:57.9018009Z"
   },
   {
     "card_id": "e06-vp01",
@@ -4032,7 +4046,9 @@
     "episode": 6,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_b608ca01-2800-4f51-b493-38128d8dc5de.png"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
@@ -4042,7 +4058,7 @@
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T00:51:34.055531+08:00"
+    "updated_at": "2026-07-15T02:51:39.0647996Z"
   },
   {
     "card_id": "e06-ip02",
@@ -4053,13 +4069,15 @@
     "episode": 6,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_b608ca01-2800-4f51-b493-38128d8dc5de.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T01:23:47.220837+08:00"
+    "updated_at": "2026-07-15T02:51:39.0647996Z"
   },
   {
     "card_id": "e06-vp02",
@@ -4104,7 +4122,9 @@
     "episode": 6,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_c266e40a-6697-4635-a474-c0105a86eb51.png"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
@@ -4114,7 +4134,7 @@
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T00:49:48.871417+08:00"
+    "updated_at": "2026-07-15T03:56:27.4471277Z"
   },
   {
     "card_id": "e06-ip03",
@@ -4125,13 +4145,15 @@
     "episode": 6,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_c266e40a-6697-4635-a474-c0105a86eb51.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T01:23:47.220837+08:00"
+    "updated_at": "2026-07-15T03:56:27.4471277Z"
   },
   {
     "card_id": "e06-vp03",
@@ -4375,13 +4397,15 @@
     "episode": 6,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_b608ca01-2800-4f51-b493-38128d8dc5de.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T01:24:29.182122+08:00"
+    "updated_at": "2026-07-15T02:51:39.0647996Z"
   },
   {
     "card_id": "e06-ip06b",
@@ -8172,7 +8196,9 @@
     "episode": 13,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_137485ca-8a8c-4a40-9cfd-42c48d35c265.png"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
@@ -8182,7 +8208,7 @@
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T00:51:34.055531+08:00"
+    "updated_at": "2026-07-14T23:47:45.6373298Z"
   },
   {
     "card_id": "e13-ip03",
@@ -8193,13 +8219,15 @@
     "episode": 13,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/img_auto_137485ca-8a8c-4a40-9cfd-42c48d35c265.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-09T19:50:59.470581+08:00",
-    "updated_at": "2026-07-11T01:23:47.220837+08:00"
+    "updated_at": "2026-07-14T23:47:45.6373298Z"
   },
   {
     "card_id": "e13-vp03",

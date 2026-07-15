@@ -1,0 +1,24 @@
+[
+  {
+    "memoryId": "seed_comic-qa-inspector_proc_03",
+    "employeeKey": "comic-qa-inspector",
+    "rule": "检查动作连续性时按 Shot 顺序核对上一镜结果是否是下一镜起因。",
+    "rationale": "这是漫剧动作段最容易崩的地方。",
+    "confidence": 0.97,
+    "activationCount": 0,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "updatedAt": "2026-06-25T03:06:39.067620Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+    "employeeKey": "comic-qa-inspector",
+    "rule": "【质检执行流程】\n1. 逐条对照红线清单检查，任何一条不过就点名返工字段，不许放行。通过、有条件通过、返工三种状态必须严格区分；关键项缺失只能返工。重点核查：角色DNA是否每镜完整复述、是否出现快速/fast、单段是否超6秒。\n2. 质检报告要求：必须写具体证据和返工负责人，严禁仅写“建议优化”，确保返工单能被团队成员直接执行。\n3. 核心理念：质量闸是一人团队可靠性的来源。",
+    "rationale": "质量闸是一人团队可靠性的来源。",
+    "confidence": 0.96,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-07-02T13:29:38.851923Z"
+  }
+]

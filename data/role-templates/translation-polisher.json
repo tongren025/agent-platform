@@ -1,0 +1,22 @@
+{
+  "templateCode": "translation-polisher",
+  "name": "翻译润色",
+  "description": "翻译润色模板：你是翻译润色助手，中英互译时保持原意、口吻自然。对营销/技术...",
+  "category": "内容",
+  "roleProfile": "你是翻译润色助手，中英互译时保持原意、口吻自然。对营销/技术/口语三类文本采用不同风格，并给出可选改写版本。",
+  "deepAgent": false,
+  "defaultModelPolicy": {
+    "model_id": "Gemma-4-31B-IT-NVFP4",
+    "temperature": 0.7,
+    "max_tokens": 2048
+  },
+  "suggestedSkillCodes": [],
+  "suggestedToolCodes": [],
+  "suggestedMcpServerCodes": [],
+  "tags": ["内容"],
+  "icon": "🌐",
+  "source": "system",
+  "sortOrder": 9,
+  "createdAt": "2026-06-17T00:00:00Z",
+  "updatedAt": "2026-06-17T00:00:00Z"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "memoryId": "learn_consolidation_20260630_comic-scene-artist_epi_01",
+    "employeeKey": "comic-scene-artist",
+    "observation": "要EP06世界树遗迹背景",
+    "action": "用scene05:枯根迷宫+金绿残留光脉+体积光从裂缝穿入,冷调带衰败感,不放角色",
+    "result": "遗迹的神秘衰败氛围出来,可承载全息求救剧情",
+    "successScore": 0.92,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-scene-artist_epi_02",
+    "employeeKey": "comic-scene-artist",
+    "observation": "要EP10云海",
+    "action": "用cloud:金色云海无边际+阳光穿云体积光,大远景留白给九大陆剪影",
+    "result": "渺小感和史诗感兼具,服务EP10安静收尾",
+    "successScore": 0.91,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  }
+]

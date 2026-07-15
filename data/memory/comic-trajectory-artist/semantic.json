@@ -1,0 +1,62 @@
+[
+  {
+    "memoryId": "duanju_spine_20260630_comic-trajectory-artist_law",
+    "employeeKey": "comic-trajectory-artist",
+    "content": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别这些电影美术手艺只是工具,必须服从短剧节奏,不是目的。",
+    "category": "shortdrama_law",
+    "importance": 0.99,
+    "sourceSession": "duanju_spine_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T23:30:00Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-06-30T23:30:00Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+    "employeeKey": "comic-trajectory-artist",
+    "content": "景别×情绪与运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。【情绪递进】：从较松的中景起步，逐步换成越来越大的特写来堆叠情绪强度，而非直接怼脸。常用20运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。【核心区分】：dolly(物理移动)产生视差纵深、zoom(变焦)是空间压缩，情绪完全不同不可混用；tracking平行跟随制造'与角色同行'的沉浸感。运镜情绪组合拳:dolly in+浅景深=世界只剩这个(顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。【核心约束】：镜头运动和角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写。禁止使用「快速/fast」等词汇以避免运动模糊，改用「缓慢/轻微/小幅度/逐渐/平稳」，优先慢速连续小动作。",
+    "category": "camera",
+    "importance": 0.99,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-10T06:14:06.205704Z"
+  },
+  {
+    "memoryId": "seed_comic-trajectory-artist_sem_02_style_core",
+    "employeeKey": "comic-trajectory-artist",
+    "content": "九陆纪元视觉核心是干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
+    "category": "style",
+    "importance": 0.98,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-06-25T03:06:39.067620Z"
+  },
+  {
+    "memoryId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+    "employeeKey": "comic-trajectory-artist",
+    "content": "【动作与轨迹连续性原则】1. 轨迹标定：每个动作镜头必须有轨迹；打斗标攻击线、闪避线、压制线、镜头运动线；魔法标法阵位置、扩张方向、命中方向和粒子残留方向。2. 姿态衔接：上一镜结束姿态必须能接下一镜起始姿态；受力方向、身体重心和镜头方向不能矛盾。3. 动画原则：Timing决定速度（AI视频中慢速连续小动作更稳）；体积守恒（挤压拉伸时宽矮/高瘦互补）；运动轨迹走弧线而非直线，且需预备动作(Anticipation)与缓入缓出，赋予物体重量与生命力。",
+    "category": "workflow",
+    "importance": 0.98,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-10T03:05:58.722303Z"
+  },
+  {
+    "memoryId": "seed_comic-trajectory-artist_sem_04_no_grid_keyframe",
+    "employeeKey": "comic-trajectory-artist",
+    "content": "正片级关键图质量标准：必须使用正向约束词（Seedance 2.0不读负向词），确保画面干净无描边、无墨线、无裂纹、无草稿线、无脏黑边、无死黑阴影、无文字水印，保持角色一致性与服装不漂移。严禁使用宫格或多面板作为正片图，优先单张干净行动图，避免分格线和脏线。",
+    "category": "quality",
+    "importance": 0.96,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-06T03:35:18.414929Z"
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "memoryId": "seed_comic-trajectory-artist_proc_01",
+    "employeeKey": "comic-trajectory-artist",
+    "rule": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。动作描述需遵循：先写受力来源 → 身体部位级动作链 → 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。且镜头运动必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场），以避免视频晃动或无目的乱动。",
+    "rationale": "没有坐标和方向，下游无法判断动作连续性。",
+    "confidence": 0.99,
+    "activationCount": 0,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "updatedAt": "2026-07-08T15:05:14.806824Z"
+  }
+]

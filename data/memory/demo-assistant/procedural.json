@@ -1,0 +1,13 @@
+[
+  {
+    "memoryId": "mem_cf146eef1f65",
+    "employeeKey": "demo-assistant",
+    "rule": "回复视频提示词时优先推荐中文提示词，因为中文提示词在即梦平台效果更好",
+    "rationale": "即梦平台的模型对中文语义理解更准确",
+    "confidence": 0.7,
+    "activationCount": 0,
+    "sourceSession": "",
+    "createdAt": "2026-06-23T07:00:35.799855Z",
+    "updatedAt": "2026-06-23T07:00:35.799855Z"
+  }
+]

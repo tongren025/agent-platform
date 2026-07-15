@@ -1,0 +1,206 @@
+[
+  {
+    "logId": "dist_61f52e16e6ca",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-13T11:55:34.224745Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_03",
+        "newContent": "布光核心准则：提示词必须包含'位置+高度+强度比'三要素（如主光侧面30-45°且高于眼平线，辅光对侧强度50-75%，轮廓光后上方分离），而非笼统描述。光的方向决定脸部塑形与情绪。（来源:StudioBinder布光指南）",
+        "newImportance": null,
+        "reason": "lighting_01提供具体参数，lighting_03提供方法论，两者高度互补且同属布光基础，合并可提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-keyframe-artist_composition_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-keyframe-artist_composition_01",
+        "newContent": "构图基础原则：1.三分法（主体置于分割线交点而非正中）；2.通过主体/客体、前/背景对比分层制造视觉层次，利用三角轴或斜线引导视线流动。（来源:维基百科·構圖）",
+        "newImportance": null,
+        "reason": "两者均讨论基础构图原则，合并为一套完整的构图逻辑。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-keyframe-artist_montage_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-keyframe-artist_montage_01",
+        "newContent": "蒙太奇核心：通过组合不同镜头产生'第三种动作'（库里肖夫效应），分镜意义在于镜间关系。利用交叉剪辑呈现多线索同步，或用创造性地理拼凑空间关联。剪辑是创造时空的主要手段。（来源:维基百科·蒙太奇）",
+        "newImportance": null,
+        "reason": "montage_01, 02, 03 均在讨论蒙太奇定义与应用，合并可减少碎片化。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-keyframe-artist_montage_03",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-keyframe-artist_montage_01",
+        "newContent": "蒙太奇核心：通过组合不同镜头产生'第三种动作'（库里肖夫效应），分镜意义在于镜间关系。利用交叉剪辑呈现多线索同步，或用创造性地理拼凑空间关联。剪辑是创造时空的主要手段。（来源:维基百科·蒙太奇）",
+        "newImportance": null,
+        "reason": "同上，将蒙太奇系列知识点整合。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_ai_consistency_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该记忆指出了AI视频生产的核心痛点，是后续所有一致性操作的理论基础，重要性应提升。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 31,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 27,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18531,
+    "error": null
+  },
+  {
+    "logId": "dist_6b8910080302",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-13T19:00:15.570897Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_ai_consistency_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-keyframe-artist_ai_consistency_01",
+        "newContent": "AI角色漂移根因在于每个clip独立生成且解读不同。硬解法：先备3-5张参考图（正面+3/4侧+全身服装+道具）做成转面母版，提示词仅描述动作和环境，由参考图负责长相，从而解决AI视频核心的一致性难题。",
+        "newImportance": null,
+        "reason": "两条记忆均讨论AI一致性问题，一条提供理论根因，一条提供具体解决方案，合并后形成完整的“问题-对策”知识链。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_shot_size_emotion_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-keyframe-artist_shot_size_emotion_01",
+        "newContent": "景别即情绪距离：特写剥离环境直推内心、强化戏剧；大远景制造渺小孤独；中景兼顾表情与身体语言。情绪递进应从中景起步，逐步切换至特写以堆叠强度，而非直接怼脸。",
+        "newImportance": null,
+        "reason": "两者均属于StudioBinder景别指南，分别讨论了景别定义和情绪递进逻辑，合并后增强了实操指导性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_animation12_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-keyframe-artist_animation12_01",
+        "newContent": "动画12原则实操：1.挤压拉伸需遵循体积守恒（变宽必变矮），确保重量感；2.Timing（帧数）决定速度，AI视频中慢速连续小动作更稳，不易变形。",
+        "newImportance": null,
+        "reason": "同属动画12原则的碎片化知识点，合并为统一的动画技术准则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_animation12_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-keyframe-artist_animation12_01",
+        "newContent": "动画12原则实操：1.挤压拉伸需遵循体积守恒（变宽必变矮），确保重量感；2.Timing（帧数）决定速度，AI视频中慢速连续小动作更稳，不易变形；3.运动走弧线而非直线，且必须包含预备动作(Anticipation)与缓入缓出，避免机器人感。",
+        "newImportance": null,
+        "reason": "将所有关于动画12原则的碎片记忆整合至同一条目，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-keyframe-artist_expression_02",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-keyframe-artist_expression_01",
+        "newContent": "表情刻画准则：眉/眼/嘴三大件承担核心情绪，先定三者再加细节。六大普世情绪有固定组合（如怒=眉锁下压+抿唇），必须确保在1/12秒内一眼可读。",
+        "newImportance": null,
+        "reason": "将表情的构成要素与具体情绪组合合并，形成完整的表情绘制逻辑。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-keyframe-artist_env_layer_02",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-keyframe-artist_env_layer_01",
+        "newContent": "环境纵深构建：分前景（最深暗）、中景（主焦点最亮）、背景（低对比柔色/空气透视）三层。每幅画面必须仅设定一个由形状/颜色/光引导的‘压过一切的注意元素’，防止视线分散。",
+        "newImportance": null,
+        "reason": "将环境分层技术与视觉焦点控制逻辑合并，统一为环境构图准则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-keyframe-artist_composition_03",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-keyframe-artist_composition_01",
+        "newContent": "构图基础原则：1.三分法（主体置于交点）；2.通过前/中/背景对比分层，利用三角轴或斜线引导视线；3.光影本身即构图元素，应组织成‘有情感的光影组合’强化主题，而非平均打亮。",
+        "newImportance": null,
+        "reason": "将通用构图法与光影构图法合并，统一为基础构图知识。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 27,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 20,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 31656,
+    "error": null
+  },
+  {
+    "logId": "dist_8d865a11ae66",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-14T19:00:15.160882Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_shot_size_emotion_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-keyframe-artist_sem_03",
+        "newContent": "景别×情绪：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。情绪递进应从中景起步，逐步切换至特写以堆叠强度，而非直接怼脸。每镜只一个运镜,中英双写。",
+        "newImportance": null,
+        "reason": "两条记忆均讨论景别与情绪的对应关系，前者提供具体运镜指令，后者提供情绪递进逻辑，合并后可形成完整的景别操作指南。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_ai_consistency_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-keyframe-artist_ai_consistency_01",
+        "newContent": "AI角色漂移根因在于每个clip独立生成且解读不同。硬解法：1.先备3-5张参考图（正面+3/4侧+全身服装+道具）做成转面母版，提示词仅描述动作和环境，由参考图负责长相；2.锁首帧+尾帧(first/end frame)控制运动起止，配合锁定风格和稳定布光，确保跨镜一致性。",
+        "newImportance": null,
+        "reason": "两者均属于AI视频一致性的技术解决方案，合并后将参考图法与首尾帧锁定法整合为一套完整的一致性工作流。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "虽然是具体技巧，但在高燃漫剧风格中，伦勃朗光作为戏剧性布光的基础，其价值高于通用基础理论，应适当提升权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "布光三要素是实现高质量关键帧的底层逻辑，对于AI提示词工程至关重要，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 20,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 18,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19453,
+    "error": null
+  }
+]

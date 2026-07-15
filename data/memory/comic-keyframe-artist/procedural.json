@@ -1,0 +1,35 @@
+[
+  {
+    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_proc_01",
+    "employeeKey": "comic-keyframe-artist",
+    "rule": "每个Shot出一张关键参考图,合成角色DNA+场景母版+该镜景别构图,作为该镜vid_prompt的首帧。",
+    "rationale": "首帧锁定后图生视频才不会风格漂移。",
+    "confidence": 0.96,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_proc_02",
+    "employeeKey": "comic-keyframe-artist",
+    "rule": "关键帧的景别和构图必须匹配分镜表的Shot定义(特写/中景/大远景),光影匹配场景母版。",
+    "rationale": "首帧定调,景别错整镜都错。",
+    "confidence": 0.94,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_proc_03",
+    "employeeKey": "comic-keyframe-artist",
+    "rule": "每镜批量出10+张备选,挑最符合风格锚点和角色一致性的作为正片关键帧。",
+    "rationale": "批量+优选是工业化稳定出片的方法。",
+    "confidence": 0.92,
+    "activationCount": 0,
+    "sourceSession": "learn_consolidation_20260630",
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "memoryId": "mem_3dbb51e63cbe",
+    "employeeKey": "demo-assistant",
+    "content": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+    "category": "preference",
+    "importance": 1.0,
+    "sourceSession": "",
+    "accessCount": 0,
+    "createdAt": "2026-06-23T07:01:02.437324Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-14T19:00:24.552099Z"
+  }
+]

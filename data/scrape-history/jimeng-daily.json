@@ -1,0 +1,212 @@
+[
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 9,
+    "totalCount": 154,
+    "message": "抓取 20 条，新增 9 条，累计 154 条。",
+    "startedAt": "2026-07-15T01:00:27.633290Z",
+    "finishedAt": "2026-07-15T01:00:28.806720Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 5,
+    "totalCount": 145,
+    "message": "抓取 20 条，新增 5 条，累计 145 条。",
+    "startedAt": "2026-07-14T01:00:02.324882Z",
+    "finishedAt": "2026-07-14T01:00:03.773232Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 6,
+    "totalCount": 140,
+    "message": "抓取 20 条，新增 6 条，累计 140 条。",
+    "startedAt": "2026-07-13T03:14:19.241658Z",
+    "finishedAt": "2026-07-13T03:14:38.820380Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 4,
+    "totalCount": 134,
+    "message": "抓取 20 条，新增 4 条，累计 134 条。",
+    "startedAt": "2026-07-10T03:05:30.164746Z",
+    "finishedAt": "2026-07-10T03:05:59.734142Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 4,
+    "totalCount": 130,
+    "message": "抓取 20 条，新增 4 条，累计 130 条。",
+    "startedAt": "2026-07-09T01:00:29.010551Z",
+    "finishedAt": "2026-07-09T01:00:30.551699Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 19,
+    "newCount": 4,
+    "totalCount": 126,
+    "message": "抓取 19 条，新增 4 条，累计 126 条。",
+    "startedAt": "2026-07-08T15:04:59.405906Z",
+    "finishedAt": "2026-07-08T15:05:16.365946Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 3,
+    "totalCount": 122,
+    "message": "抓取 20 条，新增 3 条，累计 122 条。",
+    "startedAt": "2026-07-07T03:59:57.043202Z",
+    "finishedAt": "2026-07-07T04:00:25.907727Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 7,
+    "totalCount": 119,
+    "message": "抓取 20 条，新增 7 条，累计 119 条。",
+    "startedAt": "2026-07-06T03:33:48.067640Z",
+    "finishedAt": "2026-07-06T03:34:19.636278Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 10,
+    "totalCount": 112,
+    "message": "抓取 20 条，新增 10 条，累计 112 条。",
+    "startedAt": "2026-07-03T11:21:00.767611Z",
+    "finishedAt": "2026-07-03T11:21:36.126453Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 7,
+    "totalCount": 102,
+    "message": "抓取 20 条，新增 7 条，累计 102 条。",
+    "startedAt": "2026-07-02T03:14:21.995021Z",
+    "finishedAt": "2026-07-02T03:15:02.337207Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 1,
+    "totalCount": 95,
+    "message": "抓取 20 条，新增 1 条，累计 95 条。",
+    "startedAt": "2026-07-01T03:10:45.512483Z",
+    "finishedAt": "2026-07-01T03:11:20.392102Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 7,
+    "totalCount": 94,
+    "message": "抓取 20 条，新增 7 条，累计 94 条。",
+    "startedAt": "2026-06-30T01:55:53.666195Z",
+    "finishedAt": "2026-06-30T01:56:07.830011Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 8,
+    "totalCount": 87,
+    "message": "抓取 20 条，新增 8 条，累计 87 条。",
+    "startedAt": "2026-06-29T02:24:49.089188Z",
+    "finishedAt": "2026-06-29T02:24:50.950838Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 9,
+    "totalCount": 79,
+    "message": "抓取 20 条，新增 9 条，累计 79 条。",
+    "startedAt": "2026-06-26T02:33:19.281628Z",
+    "finishedAt": "2026-06-26T02:33:20.689604Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 7,
+    "totalCount": 70,
+    "message": "抓取 20 条，新增 7 条，累计 70 条。",
+    "startedAt": "2026-06-25T01:00:04.179798Z",
+    "finishedAt": "2026-06-25T01:00:05.922320Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 10,
+    "totalCount": 63,
+    "message": "抓取 20 条，新增 10 条，累计 63 条。",
+    "startedAt": "2026-06-24T01:00:02.336853Z",
+    "finishedAt": "2026-06-24T01:00:03.741631Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 4,
+    "totalCount": 53,
+    "message": "抓取 20 条，新增 4 条，累计 53 条。",
+    "startedAt": "2026-06-23T10:07:15.256277Z",
+    "finishedAt": "2026-06-23T10:07:16.584797Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 8,
+    "totalCount": 49,
+    "message": "抓取 20 条，新增 8 条，累计 49 条。",
+    "startedAt": "2026-06-23T05:02:55.082420Z",
+    "finishedAt": "2026-06-23T05:02:58.518101Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 11,
+    "totalCount": 41,
+    "message": "抓取 20 条，新增 11 条，累计 41 条。",
+    "startedAt": "2026-06-23T05:02:51.493439Z",
+    "finishedAt": "2026-06-23T05:02:55.068049Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 10,
+    "totalCount": 30,
+    "message": "抓取 20 条，新增 10 条，累计 30 条。",
+    "startedAt": "2026-06-23T05:02:48.029592Z",
+    "finishedAt": "2026-06-23T05:02:51.485438Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 20,
+    "totalCount": 20,
+    "message": "抓取 20 条，新增 20 条，累计 20 条。",
+    "startedAt": "2026-06-23T05:02:04.868503Z",
+    "finishedAt": "2026-06-23T05:02:07.781120Z"
+  }
+]

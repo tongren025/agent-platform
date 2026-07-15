@@ -1,0 +1,64 @@
+{
+  "sortOrder": 0,
+  "createdAt": "2026-06-23T12:19:28.853834Z",
+  "updatedAt": "2026-06-25T00:00:00.000000Z",
+  "teamCode": "comic-drama-team",
+  "name": "漫剧一人团队",
+  "memberEmployeeKeys": [
+    "comic-director",
+    "comic-screenwriter",
+    "comic-character-designer",
+    "comic-scene-designer",
+    "comic-vfx-designer",
+    "comic-trajectory-artist",
+    "comic-prompt-engineer",
+    "comic-qa-inspector"
+  ],
+  "defaultEmployeeKey": "comic-director",
+  "ownerUserId": null,
+  "leaderEmployeeKey": "comic-director",
+  "description": "一人漫剧创作团队：用户说一句「做 EP01 第1段 10秒」，8 个 AI 角色自动流转，产出完整制作包。\n\n流程：总导演统筹 → 编剧分镜拆镜头 → 并行（人物设定 + 场景美术 + 特效设计 + 动作轨迹）→ AI视频提示词整合 → 质检交付",
+  "roles": [
+    {
+      "employeeKey": "comic-director",
+      "stage": "统筹",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-screenwriter",
+      "stage": "创作",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-character-designer",
+      "stage": "并行生产",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-scene-designer",
+      "stage": "并行生产",
+      "order": 1
+    },
+    {
+      "employeeKey": "comic-vfx-designer",
+      "stage": "并行生产",
+      "order": 2
+    },
+    {
+      "employeeKey": "comic-trajectory-artist",
+      "stage": "并行生产",
+      "order": 3
+    },
+    {
+      "employeeKey": "comic-prompt-engineer",
+      "stage": "整合",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-qa-inspector",
+      "stage": "质检",
+      "order": 0
+    }
+  ],
+  "defaultWorkflowKey": "comic-drama-10s"
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "memoryId": "seed_comic-screenwriter_epi_01",
+    "employeeKey": "comic-screenwriter",
+    "observation": "EP01 0-10秒是巨龙与艾拉战斗",
+    "action": "拆成巨龙压场、艾拉起阵、龙焰蓄力、空中闪避、魔法反击、护盾挡爪、星环束缚、震翼逼退等 8 镜头。",
+    "result": "每镜都有动作因果和下游特效/轨迹需求。",
+    "successScore": 0.96,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 1,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": "2026-07-09T08:03:37.572474Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-screenwriter_epi_01",
+    "employeeKey": "comic-screenwriter",
+    "observation": "要写EP02假觉醒",
+    "action": "设计管弦乐推到最高点→光柱掐灭→音乐骤停→彻底寂静→苍霖一句『也是』",
+    "result": "情绪从炸亮跌到最低谷,『也是』成为可截图的嘴替",
+    "successScore": 0.95,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 1,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": "2026-07-09T08:03:37.572474Z"
+  },
+  {
+    "memoryId": "seed_comic-screenwriter_epi_02",
+    "employeeKey": "comic-screenwriter",
+    "observation": "用户要求“高特效动作分镜”",
+    "action": "每镜同时写镜头运动、动作结果和 AI 画面提示，不只写剧情。",
+    "result": "提示词工程师能直接抽取视频提示词。",
+    "successScore": 0.94,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 1,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": "2026-07-09T08:03:37.572474Z"
+  },
+  {
+    "memoryId": "mem_5269eaf5432f",
+    "employeeKey": "comic-screenwriter",
+    "observation": "用户要求写一个赛博朋克风的短片剧本",
+    "action": "使用三幕结构+复仇型模板，主角是底层黑客对抗巨型公司，中点用假胜利（黑入系统成功）接真危机（发现是陷阱）",
+    "result": "剧本结构紧凑，分镜师反馈画面感极强，每个场景都有明确的视觉冲突",
+    "successScore": 0.9,
+    "sourceSession": "",
+    "accessCount": 1,
+    "createdAt": "2026-06-23T12:26:31.405482Z",
+    "lastAccessed": "2026-07-09T08:03:37.572474Z"
+  },
+  {
+    "memoryId": "mem_406e762d4714",
+    "employeeKey": "comic-screenwriter",
+    "observation": "用户要求15分钟的漫剧剧本",
+    "action": "按Save the Cat节拍表严格分配时长：建置3分钟、催化剂在第2分钟、中点在第7分钟、高潮在第12分钟",
+    "result": "节奏感好，观众测试时全程无快进",
+    "successScore": 0.9,
+    "sourceSession": "",
+    "accessCount": 1,
+    "createdAt": "2026-06-23T12:26:31.441585Z",
+    "lastAccessed": "2026-07-09T08:03:37.572474Z"
+  },
+  {
+    "memoryId": "jiulu_ep1_gaoran_20260709_comic-screenwriter",
+    "employeeKey": "comic-screenwriter",
+    "observation": "为《九陆纪元》EP1烬龙陆写90s高燃开篇集，用户要求全程高燃/强主角/大场面/开头带世界观",
+    "action": "九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)+苍霖开局强者(懒散欠揍)+熔浆龙焰地貌级灭舰队+反转(贱民→世界树钥匙)+嘴替(废墟里的东西也配你们删)+反天选1秒闪回埋线",
+    "result": "8单元45段90s，招牌大场面锁死不串台(烬龙陆无赛博)，spec完成过质检",
+    "successScore": 0.9,
+    "sourceSession": "jiulu_ep1_gaoran_20260709",
+    "accessCount": 0,
+    "createdAt": "2026-07-09T08:16:29.663714Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "jiulu_s1_gaoran_complete_20260709_comic-screenwriter",
+    "employeeKey": "comic-screenwriter",
+    "observation": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)",
+    "action": "三幕:立威(1-8)/结盟与真相(9-18)/季终(19-24);每集大场面set-piece+反转+钩子+编剧笔记(want/need);招牌大场面锁死不串台(烬龙陆熔浆龙焰禁赛博);EP20反天选正拳(拒绝天命回收);EP24闭环+S2钩(青鸾+神国);FLF+retake+1秒剪辑",
+    "result": "24集全90s共794卡spec完成过验;端点序列化OK",
+    "successScore": 0.9,
+    "sourceSession": "jiulu_s1_gaoran_complete_20260709",
+    "accessCount": 0,
+    "createdAt": "2026-07-09T08:53:24.294976Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "mem_925214429f47",
+    "employeeKey": "comic-screenwriter",
+    "observation": "用户给的故事概念太模糊只有一句话",
+    "action": "先用提问明确四个核心要素：主角是谁、想要什么、阻碍是什么、代价是什么，然后再动笔",
+    "result": "避免了方向偏差，用户确认后一稿通过",
+    "successScore": 0.85,
+    "sourceSession": "",
+    "accessCount": 0,
+    "createdAt": "2026-06-23T12:26:31.431586Z",
+    "lastAccessed": null
+  }
+]

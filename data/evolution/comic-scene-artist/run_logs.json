@@ -1,0 +1,32 @@
+[
+  {
+    "logId": "evo_2dd99f98ed3c",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-13T11:55:35.600287Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_16dc3c989206",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-13T20:00:26.975080Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_51078fb0ff43",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-14T20:00:24.719304Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  }
+]

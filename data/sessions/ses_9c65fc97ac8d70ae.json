@@ -1,0 +1,59 @@
+{
+  "sessionId": "ses_9c65fc97ac8d70ae",
+  "employeeKey": "demo-assistant",
+  "messages": [
+    {
+      "role": "user",
+      "content": "你好",
+      "timestamp": "2026-06-22T07:50:59.222219Z",
+      "toolName": null
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2026-06-22T07:50:59.222219Z",
+      "toolName": null
+    },
+    {
+      "role": "user",
+      "content": "11111",
+      "timestamp": "2026-06-22T08:45:57.170799Z",
+      "toolName": null
+    },
+    {
+      "role": "assistant",
+      "content": "你好！请问有什么我可以帮你的吗？",
+      "timestamp": "2026-06-22T08:45:57.170799Z",
+      "toolName": null
+    },
+    {
+      "role": "user",
+      "content": "这么快吗",
+      "timestamp": "2026-06-22T08:46:02.235383Z",
+      "toolName": null
+    },
+    {
+      "role": "assistant",
+      "content": "是的，我已经准备好为你提供帮助了！请问有什么需要测试或询问的吗？",
+      "timestamp": "2026-06-22T08:46:02.235383Z",
+      "toolName": null
+    },
+    {
+      "role": "user",
+      "content": "帮我把 狼狈翻译23中语言给我",
+      "timestamp": "2026-06-22T08:46:34.388312Z",
+      "toolName": null
+    },
+    {
+      "role": "assistant",
+      "content": "由于篇幅较长，我为你挑选了 23 种主流语言的翻译。\n\n“狼狈”在中文里通常指**窘迫、尴尬或处境糟糕**（miserable, embarrassed, in a sorry state）。根据语境，翻译略有不同：\n\n**【英语系】**\n1. 英语 (English): Miserable / In a sorry state\n2. 法语 (French): Pitoyable / Malencontreux\n3. 西班牙语 (Spanish): Desdichurado / En un estado lamentable\n4. 葡萄牙语 (Portuguese): Miserável / Em estado deplorável\n5. 德语 (German): Erbärmlich / In einer misslichen Lage\n\n**【亚欧系】**\n6. 俄语 (Russian): Жалкий (Zhalkiy)\n7. 意大利语 (Italian): Misero / In uno stato deplorevole\n8. 荷兰语 (Dutch): Jammerlijk / In een zielige toestand\n9. 波兰语 (Polish): Żałosny\n10. 乌克兰语 (Ukrainian): Жалюгідний (Zhaluhidnyi)\n\n**【亚洲系】**\n11. 日语 (Japanese): 狼狽する (Rōbai suru) / みじめな (Mijime na)\n12. 韩语 (Korean): 낭패한 (Nangpaehan) / 비참한 (Bichamhan)\n13. 越南语 (Vietnamese): Thảm hại\n14. 泰语 (Thai): น่าเวทนา (Nà wēthana)\n15. 印尼语 (Indonesian): Menyedihkan / Terpuruk\n16. 马来语 (Malay): Menyedihkan\n17. 菲律宾语 (Tagalog): Kaawa-awa\n18. 孟加拉语 (Bengali): শোচনীয় (Śōcanīẏa)\n19. 印地语 (Hindi): दयनीय (Dayanīya)\n\n**【其他/古典】**\n20. 土耳其语 (Turkish): Perişan\n21. 阿拉伯语 (Arabic): بائس (Bā'is)\n22. 希腊语 (Greek): Αθλιός (Athliós)\n23. 希伯来语 (Hebrew): עלוב (Ulav)\n\n希望这个列表对你有帮助！",
+      "timestamp": "2026-06-22T08:46:34.388312Z",
+      "toolName": null
+    }
+  ],
+  "compressedSummary": null,
+  "createdAt": "2026-06-22T07:50:59.222219Z",
+  "lastActiveAt": "2026-06-22T08:46:34.388312Z",
+  "metadata": {},
+  "pendingApproval": null
+}

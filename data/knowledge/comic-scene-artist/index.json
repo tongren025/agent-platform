@@ -1,0 +1,85 @@
+[
+  {
+    "docId": "4bc6265ef0ebcae9",
+    "fileName": "scene-bible.md",
+    "extension": ".md",
+    "sizeBytes": 1586,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "bd4427b8c8b78829",
+    "fileName": "canon-composition.md",
+    "extension": ".md",
+    "sizeBytes": 709,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "構圖"
+    ]
+  },
+  {
+    "docId": "0528a7cf8afebc8c",
+    "fileName": "canon-perspective.md",
+    "extension": ".md",
+    "sizeBytes": 745,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "透視"
+    ]
+  },
+  {
+    "docId": "61566b0357648b28",
+    "fileName": "canon-color.md",
+    "extension": ".md",
+    "sizeBytes": 599,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "色彩理論"
+    ]
+  },
+  {
+    "docId": "5e5287697806fd9e",
+    "fileName": "craft-lighting.md",
+    "extension": ".md",
+    "sizeBytes": 881,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/film lighting",
+      "三点布光与伦勃朗光"
+    ]
+  },
+  {
+    "docId": "a7672216a8bcd9a9",
+    "fileName": "craft-film_color.md",
+    "extension": ".md",
+    "sizeBytes": 794,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/NoFilmSchool·Color in Film",
+      "电影色彩叙事"
+    ]
+  },
+  {
+    "docId": "8971c46d9d5c7a87",
+    "fileName": "craft2-env_layer.md",
+    "extension": ".md",
+    "sizeBytes": 830,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "CreativeBloq/Evenant",
+      "环境景深分层"
+    ]
+  }
+]

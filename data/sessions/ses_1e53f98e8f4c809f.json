@@ -1,0 +1,28 @@
+{
+  "sessionId": "ses_1e53f98e8f4c809f",
+  "employeeKey": "comic-director",
+  "targetType": "employee",
+  "teamCode": null,
+  "title": "",
+  "archived": false,
+  "messages": [
+    {
+      "role": "user",
+      "content": "你好",
+      "timestamp": "2026-06-23T13:36:09.472510Z",
+      "toolName": null
+    },
+    {
+      "role": "assistant",
+      "content": "你好！我是漫剧创作团队的总导演。我可以帮你把一个简单的创意想法，通过专业的编剧、设计、分镜和原画流程，转化为一套完整的漫剧视觉方案。\n\n如果你已经有了想法，请直接告诉我；如果你还没想好，我们可以先聊聊。\n\n为了能更精准地把控作品质量，在开始之前，我想先了解三个问题：\n1. **你想做什么类型？**（例如：热血格斗、都市爱情、悬疑惊悚、搞笑反转等）\n2. **大概预期的时长/篇幅是多少？**（例如：1分钟短片、3-5分钟短剧，或者一个简单的单集故事）\n3. **有没有参考的作品或画风？**（例如：想追求《咒术回战》那种凌厉感，还是《吉卜力》那种清新感，或者某种特定的动漫风格）\n\n期待你的创意！",
+      "timestamp": "2026-06-23T13:36:09.472510Z",
+      "toolName": null
+    }
+  ],
+  "artifacts": [],
+  "compressedSummary": null,
+  "createdAt": "2026-06-23T13:36:09.472510Z",
+  "lastActiveAt": "2026-06-23T13:36:09.472510Z",
+  "metadata": {},
+  "pendingApproval": null
+}

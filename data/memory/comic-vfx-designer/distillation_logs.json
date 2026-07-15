@@ -1,0 +1,1630 @@
+[
+  {
+    "logId": "dist_8f645a5c0274",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-01T03:02:36.797527Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_03",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "色彩体系与核心特效元素：龙骨碎片=蓝白脉动光(苍霖核心符号)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。",
+        "newImportance": null,
+        "reason": "两条记忆均在定义特效元素的颜色绑定，内容高度重叠，合并后可提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_04",
+        "mergeIntoId": "seed_comic-vfx-designer_sem_02",
+        "newContent": "九陆纪元视觉核心/风格锚点句：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
+        "newImportance": null,
+        "reason": "风格锚点句与视觉核心定义完全一致，应合并为单一的风格基准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_05",
+        "mergeIntoId": "seed_comic-vfx-designer_sem_01_quality_clean_negative",
+        "newContent": "正片级图片和视频必须使用正向约束词（⚠️ Seedance 2.0不读负向提示词）。正向表述：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移。特效要求干净通透，严禁死黑阴影、裂纹划痕或黑色粗描边。",
+        "newImportance": null,
+        "reason": "两者均在强调画面的“干净度”和禁止的视觉元素，合并后增强了质量约束的完整性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_color_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_02",
+        "newContent": "暖冷色心理是双面的：暖色既是温暖也是愤怒，冷色既是平静也是悲伤孤独——靠饱和度和明度+语境定具体含义。配色是情绪工具，需触发特定的心理联想。（来源:No Film School/维基百科）",
+        "newImportance": null,
+        "reason": "通用色彩理论与具体色彩心理学应用高度相似，合并为综合知识点。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_vfx_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆为过于宽泛的通用定义（VFX是合成），对具体的AI生成工作流无实际指导价值，属于低价值冗余信息。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_vfx_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆列举的传统VFX技术栈（运动追踪、抠像）与当前基于Seedance的AI生成链路不匹配，易造成干扰。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 24,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 19,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18453,
+    "error": null
+  },
+  {
+    "logId": "dist_568ad171e374",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-01T03:05:22.071805Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_04",
+        "mergeIntoId": "seed_comic-vfx-designer_sem_02",
+        "newContent": "九陆纪元视觉核心（风格锚点句）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
+        "newImportance": null,
+        "reason": "两者内容几乎完全一致，前者为锚点句，后者为核心定义，合并可提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_lighting_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "newContent": "光影×情绪映射：伦勃朗光（暗侧脸颊下方三角光斑，宽不过眼长不过鼻）=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。",
+        "newImportance": null,
+        "reason": "将具体的伦勃朗光判定标准合并至光影情绪映射表中，使理论与实践标准统一。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_lighting_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-vfx-designer_lighting_03",
+        "newContent": "三点布光实操：提示词需包含'位置+高度+强度比'。主光在侧面30-45°且略高于眼平线，辅光在对侧（强度为主光的50-75%），轮廓光在后上方做边缘分离。光的方向决定脸的塑形和情绪。",
+        "newImportance": null,
+        "reason": "将布光参数与提示词撰写要求合并，形成完整的操作指南。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_color_01",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-vfx-designer_color_02",
+        "newContent": "色彩理论基础：三属性（色相/明度/饱和度）是控制画面的基本维度。互补色（色轮相对）制造最大对比张力，类似色（色轮相邻）自然和谐——冲突场景用互补，统一氛围用类似。",
+        "newImportance": null,
+        "reason": "将基础色彩属性与色彩应用逻辑合并为统一的色彩理论知识点。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆强调色彩作为叙事决策，与后续的视觉风格高度相关，重要性应高于基础理论。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15343,
+    "error": null
+  },
+  {
+    "logId": "dist_85014b94419c",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-01T03:07:22.626945Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_04",
+        "mergeIntoId": "seed_comic-vfx-designer_sem_02_style_core",
+        "newContent": "九陆纪元视觉核心（风格锚点句）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
+        "newImportance": null,
+        "reason": "两者内容几乎完全一致，前者为锚点句，后者为核心定义，合并后可作为统一的风格基准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_06_vfx_density",
+        "mergeIntoId": "seed_comic-vfx-designer_sem_08_vfx_palette",
+        "newContent": "九陆纪元特效基调与密度：每 2-3 个镜头必须出现一次明确 VFX 记忆点（如蓝白魔法阵、淡金星轨、暗金世界树光丝、赤金龙焰、雨夜水洼反光、符文环、星尘、碎玻璃、体积光）；普通剧情镜头亦需包含雨滴反光、火星、符文余光、鳞片高光等微特效。",
+        "newImportance": null,
+        "reason": "将特效的“出现频率/密度”与“具体元素清单”合并，使视觉执行标准更完整。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_proc_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "newContent": "光影×情绪映射实操：伦勃朗光（暗侧脸颊下方三角光斑）=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。在提示词中通过选择特定光型直接驱动情绪表达。",
+        "newImportance": null,
+        "reason": "将语义层面的“光影映射表”与行为层面的“执行规则”合并，将知识转化为可操作的指令。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆提供了色彩叙事的顶层逻辑，虽然目前重要性较低，但它是后续具体配色方案的理论支撑，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12891,
+    "error": null
+  },
+  {
+    "logId": "dist_6959125fe5dc",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-01T03:09:49.144492Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_02",
+        "newContent": "色彩是叙事决策而非装饰，需通过 color script 规划色调随情绪走向变化。暖冷色心理具有双面性（暖色：温暖/愤怒；冷色：平静/悲伤），具体含义由饱和度、明度及语境决定。配色应对齐角色/主题/情绪，触发特定心理联想。（来源:No Film School/StudioBinder/维基百科）",
+        "newImportance": null,
+        "reason": "两条记忆均讨论电影色彩理论与情绪映射，前者提供宏观决策逻辑，后者提供具体心理维度，合并可形成完整的色彩叙事知识体系。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_color_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_02",
+        "newContent": "色彩是叙事决策而非装饰，需通过 color script 规划色调随情绪走向变化。暖冷色心理具有双面性（暖色：温暖/愤怒；冷色：平静/悲伤），具体含义由饱和度、明度及语境决定。基础维度包含色相/明度/饱和度，利用互补色制造对比张力，利用类似色营造和谐氛围。（来源:No Film School/StudioBinder/维基百科）",
+        "newImportance": null,
+        "reason": "将基础色彩理论（互补色/类似色）整合进色彩叙事记忆中，使理论与应用统一。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_proc_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "newContent": "光影×情绪映射实操：体积光/逆光=史诗希望/神秘孤独；底光=恐怖不安；顶光=审判神圣；双色温=冲突对峙；环境柔光=日常温柔；伦勃朗光（暗侧脸颊下方三角光斑）=压迫戏剧。在提示词中通过光型直接控制情绪走向。",
+        "newImportance": null,
+        "reason": "行为记忆中的光影映射规则与语义记忆中的光影映射定义高度重合，将其整合为一套可执行的语义知识。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "由于合并了行为记忆中的实操规则，该记忆的实用价值提升，重要性相应上调。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 12,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13858,
+    "error": null
+  },
+  {
+    "logId": "dist_a5802e367cf7",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-01T03:10:46.941514Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_08_vfx_palette",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元特效基调与色彩体系：每 2-3 个镜头必须出现一次明确 VFX 记忆点。核心符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通剧情镜头亦需包含雨滴反光、火星、符文余光、鳞片高光等微特效。",
+        "newImportance": null,
+        "reason": "两条记忆均在定义九陆纪元的视觉特效元素与色彩绑定，合并后可形成完整的特效资产库。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_proc_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "newContent": "光影×情绪映射实操：伦勃朗光（暗侧脸颊下方三角光斑）=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。在提示词中通过选择光型直接驱动情绪表达。",
+        "newImportance": null,
+        "reason": "行为记忆中的光影应用规则与语义记忆中的光影映射表高度重合，将操作逻辑合并至知识点中。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_lighting_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.75,
+        "reason": "三点布光是基础工业标准，虽重要性较低但对实际提示词生成有指导意义，适当提升权重以增强实操性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 12,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 11,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 30828,
+    "error": null
+  },
+  {
+    "logId": "dist_cba252248c62",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-01T14:07:15.936144Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_lighting_03",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "newContent": "光影×情绪映射与实操：1. 情绪映射：伦勃朗光=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。2. 三点布光实操：提示词需包含'位置+高度+强度比'。主光在侧面30-45°且略高于眼平线，辅光在对侧（强度为主光的50-75%），轮廓光在后上方做边缘分离。光的方向决定脸的塑形和情绪。",
+        "newImportance": null,
+        "reason": "将光影的情绪理论与具体的三点布光实操合并，形成完整的从理论到执行的知识链。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_proc_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_proc_01",
+        "newContent": "特效必须服从情绪和色彩体系：1. 颜色绑定：每个魔法/光效绑定固定颜色(碎片=蓝白,龙焰=赤金)，颜色作为叙事符号，乱配会破坏视觉识别。2. 光型映射：用体积光/逆光制造史诗和希望感,用底光/伦勃朗光制造压迫，光型直接对应情绪。",
+        "newImportance": null,
+        "reason": "两条规则均关于特效与情绪/色彩的绑定关系，合并后增强了视觉一致性的操作逻辑。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆为通用电影色彩理论，相对于具体的短剧准则和项目视觉核心，其优先级应适当降低，作为底层支撑而非直接指令。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 11,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 10,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 35047,
+    "error": null
+  },
+  {
+    "logId": "dist_2170a023a176",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-02T03:14:23.890380Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-vfx-designer_sem_04_no_grid_keyframe",
+        "newContent": "正片级关键图质量标准：1. 严禁宫格/多面板/分格线；2. 必须使用正向约束词（Seedance 2.0不读负向词），确保画面干净无描边、无墨线、无裂纹、无草稿线、无脏黑边、无死黑阴影、无文字水印；3. 保持角色一致性，服装不漂移，特效要求干净通透。",
+        "newImportance": null,
+        "reason": "两条记忆均属于质量控制（Quality）维度，且核心目标一致：消除画面中的“脏线”与“干扰元素”，合并后可形成统一的质检标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_proc_01",
+        "mergeIntoId": "seed_comic-vfx-designer_proc_01",
+        "newContent": "特效提示词规范：1. 必须明确出现位置、扩张方向、亮度层级及与角色/环境的交互，避免泛光导致动作不可控；2. 必须服从情绪与色彩体系，颜色需作为叙事符号固定绑定（如碎片=蓝白, 龙焰=赤金），严禁乱配；3. 光型需直接对应情绪（如体积光/逆光=史诗希望, 底光/伦勃朗光=压迫）。",
+        "newImportance": null,
+        "reason": "两条记忆均关于特效提示词的编写规则，前者侧重物理空间控制，后者侧重叙事色彩控制，合并后可构建完整的特效指令集。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆为通用电影色彩理论，在极高节奏的短剧环境下，其优先级低于具体的视觉锚点和短剧第一准则。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 10,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 36031,
+    "error": null
+  },
+  {
+    "logId": "dist_98fd6361be84",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-02T13:29:10.706730Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_02_style_core",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通剧情镜头亦需包含雨滴反光、火星、符文余光、鳞片高光等微特效。",
+        "newImportance": null,
+        "reason": "两条记忆均定义了视觉风格与核心色彩符号，合并后可形成完整的“风格锚点+具体符号映射”体系，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "newContent": "光影×情绪映射与实操：1. 情绪映射：伦勃朗光=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。2. 色彩叙事：通过 color script 规划色调随情绪变化，利用互补色制造张力，类似色营造和谐，饱和度与明度决定具体心理含义。3. 三点布光实操：提示词需包含'位置+高度+强度比'。主光在侧面30-45°且略高于眼平线，辅光在对侧（强度为主光的50-75%），轮廓光在后上方做边缘分离。",
+        "newImportance": null,
+        "reason": "将通用的电影色彩理论（craft）整合进具体的光影实操（light）记忆中，使理论服务于实操，减少碎片化。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "由于合并了色彩叙事理论，该记忆在指导提示词生成时的权重应提升，使其更接近核心工作流。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28032,
+    "error": null
+  },
+  {
+    "logId": "dist_6915e0151db7",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-03T11:21:02.749226Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通剧情镜头亦需包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 关于微特效的观察与结果，与语义记忆 sem_01 中关于普通剧情镜头微特效的定义完全一致，将其转化为通用语义知识可提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-vfx-designer_proc_03",
+        "mergeIntoId": "seed_comic-vfx-designer_proc_01",
+        "newContent": "特效提示词规范：1. 必须明确出现位置、扩张方向、亮度层级及与角色/环境的交互，避免泛光导致动作不可控；2. 必须服从情绪与色彩体系，颜色需作为叙事符号固定绑定（如碎片=蓝白, 龙焰=赤金），严禁乱配；3. 光型需直接对应情绪（如体积光/逆光=史诗希望, 底光/伦勃朗光=压迫）；4. 强特效镜头必须保留主体轮廓，严禁光效遮盖角色脸部、武器或受力点，确保特效服务于动作和叙事。",
+        "newImportance": null,
+        "reason": "proc_03 的主体轮廓保留原则是 proc_01 提示词规范中关于“避免泛光”和“交互”的延伸，合并后形成完整的特效提示词执行标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 31983,
+    "error": null
+  },
+  {
+    "logId": "dist_5ecf3774f694",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-06T03:33:50.165073Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通剧情镜头亦需包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察结果与 semantic_01 中关于普通剧情镜头微特效的描述完全一致，将经验结论合并入语义知识库可增强知识的权威性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该记忆提供了具体的光影映射实操指南，与 procedural_01 的规则高度互补，是生成高质量提示词的核心支撑，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27014,
+    "error": null
+  },
+  {
+    "logId": "dist_5267d41c9608",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-06T03:34:56.353668Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通剧情/过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察结果与语义记忆 sem_01 中关于微特效解决过渡镜头平淡的描述完全一致，将其转化为语义记忆中的实操准则可提高泛化能力。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-vfx-designer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆被定义为【最高优先级,统管一切】的短剧第一准则，应将其重要性提升至最高值以确保在所有推理路径中优先激活。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22141,
+    "error": null
+  },
+  {
+    "logId": "dist_7e553102d881",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-06T06:33:23.174928Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果与 semantic_01 中关于‘过渡镜头微特效’的描述完全一致，将经验实操结果合并入语义知识库以增强其权威性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22656,
+    "error": null
+  },
+  {
+    "logId": "dist_03ffc3510332",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-06T13:43:42.252039Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果与 semantic_01 中关于过渡镜头的经验描述完全一致，将其转化为语义记忆中的实操准则可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-vfx-designer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆为最高优先级统管准则，维持最高权重以确保所有后续VFX设计服从短剧节奏。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27389,
+    "error": null
+  },
+  {
+    "logId": "dist_11dfadc1637e",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-07T03:59:58.836986Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果与 semantic_01 中关于过渡镜头的经验描述完全一致，将具体经验转化为语义记忆的通用准则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-vfx-designer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆为最高优先级统管准则，维持最高权重以确保所有输出服从短剧节奏。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24312,
+    "error": null
+  },
+  {
+    "logId": "dist_081d0ea27658",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-07T06:15:19.979735Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中关于过渡镜头的微特效描述完全一致，将其转化为语义记忆中的验证结论可提高知识密度。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24702,
+    "error": null
+  },
+  {
+    "logId": "dist_d0ac5f7cdb12",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-07T06:19:21.462564Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果与 semantic_01 中关于‘普通过渡镜头’的经验描述完全一致，将其经验沉淀至语义记忆中，消除冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-vfx-designer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆为最高优先级准则，统管所有制作逻辑，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24906,
+    "error": null
+  },
+  {
+    "logId": "dist_2fc713e065df",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-07T06:21:20.974038Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中关于过渡镜头的解决方案完全一致，将经验转化为通用语义准则可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-vfx-designer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆为最高优先级准则，统管所有制作逻辑，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24875,
+    "error": null
+  },
+  {
+    "logId": "dist_d35b9960073d",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-08T15:05:01.573251Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题，且不会导致画面脏乱）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察结果与语义记忆 sem_01 中关于过渡镜头的实操经验完全一致，将经验转化为通用语义准则可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-vfx-designer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆为最高优先级准则，统管所有制作逻辑，维持最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13358,
+    "error": null
+  },
+  {
+    "logId": "dist_8c86720b0b93",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-08T19:00:09.759091Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "经验记忆 seed_comic-vfx-designer_epi_02 的观察与结果已完全被语义记忆 learn_consolidation_20260630_comic-vfx-designer_sem_01 中的【VFX记忆点】部分所覆盖，将其转化为通用准则可提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9625,
+    "error": null
+  },
+  {
+    "logId": "dist_884d7347812e",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-09T04:06:40.377927Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果与 semantic_01 中的【VFX记忆点】关于过渡镜头的描述完全一致，将经验转化为语义记忆以增强通用性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-vfx-designer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆为最高优先级准则，维持 1.0 权重确保所有后续生成逻辑均服从短剧节奏。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14592,
+    "error": null
+  },
+  {
+    "logId": "dist_05d116bcc308",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-09T13:20:37.813748Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-vfx-designer_epi_02 的观察与结果已完全被语义记忆 learn_consolidation_20260630_comic-vfx-designer_sem_01 中的‘普通过渡镜头’实操经验所覆盖，将其转化为语义知识可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "该记忆属于基础工具链定义，相对于核心的‘短剧准则’和‘视觉体系’，其优先级可适当下调。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12328,
+    "error": null
+  },
+  {
+    "logId": "dist_06697b604ddb",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-09T13:36:16.130641Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果已完全被语义记忆 sem_01 中的【VFX记忆点】部分覆盖并理论化，将其合并为通用准则可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆描述的是具体的文件目录映射，属于工具链实施细节，相对于核心创作准则（Law）和视觉体系，其优先级较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12343,
+    "error": null
+  },
+  {
+    "logId": "dist_3557042bf97c",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-09T13:41:31.764952Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-vfx-designer_epi_02 的观察与结果已完全被 semantic 记忆 learn_consolidation_20260630_comic-vfx-designer_sem_01 中的经验结论所覆盖，将其转化为语义知识以提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆仅为基础的文件目录映射，属于低阶工具链信息，相对于核心的视觉准则和制作铁律，其重要性较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9875,
+    "error": null
+  },
+  {
+    "logId": "dist_154939f5011f",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T03:05:32.289689Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 关于过渡镜头的观察与操作结果已完全被语义记忆 sem_01 的末尾段落所覆盖并理论化，将其合并以消除冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "该记忆仅描述基础文件链路，属于通用工具链配置，相对于核心的视觉准则和制作铁律，其业务价值较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26484,
+    "error": null
+  },
+  {
+    "logId": "dist_14210135d7c2",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T03:08:05.958224Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-vfx-designer_epi_02 的观察与行动已完全被语义记忆 learn_consolidation_20260630_comic-vfx-designer_sem_01 中的‘普通过渡镜头’部分所覆盖，将其经验转化为通用语义准则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "该记忆仅描述基础文件链路，属于通用工程常识，相对于核心视觉准则和创作铁律，其对AI生成质量的直接影响较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10421,
+    "error": null
+  },
+  {
+    "logId": "dist_b9a4a16a5cb4",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T03:12:05.599258Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果已完全被 semantic_01 中的【VFX记忆点】部分所涵盖，将经验转化为语义知识以提高检索效率。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "重要性极低 (0.4)，且内容为基础的文件路径映射，属于通用工具链配置而非核心业务逻辑或创意准则，可由系统提示词或文档替代。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13094,
+    "error": null
+  },
+  {
+    "logId": "dist_2a0f046e3ef4",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T03:28:37.300903Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "经验记忆 seed_comic-vfx-designer_epi_02 的观察与结果已完全被语义记忆 learn_consolidation_20260630_comic-vfx-designer_sem_01 中的‘普通过渡镜头’部分所覆盖，将其转化为通用准则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "交付目录属于行政流程类信息，相对于核心的视觉准则和创作铁律，其对AI生成质量的直接影响较低，适当下调权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13155,
+    "error": null
+  },
+  {
+    "logId": "dist_be363376ef92",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T03:45:54.345151Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中的‘普通过渡镜头’实操建议完全一致，将经验转化为通用语义准则可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "交付目录属于纯行政流程性信息，相对于核心视觉准则和制作铁律，其对AI生成质量的直接影响较低，降低权重以优化记忆优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12141,
+    "error": null
+  },
+  {
+    "logId": "dist_856730292757",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T04:00:06.832097Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（经验证：此举可有效解决过渡镜头平淡问题）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与行动结果已完全被语义记忆 sem_01 的末尾部分所覆盖并形式化，将其合并以消除冗余并强化知识点。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.5,
+        "reason": "该记忆仅为目录结构，属于低频使用的行政类信息，相对于核心视觉与节奏准则，其重要性较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11328,
+    "error": null
+  },
+  {
+    "logId": "dist_088fab74a4c4",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T04:14:54.209652Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中关于过渡镜头的描述完全一致，将实操经验整合进语义知识库可增强知识的完备性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.3,
+        "reason": "该记忆仅为目录结构，属于低频使用的行政类信息，相对于核心视觉与节奏准则，其重要性较低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19735,
+    "error": null
+  },
+  {
+    "logId": "dist_55f612ebe047",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T04:18:46.694851Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中的实操验证部分完全一致，将经验转化为语义知识可提高检索效率。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_03_delivery_tree",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆仅为目录结构，重要性极低 (0.3)，且不涉及核心创作逻辑，属于低价值行政类信息，可由通用文档替代。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9796,
+    "error": null
+  },
+  {
+    "logId": "dist_07a735e645ef",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T04:23:31.153727Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度）。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-vfx-designer_epi_02 的观察与结果已完全被 semantic 记忆 learn_consolidation_20260630_comic-vfx-designer_sem_01 中的实操验证部分覆盖，将其转化为语义记忆的验证部分可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_07_vfx_layers",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "该记忆为通用工作流，相比于具有强项目绑定性的‘九陆纪元’铁律，其优先级应略低于核心设定。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10656,
+    "error": null
+  },
+  {
+    "logId": "dist_46cd11c1f612",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T04:31:55.683973Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效，以确保镜头不空且不脏乱（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中的实操验证部分完全重复，将其合并入语义记忆以强化知识点。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_07_vfx_layers",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该工作流记忆与经验记忆 epi_01 的成功实践高度一致，且是实现高燃且清晰画面的核心方法，提升其重要性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10421,
+    "error": null
+  },
+  {
+    "logId": "dist_2c4b3de4437b",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T04:38:59.532656Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度，确保镜头不空且不脏乱）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中的实操验证部分完全重复，将其合并为一条完整的知识点可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_07_vfx_layers",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.97,
+        "reason": "该工作流记忆与经验记忆 epi_01 中关于‘拆分四层’的成功实践高度契合，证明了分层特效的极高实操价值，提升其权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9686,
+    "error": null
+  },
+  {
+    "logId": "dist_e1bdb317e083",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T04:48:57.342451Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度，确保镜头不空且不脏乱）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中关于过渡镜头的实操验证完全一致，将经验转化为语义知识点以增强通用性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_07_vfx_layers",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "该记忆内容过于简略，且其核心逻辑（分层叠加）已在行为记忆 proc_01 中详细规范化，降低其独立重要性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13890,
+    "error": null
+  },
+  {
+    "logId": "dist_e483876832ff",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T04:49:23.565347Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度，确保镜头不空且不脏乱）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果已完全被语义记忆 sem_01 中的实操验证部分覆盖，将其合并以消除冗余并强化语义记忆的实操依据。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-vfx-designer_proc_02",
+        "mergeIntoId": "seed_comic-vfx-designer_sem_04_no_grid_keyframe",
+        "newContent": "正片级关键图质量标准：1. 严禁宫格/多面板/分格线；2. 必须使用正向约束词（Seedance 2.0不读负向词），确保画面干净无描边、无墨线、无裂纹、无草稿线、无脏黑边、无死黑阴影、无文字水印；3. 保持角色一致性，服装不漂移，特效要求干净通透；4. 严禁将黑色裂纹、粗墨线、脏污纹理视为“酷”，暗黑感应通过体积光、剪影和色彩对比表达。",
+        "newImportance": null,
+        "reason": "proc_02 的禁令与 sem_04 的质量标准在“视觉洁净度”上高度一致，将行为禁令转化为质量标准，使执行标准更统一。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12655,
+    "error": null
+  },
+  {
+    "logId": "dist_8a4e048fdf7a",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-10T06:13:54.332695Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度，确保镜头不空且不脏乱）。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-vfx-designer_epi_02 的观察与行动已完全被 semantic 记忆 learn_consolidation_20260630_comic-vfx-designer_sem_01 中的实操验证部分覆盖，将其转化为语义知识可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_07_vfx_layers",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.94,
+        "reason": "该工作流记忆与 episodic 记忆 seed_comic-vfx-designer_epi_01 的成功实践高度一致，验证了分层特效的有效性，提升其重要性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11906,
+    "error": null
+  },
+  {
+    "logId": "dist_d875bb2e9e18",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-13T03:14:23.682142Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度，确保镜头不空且不脏乱）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果与 semantic_01 中的实操验证部分完全重复，将其经验直接整合进语义记忆的实操指南中，提升知识密度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_07_vfx_layers",
+        "mergeIntoId": "seed_comic-vfx-designer_proc_01",
+        "newContent": "特效提示词规范：1. 必须明确出现位置、扩张方向、亮度层级及与角色/环境的交互，避免泛光导致动作不可控；2. 必须服从情绪与色彩体系，颜色需作为叙事符号固定绑定（如碎片=蓝白, 龙焰=赤金），严禁乱配；3. 光型需直接对应情绪（如体积光/逆光=史诗希望, 底光/伦勃朗光=压迫）；4. 强特效镜头必须保留主体轮廓，严禁光效遮盖角色脸部、武器或受力点，确保特效服务于动作和叙事。5. 拆分逻辑：每镜特效至少拆分为主光效、辅助粒子、环境响应、转场残留；执行顺序为先主体动作，后特效叠加。",
+        "newImportance": null,
+        "reason": "semantic_07 提供的特效拆分层级是 procedural_01 提示词规范的具体执行方法，将其合并为一套完整的操作流程。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15483,
+    "error": null
+  },
+  {
+    "logId": "dist_8e30df96a480",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-13T19:00:18.027439Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度，确保镜头不空且不脏乱）。",
+        "newImportance": null,
+        "reason": "episodic_02 的观察与结果与 semantic_01 中关于“普通过渡镜头”的实操验证内容完全重复，将其经验性结论合并入语义知识库以增强通用性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_07_vfx_layers",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.96,
+        "reason": "该工作流记忆与 episodic_01 的成功实践（拆分四层光效）高度呼应，证明了分层处理特效的实际价值，提升其权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12405,
+    "error": null
+  },
+  {
+    "logId": "dist_8b71b0a674a4",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-14T19:00:17.571729Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+        "newContent": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度，确保镜头不空且不脏乱）。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 的观察与结果与语义记忆 sem_01 中的实操验证部分完全一致，将其合并为语义记忆中的实操经验可增强该知识点的权重。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-vfx-designer_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该记忆涉及正片级质量底线（严禁宫格/脏线），与行为记忆 proc_02 互补，属于最高优先级质量红线，应提升重要性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12297,
+    "error": null
+  }
+]

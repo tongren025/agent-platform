@@ -1,0 +1,35 @@
+[
+  {
+    "memoryId": "seed_comic-screenwriter_proc_01",
+    "employeeKey": "comic-screenwriter",
+    "rule": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。景别控制：连续三个镜头不得使用同一景别；用远景建立空间，中景交代动作，特写给情绪钩子。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。镜头拆分表必须额外列下游字段：角色、场景、特效、轨迹、固定提示词需求。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，景别节奏决定观看变化，且确保人物/场景/特效/轨迹成员能并行工作。",
+    "rationale": "下游只能生成可见画面，抽象情绪无法生产。",
+    "confidence": 0.98,
+    "activationCount": 0,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "updatedAt": "2026-07-07T06:15:44.801716Z"
+  },
+  {
+    "memoryId": "jiulu_gaoran_pivot_20260709_comic-screenwriter_strong_protagonist_rule",
+    "employeeKey": "comic-screenwriter",
+    "rule": "苍霖任何一集都以强者姿态出场(懒散欠揍),不写'被打趴/卖惨/弱者逆袭'起手;反天选只用1秒闪回埋,不点破。其成长来自选择和经历，严禁『觉醒/天命/血统开挂』叙事;强调力量是自己从泥里爬起来的。",
+    "rationale": "用户明确:主角是世界树觉醒者,他得多强大,感受应是一个城市的毁灭;起点即强者,魂是反天选。",
+    "confidence": 0.97,
+    "activationCount": 0,
+    "sourceSession": "jiulu_gaoran_pivot_20260709",
+    "createdAt": "2026-07-09T08:02:22.942058Z",
+    "updatedAt": "2026-07-09T13:20:55.744106Z"
+  },
+  {
+    "memoryId": "mem_be2a8ad46c6f",
+    "employeeKey": "comic-screenwriter",
+    "rule": "角色塑造与结构执行标准：1. 语言区分度：确定每个角色独特的用词习惯、句式长短与口头禅并严格执行；2. 行为外化：使用能体现核心性格的动作展示角色，严禁使用旁白介绍（Show don't tell）；3. 中点逆转：在故事中点设置假胜利后接真危机，或假失败后接转机，作为注意力曲线的支撑点（故事发动机）。",
+    "rationale": "好莱坞编剧的角色区分度核心技巧，没有独特语言的角色不是角色",
+    "confidence": 0.9,
+    "activationCount": 0,
+    "sourceSession": "",
+    "createdAt": "2026-06-23T12:26:11.750553Z",
+    "updatedAt": "2026-07-07T04:00:23.052500Z"
+  }
+]

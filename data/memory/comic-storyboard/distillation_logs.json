@@ -1,0 +1,197 @@
+[
+  {
+    "logId": "dist_179a72427857",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-13T11:55:34.572520Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-storyboard_microdrama_03",
+        "mergeIntoId": "duanju_spine_20260630_comic-storyboard_law",
+        "newContent": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。单集60-90秒,一切(场景长度/对白节奏/视觉语法)都服从'把观众锁到下一集'这一个目标。构图/色彩/布光/运镜/景别这些电影美术手艺只是工具,必须服从短剧节奏,不是目的。",
+        "newImportance": null,
+        "reason": "两条记忆均定义短剧核心节奏与目标，前者提供了具体执行参数，后者强调了核心目标，合并可增强指令完整性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-storyboard_shot_size_emotion_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-storyboard_sem_01",
+        "newContent": "景别×情绪：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)且剥离环境直推内心/微距=奇观(dolly in)。每镜只一个运镜,中英双写。选景别本质是选情绪距离。",
+        "newImportance": null,
+        "reason": "两者均在讨论景别与情绪的对应关系，合并后将理论基础与具体执行指令统一。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-storyboard_camera_emotion_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-storyboard_camera_emotion_02",
+        "newContent": "运镜情绪逻辑：推镜(dolly/push in)放大情绪制造亲密与张力,用于角色顿悟/恐惧/决心的瞬间；拉镜(pull out)给语境、强调孤立渺小。dolly(物理移动)产生视差纵深、zoom(变焦)是空间压缩,两者情绪完全不同不可混用；tracking平行跟随制造'与角色同行'的沉浸感。（来源:StudioBinder/No Film School）",
+        "newImportance": null,
+        "reason": "同属运镜情绪指南，合并后形成完整的运镜工具箱。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-storyboard_montage_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-storyboard_montage_01",
+        "newContent": "蒙太奇理论：通过组合不同地点/角度/距离的镜头产生'第三种动作'（库里肖夫效应）,分镜意义在镜与镜的关系。交叉剪辑用于呈现同步多线索情节；创造性地理用剪辑拼出现实中不存在的空间关联。（来源:维基百科·蒙太奇）",
+        "newImportance": null,
+        "reason": "同属蒙太奇知识点，合并以减少碎片化。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-storyboard_composition_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-storyboard_composition_01",
+        "newContent": "构图原则：1.三分法：主体放在分割线交点而非正中；2.层次感：通过主体/客体、前景/背景对比分层,用三角轴或斜线引导视线流动。（来源:维基百科·構圖）",
+        "newImportance": null,
+        "reason": "同属基础构图原则，合并为结构化列表。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-storyboard_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "180度轴线规则是电影工业连贯性的铁律，在实际分镜执行中具有极高指导价值，原权重过低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 26,
+      "episodic": 4,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 21,
+      "episodic_count": 4,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23890,
+    "error": null
+  },
+  {
+    "logId": "dist_0a2faa4bb2be",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-13T19:00:15.855528Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-storyboard_storyboard_craft_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-storyboard_sem_01",
+        "newContent": "景别×情绪：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)且剥离环境直推内心/微距=奇观(dolly in)。选景别本质是选情绪距离：镜头越近情绪越深，远景让角色孤立于世界，近景逼观众共情。每镜只一个运镜,中英双写。",
+        "newImportance": null,
+        "reason": "两条记忆均在讨论景别与情绪的对应关系，前者提供了具体运镜参数，后者提供了理论逻辑，合并后更完整。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-storyboard_montage_03",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-storyboard_montage_01",
+        "newContent": "蒙太奇理论：通过组合不同地点/角度/距离的镜头产生'第三种动作'（库里肖夫效应）,分镜意义在镜与镜的关系。镜头并列直接决定影片节奏与叙事时空，剪辑是创造电影时间/空间的主要手段而非记录。交叉剪辑用于呈现同步多线索情节；创造性地理用剪辑拼出现实中不存在的空间关联。（来源:维基百科·蒙太奇）",
+        "newImportance": null,
+        "reason": "两条记忆均关于蒙太奇理论，内容高度重叠，合并以减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-storyboard_composition_03",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-storyboard_composition_01",
+        "newContent": "构图原则：1.三分法：主体放在分割线交点而非正中；2.层次感：通过主体/客体、前景/背景对比分层,用三角轴或斜线引导视线流动。3.光影构图：光与影本身是构图元素，需组织成'有情感的光影组合'来强化主题，而非平均打亮。（来源:维基百科·構圖）",
+        "newImportance": null,
+        "reason": "均属于构图原则，将光影作为第三条原则合并入构图总则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-storyboard_sem_04",
+        "mergeIntoId": "duanju_spine_20260630_comic-storyboard_law",
+        "newContent": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。前3秒必须有情绪炸点不慢热,单句台词≤10字。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。单集60-90秒(总时长可延至1-3分钟),结尾5秒必有反转或悬念钩子。一切(场景长度/对白节奏/视觉语法)都服从'把观众锁到下一集'这一个目标。",
+        "newImportance": null,
+        "reason": "两条记忆均定义竖屏短剧的节奏与结构，合并后形成一套完整的短剧执行标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-storyboard_storyboard_craft_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "虽然是基础分镜法，但在实际执行中（如episodic记录）已被更具体的Shot编号工作流取代，重要性适度提升但仍低于核心律法。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 21,
+      "episodic": 4,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 4,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26922,
+    "error": null
+  },
+  {
+    "logId": "dist_9e8c1a3a186d",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-14T19:00:15.424382Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-storyboard_camera_emotion_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-storyboard_sem_01",
+        "newContent": "景别×运镜×情绪逻辑：1.大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)且剥离环境直推内心/微距=奇观(dolly in)。2.运镜逻辑：推镜(dolly/push in)放大情绪制造亲密与张力(顿悟/恐惧/决心)；拉镜(pull out)给语境、强调孤立渺小。3.技术区分：dolly(物理移动)产生视差纵深、zoom(变焦)是空间压缩，不可混用；tracking平行跟随制造沉浸感。每镜只一个运镜,中英双写。",
+        "newImportance": null,
+        "reason": "两条记忆均在讨论景别与运镜如何驱动情绪，合并后可形成一套完整的视觉语言映射表。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-storyboard_microdrama_01",
+        "mergeIntoId": "duanju_spine_20260630_comic-storyboard_law",
+        "newContent": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。前3秒必须有情绪炸点(Hook,可放全季最强一拍当预告)不慢热,单句台词≤10字。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。单集60-90秒(总时长可延至1-3分钟),结尾5秒必有反转或悬念钩子。15-60秒区间必须有可拍的真实肢体/言语冲突(Friction)而非内心戏。一切都服从'把观众锁到下一集'这一个目标。",
+        "newImportance": null,
+        "reason": "pro_craft_deep2_01 提供的 Beat Engine 结构与 duanju_spine 的节奏准则高度重合，合并后增强了对短剧结构化节奏的定义。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-storyboard_storyboard_craft_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "180度轴线规则是分镜连贯性的基础铁律，原重要性0.8偏低，应提升至与工作流同级。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-storyboard_shot_size_emotion_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆关于情绪递进的描述已被合并至 learn_consolidation_20260630_comic-storyboard_sem_01 的景别逻辑中，且内容较为基础，可删除。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 4,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 4,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22766,
+    "error": null
+  }
+]

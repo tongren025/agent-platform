@@ -1,0 +1,1433 @@
+[
+  {
+    "logId": "dist_64e3a396dda3",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-06-30T14:11:47.746564Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_01",
+        "mergeIntoId": "seed_comic-qa-inspector_sem_01_quality_clean_negative",
+        "newContent": "正片级图片和视频必须使用正向约束词（⚠️ Seedance 2.0不读负向提示词）。所有禁止项必须转成正向表述（如：不要水印→画面干净无遮挡，不要模糊→面部清晰）。正向表述示例：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移。",
+        "newImportance": null,
+        "reason": "两条记忆均在强调 Seedance 2.0 禁用负向提示词并要求正向表述，内容高度重叠。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_02",
+        "mergeIntoId": "seed_comic-qa-inspector_sem_07_qa_visual",
+        "newContent": "质检必须检查：脏图、黑线、粗描边、角色漂移、服装漂移、动作逻辑错乱、场景方向矛盾、是否使用了正向约束词(⚠️若发现负向提示词必须返工)、R编号、≤6秒段、口型与字幕行、禁止词(夸张/高速/快速/fast/剧烈/激烈)。其中「快速/fast」会导致运动模糊，应改用「缓慢/轻微/小幅度/逐渐/平稳」，优先慢速连续小动作。",
+        "newImportance": null,
+        "reason": "将具体的禁止词替代方案合并至整体质检视觉清单中，增强实用性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_03",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_04",
+        "newContent": "质检红线清单:①缺风格锚点句②缺正向后缀③出现快速/fast④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒(超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式)⑧多运镜叠加⑨运镜没中英双写⑩负向提示词⑪缺口型字幕行。",
+        "newImportance": null,
+        "reason": "将时长限制的具体执行标准合并至红线清单中，使质检标准统一。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_proc_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "逐条对照红线清单检查,任何一条不过就点名返工字段,不许放行。重点核查：角色DNA是否每镜完整复述、是否出现快速/fast、单段是否超6秒。质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "将具体的重点检查项合并至通用质检流程规则中。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 19,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 16030,
+    "error": null
+  },
+  {
+    "logId": "dist_ed6e7366b5ff",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-01T03:10:47.629802Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_07_qa_visual",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_04",
+        "newContent": "质检红线清单（最高优先级）：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（必须返工）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "两条记忆均在定义质检红线和视觉检查项，合并后可形成一个完整的、高密度的质检核对清单。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_08_qa_tool_ready",
+        "mergeIntoId": "seed_comic-qa-inspector_sem_05_toolchain",
+        "newContent": "comic-drama-tool 落地链路与生成标准：需包含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场。每镜必须具备：image prompt、motion prompt、sceneXX/clipXX 映射、script JSON 草案、正向约束后缀、R编号、口型与字幕行(有台词时)。⚠️ 若存在负向提示词则返工。",
+        "newImportance": null,
+        "reason": "两者均涉及工具链的交付标准和文件映射要求，合并可统一工具链准入标准。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-qa-inspector_qa_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "通用软件测试理论，在具体的短剧质检实操中价值极低，且已被具体流程记忆覆盖。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-qa-inspector_qa_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "通用软件测试理论，缺乏具体业务场景支撑，属于低价值冗余信息。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-qa-inspector_qa_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "通用软件测试理论，在当前的短剧生产管线中优先级极低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 12,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 30281,
+    "error": null
+  },
+  {
+    "logId": "dist_a5be3cf11bc7",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-01T14:07:16.879464Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_01_quality_clean_negative",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_04",
+        "newContent": "质检红线清单（最高优先级）：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（必须返工）：Seedance 2.0不读负向提示词，所有禁止项必须转成正向表述（如：不要水印→画面干净无遮挡，不要模糊→面部清晰；示例：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及质检红线中的“负向提示词转正向表述”要求，将具体的正向表述示例合并入红线清单，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-qa-inspector_proc_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "逐条对照红线清单检查,任何一条不过就点名返工字段,不许放行。通过、有条件通过、返工三种状态必须严格区分；关键项缺失只能返工。重点核查：角色DNA是否每镜完整复述、是否出现快速/fast、单段是否超6秒。质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "两者均定义了质检的执行逻辑与状态判定标准，合并后形成统一的质检操作规程。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_03_delivery_tree",
+        "mergeIntoId": "seed_comic-qa-inspector_sem_06_qa_complete",
+        "newContent": "核心制作包标准目录为 00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。若缺 00-07 任一目录或关键文件，一律不得判定为可进入生成。",
+        "newImportance": null,
+        "reason": "将目录定义与缺失判定逻辑合并，使“标准”与“准入条件”在同一条记忆中闭环。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 12,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 10,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 34250,
+    "error": null
+  },
+  {
+    "logId": "dist_62fbd855a220",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-02T03:14:24.801830Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_05_toolchain",
+        "mergeIntoId": "seed_comic-qa-inspector_sem_06_qa_complete",
+        "newContent": "核心制作包标准目录为 00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。若缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行），一律不得判定为可进入生成。",
+        "newImportance": null,
+        "reason": "两条记忆均涉及制作包的交付标准与目录完整性检查，合并后可形成统一的交付物核对清单。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-qa-inspector_ai_consistency_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-qa-inspector_ai_consistency_02",
+        "newContent": "AI角色漂移根因在于每个clip独立生成且解读不同。硬解法：先备3-5张参考图（正面+3/4侧+全身服装+道具单独）做成转面母版，提示词仅描述动作和环境，由参考图负责长相，从而解决AI视频最核心的生产难题。",
+        "newImportance": null,
+        "reason": "01条是问题定义，02条是解决方案，合并后形成完整的“问题-对策”知识链。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_04",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆包含最高优先级的质检红线清单，是AI员工执行质检的核心依据，应提升至最高权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 10,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 35061,
+    "error": null
+  },
+  {
+    "logId": "dist_04f4dbe6e40e",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-02T13:29:11.526419Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_06_qa_complete",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_04",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "这两条记忆均属于质检（QA）标准，前者定义了交付包的物理结构，后者定义了内容的质量红线，合并后可形成完整的“质检标准手册”，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-qa-inspector_ai_consistency_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-qa-inspector_ai_consistency_02",
+        "newContent": "AI角色一致性硬解法：\n1. 基础方案：先备3-5张参考图（正面+3/4侧+全身服装+道具单独）做成转面母版，提示词仅描述动作和环境，由参考图负责长相。\n2. 进阶控制：采用锁首帧+尾帧(first/end frame)控制运动起止，配合锁定风格和稳定布光，确保跨镜一致性。",
+        "newImportance": null,
+        "reason": "两条记忆均探讨AI视频一致性的技术方案，属于同一知识点（Craft/Consistency）的不同维度，合并后形成完整的技术路径。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-qa-inspector_proc_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行流程】\n1. 逐条对照红线清单检查，任何一条不过就点名返工字段，不许放行。通过、有条件通过、返工三种状态必须严格区分；关键项缺失只能返工。重点核查：角色DNA是否每镜完整复述、是否出现快速/fast、单段是否超6秒。\n2. 质检报告要求：必须写具体证据和返工负责人，严禁仅写“建议优化”，确保返工单能被团队成员直接执行。\n3. 核心理念：质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "两条记忆均关于质检报告的执行规范，前者强调报告格式，后者强调检查逻辑，合并后可形成统一的行为准则。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27358,
+    "error": null
+  },
+  {
+    "logId": "dist_73b5885eb2d8",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-03T11:21:03.724212Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_04",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "原语义记忆中 ID 为 sem_04 和 sem_05 的内容在提供的数据中出现了重复/覆盖（sem_04 出现了两次，一次是质检红线，一次是宫格关键图），且 sem_05 在此处被错误标记为 R3 苍霖描述但实际内容与 sem_04 质检红线重复，需清理冗余并保留核心标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【质检实操经验】\n1. 针对运动词：收到 vid_prompt 含『快速展开龙翼』等词时，判定不合格，要求改为『缓缓展开』并检查时长是否超6秒，以消除运动模糊风险。\n2. 针对画面词：面对华丽但含黑线风险的提示词，强制要求使用正向约束词（如：画面干净无描边、无墨线、无草稿线、无脏黑边），移除 rough storyboard、ink、sketch 等暗示词，降低脏图概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向 Seedance 2.0 的提示词优化（禁词替换与正向约束），合并后可形成完整的提示词质检知识库。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 117391,
+    "error": null
+  },
+  {
+    "logId": "dist_9f4882a97c8b",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-06T03:33:51.178136Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于正向约束词的经验与 semantic 记忆中的红线清单第⑩项高度重合，将其具体禁词（rough storyboard, ink, sketch）整合进语义红线，提升质检标准精度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作，如将『快速展开龙翼』改为『缓缓展开龙翼』）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 是对红线清单中“快速/fast”禁词的具体执行案例，将其作为示例合并入语义红线，增强可操作性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26280,
+    "error": null
+  },
+  {
+    "logId": "dist_9bc67e58ef1d",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-06T03:34:57.161727Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于正向约束词的经验与 semantic 记忆中的红线清单第⑩条高度重合，将其具体禁词（rough storyboard, ink, sketch）合并入语义红线，提升质检标准精度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作，如将『快速展开龙翼』改为『缓缓展开龙翼』）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印，移除 rough storyboard、ink、 sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 是对红线清单第③条（禁止词fast）的具体执行案例，将其典型修改示例合并至语义记忆，增强规则的可操作性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22061,
+    "error": null
+  },
+  {
+    "logId": "dist_2e44afc88c40",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-06T06:33:24.090726Z",
+    "actions": [
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆包含具体的交付目录标准和红线清单，是质检工作的核心执行依据，重要性应与短剧第一准则持平。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21781,
+    "error": null
+  },
+  {
+    "logId": "dist_3c796e827330",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-06T13:43:43.131658Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行标准与流程（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。\n3. 执行流程：逐条对照红线清单，任何一条不过即点名返工字段。状态严格区分：通过、有条件通过、返工。关键项缺失必须返工。\n4. 报告要求：必须写具体证据和返工负责人，严禁仅写“建议优化”，确保可直接执行。\n5. 核心理念：质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "语义记忆中的'质检红线'与行为记忆中的'质检执行流程'在逻辑上高度统一，将标准与流程合并为一套完整的质检操作指南，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【提示词负向词与速度词质检经验】\n- 观察到vid_prompt含『快速展开龙翼』或华丽但含黑线词风险时 $\\rightarrow$ 判定不合格 $\\rightarrow$ 执行：1. 将『快速/fast』改为『缓缓/轻微』并检查时长是否超6秒；2. 将负向提示词（Seedance 2.0不读负向）替换为正向约束词（如：画面干净无描边、无墨线、无草稿线、无脏黑边），移除 rough storyboard、ink、sketch 等暗示词 $\\rightarrow$ 结果：消除运动模糊风险，降低生成脏图概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向 Seedance 2.0 的提示词禁忌（速度词与负向词），合并后形成更完整的提示词质检模式。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26593,
+    "error": null
+  },
+  {
+    "logId": "dist_9f25b8296750",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-07T03:59:59.710841Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行标准与流程（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。\n3. 执行流程：逐条对照红线清单，任何一条不过即点名返工字段。通过、有条件通过、返工三种状态严格区分。质检报告必须包含具体证据和返工负责人，严禁仅写“建议优化”。\n4. 核心理念：质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "语义记忆中的'质检红线'与行为记忆中的'质检执行流程'在逻辑上高度统一，将标准与流程合并为一套完整的质检操作指南，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【提示词质检实操经验】\n1. 针对运动词：发现'快速展开龙翼'等词汇时，判定不合格，要求改为'缓缓展开'并核查时长是否超6秒，以消除运动模糊风险。\n2. 针对画面词：发现华丽但含黑线风险词（如rough storyboard, ink, sketch）时，要求使用正向约束词替代（如：画面干净无描边、无墨线、无草稿线、无脏黑边），以降低Seedance 2.0生成脏图的概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均属于'提示词质检'的具体案例，合并后可形成一个针对Seedance 2.0特性的提示词避坑指南。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23766,
+    "error": null
+  },
+  {
+    "logId": "dist_d4ee6fea8942",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-07T06:15:20.812911Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行流程与红线标准（最高优先级）】\n1. 执行流程：逐条对照红线清单，任何一项不通过即点名返工，严禁仅写“建议优化”。状态严格区分：通过、有条件通过、返工。质检报告必须包含具体证据和负责人。\n2. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n3. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（10s拆≥2段, 15s拆≥3段, 格式[00:00-00:05]）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "语义记忆中的红线标准与行为记忆中的执行流程在逻辑上高度统一，合并后可形成完整的“标准+执行”闭环，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【质检实操经验】\n1. 针对运动词：收到vid_prompt含『快速展开龙翼』 $\rightarrow$ 判定不合格 $\rightarrow$ 指导改为『缓缓展开龙翼』并检查时长是否超6秒 $\rightarrow$ 消除运动模糊风险。\n2. 针对画面词：发现华丽但含黑线风险词 $\rightarrow$ 要求用正向约束词替代（Seedance 2.0不读负向提示词），如『画面干净无描边、无墨线、无草稿线、无脏黑边』，移除 rough storyboard、ink、sketch 等 $\rightarrow$ 降低脏图概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均属于对 Seedance 2.0 提示词禁忌的实操纠偏，合并为综合经验集可增强模式识别能力。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24078,
+    "error": null
+  },
+  {
+    "logId": "dist_12c7a75c3d23",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-07T06:19:22.281647Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行标准与流程（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。\n3. 执行流程：逐条对照红线清单，任何一条不过即点名返工字段。状态严格区分（通过、有条件通过、返工），关键项缺失必须返工。重点核查角色DNA复述、禁词及时长。\n4. 报告要求：必须写具体证据和返工负责人，严禁仅写“建议优化”，确保可直接执行。\n5. 核心理念：质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "语义记忆中的质检红线与行为记忆中的质检流程在逻辑上高度统一，合并后可形成一套完整的从‘标准’到‘执行’的闭环指令，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【提示词质检实操经验】\n1. 针对运动词：收到vid_prompt含『快速展开龙翼』→判定不合格，点名“快速”是禁止词，要求改为『缓缓展开龙翼』，并同步检查时长是否超6秒，消除运动模糊风险。\n2. 针对画面词：发现华丽但含黑线风险词（如rough storyboard, ink, sketch）→要求用正向约束词替代（Seedance 2.0不读负向提示词），如：画面干净无描边、无墨线、无草稿线、无脏黑边，降低脏图概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均属于对 Seedance 2.0 提示词禁忌的实操纠错，合并后可作为统一的“提示词质检案例库”。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24218,
+    "error": null
+  },
+  {
+    "logId": "dist_1a32218b718d",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-07T06:21:21.788153Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行流程与红线标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。\n3. 执行流程：逐条对照红线清单检查，任何一条不过就点名返工字段，不许放行。通过、有条件通过、返工三种状态必须严格区分；关键项缺失只能返工。重点核查：角色DNA是否每镜完整复述、是否出现快速/fast、单段是否超6秒。\n4. 质检报告要求：必须写具体证据和返工负责人，严禁仅写“建议优化”，确保返工单能被团队成员直接执行。\n5. 核心理念：质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "语义记忆中的红线标准与行为记忆中的执行流程在逻辑上高度统一，合并后可形成一套完整的从“标准”到“执行”的闭环操作指南，减少检索冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【提示词质检实操经验】\n1. 针对运动词：收到vid_prompt含『快速展开龙翼』 $\\rightarrow$ 判定不合格 $\\rightarrow$ 要求改『缓缓展开龙翼』并检查时长是否超6秒 $\\rightarrow$ 消除运动模糊风险。\n2. 针对画面词：提示词华丽但含黑线风险 $\\rightarrow$ 强制要求用正向约束词替代（Seedance 2.0不读负向提示词），如『画面干净无描边、无墨线、无草稿线、无脏黑边』，移除 rough storyboard、ink、sketch 等暗示词 $\\rightarrow$ 降低脏图概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均属于对 Seedance 2.0 提示词禁忌的实操修正，合并为综合经验条目可提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24358,
+    "error": null
+  },
+  {
+    "logId": "dist_bfb2db96a46d",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-08T15:05:02.510384Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行标准与流程（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。\n3. 执行流程：逐条对照红线清单，任何一条不过即点名返工字段。状态严格区分（通过、有条件通过、返工），关键项缺失必须返工。重点核查角色DNA完整性、禁词及时长。\n4. 报告要求：必须写具体证据和返工负责人，严禁仅写“建议优化”，确保可直接执行。\n5. 核心理念：质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "语义记忆中的质检红线与行为记忆中的质检流程在逻辑上高度统一，合并后可形成一个完整的“标准+流程”执行闭环，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【质检实操案例】\n案例A：收到vid_prompt含『快速展开龙翼』 $\\rightarrow$ 判定不合格，点名“快速”为禁止词 $\\rightarrow$ 要求改为『缓缓展开龙翼』并检查时长是否超6秒 $\\rightarrow$ 消除运动模糊风险。\n案例B：画面提示词华丽但含黑线风险 $\\rightarrow$ 强制要求用正向约束词替代（Seedance 2.0不读负向）：如“画面干净无描边、无墨线、无草稿线、无脏黑边”，移除 rough storyboard、ink、sketch 等暗示词 $\\rightarrow$ 降低脏图概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均属于“提示词词汇质检”的具体实操案例，合并为案例集可增强经验的泛化能力。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18063,
+    "error": null
+  },
+  {
+    "logId": "dist_45e228bb6d12",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-08T19:00:10.624861Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行标准与流程（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。\n3. 执行流程：逐条对照红线清单，任何一条不过即点名返工字段。状态严格区分：通过、有条件通过、返工。关键项缺失必须返工。\n4. 报告要求：必须写具体证据和返工负责人，严禁仅写“建议优化”，确保可直接执行。\n5. 核心理念：质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "语义记忆中的'质检红线'与行为记忆中的'质检执行流程'在逻辑上高度重合，将具体的标准（What）与执行步骤（How）合并为一套完整的质检操作指南，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【提示词负向词/禁词处理经验】\n- 场景A：收到vid_prompt含『快速展开龙翼』 $\rightarrow$ 判定不合格，点名“快速”是禁止词 $\rightarrow$ 改为『缓缓展开龙翼』并检查时长是否超6秒 $\rightarrow$ 消除运动模糊风险。\n- 场景B：画面提示词华丽但含黑线风险 $\rightarrow$ 强制要求用正向约束词替代（Seedance 2.0不读负向词），如：画面干净无描边、无墨线、无草稿线、无脏黑边 $\rightarrow$ 移除 rough storyboard, ink, sketch 等暗示词 $\rightarrow$ 降低脏图概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向 Seedance 2.0 的提示词约束逻辑（禁词与正向替代），合并为专项经验集可增强模式识别能力。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 18000,
+    "error": null
+  },
+  {
+    "logId": "dist_2bc87f86e050",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T04:06:41.214209Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行流程与红线标准（最高优先级）】\n1. 执行流程：逐条对照红线清单，任何一项不合格即点名返工字段。状态严格区分：通过、有条件通过、返工（关键项缺失必须返工）。质检报告须包含具体证据与负责人，严禁模糊描述。\n2. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n3. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（10s拆≥2段, 15s拆≥3段, 格式[00:00-00:05]）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "语义记忆中的红线标准与行为记忆中的执行流程在逻辑上高度统一，合并后可形成完整的“标准+流程”质检闭环，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "newContent": "【提示词质检经验】\n1. 针对运动词：收到vid_prompt含『快速展开龙翼』→判定不合格，要求改为『缓缓展开龙翼』并检查时长是否超6秒，消除运动模糊风险。\n2. 针对视觉词：画面提示词华丽但含黑线风险→要求用正向约束词替代（Seedance 2.0不读负向词），如『画面干净无描边、无墨线、无草稿线、无脏黑边』，移除 rough storyboard、ink、sketch 等暗示词，降低脏图概率。",
+        "newImportance": null,
+        "reason": "两条经验记忆均属于对 Seedance 2.0 提示词禁忌的实操反馈，合并为统一的提示词质检经验库。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17250,
+    "error": null
+  },
+  {
+    "logId": "dist_1be7e80b5374",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T13:20:38.784837Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无死黑阴影/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于正向约束词的经验与 semantic 记忆中的红线清单第⑩项高度重合，将其具体禁词（rough storyboard, ink, sketch）合并入通用标准中，提升语义记忆的完备性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "seed_comic-qa-inspector_epi_01",
+        "newContent": "【质检实操经验】\n1. 映射缺失：制作包内容多但缺失 sceneXX/clipXX 映射 $\\rightarrow$ 判定返工 $\\rightarrow$ 要求补 Image/Motion/Script 三件套，确保能接入 comic-drama-tool。\n2. 禁用词触发：vid_prompt 含『快速/fast』 $\\rightarrow$ 判定不合格 $\\rightarrow$ 要求改为『缓缓/缓慢』并核查时长是否超6秒，消除运动模糊风险。",
+        "newImportance": null,
+        "reason": "两条经验记忆均属于“质检判定-执行-结果”的模式，且均指向语义记忆中的红线清单，合并为结构化的实操经验库，减少碎片化。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17140,
+    "error": null
+  },
+  {
+    "logId": "dist_443c6ced1836",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T13:36:16.824596Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的观察与处理，与 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项完全重合，将其经验转化为标准红线定义，提升知识密度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于『快速』禁词的案例，已在 semantic 记忆红线清单第③项中明确定义，无需重复存储为经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23141,
+    "error": null
+  },
+  {
+    "logId": "dist_caaf1734a4ee",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-09T13:41:32.563850Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验已完全被 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项覆盖，将其转化为通用准则以提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁词和时长的经验已在 semantic 记忆的红线清单第③和⑦项中明确定义，无需重复存储为经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20594,
+    "error": null
+  },
+  {
+    "logId": "dist_b8871a21f44f",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:05:33.197982Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验已完全被 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第十项覆盖，将其转化为结构化知识以提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁词和“6秒”时长的经验已在 semantic 记忆的红线清单第三项和第七项中明确定义，无需重复存储为经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 33609,
+    "error": null
+  },
+  {
+    "logId": "dist_299e45248824",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:08:06.654263Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验已完全被 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩条覆盖，将其转化为语义知识以增强通用性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。若缺失 sceneXX/clipXX 映射，必须要求提示词工程师补齐 Image/Motion/Script 三件套，否则无法接入 comic-drama-tool。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_01 关于映射缺失的经验是 semantic 记忆中交付包标准的具体实践，合并后使交付标准更具可操作性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20890,
+    "error": null
+  },
+  {
+    "logId": "dist_6e6836935f0f",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:12:06.407763Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验已完全被语义记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项覆盖，将其转化为语义标准以增强通用性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。特别注意：必须确保 sceneXX/clipXX 映射关系完整，否则无法接入 comic-drama-tool。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_01 关于映射缺失的观察结果是语义记忆中交付标准目录的具体实践，将其合并至语义红线标准中，使标准更具体。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21530,
+    "error": null
+  },
+  {
+    "logId": "dist_e76e4273ea71",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:28:38.097709Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验已完全被 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项覆盖，将其转化为结构化知识以提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁止词的经验已在 semantic 记忆红线清单第③项中明确定义，无需重复存储为经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21750,
+    "error": null
+  },
+  {
+    "logId": "dist_ff4f91f93453",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T03:45:55.218307Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无脏黑边/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "经验记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的处理逻辑已完全被语义记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项覆盖，将其转化为具体的执行标准以增强知识密度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "newContent": "【质检执行流程】\n1. 逐条对照红线清单检查，任何一条不过就点名返工字段，不许放行。通过、有条件通过、返工三种状态必须严格区分；关键项缺失（如缺 sceneXX/clipXX 映射、Image/Motion/Script 三件套）只能返工。重点核查：角色DNA是否每镜完整复述、是否出现快速/fast、单段是否超6秒。\n2. 质检报告要求：必须写具体证据和返工负责人，严禁仅写“建议优化”，确保返工单能被团队成员直接执行。\n3. 核心理念：质量闸是一人团队可靠性的来源。",
+        "newImportance": null,
+        "reason": "经验记忆 seed_comic-qa-inspector_epi_01 提供的关于映射缺失的判定逻辑是质检流程的具体实例化，将其合并至行为记忆的执行流程中，使流程更具操作性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 16280,
+    "error": null
+  },
+  {
+    "logId": "dist_e142fb74d240",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:00:07.691129Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验已完全被 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项覆盖，将其转化为结构化知识以提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁词和时长的具体案例已在 semantic 记忆的红线清单第③⑦项中标准化，无需重复存储经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21922,
+    "error": null
+  },
+  {
+    "logId": "dist_94ab64d6142c",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:14:54.900388Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验与 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩条高度重合，将其经验转化为标准红线定义，提升知识密度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作，如将『快速展开龙翼』改为『缓缓展开龙翼』）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 是对红线清单中『快速/fast』禁令的具体执行案例，将其作为示例合并入语义红线清单，增强可操作性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21156,
+    "error": null
+  },
+  {
+    "logId": "dist_aaa4c697e420",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:18:47.379686Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验已完全被 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩条覆盖，将其转化为结构化知识以提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁词的案例已在 semantic 记忆红线清单第③条中明确定义，合并以消除冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21515,
+    "error": null
+  },
+  {
+    "logId": "dist_8a0fdfef69b0",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:23:31.952192Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于 Seedance 2.0 负向词转正向的经验与 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项完全重合，将其经验内化为语义准则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "seed_comic-qa-inspector_epi_01",
+        "newContent": "【质检实操经验】\n1. 映射缺失：制作包内容多但缺失 sceneXX/clipXX 映射 $\\rightarrow$ 判定返工 $\\rightarrow$ 要求补 Image/Motion/Script 三件套 $\\rightarrow$ 确保能接入 comic-drama-tool。\n2. 禁词触发：vid_prompt 含『快速展开龙翼』 $\\rightarrow$ 判定不合格 $\\rightarrow$ 指出『快速』是禁止词并要求改为『缓缓』，同时核查时长是否超6秒 $\\rightarrow$ 消除运动模糊风险。",
+        "newImportance": null,
+        "reason": "两条经验记忆均属于质检过程中的具体判定逻辑，合并为结构化的实操经验库，提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15890,
+    "error": null
+  },
+  {
+    "logId": "dist_dd26b8885d01",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:31:56.371091Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于 Seedance 2.0 正向约束词的经验与 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项完全重合，将其经验转化为语义红线标准，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁止词和“6秒”时长的处理经验已在语义红线清单中明确定义，无需重复存储为经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21000,
+    "error": null
+  },
+  {
+    "logId": "dist_f77e9c4bc99c",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:39:00.370232Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于正向约束词的经验与 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项完全重合，将其经验转化为标准红线描述，提升知识密度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于'快速'禁词的实操经验已在 semantic 红线清单第③项中完整覆盖，无需重复存储为经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19171,
+    "error": null
+  },
+  {
+    "logId": "dist_00aa7fe88e2b",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T04:49:24.372292Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的经验已完全被 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩条覆盖，将其合并以消除冗余并强化知识点。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁止词和“6秒”时长的具体案例，已在 semantic 记忆的红线清单第③条和第⑦条中定义，合并以将经验转化为标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 20390,
+    "error": null
+  },
+  {
+    "logId": "dist_807b9347c85d",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-10T06:13:55.135764Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的处理逻辑与 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项完全一致，将经验转化为标准准则，提升检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁词的案例已在 semantic 记忆的红线清单第③项中明确定义，无需重复存储为经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26109,
+    "error": null
+  },
+  {
+    "logId": "dist_f7ba07b4daa8",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-13T03:14:24.667477Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic_epi_02 关于负向提示词的经验完全被 semantic_sem_05 的红线清单第⑩条覆盖，将其转化为结构化语义记忆以提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic_epi_01 关于'快速'禁词的经验已在 semantic_sem_05 红线清单第③条中明确定义，无需重复存储为经验片段。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21422,
+    "error": null
+  },
+  {
+    "logId": "dist_70103bb865c9",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-13T19:00:18.850785Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于 Seedance 2.0 负向词转正向词的经验与 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项完全重合，将其经验固化至语义红线中，删除冗余经验记录。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。若制作包内容丰富但缺失 sceneXX/clipXX 映射关系，判定为有条件通过或返工，必须补齐 Image/Motion/Script 三件套以确保能接入 comic-drama-tool。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_01 关于映射关系缺失的判定经验是语义记忆中交付标准目录检查的具体执行细节，将其合并以增强语义记忆的完备性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23655,
+    "error": null
+  },
+  {
+    "logId": "dist_24582be48e83",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-14T19:00:18.473413Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于负向提示词的处理经验与 semantic 记忆 learn_consolidation_20260630_comic-qa-inspector_sem_05 的红线清单第⑩项完全重复，将其经验固化到标准红线中。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。特别注意：若缺失 sceneXX/clipXX 映射关系，必须要求提示词工程师补齐 Image/Motion/Script 三件套，否则无法接入 comic-drama-tool。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_01 关于映射缺失的处理经验与 semantic 记忆中交付包标准的目录检查项高度相关，将具体操作逻辑合并至标准中。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22985,
+    "error": null
+  }
+]

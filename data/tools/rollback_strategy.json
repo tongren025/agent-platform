@@ -1,0 +1,10 @@
+{
+  "name": "回滚策略",
+  "bindingCode": "rollback_strategy",
+  "createdAt": "2026-06-04T17:33:26.525Z",
+  "updatedAt": "2026-06-04T17:33:26.525Z",
+  "description": "根据 snapshot_id 回滚已创建的策略资源。仅在创建出错或运营要求撤销时调用。",
+  "inputSchema": "{\"type\":\"object\",\"properties\":{\"snapshot_id\":{\"type\":\"string\",\"description\":\"解析任务的快照 ID（由上传 Excel 时返回）\"}},\"required\":[\"snapshot_id\"],\"additionalProperties\":false}",
+  "toolCode": "rollback_strategy",
+  "sortOrder": 4
+}

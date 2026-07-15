@@ -1,0 +1,73 @@
+[
+  {
+    "docId": "56535e422342efcd",
+    "fileName": "production-handbook.md",
+    "extension": ".md",
+    "sizeBytes": 1045,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "db1da99f029e0c33",
+    "fileName": "canon-production.md",
+    "extension": ".md",
+    "sizeBytes": 604,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "電影製作"
+    ]
+  },
+  {
+    "docId": "febdf790621f7bdb",
+    "fileName": "canon-montage.md",
+    "extension": ".md",
+    "sizeBytes": 908,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "蒙太奇"
+    ]
+  },
+  {
+    "docId": "b627ac85c50f8199",
+    "fileName": "craft-ai_consistency.md",
+    "extension": ".md",
+    "sizeBytes": 1113,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "neolemon/Artlist/Vidu·AI Character Consistency",
+      "AI视频角色一致性工作流"
+    ]
+  },
+  {
+    "docId": "74d3a00765f3f495",
+    "fileName": "craft-storyboard_craft.md",
+    "extension": ".md",
+    "sizeBytes": 810,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/Videomaker·Storyboarding",
+      "分镜制作法"
+    ]
+  },
+  {
+    "docId": "6e8fbbcd76c62087",
+    "fileName": "craft2-microdrama.md",
+    "extension": ".md",
+    "sizeBytes": 1037,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "Vitrina/Real Reel/Filmustage·Micro Drama 2026",
+      "竖屏微短剧结构"
+    ]
+  }
+]

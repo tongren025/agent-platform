@@ -1,0 +1,13 @@
+{
+  "name": "aitag",
+  "endpoint": "http://112.123.118.159:8002/v1",
+  "apiKey": "no-key",
+  "enabled": true,
+  "models": [
+    {
+      "modelName": "Gemma-4-31B-IT-NVFP4",
+      "modelId": "Gemma-4-31B-IT-NVFP4",
+      "timeoutMinutes": 20
+    }
+  ]
+}

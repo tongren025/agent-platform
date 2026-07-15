@@ -1,0 +1,170 @@
+[
+  {
+    "logId": "dist_36667af3f4b6",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-13T11:55:34.899758Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-artist_lighting_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-scene-artist_lighting_03",
+        "newContent": "布光实操准则：提示词必须包含'位置+高度+强度比'三要素（如：主光侧面30-45°且略高于眼平线，辅光对侧强度50-75%，轮廓光后上方分离），而非笼统描述，因为光向决定脸部塑形与情绪。（来源:StudioBinder布光指南）",
+        "newImportance": null,
+        "reason": "两条记忆均关于StudioBinder布光指南的参数化描述，合并后将具体参数与方法论统一。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-artist_composition_01",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-scene-artist_composition_02",
+        "newContent": "构图核心原则：基础采用三分法（主体置于分割线交点）；通过主体/客体、前/背景对比分层制造视觉层次，并利用三角轴或斜线引导视线流动。（来源:维基百科·構圖）",
+        "newImportance": null,
+        "reason": "同属基础构图知识，合并后形成从基础法则到进阶引导的完整逻辑。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-artist_color_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-scene-artist_film_color_02",
+        "newContent": "色彩心理与叙事：暖色（温暖/愤怒）与冷色（平静/悲伤孤独）触发不同心理联想，具体含义由饱和度、明度及语境决定。配色是情绪工具而非装饰。（来源:No Film School & 维基百科）",
+        "newImportance": null,
+        "reason": "两条记忆均讨论冷暖色的心理暗示，合并可消除冗余并强化结论。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆将光影与情绪直接挂钩，在实际Prompt生成中具有较高的指导价值，应提升其权重以匹配其功能性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 24,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 21,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14077,
+    "error": null
+  },
+  {
+    "logId": "dist_dba290e53b79",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-13T19:00:16.359027Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-artist_film_color_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-scene-artist_film_color_02",
+        "newContent": "色彩心理与叙事决策：配色是情绪工具而非装饰，必须对齐角色/主题/情绪。暖色（温暖/愤怒）与冷色（平静/悲伤孤独）触发不同心理联想，具体含义由饱和度、明度及语境决定。整片应先做color script规划色调随情绪走向变化。（来源:No Film School, StudioBinder & 维基百科）",
+        "newImportance": null,
+        "reason": "两条记忆均讨论色彩在叙事中的心理作用与决策逻辑，高度重合，合并可提升知识密度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-artist_composition_03",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-scene-artist_composition_02",
+        "newContent": "构图核心原则：基础采用三分法（主体置于分割线交点）；通过主体/客体、前/背景对比分层制造视觉层次，并利用三角轴或斜线引导视线流动。同时，光与影本身应被组织成'有情感的光影组合'来强化主题，而非平均打亮。（来源:维基百科·構圖）",
+        "newImportance": null,
+        "reason": "两条记忆均属于构图原则，且均来自同一来源，将光影作为构图元素合并入通用构图原则中。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-artist_perspective_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-scene-artist_perspective_01",
+        "newContent": "透视与空间纵深：一点透视所有纵深线汇于焦点；视平线高低决定仰视/俯视视角。同时利用大气/空气透视（近处鲜明、远方失色且淡化）表现景深，实现'远山无皴远水无波'的效果。（来源:维基百科·透視）",
+        "newImportance": null,
+        "reason": "两条记忆均讨论透视原理，合并后形成完整的空间纵深知识点。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-artist_color_01",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-scene-artist_color_02",
+        "newContent": "色彩理论基础：色彩三属性为色相/明度/饱和度，通过独立调整其中一项控制画面维度。在应用上，互补色（色轮相对）制造最大对比张力，类似色（色轮相邻）则自然和谐——冲突场景用互补，统一氛围用类似。（来源:维基百科·色彩理論）",
+        "newImportance": null,
+        "reason": "两条记忆均属于基础色彩理论，合并后将属性定义与应用逻辑统一。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "该记忆提供了具体的光影×情绪映射表，在实际提示词生成中具有极高实用价值，应提升其权重以增强检索优先级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 21,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23280,
+    "error": null
+  },
+  {
+    "logId": "dist_26328464284e",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-14T19:00:15.984914Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-artist_lighting_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-artist_sem_03",
+        "newContent": "光影×情绪：伦勃朗光(暗侧脸颊下方三角光斑,宽不过眼长不过鼻,辅光约主光一半功率)=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。",
+        "newImportance": null,
+        "reason": "将具体的伦勃朗光判定标准合并至光影情绪映射表，增强实用性并减少冗余条目。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-artist_color_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-scene-artist_film_color_02",
+        "newContent": "色彩心理与叙事决策：配色是情绪工具而非装饰。基础属性为色相/明度/饱和度；互补色制造最大对比张力(冲突场景)，类似色自然和谐(统一氛围)。暖色（温暖/愤怒）与冷色（平静/悲伤孤独）触发不同心理联想，具体含义由饱和度、明度及语境决定。整片应先做color script规划色调随情绪走向变化。",
+        "newImportance": null,
+        "reason": "将基础色彩理论与叙事决策合并，形成从理论到应用的完整知识链。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-artist_lighting_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "该记忆提供了具体的提示词实操准则（位置+高度+强度比），对生成质量有直接影响，应提升权重以对齐实操需求。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15672,
+    "error": null
+  }
+]

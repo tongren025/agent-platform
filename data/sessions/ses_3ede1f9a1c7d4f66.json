@@ -1,0 +1,29 @@
+{
+  "SessionId": "ses_3ede1f9a1c7d4f66",
+  "EmployeeKey": "demo-assistant",
+  "Messages": [
+    {
+      "Role": "user",
+      "Content": "你好，请记住我叫小明",
+      "Timestamp": "2026-06-04T03:49:25.086Z"
+    },
+    {
+      "Role": "assistant",
+      "Content": "你好，小明！我已经记住了，很高兴为你服务。有什么我可以帮你的吗？",
+      "Timestamp": "2026-06-04T03:49:25.086Z"
+    },
+    {
+      "Role": "user",
+      "Content": "我叫什么名字？",
+      "Timestamp": "2026-06-04T03:49:33.886Z"
+    },
+    {
+      "Role": "assistant",
+      "Content": "你叫小明。",
+      "Timestamp": "2026-06-04T03:49:33.886Z"
+    }
+  ],
+  "CreatedAt": "2026-06-04T03:49:25.086Z",
+  "LastActiveAt": "2026-06-04T03:49:33.886Z",
+  "Metadata": {}
+}

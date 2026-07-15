@@ -1,0 +1,300 @@
+{
+  "sortOrder": 0,
+  "createdAt": "2026-06-23T18:07:53.810609Z",
+  "updatedAt": "2026-06-23T18:07:53.810609Z",
+  "workflowKey": "comic-drama",
+  "name": "漫剧创作流水线",
+  "description": "导演统筹 → 编剧 → 角色/场景/分镜设计（并行）→ 提示词工程 → 角色/场景/关键帧生成（并行）→ 成片",
+  "teamCode": "comic-drama-team",
+  "nodes": [
+    {
+      "nodeKey": "start",
+      "type": "start",
+      "name": "题材输入",
+      "position": {
+        "x": 40,
+        "y": 300
+      },
+      "config": {
+        "inputs": [
+          {
+            "name": "theme",
+            "label": "漫剧题材 / 梗概"
+          }
+        ]
+      }
+    },
+    {
+      "nodeKey": "director",
+      "type": "agent",
+      "name": "导演·统筹",
+      "position": {
+        "x": 260,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-director",
+        "userInputTemplate": "你是导演。把下面的题材拆成一份创作简报（题材定位、目标受众、核心看点、分集数量建议）：\n{{start.theme}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "writer",
+      "type": "agent",
+      "name": "编剧·剧本",
+      "position": {
+        "x": 480,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-screenwriter",
+        "userInputTemplate": "根据创作简报写可生产逐镜剧本；G 拆为 2-6 秒生成子段，写清动作因果、台词、音效和资产需求：\n{{director.output}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "char_design",
+      "type": "agent",
+      "name": "角色设计",
+      "position": {
+        "x": 720,
+        "y": 120
+      },
+      "config": {
+        "employeeKey": "comic-character-designer",
+        "userInputTemplate": "建立 R 编号、角色版本 ID、适用集数、母版引用和本集版本清单：\n{{writer.output}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "scene_design",
+      "type": "agent",
+      "name": "场景设计",
+      "position": {
+        "x": 720,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-scene-designer",
+        "userInputTemplate": "建立可行动 SCENE 资产卡：入口出口、前中后景、地标、行动区、轴线和光源：\n{{writer.output}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "storyboard",
+      "type": "agent",
+      "name": "分镜",
+      "position": {
+        "x": 720,
+        "y": 480
+      },
+      "config": {
+        "employeeKey": "comic-storyboard",
+        "userInputTemplate": "根据剧本、角色版本和场景资产制作逐镜分镜；每镜写起止姿态、画面位置、前中后景、视线/运动方向和连续性：\n【剧本】\n{{writer.output}}\n\n【角色】\n{{char_design.output}}\n\n【场景】\n{{scene_design.output}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "compose_design",
+      "type": "template",
+      "name": "设定汇总",
+      "position": {
+        "x": 980,
+        "y": 300
+      },
+      "config": {
+        "template": "【角色设定】\n{{char_design.output}}\n\n【场景设定】\n{{scene_design.output}}\n\n【分镜】\n{{storyboard.output}}"
+      }
+    },
+    {
+      "nodeKey": "prompt_eng",
+      "type": "agent",
+      "name": "提示词工程",
+      "position": {
+        "x": 1220,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-prompt-engineer",
+        "userInputTemplate": "转成结构化图片/视频提示词；正向与负向字段分离，执行视觉降噪预算，视频按 2-6 秒子段输出：\n{{compose_design.output}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "char_art",
+      "type": "agent",
+      "name": "角色原画",
+      "position": {
+        "x": 1460,
+        "y": 120
+      },
+      "config": {
+        "employeeKey": "comic-character-artist",
+        "userInputTemplate": "根据提示词产出角色原画说明：\n{{prompt_eng.output}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "scene_art",
+      "type": "agent",
+      "name": "场景原画",
+      "position": {
+        "x": 1460,
+        "y": 300
+      },
+      "config": {
+        "employeeKey": "comic-scene-artist",
+        "userInputTemplate": "根据提示词产出场景原画说明：\n{{prompt_eng.output}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "keyframe_art",
+      "type": "agent",
+      "name": "关键帧",
+      "position": {
+        "x": 1460,
+        "y": 480
+      },
+      "config": {
+        "employeeKey": "comic-keyframe-artist",
+        "userInputTemplate": "按运动幅度选择 1 张首帧或 2 张 FLF 代表帧，不默认九宫格：\n{{prompt_eng.output}}",
+        "onError": "continue"
+      }
+    },
+    {
+      "nodeKey": "compose_final",
+      "type": "template",
+      "name": "成片汇总",
+      "position": {
+        "x": 1720,
+        "y": 300
+      },
+      "config": {
+        "template": "【角色原画】\n{{char_art.output}}\n\n【场景原画】\n{{scene_art.output}}\n\n【关键帧】\n{{keyframe_art.output}}"
+      }
+    },
+    {
+      "nodeKey": "end",
+      "type": "end",
+      "name": "交付",
+      "position": {
+        "x": 1960,
+        "y": 300
+      },
+      "config": {
+        "outputTemplate": "{{compose_final.output}}"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "edgeId": "start->director",
+      "source": "start",
+      "target": "director",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "director->writer",
+      "source": "director",
+      "target": "writer",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "writer->char_design",
+      "source": "writer",
+      "target": "char_design",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "writer->scene_design",
+      "source": "writer",
+      "target": "scene_design",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "char_design->compose_design",
+      "source": "char_design",
+      "target": "compose_design",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "scene_design->compose_design",
+      "source": "scene_design",
+      "target": "compose_design",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "storyboard->compose_design",
+      "source": "storyboard",
+      "target": "compose_design",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "compose_design->prompt_eng",
+      "source": "compose_design",
+      "target": "prompt_eng",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "prompt_eng->char_art",
+      "source": "prompt_eng",
+      "target": "char_art",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "prompt_eng->scene_art",
+      "source": "prompt_eng",
+      "target": "scene_art",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "prompt_eng->keyframe_art",
+      "source": "prompt_eng",
+      "target": "keyframe_art",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "char_art->compose_final",
+      "source": "char_art",
+      "target": "compose_final",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "scene_art->compose_final",
+      "source": "scene_art",
+      "target": "compose_final",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "keyframe_art->compose_final",
+      "source": "keyframe_art",
+      "target": "compose_final",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "compose_final->end",
+      "source": "compose_final",
+      "target": "end",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "char_design->storyboard",
+      "source": "char_design",
+      "target": "storyboard",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "condition": null
+    },
+    {
+      "edgeId": "scene_design->storyboard",
+      "source": "scene_design",
+      "target": "storyboard",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "condition": null
+    }
+  ],
+  "enabled": false,
+  "ownerUserId": null
+}

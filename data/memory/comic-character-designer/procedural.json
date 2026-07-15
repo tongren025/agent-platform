@@ -1,0 +1,24 @@
+[
+  {
+    "memoryId": "seed_comic-character-designer_proc_02",
+    "employeeKey": "comic-character-designer",
+    "rule": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词。执行时必须先写不可漂移字段，再写可变化字段，且必须逐字复制不可漂移字段，不依赖模型临场理解。",
+    "rationale": "只写角色简介无法支撑逐镜头生产。",
+    "confidence": 0.97,
+    "activationCount": 0,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "updatedAt": "2026-07-06T13:44:09.577092Z"
+  },
+  {
+    "memoryId": "seed_comic-character-designer_proc_03",
+    "employeeKey": "comic-character-designer",
+    "rule": "成人角色必须明确成年感，性感表达要服装设计化和战斗功能化，禁止未成年化或低俗姿势。",
+    "rationale": "保证角色审美和安全边界稳定。",
+    "confidence": 0.96,
+    "activationCount": 0,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "updatedAt": "2026-06-25T03:06:39.067620Z"
+  }
+]

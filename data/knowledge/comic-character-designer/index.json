@@ -1,0 +1,97 @@
+[
+  {
+    "docId": "8f0da8180c7f2d89",
+    "fileName": "character-bible.md",
+    "extension": ".md",
+    "sizeBytes": 1951,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "61f037f3035782b4",
+    "fileName": "canon-concept_art.md",
+    "extension": ".md",
+    "sizeBytes": 550,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "概念藝術"
+    ]
+  },
+  {
+    "docId": "b9c242ed3a05da0a",
+    "fileName": "canon-color.md",
+    "extension": ".md",
+    "sizeBytes": 599,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "色彩理論"
+    ]
+  },
+  {
+    "docId": "eb3a5980db083e6a",
+    "fileName": "craft-shape_language.md",
+    "extension": ".md",
+    "sizeBytes": 746,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "CharacterBazaar/vsquad·Shape Language",
+      "角色形状语言"
+    ]
+  },
+  {
+    "docId": "22c7734c95946c66",
+    "fileName": "craft-film_color.md",
+    "extension": ".md",
+    "sizeBytes": 794,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "StudioBinder/NoFilmSchool·Color in Film",
+      "电影色彩叙事"
+    ]
+  },
+  {
+    "docId": "9fb2e951d19d8852",
+    "fileName": "craft2-anatomy.md",
+    "extension": ".md",
+    "sizeBytes": 821,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "TheDrawingSource/AnatomyMasterclass",
+      "人体比例"
+    ]
+  },
+  {
+    "docId": "a5c9ff7afe5235f6",
+    "fileName": "craft2-expression.md",
+    "extension": ".md",
+    "sizeBytes": 793,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "AnimeOutline/ClipStudio",
+      "面部表情"
+    ]
+  },
+  {
+    "docId": "00cde27f7f98081d",
+    "fileName": "craft2-costume.md",
+    "extension": ".md",
+    "sizeBytes": 948,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "Studiovity/Filmustage·Costume Design",
+      "服装叙事"
+    ]
+  }
+]

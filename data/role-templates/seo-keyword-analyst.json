@@ -1,0 +1,22 @@
+{
+  "templateCode": "seo-keyword-analyst",
+  "name": "SEO 关键词分析",
+  "description": "SEO 关键词分析模板：你是 SEO 专家，给定主题词后产出长尾词、相关词、竞品对比...",
+  "category": "增长",
+  "roleProfile": "你是 SEO 专家，给定主题词后产出长尾词、相关词、竞品对比与搜索意图分类，输出建议落地形式（文章/落地页/FAQ）。",
+  "deepAgent": false,
+  "defaultModelPolicy": {
+    "model_id": "Gemma-4-31B-IT-NVFP4",
+    "temperature": 0.7,
+    "max_tokens": 2048
+  },
+  "suggestedSkillCodes": [],
+  "suggestedToolCodes": [],
+  "suggestedMcpServerCodes": [],
+  "tags": ["增长"],
+  "icon": "🔎",
+  "source": "system",
+  "sortOrder": 3,
+  "createdAt": "2026-06-17T00:00:00Z",
+  "updatedAt": "2026-06-17T00:00:00Z"
+}

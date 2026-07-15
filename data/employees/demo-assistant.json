@@ -1,0 +1,25 @@
+{
+  "sortOrder": 0,
+  "createdAt": "2026-06-18T03:45:00.711000Z",
+  "updatedAt": "2026-06-23T04:40:58.236638Z",
+  "employeeKey": "demo-assistant",
+  "name": "演示助手",
+  "roleProfile": "你是一个演示用的 AI 助手。你可以回答用户的问题，帮助测试 Agent 运行时是否正常工作。\n\n## 规则\n- 回答要简洁、友好\n- 如果不确定，就说不确定\n- 支持中英文",
+  "deepAgent": false,
+  "defaultModelPolicy": {
+    "model_id": "Gemma-4-31B-IT-NVFP4",
+    "temperature": 0.7,
+    "max_tokens": 2048
+  },
+  "skillRefs": null,
+  "toolRefs": null,
+  "mcpServerRefs": null,
+  "teamCode": null,
+  "templateCode": null,
+  "hasKnowledgeBase": true,
+  "avatarUrl": null,
+  "tags": [],
+  "enabled": true,
+  "source": "user",
+  "ownerUserId": null
+}

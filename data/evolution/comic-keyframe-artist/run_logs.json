@@ -1,0 +1,32 @@
+[
+  {
+    "logId": "evo_7628f61d4f31",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-13T11:55:35.246726Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 343,
+    "error": null
+  },
+  {
+    "logId": "evo_45e36eb47437",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-13T20:00:17.980422Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_cfef865badc2",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-14T20:00:24.697688Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  }
+]

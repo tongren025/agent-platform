@@ -1,0 +1,4 @@
+interface:
+  display_name: "漫剧AI短片总控"
+  short_description: "调度编剧、角色、场景、分镜、参考图和视频生成岗位，生成AI短片制作包"
+  default_prompt: "使用 $generate-comic-drama-production-cards 按数字员工团队流程，为我的一集或一个10秒/15秒视频段生成角色规范、场景规范、人物图、场景图、分镜轨迹图、视频轨迹图、关键参考图、视频剧本、分镜提示词和逐镜头视频提示词。"

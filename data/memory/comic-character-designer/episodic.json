@@ -1,0 +1,38 @@
+[
+  {
+    "memoryId": "seed_comic-character-designer_epi_01",
+    "employeeKey": "comic-character-designer",
+    "observation": "生成艾拉多镜头素材时容易服装漂移",
+    "action": "把黑蓝战斗装、透明纱质外摆、大腿绑带、膝上长靴、月牙发饰、晶体腰链写成不可漂移字段。",
+    "result": "跨镜头识别度提高，提示词整合不再随意改写。",
+    "successScore": 0.95,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "seed_comic-character-designer_epi_02",
+    "employeeKey": "comic-character-designer",
+    "observation": "巨龙画面容易糊成黑块",
+    "action": "强制列头、颈、翼、爪、鳞片、胸腔白热龙焰和熔金龙瞳结构。",
+    "result": "巨龙主体更清晰，动作轨迹和特效能落到具体部位。",
+    "successScore": 0.94,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-character-designer_epi_01",
+    "employeeKey": "comic-character-designer",
+    "observation": "需要EP09苍霖形象",
+    "action": "调用R3后期DNA:深灰龙翼披风龙鳞纹+粗绳项链挂碎片+不再赤脚,与EP01早期形成成长对照",
+    "result": "下游提示词角色不漂移,EP01到EP09有可见成长",
+    "successScore": 0.93,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "memoryId": "duanju_spine_20260630_comic-vfx-designer_law",
+    "employeeKey": "comic-vfx-designer",
+    "content": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别这些电影美术手艺只是工具,必须服从短剧节奏,不是目的。",
+    "category": "shortdrama_law",
+    "importance": 1.0,
+    "sourceSession": "duanju_spine_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T23:30:00Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-09T04:06:54.968461Z"
+  },
+  {
+    "memoryId": "jiulu_gaoran_pivot_20260709_comic-vfx-designer_register_law",
+    "employeeKey": "comic-vfx-designer",
+    "content": "【九陆纪元·register铁律·最高优先级】全程高燃、高格调门槛、起点即天花板。无拉跨、无卡拉米——'贴地无脸/样本视角/体温/一个少年一块石头'那套小人物文艺分镜全部作废。主角苍霖开局即强者:懒散欠揍、世界树觉醒者、力量地貌/城市尺度,不是泥里被打的弱者。反天选是魂但埋线不点破(力量是自己爬来的,1秒闪回足矣)。每集=一个大场面set-piece+一个反转(以为A其实B)+一个钩子;1秒剪辑,约60刀/90秒,战斗段0.5秒。爽点=抬手改写一座城。",
+    "category": "knowledge",
+    "importance": 1.0,
+    "sourceSession": "jiulu_gaoran_pivot_20260709",
+    "accessCount": 0,
+    "createdAt": "2026-07-09T08:02:22.707815Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-09T08:02:22.707815Z"
+  },
+  {
+    "memoryId": "seed_comic-vfx-designer_sem_04_no_grid_keyframe",
+    "employeeKey": "comic-vfx-designer",
+    "content": "正片级关键图质量标准：1. 严禁宫格/多面板/分格线；2. 必须使用正向约束词（Seedance 2.0不读负向词），确保画面干净无描边、无墨线、无裂纹、无草稿线、无脏黑边、无死黑阴影、无文字水印；3. 保持角色一致性，服装不漂移，特效要求干净通透。",
+    "category": "quality",
+    "importance": 0.98,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-14T19:00:29.850820Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
+    "employeeKey": "comic-vfx-designer",
+    "content": "九陆纪元视觉核心与色彩体系：【风格锚点】干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。【VFX记忆点】每2-3个镜头必须出现一次明确符号绑定：龙骨碎片=蓝白脉动光(苍霖)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。普通过渡镜头必须包含雨滴反光、火星、符文余光、鳞片高光等微特效（实操验证：此举可有效解决过渡镜头平淡问题，提升视觉丰富度，确保镜头不空且不脏乱）。",
+    "category": "vfx",
+    "importance": 0.97,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-14T19:00:29.839855Z"
+  },
+  {
+    "memoryId": "jiulu_gaoran_pivot_20260709_comic-vfx-designer_realm_spectacle_lock",
+    "employeeKey": "comic-vfx-designer",
+    "content": "【九陆纪元·各陆招牌大场面·锁死不串台】烬龙陆=熔浆龙焰/龙骨废墟山峦/巨龙(禁止赛博元素);星圣陆=魔法阵连接整座浮空城/碎星环坠落/星轨炮;青霄陆=赛博朋克火箭炮/机械穹顶/数据洪流/净化光束扫城;潮生陆=海啸卷城/百米浪墙/充潮;归墟陆=虫潮遮天蔽日。每块大陆一个视觉母题即卖点,提示词必须写出尺度(城市/地貌级)+体积光+粒子+冲击波。别把大陆的招牌混用。",
+    "category": "knowledge",
+    "importance": 0.97,
+    "sourceSession": "jiulu_gaoran_pivot_20260709",
+    "accessCount": 0,
+    "createdAt": "2026-07-09T08:02:22.877352Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-09T08:02:22.877352Z"
+  },
+  {
+    "memoryId": "seed_comic-vfx-designer_sem_07_vfx_layers",
+    "employeeKey": "comic-vfx-designer",
+    "content": "每镜特效至少拆主光效、辅助粒子、环境响应、转场残留；先主体动作，后特效叠加。",
+    "category": "workflow",
+    "importance": 0.96,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 0,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-13T19:00:30.425672Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
+    "employeeKey": "comic-vfx-designer",
+    "content": "光影×情绪映射与实操：1. 情绪映射：伦勃朗光=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。2. 色彩叙事：通过 color script 规划色调随情绪变化，利用互补色制造张力，类似色营造和谐，饱和度与明度决定具体心理含义。3. 三点布光实操：提示词需包含'位置+高度+强度比'。主光在侧面30-45°且略高于眼平线，辅光在对侧（强度为主光的50-75%），轮廓光在后上方做边缘分离。",
+    "category": "light",
+    "importance": 0.95,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-06T03:34:17.174974Z"
+  }
+]

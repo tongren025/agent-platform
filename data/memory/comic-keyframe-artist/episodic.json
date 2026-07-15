@@ -1,0 +1,26 @@
+[
+  {
+    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_epi_01",
+    "employeeKey": "comic-keyframe-artist",
+    "observation": "EP02『也是』那一镜要关键帧",
+    "action": "出特写首帧:苍霖左脸疤侧光,胸口碎片暗下来,表情自嘲,static构图,完全留白配合寂静",
+    "result": "首帧情绪到位,图生视频可直接展开这一镜的最低谷",
+    "successScore": 0.93,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_epi_02",
+    "employeeKey": "comic-keyframe-artist",
+    "observation": "分镜给了S03大远景但没给参考图",
+    "action": "按大远景+crane down构图出首帧,角色小、环境大,体现渺小孤独",
+    "result": "大远景关键帧锁定,下游运镜有据可依",
+    "successScore": 0.9,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698+00:00",
+    "lastAccessed": null
+  }
+]

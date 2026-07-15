@@ -1,0 +1,62 @@
+[
+  {
+    "memoryId": "seed_comic-director_epi_01",
+    "employeeKey": "comic-director",
+    "observation": "用户只说“做 EP01 第1段 10秒”",
+    "action": "自动补齐段落 brief：钩子、交付目录、各角色任务，并要求编剧先拆镜头。",
+    "result": "团队不会散写，所有成员围绕同一制作目标工作。",
+    "successScore": 0.94,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 1,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": "2026-07-01T03:12:39.808970Z"
+  },
+  {
+    "memoryId": "seed_comic-director_epi_02",
+    "employeeKey": "comic-director",
+    "observation": "并行角色产出互相冲突",
+    "action": "总导演按镜头拆分表回收，要求人物/场景/特效/轨迹都引用同一 Shot 编号。",
+    "result": "后续视频提示词可以逐镜头整合。",
+    "successScore": 0.93,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "accessCount": 1,
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "lastAccessed": "2026-07-01T03:12:39.808970Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-director_epi_01",
+    "employeeKey": "comic-director",
+    "observation": "用户只说『做EP08』没给情绪定位",
+    "action": "自动补齐：EP08=决然离开,嘴替『也是』(老矿工释然),完全寂静处理,背影不回头",
+    "result": "下游围绕同一情绪目标产出,质检一次通过",
+    "successScore": 0.93,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 1,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": "2026-07-01T03:12:39.808970Z"
+  },
+  {
+    "memoryId": "jiulu_ep1_gaoran_20260709_comic-director",
+    "employeeKey": "comic-director",
+    "observation": "为《九陆纪元》EP1烬龙陆写90s高燃开篇集，用户要求全程高燃/强主角/大场面/开头带世界观",
+    "action": "九陆巡礼群像开场(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)+苍霖开局强者(懒散欠揍)+熔浆龙焰地貌级灭舰队+反转(贱民→世界树钥匙)+嘴替(废墟里的东西也配你们删)+反天选1秒闪回埋线",
+    "result": "8单元45段90s，招牌大场面锁死不串台(烬龙陆无赛博)，spec完成过质检",
+    "successScore": 0.9,
+    "sourceSession": "jiulu_ep1_gaoran_20260709",
+    "accessCount": 0,
+    "createdAt": "2026-07-09T08:16:29.663714Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+    "employeeKey": "comic-director",
+    "observation": "为《九陆纪元》第一季写完整24集90s高燃分镜(烬龙陆·拒绝删除)",
+    "action": "三幕:立威(1-8)/结盟与真相(9-18)/季终(19-24);每集大场面set-piece+反转+钩子+编剧笔记(want/need);招牌大场面锁死不串台(烬龙陆熔浆龙焰禁赛博);EP20反天选正拳(拒绝天命回收);EP24闭环+S2钩(青鸾+神国);FLF+retake+1秒剪辑",
+    "result": "24集全90s共794卡spec完成过验;端点序列化OK",
+    "successScore": 0.9,
+    "sourceSession": "jiulu_s1_gaoran_complete_20260709",
+    "accessCount": 0,
+    "createdAt": "2026-07-09T08:53:24.294976Z",
+    "lastAccessed": null
+  }
+]

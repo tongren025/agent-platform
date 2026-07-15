@@ -1,0 +1,502 @@
+[
+  {
+    "logId": "evo_493d103223be",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-29T13:12:24.027498Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_8adefe70d649",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-29T13:50:01.552285Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_ec21b8401c56",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T01:56:06.858182Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_35e201191a46",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T01:59:08.162372Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_71cc08b639f2",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T01:59:29.550136Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_f0827e3a57d3",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T04:07:10.123082Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_adfcd2952749",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T04:13:15.789787Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_69789d2a878d",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T04:13:21.105709Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_f43972a4036d",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T04:13:51.050641Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_10fa76757065",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T04:15:55.876055Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_0eadb4f36181",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T10:46:32.842749Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_ecbb1c56be13",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-06-30T10:51:15.407683Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_d05935d8ccfe",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-01T03:10:58.618199Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11218,
+    "error": null
+  },
+  {
+    "logId": "evo_500ed75f5a2d",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-01T14:07:28.728741Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12202,
+    "error": null
+  },
+  {
+    "logId": "evo_7bbe32be78ee",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-02T03:14:37.310448Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12780,
+    "error": null
+  },
+  {
+    "logId": "evo_00d9ca93f9c5",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-02T13:29:11.913578Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15687,
+    "error": null
+  },
+  {
+    "logId": "evo_50b6dc06da10",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-03T11:21:04.209528Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15094,
+    "error": null
+  },
+  {
+    "logId": "evo_e236bb9f11b2",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-06T03:33:51.761669Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14891,
+    "error": null
+  },
+  {
+    "logId": "evo_73a395cb6cf7",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-06T03:34:57.527172Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12250,
+    "error": null
+  },
+  {
+    "logId": "evo_38392369e07d",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-06T06:33:24.493130Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 3,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12859,
+    "error": null
+  },
+  {
+    "logId": "evo_bc40d6d2feac",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-06T13:43:43.523107Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15156,
+    "error": null
+  },
+  {
+    "logId": "evo_208a5e758a11",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-07T04:00:00.108652Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13968,
+    "error": null
+  },
+  {
+    "logId": "evo_e5fb6b7f9355",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-07T06:15:21.202563Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14828,
+    "error": null
+  },
+  {
+    "logId": "evo_b8981e1c4c7c",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-07T06:19:22.663139Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13187,
+    "error": null
+  },
+  {
+    "logId": "evo_2034dba22059",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-07T06:21:22.173295Z",
+    "sessionsAnalyzed": 1,
+    "insightsGenerated": 4,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13203,
+    "error": null
+  },
+  {
+    "logId": "evo_5ceee219950b",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-08T15:05:14.768409Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_876e163a8122",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-08T20:00:21.124086Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_d40918c5f28d",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-09T04:06:54.799813Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_eb6e6647724e",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-09T13:20:49.663443Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_558f94a5d7eb",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-09T13:36:27.800332Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_a5e332ad68c9",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-09T13:36:52.409275Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_30e1b3f96bb8",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-09T13:41:41.332369Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_9dcabfe98603",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T03:05:42.198841Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_642e481cafd5",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T03:05:58.614777Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_233aebb7c071",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T03:08:15.429094Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_645db621fe54",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T03:12:18.592189Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_87ffa7c2e7de",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T03:28:50.383720Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_08b046faad0f",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T03:46:06.391038Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_0ceaa8a1a08a",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T04:00:18.102575Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_f9fff2a1653b",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T04:15:13.867577Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_3c28d45cd769",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T04:18:55.943427Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_c19e8ecafa28",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T04:23:41.748591Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_6602eca70915",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T04:32:06.006701Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_3da0b6358e63",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T04:39:08.319804Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_afdb15e4879d",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T04:49:11.134014Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_9358920fa5f7",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T04:49:36.104242Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_44a1e03ad51e",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-10T06:14:06.177239Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_9f7b040e2d95",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-13T03:14:37.432977Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_d5fccf60a259",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-13T20:00:27.024325Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_2b1aab0a910e",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-14T20:00:24.781817Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  }
+]

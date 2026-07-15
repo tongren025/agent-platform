@@ -1,0 +1,24 @@
+[
+  {
+    "memoryId": "seed_comic-vfx-designer_proc_01",
+    "employeeKey": "comic-vfx-designer",
+    "rule": "特效提示词规范：1. 必须明确出现位置、扩张方向、亮度层级及与角色/环境的交互，避免泛光导致动作不可控；2. 必须服从情绪与色彩体系，颜色需作为叙事符号固定绑定（如碎片=蓝白, 龙焰=赤金），严禁乱配；3. 光型需直接对应情绪（如体积光/逆光=史诗希望, 底光/伦勃朗光=压迫）；4. 强特效镜头必须保留主体轮廓，严禁光效遮盖角色脸部、武器或受力点，确保特效服务于动作和叙事。",
+    "rationale": "否则视频模型只会生成泛光，动作不可控。",
+    "confidence": 0.98,
+    "activationCount": 0,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "updatedAt": "2026-07-03T11:21:34.707573Z"
+  },
+  {
+    "memoryId": "seed_comic-vfx-designer_proc_02",
+    "employeeKey": "comic-vfx-designer",
+    "rule": "严禁把黑色裂纹、粗墨线、脏污纹理当成“酷”；暗黑感用体积光、剪影和色彩对比表达。",
+    "rationale": "黑线和脏感是用户明确不满意的核心问题。",
+    "confidence": 0.98,
+    "activationCount": 0,
+    "sourceSession": "seed_comic_drama_reliable_roles_20260625",
+    "createdAt": "2026-06-25T03:06:39.067620Z",
+    "updatedAt": "2026-06-25T03:06:39.067620Z"
+  }
+]

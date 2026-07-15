@@ -1,0 +1,97 @@
+[
+  {
+    "docId": "5a445cfac70dbc09",
+    "fileName": "character-bible.md",
+    "extension": ".md",
+    "sizeBytes": 1951,
+    "uploadedAt": "2026-06-30T11:47:43.328049+00:00",
+    "tags": [
+      "项目知识库",
+      "自动沉淀"
+    ]
+  },
+  {
+    "docId": "cb21b4dd16293491",
+    "fileName": "canon-concept_art.md",
+    "extension": ".md",
+    "sizeBytes": 550,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "概念藝術"
+    ]
+  },
+  {
+    "docId": "eff8488ca972bd99",
+    "fileName": "canon-color.md",
+    "extension": ".md",
+    "sizeBytes": 599,
+    "uploadedAt": "2026-06-30T12:28:25.765700+00:00",
+    "tags": [
+      "职业正典",
+      "维基百科",
+      "色彩理論"
+    ]
+  },
+  {
+    "docId": "b36bfa7e2a18d5d3",
+    "fileName": "craft-shape_language.md",
+    "extension": ".md",
+    "sizeBytes": 746,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "CharacterBazaar/vsquad·Shape Language",
+      "角色形状语言"
+    ]
+  },
+  {
+    "docId": "6a323e87745b9cec",
+    "fileName": "craft-ai_consistency.md",
+    "extension": ".md",
+    "sizeBytes": 1113,
+    "uploadedAt": "2026-06-30T12:34:27.366500+00:00",
+    "tags": [
+      "手艺正典",
+      "neolemon/Artlist/Vidu·AI Character Consistency",
+      "AI视频角色一致性工作流"
+    ]
+  },
+  {
+    "docId": "507527ebc1c7a7d8",
+    "fileName": "craft2-anatomy.md",
+    "extension": ".md",
+    "sizeBytes": 821,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "TheDrawingSource/AnatomyMasterclass",
+      "人体比例"
+    ]
+  },
+  {
+    "docId": "8068660feafd396b",
+    "fileName": "craft2-expression.md",
+    "extension": ".md",
+    "sizeBytes": 793,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "AnimeOutline/ClipStudio",
+      "面部表情"
+    ]
+  },
+  {
+    "docId": "36eb0c46958171bc",
+    "fileName": "craft2-costume.md",
+    "extension": ".md",
+    "sizeBytes": 948,
+    "uploadedAt": "2026-06-30T12:40:38.660400+00:00",
+    "tags": [
+      "手艺正典",
+      "Studiovity/Filmustage·Costume Design",
+      "服装叙事"
+    ]
+  }
+]

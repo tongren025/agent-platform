@@ -1,0 +1,19 @@
+{
+  "SessionId": "ses_1f39d033f894428b",
+  "EmployeeKey": "demo-assistant",
+  "Messages": [
+    {
+      "Role": "user",
+      "Content": "我最开始讲了什么",
+      "Timestamp": "2026-06-04T09:10:56.886Z"
+    },
+    {
+      "Role": "assistant",
+      "Content": "你最开始发送的是一段关于我的**角色设定（Role Profile）**，定义我是一个用于演示的 AI 助手，要求我回答简洁、友好，并支持中英文。",
+      "Timestamp": "2026-06-04T09:10:56.886Z"
+    }
+  ],
+  "CreatedAt": "2026-06-04T09:10:56.886Z",
+  "LastActiveAt": "2026-06-04T09:10:56.886Z",
+  "Metadata": {}
+}

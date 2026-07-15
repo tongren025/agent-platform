@@ -1,0 +1,1866 @@
+[
+  {
+    "logId": "dist_a087c02bc2a7",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-01T03:02:21.114055Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_04",
+        "mergeIntoId": "seed_comic-scene-designer_sem_02",
+        "newContent": "九陆纪元视觉核心（风格锚点句）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边，蓝白魔法阵与赤金龙焰对撞。",
+        "newImportance": null,
+        "reason": "两条记忆内容完全一致，均为视觉核心风格定义，应合并为单一锚点。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_color_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-scene-designer_film_color_02",
+        "newContent": "暖冷色心理是双面的：暖色既是温暖也是愤怒，冷色既是平静也是悲伤孤独——靠饱和度和明度+语境定具体含义。色彩是触发心理联想的情绪工具，而非单纯装饰。（来源:No Film School & 维基百科）",
+        "newImportance": null,
+        "reason": "两者均讨论暖冷色的心理联想，前者提供具体维度，后者提供理论基础，可合并。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-designer_lighting_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-designer_sem_03",
+        "newContent": "光影×情绪映射：伦勃朗光（暗侧脸颊下方三角光斑，宽不过眼长不过鼻）=压迫戏剧/冲突；逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。",
+        "newImportance": null,
+        "reason": "将具体的伦勃朗光判定标准合并至光影情绪映射表中，增强实用性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.75,
+        "reason": "通过合并具体布光技巧，该记忆从简单的映射表升级为可执行的指南，价值提升。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_concept_art_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "定义过于通用（维基百科基础定义），对于已进入执行阶段的AI员工而言，缺乏实际操作指导价值。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_concept_art_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "定义过于通用，且其核心逻辑（先定调再量产）已在workflow相关记忆中体现。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 31,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 27,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15686,
+    "error": null
+  },
+  {
+    "logId": "dist_3d1fd5b4d6d1",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-01T03:03:59.005692Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_04",
+        "mergeIntoId": "seed_comic-scene-designer_sem_02",
+        "newContent": "九陆纪元视觉核心（风格锚点句）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边，蓝白魔法阵与赤金龙焰对撞。",
+        "newImportance": null,
+        "reason": "两条记忆内容几乎完全一致，均为视觉核心风格定义，应合并以消除冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-designer_lighting_03",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-scene-designer_lighting_01",
+        "newContent": "三点布光参数与提示词规范：主光在侧面30-45°且略高于眼平线，辅光在对侧（强度50-75%），轮廓光在后上方。提示词必须包含'位置+高度+强度比'三要素，而非笼统描述，以决定脸部塑形和情绪。（来源:StudioBinder布光指南）",
+        "newImportance": null,
+        "reason": "两者均来自同一来源且讨论同一主题（布光），一个提供参数，一个提供提示词写法，合并后形成完整的执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_composition_01",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-scene-designer_composition_02",
+        "newContent": "构图原则：基础采用三分法（主体置于分割线交点）；通过主体/客体、前景/背景的对比分层制造视觉层次，并利用三角轴或斜线引导视线流动。（来源:维基百科·構圖）",
+        "newImportance": null,
+        "reason": "同属基础构图知识，合并后可将具体技巧（三分法）与通用原则（分层/引导线）统一。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "光影情绪映射是极高价值的创作指导，当前0.75权重过低，应提升至与场景定义相当的级别。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 27,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 25,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12110,
+    "error": null
+  },
+  {
+    "logId": "dist_675c2f3891d6",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-01T03:05:08.438284Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_04",
+        "mergeIntoId": "seed_comic-scene-designer_sem_02",
+        "newContent": "九陆纪元视觉核心（风格锚点句）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边，蓝白魔法阵与赤金龙焰对撞。",
+        "newImportance": null,
+        "reason": "两条记忆内容几乎完全一致，均为视觉核心风格定义，合并以消除冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_04",
+        "mergeIntoId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "newContent": "正片级图片和视频必须使用正向约束词（⚠️ Seedance 2.0不读负向提示词）。正向表述：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移；严禁出现宫格、多面板、分格线或脏线。",
+        "newImportance": null,
+        "reason": "两者均涉及Seedance 2.0的质量约束和禁止分格线的正向表述，合并为统一的质量控制标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-designer_sem_02",
+        "newContent": "核心场景与色彩体系：scene01废巷(暖色午后散射光)/scene02废矿坑(30米深,碎片蓝光+裂缝金绿光丝)/scene03矿洞口(半明半暗过渡)/scene04矿洞深处(全黑只有碎片光)/scene05世界树遗迹(枯根迷宫,金绿光脉,体积光)/scene06悬崖(断崖云海,日落暖橙侧光)/cloud云海(金色无边际,阳光穿云体积光)。色彩符号：龙骨碎片=蓝白脉动光,龙焰=赤金白热,星环治疗阵=蓝白+数据流,世界树=金绿光脉。",
+        "newImportance": null,
+        "reason": "场景定义与对应的色彩体系是强绑定关系，合并后可提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-designer_lighting_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "虽然是基础知识，但其具体参数对提示词生成有直接指导意义，重要性应高于通用百科知识。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 25,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 24,
+      "episodic_count": 3,
+      "procedural_count": 5
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13625,
+    "error": null
+  },
+  {
+    "logId": "dist_6b87bacf06d5",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-01T03:07:08.426577Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_04",
+        "mergeIntoId": "seed_comic-scene-designer_sem_02",
+        "newContent": "九陆纪元视觉核心（风格锚点句）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边，蓝白魔法阵与赤金龙焰对撞。所有提示词必须携带此锚点以确保风格统一。",
+        "newImportance": null,
+        "reason": "两条记忆均定义视觉核心风格，前者为定义，后者为执行要求，合并后形成完整的“定义+应用”规范。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_04",
+        "mergeIntoId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "newContent": "正片级图片和视频必须使用正向约束词（⚠️ Seedance 2.0不读负向提示词）。正向表述：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移；严禁出现宫格、多面板、分格线或脏线。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "两者均在强调禁止宫格/分格线以及使用正向约束词，内容高度重叠。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_proc_01",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区、光源方向/色温及氛围元素。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "两者均涉及场景提示词的结构化要求和母版复用逻辑，合并后增强了操作指令的完整性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-designer_lighting_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆提供了具体的三点布光参数，对实际生成质量有直接指导意义，原权重 0.7 过低。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_color_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "基础色彩三属性定义属于通用常识，且在更高级的叙事色彩记忆中已隐含，对 AI 员工的特定任务价值极低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 24,
+      "episodic": 3,
+      "procedural": 5
+    },
+    "afterCounts": {
+      "semantic_count": 23,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14188,
+    "error": null
+  },
+  {
+    "logId": "dist_313d2c19bd07",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-01T03:09:37.582887Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_04_no_grid_keyframe",
+        "mergeIntoId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "newContent": "正片级图片和视频必须使用正向约束词（⚠️ Seedance 2.0不读负向提示词）。正向表述：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移；严禁出现宫格、多面板、分格线或脏线。宫格/多面板仅限内部时序参考，不可作为正片关键图，优先使用单张干净行动图。",
+        "newImportance": null,
+        "reason": "两条记忆均在强调禁止宫格/分格线以及使用正向约束词，内容高度重叠。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_04",
+        "mergeIntoId": "seed_comic-scene-designer_sem_02_style_core",
+        "newContent": "九陆纪元视觉核心（所有提示词必带风格锚点）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
+        "newImportance": null,
+        "reason": "两者内容完全一致，一个是核心定义，一个是提示词锚点，应合并为统一的风格标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-designer_film_color_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆提供了色彩叙事的理论基础，虽然目前权重较低，但对于高阶视觉规划具有指导意义，适当提升。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_composition_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "基础的三分法构图属于通用常识，且在实际的短剧节奏（duanju_spine）和行动图（sem_06）要求面前，其指导价值较低，可剪枝以减少冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 23,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 20,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11546,
+    "error": null
+  },
+  {
+    "logId": "dist_162e2386b008",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-01T03:10:46.710576Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线、文字水印或死黑阴影。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束词（如：画面干净无描边、单张干净行动图、保持角色一致性）来确保素材纯净度。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁止项高度重合，合并为一条强约束的行为准则，提高执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-designer_film_color_01",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-scene-designer_film_color_02",
+        "newContent": "色彩是叙事决策而非装饰：配色必须对齐角色/主题/情绪，通过 color script 规划色调随情绪演变。暖色（温暖/愤怒）与冷色（平静/悲伤）的具体含义由饱和度、明度及语境决定，是触发心理联想的情绪工具。（来源:No Film School, StudioBinder, 维基百科）",
+        "newImportance": null,
+        "reason": "两条记忆均讨论色彩的叙事功能与心理映射，合并后形成完整的色彩理论体系。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_perspective_02",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-scene-designer_env_layer_01",
+        "newContent": "环境分前景/中景/背景三层造纵深：前景留最深的暗、主焦点用最亮、背景少细节低对比柔色。利用大气透视（近处鲜明，远方失色且淡化）和边缘清晰度分离三层，增强景深感。（来源:Evenant, 维基百科）",
+        "newImportance": null,
+        "reason": "大气透视是实现环境分层纵深的核心技术手段，合并可使理论与实践统一。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-designer_env_layer_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "‘单一视觉焦点’原则在短剧高频反转的视觉逻辑中至关重要，应提升其重要性以指导构图。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 20,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 18,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 31110,
+    "error": null
+  },
+  {
+    "logId": "dist_8a2b3c741a0a",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-01T14:07:15.625146Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束表述：画面干净无描边/裂纹/草稿线，保持角色一致性与服装稳定，优先使用单张干净行动图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁止项高度重合，合并为一条强有力的执行准则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-designer_film_color_02",
+        "mergeIntoId": "pro_canon_wiki_20260630_comic-scene-designer_color_02",
+        "newContent": "色彩是叙事决策而非装饰：通过 color script 规划色调随情绪演变。利用互补色（色轮相对）制造最大对比张力（冲突场景），利用类似色（色轮相邻）营造自然和谐（统一氛围）。暖色与冷色的具体含义由饱和度、明度及语境决定，旨在触发心理联想。",
+        "newImportance": null,
+        "reason": "将色彩的理论知识（互补/类似色）与实操决策（叙事/情绪）合并，形成完整的色彩工作流。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-designer_lighting_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-designer_sem_03",
+        "newContent": "光影×情绪映射与参数规范：1. 情绪映射：伦勃朗光=压迫冲突；逆光=神秘孤独；底光=恐怖不安；顶光=审判神圣；双色温=冲突对峙；体积光=史诗希望；环境柔光=日常温柔。2. 参数规范：三点布光需包含'位置+高度+强度比'（主光侧面30-45°且略高于眼平线，辅光对侧50-75%，轮廓光后上方），严禁笼统描述。",
+        "newImportance": null,
+        "reason": "将光影的情绪含义与具体的布光参数合并，使“怎么打光”与“为什么这么打”在一条记忆中闭环。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-designer_env_layer_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.75,
+        "reason": "环境分层（前中后景）是构建空间纵深的基础，其重要性高于目前的 0.55，应提升至与视觉焦点原则相当的水平。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 18,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 35438,
+    "error": null
+  },
+  {
+    "logId": "dist_2a1418e3b4fc",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-02T03:14:23.577742Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印（⚠️ Seedance 2.0不读负向提示词，必须使用正向约束：如'画面干净无描边'）。如果需要时序参考，仅限内部说明，不可作为最终关键图，以避免污染正片素材。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁止项高度重合，将其整合为一条强约束的行为准则，提高执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_08_no_decor_scene",
+        "mergeIntoId": "seed_comic-scene-designer_proc_03",
+        "newContent": "场景元素必须与动作发生实质关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），禁止纯装饰性背景。背景细节必须服务于主体动作且不抢人物，以减少噪声并提升成片质量。",
+        "newImportance": null,
+        "reason": "语义记忆中关于'不抢人物'的原则与行为记忆中'功能性元素'的逻辑一致，合并后增强了从原则到执行的完整性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_05",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-designer_sem_02",
+        "newContent": "核心场景与色彩体系（控制在10个核心场景以提高复用率）：scene01废巷(EP01/05/08,暖色午后散射光)/scene02废矿坑(EP02,30米深,碎片蓝光+裂缝金绿光丝)/scene03矿洞口(EP03,半明半暗过渡)/scene04矿洞深处(EP03,全黑只有碎片光)/scene05世界树遗迹(EP06/07,枯根迷宫,金绿光脉,体积光)/scene06悬崖(EP09,断崖云海,日落暖橙侧光)/cloud云海(EP09/10,金色无边际,阳光穿云体积光)。色彩符号：龙骨碎片=蓝白脉动光,龙焰=赤金白热,星环治疗阵=蓝白+数据流,世界树=金绿光脉。",
+        "newImportance": null,
+        "reason": "将场景的分布映射（EP对应关系）直接整合进场景定义中，使场景母版信息更完整，减少检索次数。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_composition_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该理论性知识与'光影×情绪映射'及'压过一切的注意元素'高度相关，在实际生产中具有指导意义，应提升权重。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 15,
+      "episodic_count": 3,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 36515,
+    "error": null
+  },
+  {
+    "logId": "dist_32122ceb2518",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-02T13:29:10.439286Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_08_no_decor_scene",
+        "mergeIntoId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "newContent": "场景美术输出的是主场景行动图：必须包含空间方向、角色起点终点、关键地标、遮挡物、危险物、光源方向和镜头运动路径。场景细节必须服务于主体动作（可交互、可遮挡），严禁纯装饰性背景，确保背景不抢人物。",
+        "newImportance": null,
+        "reason": "两条记忆均强调场景元素必须服务于动作/功能，合并可增强场景设计准则的完整性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_proc_02",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区、光源方向/色温及氛围元素（光影描述是质量ROI最高部分，必须写清光源类型/方向/色温）。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "将光影描述的必要性直接整合进场景提示词的标准化构成中，提高执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线、描边或水印。必须使用正向约束词（⚠️ Seedance 2.0不读负向提示词）：如“画面干净无描边、单张行动图、保持角色一致性”。若需时序参考，仅限内部说明，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁止项高度重合，将其统一为一条强制性的执行准则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_perspective_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "基础透视知识属于通用常识，在具体短剧生产链路中的权重较低，可适当下调。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 3,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 28218,
+    "error": null
+  },
+  {
+    "logId": "dist_91436572049a",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-03T11:21:02.403695Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线、描边或水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束词（如：画面干净无描边、单张行动图、保持角色一致性）来确保素材纯净度。宫格仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁止项高度重合，合并为一套完整的执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-scene-designer_epi_02",
+        "mergeIntoId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "newContent": null,
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 是对 sem_01 规则的实践验证，其结果已内化为语义准则，可合并以减少冗余。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_perspective_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.3,
+        "reason": "基础透视知识属于通用常识，在高度专业化的短剧工作流中权重较低。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（含起点终点、关键地标、遮挡物、危险物）、光源方向/色温及氛围元素。场景细节必须服务于主体动作（可交互、可遮挡），严禁纯装饰性背景，确保背景不抢人物。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "场景行动图的定义（语义）与提示词的编写要求（行为）在实际操作中是同一环节，合并可提高检索效率。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 32203,
+    "error": null
+  },
+  {
+    "logId": "dist_b8e2f4b5d72e",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-06T03:33:49.806100Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束表述（如：画面干净无描边、单张行动图、服装不漂移）。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁令高度重合，合并为一条强约束的行为准则，提高执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-scene-designer_epi_02",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束表述（如：画面干净无描边、单张行动图、服装不漂移）。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 是对语义记忆 sem_01 的实践验证，结果已转化为行为准则 proc_02，可将经验直接沉淀至准则中并删除冗余经验。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_perspective_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.2,
+        "reason": "基础透视知识属于通用常识，在高度专业化的短剧生产链路中价值较低，降低权重以减少检索干扰。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_color_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆仅提供通用色彩理论，而 learn_consolidation...sem_02 已经提供了具体的项目色彩符号体系，前者过于笼统，缺乏实操指导价值。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 13,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27452,
+    "error": null
+  },
+  {
+    "logId": "dist_060af6d2d801",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-06T03:34:56.077405Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束表述（如：画面干净无描边、单张行动图、保持角色一致性）。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁令高度重合，合并为一条强约束的行为准则，提高执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-scene-designer_epi_02",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束表述（如：画面干净无描边、单张行动图、保持角色一致性）。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 是对语义记忆 sem_01 的实践验证，其结论已转化为行为准则 proc_02，可合并以消除冗余。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_perspective_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "重要性极低 (0.2)，且内容为基础美术常识，在专业工作流记忆体系中缺乏特异性价值。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-designer_env_layer_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆提供的纵深构建方法与行为记忆 proc_01 中的空间一致性要求高度互补，实际应用价值高于初始设定。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 13,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 12,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 22452,
+    "error": null
+  },
+  {
+    "logId": "dist_f993764e9506",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-06T06:33:22.869297Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束表述（如：画面干净无描边、单张行动图、低描边、柔和光影）。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁止项高度重合，合并后将‘禁令’与‘正向操作方法’统一，提高执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-designer_env_layer_01",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-scene-designer_env_layer_02",
+        "newContent": "环境构图核心：1. 建立纵深感：分前景（最深暗）、中景（主焦点最亮）、背景（低对比柔色）三层，利用大气透视分离。2. 视觉锚点：每幅画面仅设定一个由形状/颜色/光引导的‘压过一切的注意元素’，防止视线分散。",
+        "newImportance": null,
+        "reason": "两条记忆均属于环境艺术构图的底层逻辑，合并为一套完整的‘纵深+焦点’构图准则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_composition_03",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-designer_sem_03",
+        "newContent": "光影×情绪映射与参数规范：1. 情绪映射：光影本身是构图元素，需组织成有情感的组合（如：伦勃朗光=压迫冲突；逆光=神秘孤独；底光=恐怖不安；顶光=审判神圣；双色温=冲突对峙；体积光=史诗希望；环境柔光=日常温柔）。2. 参数规范：三点布光需包含'位置+高度+强度比'（主光侧面30-45°且略高于眼平线，辅光对侧50-75%，轮廓光后上方），严禁笼统描述。",
+        "newImportance": null,
+        "reason": "将抽象的光影构图理论合并入具体的参数规范记忆中，使理论服务于实践。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_07_arena_scene",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "该记忆属于特定剧集（EP01）的临时场景描述，随着剧情推进，其通用价值低于核心风格和工作流准则。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 12,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 10,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 23140,
+    "error": null
+  },
+  {
+    "logId": "dist_e90c5af2f164",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-06T13:43:41.968881Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束表述：画面干净无描边、无墨线、无裂纹、无草稿线、无死黑阴影，保持角色一致性与服装不漂移。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁令高度重合，将其整合为一套完整的正向约束执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-scene-designer_epi_02",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线或文字水印。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束表述：画面干净无描边、无墨线、无裂纹、无草稿线、无死黑阴影，保持角色一致性与服装不漂移。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "经验记忆 epi_02 是对语义记忆 sem_01 的实践验证，其结论已完全转化为行为准则 proc_02，可合并以消除冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点/终点）、光源方向/色温及氛围元素。场景美术输出的主场景行动图必须包含关键地标、遮挡物、危险物及镜头运动路径。光影描述是质量ROI最高部分，必须写清光源类型/方向/色温，确保场景细节服务于主体动作且不抢人物。",
+        "newImportance": null,
+        "reason": "场景行动图的构成要素（sem_06）与提示词的编写规则（proc_01）在逻辑上是同一套工作流，合并后可提高检索效率。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_07_arena_scene",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆为特定剧集（EP01）的临时场景描述，属于短期上下文，不具备长期通用价值，应由具体剧本驱动而非存储在长期语义记忆中。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 10,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 27750,
+    "error": null
+  },
+  {
+    "logId": "dist_9e5145fa5a1e",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-07T03:59:58.543384Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、脏线、描边、文字水印或多面板分格。由于 Seedance 2.0 不读取负向提示词，必须使用正向约束词表述（如：画面干净无描边、单张行动图、服装不漂移）。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁令高度重合，合并为一条强约束的行为准则，并保留正向提示词的具体操作方法。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-scene-designer_epi_02",
+        "mergeIntoId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "newContent": "（已在上述merge操作中通过语义化处理，此处建议将epi_02的经验直接沉淀至proc_02，故将epi_02标记为可删除或合并）",
+        "newImportance": null,
+        "reason": "经验记忆epi_02是对sem_01的实践验证，其结论已完全转化为行为准则，无需保留重复的经验记录。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-scene-designer_epi_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该经验已通过 merge 操作将其核心结论（正向约束词）沉淀至行为准则 proc_02 中，不再需要单独的经验记录。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-designer_env_layer_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "环境构图的纵深感和视觉锚点是提升画面质量的关键，其价值高于初始设定的0.7。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 24812,
+    "error": null
+  },
+  {
+    "logId": "dist_90ede2fda087",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-07T06:15:19.701436Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_proc_02",
+        "newContent": "正片场景图严禁出现宫格、分格线、黑底多面板、描边、墨线、裂纹、草稿线、脏黑边、死黑阴影或文字水印。Seedance 2.0不读负向提示词，必须使用正向约束词（如：画面干净无描边...）确保角色一致性与服装不漂移。宫格/多面板仅限内部时序参考，不可作为正片关键图。",
+        "newImportance": null,
+        "reason": "语义记忆中的质量约束与行为记忆中的禁忌规则高度重合，合并为一条强约束的行为准则，提高执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_03",
+        "newContent": "场景元素必须与动作发生功能性关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。主场景行动图必须包含：空间方向、角色起点终点、关键地标、遮挡物、危险物、光源方向和镜头运动路径，确保背景不抢人物且服务于主体动作。",
+        "newImportance": null,
+        "reason": "场景行动图的构成要素与场景元素的实用性原则在逻辑上是一致的，合并后形成完整的‘功能性场景设计’标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25093,
+    "error": null
+  },
+  {
+    "logId": "dist_7de75a5f8169",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-07T06:19:21.190496Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-scene-designer_proc_02",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区、光源方向/色温及氛围元素（光影描述是质量ROI最高部分，必须写清光源类型/方向/色温）。正片场景图严禁出现宫格、分格线、黑底多面板，如需时序仅限内部说明。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "proc_02 的禁宫格规则与 proc_01 的提示词规范均属于场景输出的质量控制标准，合并后可形成完整的场景生成指令集。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-scene-designer_proc_03",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区、光源方向/色温及氛围元素（光影描述是质量ROI最高部分，必须写清光源类型/方向/色温）。正片场景图严禁出现宫格、分格线、黑底多面板，如需时序仅限内部说明。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "proc_03 关于元素功能性的要求与 proc_01 的场景构成规范高度相关，合并后可统一场景设计的逻辑闭环。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
+        "mergeIntoId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "newContent": "场景美术输出标准：1. 必须包含空间方向、角色起点终点、关键地标、遮挡物、危险物、光源方向和镜头运动路径。2. 场景细节必须服务于主体动作（可交互、可遮挡），严禁纯装饰性背景。3. 正向约束：画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印，保持角色一致性，服装不漂移；严禁出现宫格、多面板、分格线或脏线。",
+        "newImportance": null,
+        "reason": "sem_01 的质量约束与 sem_06 的场景输出要求均属于场景图的交付标准，合并可减少冗余的语义条目。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25266,
+    "error": null
+  },
+  {
+    "logId": "dist_fa6429c6a5aa",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-07T06:21:20.702907Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可交互、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’直接转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【观察】战斗镜头场景方向混乱且场景母版复用率低 $\\rightarrow$ 【行动】先建立核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），再画主场景行动图，为每镜取景表指定角色位置和镜头方向 $\\rightarrow$ 【结果】动作轨迹能接上，镜头无空间跳变，且EP02所有镜头风格统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景母版和空间规划解决镜头跳变/不统一’的问题，合并后形成更完整的‘母版 $\\rightarrow$ 行动图 $\\rightarrow$ 取景表’工作流经验。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25282,
+    "error": null
+  },
+  {
+    "logId": "dist_4e3391748330",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-08T15:05:01.279422Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点/终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可交互、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。采取措施：1. 先画主场景行动图，再给每镜取景表指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用。结果：动作轨迹连贯，空间无跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景空间/母版解决一致性问题’，合并后形成更完整的‘问题-方案-结果’链路。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13640,
+    "error": null
+  },
+  {
+    "logId": "dist_f9691417e592",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-08T19:00:09.468212Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区/起点终点、关键地标、遮挡物、危险物、光源方向/色温及氛围元素（光影描述是质量ROI最高部分）。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。行动：1. 先画主场景行动图，再给每镜取景表指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用。结果：动作轨迹连贯，无空间跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景/路径解决空间一致性’问题，合并后形成更完整的‘母版+轨迹’解决方案。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12375,
+    "error": null
+  },
+  {
+    "logId": "dist_98b6d947a95e",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-09T04:06:40.100541Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可交互、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’直接转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【场景一致性实践】观察到战斗镜头方向混乱且场景复用率低。对策：1. 先绘制主场景行动图，指定角色位置与镜头方向，解决空间跳变；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头风格统一且可复用。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景/路径解决空间一致性’，合并后形成更完整的‘场景母版+行动图’解决方案。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14891,
+    "error": null
+  },
+  {
+    "logId": "dist_f6756102b976",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-09T13:20:37.474334Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须服务于主体动作（可交互、可遮挡、可踩、可撞、可反光、可制造粒子或转场），严禁纯装饰性背景。正向约束：画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印，严禁出现宫格、多面板、分格线或脏线。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，将具体约束合并至执行流程中可提高指令执行效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。行动：1. 先画主场景行动图，指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保所有镜头复用同一母版。结果：动作轨迹衔接流畅，空间无跳变，整体风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景标准解决空间一致性’，合并后可形成更完整的‘母版+轨迹’解决方案。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13108,
+    "error": null
+  },
+  {
+    "logId": "dist_181242f980a3",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-09T13:36:15.894849Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’直接转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【场景一致性实践】观察到战斗镜头方向混乱及场景复用需求。行动：1. 先画主场景行动图，指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保所有相关镜头复用同一母版。结果：动作轨迹衔接流畅，空间无跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景/路径解决空间一致性’，合并后形成更完整的‘母版+路径’解决方案。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13546,
+    "error": null
+  },
+  {
+    "logId": "dist_d11c1cd075b5",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-09T13:41:31.495493Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点/终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词编写规则高度重合，合并后可将‘标准’转化为‘可执行的流程’，减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。采取措施：1. 先画主场景行动图，再给每镜取景表指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用。结果：动作轨迹连贯，无空间跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘场景一致性’与‘空间控制’，合并后形成了从‘空间逻辑’到‘资产复用’的完整经验闭环。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10577,
+    "error": null
+  },
+  {
+    "logId": "dist_33431322b012",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T03:05:32.005866Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’转化为‘执行指令’，提高调用效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【场景一致性实践】1. 针对战斗镜头方向混乱：先画主场景行动图，再给每镜取景表指定角色位置和镜头方向，解决空间跳变。2. 针对特定场景（如EP02废矿坑）：锁定场景母版（30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保所有镜头复用，维持风格统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景/路径图解决空间一致性’，合并为一套完整的场景一致性操作经验。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 26766,
+    "error": null
+  },
+  {
+    "logId": "dist_00ec97bddfc4",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T03:08:05.729837Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点/终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可交互、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’直接转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "光影参数规范是实现‘电影级’视觉效果的核心技术支撑，其重要性应提升至与场景体系同级。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 9750,
+    "error": null
+  },
+  {
+    "logId": "dist_392357e36924",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T03:12:05.333787Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可交互、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后将标准转化为可执行的流程指令，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱及特定场景（如EP02废矿坑）需求时，采取‘先建立场景母版（如scene02:30米深竖井+碎片蓝光+金绿光丝+幽暗冷调），再为每镜指定角色位置和镜头方向’的策略。结果证明动作轨迹能接上，空间不跳变，且风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景母版解决空间一致性’，合并后将具体案例（废矿坑）与通用方法论（行动图）结合。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13375,
+    "error": null
+  },
+  {
+    "logId": "dist_a7d9c4a6757e",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T03:28:37.036303Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可交互、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’转化为‘执行指令’，提高调用效率。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-designer_env_layer_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "该构图核心（纵深感与视觉锚点）是实现短剧高节奏视觉引导的基础，其价值高于初始设定的0.85。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13390,
+    "error": null
+  },
+  {
+    "logId": "dist_c17fff839ae5",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T03:45:54.003803Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’直接转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【空间一致性实践】观察到战斗镜头场景方向混乱及场景复用需求。行动：1. 先画主场景行动图，指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用。结果：动作轨迹衔接流畅，无空间跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘空间一致性’与‘场景母版’的执行，合并为一套完整的‘空间管理’经验链路。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12578,
+    "error": null
+  },
+  {
+    "logId": "dist_5a70c7e46689",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T04:00:06.538601Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，且行为记忆包含更完整的执行逻辑，合并后可统一场景构建的质量约束与技术要求。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。行动：先建立场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），再画主场景行动图，并为每镜取景表指定角色位置和镜头方向。结果：场景母版可被所有相关镜头复用，动作轨迹衔接流畅，无空间跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景标准解决空间一致性’问题，前者侧重于镜头方向，后者侧重于场景母版复用，合并后形成更完整的‘母版-行动图-取景表’工作流经验。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12750,
+    "error": null
+  },
+  {
+    "logId": "dist_71bdc75df7f7",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T04:14:53.978278Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可交互、可遮挡、可踩、可撞、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，且行为记忆包含更强的执行逻辑，合并后可统一场景构建的质量标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用度低。采取措施：1. 先画主场景行动图，指定角色位置和镜头方向，确保动作轨迹不跳变；2. 锁定场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头风格统一且可复用。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向“通过预设场景/路径解决空间一致性问题”，合并后可形成更完整的“母版+路径”工作流经验。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 19984,
+    "error": null
+  },
+  {
+    "logId": "dist_de6167cebe9f",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T04:18:46.465574Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，均强调空间方向、光源、禁忌项及功能性背景，合并后可统一执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。采取措施：1. 先画主场景行动图，指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用。结果：动作轨迹衔接流畅，空间无跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向“通过预设场景/方向图解决空间一致性”的问题，合并后形成更完整的“母版+轨迹”解决方案。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11719,
+    "error": null
+  },
+  {
+    "logId": "dist_c6bd57c788ea",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T04:23:30.887178Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点/终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并至行为记忆（Procedural）可增强执行指令的完整性，减少冗余检索。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-designer_sem_02",
+        "newContent": "核心场景与色彩体系（控制在10个核心场景以提高复用率）：scene01废巷(EP01/05/08,暖色午后散射光)/scene02废矿坑(EP02,30米深,碎片蓝光+裂缝金绿光丝+幽暗冷调,环境音滴水回声+碎片脉动)/scene03矿洞口(EP03,半明半暗过渡)/scene04矿洞深处(EP03,全黑只有碎片光)/scene05世界树遗迹(EP06/07,枯根迷宫,金绿光脉,体积光)/scene06悬崖(EP09,断崖云海,日落暖橙侧光)/cloud云海(EP09/10,金色无边际,阳光穿云体积光)。色彩符号：龙骨碎片=蓝白脉动光,龙焰=赤金白热,星环治疗阵=蓝白+数据流,世界树=金绿光脉。",
+        "newImportance": null,
+        "reason": "经验记忆中关于EP02废矿坑的具体操作实例已转化为语义记忆中的场景定义，将其细节合并入语义记忆的场景库中，将经验升华为标准。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13640,
+    "error": null
+  },
+  {
+    "logId": "dist_1e2053693012",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T04:31:55.457584Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’转化为‘执行指令’，提高调用效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【场景一致性实践】观察到战斗镜头方向混乱及场景复用需求 $\\rightarrow$ 采取‘先画主场景行动图 $\\rightarrow$ 指定角色位置/镜头方向 $\\rightarrow$ 锁定场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调）’ $\\rightarrow$ 结果：动作轨迹衔接流畅，空间无跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景母版和行动图解决空间一致性’，合并为一套完整的实践链路。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 11218,
+    "error": null
+  },
+  {
+    "logId": "dist_54aa4f6b88e3",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T04:38:59.254280Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’直接转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【场景一致性实践】观察到战斗镜头方向混乱及场景复用需求。行动：1. 先画主场景行动图，指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用。结果：动作轨迹连贯，空间不跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景母版和行动图解决空间一致性’，合并后形成更完整的最佳实践链路。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 10296,
+    "error": null
+  },
+  {
+    "logId": "dist_5e7e68724996",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T04:48:57.059587Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【场景一致性实践】观察到战斗镜头方向混乱或场景需求重复时，采取‘先定义场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），再绘制主场景行动图，最后为每镜指定角色位置和镜头方向’的流程。结果：动作轨迹衔接流畅，空间无跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景母版解决空间一致性’，合并后形成更完整的‘问题-方案-结果’链路。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14186,
+    "error": null
+  },
+  {
+    "logId": "dist_288ed1e1000c",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T04:49:23.298757Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区、光源方向/色温及氛围元素（光影描述是质量ROI最高部分，必须写清光源类型/方向/色温）。场景细节必须服务于主体动作（可交互、可遮挡、可踩、可撞、可反光、可制造粒子或转场），严禁纯装饰性背景。正向约束：画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印，保持角色一致性，服装不漂移；严禁出现宫格、多面板、分格线或脏线。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，均强调空间方向、动作服务性及负向约束，合并后可统一执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。采取措施：1. 先画主场景行动图，再给每镜取景表指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用。结果：动作轨迹衔接流畅，空间无跳变，整体风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均关于场景空间的一致性与复用，前者侧重于动作轨迹，后者侧重于母版锁定，合并后形成完整的场景控制闭环。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12891,
+    "error": null
+  },
+  {
+    "logId": "dist_4f083291f335",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-10T06:13:54.067098Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须与动作发生关系（可交互、可遮挡、可踩、可撞、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，且行为记忆包含了更强的执行逻辑，合并后可统一场景构建的质量标准与操作规范。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【观察】战斗镜头场景方向混乱且场景复用率低 $\\rightarrow$ 【行动】先建立场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），再画主场景行动图，并为每镜取景表指定角色位置和镜头方向 $\\rightarrow$ 【结果】动作轨迹能接上，镜头无空间跳变，且场景母版可被所有相关镜头复用，风格统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景标准解决空间一致性’，将具体的场景应用案例（EP02）与通用方法论（行动图/取景表）合并，增强经验的普适性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12171,
+    "error": null
+  },
+  {
+    "logId": "dist_e78f2c327b96",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-13T03:14:23.342024Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。场景元素必须服务于主体动作（可交互、可遮挡、可踩、可撞、可反光、可制造粒子或转场），严禁纯装饰性背景。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并后可将‘标准’转化为‘执行指令’，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【空间一致性实践】1. 针对战斗等复杂镜头，先绘制主场景行动图，再指定每镜角色位置和镜头方向，解决空间跳变问题。2. 针对具体场景（如EP02废矿坑），通过锁定场景母版（30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调）确保所有镜头风格统一且可复用。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设空间/母版解决一致性问题’，合并为一套完整的空间控制方法论。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 14140,
+    "error": null
+  },
+  {
+    "logId": "dist_89b205de0f26",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-13T19:00:17.689135Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点/终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，且均强调‘非装饰性’和‘禁止宫格’，合并后可统一场景构建的执行标准。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。采取措施：1. 先绘制主场景行动图，指定角色位置和镜头方向，确保动作轨迹不跳变；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头风格统一且可复用。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景/路径解决空间一致性’，合并后形成更完整的‘母版+轨迹’工作流经验。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13469,
+    "error": null
+  },
+  {
+    "logId": "dist_fed25aa72f30",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-14T19:00:17.291672Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，合并至行为记忆（Procedural）以强化执行链路，减少冗余。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "【场景一致性实践】观察到战斗镜头方向混乱及场景复用需求 $\\rightarrow$ 采取措施：1. 先绘制主场景行动图，指定角色位置与镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用 $\\rightarrow$ 结果：动作轨迹衔接流畅，空间无跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景母版/行动图解决空间一致性’，合并为一条更完整的最佳实践路径。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13406,
+    "error": null
+  }
+]

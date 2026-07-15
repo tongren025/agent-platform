@@ -1,0 +1,23 @@
+{
+  "sessionId": "ses_1fa01183c5d44bdf",
+  "employeeKey": "demo-assistant",
+  "messages": [
+    {
+      "role": "user",
+      "content": "我想加一个mcp",
+      "timestamp": "2026-06-22T08:47:09.642064Z",
+      "toolName": null
+    },
+    {
+      "role": "assistant",
+      "content": "如果你是指在支持 MCP（Model Context Protocol）的客户端（如 Claude Desktop 等）中添加一个新的 MCP 服务器，通常可以通过以下步骤实现：\n\n1. **找到配置文件**：打开客户端的 `config.json` 配置文件。\n2. **添加服务器配置**：在 `mcpServers` 字段下添加该服务器的名称、运行命令（如 `node` 或 `python`）以及必要的参数。\n3. **重启客户端**：保存文件并重启应用，使配置生效。\n\n如果你是指特定的 MCP 插件或有具体的报错，请提供更多细节，我会尽力帮你！",
+      "timestamp": "2026-06-22T08:47:09.642064Z",
+      "toolName": null
+    }
+  ],
+  "compressedSummary": null,
+  "createdAt": "2026-06-22T08:47:09.642064Z",
+  "lastActiveAt": "2026-06-22T08:47:09.642064Z",
+  "metadata": {},
+  "pendingApproval": null
+}
