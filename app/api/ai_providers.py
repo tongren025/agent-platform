@@ -7,6 +7,7 @@ Prefix: /api/v1/agentapp/agent  （保持前端路由不变）
 from __future__ import annotations
 
 import openai
+import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -33,6 +34,13 @@ class AiProviderBody(BaseModel):
     models: list[dict] = []
 
 
+class ProviderModelBody(BaseModel):
+    """追加到供应商模型列表的单个模型。"""
+    modelName: str
+    modelId: str
+    timeoutMinutes: int = 20
+
+
 @router.get("/ai-providers")
 def list_ai_providers():
     """GET /ai-providers：列出全部供应商（含配置文件内置与用户自管），apiKey 脱敏返回，managed 标记是否可编辑。"""
@@ -50,6 +58,106 @@ def list_ai_providers():
             "managed": managed is not None,
         })
     return _ok(result)
+
+
+def _is_free_openrouter_model(item: dict) -> bool:
+    """按 OpenRouter 返回的 id/pricing 判断是否免费。"""
+    if str(item.get("id", "")).endswith(":free"):
+        return True
+    pricing = item.get("pricing") or {}
+    prompt = float(pricing.get("prompt") or 0)
+    completion = float(pricing.get("completion") or 0)
+    return prompt == 0 and completion == 0
+
+
+@router.get("/openrouter/models")
+def list_openrouter_models():
+    """GET /openrouter/models：从 OpenRouter 实时拉取模型目录，并标记免费模型。"""
+    try:
+        resp = httpx.get("https://openrouter.ai/api/v1/models", timeout=20)
+        resp.raise_for_status()
+        raw = resp.json().get("data", [])
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"OpenRouter models fetch failed: {exc}") from exc
+
+    configured = set()
+    for p in ai_service.list_all_providers():
+        if p.name.lower() == "openrouter":
+            configured = {m.get("modelId") or m.get("modelName") for m in p.models}
+            break
+
+    models = []
+    for item in raw:
+        pricing = item.get("pricing") or {}
+        architecture = item.get("architecture") or {}
+        top_provider = item.get("top_provider") or {}
+        model_id = item.get("id", "")
+        models.append({
+            "id": model_id,
+            "name": item.get("name") or model_id,
+            "contextLength": item.get("context_length") or top_provider.get("context_length"),
+            "promptPrice": pricing.get("prompt"),
+            "completionPrice": pricing.get("completion"),
+            "isFree": _is_free_openrouter_model(item),
+            "modality": architecture.get("modality"),
+            "inputModalities": architecture.get("input_modalities") or [],
+            "outputModalities": architecture.get("output_modalities") or [],
+            "configured": model_id in configured,
+        })
+    return _ok(models)
+
+
+@router.post("/ai-providers/{name}/models")
+def add_ai_provider_model(name: str, body: ProviderModelBody):
+    """POST /ai-providers/{name}/models：把一个模型追加到供应商配置，已存在则更新名称/超时。"""
+    if BAD_KEY_RE.search(name):
+        raise HTTPException(status_code=400, detail="Invalid provider name")
+    provider = None
+    for p in ai_service.list_all_providers():
+        if p.name.lower() == name.lower():
+            provider = p
+            break
+    if provider is None:
+        if name.lower() != "openrouter":
+            raise HTTPException(status_code=404, detail=f"Provider not found: {name}")
+        data = {
+            "name": "openrouter",
+            "endpoint": "https://openrouter.ai/api/v1",
+            "apiKey": "${OPENROUTER_API_KEY}",
+            "enabled": True,
+            "models": [],
+        }
+    else:
+        existing = ai_service.store.get(provider.name)
+        data = existing or {
+            "name": provider.name,
+            "endpoint": provider.endpoint,
+            "apiKey": "${OPENROUTER_API_KEY}" if provider.name.lower() == "openrouter" else provider.api_key,
+            "enabled": provider.enabled,
+            "models": list(provider.models),
+        }
+
+    models = list(data.get("models") or [])
+    next_model = {
+        "modelName": body.modelName or body.modelId,
+        "modelId": body.modelId or body.modelName,
+        "timeoutMinutes": body.timeoutMinutes or 20,
+    }
+    replaced = False
+    for idx, model in enumerate(models):
+        if (model.get("modelId") or model.get("modelName")) == next_model["modelId"]:
+            models[idx] = next_model
+            replaced = True
+            break
+    if not replaced:
+        models.append(next_model)
+    data["models"] = models
+    saved = ai_service.store.save(data)
+    safe = dict(saved)
+    safe["apiKeyMasked"] = _mask_key(safe.get("apiKey", ""))
+    safe.pop("apiKey", None)
+    safe["managed"] = True
+    return _ok(safe)
 
 
 @router.get("/ai-providers/{name}")

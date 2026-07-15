@@ -74,3 +74,42 @@ def test_login_missing_body_returns_422(app_client):
     # pydantic 校验失败 → 422，锁住请求体契约
     resp = app_client.post("/api/v1/agentapp/auth/login", json={})
     assert resp.status_code == 422
+
+
+def test_openrouter_models_endpoint_marks_free_models(app_client, monkeypatch):
+    """OpenRouter 模型目录接口应返回 JSON 信封，而不是被 SPA 兜底成 HTML。"""
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "data": [
+                    {
+                        "id": "vendor/free-model:free",
+                        "name": "Free Model",
+                        "context_length": 8192,
+                        "pricing": {"prompt": "0", "completion": "0"},
+                        "architecture": {"modality": "text->text"},
+                        "top_provider": {},
+                    },
+                    {
+                        "id": "vendor/paid-model",
+                        "name": "Paid Model",
+                        "context_length": 32768,
+                        "pricing": {"prompt": "0.000001", "completion": "0.000002"},
+                        "architecture": {"modality": "text->text"},
+                        "top_provider": {},
+                    },
+                ]
+            }
+
+    monkeypatch.setattr("app.api.ai_providers.httpx.get", lambda *args, **kwargs: FakeResponse())
+
+    resp = app_client.get("/api/v1/agentapp/agent/openrouter/models")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["code"] == 200
+    assert body["data"][0]["id"] == "vendor/free-model:free"
+    assert body["data"][0]["isFree"] is True
+    assert body["data"][1]["isFree"] is False

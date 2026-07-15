@@ -195,6 +195,9 @@ export const api = {
     request<any>(`/agent/ai-providers/${encodeURIComponent(name)}`, { method: 'DELETE' }),
   testAiProvider: (name: string) =>
     request<any>(`/agent/ai-providers/${encodeURIComponent(name)}/test`, { method: 'POST' }),
+  listOpenRouterModels: () => request<any[]>('/agent/openrouter/models'),
+  addAiProviderModel: (name: string, data: { modelName: string; modelId: string; timeoutMinutes?: number }) =>
+    request<any>(`/agent/ai-providers/${encodeURIComponent(name)}/models`, { method: 'POST', body: JSON.stringify(data) }),
 
   // System
   getSystemInfo: () => request<any>('/agent/system-info'),
@@ -332,8 +335,16 @@ export const api = {
     request<any>(`/production/projects/${pid}/members/${userId}`, { method: 'PUT', body: JSON.stringify({ role }) }),
   removeMember: (pid: string, userId: string) =>
     request<any>(`/production/projects/${pid}/members/${userId}`, { method: 'DELETE' }),
-  generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string; episode?: number | null; mode?: 'append' | 'replace' }) =>
+  generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string; episode?: number | null; shot_number?: number; mode?: 'append' | 'replace' }) =>
     request<any>(`/production/projects/${pid}/generate`, { method: 'POST', body: JSON.stringify(data) }),
+  generateCardImage: (pid: string, cardId: string, data: { model: string; prompt?: string; size?: string }) =>
+    request<{ url: string; model: string; card: any }>(`/production/projects/${pid}/cards/${cardId}/generate-image`, {
+      method: 'POST', body: JSON.stringify(data),
+    }),
+  splitStoryboardCard: (pid: string, cardId: string) =>
+    request<{ split: number; source_card_id: string; cards: any[] }>(
+      `/production/projects/${pid}/cards/${cardId}/split-storyboard`, { method: 'POST' },
+    ),
   listStages: () => request<any[]>('/production/stages'),
   /** 跨季全链路对照矩阵：每个 G 生成单元一行，只回统计量不回卡片正文。 */
   getMatrix: () => request<{ projects: MatrixProject[]; rows: MatrixRow[] }>('/production/matrix'),

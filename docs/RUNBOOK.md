@@ -110,10 +110,30 @@ python -m app.tasks.worker      # 或 arq app.tasks.worker.WorkerSettings
 | `aiModels`（appsettings） | 无 | 一旦写了，`name/endpoint/apiKey` 三键必填——缺键会在 **import 期 KeyError 崩掉 uvicorn** |
 
 **密钥现状（三个地方，按优先级）**：管理端 UI 落盘的 `data/ai-providers/*.json`（最优先）>
-`appsettings.Development.json` 的 `aiModels` > 无。`.env` 管基础设施密钥（DashScope 等）。
+`appsettings.Development.json` 的 `aiModels` > 无。`aiModels[].apiKey` 支持 `${ENV_NAME}` 占位符，
+例如 OpenRouter 可写 `"apiKey": "${OPENROUTER_API_KEY}"`，真实 key 放 `.env` 或系统环境变量。
+`.env` 也管基础设施密钥（DashScope 等）。
 `appsettings.Development.json` 已 gitignore，但它在盘上是明文——不要把它复制进任何会入库的路径。
 另注意其中 `AdminApiBaseUrl`（:5040）指向的是**外部充值策略 admin API**（`app/api/strategy_proxy.py` 消费），
 与本仓 :8001 的 admin/ 服务重名不同物。
+
+OpenRouter 配置最小例子：
+
+```json
+{
+  "aiModels": [
+    {
+      "name": "openrouter",
+      "endpoint": "https://openrouter.ai/api/v1",
+      "apiKey": "${OPENROUTER_API_KEY}",
+      "enabled": "true",
+      "models": [
+        { "modelName": "OpenRouter Auto", "modelId": "openrouter/auto", "timeoutMinutes": 20 }
+      ]
+    }
+  ]
+}
+```
 
 ## 4. 可选外部服务矩阵（不起会怎样）
 

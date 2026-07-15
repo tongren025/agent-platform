@@ -27,6 +27,7 @@ import {
   HistoryOutlined,
   CloudSyncOutlined,
   LogoutOutlined,
+  ApiOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../theme';
 import { hasPerm, userAuth } from '../userAuth';
@@ -72,6 +73,7 @@ const navSections: NavSection[] = [
     title: '系统',
     items: [
       { key: '/tools', icon: <ToolOutlined />, label: '工具 & MCP', perm: 'tool:manage' },
+      { key: '/models', icon: <ApiOutlined />, label: '模型市场', perm: 'settings:manage' },
       { key: '/settings', icon: <SettingOutlined />, label: '设置', perm: 'settings:manage' },
     ],
   },

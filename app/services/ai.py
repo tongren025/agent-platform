@@ -14,7 +14,7 @@ from typing import Sequence
 
 import openai
 
-from app.config import AiModelConfig, BASE_DIR
+from app.config import AiModelConfig, BASE_DIR, resolve_secret
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +77,7 @@ class AiProviderStore:
             configs.append(AiModelConfig(
                 name=d["name"],
                 endpoint=d.get("endpoint", ""),
-                api_key=d.get("apiKey", ""),
+                api_key=resolve_secret(d.get("apiKey", "")),
                 enabled=d.get("enabled", True),
                 models=d.get("models", []),
             ))

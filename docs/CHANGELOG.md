@@ -5,6 +5,34 @@
 
 ---
 
+## [2026-07-15] feat: OpenRouter 模型市场页
+
+**动机**：用户希望单独查看 OpenRouter 模型，标出免费模型，并可自行选择加入平台使用。
+
+**变更**：
+- 新增 `GET /api/v1/agentapp/agent/openrouter/models`，实时读取 OpenRouter 模型目录并标记免费模型。
+- 新增 `POST /api/v1/agentapp/agent/ai-providers/{name}/models`，支持把选中的模型追加到供应商模型列表。
+- 新增前端 `/models` 模型市场页，支持免费/全部/已加入筛选、搜索、价格与上下文展示、一键加入 OpenRouter。
+- 供应商存储读取也支持 `${ENV_NAME}` 密钥占位，避免把 OpenRouter key 写入托管 JSON。
+
+**影响面**：用户端新增“模型市场”导航；OpenRouter 模型选择不需要手改 JSON；无数据库变更。
+
+---
+
+## [2026-07-15] feat: OpenRouter 作为 OpenAI 兼容模型供应商接入
+
+**动机**：用户已有 OpenRouter 账号，希望平台里的数字员工能直接选择并调用 OpenRouter 上的模型。
+
+**变更**：
+- `appsettings*.json` 的 `aiModels[].apiKey` 支持 `${ENV_NAME}` 环境变量占位，避免把 OpenRouter key 写死进 JSON。
+- 业务配置加载时会读取仓库根 `.env`，保证 `OPENROUTER_API_KEY` 在 `app.config` 先导入时也能解析。
+- `.env.example` 新增 `OPENROUTER_API_KEY` 示例。
+- RUNBOOK 补充 OpenRouter 最小配置，endpoint 使用 `https://openrouter.ai/api/v1`，模型可先用 `openrouter/auto` 或替换为控制台里的模型 ID。
+
+**影响面**：`app/config.py` 配置解析；本地/生产配置可用环境变量承载 LLM provider 密钥；无数据库或 API schema 变更。
+
+---
+
 ## [2026-07-14] fix: 部署后数据全空——data/resouce bind mount + 同步脚本
 
 **问题**：部署后员工/团队/工作流等数据全空，制作看板图片也全部 404。

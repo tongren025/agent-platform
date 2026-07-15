@@ -7,10 +7,14 @@ core 管数据库 / 开关 / 密钥。模块加载时即构造全局单例 `sett
 """
 from __future__ import annotations
 import json
+import os
 from pathlib import Path
 from dataclasses import dataclass, field
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 
 @dataclass
@@ -87,6 +91,13 @@ def _load_json(path: Path) -> dict:
     return {}
 
 
+def resolve_secret(value: str) -> str:
+    """解析配置里的密钥占位符：${ENV_NAME} 从环境变量读取，其他值原样返回。"""
+    if value.startswith("${") and value.endswith("}"):
+        return os.getenv(value[2:-1], "")
+    return value
+
+
 def load_settings() -> Settings:
     """装载并解析业务配置：base 与 Development 深合并后映射为强类型 Settings。"""
     base = _load_json(BASE_DIR / "appsettings.json")
@@ -151,7 +162,7 @@ def load_settings() -> Settings:
         ai_models.append(AiModelConfig(
             name=m["name"],
             endpoint=m["endpoint"],
-            api_key=m["apiKey"],
+            api_key=resolve_secret(m["apiKey"]),
             enabled=str(m.get("enabled", "true")).lower() == "true",
             models=m.get("models", []),
         ))
