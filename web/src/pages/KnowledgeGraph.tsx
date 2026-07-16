@@ -1,4 +1,4 @@
-// 知识图谱页：员工/工具/技能/团队/工作流的关系可视化。
+// 能力关系图页：员工/工具/技能/团队/工作流的拓扑可视化，不表示内容知识实体。
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import ReactFlow, {
   Background, Controls, useNodesState, useEdgesState,
@@ -183,7 +183,7 @@ export default function KnowledgeGraph() {
         <div>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🖥️</div>
           <h2 style={{ marginBottom: 8 }}>请在桌面端使用</h2>
-          <p style={{ color: '#888' }}>知识图谱需要更大的屏幕，请在电脑上打开此页面。</p>
+          <p style={{ color: '#888' }}>能力关系图需要更大的屏幕，请在电脑上打开此页面。</p>
         </div>
       </div>
     );
@@ -198,7 +198,7 @@ export default function KnowledgeGraph() {
       <div>
         <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 20 }}>
           <ShareAltOutlined style={{ marginRight: 8, color: COLORS.iris }} />
-          知识图谱
+          能力关系图
         </div>
         <Empty description="暂无实体数据，请先创建数字员工、工具或工作流" style={{ padding: 80 }} />
       </div>
@@ -211,7 +211,7 @@ export default function KnowledgeGraph() {
         <div>
           <div style={{ fontSize: 22, fontWeight: 700 }}>
             <ShareAltOutlined style={{ marginRight: 8, color: COLORS.iris }} />
-            知识图谱
+            能力关系图
           </div>
           <div style={{ color: COLORS.slate, fontSize: 13, marginTop: 2 }}>
             可视化展示数字员工、工具、技能、团队、工作流之间的关系网络

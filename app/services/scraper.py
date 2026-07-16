@@ -357,8 +357,17 @@ async def scrape_and_summarize(
 
     返回 {"title", "charCount", "knowledgeDocId", "memoriesAdded"} 。
     """
-    from app.dependencies import ai_service, knowledge_store, long_term_memory
+    from app.dependencies import (
+        ai_service,
+        knowledge_store,
+        long_term_memory,
+        semantic_retriever,
+    )
     from app.models.memory_types import SemanticMemory
+    from app.services.knowledge_ingestion import (
+        index_knowledge_document,
+        store_knowledge_document,
+    )
 
     article = await scrape_article(url)
 
@@ -417,8 +426,21 @@ async def scrape_and_summarize(
     if knowledge_md and len(knowledge_md) > 50:
         safe_title = re.sub(r"[^\w一-鿿-]", "_", article.title)[:50]
         filename = f"learned-{safe_title}-{article.content_hash}.md"
-        doc_result = knowledge_store.upload(
-            employee_key, filename, knowledge_md.encode("utf-8")
+        content_bytes = knowledge_md.encode("utf-8")
+        doc_result = store_knowledge_document(
+            knowledge_store,
+            employee_key,
+            filename,
+            content_bytes,
+            source_type="article",
+            authority="unverified",
+        )
+        await index_knowledge_document(
+            knowledge_store,
+            semantic_retriever,
+            employee_key,
+            doc_result.doc_id,
+            content_bytes,
         )
 
     memories_added = 0

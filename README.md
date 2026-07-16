@@ -33,7 +33,8 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **员工注册表** — 每个员工有独立身份（`employeeKey`）、角色提示词（`roleProfile`）、绑定的工具和技能
 - **角色模板库** — 内置 12 种预设角色（数据分析师、文案写手、代码审查员、SEO 分析师等），一键创建员工
 - **独立知识库** — 每个员工可上传专属文档（`.txt` / `.md`），对话时自动检索相关片段注入上下文
-- **长期记忆** — 对话结束后自动提取关键信息存入员工长期记忆，下次对话可回忆历史
+- **知识中心** — 从一个入口查看员工知识覆盖、索引状态，并进入文章学习、提示词采集和 Agent 记忆
+- **长期记忆** — 对话结束后只增量提取用户明确偏好、纠正和有成功证据的经验，下次对话可按需回忆
 
 ### 团队协作
 - **团队结构** — 团队有队长（`leaderEmployeeKey`）、成员角色分阶段排列（统筹 → 创作 → 设计 → 生成）
@@ -136,6 +137,7 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 | [scripts/README.md](scripts/README.md) | 全部 31 个脚本的清单:用途/跑法/一次性还是可复用/是否破坏性 |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | **未来一年目标与方向**:KPI、季度计划、优化项、欠账、机会与不做清单 |
 | [docs/KNOWLEDGE_ARCHITECTURE.md](docs/KNOWLEDGE_ARCHITECTURE.md) | **知识、记忆和项目正典怎么分**:唯一事实源、统一入库/检索、上下文预算、记忆准入与一人工作室信息架构 |
+| [docs/SOLO_KNOWLEDGE_WORKFLOW.md](docs/SOLO_KNOWLEDGE_WORKFLOW.md) | **一人团队怎么从知识走到成片**:首次设置、每日主路径、每周 30 分钟维护与效果判定 |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统怎么运转的（分层 + 5 条核心数据流）、**想改 X 去哪个文件**速查表 |
 | [docs/MODULE_INDEX.md](docs/MODULE_INDEX.md) | 全部 160+ 模块的一句话职责索引（自动生成：`python -m scripts.gen_module_index`） |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | 每次改动的动机 / 变更点 / 影响面 |

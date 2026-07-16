@@ -7,7 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useResponsive } from '../hooks/useResponsive';
 import { api } from '../api';
 import { COLORS } from '../theme';
-import type { Employee } from '../types';
+import type { Employee, KnowledgeDocument } from '../types';
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -27,7 +27,7 @@ export default function Employees() {
 
   const [knowledgeOpen, setKnowledgeOpen] = useState(false);
   const [knowledgeEmp, setKnowledgeEmp] = useState<Employee | null>(null);
-  const [knowledgeDocs, setKnowledgeDocs] = useState<any[]>([]);
+  const [knowledgeDocs, setKnowledgeDocs] = useState<KnowledgeDocument[]>([]);
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailEmp, setDetailEmp] = useState<Employee | null>(null);
@@ -291,23 +291,36 @@ export default function Employees() {
 
       <Modal title={`知识库管理 — ${knowledgeEmp?.name ?? ''}`} open={knowledgeOpen} onCancel={() => setKnowledgeOpen(false)} footer={null} width={isMobile ? '100%' : 600}>
         <Upload.Dragger
+          accept=".txt,.md"
           beforeUpload={(file) => { handleUploadKnowledge(file); return false; }}
           showUploadList={false}
           style={{ marginBottom: 16, borderRadius: 10 }}
         >
           <p><UploadOutlined style={{ fontSize: 24, color: COLORS.iris }} /></p>
           <p>点击或拖拽文件上传知识文档</p>
-          <p style={{ color: COLORS.slate, fontSize: 12 }}>支持 .txt, .md, .pdf 等文本格式</p>
+          <p style={{ color: COLORS.slate, fontSize: 12 }}>当前支持 .txt、.md，上传后自动建立检索索引</p>
         </Upload.Dragger>
         <Table
           rowKey="docId" dataSource={knowledgeDocs} pagination={false} size="small" scroll={{ x: 'max-content' }}
           columns={[
             { title: '文件名', dataIndex: 'fileName', key: 'fileName' },
-            { title: '片段数', dataIndex: 'chunkCount', key: 'chunkCount', render: (v: number) => v ?? '-' },
-            { title: '上传时间', dataIndex: 'createdAt', key: 'createdAt', render: (v: string) => v ? new Date(v).toLocaleString() : '-' },
+            {
+              title: '索引', dataIndex: 'indexStatus', key: 'indexStatus',
+              render: (v: KnowledgeDocument['indexStatus'], record: KnowledgeDocument) => {
+                const config = {
+                  pending: { color: 'processing', text: '处理中' },
+                  indexed: { color: 'success', text: `${record.chunkCount} 片段` },
+                  degraded: { color: 'warning', text: '关键词模式' },
+                  failed: { color: 'error', text: '失败' },
+                }[v] ?? { color: 'default', text: '未知' };
+                return <Tag color={config.color}>{config.text}</Tag>;
+              },
+            },
+            { title: '大小', dataIndex: 'sizeBytes', key: 'sizeBytes', render: (v: number) => v < 1024 ? `${v} B` : `${(v / 1024).toFixed(1)} KB` },
+            { title: '上传时间', dataIndex: 'uploadedAt', key: 'uploadedAt', render: (v: string) => v ? new Date(v).toLocaleString() : '-' },
             {
               title: '操作', key: 'actions', width: 80,
-              render: (_: unknown, r: any) => (
+              render: (_: unknown, r: KnowledgeDocument) => (
                 <Popconfirm title="确认删除？" onConfirm={() => handleDeleteDoc(r.docId)}>
                   <Button type="link" size="small" danger icon={<DeleteOutlined />} />
                 </Popconfirm>

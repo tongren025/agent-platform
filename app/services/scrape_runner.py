@@ -62,9 +62,10 @@ def _render_markdown(source: ScrapeSource, prompts: list) -> str:
     return "\n".join(lines)
 
 
-def _ingest_into_knowledge(source: ScrapeSource, prompts: list) -> None:
+async def _ingest_into_knowledge(source: ScrapeSource, prompts: list) -> None:
     """把采集到的提示词渲染成 markdown，替换目标员工知识库里的自动文档。"""
-    from app.dependencies import employee_registry, knowledge_store
+    from app.dependencies import employee_registry, knowledge_store, semantic_retriever
+    from app.services.knowledge_ingestion import replace_named_knowledge_document
 
     emp_key = source.target_employee_key
     if not emp_key:
@@ -75,23 +76,17 @@ def _ingest_into_knowledge(source: ScrapeSource, prompts: list) -> None:
 
     auto_file = f"auto-{source.source_code}.md"
 
-    # 先记录旧的自动文档 id（暂不删除）
-    old_doc_ids = [
-        doc.doc_id
-        for doc in knowledge_store.list_docs(emp_key)
-        if doc.file_name == auto_file
-    ]
-
-    # 先写入新文档（写成功后再删旧），保证 upload 失败时旧内容仍在，不丢数据
+    # 统一服务保证先写入并索引新文档，再清理旧正文和向量。
     md = _render_markdown(source, prompts)
-    knowledge_store.upload(emp_key, auto_file, md.encode("utf-8"))
-
-    # 新文档已落盘，删除旧的自动文档
-    for doc_id in old_doc_ids:
-        try:
-            knowledge_store.delete_doc(emp_key, doc_id)
-        except Exception:
-            logger.warning("清理旧自动知识文档失败：%s/%s", emp_key, doc_id, exc_info=True)
+    await replace_named_knowledge_document(
+        knowledge_store,
+        semantic_retriever,
+        emp_key,
+        auto_file,
+        md.encode("utf-8"),
+        source_type="scrape",
+        authority="unverified",
+    )
 
 
 async def run_scrape(source: ScrapeSource) -> ScrapeRunResult:
@@ -124,7 +119,7 @@ async def _run_scrape_inner(source: ScrapeSource) -> ScrapeRunResult:
         all_prompts = collected_prompt_store.list(source.source_code)
 
         try:
-            _ingest_into_knowledge(source, all_prompts)
+            await _ingest_into_knowledge(source, all_prompts)
         except Exception as exc:
             logger.warning("知识库注入失败：%s", exc, exc_info=True)
 

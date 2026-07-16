@@ -40,7 +40,7 @@ POST /agent/run                      app/api/agent.py      限流(20/min) + 月�
        │                                                             同供应商换模型、跨供应商 fallback）
        ├► 存会话                          memory_store（JSON 或 PG）
        ├► 落运行记录 + Prometheus 指标 + 配额累加    run_store / metrics / rate_limit
-       └► 后台提取长期记忆                app/services/memory_extractor.py
+       └► 按消息 sequence 增量提取长期记忆  app/services/memory_extractor.py
 ```
 
 ### 2. 异步路径（M4，长任务不占请求连接）
@@ -61,9 +61,10 @@ POST /workflow/{key}/run → app/services/workflow_executor.py（Kahn 拓扑遍�
 ### 4. 知识库检索（M3 双轨）
 
 ```
-上传文档 → registry.py 存文件 + 后台向量化(index_document → DashScope embedding → pgvector)
-检索     → /knowledge/search：向量可用走语义(SemanticRetriever)，否则退化关键词(KeywordRetriever)
-agent 内 → query_knowledge_base 工具（app/tools/builtin.py）
+手工上传 / 文章学习 / 提示词采集
+  └► knowledge_ingestion.py：写元数据 → 索引 → 回写 indexed/degraded → 替换/删除同步清旧向量
+检索入口（对话、API、工作流知识节点、query_knowledge_base 工具）
+  └► retrieve_knowledge()：语义可用且有结果时返回，否则统一退化 KeywordRetriever
 ```
 
 ### 5. 记忆体系（三层）
@@ -71,7 +72,7 @@ agent 内 → query_knowledge_base 工具（app/tools/builtin.py）
 | 层 | 存哪 | 谁写 | 谁读 |
 |----|------|------|------|
 | 会话记忆（消息历史） | sessions | invocation 每轮追加 | 续聊时注入 |
-| 长期记忆（语义/经验/行为三类） | data/memory 或 PG | memory_extractor 后台提取 | prompt 编译时注入 |
+| 长期记忆（语义/经验/行为三类） | data/memory 或 PG | memory_extractor 按消息增量提取 | prompt 编译时注入 |
 | 蒸馏/进化 | distillation/evolution logs | 定时或手动触发 | 人工审阅采纳 |
 
 ## 三、"我想改 X" 速查表

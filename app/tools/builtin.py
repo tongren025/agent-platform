@@ -5,7 +5,7 @@ import json
 import logging
 
 from app.tools.base import ToolContext, register_handler
-from app.dependencies import skill_registry, knowledge_retriever
+from app.dependencies import skill_registry
 
 logger = logging.getLogger(__name__)
 
@@ -63,11 +63,12 @@ class SkillDetailHandler:
 
 
 class KnowledgeQueryHandler:
-    """query_knowledge_base 工具：在该员工的知识库中按关键词检索，返回 top-k 片段（top_k 限 1-20）。"""
+    """query_knowledge_base 工具：统一语义优先、关键词兜底检索，top_k 限 1-20。"""
     tool_code = "query_knowledge_base"
 
     async def handle(self, ctx: ToolContext) -> str:
-        """执行检索：校验 query，调 knowledge_retriever 返回命中片段 JSON。"""
+        """执行检索：校验 query，返回统一入口命中的片段 JSON。"""
+        from app.services.vector_store import retrieve_knowledge
         args = ctx.parse_args()
         query = args.get("query", "").strip()
         if not query:
@@ -80,7 +81,7 @@ class KnowledgeQueryHandler:
             top_k = 5
         top_k = max(1, min(top_k, 20))
 
-        hits = knowledge_retriever.search(ctx.employee_key, query, top_k)
+        hits = await retrieve_knowledge(ctx.employee_key, query, top_k)
 
         return json.dumps(
             {

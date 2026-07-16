@@ -225,6 +225,11 @@ async def retrieve_knowledge(
     """
     from app.dependencies import knowledge_retriever, semantic_retriever
 
+    query = query.strip()
+    if not query:
+        return []
+    top_k = max(1, min(int(top_k), 20))
+
     snippets: list[KnowledgeSnippet] = []
     if semantic_retriever is not None:
         try:

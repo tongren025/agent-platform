@@ -5,8 +5,10 @@
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
+import os
 import re
 import secrets
 from pathlib import Path
@@ -56,11 +58,13 @@ class KnowledgeStore:
     def _save_index(
         self, employee_key: str, docs: list[KnowledgeDocument]
     ) -> None:
-        """整体写回员工的文档索引。"""
+        """整体原子写回员工文档索引，避免进程中断留下半截 JSON。"""
         ip = self._index_path(employee_key)
         ip.parent.mkdir(parents=True, exist_ok=True)
         data = [d.model_dump(by_alias=True, mode="json") for d in docs]
-        ip.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp = ip.with_suffix(f".json.tmp-{os.getpid()}-{secrets.token_hex(4)}")
+        tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        os.replace(tmp, ip)
 
     def _total_size(self, employee_key: str) -> int:
         """统计员工知识库已占用字节数（不含 index.json），用于配额校验。"""
@@ -96,8 +100,11 @@ class KnowledgeStore:
         employee_key: str,
         filename: str,
         content_bytes: bytes,
+        *,
+        source_type: str = "upload",
+        authority: str = "reviewed",
     ) -> KnowledgeDocument:
-        """上传文档：校验扩展名/单文件大小/员工总配额 → 落盘 → 更新索引 → 首篇时置知识库标记。"""
+        """上传文档：校验配额后落盘，并写入兼容的来源、哈希与索引状态。"""
         ext = Path(filename).suffix.lower()
         if ext not in self._allowed_exts:
             raise ValueError(
@@ -123,6 +130,11 @@ class KnowledgeStore:
             file_name=filename,
             extension=ext,
             size_bytes=len(content_bytes),
+            space_key=employee_key,
+            source_type=source_type,
+            authority=authority,
+            content_hash=hashlib.sha256(content_bytes).hexdigest(),
+            index_status="pending",
         )
 
         emp_dir = self._emp_dir(employee_key)
@@ -138,6 +150,24 @@ class KnowledgeStore:
             self._set_employee_knowledge_flag(employee_key, True)
 
         return doc
+
+    def update_index_status(
+        self,
+        employee_key: str,
+        doc_id: str,
+        status: str,
+        chunk_count: int = 0,
+    ) -> KnowledgeDocument | None:
+        """更新一篇文档的索引状态；文档已被删除时返回 None。"""
+        docs = self._load_index(employee_key)
+        target = next((d for d in docs if d.doc_id == doc_id), None)
+        if target is None:
+            return None
+        target.index_status = status
+        target.chunk_count = max(0, chunk_count)
+        target.revision = max(1, target.revision) + 1
+        self._save_index(employee_key, docs)
+        return target
 
     def delete_doc(self, employee_key: str, doc_id: str) -> bool:
         """删除一篇文档（文件 + 索引条目）；删空时清掉知识库标记。不存在返回 False。"""

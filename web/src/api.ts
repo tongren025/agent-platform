@@ -1,5 +1,5 @@
 // 用户端 API 封装：统一 BASE 前缀、Bearer 凭证、错误信封解包；401 自动清 token 回登录页。
-import type { ApiResult, AgentRunRecord } from './types';
+import type { ApiResult, AgentRunRecord, Employee, KnowledgeDocument } from './types';
 import { userToken } from './userAuth';
 
 const BASE = '/api/v1/agentapp';
@@ -140,7 +140,7 @@ export const api = {
   // Knowledge 语义搜索
   searchKnowledge: (key: string, q: string, topK = 5) =>
     request<any[]>(`/registry/employees/${encodeURIComponent(key)}/knowledge/search?q=${encodeURIComponent(q)}&topK=${topK}`),
-  listEmployees: () => request<any[]>('/registry/employees'),
+  listEmployees: () => request<Employee[]>('/registry/employees'),
   getEmployee: (key: string) => request<any>(`/registry/employees/${key}`),
   saveEmployee: (data: any) => request<any>('/registry/employees', { method: 'POST', body: JSON.stringify(data) }),
   updateEmployee: (key: string, data: any) => request<any>(`/registry/employees/${key}`, { method: 'PUT', body: JSON.stringify(data) }),
@@ -174,7 +174,7 @@ export const api = {
     request<any>(`/registry/employees/${key}/bindings`, { method: 'PUT', body: JSON.stringify(bindings) }),
 
   // Knowledge
-  listKnowledge: (key: string) => request<any[]>(`/registry/employees/${key}/knowledge`),
+  listKnowledge: (key: string) => request<KnowledgeDocument[]>(`/registry/employees/${key}/knowledge`),
   deleteKnowledge: (key: string, docId: string) => request<any>(`/registry/employees/${key}/knowledge/${docId}`, { method: 'DELETE' }),
   uploadKnowledge: async (key: string, file: File) => {
     const form = new FormData();
@@ -182,7 +182,7 @@ export const api = {
     const res = await fetch(`${BASE}/registry/employees/${key}/knowledge`, { method: 'POST', body: form, headers: authHeaders() });
     const json = await res.json();
     if (json.code !== 200) throw new Error(json.message || 'upload failed');
-    return json.data;
+    return json.data as KnowledgeDocument;
   },
 
   // AI Providers

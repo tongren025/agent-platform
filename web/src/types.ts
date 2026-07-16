@@ -20,6 +20,25 @@ export interface Employee {
   updatedAt: string;
 }
 
+export interface KnowledgeDocument {
+  docId: string;
+  fileName: string;
+  extension: string;
+  sizeBytes: number;
+  uploadedAt: string;
+  tags: string[] | null;
+  spaceType: string;
+  spaceKey: string;
+  kind: string;
+  status: string;
+  authority: string;
+  sourceType: string;
+  contentHash: string;
+  indexStatus: 'pending' | 'indexed' | 'degraded' | 'failed';
+  chunkCount: number;
+  revision: number;
+}
+
 export interface RoleTemplate {
   templateCode: string;
   name: string;

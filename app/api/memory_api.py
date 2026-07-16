@@ -151,16 +151,17 @@ async def delete_procedural(employee_key: str, memory_id: str):
 
 @router.post("/extract/{employee_key}/{session_id}")
 async def trigger_extraction(employee_key: str, session_id: str):
-    """POST /extract/{key}/{session_id}：从指定会话手动提取记忆并存入长期记忆，会话不存在返 404。"""
+    """POST /extract/{key}/{session_id}：增量提取指定会话，已处理消息不会重复分析。"""
     from app.dependencies import memory_store
-    from app.services.memory_extractor import extract_and_store
+    from app.services.memory_extractor import extract_session_delta
 
     session = memory_store.load_session(session_id)
     if session is None:
         raise HTTPException(404, "Session not found")
+    if session.employee_key != employee_key:
+        raise HTTPException(404, "Session not found for employee")
 
-    messages = [{"role": msg.role, "content": msg.content} for msg in session.messages]
-    await extract_and_store(messages, employee_key, session_id)
+    await extract_session_delta(employee_key, session_id)
     return _ok(long_term_memory.get_stats(employee_key))
 
 

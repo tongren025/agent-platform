@@ -245,12 +245,12 @@ class ToolExecutor(NodeExecutor):
 
 
 class KnowledgeExecutor(NodeExecutor):
-    """知识检索节点：对指定员工知识库做关键词检索，把片段作为变量注入下游。"""
+    """知识检索节点：走统一语义优先、关键词兜底入口，把片段注入下游。"""
     node_type = "knowledge"
 
     async def execute(self, ctx: NodeContext) -> NodeResult:
-        """对指定员工知识库做关键词检索，把命中片段拼接后作为变量注入下游（含 count）。"""
-        from app.dependencies import knowledge_retriever
+        """统一检索指定员工知识库，把命中片段拼接后发布（含 count）。"""
+        from app.services.vector_store import retrieve_knowledge
 
         cfg = ctx.node.config or {}
         employee_key = (cfg.get("employeeKey") or "").strip()
@@ -261,7 +261,7 @@ class KnowledgeExecutor(NodeExecutor):
             top_k = 5
         if not employee_key or not query.strip():
             return NodeResult(output=_publish("", count=0))
-        snippets = knowledge_retriever.search(employee_key, query, top_k)
+        snippets = await retrieve_knowledge(employee_key, query, top_k)
         joined = "\n\n".join(f"[{s.file_name}] {s.excerpt}" for s in snippets)
         return NodeResult(output=_publish(joined, count=len(snippets)))
 

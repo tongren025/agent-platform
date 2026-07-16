@@ -150,6 +150,10 @@ class LongTermMemoryStore:
     def add_semantic(self, emp_key: str, memory: SemanticMemory) -> SemanticMemory:
         """新增语义记忆；与已有内容相似度 >0.6 则合并更新（取高重要性、访问计数+1）而非重复插入。"""
         items = self.list_semantic(emp_key)
+        if memory.memory_id:
+            exact = next((item for item in items if item.memory_id == memory.memory_id), None)
+            if exact is not None:
+                return exact
         # 合并：如果已有高相似度的记忆，更新而非新增
         for existing in items:
             if _similarity(existing.content, memory.content) > 0.6:
@@ -215,8 +219,12 @@ class LongTermMemoryStore:
         self._backend.save(emp_key, "episodic", rows)
 
     def add_episodic(self, emp_key: str, memory: EpisodicMemory) -> EpisodicMemory:
-        """新增一条经验记忆（不做相似合并，缺 id 时生成）。"""
+        """新增一条经验记忆；相同稳定 ID 视为同一提取事件并幂等返回。"""
         items = self.list_episodic(emp_key)
+        if memory.memory_id:
+            exact = next((item for item in items if item.memory_id == memory.memory_id), None)
+            if exact is not None:
+                return exact
         if not memory.memory_id:
             memory.memory_id = _gen_id()
         items.append(memory)
@@ -276,6 +284,10 @@ class LongTermMemoryStore:
     def add_procedural(self, emp_key: str, memory: ProceduralMemory) -> ProceduralMemory:
         """新增行为记忆；与已有规则相似度 >0.5 则合并（置信度+0.1、激活次数+1）而非重复插入。"""
         items = self.list_procedural(emp_key)
+        if memory.memory_id:
+            exact = next((item for item in items if item.memory_id == memory.memory_id), None)
+            if exact is not None:
+                return exact
         for existing in items:
             if _similarity(existing.rule, memory.rule) > 0.5:
                 existing.confidence = min(1.0, existing.confidence + 0.1)

@@ -79,6 +79,8 @@ class ConversationMessage(BaseModel):
     content: str
     timestamp: datetime = Field(default_factory=_now)
     tool_name: Optional[str] = Field(None, alias="toolName")
+    message_id: str = Field("", alias="messageId")
+    sequence: int = 0
 
     model_config = {"populate_by_name": True}
 

@@ -52,6 +52,7 @@ const navSections: NavSection[] = [
   {
     title: '管理',
     items: [
+      { key: '/knowledge', icon: <ReadOutlined />, label: '知识中心', perm: 'employee:manage' },
       { key: '/employees', icon: <TeamOutlined />, label: '数字员工', perm: 'employee:manage' },
       { key: '/models', icon: <ApiOutlined />, label: '模型市场', perm: 'settings:manage' },
       { key: '/settings', icon: <SettingOutlined />, label: '设置', perm: 'settings:manage' },
@@ -67,7 +68,7 @@ const advancedNavSections: NavSection[] = [
       { key: '/production/matrix', icon: <TableOutlined />, label: '链路诊断', perm: 'production:manage' },
       { key: '/workbench', icon: <MessageOutlined />, label: '专家工作台', perm: 'workbench:use' },
       { key: '/templates', icon: <AppstoreOutlined />, label: '角色模板', perm: 'employee:manage' },
-      { key: '/knowledge-graph', icon: <ShareAltOutlined />, label: '知识图谱', perm: 'employee:manage' },
+      { key: '/knowledge-graph', icon: <ShareAltOutlined />, label: '能力关系图', perm: 'employee:manage' },
       { key: '/memory', icon: <BulbOutlined />, label: '记忆库', perm: 'employee:manage' },
     ],
   },

@@ -17,13 +17,13 @@ from app.dependencies import agent_run_store, memory_store
 from app.models.conversation import (
     AgentRunRequest,
     ConversationArtifact,
-    ConversationMessage,
     ConversationSession,
 )
 from app.core.metrics import record_run_metrics
 from app.core.rate_limit import record_token_usage
 from app.models.run_record import AgentRunRecord
 from app.services.run_store import estimate_cost
+from app.services.session_messages import append_session_message
 from app.runtime.prompt import compile
 from app.runtime.runner import AgentRunResult, run_agent
 from app.runtime.scope import build_scopes
@@ -174,15 +174,17 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
             title=_session_title(request.user_input),
         )
 
-    session.messages.append(
-        ConversationMessage(role="user", content=request.user_input, timestamp=now)
+    append_session_message(
+        session,
+        role="user",
+        content=request.user_input,
+        timestamp=now,
     )
-    session.messages.append(
-        ConversationMessage(
-            role="assistant",
-            content=result.assistant_message,
-            timestamp=now,
-        )
+    append_session_message(
+        session,
+        role="assistant",
+        content=result.assistant_message,
+        timestamp=now,
     )
 
     session.last_active_at = now
@@ -224,10 +226,9 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     # LangMem Background Formation: 后台提取长期记忆，不阻塞响应
     if result.success and len(session.messages) >= 4:
         try:
-            from app.services.memory_extractor import extract_and_store
-            all_msgs = [{"role": m.role, "content": m.content} for m in session.messages]
+            from app.services.memory_extractor import extract_session_delta
             asyncio.create_task(
-                extract_and_store(all_msgs, request.employee_key, session.session_id)
+                extract_session_delta(request.employee_key, session.session_id)
             )
         except Exception:
             logger.debug("后台记忆提取启动失败", exc_info=True)

@@ -134,6 +134,7 @@
 | [evolution.py](../app/services/evolution.py) | 自我进化引擎 —— 审视对话历史，生成改进建议。 |
 | [invocation.py](../app/services/invocation.py) | Agent 调用编排层。 |
 | [knowledge.py](../app/services/knowledge.py) | 员工知识库：文件存储 + 关键词检索。 |
+| [knowledge_ingestion.py](../app/services/knowledge_ingestion.py) | 统一知识入库服务：上传、索引、替换与删除共用同一套 fail-open 语义。 |
 | [learn_runner.py](../app/services/learn_runner.py) | 定时文章学习运行编排：逐个 URL 抓取 → LLM 总结 → 写入目标员工知识库+长期记忆 → 记录历史。 |
 | [learn_store.py](../app/services/learn_store.py) | 定时文章学习的文件型持久化。 |
 | [long_term_memory.py](../app/services/long_term_memory.py) | 长期记忆存储。 |
@@ -151,6 +152,7 @@
 | [scrape_store.py](../app/services/scrape_store.py) | 采集相关的文件型持久化存储。 |
 | [scraper.py](../app/services/scraper.py) | 网页提示词采集器。 |
 | [seed_workflows.py](../app/services/seed_workflows.py) | 种子工作流：把 9 人漫剧团队的真实「编剧→设计→生成」流水线编码成一张 WorkflowDefinition， |
+| [session_messages.py](../app/services/session_messages.py) | 会话消息身份工具：为新旧消息提供稳定 ID 与单调序号，支撑增量记忆游标。 |
 | [trend_digest.py](../app/services/trend_digest.py) | 个人化趋势简报。 |
 | [user_store.py](../app/services/user_store.py) | 平台用户与角色存储——JSON 文件持久化，admin 和 user 两端共用。 |
 | [vector_store.py](../app/services/vector_store.py) | M3 向量存储与语义检索 —— pgvector 存取 + DashScope embedding。 |
@@ -247,7 +249,8 @@
 | [Employees.tsx](../web/src/pages/Employees.tsx) | 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、知识库上传。 |
 | [EpisodeDetail.tsx](../web/src/pages/EpisodeDetail.tsx) | 单集详情页：该集全部 G 生成单元卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。 |
 | [Evolution.tsx](../web/src/pages/Evolution.tsx) | 自我进化页：查看/采纳/拒绝 LLM 分析会话后产出的改进洞察。 |
-| [KnowledgeGraph.tsx](../web/src/pages/KnowledgeGraph.tsx) | 知识图谱页：员工/工具/技能/团队/工作流的关系可视化。 |
+| [KnowledgeCenter.tsx](../web/src/pages/KnowledgeCenter.tsx) | 一人工作室知识中心：聚合真实知识覆盖与现有入口。 |
+| [KnowledgeGraph.tsx](../web/src/pages/KnowledgeGraph.tsx) | 能力关系图页：员工/工具/技能/团队/工作流的拓扑可视化。 |
 | [Memory.tsx](../web/src/pages/Memory.tsx) | 记忆管理页：查看/增删员工的语义、经验、行为三类长期记忆，触发提取与蒸馏。 |
 | [Pipeline.tsx](../web/src/pages/Pipeline.tsx) | CLI 流水线页：用本地 claude/gemini CLI 跑漫剧创作流水线（导演→编剧→美术…）。 |
 | [Production.tsx](../web/src/pages/Production.tsx) | 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。 |

@@ -1,8 +1,6 @@
 """注册表 API：技能/MCP/工具/员工/团队/角色模板的 CRUD + 员工知识库管理。Prefix: /api/v1/agentapp/registry。"""
 from __future__ import annotations
 
-import asyncio as _asyncio
-import logging as _logging
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, UploadFile, File
@@ -11,7 +9,6 @@ from pydantic import BaseModel, Field
 from app.api.common import ok as _ok, validate_key as _validate_key
 from app.dependencies import (
     employee_registry,
-    knowledge_retriever,
     knowledge_store,
     mcp_server_registry,
     role_template_registry,
@@ -28,11 +25,14 @@ from app.models.registry import (
     TeamDefinition,
     ToolDefinition,
 )
+from app.services.knowledge_ingestion import (
+    delete_knowledge_document,
+    index_knowledge_document,
+    schedule_knowledge_index,
+    store_knowledge_document,
+)
 
 router = APIRouter(prefix="/api/v1/agentapp/registry")
-
-_logger = _logging.getLogger(__name__)
-
 
 # ── Skills ──────────────────────────────────────────────────────────
 
@@ -426,30 +426,20 @@ def update_team_members(code: str, body: TeamMembersBody):
 # ── Knowledge ───────────────────────────────────────────────────────
 
 async def _vectorize_doc(key: str, doc_id: str, content_bytes: bytes) -> None:
-    """M3 接线：上传后把文档切片向量化入库（后台任务）。
-
-    semantic_retriever 未启用（JSON 模式 / 无 DASHSCOPE_API_KEY）或失败时静默跳过——
-    向量化只是检索增强，绝不能影响上传主流程。
-    """
-    if semantic_retriever is None:
-        return
-    try:
-        text = content_bytes.decode("utf-8", errors="replace")
-        stored = await semantic_retriever.index_document(key, doc_id, text)
-        if stored:
-            _logger.info("知识文档已向量化: %s/%s (%d chunks)", key, doc_id, stored)
-    except Exception:
-        _logger.warning("知识文档向量化失败（不影响上传）: %s/%s", key, doc_id, exc_info=True)
+    """兼容旧调用：委托统一服务执行索引并回写真实状态。"""
+    await index_knowledge_document(
+        knowledge_store, semantic_retriever, key, doc_id, content_bytes
+    )
 
 
 def _drop_doc_vectors(key: str, doc_id: str) -> None:
-    """M3 接线：删除文档时连带清掉其全部切片向量；失败只告警。"""
+    """兼容旧调用：只清理向量；失败保持 fail-open。"""
     if semantic_retriever is None:
         return
     try:
         semantic_retriever.remove_document(key, doc_id)
     except Exception:
-        _logger.warning("清理文档向量失败: %s/%s", key, doc_id, exc_info=True)
+        return
 
 
 @router.get("/employees/{key}/knowledge")
@@ -468,11 +458,13 @@ async def upload_knowledge_doc(key: str, file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Filename is required")
     content = await file.read()
     try:
-        doc = knowledge_store.upload(key, file.filename, content)
+        doc = store_knowledge_document(knowledge_store, key, file.filename, content)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
-    # 后台向量化，不阻塞上传响应
-    _asyncio.create_task(_vectorize_doc(key, doc.doc_id, content))
+    # 后台向量化，不阻塞上传响应；结束后回写 indexed/degraded。
+    schedule_knowledge_index(
+        knowledge_store, semantic_retriever, key, doc.doc_id, content
+    )
     return _ok(doc.model_dump(by_alias=True, mode="json"))
 
 
@@ -480,10 +472,11 @@ async def upload_knowledge_doc(key: str, file: UploadFile = File(...)):
 def delete_knowledge_doc(key: str, doc_id: str):
     """DELETE /employees/{key}/knowledge/{doc_id}：删除知识文档，不存在返 404；连带清向量（M3）。"""
     _validate_key(key)
-    deleted = knowledge_store.delete_doc(key, doc_id)
+    deleted = delete_knowledge_document(
+        knowledge_store, semantic_retriever, key, doc_id
+    )
     if not deleted:
         raise HTTPException(status_code=404, detail=f"Document not found: {doc_id}")
-    _drop_doc_vectors(key, doc_id)
     return _ok(True)
 
 

@@ -28,6 +28,7 @@ const EpisodeDetail = lazy(() => import('./pages/EpisodeDetail'));
 const Settings = lazy(() => import('./pages/Settings'));
 const OpenRouterModels = lazy(() => import('./pages/OpenRouterModels'));
 const SkillTracker = lazy(() => import('./pages/SkillTracker'));
+const KnowledgeCenter = lazy(() => import('./pages/KnowledgeCenter'));
 const KnowledgeGraph = lazy(() => import('./pages/KnowledgeGraph'));
 const Evolution = lazy(() => import('./pages/Evolution'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="/production/:pid/pipeline" element={<Production />} />
           <Route path="/canvas" element={<Canvas />} />
           <Route path="/trends" element={<SkillTracker />} />
+          <Route path="/knowledge" element={<KnowledgeCenter />} />
           <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
           <Route path="/evolution" element={<Evolution />} />
           <Route path="/settings" element={<Settings />} />
