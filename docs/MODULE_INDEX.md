@@ -43,7 +43,7 @@
 | [__init__.py](../app/api/__init__.py) | 用户端 API 路由包 —— 汇集 app/api/ 下各业务路由模块（agent、registry、production 等），由 app.main 统一挂载。 |
 | [agent.py](../app/api/agent.py) | Agent 运行 API——核心的 run / team-run 端点。 |
 | [ai_providers.py](../app/api/ai_providers.py) | AI Provider 管理 API。 |
-| [canvas.py](../app/api/canvas.py) | 自由画布 API —— 画布 CRUD + 文生图 + 素材上传。 |
+| [canvas.py](../app/api/canvas.py) | 自由画布 API：原子 CRUD、图片/视频上传、文生图、异步视频任务同步与人工顺序成片合成。 |
 | [common.py](../app/api/common.py) | API 层公共工具函数——消除各 router 文件中的重复定义。 |
 | [director.py](../app/api/director.py) | 导演 Agent API：把剧本、图片、视频与成片收束为一条可执行主线。 |
 | [evolution.py](../app/api/evolution.py) | 自我进化系统 API。 |
@@ -226,7 +226,7 @@
 
 | 文件 | 干什么 |
 |------|--------|
-| [CanvasNodes.tsx](../web/src/components/canvas/CanvasNodes.tsx) | 自由画布节点组件:数据节点(DataNode,主角)与图片节点(ImageNode)。 |
+| [CanvasNodes.tsx](../web/src/components/canvas/CanvasNodes.tsx) | 自由画布文本/图片/视频节点：人工编辑、审核状态、生成、同步、复制、删除和看板回写。 |
 
 ### `web/src/components/workflow/`
 
@@ -243,7 +243,7 @@
 |------|--------|
 | [ArticleLearn.tsx](../web/src/pages/ArticleLearn.tsx) | 文章学习页：学习源 CRUD、手动触发、学习历史（网页→LLM 总结→知识库+记忆）。 |
 | [AutoLearn.tsx](../web/src/pages/AutoLearn.tsx) | 提示词采集页：采集源 CRUD、手动触发、已采提示词与历史查看。 |
-| [Canvas.tsx](../web/src/pages/Canvas.tsx) | 自由画布 —— 数据的可视化生成台。 |
+| [Canvas.tsx](../web/src/pages/Canvas.tsx) | 一人团队人工主控画布：从文本、图片、视频到审核、备份与成片合成。 |
 | [Dashboard.tsx](../web/src/pages/Dashboard.tsx) | 总览页：以“继续制作、当前阻塞、下一步行动”为核心，而非罗列系统资源数量。 |
 | [DirectorStudio.tsx](../web/src/pages/DirectorStudio.tsx) | 导演 Agent 主页面：创意建项、七步进度、OpenRouter 媒体生成、镜头审片与成片预览。 |
 | [Employees.tsx](../web/src/pages/Employees.tsx) | 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、知识库上传。 |

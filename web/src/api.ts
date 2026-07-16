@@ -384,7 +384,7 @@ export const api = {
   listCanvases: () => request<any[]>('/canvas/canvases'),
   createCanvas: (name: string) => request<any>('/canvas/canvases', { method: 'POST', body: JSON.stringify({ name }) }),
   getCanvas: (cid: string) => request<any>(`/canvas/canvases/${cid}`),
-  saveCanvas: (cid: string, data: { name?: string; nodes: any[]; edges: any[] }) =>
+  saveCanvas: (cid: string, data: { name?: string; base_revision?: number; nodes: any[]; edges: any[] }) =>
     request<any>(`/canvas/canvases/${cid}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteCanvas: (cid: string) => request<any>(`/canvas/canvases/${cid}`, { method: 'DELETE' }),
   listImageModels: () => request<any[]>('/canvas/image-models'),
@@ -396,6 +396,20 @@ export const api = {
   }) =>
     request<{ items: { title: string; content: string; stage: string }[]; raw?: string }>(
       `/canvas/canvases/${cid}/derive`, { method: 'POST', body: JSON.stringify(data) }),
+  listCanvasMediaModels: (kind: 'image' | 'video') =>
+    request<any[]>(`/canvas/media-models?kind=${kind}`),
+  canvasGenerateVideo: (cid: string, data: {
+    model: string; prompt: string; duration?: number; resolution?: string;
+    aspect_ratio?: string; image_url?: string; generate_audio?: boolean;
+  }) => request<{ job: any }>(`/canvas/canvases/${cid}/video`, {
+    method: 'POST', body: JSON.stringify(data),
+  }),
+  canvasSyncVideo: (cid: string, jobId: string) =>
+    request<{ job: any }>(`/canvas/canvases/${cid}/video/${jobId}/sync`, { method: 'POST' }),
+  canvasCompose: (cid: string, data: { video_urls: string[]; aspect_ratio?: string }) =>
+    request<{ url: string; duration?: number; clipCount?: number }>(`/canvas/canvases/${cid}/compose`, {
+      method: 'POST', body: JSON.stringify(data),
+    }),
   uploadCanvasAsset: async (cid: string, file: File) => {
     const form = new FormData();
     form.append('file', file);
@@ -406,7 +420,7 @@ export const api = {
     });
     const json = await res.json();
     if (!res.ok || json.code !== 200) throw new Error(json.detail || json.message || '上传失败');
-    return json.data as { url: string };
+    return json.data as { url: string; kind: 'image' | 'video'; name: string; size: number };
   },
 
   // AI 趋势雷达 (skill_tracker)

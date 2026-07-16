@@ -1,4 +1,4 @@
-"""自由画布 API —— 画布 CRUD + 文生图 + 素材上传。
+"""自由画布 API —— 原子 CRUD + 图片/视频生成、上传与人工审核后合成。
 
 画布是无限拼贴空间:节点(提示词/图片)带坐标,连线记录生成血缘。
 数据落盘 data/canvas/{canvas_id}.json,与制作看板(production)互不依赖;
@@ -14,7 +14,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field
 
 from app.api.common import ok, validate_key
@@ -22,6 +22,7 @@ from app.config import BASE_DIR
 from app.core.logging import get_logger
 from app.dependencies import ai_service
 from app.services.image_generation import generate_image_to_local
+from app.services import openrouter_media
 from app.models.conversation import AgentRunRequest
 from app.models.production import STAGES, STAGE_INSTRUCTIONS
 from app.services.invocation import run_invocation
@@ -42,10 +43,10 @@ _ALLOWED_UPLOAD_EXT = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".mp4", ".webm"
 
 
 class CanvasNode(BaseModel):
-    """画布节点。data 内容按 type 区分:prompt 存 {prompt},image 存 {url, prompt}。"""
+    """画布节点。type 支持 data/image/video，data 保持开放字典便于前端演进。"""
 
     node_id: str = ""
-    type: str = "image"  # prompt | image
+    type: str = "data"  # data | image | video
     position: dict = Field(default_factory=lambda: {"x": 0, "y": 0})
     data: dict = Field(default_factory=dict)
 
@@ -64,6 +65,7 @@ class CanvasDoc(BaseModel):
     name: str = "未命名画布"
     nodes: list[CanvasNode] = Field(default_factory=list)
     edges: list[CanvasEdge] = Field(default_factory=list)
+    revision: int = 0
     created_at: str = ""
     updated_at: str = ""
 
@@ -88,8 +90,15 @@ def _load(cid: str) -> CanvasDoc:
 
 
 def _save(doc: CanvasDoc) -> None:
-    """画布整体落盘（格式化 JSON）。"""
-    _path(doc.canvas_id).write_text(doc.model_dump_json(indent=2), "utf-8")
+    """原子保存画布，避免进程中断留下半截 JSON。"""
+    target = _path(doc.canvas_id)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temporary = target.with_name(f".{target.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        temporary.write_text(doc.model_dump_json(indent=2), "utf-8")
+        temporary.replace(target)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 # ── 画布 CRUD ─────────────────────────────────────────────────────
@@ -140,6 +149,7 @@ def get_canvas(cid: str):
 class SaveCanvasReq(BaseModel):
     """保存画布请求体：整体覆盖节点与连线，名字可选改。"""
     name: str | None = None
+    base_revision: int | None = None
     nodes: list[CanvasNode] = Field(default_factory=list)
     edges: list[CanvasEdge] = Field(default_factory=list)
 
@@ -148,10 +158,16 @@ class SaveCanvasReq(BaseModel):
 def save_canvas(cid: str, req: SaveCanvasReq):
     """PUT /canvases/{cid}：整体保存画布（节点/连线全量覆盖）。"""
     doc = _load(cid)
+    if req.base_revision is not None and req.base_revision != doc.revision:
+        raise HTTPException(
+            409,
+            f"画布已被其他窗口更新（当前版本 {doc.revision}，提交版本 {req.base_revision}）",
+        )
     if req.name is not None and req.name.strip():
         doc.name = req.name.strip()
     doc.nodes = req.nodes
     doc.edges = req.edges
+    doc.revision += 1
     doc.updated_at = _now()
     _save(doc)
     return ok(doc.model_dump())
@@ -226,7 +242,7 @@ def generate_image(cid: str, req: GenerateReq):
 
 @router.post("/canvases/{cid}/upload")
 async def upload_asset(cid: str, file: UploadFile = File(...)):
-    """把本地图片拖上画布:落盘 uploads/canvas 并返回静态 URL。"""
+    """把本地图片或视频拖上画布，落盘后返回媒体类型和静态 URL。"""
     _load(cid)
     ext = Path(file.filename or "file").suffix.lower() or ".png"
     if ext not in _ALLOWED_UPLOAD_EXT:
@@ -236,7 +252,105 @@ async def upload_asset(cid: str, file: UploadFile = File(...)):
         raise HTTPException(400, "文件超过 50MB 上限")
     filename = f"up_{uuid.uuid4().hex[:10]}{ext}"
     (UPLOAD_DIR / filename).write_bytes(content)
-    return ok({"url": f"/uploads/canvas/{filename}"})
+    kind = "video" if ext in {".mp4", ".webm"} else "image"
+    return ok({
+        "url": f"/uploads/canvas/{filename}",
+        "kind": kind,
+        "name": file.filename or filename,
+        "size": len(content),
+    })
+
+
+# ── 视频生成与手动合成 ────────────────────────────────────────────
+
+
+@router.get("/media-models")
+def list_media_models(kind: str = Query("video", pattern="^(image|video)$")):
+    """列出 OpenRouter 图片/视频模型，供自由画布显式选择。"""
+    try:
+        return ok(openrouter_media.list_media_models(kind))
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(502, f"读取 {kind} 模型失败: {exc}") from exc
+
+
+class GenerateVideoReq(BaseModel):
+    """自由画布视频任务：既支持文生视频，也支持首帧图生视频。"""
+
+    model: str
+    prompt: str
+    duration: int = 5
+    resolution: str = "720p"
+    aspect_ratio: str = "9:16"
+    image_url: str = ""
+    generate_audio: bool = True
+
+
+@router.post("/canvases/{cid}/video")
+def generate_video(cid: str, req: GenerateVideoReq):
+    """提交异步视频任务；任务信息由前端作为节点数据保存。"""
+    _load(cid)
+    if not req.prompt.strip():
+        raise HTTPException(400, "视频提示词不能为空")
+    try:
+        job = openrouter_media.submit_video(
+            cid,
+            model=req.model,
+            prompt=req.prompt.strip(),
+            duration=req.duration,
+            resolution=req.resolution,
+            aspect_ratio=req.aspect_ratio,
+            image_url=req.image_url,
+            generate_audio=req.generate_audio,
+        )
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(502, f"视频任务提交失败: {exc}") from exc
+    return ok({"job": job})
+
+
+@router.post("/canvases/{cid}/video/{job_id}/sync")
+def sync_video(cid: str, job_id: str):
+    """同步视频任务；完成后把远端 MP4 固化到本地 uploads。"""
+    _load(cid)
+    try:
+        return ok({"job": openrouter_media.sync_video(cid, job_id)})
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(502, f"同步视频任务失败: {exc}") from exc
+
+
+class ComposeReq(BaseModel):
+    """按用户指定顺序合成已审核镜头。"""
+
+    video_urls: list[str] = Field(min_length=1, max_length=100)
+    aspect_ratio: str = "9:16"
+
+
+@router.post("/canvases/{cid}/compose")
+def compose_canvas_video(cid: str, req: ComposeReq):
+    """按请求顺序拼接本地视频，返回可下载的成片节点素材。"""
+    doc = _load(cid)
+    approved_urls = {
+        str(node.data.get("url") or "")
+        for node in doc.nodes
+        if node.type == "video"
+        and node.data.get("reviewStatus") == "approved"
+        and node.data.get("stage") != "final"
+    }
+    rejected = [url for url in req.video_urls if url not in approved_urls]
+    if rejected:
+        raise HTTPException(400, "只能合成当前画布中人工标记为“已通过”的视频")
+    try:
+        result = openrouter_media.compose_video(cid, req.video_urls, req.aspect_ratio)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(502, f"合成失败: {exc}") from exc
+    return ok(result)
 
 
 # ── AI 派生(画布的核心动作)────────────────────────────────────

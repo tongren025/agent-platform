@@ -112,12 +112,13 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **视觉故事板与视频参考包** — 分镜按 ≤6 秒子镜头“一镜一卡”，历史 G 大分镜可一键拆卡并逐镜生成故事板图；视频提示词卡自动汇总同 G 故事板、首尾帧和全局人物三视图/定妆图，供支持多图参考的视频模型选用
 - **卡片系统** — 每张卡片支持内容、提示词、图片、视频、元数据，支持 Markdown 渲染
 
-### 自由画布（数据的可视化生成台）
-- **定位** — 看板是表视图，画布是图视图，同一份生产数据。节点=数据（剧本/设定/分镜/提示词）或图片（参考图/出图回传），连线=派生血缘。出图仍走小云雀/即梦半自动路径（提示词一键复制），平台不重造生成器
-- **AI 派生（核心动作）** — 指着任意数据节点选数字员工 + 目标阶段 + 指令，员工生成 1~N 个下游数据节点并自动连血缘线；阶段指令模板与看板逐阶段生成共用（`STAGE_INSTRUCTIONS`），员工知识库中的固定描述词（Art Bible）在派生中自动生效
-- **看板双向** — 「从看板导入」把某项目/某集/某阶段的卡片按阶段分列铺进画布（单次≤60 张）；数据/图片节点一键「回写看板」成对应阶段卡片
-- **参考图与可选生图** — 本地图片上传成图片节点（点击放大预览）；配好 OpenAI 兼容 images 模型后图片节点可做 API 变体（可选，非主路径）
-- **无限画布基建** — ReactFlow 平移缩放连线、1.2s 防抖自动保存落盘 `data/canvas/`、生成图片转存本地防远端 URL 过期
+### 自由画布（一人团队人工主控台）
+- **定位** — 文本、图片、视频和成片共存于无限画布；每个节点都能手动编辑、复制、删除、连线和设置“草稿 / 待审核 / 已通过”，AI 只是可选加速器
+- **自由生产** — 文本可直接出图或文生视频，图片可作为首帧生成视频；外部工具生成的图片/MP4/WebM 也可拖回画布，三种路径可以随时混用
+- **人工质量门禁** — AI 结果默认待审核；只有手动标记“已通过”的视频才允许按画布从左到右顺序进入 FFmpeg 成片合成
+- **可恢复编辑** — 撤销/重做、流程自动排布、JSON 导入导出备份、1.2 秒自动保存；保存使用 revision 冲突检测与原子替换，避免多窗口静默覆盖或半截 JSON
+- **看板双向** — 可按项目/集数/阶段导入制作卡片，文本、图片、视频节点均可回写看板并继承人工审核状态
+- **使用手册** — 见 [docs/SOLO_VIDEO_CANVAS_WORKFLOW.md](docs/SOLO_VIDEO_CANVAS_WORKFLOW.md)，包含最短出片路径、四次人工拍板和当前能力边界
 
 ### 对话工作台
 - **实时对话** — 选择员工直接开始 AI 对话
@@ -138,6 +139,7 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 | [docs/ROADMAP.md](docs/ROADMAP.md) | **未来一年目标与方向**:KPI、季度计划、优化项、欠账、机会与不做清单 |
 | [docs/KNOWLEDGE_ARCHITECTURE.md](docs/KNOWLEDGE_ARCHITECTURE.md) | **知识、记忆和项目正典怎么分**:唯一事实源、统一入库/检索、上下文预算、记忆准入与一人工作室信息架构 |
 | [docs/SOLO_KNOWLEDGE_WORKFLOW.md](docs/SOLO_KNOWLEDGE_WORKFLOW.md) | **一人团队怎么从知识走到成片**:首次设置、每日主路径、每周 30 分钟维护与效果判定 |
+| [docs/SOLO_VIDEO_CANVAS_WORKFLOW.md](docs/SOLO_VIDEO_CANVAS_WORKFLOW.md) | **一个人怎么在自由画布稳定出片**:文本→图→视频→人工通过→合成，以及外部工具混用和质量检查清单 |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统怎么运转的（分层 + 5 条核心数据流）、**想改 X 去哪个文件**速查表 |
 | [docs/MODULE_INDEX.md](docs/MODULE_INDEX.md) | 全部 160+ 模块的一句话职责索引（自动生成：`python -m scripts.gen_module_index`） |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | 每次改动的动机 / 变更点 / 影响面 |

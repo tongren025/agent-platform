@@ -75,6 +75,20 @@ POST /workflow/{key}/run → app/services/workflow_executor.py（Kahn 拓扑遍�
 | 长期记忆（语义/经验/行为三类） | data/memory 或 PG | memory_extractor 按消息增量提取 | prompt 编译时注入 |
 | 蒸馏/进化 | distillation/evolution logs | 定时或手动触发 | 人工审阅采纳 |
 
+### 6. 自由画布人工出片
+
+```text
+手工文本 / 看板卡片 / 外部图片视频
+  └► Canvas.tsx：编辑、连线、撤销、审核状态、JSON 备份
+      ├► canvas.py /generate：可选文生图，结果固化 uploads/canvas
+      ├► canvas.py /video + /sync：可选文生/图生视频，任务和结果回到视频节点
+      └► canvas.py /compose：仅接收前端明确排序且人工通过的视频 URL
+          └► openrouter_media.compose_video：FFmpeg 统一画幅并串接成片
+```
+
+画布 JSON 保存带 `revision` 乐观锁并使用临时文件原子替换。生成结果默认需要人工审核；“已通过”是前端合成门禁，
+不代表模型质量由系统自动担保。
+
 ## 三、"我想改 X" 速查表
 
 | 想干什么 | 去哪 |
