@@ -135,6 +135,7 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 | [docs/RUNBOOK.md](docs/RUNBOOK.md) | **怎么把项目跑起来**:零配置最短路径、端口坑、配置双轨制、常见报错解法、data/ 目录地图、根目录文件辨析 |
 | [scripts/README.md](scripts/README.md) | 全部 31 个脚本的清单:用途/跑法/一次性还是可复用/是否破坏性 |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | **未来一年目标与方向**:KPI、季度计划、优化项、欠账、机会与不做清单 |
+| [docs/KNOWLEDGE_ARCHITECTURE.md](docs/KNOWLEDGE_ARCHITECTURE.md) | **知识、记忆和项目正典怎么分**:唯一事实源、统一入库/检索、上下文预算、记忆准入与一人工作室信息架构 |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统怎么运转的（分层 + 5 条核心数据流）、**想改 X 去哪个文件**速查表 |
 | [docs/MODULE_INDEX.md](docs/MODULE_INDEX.md) | 全部 160+ 模块的一句话职责索引（自动生成：`python -m scripts.gen_module_index`） |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | 每次改动的动机 / 变更点 / 影响面 |
