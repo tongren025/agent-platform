@@ -1,0 +1,15 @@
+{
+  "query": "topic:mcp",
+  "taken_at": "2026-06-26T07:22:51.144864+00:00",
+  "stars": {
+    "affaan-m/ECC": 221867,
+    "n8n-io/n8n": 194103,
+    "Snailclimb/JavaGuide": 156627,
+    "langgenius/dify": 146616,
+    "open-webui/open-webui": 143047,
+    "MemPalace/mempalace": 56408,
+    "rohitg00/ai-engineering-from-scratch": 36403,
+    "Panniantong/Agent-Reach": 41596,
+    "headroomlabs-ai/headroom": 51311
+  }
+}

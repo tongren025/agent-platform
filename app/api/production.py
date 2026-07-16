@@ -22,6 +22,7 @@ from app.models.production import (
     ProductionCard, ProductionProject, ProjectWithCards, ProjectMember,
 )
 from app.services.invocation import run_invocation
+from app.services.image_generation import generate_image_to_local
 from app.services.production_quality import evaluate_production_draft
 
 router = APIRouter(prefix="/api/v1/agentapp/production", tags=["production"])
@@ -521,6 +522,7 @@ class UpdateCardReq(BaseModel):
     episode: Optional[int] = None
     shot_number: Optional[int] = None
     prompts: Optional[list[str]] = None
+    negative_prompts: Optional[list[str]] = None
     images: Optional[list[str]] = None
     videos: Optional[list[str]] = None
     metadata: Optional[dict] = None
@@ -551,6 +553,8 @@ def update_card(card_id: str, req: UpdateCardReq):
                     c.shot_number = req.shot_number
                 if "prompts" in provided:
                     c.prompts = req.prompts or []
+                if "negative_prompts" in provided:
+                    c.negative_prompts = req.negative_prompts or []
                 if "images" in provided:
                     c.images = req.images or []
                 if "videos" in provided:
@@ -806,6 +810,7 @@ class GenerateReq(BaseModel):
     employee_key: str = ""
     extra_instruction: str = ""
     episode: Optional[int] = None
+    shot_number: Optional[int] = None
     mode: str = "append"
 
 
@@ -834,12 +839,35 @@ async def generate_stage(pid: str, req: GenerateReq):
     prev_cards = [c for c in cards if c.stage in stage_keys and stage_keys.index(c.stage) < target_idx]
     if req.episode is not None:
         prev_cards = [c for c in prev_cards if c.episode == req.episode or c.episode is None]
+    if req.shot_number is not None:
+        if req.shot_number <= 0:
+            raise HTTPException(400, "shot_number 必须大于 0")
+        prev_cards = [c for c in prev_cards if c.shot_number in (0, req.shot_number)]
     if not prev_cards and not proj.source_content:
         raise HTTPException(400, "没有前置阶段的内容可供生成")
 
     context_parts = []
     if proj.source_content:
         context_parts.append(f"## 项目原始素材\n{proj.source_content}")
+    # GC 可继承正片项目已经锁定的 Art Bible，避免概念片重新猜人物与画风。
+    art_bible_project_id = str((proj.settings or {}).get("art_bible_project_id") or "").strip()
+    if is_gc and art_bible_project_id:
+        try:
+            art_bible_cards = [
+                card for card in _load_cards(art_bible_project_id)
+                if card.stage in ("setting", "design")
+                and (card.images or card.prompts or card.content)
+            ]
+        except HTTPException:
+            art_bible_cards = []
+        if art_bible_cards:
+            context_parts.append("## 已锁定 Art Bible（必须继承，不得重新设计）")
+            for card in art_bible_cards:
+                context_parts.append(f"### {card.title}\n{card.content}")
+                if card.prompts:
+                    context_parts.append("母版提示词:\n" + "\n".join(f"- {item}" for item in card.prompts))
+                if card.images:
+                    context_parts.append("母版图片:\n" + "\n".join(f"- {item}" for item in card.images))
     for stage_key in stage_keys[:target_idx]:
         stage_cards = sorted([c for c in prev_cards if c.stage == stage_key], key=lambda x: x.shot_number)
         if stage_cards:
@@ -870,6 +898,12 @@ async def generate_stage(pid: str, req: GenerateReq):
         raise HTTPException(400, "需要指定一个数字员工来执行生成")
 
     scope_label = f"EP{req.episode:02d}" if req.episode is not None else "全局资产"
+    if req.shot_number is not None:
+        scope_label += f" / G{req.shot_number}"
+        instruction += (
+            f"\n\n本次只返工 G{req.shot_number}，不要生成其他 G 单元；"
+            "保持未要求修改的事实、角色和上下游约束不变。"
+        )
     project_constraints = (
         f"项目规格：单集目标时长 {proj.episode_duration_seconds} 秒；画幅 {proj.aspect_ratio}；"
         f"视觉风格：{proj.visual_style or '沿用已锁定 Art Bible'}。"
@@ -894,7 +928,12 @@ async def generate_stage(pid: str, req: GenerateReq):
     now = _now()
     new_cards = []
     # 替换/续号都只作用于「同阶段 + 同集数」的卡片，其他集的卡片绝不触碰
-    scope_cards = [c for c in cards if c.stage == req.target_stage and c.episode == req.episode]
+    scope_cards = [
+        c for c in cards
+        if c.stage == req.target_stage
+        and c.episode == req.episode
+        and (req.shot_number is None or c.shot_number == req.shot_number)
+    ]
     replaced = 0
     if req.mode == "replace":
         for ec in scope_cards:
@@ -909,7 +948,9 @@ async def generate_stage(pid: str, req: GenerateReq):
         body = draft["content"]
         metadata = dict(draft.get("metadata") or {})
         parsed_unit = _detect_generation_unit(title, metadata)
-        if parsed_unit is None and _is_overview_card(title):
+        if req.shot_number is not None:
+            unit_number = req.shot_number
+        elif parsed_unit is None and _is_overview_card(title):
             unit_number = 0
         elif parsed_unit is not None:
             unit_number = parsed_unit
@@ -966,11 +1007,110 @@ async def generate_stage(pid: str, req: GenerateReq):
         "replaced": replaced,
         "mode": req.mode,
         "episode": req.episode,
+        "shot_number": req.shot_number,
         "stage": req.target_stage,
         "cards": [c.model_dump() for c in new_cards],
         "quality_issue_count": sum(
             len(c.metadata.get("quality_gate", {}).get("issues", [])) for c in new_cards
         ),
+    }}
+
+
+class GenerateCardImageReq(BaseModel):
+    """单卡立即生图请求：默认读取卡片 prompts[0]，也允许前端显式传入已编辑提示词。"""
+    model: str
+    prompt: str = ""
+    size: str = "1024x1536"
+
+
+@router.post("/projects/{pid}/cards/{card_id}/generate-image")
+def generate_card_image(pid: str, card_id: str, req: GenerateCardImageReq):
+    """为图片提示词或故事板卡立即生成新版本，保留旧图并把新 URL 设为当前版本。"""
+    _load_project(pid)
+    cards = _load_cards(pid)
+    card = next((item for item in cards if item.card_id == card_id), None)
+    if card is None:
+        raise HTTPException(404, f"卡片 {card_id} 不存在")
+    if card.stage not in ("img_prompt", "storyboard"):
+        raise HTTPException(400, "只有图片提示词卡或故事板卡可以立即生图")
+
+    prompt = req.prompt.strip() or (card.prompts[0].strip() if card.prompts else card.content.strip())
+    if not prompt:
+        raise HTTPException(400, "卡片没有可用提示词")
+    try:
+        result = generate_image_to_local(prompt, req.model, req.size)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        logger.warning("单卡生图失败 card=%s model=%s: %s", card_id, req.model, exc)
+        raise HTTPException(502, f"生图失败: {exc}") from exc
+
+    card.images.append(result["url"])
+    card.metadata = {
+        **card.metadata,
+        "active_image": result["url"],
+        "last_image_model": result["model"],
+        "last_image_prompt": prompt,
+    }
+    card.status = "done"
+    card.updated_at = _now()
+    _save_cards(pid, cards)
+    return {"code": 200, "data": {**result, "card": card.model_dump()}}
+
+
+@router.post("/projects/{pid}/cards/{card_id}/split-storyboard")
+def split_storyboard_card(pid: str, card_id: str):
+    """把历史上一张 G 内含多个 ``### 镜头N`` 的大分镜拆成一镜一卡，原卡不再保留。"""
+    _load_project(pid)
+    cards = _load_cards(pid)
+    card = next((item for item in cards if item.card_id == card_id), None)
+    if card is None:
+        raise HTTPException(404, f"卡片 {card_id} 不存在")
+    if card.stage != "storyboard":
+        raise HTTPException(400, "只有分镜卡可以拆成逐镜故事板")
+
+    matches = list(re.finditer(r"(?m)^###\s*镜头\s*(\d+)[^\n]*\n", card.content))
+    if len(matches) < 2:
+        raise HTTPException(400, "该分镜没有检测到至少两个“### 镜头N”段落")
+
+    now = _now()
+    split_cards: list[ProductionCard] = []
+    for index, match in enumerate(matches):
+        subshot_number = int(match.group(1))
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(card.content)
+        heading = match.group(0).strip()
+        body = card.content[match.end():end].strip()
+        subshot = f"G{card.shot_number}-S{subshot_number}"
+        metadata = {
+            **card.metadata,
+            "unit_number": card.shot_number,
+            "subshot": subshot,
+            "storyboard_schema_version": "3.0-one-shot-per-card",
+            "split_from_card_id": card.card_id,
+        }
+        split_cards.append(ProductionCard(
+            card_id=str(uuid.uuid4())[:8],
+            project_id=pid,
+            stage="storyboard",
+            title=f"{subshot} 故事板",
+            content=f"{heading}\n{body}",
+            episode=card.episode,
+            shot_number=card.shot_number,
+            images=list(card.images) if index == 0 else [],
+            metadata=metadata,
+            status=card.status,
+            assignee=card.assignee,
+            created_at=now,
+            updated_at=now,
+        ))
+
+    position = cards.index(card)
+    cards[position:position + 1] = split_cards
+    _save_cards(pid, cards)
+    return {"code": 200, "data": {
+        "split": len(split_cards),
+        "source_card_id": card_id,
+        "cards": [item.model_dump() for item in split_cards],
     }}
 
 

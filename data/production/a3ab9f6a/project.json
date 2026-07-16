@@ -1,7 +1,7 @@
 {
   "project_id": "a3ab9f6a",
   "name": "九陆纪元 · GC概念宣传片",
-  "description": "15-30秒概念宣传片 · 3-5个最炸裂视觉瞬间 · 吸引观众入坑",
+  "description": "30秒竖屏剧情型GC：被命运拒绝的少年第一次被龙选择，并被世界判定为最后的钥匙",
   "source_type": "gc",
   "source_content": "《九陆纪元》概念宣传片\n\n定位：15-30秒竖屏概念宣传片，用3-5个最炸裂的视觉瞬间让观众一眼入坑。\n\n核心素材池（从全五季中挑选最具视觉冲击力的瞬间）：\n1. 烬龙陆·熔浆龙焰——苍霖骑龙升空，熔浆奔涌背景\n2. 青霄陆·万丈悬瀑——世界树根系穿透云层\n3. 觉醒者金色虹膜特写——瞳孔里倒映九大陆轮廓\n4. 龙蛋孵化——裂缝透出冷蓝数据流光芒\n5. 九大陆全景巡礼——从太空视角俯瞰星球\n\n最后一个瞬间必须是悬念钩子：苍霖背影面对未知，字幕「没有人选你。但你还是站起来了。」",
   "employee_key": "",
@@ -9,7 +9,7 @@
   "episode_count": 1,
   "episode_duration_seconds": 30,
   "aspect_ratio": "9:16",
-  "visual_style": "",
+  "visual_style": "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。",
   "budget": 0.0,
   "members": [
     {
@@ -23,8 +23,13 @@
   "settings": {
     "visibility": "private",
     "allow_ai_generate": true,
-    "default_status": "pending"
+    "default_status": "pending",
+    "art_bible_project_id": "jiulu-s1",
+    "style_reference_policy": "inherit_locked_art_bible",
+    "distribution_goal": "douyin_cold_start",
+    "gc_version": "douyin_story_hook_v1",
+    "video_generation_locked_until_review": true
   },
   "created_at": "2026-07-14T06:18:46.676494+00:00",
-  "updated_at": "2026-07-14T07:44:58.789093+00:00"
+  "updated_at": "2026-07-16T02:47:19.008027+00:00"
 }

@@ -1,0 +1,31 @@
+{
+  "query": "AI coding",
+  "taken_at": "2026-07-13T18:01:24.390477+00:00",
+  "stars": {
+    "obra/superpowers": 253703,
+    "n8n-io/n8n": 196289,
+    "x1xhlol/system-prompts-and-models-of-ai-tools": 141873,
+    "JuliusBrussee/caveman": 88986,
+    "thedotmack/claude-mem": 87080,
+    "Graphify-Labs/graphify": 84313,
+    "DietrichGebert/ponytail": 82110,
+    "addyosmani/agent-skills": 77853,
+    "bytedance/deer-flow": 76927,
+    "daytonaio/daytona": 72199,
+    "earendil-works/pi": 70442,
+    "code-yeongyu/oh-my-openagent": 65683,
+    "ruvnet/ruflo": 64290,
+    "Leonxlnx/taste-skill": 62874,
+    "shanraisshan/claude-code-best-practice": 62524,
+    "santifer/career-ops": 59848,
+    "XiaomiMiMo/MiMo-Code": 11918,
+    "calesthio/OpenMontage": 37937,
+    "esengine/DeepSeek-Reasonix": 26859,
+    "Gitlawb/openclaude": 29969,
+    "JCodesMore/ai-website-cloner-template": 28077,
+    "omnigent-ai/omnigent": 7199,
+    "coreyhaines31/marketingskills": 38355,
+    "cobusgreyling/loop-engineering": 7284,
+    "MadsLorentzen/ai-job-search": 21792
+  }
+}

@@ -1,15 +1,5 @@
 [
   {
-    "logId": "evo_83db4bd196ac",
-    "employeeKey": "comic-director",
-    "ranAt": "2026-06-29T13:12:12.305726Z",
-    "sessionsAnalyzed": 3,
-    "insightsGenerated": 4,
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 11625,
-    "error": null
-  },
-  {
     "logId": "evo_b11c25c5166a",
     "employeeKey": "comic-director",
     "ranAt": "2026-06-29T13:49:51.371321Z",
@@ -497,6 +487,16 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_d8536fd08867",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-15T20:00:30.040981Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
     "error": null
   }
 ]

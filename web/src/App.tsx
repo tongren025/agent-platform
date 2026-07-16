@@ -7,6 +7,7 @@ import UserAuthGuard from './components/UserAuthGuard';
 import { Spin } from 'antd';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
+const DirectorStudio = lazy(() => import('./pages/DirectorStudio'));
 const Employees = lazy(() => import('./pages/Employees'));
 const Templates = lazy(() => import('./pages/Templates'));
 const Tools = lazy(() => import('./pages/Tools'));
@@ -43,7 +44,8 @@ export default function App() {
       <Route path="/login" element={<UserLogin />} />
       <Route element={<UserAuthGuard />}>
         <Route element={<Layout />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Navigate to="/studio" replace />} />
+          <Route path="/studio" element={<DirectorStudio />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/templates" element={<Templates />} />

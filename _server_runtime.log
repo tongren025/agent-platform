@@ -1,0 +1,558 @@
+ÿ�ղɼ�������������
+��ʱ��������ͬ�� @ 02:00
+��ʱ��������comic-keyframe-artist @ 03:00
+��ʱ��������comic-storyboard @ 03:00
+��ʱ��������comic-scene-artist @ 03:00
+��ʱ�������ҽ�����comic-keyframe-artist @ 04:00
+��ʱ�������ҽ�����comic-storyboard @ 04:00
+��ʱ�������ҽ�����comic-scene-artist @ 04:00
+趋势 AI 报告就绪，模型=Gemma-4-31B-IT-NVFP4
+趋势简报就绪：6 条(候选 185)
+趋势同步完成：新拉 0 个，跳过 8 个（当天已有），共 8 个 query
+2026-07-13T11:55:36.568651Z [info     ] request                        client=127.0.0.1 elapsed_ms=47.6 method=GET path=/ request_id=034cfbb6617b422ab73a0a7eb5e90de4 status=200
+2026-07-13T11:55:46.229640Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.3 method=GET path=/ request_id=e9d097f15a234ebcba60a15b4584a950 status=200
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-scene-artist, actions=4, before={'semantic': 24, 'episodic': 2, 'procedural': 3}, after={'semantic_count': 21, 'episodic_count': 2, 'procedural_count': 3}, 14077ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-keyframe-artist, actions=5, before={'semantic': 31, 'episodic': 2, 'procedural': 3}, after={'semantic_count': 27, 'episodic_count': 2, 'procedural_count': 3}, 18531ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-storyboard, actions=6, before={'semantic': 26, 'episodic': 4, 'procedural': 4}, after={'semantic_count': 21, 'episodic_count': 4, 'procedural_count': 4}, 23890ms
+2026-07-13T11:56:02.301034Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/ request_id=d14df64402094119bffc04729bd543dc status=200
+2026-07-13T11:56:02.347958Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/assets/index-Cjs0J1y4.js request_id=7375910eba1d4151834b7b383ffb4502 status=200
+2026-07-13T11:56:02.365303Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/assets/index-DH1lgv_e.css request_id=019d2fadaed3490281da10af7ffa2226 status=200
+2026-07-13T11:56:02.928252Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.5 method=GET path=/assets/UserLogin-B6c07Jnp.js request_id=29a701b0ed8042d5ba1fc89ff86a2782 status=200
+2026-07-13T11:56:02.938275Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.0 method=GET path=/assets/TextArea-BYlZLfhb.js request_id=64ffb8a7cd11486b95bc0157810b2d52 status=200
+2026-07-13T11:56:02.947254Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.5 method=GET path=/assets/useVariants-B_DfNHOx.js request_id=5dd138d1f926422391c6acf539a886c2 status=200
+2026-07-13T11:56:02.958253Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.3 method=GET path=/assets/index-DcaerdNe.js request_id=3ddbe3727c9948f58757494a1fd48e99 status=200
+2026-07-13T11:56:02.967252Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.2 method=GET path=/assets/Input-DpDiXcJo.js request_id=1692fdeaab764c3c8a4cbe9f8c050dac status=200
+2026-07-13T11:56:02.975980Z [info     ] request                        client=127.0.0.1 elapsed_ms=52.4 method=GET path=/assets/EyeOutlined-CDvvHKvd.js request_id=700b760b698d4a3b80a96f7cf8ade24d status=200
+2026-07-13T11:56:02.995978Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.2 method=GET path=/assets/SearchOutlined-BaAUilXr.js request_id=2adf1ce027fa4315b389be8d0c3502c7 status=200
+2026-07-13T11:56:03.004220Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.7 method=GET path=/assets/UserOutlined-BuFhv-jy.js request_id=a7f340e287bf4f0f8dd58fb2f28f0527 status=200
+2026-07-13T11:56:03.012220Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.7 method=GET path=/assets/LockOutlined-CCVcHLqq.js request_id=41af50955b3a428da18f52fbf5c8ef1e status=200
+2026-07-13T11:56:03.124309Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/favicon.ico request_id=0208fd2e1a74447ab85b62629f7cbd7e status=200
+2026-07-13T11:56:24.101006Z [info     ] request                        client=127.0.0.1 elapsed_ms=108.8 method=POST path=/api/v1/agentapp/auth/login request_id=a4958ddde8a0426e872a5783f6ce0463 status=200
+2026-07-13T11:56:24.137580Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.1 method=GET path=/api/v1/agentapp/auth/check request_id=47d829166d7846b1813a4d0d3239e4b6 status=200
+2026-07-13T11:56:24.165768Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/favicon.ico request_id=40ce7b48791d42ed9e0ceb772a20fdfc status=200
+2026-07-13T11:56:24.179632Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/api/v1/agentapp/auth/check request_id=3d02863de74e46129c5d2d2a3e07c718 status=200
+2026-07-13T11:56:24.232466Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/favicon.ico request_id=e58cf8a5ddfb42a3bc9b730605941260 status=200
+2026-07-13T11:56:24.251140Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.9 method=GET path=/assets/api-DPEEF-51.js request_id=c75dcbac63b84d3cafc4622f29b61ebf status=200
+2026-07-13T11:56:24.258140Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.7 method=GET path=/assets/Dashboard-BMQEyJSI.js request_id=fd86588602164e20a60be0444cd1c6b0 status=200
+2026-07-13T11:56:24.269507Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.2 method=GET path=/assets/ReloadOutlined-DZrRAJXY.js request_id=26f3de1d799b4bb7a140bc9a3cc02ea5 status=200
+2026-07-13T11:56:24.276231Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.4 method=GET path=/assets/CheckOutlined-BnzVNL8L.js request_id=138cff5224d348f08770066d0561bd6a status=200
+2026-07-13T11:56:24.285442Z [info     ] request                        client=127.0.0.1 elapsed_ms=39.1 method=GET path=/assets/index-DGx1Kobf.js request_id=2402d73433564663b8dfe39379ed36ed status=200
+2026-07-13T11:56:24.303009Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.3 method=GET path=/assets/index-BFTt7-yt.js request_id=a7a5f3ee12ad4f05b874f61f3bd35c25 status=200
+2026-07-13T11:56:24.317298Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.3 method=GET path=/assets/PlusOutlined-BOLybB1j.js request_id=d885189295934be69cfea5ccf17a4100 status=200
+2026-07-13T11:56:24.325299Z [info     ] request                        client=127.0.0.1 elapsed_ms=25.9 method=GET path=/assets/index-GBHW4yUc.js request_id=1d542433ec6848ebadfde2849d8ba73b status=200
+2026-07-13T11:56:24.337350Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.8 method=GET path=/assets/index-BEf6eXCT.js request_id=02f81f3d1fb349d98437f3e76f45c736 status=200
+2026-07-13T11:56:24.358337Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.8 method=GET path=/assets/Overflow-DlRKR7cO.js request_id=304246015cd64060a1ae021295b251d5 status=200
+2026-07-13T11:56:24.368404Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.8 method=GET path=/assets/EllipsisOutlined-Bp3giGmP.js request_id=69ffc7d922c44c87b2f2a15649ecf22d status=200
+2026-07-13T11:56:24.377338Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.7 method=GET path=/assets/progress-BxJNoqSj.js request_id=77e9e1dd20094d23980781cbdd272a01 status=200
+2026-07-13T11:56:24.386338Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.9 method=GET path=/assets/index-BIGy2wfL.js request_id=32a1d16933ab4178bb0e57d76f75a6e9 status=200
+2026-07-13T11:56:24.393475Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.0 method=GET path=/assets/ArrowRightOutlined-CN-33DhV.js request_id=274ed926cf0e4f07952050603cc6ffaa status=200
+2026-07-13T11:56:24.407446Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.2 method=GET path=/assets/row-D-Tt7xg5.js request_id=d6f8237a0a1340feae5993a4d1aef237 status=200
+2026-07-13T11:56:24.415447Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.2 method=GET path=/assets/useBreakpoint-CcmNXtzf.js request_id=8028a6c849d34bc3862ebe1694587077 status=200
+2026-07-13T11:56:24.431447Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.9 method=GET path=/assets/useForceUpdate-CY9_I4TO.js request_id=8be697024cee4a0c91696799892085fb status=200
+2026-07-13T11:56:24.438446Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.5 method=GET path=/assets/index-DzRKieEp.js request_id=e6f1049b29cf48debaea8fd71021424a status=200
+2026-07-13T11:56:24.455039Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.0 method=GET path=/assets/ExclamationCircleOutlined-eg81f8pQ.js request_id=50920bef311f4edfa15f29f5a4b4d6b5 status=200
+2026-07-13T11:56:24.468447Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.8 method=GET path=/assets/CheckCircleOutlined-CoRSArEm.js request_id=cb9baadfeba640a6ab5739be29f74d9e status=200
+2026-07-13T11:56:24.475553Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.4 method=GET path=/assets/index-Cw6fCy-S.js request_id=43e34eb0c4b74274bcc4086d70936f8b status=200
+2026-07-13T11:56:24.588553Z [info     ] request                        client=127.0.0.1 elapsed_ms=78.8 method=GET path=/api/v1/agentapp/production/projects request_id=fd655c29a2e04ebc8e88de8f87ff940f status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+2026-07-13T11:56:28.114338Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.3 method=GET path=/assets/media-BI8TGDae.js request_id=2947d6a77e81410faad4696e583aae70 status=200
+2026-07-13T11:56:28.122337Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.3 method=GET path=/assets/index-BGgkAVJI.js request_id=6e7dba421e39403cbad6d613d6232862 status=200
+2026-07-13T11:56:28.131471Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.7 method=GET path=/assets/GlobalOutlined-CS_HEgWT.js request_id=060c6bd10f36417994287d5cc66eb7ab status=200
+2026-07-13T11:56:28.141490Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.9 method=GET path=/assets/Production-CIczKQDv.js request_id=2f765029f87e4d9fbff62b39853a9d0e status=200
+2026-07-13T11:56:28.150450Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.1 method=GET path=/assets/DeleteOutlined-BSaeY91P.js request_id=b476fddc220b412690f7bb07c44f70a5 status=200
+2026-07-13T11:56:28.186448Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.8 method=GET path=/assets/index-CSIeYifG.js request_id=0146c138d9a649b087239d8ef7831699 status=200
+2026-07-13T11:56:28.195449Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.5 method=GET path=/assets/PurePanel-CCWbiKdh.js request_id=029c396d385e4393b3cb5c585a735a63 status=200
+2026-07-13T11:56:28.204449Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.0 method=GET path=/assets/DownOutlined-BVhNmCnJ.js request_id=5c5fd2e9b3db4d52a93c990763cd5b85 status=200
+2026-07-13T11:56:28.222447Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.5 method=GET path=/assets/index-BagP969w.js request_id=a77795284f8a4d739e75e2c2ae8aa0d5 status=200
+2026-07-13T11:56:28.235518Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.8 method=GET path=/assets/index-CpuDWbwR.js request_id=5059731a1cb3413cb634245d0cfff90f status=200
+2026-07-13T11:56:28.242627Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.1 method=GET path=/assets/index-C1AWdfZm.js request_id=04400c16ab0f4ecbbae0e7cefaea99d4 status=200
+2026-07-13T11:56:28.249518Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.7 method=GET path=/assets/useForm-DufKktzB.js request_id=910b73fe3ecd4594bc8e0e23ccb8bf3c status=200
+2026-07-13T11:56:28.265519Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.6 method=GET path=/assets/index-CnxFxWCe.js request_id=f7d313a7835b48e28cb361ae33ce9d7d status=200
+2026-07-13T11:56:28.284517Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.2 method=GET path=/assets/index-CBWJRWs1.js request_id=789e8eb40ac94e8ea6d3f293dc87740c status=200
+2026-07-13T11:56:28.300516Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.3 method=GET path=/assets/index-cBvBB6JB.js request_id=7dd91990df76484e9e53dacbedc85d63 status=200
+2026-07-13T11:56:28.317590Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.7 method=GET path=/assets/SaveOutlined-BVDYwoRE.js request_id=b1524bc8a0fc4055b5f2ad6583bb0d3d status=200
+2026-07-13T11:56:28.325674Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.2 method=GET path=/assets/index-Da2EfiXP.js request_id=057cd00e61ef477ea6e8250473949be9 status=200
+2026-07-13T11:56:28.333591Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.2 method=GET path=/assets/addEventListener-D8ptglEV.js request_id=fc73159fbabd44a6bdd5ede95fa0df2b status=200
+2026-07-13T11:56:28.352608Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.3 method=GET path=/assets/SwapOutlined-D4vlnwVf.js request_id=e781261be1f2421fa5fd06611cf1b853 status=200
+2026-07-13T11:56:28.367591Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.5 method=GET path=/assets/UploadOutlined-B_ZvSiS_.js request_id=2614dce7f5bd482e98dca90ae0fbe6cd status=200
+2026-07-13T11:56:28.375590Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.6 method=GET path=/assets/index-CXQufxud.js request_id=58f2193781e24905b5f08e86e4f75118 status=200
+2026-07-13T11:56:28.382592Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.2 method=GET path=/assets/index-DKwSdgby.js request_id=a4593db6d5e54b3285b15da221371800 status=200
+2026-07-13T11:56:28.390590Z [info     ] request                        client=127.0.0.1 elapsed_ms=39.5 method=GET path=/assets/index-BWJKEzqW.js request_id=87a8b836ceb842ad81ba04b03946f2fd status=200
+2026-07-13T11:56:28.405653Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.2 method=GET path=/assets/PlayCircleOutlined-BWuTyoY7.js request_id=0a7ac073ee6140318690c5533d11f648 status=200
+2026-07-13T11:56:28.412630Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.5 method=GET path=/assets/PictureOutlined-DYc6phYE.js request_id=d4f3e3d2a66144eda478cffd457954e0 status=200
+2026-07-13T11:56:28.420744Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.2 method=GET path=/assets/FileTextOutlined-C6f3MwFl.js request_id=9a79d72e52b24c2cb4654241c8ec9e45 status=200
+2026-07-13T11:56:28.433683Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/favicon.ico request_id=22c8b946209044268997735d3693cf25 status=200
+2026-07-13T11:56:28.443682Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.4 method=GET path=/assets/ClockCircleOutlined-DmHc0JTv.js request_id=fcd196ee7862417db6eb65fd412e619e status=200
+2026-07-13T11:56:28.533774Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.0 method=GET path=/api/v1/agentapp/registry/employees request_id=3d4ee9d1acfa44539f288e75c115deef status=200
+2026-07-13T11:56:28.588690Z [info     ] request                        client=127.0.0.1 elapsed_ms=92.1 method=GET path=/api/v1/agentapp/production/projects request_id=aefaa3e48c4d4830b51f7f98b694a525 status=200
+2026-07-13T11:56:28.788223Z [info     ] request                        client=127.0.0.1 elapsed_ms=71.8 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=cb1dbb787f20448883711401689e9d87 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+2026-07-13T11:56:30.042101Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.7 method=GET path=/api/v1/agentapp/production/resource/漫剧/九陆纪元_前期制作包/02_人物图/苍霖_三个月前赤脚伤痕弱小版.png request_id=cee7d561cd264bf0b19e8c508543253c status=200
+2026-07-13T11:56:30.070099Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.5 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_三个月前赤脚伤痕弱小版.png request_id=38227a861bb1472da1ef6ff792d570e0 status=200
+2026-07-13T11:56:30.082153Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.5 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png request_id=cd3ab29f9d424247bdf703d675dbd6a7 status=200
+2026-07-13T11:56:30.094154Z [info     ] request                        client=127.0.0.1 elapsed_ms=57.0 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/04_艾拉_星圣陆法则学徒.png request_id=2cee842781914f1788d34f367c291842 status=200
+2026-07-13T11:56:30.112153Z [info     ] request                        client=127.0.0.1 elapsed_ms=74.9 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_v3_龙族废墟擦边性感版.png request_id=6b02ae7e9d374a36b269b173a4af3b38 status=200
+2026-07-13T11:56:30.130154Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.6 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png request_id=88898b1cfb5a4347b9967a9b5bd23c26 status=200
+2026-07-13T11:56:30.170419Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.9 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/10_老矿工_烬龙陆.png request_id=01a2ca9011a645858d240532e7260585 status=200
+2026-07-13T11:56:30.178153Z [info     ] request                        client=127.0.0.1 elapsed_ms=52.9 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png request_id=e03853d145c84c0dad72d9f24383507d status=200
+2026-07-13T11:56:30.196157Z [info     ] request                        client=127.0.0.1 elapsed_ms=70.9 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/场景图/EP01_场景概念图_四宫格_v1.png request_id=01bf2cbed8b048598b48427df76331d4 status=200
+2026-07-13T11:56:30.214229Z [info     ] request                        client=127.0.0.1 elapsed_ms=88.4 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/场景图/EP01_龙骨废墟_苍霖初现_v2.png request_id=41ede7d62f4b49649bc6d995af2dc8ee status=200
+2026-07-13T11:56:30.251928Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.8 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/道具细节图/03_别忘了我龙骨碎片.png request_id=30d202093f9c441f80492d2b7cfcb258 status=200
+2026-07-13T11:56:30.280926Z [info     ] request                        client=127.0.0.1 elapsed_ms=56.8 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/道具细节图/01_苍霖掌心叶子.png request_id=ed107287d51d4f61bcb9da97dee7bd96 status=200
+2026-07-13T11:56:30.290929Z [info     ] request                        client=127.0.0.1 elapsed_ms=65.0 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/道具细节图/02_刻名龙鳞.png request_id=089fbe04a9cd4c7b9fabb8f5d17c3b7c status=200
+2026-07-13T11:56:30.309926Z [info     ] request                        client=127.0.0.1 elapsed_ms=73.9 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/03_星圣陆_碎星环浮空城.png request_id=488daff5734b47a8aa92ff9f29afafe6 status=200
+2026-07-13T11:56:30.323926Z [info     ] request                        client=127.0.0.1 elapsed_ms=90.0 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/02_青霄陆_机械穹顶.png request_id=23a74123f2214000b32115d3ee7541be status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+2026-07-13T11:56:34.934622Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.6 method=GET path=/production request_id=c12e364514eb4132b3ee915295848055 status=200
+2026-07-13T11:56:34.956621Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.5 method=GET path=/assets/index-DH1lgv_e.css request_id=1cf14bdb97b24763af61f0d1b486d7a3 status=200
+2026-07-13T11:56:34.980717Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.6 method=GET path=/assets/index-Cjs0J1y4.js request_id=8f471283c3724800a38b37992f2e2000 status=200
+2026-07-13T11:56:35.376746Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.9 method=GET path=/api/v1/agentapp/auth/check request_id=fc0bffd766694a8b94b3e6784958bf54 status=401
+2026-07-13T11:56:35.387063Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/favicon.ico request_id=610a08cb718f44358e405a9398243814 status=200
+2026-07-13T11:56:35.405783Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.7 method=GET path=/assets/UserLogin-B6c07Jnp.js request_id=c1d5451f745b479ca58e3c581af2ceb4 status=200
+2026-07-13T11:56:35.435973Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.8 method=GET path=/assets/index-DcaerdNe.js request_id=b9dca58945974bc3968eb3eb6302c928 status=200
+2026-07-13T11:56:35.442971Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.3 method=GET path=/assets/Input-DpDiXcJo.js request_id=9828049f868a43f19bce67d58a200d98 status=200
+2026-07-13T11:56:35.450973Z [info     ] request                        client=127.0.0.1 elapsed_ms=51.6 method=GET path=/assets/TextArea-BYlZLfhb.js request_id=4e56c9edd5784d60991bee2d635ddde8 status=200
+2026-07-13T11:56:35.458149Z [info     ] request                        client=127.0.0.1 elapsed_ms=57.3 method=GET path=/assets/useVariants-B_DfNHOx.js request_id=67e4fb4804014fee815ccf0ee8c6b158 status=200
+2026-07-13T11:56:35.465161Z [info     ] request                        client=127.0.0.1 elapsed_ms=60.4 method=GET path=/assets/EyeOutlined-CDvvHKvd.js request_id=349bd3de8dfb4ac8bf68206ea1413dbb status=200
+2026-07-13T11:56:35.483079Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.3 method=GET path=/favicon.ico request_id=2abfa398302f4e02a41241187fea307c status=200
+2026-07-13T11:56:35.493099Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.6 method=GET path=/assets/SearchOutlined-BaAUilXr.js request_id=bff1323730344d2d90f0e7111e76b984 status=200
+2026-07-13T11:56:35.500125Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.4 method=GET path=/assets/UserOutlined-BuFhv-jy.js request_id=14eb4698e21a4358b974be971c4d4c0c status=200
+2026-07-13T11:56:35.508505Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.2 method=GET path=/assets/LockOutlined-CCVcHLqq.js request_id=122692345545471a89cfdda1ae55b123 status=200
+查询任务列表失败
+Traceback (most recent call last):
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1083, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1466, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 905, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-13T11:56:35.955973Z [info     ] request                        client=127.0.0.1 elapsed_ms=11356.5 method=GET path=/api/v1/agentapp/tasks request_id=2801033583ab4efab4409eebbf891b29 status=503
+2026-07-13T11:56:36.720026Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.3 method=GET path=/production/jiulu-s1 request_id=11f5af350a414ff297de6afaf25047f7 status=200
+2026-07-13T11:56:36.800087Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/api/v1/agentapp/auth/check request_id=f5413d17c5084bd29d4b4382c0689058 status=200
+2026-07-13T11:56:36.811743Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/favicon.ico request_id=ba94deacb1ba4e7ea35406c855eafa1c status=200
+2026-07-13T11:56:36.827742Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.7 method=GET path=/assets/ProductionHub-kUoT2iIJ.js request_id=306f7a30846f4d35b62cd38df7d64403 status=200
+2026-07-13T11:56:36.852742Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.2 method=GET path=/assets/dropdown-9-I-zGnQ.js request_id=8df5f0821781448b920cfb65fb45ef53 status=200
+2026-07-13T11:56:36.859860Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.3 method=GET path=/assets/HomeOutlined-Ce2X-gr-.js request_id=11d185d6f2f1408b968ec5e94de0aacd status=200
+2026-07-13T11:56:36.867936Z [info     ] request                        client=127.0.0.1 elapsed_ms=42.3 method=GET path=/assets/collapse-BbEVqHco.js request_id=2e215378860041d2afc9900c3b68c052 status=200
+2026-07-13T11:56:37.085680Z [info     ] request                        client=127.0.0.1 elapsed_ms=158.3 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=e902dcbb98be49dfb891841225b7f042 status=200
+2026-07-13T11:56:37.147984Z [info     ] request                        client=127.0.0.1 elapsed_ms=221.9 method=GET path=/api/v1/agentapp/production/projects request_id=437ebf9ae33341b1b242c0073ee5e5d3 status=200
+2026-07-13T11:56:37.217148Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/uploads/canvas/img_auto_019f995542c642e398712f414e4577a8.png request_id=b62937deb25f475998c2d531be387e3d status=200
+2026-07-13T11:56:40.136376Z [info     ] request                        client=127.0.0.1 elapsed_ms=91.5 method=POST path=/api/v1/agentapp/auth/login request_id=b2b07e4688af4cc88a7da702b7e908ea status=200
+2026-07-13T11:56:40.157393Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.2 method=GET path=/api/v1/agentapp/auth/check request_id=962a444e108c4f3a9006fedae9ed1c18 status=200
+2026-07-13T11:56:40.192367Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.7 method=GET path=/favicon.ico request_id=8bff118ae564419783cb7a2e7b7a8779 status=200
+2026-07-13T11:56:40.205491Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.3 method=GET path=/api/v1/agentapp/auth/check request_id=c76424a2b57c41e9a7f1f2e3502150a1 status=200
+2026-07-13T11:56:40.233491Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.1 method=GET path=/assets/CheckOutlined-BnzVNL8L.js request_id=90ddbf9cf41b437e983d550bcf25683c status=200
+2026-07-13T11:56:40.242461Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.6 method=GET path=/assets/index-DGx1Kobf.js request_id=55d06b967ffd459dbfd1682a2e11d52a status=200
+2026-07-13T11:56:40.251580Z [info     ] request                        client=127.0.0.1 elapsed_ms=25.8 method=GET path=/assets/api-DPEEF-51.js request_id=f4d3009038ac4a33afa796a54bce3cd4 status=200
+2026-07-13T11:56:40.258577Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.5 method=GET path=/assets/index-BFTt7-yt.js request_id=bca43b917479489ca30cefde5cacf293 status=200
+2026-07-13T11:56:40.267541Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.5 method=GET path=/assets/ReloadOutlined-DZrRAJXY.js request_id=b02c5f6044954fb988afcbb5741e7e92 status=200
+2026-07-13T11:56:40.275539Z [info     ] request                        client=127.0.0.1 elapsed_ms=51.4 method=GET path=/assets/Dashboard-BMQEyJSI.js request_id=a322dba7c06b44ff96b56ba8648c9896 status=200
+2026-07-13T11:56:40.304537Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.2 method=GET path=/assets/EllipsisOutlined-Bp3giGmP.js request_id=d24e12d45df942c7b3bf09d08ac6558e status=200
+2026-07-13T11:56:40.314618Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.8 method=GET path=/assets/PlusOutlined-BOLybB1j.js request_id=177261871cba4e0096fd6e84c9139c97 status=200
+2026-07-13T11:56:40.324616Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.4 method=GET path=/assets/index-BEf6eXCT.js request_id=64c86b3ba360449ba67d443ef15b8e05 status=200
+2026-07-13T11:56:40.331618Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.6 method=GET path=/assets/index-GBHW4yUc.js request_id=87c7684cf8474a99b185fbc6b57c1f8c status=200
+2026-07-13T11:56:40.340618Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.7 method=GET path=/assets/Overflow-DlRKR7cO.js request_id=4aab1997e23940b183b63337655466b1 status=200
+2026-07-13T11:56:40.349619Z [info     ] request                        client=127.0.0.1 elapsed_ms=49.3 method=GET path=/assets/progress-BxJNoqSj.js request_id=f86728f3193a4114878f400cbb00040a status=200
+2026-07-13T11:56:40.376616Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.2 method=GET path=/assets/ArrowRightOutlined-CN-33DhV.js request_id=df3d659ef2694a28a645e5b57cd58093 status=200
+2026-07-13T11:56:40.402060Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.5 method=GET path=/assets/useForceUpdate-CY9_I4TO.js request_id=1ebf1cd2c7884cd2ad7299d46637c095 status=200
+2026-07-13T11:56:40.409745Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.3 method=GET path=/assets/useBreakpoint-CcmNXtzf.js request_id=ce506ac8580240e285be3b5559b8115f status=200
+2026-07-13T11:56:40.417623Z [info     ] request                        client=127.0.0.1 elapsed_ms=52.4 method=GET path=/assets/index-BIGy2wfL.js request_id=1fc2ba8a123543bfbe8292cbb3ba7b62 status=200
+2026-07-13T11:56:40.424892Z [info     ] request                        client=127.0.0.1 elapsed_ms=58.4 method=GET path=/assets/row-D-Tt7xg5.js request_id=4bbf22becf1248019e0b6e900bf59c77 status=200
+2026-07-13T11:56:40.432626Z [info     ] request                        client=127.0.0.1 elapsed_ms=60.3 method=GET path=/assets/index-DzRKieEp.js request_id=676d5283a7454decb0f338a2e1d162f6 status=200
+2026-07-13T11:56:40.451618Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/favicon.ico request_id=964215bc3374492f83d727dda7f45456 status=200
+2026-07-13T11:56:40.458886Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.8 method=GET path=/assets/ExclamationCircleOutlined-eg81f8pQ.js request_id=b84cc36e181d421788268bade0b838f7 status=200
+2026-07-13T11:56:40.467619Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.1 method=GET path=/assets/CheckCircleOutlined-CoRSArEm.js request_id=96b9c99c292a443494b21441cfcd9798 status=200
+2026-07-13T11:56:40.474617Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.0 method=GET path=/assets/index-Cw6fCy-S.js request_id=9deb7032a57f46649b6ff8f5abd5fdf6 status=200
+2026-07-13T11:56:40.606133Z [info     ] request                        client=127.0.0.1 elapsed_ms=112.2 method=GET path=/api/v1/agentapp/production/projects request_id=48389d742895418890628c46eba661b6 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+2026-07-13T11:56:45.259536Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.0 method=GET path=/assets/index-BGgkAVJI.js request_id=e130d4e725644d2983ad54c08a649f31 status=200
+2026-07-13T11:56:45.267921Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.3 method=GET path=/assets/DeleteOutlined-BSaeY91P.js request_id=6230d97154c646b7a19cfb0a9144231e status=200
+2026-07-13T11:56:45.274393Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.9 method=GET path=/assets/Production-CIczKQDv.js request_id=6a425efb6948442aa326651c601ec39e status=200
+2026-07-13T11:56:45.283634Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.0 method=GET path=/assets/GlobalOutlined-CS_HEgWT.js request_id=9f49e31eaf1948bf9d8dea33b3c32f27 status=200
+2026-07-13T11:56:45.291253Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.6 method=GET path=/assets/media-BI8TGDae.js request_id=0b7091b678d54adab216ca423a3df55c status=200
+2026-07-13T11:56:45.311326Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.7 method=GET path=/assets/index-CpuDWbwR.js request_id=33af1d18653b4f9b9a4b8c30b51a3188 status=200
+2026-07-13T11:56:45.319102Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.6 method=GET path=/assets/index-CSIeYifG.js request_id=95b38a2bd8e141f4ba3d6cc3f94f621e status=200
+2026-07-13T11:56:45.325757Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.7 method=GET path=/assets/PurePanel-CCWbiKdh.js request_id=17a48322b56249698de91c7eaadb53c6 status=200
+2026-07-13T11:56:45.333758Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.6 method=GET path=/assets/index-BagP969w.js request_id=0f32f3ac53f047509aaab8564ad3248e status=200
+2026-07-13T11:56:45.341202Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.4 method=GET path=/assets/DownOutlined-BVhNmCnJ.js request_id=68d81b2155bc4a5c8067891ae8374d06 status=200
+2026-07-13T11:56:45.361202Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.1 method=GET path=/assets/index-CnxFxWCe.js request_id=29179a28b07f427184fd6885986706c7 status=200
+2026-07-13T11:56:45.392233Z [info     ] request                        client=127.0.0.1 elapsed_ms=39.8 method=GET path=/assets/index-C1AWdfZm.js request_id=8ff479c42f144912ae99a6c91d2fe957 status=200
+2026-07-13T11:56:45.399726Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.9 method=GET path=/assets/index-cBvBB6JB.js request_id=5b94e5478a56455db35bd3f36868068d status=200
+2026-07-13T11:56:45.406724Z [info     ] request                        client=127.0.0.1 elapsed_ms=52.1 method=GET path=/assets/index-CBWJRWs1.js request_id=056c5f3806204d44b8a312aef9f9ae98 status=200
+2026-07-13T11:56:45.414591Z [info     ] request                        client=127.0.0.1 elapsed_ms=61.0 method=GET path=/assets/useForm-DufKktzB.js request_id=74f75ad4ca484dd2948d69f2f5f001c1 status=200
+2026-07-13T11:56:45.435756Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.3 method=GET path=/assets/SaveOutlined-BVDYwoRE.js request_id=0cee68e162b245e69618cb1998f3911f status=200
+2026-07-13T11:56:45.443756Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.7 method=GET path=/assets/UploadOutlined-B_ZvSiS_.js request_id=53cd43045d3f4e2699c0c7c39b83ac87 status=200
+2026-07-13T11:56:45.453728Z [info     ] request                        client=127.0.0.1 elapsed_ms=25.5 method=GET path=/assets/addEventListener-D8ptglEV.js request_id=b91137f16f3d4d6188c3f9669c568c10 status=200
+2026-07-13T11:56:45.460783Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.4 method=GET path=/assets/index-Da2EfiXP.js request_id=57ee8aa1af604023ac9cb9a35fede48d status=200
+2026-07-13T11:56:45.469725Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.8 method=GET path=/assets/SwapOutlined-D4vlnwVf.js request_id=0758290d906c4aa7941c7c4b91879000 status=200
+2026-07-13T11:56:45.490751Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.9 method=GET path=/assets/index-DKwSdgby.js request_id=1c53667c7fa24b77a3b74f210b39013a status=200
+2026-07-13T11:56:45.501386Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.0 method=GET path=/assets/index-CXQufxud.js request_id=13f60b1797934992a3eaaf16f5046ada status=200
+2026-07-13T11:56:45.508335Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.1 method=GET path=/assets/PlayCircleOutlined-BWuTyoY7.js request_id=1d707bb246be4bdc914c24a8fe9ac243 status=200
+2026-07-13T11:56:45.518271Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.4 method=GET path=/assets/PictureOutlined-DYc6phYE.js request_id=7607ecc805eb4627aa2fe6e8d5afc4b6 status=200
+2026-07-13T11:56:45.526807Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.6 method=GET path=/assets/index-BWJKEzqW.js request_id=12252ce75362442cb9c2dc4ea6c20cc1 status=200
+2026-07-13T11:56:45.545270Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/favicon.ico request_id=24d37250699641838a1d5a85f7f04514 status=200
+2026-07-13T11:56:45.555271Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.4 method=GET path=/assets/FileTextOutlined-C6f3MwFl.js request_id=c4accddba028434f865360d65c1190e1 status=200
+2026-07-13T11:56:45.564273Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.7 method=GET path=/assets/ClockCircleOutlined-DmHc0JTv.js request_id=3244f6be5460409f9d04b150313514cf status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+2026-07-13T11:56:45.679603Z [info     ] request                        client=127.0.0.1 elapsed_ms=73.0 method=GET path=/api/v1/agentapp/registry/employees request_id=1ed9830e2e1744419a8b5faf24c07b29 status=200
+2026-07-13T11:56:45.732976Z [info     ] request                        client=127.0.0.1 elapsed_ms=125.6 method=GET path=/api/v1/agentapp/production/projects request_id=a52af391ea4847f79568e646c56996e8 status=200
+2026-07-13T11:56:45.948075Z [info     ] request                        client=127.0.0.1 elapsed_ms=79.5 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=fc87cfc45cd046848e3f3b557539f75b status=200
+2026-07-13T11:56:47.167442Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.8 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_v3_龙族废墟擦边性感版.png request_id=af0c78ad66dc4b6b8421e71c86d3913d status=200
+2026-07-13T11:56:47.176745Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.8 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png request_id=c1e3df440d274286a214b5ae6c058dcf status=200
+2026-07-13T11:56:47.186633Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.9 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_三个月前赤脚伤痕弱小版.png request_id=77191b9c418a4cc8b9106f37cc076847 status=200
+2026-07-13T11:56:47.196443Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.2 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/04_艾拉_星圣陆法则学徒.png request_id=74c6aa15075c4b83aea187f7d50b3aff status=200
+2026-07-13T11:56:47.204503Z [info     ] request                        client=127.0.0.1 elapsed_ms=47.7 method=GET path=/api/v1/agentapp/production/resource/漫剧/九陆纪元_前期制作包/02_人物图/苍霖_三个月前赤脚伤痕弱小版.png request_id=bd31b61a7ae84bbea50fdecb13d6dd70 status=200
+2026-07-13T11:56:47.226444Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.5 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/场景图/EP01_龙骨废墟_苍霖初现_v2.png request_id=03d168ad30de4919876f90c51eb29e34 status=200
+2026-07-13T11:56:47.235443Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.8 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/场景图/EP01_场景概念图_四宫格_v1.png request_id=a5d59e3d14fa42999e7f36d0b88b9020 status=200
+2026-07-13T11:56:47.242789Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.2 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png request_id=46641e79921c4cdbab4b37145586c112 status=200
+2026-07-13T11:56:47.250441Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.4 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/10_老矿工_烬龙陆.png request_id=09416185e59044aaaa318af10f4785ae status=200
+2026-07-13T11:56:47.259443Z [info     ] request                        client=127.0.0.1 elapsed_ms=43.2 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png request_id=6ea2ed82cb284fef9a2ed8d00780134a status=200
+2026-07-13T11:56:47.274745Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/uploads/canvas/img_auto_019f995542c642e398712f414e4577a8.png request_id=447f1bb3d7784405b2272f65f2f993e2 status=200
+2026-07-13T11:56:47.299534Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.2 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page02_P25-P48.png request_id=fbc44b4e3ad2425e8b1f1a103f904e98 status=200
+2026-07-13T11:56:47.321020Z [info     ] request                        client=127.0.0.1 elapsed_ms=50.6 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png request_id=7de3e62eecd940f292b42288958d32dd status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+查询任务列表失败
+Traceback (most recent call last):
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1083, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1466, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 905, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-13T11:56:51.679805Z [info     ] request                        client=127.0.0.1 elapsed_ms=11055.1 method=GET path=/api/v1/agentapp/tasks request_id=a8c1e18e13e8472bb2413b5f43b1748c status=503
+2026-07-13T12:02:15.107013Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.5 method=GET path=/assets/ProductionMatrix-CuwbX0yf.js request_id=272497dd2beb42c38e62b31032e304b1 status=200
+2026-07-13T12:02:15.116013Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.4 method=GET path=/assets/InboxOutlined-BCFOezxW.js request_id=bb0cab45d9dc46488124090c90c09985 status=200
+2026-07-13T12:02:15.124014Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.2 method=GET path=/assets/dropdown-9-I-zGnQ.js request_id=78e4b171d9ae4e8998e520ac2a9632c1 status=200
+2026-07-13T12:02:15.131032Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.5 method=GET path=/assets/Table-BZj95R7f.js request_id=073e4d9fd12b4cfb9fdf1b3c62b5e412 status=200
+2026-07-13T12:02:15.139012Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.1 method=GET path=/assets/collapse-BbEVqHco.js request_id=38d91e1f963d43489fedbd9e21fc11cc status=200
+2026-07-13T12:02:15.145079Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.8 method=GET path=/assets/FileOutlined-DcyhPHLy.js request_id=edfab1c64ba64b51bf932edb80e63f5d status=200
+2026-07-13T12:02:15.158015Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/favicon.ico request_id=bed061c424854ea7abad6bc2d35d5601 status=200
+2026-07-13T12:02:15.411182Z [info     ] request                        client=127.0.0.1 elapsed_ms=193.4 method=GET path=/api/v1/agentapp/production/orphans request_id=ba6c434634194200898e24d5465f6977 status=200
+2026-07-13T12:02:15.419625Z [info     ] request                        client=127.0.0.1 elapsed_ms=203.0 method=GET path=/api/v1/agentapp/production/matrix request_id=9b48b541f6c34266ba4f821ca61452aa status=200
+2026-07-13T12:02:15.529996Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.6 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=7c4aedb3e00349cd9fa949240cd9836a status=200
+2026-07-13T12:02:17.929339Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/favicon.ico request_id=f720db0eb00843f1b47b3d1190dd6372 status=200
+2026-07-13T12:02:17.938339Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.1 method=GET path=/assets/Canvas-BuknkNJi.js request_id=c889184c36da4bacb5740269ad5ee51f status=200
+2026-07-13T12:02:17.945339Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.0 method=GET path=/assets/DownloadOutlined-kqpvIgiO.js request_id=a9cd7256ef204a3cbc0cc9900d58e533 status=200
+2026-07-13T12:02:17.953341Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.5 method=GET path=/assets/style-BPljHo6W.js request_id=56c0551b3d2741f69a802fccf0517444 status=200
+2026-07-13T12:02:17.960347Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.2 method=GET path=/assets/style-B5DZHykP.css request_id=20669fcb70ba433580870135107df853 status=200
+2026-07-13T12:02:17.968345Z [info     ] request                        client=127.0.0.1 elapsed_ms=44.1 method=GET path=/assets/SendOutlined-CNMfaw4G.js request_id=a5dd98e23d8747f18eaee1205cc85a57 status=200
+2026-07-13T12:02:18.038577Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.5 method=GET path=/api/v1/agentapp/canvas/image-models request_id=9e6118c697c9463292cc640c5add658d status=200
+2026-07-13T12:02:18.064708Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.3 method=GET path=/api/v1/agentapp/registry/employees request_id=b4eb68281c3f4e259daf7557c2610187 status=200
+2026-07-13T12:02:18.071707Z [info     ] request                        client=127.0.0.1 elapsed_ms=42.5 method=GET path=/api/v1/agentapp/canvas/canvases request_id=478e7d0fd7d64abe9ba011172143e7cd status=200
+2026-07-13T12:02:18.123709Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.7 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=0e5a7a6b35264b6d9242245b94a4fa70 status=200
+2026-07-13T12:02:19.758341Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.6 method=PUT path=/api/v1/agentapp/canvas/canvases/359d205a request_id=82ae62af271f4f32b1f841b8a341fcb1 status=200
+2026-07-13T12:02:22.591273Z [info     ] request                        client=127.0.0.1 elapsed_ms=78.1 method=GET path=/api/v1/agentapp/production/projects request_id=23abf6d56a264a83ab158a93d0b418d9 status=200
+2026-07-13T12:02:22.941128Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.6 method=PUT path=/api/v1/agentapp/canvas/canvases/359d205a request_id=679696080d844f51a0e9598e28c50e11 status=200
+2026-07-13T12:02:26.050694Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/favicon.ico request_id=89ccdc620a0544cd9a740890284a9d4e status=200
+2026-07-13T12:02:26.058787Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.0 method=GET path=/assets/Workbench-UYBVsLev.js request_id=e0df6b73bdc5472e879cde3dfd7bba6c status=200
+2026-07-13T12:02:26.067050Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.0 method=GET path=/assets/RobotOutlined-WYadVOsu.js request_id=5518395c1b794b5080d2b3b16884730d status=200
+2026-07-13T12:02:26.073939Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.0 method=GET path=/assets/index-uTktWZ4X.js request_id=76bcf5484b5249bcbe9e4e156d4101f7 status=200
+2026-07-13T12:02:26.134069Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.2 method=GET path=/api/v1/agentapp/registry/teams request_id=23fde370d3404b4e83d11d247ebfcb3d status=200
+2026-07-13T12:02:26.147174Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.1 method=GET path=/api/v1/agentapp/agent/employees request_id=5618b0e4d264419498fbc0ed1b10b685 status=200
+2026-07-13T12:02:28.664967Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.6 method=GET path=/assets/Employees-CNggGmxb.js request_id=4158d461d6004b41bbce4e2effa176dd status=200
+2026-07-13T12:02:28.672966Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.4 method=GET path=/favicon.ico request_id=637ef177a29e4d8b9f4fe910cda3e194 status=200
+2026-07-13T12:02:28.681463Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.4 method=GET path=/assets/index-Dw80qn9a.js request_id=3eca03409ee44cbdacce842878d61a8c status=200
+2026-07-13T12:02:28.689253Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.8 method=GET path=/assets/index-DDgYgMcd.js request_id=12158b3812974b12ac30acfb3d811b89 status=200
+2026-07-13T12:02:28.697203Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.0 method=GET path=/assets/index-DjjQ5apw.js request_id=067520351e854b4b89e0353279d37f73 status=200
+2026-07-13T12:02:28.705730Z [info     ] request                        client=127.0.0.1 elapsed_ms=49.7 method=GET path=/assets/index-C32DzsxQ.js request_id=76c32e5a79b542eea0eb7b9fb124cd9a status=200
+2026-07-13T12:02:28.833338Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.9 method=GET path=/api/v1/agentapp/registry/mcp-servers request_id=c97de938a5a1424cb33f39e8a027408f status=200
+2026-07-13T12:02:28.847342Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.1 method=GET path=/api/v1/agentapp/registry/teams request_id=a5d0f45ffedb4c0dbb202811a9700d5f status=200
+2026-07-13T12:02:28.854336Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.1 method=GET path=/api/v1/agentapp/agent/ai-providers request_id=dad2f8c56c4d4a8ea058c8583e2b803e status=200
+2026-07-13T12:02:28.862877Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.4 method=GET path=/api/v1/agentapp/registry/employees request_id=9d47ddee93684beaa4d998ccab6b7237 status=200
+2026-07-13T12:02:28.870337Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.8 method=GET path=/api/v1/agentapp/registry/skills request_id=63cdd57cb1ca4559adbca652b571cedd status=200
+2026-07-13T12:02:28.880271Z [info     ] request                        client=127.0.0.1 elapsed_ms=56.7 method=GET path=/api/v1/agentapp/registry/tools request_id=5a2044cd72aa4a86b79dc332e3661011 status=200
+2026-07-13T12:02:29.485456Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/favicon.ico request_id=ae9d0b407e34453d87a03bade7a11784 status=200
+2026-07-13T12:02:29.493612Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.4 method=GET path=/assets/Templates-QPpIDWf2.js request_id=bba8a51cc1fb4209aeeefe5860acfd9c status=200
+2026-07-13T12:02:29.617443Z [info     ] request                        client=127.0.0.1 elapsed_ms=92.1 method=GET path=/api/v1/agentapp/registry/role-templates request_id=a790da0503bc4b57b689144cfbc5b2f2 status=200
+2026-07-13T12:02:30.991453Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/favicon.ico request_id=e2ac25382eb842a2be4a659272810d41 status=200
+2026-07-13T12:02:31.000750Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.2 method=GET path=/assets/KnowledgeGraph-cx1Y3ujc.js request_id=a26ba9d6a5a3431da09d7b6ac53bcc6b status=200
+2026-07-13T12:02:31.008747Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.5 method=GET path=/assets/CloudServerOutlined-CcABv9ut.js request_id=be7e92122fce4e8f92006825ad0b96f4 status=200
+2026-07-13T12:02:31.060748Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.3 method=GET path=/api/v1/agentapp/knowledge-graph request_id=a68f1effb1d34be589853622c5f03703 status=200
+2026-07-13T12:02:31.776411Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/favicon.ico request_id=c963b664308541469275c16224390845 status=200
+2026-07-13T12:02:31.785727Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.3 method=GET path=/assets/Memory-JnLNfjT4.js request_id=1691c1e9467548b3924c856be313502c status=200
+2026-07-13T12:02:31.793414Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.1 method=GET path=/assets/ExperimentOutlined-BPYvAhzC.js request_id=92e14b22d34047228a22682a0d73c9df status=200
+2026-07-13T12:02:31.847416Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.7 method=GET path=/api/v1/agentapp/registry/employees request_id=22f85df055d74c09b7c49a2f5186e42d status=200
+2026-07-13T12:02:32.772488Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/favicon.ico request_id=02dc5050ba934ea490bf78a0716ffa2d status=200
+2026-07-13T12:02:32.781786Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.9 method=GET path=/assets/Teams-xX9UePI2.js request_id=94d1752da307409c8223fbb520750bcf status=200
+2026-07-13T12:02:32.789819Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.0 method=GET path=/assets/BookOutlined-g28PCyTG.js request_id=2082eb7e138e47c2b5e41a69ec3e260e status=200
+2026-07-13T12:02:32.849939Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.6 method=GET path=/api/v1/agentapp/registry/teams request_id=a62a3c74f9bf49dc958f013bc0d72ee9 status=200
+2026-07-13T12:02:32.862026Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.0 method=GET path=/api/v1/agentapp/registry/employees request_id=61693e80937745e3b08fb7351e09fc1f status=200
+2026-07-13T12:02:33.302101Z [info     ] request                        client=127.0.0.1 elapsed_ms=354.6 method=GET path=/api/v1/agentapp/memory/stats/comic-director request_id=2a1e312425f8402fb7677b6b7ea76bd4 status=200
+2026-07-13T12:02:33.313374Z [info     ] request                        client=127.0.0.1 elapsed_ms=364.9 method=GET path=/api/v1/agentapp/memory/stats/comic-screenwriter request_id=03c742a0997b4b2baa4fc862dec69e7e status=200
+2026-07-13T12:02:33.319664Z [info     ] request                        client=127.0.0.1 elapsed_ms=371.3 method=GET path=/api/v1/agentapp/memory/stats/comic-character-designer request_id=bf2968716c434c379b35b54f104fb303 status=200
+2026-07-13T12:02:33.326212Z [info     ] request                        client=127.0.0.1 elapsed_ms=377.7 method=GET path=/api/v1/agentapp/memory/stats/comic-scene-designer request_id=4226034f5d4b401caa8c0b9aeb6cf856 status=200
+2026-07-13T12:02:33.333325Z [info     ] request                        client=127.0.0.1 elapsed_ms=330.8 method=GET path=/api/v1/agentapp/memory/stats/comic-vfx-designer request_id=ce26568e44004f9cb59f611c62c05462 status=200
+2026-07-13T12:02:33.340216Z [info     ] request                        client=127.0.0.1 elapsed_ms=337.2 method=GET path=/api/v1/agentapp/memory/stats/comic-trajectory-artist request_id=2f01d23ff5aa4eb68b59fc86ecb201a4 status=200
+2026-07-13T12:02:33.538362Z [info     ] request                        client=127.0.0.1 elapsed_ms=190.0 method=GET path=/api/v1/agentapp/memory/stats/comic-prompt-engineer request_id=03f671b17cae4a03b13264ccb4734b19 status=200
+2026-07-13T12:02:33.547079Z [info     ] request                        client=127.0.0.1 elapsed_ms=119.3 method=GET path=/api/v1/agentapp/memory/stats/comic-qa-inspector request_id=39f824b4411945bc9b557f04c6ea6a9b status=200
+2026-07-13T12:02:34.047497Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/favicon.ico request_id=38e9291a2283444581b50bb78392dde8 status=200
+2026-07-13T12:02:34.056666Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.7 method=GET path=/assets/Collapse-BZrHQwrW.js request_id=a40d884ac402477f88bdc62f793d782c status=200
+2026-07-13T12:02:34.063666Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.0 method=GET path=/assets/RunPanel-D1v2K297.js request_id=a6596a1d67b04a98861d675305b7b077 status=200
+2026-07-13T12:02:34.071666Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.1 method=GET path=/assets/Workflows-DnoWKit1.js request_id=6df2f635c14344d2b9b52c72276ada88 status=200
+2026-07-13T12:02:34.123667Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.6 method=GET path=/api/v1/agentapp/workflow request_id=315caab0203f4b69b8d7c93fe67fe827 status=200
+2026-07-13T12:02:35.551961Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/favicon.ico request_id=175e7fd8aeeb4f24b198efccbaf74c38 status=200
+2026-07-13T12:02:35.560617Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.8 method=GET path=/assets/AutoLearn-D9iQVGPv.js request_id=c602e6bb65ef42a282a35fdf96cf04d8 status=200
+2026-07-13T12:02:35.569942Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.7 method=GET path=/assets/index-Bta9arg2.js request_id=3a17df9fa6774d85809b264c8e294926 status=200
+2026-07-13T12:02:35.698822Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/api/v1/agentapp/scrape/sources request_id=2ccdba3bc6cf49b5af2a8c0cf60db553 status=200
+2026-07-13T12:02:35.709820Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.3 method=GET path=/api/v1/agentapp/registry/employees request_id=5a5667bc7a524efd91ee18b7e0e17f88 status=200
+2026-07-13T12:02:35.935488Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/favicon.ico request_id=4d2207bad1f64fa5a57fe9073d5c9640 status=200
+2026-07-13T12:02:35.943598Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.5 method=GET path=/assets/LinkOutlined-D-d8OLAE.js request_id=b0099e25370c4226bc7be64ac6831adb status=200
+2026-07-13T12:02:35.951327Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.9 method=GET path=/assets/ArticleLearn-BLEOl767.js request_id=24efce3b5aa749dc8115e20b88eb1d1c status=200
+2026-07-13T12:02:36.042020Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.9 method=GET path=/api/v1/agentapp/scrape/learn-sources request_id=d5c2a9f7f6df40448ab492a4b233bec0 status=200
+2026-07-13T12:02:36.054307Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.1 method=GET path=/api/v1/agentapp/registry/employees request_id=86246bf6fd1c4ffeba31e6afe2dfa335 status=200
+2026-07-13T12:02:36.754526Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/favicon.ico request_id=ab3eff6c9131416687652b0b06143a35 status=200
+2026-07-13T12:02:36.762024Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.2 method=GET path=/assets/SkillTracker-DUllb7Bu.js request_id=ebcfbfd0c10d4bb9a157aba41b7b0a1e status=200
+2026-07-13T12:02:36.816103Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.9 method=GET path=/api/v1/agentapp/skills/analyze request_id=87895eed805f4391b099f43ac18a35aa status=200
+2026-07-13T12:02:36.826103Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.0 method=GET path=/api/v1/agentapp/skills/digest request_id=7aa14372a08b414c846be6828081bb0b status=200
+2026-07-13T12:02:36.834103Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.6 method=GET path=/api/v1/agentapp/skills/queries request_id=97a7f3c27c124578ba92190c649de210 status=200
+2026-07-13T12:02:36.841103Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.2 method=GET path=/api/v1/agentapp/skills/summary request_id=039b54c22a1f41d3b2d27f8347f4cc22 status=200
+2026-07-13T12:02:36.886104Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.1 method=GET path=/api/v1/agentapp/skills/analyze request_id=3f58eb0a6cbd4efb82a8b80de0954447 status=200
+2026-07-13T12:02:36.897774Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.2 method=GET path=/api/v1/agentapp/skills/list request_id=223de0040c7e41a099bfdf8acd0db399 status=200
+2026-07-13T12:02:36.905087Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.8 method=GET path=/api/v1/agentapp/skills/summary request_id=728c3e4c3ed64a9fada241700351f427 status=200
+2026-07-13T12:02:36.913177Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.9 method=GET path=/api/v1/agentapp/skills/queries request_id=9802e0d68dd94da1952f6c8359e29039 status=200
+2026-07-13T12:04:41.294520Z [info     ] request                        client=127.0.0.1 elapsed_ms=1114.0 method=GET path=/api/v1/agentapp/trend-sources/hn request_id=090995768c9f4e43b1f2f13b6cc0d4d8 status=200
+2026-07-13T12:05:00.435784Z [info     ] request                        client=127.0.0.1 elapsed_ms=881.1 method=GET path=/api/v1/agentapp/trend-sources/hn request_id=13e8273e583c43328c06b507f48cfbe1 status=200
+2026-07-13T12:05:06.920188Z [info     ] request                        client=127.0.0.1 elapsed_ms=942.3 method=GET path=/api/v1/agentapp/trend-sources/hn request_id=24cfc924404b4e85b69b6d9e732228e7 status=200
+2026-07-13T12:05:54.728983Z [info     ] request                        client=127.0.0.1 elapsed_ms=852.1 method=GET path=/api/v1/agentapp/trend-sources/hn request_id=dbac3eb23e14464ba5300971359c6378 status=200
+2026-07-13T12:06:15.632518Z [info     ] request                        client=127.0.0.1 elapsed_ms=1027.2 method=GET path=/api/v1/agentapp/trend-sources/arxiv request_id=74dbd4a3767f47fd83c072c6f72803bc status=200
+2026-07-13T12:06:21.388036Z [info     ] request                        client=127.0.0.1 elapsed_ms=949.6 method=GET path=/api/v1/agentapp/trend-sources/arxiv request_id=aa7d93f6f6ad4b37a48f97426ad8cf5f status=200
+2026-07-13T12:06:29.453666Z [info     ] request                        client=127.0.0.1 elapsed_ms=2240.2 method=GET path=/api/v1/agentapp/trend-sources/news request_id=d318fc67245e41b4a37d27605bd93197 status=200
+2026-07-13T12:06:40.194717Z [info     ] request                        client=127.0.0.1 elapsed_ms=641.4 method=GET path=/api/v1/agentapp/trend-sources/reddit request_id=817a4c54c8fa4a26a9b2fde027e92478 status=200
+2026-07-13T12:06:44.917013Z [info     ] request                        client=127.0.0.1 elapsed_ms=512.5 method=GET path=/api/v1/agentapp/trend-sources/reddit request_id=4f334fa2fb64446483be1d8d0a9aedc7 status=200
+2026-07-13T12:06:52.038881Z [info     ] request                        client=127.0.0.1 elapsed_ms=1937.0 method=GET path=/api/v1/agentapp/trend-sources/news request_id=beac41698aa64de0847e4651e5a015a1 status=200
+2026-07-13T12:07:10.413838Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/favicon.ico request_id=66affd08d71842688041d9e216c25053 status=200
+2026-07-13T12:07:10.424266Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.4 method=GET path=/assets/Evolution-HzM14sYY.js request_id=22fdc37720ad424d89c42d46d1290eb0 status=200
+2026-07-13T12:07:10.471541Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.3 method=GET path=/api/v1/agentapp/registry/employees request_id=fa588b2e00d64081b8f55f6ae3ce4b80 status=200
+2026-07-13T12:07:10.497510Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.8 method=GET path=/api/v1/agentapp/evolution/insights/recharge-strategy-assistant request_id=af16091399e74954b9744a216a2175cc status=200
+2026-07-13T12:07:10.517731Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.7 method=GET path=/api/v1/agentapp/evolution/run-logs/recharge-strategy-assistant request_id=8f7cc4d20a9f4751b1c8d346efd3c74c status=200
+2026-07-13T12:07:16.211428Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.6 method=POST path=/api/v1/agentapp/evolution/analyze/recharge-strategy-assistant request_id=497f839343ab4d3198090bfe937b40a1 status=200
+2026-07-13T12:07:16.238517Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.3 method=GET path=/api/v1/agentapp/evolution/insights/recharge-strategy-assistant request_id=171ee905896748fab0baeb2f1f2f1216 status=200
+2026-07-13T12:07:16.254477Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.5 method=GET path=/api/v1/agentapp/evolution/run-logs/recharge-strategy-assistant request_id=9557f46c90ca47dabe997062fd8bc908 status=200
+2026-07-13T12:07:18.408090Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.0 method=GET path=/api/v1/agentapp/evolution/insights/comic-keyframe-artist request_id=76df02770e6c4dedb08af54f9a91fe56 status=200
+2026-07-13T12:07:18.417212Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.0 method=GET path=/api/v1/agentapp/evolution/run-logs/comic-keyframe-artist request_id=4cf37a4bea1045c39841e06d7fc40a84 status=200
+2026-07-13T12:07:19.406012Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.3 method=GET path=/api/v1/agentapp/evolution/insights/script-doctor request_id=a9700142b7fa4cbca5c7ff3ec6c39795 status=200
+2026-07-13T12:07:19.416011Z [info     ] request                        client=127.0.0.1 elapsed_ms=42.9 method=GET path=/api/v1/agentapp/evolution/run-logs/script-doctor request_id=7a0325bb58a54b6c93ccdc3a1fdc22f2 status=200
+2026-07-13T12:07:36.643306Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/favicon.ico request_id=8a2cfb53b48d474cbaed4649959b227c status=200
+2026-07-13T12:07:36.651698Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.6 method=GET path=/assets/Runs-pgIIT1ue.js request_id=9ff84ca81c864222b94ff00e371d9d9d status=200
+2026-07-13T12:07:36.713619Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.3 method=GET path=/api/v1/agentapp/registry/employees request_id=6d148ed2b96d4dd1ac6dda39ec6d0547 status=200
+2026-07-13T12:07:36.745428Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.0 method=GET path=/api/v1/agentapp/agent/runs request_id=085f5929c5eb4b968240b6ef77f343d9 status=200
+2026-07-13T12:07:43.113895Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/favicon.ico request_id=4a9fd74b99d24a839225108dd51ad7ff status=200
+2026-07-13T12:07:43.121508Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.9 method=GET path=/assets/CloseCircleOutlined-B_NB6Zlm.js request_id=c32cfe3573ce43c5b568aeb3c4f72de4 status=200
+2026-07-13T12:07:43.129673Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.5 method=GET path=/assets/Tasks-CU1WSI7y.js request_id=855e6a7add1c4d25b8c665181a3fdbf0 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+查询任务列表失败
+Traceback (most recent call last):
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1083, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1466, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 905, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-13T12:07:54.325371Z [info     ] request                        client=127.0.0.1 elapsed_ms=11115.6 method=GET path=/api/v1/agentapp/tasks request_id=245d4cc7481a4f23b4c8b3004406b7d0 status=503
+2026-07-13T12:07:57.241652Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/favicon.ico request_id=f5acd103442f40e6b65b889ba9564812 status=200
+2026-07-13T12:07:57.257653Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.3 method=GET path=/api/v1/agentapp/registry/employees request_id=f2f18c0262f04dd395d29e30c18a95f4 status=200
+2026-07-13T12:07:57.286683Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.4 method=GET path=/api/v1/agentapp/evolution/insights/recharge-strategy-assistant request_id=1778fa364a6e4e7496924690fc38bdaf status=200
+2026-07-13T12:07:57.299652Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.6 method=GET path=/api/v1/agentapp/evolution/run-logs/recharge-strategy-assistant request_id=fdf328f7722c443d947b24b1d02c6144 status=200
+2026-07-13T12:07:59.369032Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/favicon.ico request_id=2e7663077b494b3d834f915772df5fcc status=200
+2026-07-13T12:07:59.398213Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.9 method=GET path=/assets/Tools-D6SYMXPl.js request_id=bdc1d038d4964e16bbe7c57daf29e781 status=200
+2026-07-13T12:07:59.433213Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.1 method=GET path=/api/v1/agentapp/registry/mcp-servers request_id=08ce6bc4ebeb41b3aadb5d43cf67beb8 status=200
+2026-07-13T12:07:59.444214Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.7 method=GET path=/api/v1/agentapp/registry/skills request_id=d787c500861c4fb5b7223f832bd7085d status=200
+2026-07-13T12:07:59.479214Z [info     ] request                        client=127.0.0.1 elapsed_ms=52.1 method=GET path=/api/v1/agentapp/registry/tools request_id=b7492371b86a46e8a4c085661716bcaf status=200
+2026-07-13T12:08:02.939594Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/favicon.ico request_id=a3b703cb29034bb596a64cbbf0611fb9 status=200
+2026-07-13T12:08:02.947594Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.0 method=GET path=/assets/Settings-CLnIa9EI.js request_id=1ec93c23cdd3473f8dfca489e697ad7a status=200
+2026-07-13T12:08:02.980596Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.1 method=GET path=/api/v1/agentapp/agent/system-info request_id=c50d7271f8b3484b82256a80d4a5c696 status=200
+2026-07-13T12:08:02.989969Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.3 method=GET path=/api/v1/agentapp/agent/ai-providers request_id=2621347df07940b9b03107f6574b7fe2 status=200
+2026-07-13T12:08:52.933227Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/favicon.ico request_id=4668c8bd8a814cb2ad6d485e9715b94f status=200
+2026-07-13T12:08:52.955225Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.3 method=GET path=/api/v1/agentapp/skills/digest request_id=1940fe3ddad7448eb3ef6c4393b44da1 status=200
+2026-07-13T12:08:52.978724Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.1 method=GET path=/api/v1/agentapp/skills/analyze request_id=3b20c2c678db45a389192e937d8468e1 status=200
+2026-07-13T12:08:52.987403Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.6 method=GET path=/api/v1/agentapp/skills/queries request_id=794c41d9f7144f7f95a6dd961b7603fa status=200
+2026-07-13T12:08:52.995235Z [info     ] request                        client=127.0.0.1 elapsed_ms=43.8 method=GET path=/api/v1/agentapp/skills/summary request_id=b1aef524b3f84f45998bad08100f1e31 status=200
+2026-07-13T12:08:53.060835Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.8 method=GET path=/api/v1/agentapp/skills/analyze request_id=e1e480ff2cbb4065acd208e2dbd29f46 status=200
+2026-07-13T12:08:53.073367Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.1 method=GET path=/api/v1/agentapp/skills/summary request_id=ebcf739e37064e5a8fcc9fbb7ef2e6fe status=200
+2026-07-13T12:08:53.080832Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.8 method=GET path=/api/v1/agentapp/skills/list request_id=18ea0ab1c3824bc89b17947d64c35e09 status=200
+2026-07-13T12:08:53.087835Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.8 method=GET path=/api/v1/agentapp/skills/queries request_id=32b9c9fc4f7748dbb516f5dc1662fedb status=200
+2026-07-13T12:08:59.769990Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/api/v1/agentapp/skills/analyze request_id=a9ea6d91b11845889292d9c7e6810d31 status=200
+2026-07-13T12:08:59.782129Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.9 method=GET path=/api/v1/agentapp/skills/queries request_id=a56e0e9f1e37457ea8c5312def6ec13b status=200
+2026-07-13T12:08:59.788990Z [info     ] request                        client=127.0.0.1 elapsed_ms=25.9 method=GET path=/api/v1/agentapp/skills/list request_id=bbb3af5fab394d28a5228038bc794b69 status=200
+2026-07-13T12:08:59.796990Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.8 method=GET path=/api/v1/agentapp/skills/summary request_id=a3f737bcee6e441b9f6078b9760c40d4 status=200
+2026-07-13T12:09:00.112641Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.0 method=GET path=/api/v1/agentapp/skills/analyze request_id=78117d951d1942ba93242b8316b57088 status=200
+2026-07-13T12:09:00.127829Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.7 method=GET path=/api/v1/agentapp/skills/queries request_id=7c88f37a6a854f2887b38122cbf86861 status=200
+2026-07-13T12:09:00.135474Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.0 method=GET path=/api/v1/agentapp/skills/summary request_id=b25408a723cc4e67a74eb137b3598f95 status=200
+2026-07-13T12:09:00.142473Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.2 method=GET path=/api/v1/agentapp/skills/list request_id=a651df69f3ac4a35bd28459be9fcfcc7 status=200
+2026-07-13T12:09:00.489543Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.3 method=GET path=/api/v1/agentapp/skills/analyze request_id=fe312ae4e7d541c3bfcdaaaf7300fafd status=200
+2026-07-13T12:09:00.501544Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.6 method=GET path=/api/v1/agentapp/skills/summary request_id=f1ffe0966d6b478ab7e9a6c6d59fd974 status=200
+2026-07-13T12:09:00.509638Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.9 method=GET path=/api/v1/agentapp/skills/queries request_id=e10b72736297418c846e06b64626ded1 status=200
+2026-07-13T12:09:00.517638Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.7 method=GET path=/api/v1/agentapp/skills/list request_id=215435a3eada4e51ab86c62698a1791e status=200
+2026-07-13T12:09:01.091006Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.3 method=GET path=/api/v1/agentapp/skills/analyze request_id=4b5c551bfe974767b45ad8bb1387a5c3 status=200
+2026-07-13T12:09:01.103801Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.9 method=GET path=/api/v1/agentapp/skills/summary request_id=00e60a7904fb45a1b6080baf647f0f98 status=200
+2026-07-13T12:09:01.112882Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.1 method=GET path=/api/v1/agentapp/skills/queries request_id=e89de317fa55445588d7b02f7deae458 status=200
+2026-07-13T12:09:01.120798Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.6 method=GET path=/api/v1/agentapp/skills/list request_id=a9e9a1f89b84438fae4ae844e4afe300 status=200
+2026-07-13T12:09:01.428999Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.7 method=GET path=/api/v1/agentapp/skills/analyze request_id=13b477f9804643ffa7bfdd3b0fb006ed status=200
+2026-07-13T12:09:01.442001Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.4 method=GET path=/api/v1/agentapp/skills/list request_id=c9d6467aae88424baf5bb401240ac94f status=200
+2026-07-13T12:09:01.449999Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.1 method=GET path=/api/v1/agentapp/skills/queries request_id=6e3d048c7b7c4521a561233fbbcf73e4 status=200
+2026-07-13T12:09:01.458180Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.9 method=GET path=/api/v1/agentapp/skills/summary request_id=5d3803a397d34fc4bf66a3f2d8e1f548 status=200
+2026-07-13T12:09:01.830067Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.8 method=GET path=/api/v1/agentapp/skills/analyze request_id=708214485f2a488982a7519158880ad7 status=200
+2026-07-13T12:09:01.848069Z [info     ] request                        client=127.0.0.1 elapsed_ms=25.9 method=GET path=/api/v1/agentapp/skills/queries request_id=e353e51ce7ec474488d310fc39d994c6 status=200
+2026-07-13T12:09:01.857382Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.3 method=GET path=/api/v1/agentapp/skills/list request_id=f2b5c7b1ee7744ff94283e11f9d41b8f status=200
+2026-07-13T12:09:01.867077Z [info     ] request                        client=127.0.0.1 elapsed_ms=43.9 method=GET path=/api/v1/agentapp/skills/summary request_id=ef613f26f9984da19325623e0c093bef status=200
+2026-07-13T12:09:02.376219Z [info     ] request                        client=127.0.0.1 elapsed_ms=112.7 method=GET path=/api/v1/agentapp/skills/list request_id=2e8c14bd317d4e039de085188b4ddeef status=200
+2026-07-13T12:09:02.486529Z [info     ] request                        client=127.0.0.1 elapsed_ms=218.0 method=GET path=/api/v1/agentapp/skills/analyze request_id=1ad4559eea384fef8081ae4c7b3b2b0b status=200
+2026-07-13T12:09:02.513779Z [info     ] request                        client=127.0.0.1 elapsed_ms=247.2 method=GET path=/api/v1/agentapp/skills/queries request_id=8d0d138320c5447a900d6facc8f9f329 status=200
+2026-07-13T12:09:02.546624Z [info     ] request                        client=127.0.0.1 elapsed_ms=279.9 method=GET path=/api/v1/agentapp/skills/summary request_id=61b25c7aa95448a2a3386dfaa6ba387f status=200
+2026-07-13T12:09:40.317418Z [info     ] request                        client=127.0.0.1 elapsed_ms=343.8 method=GET path=/api/v1/agentapp/skills/repo-history request_id=bc51800c665142a4a6d65cebd8ba1133 status=200
+2026-07-13T12:09:51.399387Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/favicon.ico request_id=71c3eae04c7c40b1a23d9dd66befd4ae status=200
+2026-07-13T12:09:51.420388Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.1 method=GET path=/api/v1/agentapp/registry/employees request_id=c141709af0c5473aad34f5b7958c3548 status=200
+2026-07-13T12:09:51.483385Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.0 method=GET path=/api/v1/agentapp/evolution/insights/recharge-strategy-assistant request_id=e94f3152e8be47328e54addd427bd79a status=200
+2026-07-13T12:09:51.491474Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.6 method=GET path=/api/v1/agentapp/evolution/run-logs/recharge-strategy-assistant request_id=fd5e9067dd5e4160912a6389d6592c66 status=200

@@ -1,0 +1,13 @@
+{
+  "query": "skill",
+  "taken_at": "2026-06-26T07:22:44.745506+00:00",
+  "stars": {
+    "obra/superpowers": 238949,
+    "affaan-m/ECC": 221867,
+    "multica-ai/andrej-karpathy-skills": 182437,
+    "anthropics/skills": 155332,
+    "mattpocock/skills": 146681,
+    "nexu-io/open-design": 71336,
+    "JuliusBrussee/caveman": 77009
+  }
+}

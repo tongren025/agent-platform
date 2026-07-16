@@ -1,0 +1,33 @@
+{
+  "query": "topic:mcp",
+  "taken_at": "2026-06-27T01:00:09.814695+00:00",
+  "stars": {
+    "affaan-m/ECC": 222188,
+    "n8n-io/n8n": 194192,
+    "Snailclimb/JavaGuide": 156635,
+    "langgenius/dify": 146678,
+    "open-webui/open-webui": 143144,
+    "farion1231/cc-switch": 109022,
+    "punkpeye/awesome-mcp-servers": 89843,
+    "netdata/netdata": 79423,
+    "lobehub/lobehub": 79132,
+    "D4Vinci/Scrapling": 66321,
+    "ComposioHQ/awesome-claude-skills": 66038,
+    "sansan0/TrendRadar": 59943,
+    "upstash/context7": 58145,
+    "MemPalace/mempalace": 56541,
+    "headroomlabs-ai/headroom": 51990,
+    "rohitg00/ai-engineering-from-scratch": 36468,
+    "Panniantong/Agent-Reach": 42346,
+    "heygen-com/hyperframes": 31550,
+    "sickn33/antigravity-awesome-skills": 41783,
+    "mukul975/Anthropic-Cybersecurity-Skills": 21811,
+    "tirth8205/code-review-graph": 18938,
+    "HKUDS/Vibe-Trading": 13428,
+    "mksglu/context-mode": 18225,
+    "RightNow-AI/openfang": 17927,
+    "cobusgreyling/loop-engineering": 2597,
+    "DeusData/codebase-memory-mcp": 15659,
+    "wanshuiyin/Auto-claude-code-research-in-sleep": 12679
+  }
+}

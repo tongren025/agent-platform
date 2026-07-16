@@ -1,0 +1,14 @@
+{
+  "query": "agent skill",
+  "taken_at": "2026-06-26T07:22:54.166190+00:00",
+  "stars": {
+    "obra/superpowers": 238949,
+    "affaan-m/ECC": 221867,
+    "anthropics/skills": 155332,
+    "bytedance/deer-flow": 74794,
+    "addyosmani/agent-skills": 66871,
+    "Leonxlnx/taste-skill": 51169,
+    "mvanhorn/last30days-skill": 46788,
+    "op7418/guizang-ppt-skill": 19014
+  }
+}

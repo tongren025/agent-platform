@@ -1,0 +1,343 @@
+{
+  "source": "arxiv",
+  "category": "cs.MA",
+  "fetchedAt": "2026-07-13T20:06:21.383042",
+  "items": [
+    {
+      "title": "Mosaic: Runtime-Efficient Multi-Agent Embodied Planning",
+      "summary": "LLM-based multi-agent embodied planning remains impractical due to prohibitively high execution latency. We identify failed actions as the dominant bottleneck, stemming from two core challenges: inaccurate state tracking under partial observability and inefficient coordination that produces redundan…",
+      "authors": [
+        "Kunjal Panchal",
+        "Saayan Mitra",
+        "Sunav Choudhary",
+        "Victor Bursztyn",
+        "Somdeb Sarkhel"
+      ],
+      "publishedAt": "2026-07-10T16:57:37Z",
+      "absUrl": "https://arxiv.org/abs/2607.09603v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.09603v1",
+      "categories": [
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "Shared Selective Persistent Memory for Agentic LLM Systems",
+      "summary": "Agentic LLM systems that generate code through multi-turn tool use face a fundamental context problem: each session starts from zero, discarding the configuration choices, domain constraints, data schemas, and tool-use patterns that made previous sessions productive. Naively persisting entire conver…",
+      "authors": [
+        "Sanjana Pedada",
+        "Aditya Dhavala",
+        "Neelraj Patil"
+      ],
+      "publishedAt": "2026-07-10T15:07:00Z",
+      "absUrl": "https://arxiv.org/abs/2607.09493v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.09493v1",
+      "categories": [
+        "cs.AI",
+        "cs.MA",
+        "cs.SE"
+      ]
+    },
+    {
+      "title": "Communication-Efficient Digital-Twin Coordination for Heterogeneous LLM Embodied Agents over Computing Power Networks",
+      "summary": "Embodied agent teams powered by heterogeneous large language models (LLMs) are being widely deployed in physical artificial intelligence such as smart factories, warehouses, and service robotics. To enable collaboration among such an agent team, efficient coordination mechanisms that operate reliabl…",
+      "authors": [
+        "Nuocheng Yang",
+        "Sihua Wang",
+        "Zihan Chen",
+        "Tony Q. S. Quek",
+        "Changchuan Yin"
+      ],
+      "publishedAt": "2026-07-10T12:10:31Z",
+      "absUrl": "https://arxiv.org/abs/2607.09330v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.09330v1",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "When is Routing Meaningful? Diversity and Robustness in Language Model Societies",
+      "summary": "Routing policies for multi-model systems are evaluated almost exclusively on task accuracy and inference cost. We argue that two properties, orthogonal to performance, determine whether routing is meaningful. First, the society of actors must be behaviourally differentiated: if all actors respond id…",
+      "authors": [
+        "Fantine Huot",
+        "Michael Kaisers",
+        "Mirella Lapata"
+      ],
+      "publishedAt": "2026-07-10T08:42:58Z",
+      "absUrl": "https://arxiv.org/abs/2607.09197v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.09197v1",
+      "categories": [
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "Control Laguerre Tessellation: Semi-discrete Optimal Transport Over Control Systems",
+      "summary": "We study the optimal transport of optimally controlled agents from a compactly supported absolutely continuous source to a discrete target measure. The ground cost for the transport is induced by the optimal cost of the agents' motion. When this ground cost satisfies the twist condition, the optimal…",
+      "authors": [
+        "Ripon C. Sarker",
+        "Abhishek Halder"
+      ],
+      "publishedAt": "2026-07-10T06:50:53Z",
+      "absUrl": "https://arxiv.org/abs/2607.09139v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.09139v1",
+      "categories": [
+        "math.OC",
+        "cs.LG",
+        "cs.MA",
+        "eess.SY"
+      ]
+    },
+    {
+      "title": "Secret Scanner Agent: Extracting Secrets and Access Context from Unstructured Documents",
+      "summary": "Exposed documents such as emails, chat threads, tickets, and incident notes routinely leak credentials, but during incident response a leaked secret is only half the story. Responders also need to identify the ``door'' the secret opens: the account, tenant, endpoint, database, cloud resource, or oth…",
+      "authors": [
+        "Zixiao Chen",
+        "Mariko Wakabayashi",
+        "Charlotte Siska"
+      ],
+      "publishedAt": "2026-07-10T00:28:34Z",
+      "absUrl": "https://arxiv.org/abs/2607.09011v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.09011v1",
+      "categories": [
+        "cs.CR",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "Offline Nash Solvers Meet Online Tree Search in Multi-Agent Games on Graphs",
+      "summary": "Computing Nash equilibrium policies in multi-agent Pursuit-Evasion games (PEG) is challenging due to the exponential growth of the joint state and action spaces with the number of agents. Existing approaches either rely on offline equilibrium approximations, which may lack adaptability during execut…",
+      "authors": [
+        "Mukesh Kumar",
+        "Yue Guan",
+        "Panagiotis Tsiotras"
+      ],
+      "publishedAt": "2026-07-09T19:33:01Z",
+      "absUrl": "https://arxiv.org/abs/2607.08892v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.08892v1",
+      "categories": [
+        "cs.GT",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "SolarChain-Eval: A Physics-Constrained Benchmark for Trustworthy Economic Agents in Decentralized Energy Markets",
+      "summary": "As agentic AI systems are increasingly applied to cyber-physical environments, their evaluation requires assessment of both task performance and trustworthiness. In decentralized energy markets, autonomous agents may improve market utility, but may also exploit invalid physical data, create artifici…",
+      "authors": [
+        "Shilin Ou",
+        "Yifan Xu",
+        "Luyao Zhang"
+      ],
+      "publishedAt": "2026-07-09T16:43:42Z",
+      "absUrl": "https://arxiv.org/abs/2607.08681v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.08681v1",
+      "categories": [
+        "cs.AI",
+        "cs.ET",
+        "cs.LG",
+        "cs.MA",
+        "econ.GN"
+      ]
+    },
+    {
+      "title": "WebSwarm: Recursive Multi-Agent Orchestration for Deep-and-Wide Web Search",
+      "summary": "Large language model (LLM)-based web search agents are transforming information seeking from simple factoid question answering into complex, deep-and-wide search and research-oriented tasks. A single ReAct-style agent is constrained by one long trajectory and limited context, making it difficult to …",
+      "authors": [
+        "Xiaoshuai Song",
+        "Liancheng Zhang",
+        "Kangzhi Zhao",
+        "Yutao Zhu",
+        "Zhongyuan Wang"
+      ],
+      "publishedAt": "2026-07-09T16:28:49Z",
+      "absUrl": "https://arxiv.org/abs/2607.08662v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.08662v1",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "Early to Share, Late to Save: Synchronisation-Driven Communication Gating in Bandwidth-Constrained Cooperative VLN",
+      "summary": "Most cooperative Vision-Language Navigation (VLN) methods assume unlimited communication, not considering real-world applications where bandwidth is restricted and information efficiency is critical. We introduce \\textbf{bandwidth-constrained cooperative VLN} and propose \\textbf{hindsight gating}: a…",
+      "authors": [
+        "Arav Gupta",
+        "Nivedan Yakolli",
+        "Avinash Gautam"
+      ],
+      "publishedAt": "2026-07-09T14:00:17Z",
+      "absUrl": "https://arxiv.org/abs/2607.08504v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.08504v1",
+      "categories": [
+        "cs.MA",
+        "cs.RO"
+      ]
+    },
+    {
+      "title": "Multi-Agent Firewall Architecture for Privacy Protection of Sensitive Data in Interactions with Language Models",
+      "summary": "While Large Language Models (LLMs) have become essential productivity tools, their integration into workflows without adequate safeguards creates significant risks. This paper proposes an open-source, privacy-focused, user-facing firewall designed to secure both web-based and programmatic LLM intera…",
+      "authors": [
+        "Hugo García Cuesta",
+        "Pablo Mateo Torrejón",
+        "Alfonso Sánchez-Macián"
+      ],
+      "publishedAt": "2026-07-09T09:23:13Z",
+      "absUrl": "https://arxiv.org/abs/2607.08282v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.08282v1",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "ASMR: Agentic Schema Generation for Ship Maintenance Report Writing",
+      "summary": "In this paper, we study the automatic schema generation problem: given a collection of historical ship maintenance and operational reports across multiple form categories, automatically discover compact and informative schemas that capture the essential information requirements of each report type. …",
+      "authors": [
+        "Sohrab Namazi Nia",
+        "Amogh Dalal",
+        "Ning Sa",
+        "Peter Ly",
+        "Marti Zentmaier"
+      ],
+      "publishedAt": "2026-07-09T07:25:28Z",
+      "absUrl": "https://arxiv.org/abs/2607.08177v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.08177v1",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "Who Broke the System? Failure Localization in LLM-Based Multi-Agent Systems",
+      "summary": "Large language model (LLM) based multi-agent systems enable complex problem solving through coordinated reasoning and action, but their distributed structure also introduces new challenges in diagnosing system-level failures. When an execution fails, identifying which agent is responsible and at wha…",
+      "authors": [
+        "Yufei Xia",
+        "Anjun Gao",
+        "Yueyang Quan",
+        "Zhuqing Liu",
+        "Minghong Fang"
+      ],
+      "publishedAt": "2026-07-08T23:33:49Z",
+      "absUrl": "https://arxiv.org/abs/2607.07989v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.07989v1",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.IR",
+        "cs.LG",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "From Triggers to Emotions: A CPM-Grounded Appraisal Multi-Agent for Dynamic Emotional Evolution in Persona-Based Dialogue",
+      "summary": "Large Language Models (LLMs) have substantially advanced persona-based dialogue agents for emotion-sensitive role simulation in healthcare, education, counseling, customer service, and interactive storytelling. However, two related lines of work leave a key gap. Persona-based dialogue systems often …",
+      "authors": [
+        "Jingyao Cai",
+        "Shuaijun Liu",
+        "Abdul Rehman",
+        "Yutong Guo",
+        "Qin Tian"
+      ],
+      "publishedAt": "2026-07-08T18:06:03Z",
+      "absUrl": "https://arxiv.org/abs/2607.07824v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.07824v1",
+      "categories": [
+        "cs.MA",
+        "cs.AI"
+      ]
+    },
+    {
+      "title": "Institutional Red-Teaming: Deployment Rules, Not Just Models, Causally Shape Multi-Agent AI Safety",
+      "summary": "We introduce institutional red-teaming, an evaluation methodology for testing deployment rules in multi-agent AI: hold the agents, objectives, and task state fixed, vary only one rule, and attribute the resulting change in collective behavior to that rule. We instantiate the methodology in IABench-C…",
+      "authors": [
+        "Yujiao Chen"
+      ],
+      "publishedAt": "2026-07-08T17:53:56Z",
+      "absUrl": "https://arxiv.org/abs/2607.07695v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.07695v1",
+      "categories": [
+        "cs.AI",
+        "cs.GT",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "Agent Delivery Engineering Predictive Reliability Framework",
+      "summary": "Long-horizon LLM multi-agent systems face reliability risks invisible to infrastructure monitoring. We propose the ADE Predictive Reliability Framework (ADE-PRF), enabling proactive health trajectory prediction from passive degradation detection. ADE-PRF aggregates 20 heterogeneous signals across fi…",
+      "authors": [
+        "Dexing Liu"
+      ],
+      "publishedAt": "2026-07-08T17:49:08Z",
+      "absUrl": "https://arxiv.org/abs/2607.07689v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.07689v1",
+      "categories": [
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "A hierarchical memory architecture overcomes context limits in long-horizon multi-agent computational modeling",
+      "summary": "Large language models (LLMs) demonstrate remarkable reasoning capabilities, yet their stateless architecture fundamentally limits deployment in long-horizon research workflows requiring multi-session continuity and quantitative rigor. Here we present Ensemble QSP, a multi-agent framework featuring a…",
+      "authors": [
+        "Shivendra G. Tewari",
+        "Holly Kimko"
+      ],
+      "publishedAt": "2026-07-08T17:22:28Z",
+      "absUrl": "https://arxiv.org/abs/2607.07666v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.07666v1",
+      "categories": [
+        "q-bio.QM",
+        "cs.MA"
+      ]
+    },
+    {
+      "title": "Stability and Convergence of Optimistic Exponential Weights with Asymmetric Step Sizes in Bimatrix Games",
+      "summary": "We study bimatrix two-player games and investigate the last-iterate convergence and stability of equilibria for the iterates generated by the optimistic exponential weights method. In contrast to prior work, we allow the step sizes $η_x$ and $η_y$ to differ. Our first main result establishes, under …",
+      "authors": [
+        "Hédi Hadiji",
+        "Sarah Sachs"
+      ],
+      "publishedAt": "2026-07-08T15:14:02Z",
+      "absUrl": "https://arxiv.org/abs/2607.07517v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.07517v1",
+      "categories": [
+        "cs.MA",
+        "math.DS"
+      ]
+    },
+    {
+      "title": "Multi-Agent Robotic Control with Onboard Vision-Language Models",
+      "summary": "Vision Language Models (VLMs) and Vision Language Action (VLA) models have shown promise in robotic control. Yet, they face significant challenges regarding explainability, generalization, and compute requirements. This paper presents a Multi-Agent System (MAS) architecture that addresses these limi…",
+      "authors": [
+        "Kajetan Rachwał",
+        "Maciej Majek",
+        "Bartłomiej Boczek",
+        "Jakub Matejczyk",
+        "Dominik Matejkowski"
+      ],
+      "publishedAt": "2026-07-08T13:37:31Z",
+      "absUrl": "https://arxiv.org/abs/2607.07403v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.07403v1",
+      "categories": [
+        "cs.MA",
+        "cs.RO"
+      ]
+    },
+    {
+      "title": "A Large Language Model-Driven Agent-Based Modeling Framework with Multi-Round Communication for Simulating Vaccine Opinion Dynamics",
+      "summary": "Recently, Large Language Models (LLMs) have been utilized in various applications of computational social science and provide the possibility to integrate such models into agent-based modeling to explore the cognitive processes. However, how specific cognitive modules drive individual decisions and …",
+      "authors": [
+        "Bo Zhang",
+        "Na Jiang"
+      ],
+      "publishedAt": "2026-07-08T13:19:47Z",
+      "absUrl": "https://arxiv.org/abs/2607.07387v1",
+      "pdfUrl": "https://arxiv.org/pdf/2607.07387v1",
+      "categories": [
+        "cs.MA",
+        "cs.SI",
+        "physics.soc-ph"
+      ]
+    }
+  ]
+}

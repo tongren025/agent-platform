@@ -1,0 +1,1672 @@
+[
+  {
+    "card_id": "346d7625",
+    "project_id": "a3ab9f6a",
+    "stage": "idea",
+    "title": "原始素材",
+    "content": "《九陆纪元》概念宣传片\n\n定位：15-30秒竖屏概念宣传片，用3-5个最炸裂的视觉瞬间让观众一眼入坑。\n\n核心素材池（从全五季中挑选最具视觉冲击力的瞬间）：\n1. 烬龙陆·熔浆龙焰——苍霖骑龙升空，熔浆奔涌背景\n2. 青霄陆·万丈悬瀑——世界树根系穿透云层\n3. 觉醒者金色虹膜特写——瞳孔里倒映九大陆轮廓\n4. 龙蛋孵化——裂缝透出冷蓝数据流光芒\n5. 九大陆全景巡礼——从太空视角俯瞰星球\n\n最后一个瞬间必须是悬念钩子：苍霖背影面对未知，字幕「没有人选你。但你还是站起来了。」",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {},
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:18:46.676494+00:00",
+    "updated_at": "2026-07-14T06:18:46.676494+00:00"
+  },
+  {
+    "card_id": "9ce72c92",
+    "project_id": "a3ab9f6a",
+    "stage": "design",
+    "title": "苍霖人物三视图",
+    "content": "苍霖：正面、左侧面、背面三视图。用于锁定脸、左脸旧疤、黑色短碎发、深灰龙翼披风、骨片项链和全身比例。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_gc_canglin_turnaround_v1.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "reference_role": "identity",
+      "asset_type": "character_turnaround",
+      "subject_name": "苍霖",
+      "active_image": "/uploads/canvas/img_gc_canglin_turnaround_v1.png",
+      "approved_for_video": false,
+      "generator": "Codex built-in imagegen",
+      "auto_image_disabled": true,
+      "rejection_reason": "画风偏欧美游戏概念设定稿，与九陆纪元既有 Art Bible 不一致"
+    },
+    "status": "rejected",
+    "assignee": "",
+    "created_at": "2026-07-15T13:57:17.300615+00:00",
+    "updated_at": "2026-07-15T14:25:12.855322+00:00"
+  },
+  {
+    "card_id": "b249292d",
+    "project_id": "a3ab9f6a",
+    "stage": "design",
+    "title": "赤色火龙三视图",
+    "content": "赤色火龙：侧面、前侧面、俯视三视图。用于锁定黑曜石双角、赤红鳞片、翼形、鞍具和体型。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_gc_fire_dragon_turnaround_v1.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "reference_role": "identity",
+      "asset_type": "creature_turnaround",
+      "subject_name": "赤色火龙",
+      "active_image": "/uploads/canvas/img_gc_fire_dragon_turnaround_v1.png",
+      "approved_for_video": false,
+      "generator": "Codex built-in imagegen",
+      "auto_image_disabled": true,
+      "rejection_reason": "画风偏欧美游戏概念设定稿，与九陆纪元既有 Art Bible 不一致"
+    },
+    "status": "rejected",
+    "assignee": "",
+    "created_at": "2026-07-15T13:57:17.300615+00:00",
+    "updated_at": "2026-07-15T14:25:12.855322+00:00"
+  },
+  {
+    "card_id": "507dac00",
+    "project_id": "a3ab9f6a",
+    "stage": "design",
+    "title": "苍霖母版（继承第一季）",
+    "content": "锁定母版：苍霖母版（继承第一季）。GC 必须继承，不得重新设计。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "asset_type": "art_bible_reference",
+      "reference_role": "identity_and_style",
+      "approved_for_video": true,
+      "source_project_id": "jiulu-s1",
+      "active_image": "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-15T14:25:12.855322+00:00",
+    "updated_at": "2026-07-15T14:25:12.855322+00:00"
+  },
+  {
+    "card_id": "d35f44b6",
+    "project_id": "a3ab9f6a",
+    "stage": "design",
+    "title": "巨龙母版（继承第一季）",
+    "content": "锁定母版：巨龙母版（继承第一季）。GC 必须继承，不得重新设计。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "asset_type": "art_bible_reference",
+      "reference_role": "identity_and_style",
+      "approved_for_video": true,
+      "source_project_id": "jiulu-s1",
+      "active_image": "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-15T14:25:12.855322+00:00",
+    "updated_at": "2026-07-15T14:25:12.855322+00:00"
+  },
+  {
+    "card_id": "a50da941",
+    "project_id": "a3ab9f6a",
+    "stage": "design",
+    "title": "九大陆场景母版（继承第一季）",
+    "content": "锁定母版：九大陆场景母版（继承第一季）。GC 必须继承，不得重新设计。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "asset_type": "art_bible_reference",
+      "reference_role": "identity_and_style",
+      "approved_for_video": true,
+      "source_project_id": "jiulu-s1",
+      "active_image": "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png"
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-15T14:25:12.855322+00:00",
+    "updated_at": "2026-07-15T14:25:12.855322+00:00"
+  },
+  {
+    "card_id": "b446a718",
+    "project_id": "a3ab9f6a",
+    "stage": "design",
+    "title": "48镜故事板风格参考（继承第一季）",
+    "content": "锁定母版：48镜故事板风格参考（继承第一季）。GC 必须继承，不得重新设计。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "asset_type": "art_bible_reference",
+      "reference_role": "identity_and_style",
+      "approved_for_video": true,
+      "source_project_id": "jiulu-s1",
+      "active_image": "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-15T14:25:12.855322+00:00",
+    "updated_at": "2026-07-15T14:25:12.855322+00:00"
+  },
+  {
+    "card_id": "8f80e4f8",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G1 觉醒之瞳 [2s]",
+    "content": "**时间码**：00:00-00:02\n**可见画面**：极近距离眼球特写，金色虹膜从暗处亮起，九大陆轮廓藏在瞳孔深处。\n**动作**：眼睑微颤后睁开，瞳孔收缩。\n**叙事功能**：前三秒视觉钩子\n**剪辑点**：瞳孔金光闪满画面，形成闪白剪辑点",
+    "episode": null,
+    "shot_number": 1,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "subshot": "G1-S1",
+      "time_range": "00:00-00:02",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "d2c56bdf",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G1-S1 觉醒之瞳 故事板",
+    "content": "1. **画面内容**：极近距离眼球特写，金色虹膜从暗处亮起，九大陆轮廓藏在瞳孔深处。\n2. **角色动作**：眼睑微颤后睁开，瞳孔收缩。\n3. **景别 + 唯一运镜**：极特写，固定机位后轻微推进\n4. **光影**：正面赤金点光从虹膜向外扩散\n5. **时长**：2秒\n6. **母版引用**：48镜风格参考\n7. **承接/剪辑点**：瞳孔金光闪满画面，形成闪白剪辑点",
+    "episode": null,
+    "shot_number": 1,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "subshot": "G1-S1",
+      "time_range": "00:00-00:02",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": []
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "c9b00ce9",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G1 觉醒之瞳 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 极近距离眼球特写，金色虹膜从暗处亮起，九大陆轮廓藏在瞳孔深处。 眼睑微颤后睁开，瞳孔收缩。 极特写，固定机位后轻微推进，竖屏9:16。正面赤金点光从虹膜向外扩散 画面服务于“觉醒之瞳”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 1,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 极近距离眼球特写，金色虹膜从暗处亮起，九大陆轮廓藏在瞳孔深处。 眼睑微颤后睁开，瞳孔收缩。 极特写，固定机位后轻微推进，竖屏9:16。正面赤金点光从虹膜向外扩散 画面服务于“觉醒之瞳”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "subshot": "G1-S1",
+      "time_range": "00:00-00:02",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": []
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "71a699cb",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G1 觉醒之瞳 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 1,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。眼睑微颤后睁开，瞳孔收缩。 环境变化：极近距离眼球特写，金色虹膜从暗处亮起，九大陆轮廓藏在瞳孔深处。 运镜：极特写，固定机位后轻微推进。光效节奏：正面赤金点光从虹膜向外扩散。保持单一连续动作，在2秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "subshot": "G1-S1",
+      "time_range": "00:00-00:02",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G1-A",
+      "flf": false,
+      "reference_images": [],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。眼睑微颤后睁开，瞳孔收缩。 环境变化：极近距离眼球特写，金色虹膜从暗处亮起，九大陆轮廓藏在瞳孔深处。 运镜：极特写，固定机位后轻微推进。光效节奏：正面赤金点光从虹膜向外扩散。保持单一连续动作，在2秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "e2d19457",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G2 九陆倒影 [2s]",
+    "content": "**时间码**：00:02-00:04\n**可见画面**：瞳孔内部的九块大陆轮廓沿圆环依次点亮，蓝白法则线连接成星图。\n**动作**：大陆光点依次点亮并向中心收束。\n**叙事功能**：前三秒视觉钩子\n**剪辑点**：中心光点爆亮，形状匹配切到熔浆火星",
+    "episode": null,
+    "shot_number": 2,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 2,
+      "subshot": "G2-S1",
+      "time_range": "00:02-00:04",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "95e626aa",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G2-S1 九陆倒影 故事板",
+    "content": "1. **画面内容**：瞳孔内部的九块大陆轮廓沿圆环依次点亮，蓝白法则线连接成星图。\n2. **角色动作**：大陆光点依次点亮并向中心收束。\n3. **景别 + 唯一运镜**：微观大远景，沿星图缓慢旋转\n4. **光影**：深蓝底色，赤金大陆与蓝白连线对撞\n5. **时长**：2秒\n6. **母版引用**：48镜风格参考\n7. **承接/剪辑点**：中心光点爆亮，形状匹配切到熔浆火星",
+    "episode": null,
+    "shot_number": 2,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 2,
+      "subshot": "G2-S1",
+      "time_range": "00:02-00:04",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": []
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "3c3dbaca",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G2 九陆倒影 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 瞳孔内部的九块大陆轮廓沿圆环依次点亮，蓝白法则线连接成星图。 大陆光点依次点亮并向中心收束。 微观大远景，沿星图缓慢旋转，竖屏9:16。深蓝底色，赤金大陆与蓝白连线对撞 画面服务于“九陆倒影”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 2,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 瞳孔内部的九块大陆轮廓沿圆环依次点亮，蓝白法则线连接成星图。 大陆光点依次点亮并向中心收束。 微观大远景，沿星图缓慢旋转，竖屏9:16。深蓝底色，赤金大陆与蓝白连线对撞 画面服务于“九陆倒影”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 2,
+      "subshot": "G2-S1",
+      "time_range": "00:02-00:04",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": []
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "dc348608",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G2 九陆倒影 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 2,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。大陆光点依次点亮并向中心收束。 环境变化：瞳孔内部的九块大陆轮廓沿圆环依次点亮，蓝白法则线连接成星图。 运镜：微观大远景，沿星图缓慢旋转。光效节奏：深蓝底色，赤金大陆与蓝白连线对撞。保持单一连续动作，在2秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 2,
+      "subshot": "G2-S1",
+      "time_range": "00:02-00:04",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G2-A",
+      "flf": false,
+      "reference_images": [],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。大陆光点依次点亮并向中心收束。 环境变化：瞳孔内部的九块大陆轮廓沿圆环依次点亮，蓝白法则线连接成星图。 运镜：微观大远景，沿星图缓慢旋转。光效节奏：深蓝底色，赤金大陆与蓝白连线对撞。保持单一连续动作，在2秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "b4190533",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G3 贴地掠火 [3s]",
+    "content": "**时间码**：00:04-00:07\n**可见画面**：赤色巨龙贴近熔浆河谷掠过，翼尖卷起火浪，苍霖伏在龙背。\n**动作**：巨龙完成一次有力振翼，苍霖压低身体抓紧缰绳。\n**叙事功能**：升级世界观\n**剪辑点**：巨龙抬头，运动方向由横向转为向上",
+    "episode": null,
+    "shot_number": 3,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 3,
+      "subshot": "G3-S1",
+      "time_range": "00:04-00:07",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "99086cc9",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G3-S1 贴地掠火 故事板",
+    "content": "1. **画面内容**：赤色巨龙贴近熔浆河谷掠过，翼尖卷起火浪，苍霖伏在龙背。\n2. **角色动作**：巨龙完成一次有力振翼，苍霖压低身体抓紧缰绳。\n3. **景别 + 唯一运镜**：大远景，低机位平稳跟随\n4. **光影**：下方赤金熔浆主光，天空暗红逆光\n5. **时长**：3秒\n6. **母版引用**：苍霖、巨龙、九大陆场景、48镜风格参考\n7. **承接/剪辑点**：巨龙抬头，运动方向由横向转为向上",
+    "episode": null,
+    "shot_number": 3,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 3,
+      "subshot": "G3-S1",
+      "time_range": "00:04-00:07",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "b4ee5b9b",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G3 贴地掠火 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 赤色巨龙贴近熔浆河谷掠过，翼尖卷起火浪，苍霖伏在龙背。 巨龙完成一次有力振翼，苍霖压低身体抓紧缰绳。 大远景，低机位平稳跟随，竖屏9:16。下方赤金熔浆主光，天空暗红逆光 画面服务于“贴地掠火”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 3,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 赤色巨龙贴近熔浆河谷掠过，翼尖卷起火浪，苍霖伏在龙背。 巨龙完成一次有力振翼，苍霖压低身体抓紧缰绳。 大远景，低机位平稳跟随，竖屏9:16。下方赤金熔浆主光，天空暗红逆光 画面服务于“贴地掠火”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 3,
+      "subshot": "G3-S1",
+      "time_range": "00:04-00:07",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "bee27708",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G3 贴地掠火 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 3,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。巨龙完成一次有力振翼，苍霖压低身体抓紧缰绳。 环境变化：赤色巨龙贴近熔浆河谷掠过，翼尖卷起火浪，苍霖伏在龙背。 运镜：大远景，低机位平稳跟随。光效节奏：下方赤金熔浆主光，天空暗红逆光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 3,
+      "subshot": "G3-S1",
+      "time_range": "00:04-00:07",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G3-A",
+      "flf": false,
+      "reference_images": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png"
+      ],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。巨龙完成一次有力振翼，苍霖压低身体抓紧缰绳。 环境变化：赤色巨龙贴近熔浆河谷掠过，翼尖卷起火浪，苍霖伏在龙背。 运镜：大远景，低机位平稳跟随。光效节奏：下方赤金熔浆主光，天空暗红逆光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+          "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "d28f784b",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G4 骑手特写 [2s]",
+    "content": "**时间码**：00:07-00:09\n**可见画面**：苍霖骑在龙背的近景，风压掀起黑色碎发和龙翼披风，左脸旧疤清晰。\n**动作**：他抬眼看向上方，右手收紧缰绳。\n**叙事功能**：升级世界观\n**剪辑点**：苍霖视线抬升，按视线切到天空",
+    "episode": null,
+    "shot_number": 4,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 4,
+      "subshot": "G4-S1",
+      "time_range": "00:07-00:09",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "b9d82552",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G4-S1 骑手特写 故事板",
+    "content": "1. **画面内容**：苍霖骑在龙背的近景，风压掀起黑色碎发和龙翼披风，左脸旧疤清晰。\n2. **角色动作**：他抬眼看向上方，右手收紧缰绳。\n3. **景别 + 唯一运镜**：近景，稳定侧前方跟拍\n4. **光影**：左下赤金侧光，右眼掠过蓝白反光\n5. **时长**：2秒\n6. **母版引用**：苍霖、巨龙、48镜风格参考\n7. **承接/剪辑点**：苍霖视线抬升，按视线切到天空",
+    "episode": null,
+    "shot_number": 4,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 4,
+      "subshot": "G4-S1",
+      "time_range": "00:07-00:09",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "3b41124e",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G4 骑手特写 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 苍霖骑在龙背的近景，风压掀起黑色碎发和龙翼披风，左脸旧疤清晰。 他抬眼看向上方，右手收紧缰绳。 近景，稳定侧前方跟拍，竖屏9:16。左下赤金侧光，右眼掠过蓝白反光 画面服务于“骑手特写”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 4,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 苍霖骑在龙背的近景，风压掀起黑色碎发和龙翼披风，左脸旧疤清晰。 他抬眼看向上方，右手收紧缰绳。 近景，稳定侧前方跟拍，竖屏9:16。左下赤金侧光，右眼掠过蓝白反光 画面服务于“骑手特写”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 4,
+      "subshot": "G4-S1",
+      "time_range": "00:07-00:09",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "b5ba5b92",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G4 骑手特写 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 4,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。他抬眼看向上方，右手收紧缰绳。 环境变化：苍霖骑在龙背的近景，风压掀起黑色碎发和龙翼披风，左脸旧疤清晰。 运镜：近景，稳定侧前方跟拍。光效节奏：左下赤金侧光，右眼掠过蓝白反光。保持单一连续动作，在2秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 4,
+      "subshot": "G4-S1",
+      "time_range": "00:07-00:09",
+      "duration_seconds": 2,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G4-A",
+      "flf": false,
+      "reference_images": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
+      ],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。他抬眼看向上方，右手收紧缰绳。 环境变化：苍霖骑在龙背的近景，风压掀起黑色碎发和龙翼披风，左脸旧疤清晰。 运镜：近景，稳定侧前方跟拍。光效节奏：左下赤金侧光，右眼掠过蓝白反光。保持单一连续动作，在2秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "aee7f53c",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G5 冲破火云 [3s]",
+    "content": "**时间码**：00:09-00:12\n**可见画面**：巨龙带着苍霖冲出暗红火云，远处世界树根系横贯云层。\n**动作**：巨龙连续抬升后展开双翼滑翔。\n**叙事功能**：升级世界观\n**剪辑点**：龙翼展开填满画面，翼膜暗部擦黑转场",
+    "episode": null,
+    "shot_number": 5,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 5,
+      "subshot": "G5-S1",
+      "time_range": "00:09-00:12",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "0c4b12d5",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G5-S1 冲破火云 故事板",
+    "content": "1. **画面内容**：巨龙带着苍霖冲出暗红火云，远处世界树根系横贯云层。\n2. **角色动作**：巨龙连续抬升后展开双翼滑翔。\n3. **景别 + 唯一运镜**：大远景，由后下方平稳抬升\n4. **光影**：背后赤金火云，前方冷白天光\n5. **时长**：3秒\n6. **母版引用**：苍霖、巨龙、48镜风格参考\n7. **承接/剪辑点**：龙翼展开填满画面，翼膜暗部擦黑转场",
+    "episode": null,
+    "shot_number": 5,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 5,
+      "subshot": "G5-S1",
+      "time_range": "00:09-00:12",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "ab3bebe7",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G5 冲破火云 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 巨龙带着苍霖冲出暗红火云，远处世界树根系横贯云层。 巨龙连续抬升后展开双翼滑翔。 大远景，由后下方平稳抬升，竖屏9:16。背后赤金火云，前方冷白天光 画面服务于“冲破火云”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 5,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 巨龙带着苍霖冲出暗红火云，远处世界树根系横贯云层。 巨龙连续抬升后展开双翼滑翔。 大远景，由后下方平稳抬升，竖屏9:16。背后赤金火云，前方冷白天光 画面服务于“冲破火云”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 5,
+      "subshot": "G5-S1",
+      "time_range": "00:09-00:12",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "f3d84670",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G5 冲破火云 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 5,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。巨龙连续抬升后展开双翼滑翔。 环境变化：巨龙带着苍霖冲出暗红火云，远处世界树根系横贯云层。 运镜：大远景，由后下方平稳抬升。光效节奏：背后赤金火云，前方冷白天光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 5,
+      "subshot": "G5-S1",
+      "time_range": "00:09-00:12",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G5-A",
+      "flf": false,
+      "reference_images": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
+      ],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。巨龙连续抬升后展开双翼滑翔。 环境变化：巨龙带着苍霖冲出暗红火云，远处世界树根系横贯云层。 运镜：大远景，由后下方平稳抬升。光效节奏：背后赤金火云，前方冷白天光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "00cc99a2",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G6 万丈悬瀑 [3s]",
+    "content": "**时间码**：00:12-00:15\n**可见画面**：遮幅暗部揭开青霄陆全景，世界树根系穿透云海，万丈瀑布从高处倾落。\n**动作**：瀑布持续下落，云雾绕根系移动。\n**叙事功能**：升级世界观\n**剪辑点**：一束蓝白水光落向下方根系",
+    "episode": null,
+    "shot_number": 6,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 6,
+      "subshot": "G6-S1",
+      "time_range": "00:12-00:15",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "e8a41a63",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G6-S1 万丈悬瀑 故事板",
+    "content": "1. **画面内容**：遮幅暗部揭开青霄陆全景，世界树根系穿透云海，万丈瀑布从高处倾落。\n2. **角色动作**：瀑布持续下落，云雾绕根系移动。\n3. **景别 + 唯一运镜**：超大远景，缓慢向前漂移\n4. **光影**：冷白散射光，树心保留微弱赤金生命光\n5. **时长**：3秒\n6. **母版引用**：九大陆场景、48镜风格参考\n7. **承接/剪辑点**：一束蓝白水光落向下方根系",
+    "episode": null,
+    "shot_number": 6,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 6,
+      "subshot": "G6-S1",
+      "time_range": "00:12-00:15",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": []
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "3b479777",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G6 万丈悬瀑 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 遮幅暗部揭开青霄陆全景，世界树根系穿透云海，万丈瀑布从高处倾落。 瀑布持续下落，云雾绕根系移动。 超大远景，缓慢向前漂移，竖屏9:16。冷白散射光，树心保留微弱赤金生命光 画面服务于“万丈悬瀑”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 6,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 遮幅暗部揭开青霄陆全景，世界树根系穿透云海，万丈瀑布从高处倾落。 瀑布持续下落，云雾绕根系移动。 超大远景，缓慢向前漂移，竖屏9:16。冷白散射光，树心保留微弱赤金生命光 画面服务于“万丈悬瀑”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 6,
+      "subshot": "G6-S1",
+      "time_range": "00:12-00:15",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": []
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "78fa00a6",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G6 万丈悬瀑 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 6,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。瀑布持续下落，云雾绕根系移动。 环境变化：遮幅暗部揭开青霄陆全景，世界树根系穿透云海，万丈瀑布从高处倾落。 运镜：超大远景，缓慢向前漂移。光效节奏：冷白散射光，树心保留微弱赤金生命光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 6,
+      "subshot": "G6-S1",
+      "time_range": "00:12-00:15",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G6-A",
+      "flf": false,
+      "reference_images": [
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png"
+      ],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。瀑布持续下落，云雾绕根系移动。 环境变化：遮幅暗部揭开青霄陆全景，世界树根系穿透云海，万丈瀑布从高处倾落。 运镜：超大远景，缓慢向前漂移。光效节奏：冷白散射光，树心保留微弱赤金生命光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [
+          "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "582a95b6",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G7 根上孤行 [3s]",
+    "content": "**时间码**：00:15-00:18\n**可见画面**：苍霖沿巨大根系边缘行走，人物只占画面很小比例，披风被水雾吹向一侧。\n**动作**：他停步，低头看见根系缝隙中的蓝白闪光。\n**叙事功能**：升级世界观\n**剪辑点**：蓝光映亮他的手，动作匹配切到指尖",
+    "episode": null,
+    "shot_number": 7,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 7,
+      "subshot": "G7-S1",
+      "time_range": "00:15-00:18",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "77e225b1",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G7-S1 根上孤行 故事板",
+    "content": "1. **画面内容**：苍霖沿巨大根系边缘行走，人物只占画面很小比例，披风被水雾吹向一侧。\n2. **角色动作**：他停步，低头看见根系缝隙中的蓝白闪光。\n3. **景别 + 唯一运镜**：大远景转中远景，缓慢推进\n4. **光影**：冷白水雾主光，脚下蓝白异常光\n5. **时长**：3秒\n6. **母版引用**：苍霖、九大陆场景、48镜风格参考\n7. **承接/剪辑点**：蓝光映亮他的手，动作匹配切到指尖",
+    "episode": null,
+    "shot_number": 7,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 7,
+      "subshot": "G7-S1",
+      "time_range": "00:15-00:18",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "c1100ae6",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G7 根上孤行 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 苍霖沿巨大根系边缘行走，人物只占画面很小比例，披风被水雾吹向一侧。 他停步，低头看见根系缝隙中的蓝白闪光。 大远景转中远景，缓慢推进，竖屏9:16。冷白水雾主光，脚下蓝白异常光 画面服务于“根上孤行”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 7,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 苍霖沿巨大根系边缘行走，人物只占画面很小比例，披风被水雾吹向一侧。 他停步，低头看见根系缝隙中的蓝白闪光。 大远景转中远景，缓慢推进，竖屏9:16。冷白水雾主光，脚下蓝白异常光 画面服务于“根上孤行”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 7,
+      "subshot": "G7-S1",
+      "time_range": "00:15-00:18",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "16051633",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G7 根上孤行 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 7,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。他停步，低头看见根系缝隙中的蓝白闪光。 环境变化：苍霖沿巨大根系边缘行走，人物只占画面很小比例，披风被水雾吹向一侧。 运镜：大远景转中远景，缓慢推进。光效节奏：冷白水雾主光，脚下蓝白异常光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 7,
+      "subshot": "G7-S1",
+      "time_range": "00:15-00:18",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G7-A",
+      "flf": false,
+      "reference_images": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png"
+      ],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。他停步，低头看见根系缝隙中的蓝白闪光。 环境变化：苍霖沿巨大根系边缘行走，人物只占画面很小比例，披风被水雾吹向一侧。 运镜：大远景转中远景，缓慢推进。光效节奏：冷白水雾主光，脚下蓝白异常光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "8ffce678",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G8 龙蛋破壳 [3s]",
+    "content": "**时间码**：00:18-00:21\n**可见画面**：苍霖指尖触碰古老龙蛋裂缝，冷蓝数据纹从蛋壳蔓延到手指。\n**动作**：手指停在裂缝上，数据纹沿手背逐段亮起。\n**叙事功能**：异常反转与人物悬念\n**剪辑点**：数据纹冲向镜头并短暂覆盖画面",
+    "episode": null,
+    "shot_number": 8,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 8,
+      "subshot": "G8-S1",
+      "time_range": "00:18-00:21",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "8f4fb473",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G8-S1 龙蛋破壳 故事板",
+    "content": "1. **画面内容**：苍霖指尖触碰古老龙蛋裂缝，冷蓝数据纹从蛋壳蔓延到手指。\n2. **角色动作**：手指停在裂缝上，数据纹沿手背逐段亮起。\n3. **景别 + 唯一运镜**：手部特写，固定机位轻微后移\n4. **光影**：黑暗环境，冷蓝自发光照亮手部轮廓\n5. **时长**：3秒\n6. **母版引用**：苍霖、48镜风格参考\n7. **承接/剪辑点**：数据纹冲向镜头并短暂覆盖画面",
+    "episode": null,
+    "shot_number": 8,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 8,
+      "subshot": "G8-S1",
+      "time_range": "00:18-00:21",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "d3d6ac79",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G8 龙蛋破壳 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 苍霖指尖触碰古老龙蛋裂缝，冷蓝数据纹从蛋壳蔓延到手指。 手指停在裂缝上，数据纹沿手背逐段亮起。 手部特写，固定机位轻微后移，竖屏9:16。黑暗环境，冷蓝自发光照亮手部轮廓 画面服务于“龙蛋破壳”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 8,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 苍霖指尖触碰古老龙蛋裂缝，冷蓝数据纹从蛋壳蔓延到手指。 手指停在裂缝上，数据纹沿手背逐段亮起。 手部特写，固定机位轻微后移，竖屏9:16。黑暗环境，冷蓝自发光照亮手部轮廓 画面服务于“龙蛋破壳”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 8,
+      "subshot": "G8-S1",
+      "time_range": "00:18-00:21",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "795e06d2",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G8 龙蛋破壳 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 8,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。手指停在裂缝上，数据纹沿手背逐段亮起。 环境变化：苍霖指尖触碰古老龙蛋裂缝，冷蓝数据纹从蛋壳蔓延到手指。 运镜：手部特写，固定机位轻微后移。光效节奏：黑暗环境，冷蓝自发光照亮手部轮廓。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 8,
+      "subshot": "G8-S1",
+      "time_range": "00:18-00:21",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G8-A",
+      "flf": false,
+      "reference_images": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+      ],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。手指停在裂缝上，数据纹沿手背逐段亮起。 环境变化：苍霖指尖触碰古老龙蛋裂缝，冷蓝数据纹从蛋壳蔓延到手指。 运镜：手部特写，固定机位轻微后移。光效节奏：黑暗环境，冷蓝自发光照亮手部轮廓。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "d007a12d",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G9 系统入侵 [3s]",
+    "content": "**时间码**：00:21-00:24\n**可见画面**：苍霖半脸近景，左脸旧疤与金色虹膜同时清晰，蓝白数据纹倒映在瞳孔里。\n**动作**：他先震惊屏息，随后咬紧牙关稳定视线。\n**叙事功能**：异常反转与人物悬念\n**剪辑点**：瞳孔中出现巨大门形暗影，匹配切到真实虚空门",
+    "episode": null,
+    "shot_number": 9,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 9,
+      "subshot": "G9-S1",
+      "time_range": "00:21-00:24",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "10155d31",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G9-S1 系统入侵 故事板",
+    "content": "1. **画面内容**：苍霖半脸近景，左脸旧疤与金色虹膜同时清晰，蓝白数据纹倒映在瞳孔里。\n2. **角色动作**：他先震惊屏息，随后咬紧牙关稳定视线。\n3. **景别 + 唯一运镜**：近景，极慢推进\n4. **光影**：左侧冷蓝数据光，右侧残留赤金轮廓光\n5. **时长**：3秒\n6. **母版引用**：苍霖、48镜风格参考\n7. **承接/剪辑点**：瞳孔中出现巨大门形暗影，匹配切到真实虚空门",
+    "episode": null,
+    "shot_number": 9,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 9,
+      "subshot": "G9-S1",
+      "time_range": "00:21-00:24",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "b6c082e2",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G9 系统入侵 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 苍霖半脸近景，左脸旧疤与金色虹膜同时清晰，蓝白数据纹倒映在瞳孔里。 他先震惊屏息，随后咬紧牙关稳定视线。 近景，极慢推进，竖屏9:16。左侧冷蓝数据光，右侧残留赤金轮廓光 画面服务于“系统入侵”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 9,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 苍霖半脸近景，左脸旧疤与金色虹膜同时清晰，蓝白数据纹倒映在瞳孔里。 他先震惊屏息，随后咬紧牙关稳定视线。 近景，极慢推进，竖屏9:16。左侧冷蓝数据光，右侧残留赤金轮廓光 画面服务于“系统入侵”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 9,
+      "subshot": "G9-S1",
+      "time_range": "00:21-00:24",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "179e5439",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G9 系统入侵 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 9,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。他先震惊屏息，随后咬紧牙关稳定视线。 环境变化：苍霖半脸近景，左脸旧疤与金色虹膜同时清晰，蓝白数据纹倒映在瞳孔里。 运镜：近景，极慢推进。光效节奏：左侧冷蓝数据光，右侧残留赤金轮廓光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 9,
+      "subshot": "G9-S1",
+      "time_range": "00:21-00:24",
+      "duration_seconds": 3,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G9-A",
+      "flf": false,
+      "reference_images": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+      ],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。他先震惊屏息，随后咬紧牙关稳定视线。 环境变化：苍霖半脸近景，左脸旧疤与金色虹膜同时清晰，蓝白数据纹倒映在瞳孔里。 运镜：近景，极慢推进。光效节奏：左侧冷蓝数据光，右侧残留赤金轮廓光。保持单一连续动作，在3秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "f85af8ef",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G10 无人选择 [4s]",
+    "content": "**时间码**：00:24-00:28\n**可见画面**：灰色荒原上，苍霖背对镜头面对遮天蔽日的虚空门，龙翼披风在风中展开。\n**动作**：他停顿一次呼吸后向虚空门迈出一步。\n**叙事功能**：异常反转与人物悬念\n**剪辑点**：脚步落地时画面切黑，后期叠字幕“没有人选你。但你还是站起来了。”",
+    "episode": null,
+    "shot_number": 10,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 10,
+      "subshot": "G10-S1",
+      "time_range": "00:24-00:28",
+      "duration_seconds": 4,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "ec12a022",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G10-S1 无人选择 故事板",
+    "content": "1. **画面内容**：灰色荒原上，苍霖背对镜头面对遮天蔽日的虚空门，龙翼披风在风中展开。\n2. **角色动作**：他停顿一次呼吸后向虚空门迈出一步。\n3. **景别 + 唯一运镜**：全景，缓慢推进，保持背影居中\n4. **光影**：冷灰逆光勾勒人物，门内一线赤金光与蓝白裂纹并存\n5. **时长**：4秒\n6. **母版引用**：苍霖、48镜风格参考\n7. **承接/剪辑点**：脚步落地时画面切黑，后期叠字幕“没有人选你。但你还是站起来了。”",
+    "episode": null,
+    "shot_number": 10,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 10,
+      "subshot": "G10-S1",
+      "time_range": "00:24-00:28",
+      "duration_seconds": 4,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "355d05a9",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G10 无人选择 首帧",
+    "content": "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 灰色荒原上，苍霖背对镜头面对遮天蔽日的虚空门，龙翼披风在风中展开。 他停顿一次呼吸后向虚空门迈出一步。 全景，缓慢推进，保持背影居中，竖屏9:16。冷灰逆光勾勒人物，门内一线赤金光与蓝白裂纹并存 画面服务于“无人选择”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。",
+    "episode": null,
+    "shot_number": 10,
+    "prompts": [
+      "高精度东方幻想数字绘景式漫剧关键帧，二维半写实人物审美，低描边、无墨线，清晰主体与真实环境材质，强体积光；核心色彩语言为赤金龙焰与蓝白法则光对撞。不是欧美游戏设定稿，不是真人摄影，不使用白底概念图作为成片画风。 灰色荒原上，苍霖背对镜头面对遮天蔽日的虚空门，龙翼披风在风中展开。 他停顿一次呼吸后向虚空门迈出一步。 全景，缓慢推进，保持背影居中，竖屏9:16。冷灰逆光勾勒人物，门内一线赤金光与蓝白裂纹并存 画面服务于“无人选择”这一叙事信息，主体轮廓清楚，特效不遮挡人物关键特征。严格继承已锁定母版与48镜故事板风格参考。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 10,
+      "subshot": "G10-S1",
+      "time_range": "00:24-00:28",
+      "duration_seconds": 4,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "requires_reference_image": true,
+      "reference_roles": [
+        "苍霖"
+      ]
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  },
+  {
+    "card_id": "fac42579",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "G10 无人选择 视频提示词",
+    "content": "",
+    "episode": null,
+    "shot_number": 10,
+    "prompts": [
+      "使用本镜首帧与已锁定母版作为身份和画风依据。他停顿一次呼吸后向虚空门迈出一步。 环境变化：灰色荒原上，苍霖背对镜头面对遮天蔽日的虚空门，龙翼披风在风中展开。 运镜：全景，缓慢推进，保持背影居中。光效节奏：冷灰逆光勾勒人物，门内一线赤金光与蓝白裂纹并存。保持单一连续动作，在4秒内完成；画面稳定，竖屏9:16。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 10,
+      "subshot": "G10-S1",
+      "time_range": "00:24-00:28",
+      "duration_seconds": 4,
+      "reference_assets": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
+      ],
+      "style_locked": true,
+      "art_bible_project_id": "jiulu-s1",
+      "prompt_audit_status": "rewritten_2026-07-15",
+      "subsegment": "G10-A",
+      "flf": false,
+      "reference_images": [
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+      ],
+      "video_generation_ready": false,
+      "video_review_status": "pending_image_review",
+      "seedance_input": {
+        "prompt": "使用本镜首帧与已锁定母版作为身份和画风依据。他停顿一次呼吸后向虚空门迈出一步。 环境变化：灰色荒原上，苍霖背对镜头面对遮天蔽日的虚空门，龙翼披风在风中展开。 运镜：全景，缓慢推进，保持背影居中。光效节奏：冷灰逆光勾勒人物，门内一线赤金光与蓝白裂纹并存。保持单一连续动作，在4秒内完成；画面稳定，竖屏9:16。",
+        "image_url": [
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T14:26:54.638387+00:00",
+    "updated_at": "2026-07-15T14:26:54.638387+00:00"
+  }
+]

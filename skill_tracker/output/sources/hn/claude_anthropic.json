@@ -1,0 +1,187 @@
+{
+  "source": "hackernews",
+  "query": "Claude anthropic",
+  "fetchedAt": "2026-07-13T20:05:06.915197",
+  "items": [
+    {
+      "title": "Anthropic's Claude Desktop App Installs Undisclosed Native Messaging Bridge",
+      "url": "https://letsdatascience.com/news/claude-desktop-installs-preauthorized-browser-extension-mani-4064fb1a",
+      "points": 100,
+      "comments": 17,
+      "author": "CGMthrowaway",
+      "createdAt": "2026-04-23T19:43:08Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47880697"
+    },
+    {
+      "title": "Anthropic's Claude Mythos isn't a sentient super-hacker, it's a sales pitch",
+      "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropics-claude-mythos-isnt-a-sentient-super-hacker-its-a-sales-pitch-claims-of-thousands-of-severe-zero-days-rely-on-just-198-manual-reviews",
+      "points": 44,
+      "comments": 21,
+      "author": "edwardsrobbie",
+      "createdAt": "2026-04-10T13:49:50Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47718155"
+    },
+    {
+      "title": "Trump Admin. Still Used Anthropic's Claude in Iran Strikes, Hours After It",
+      "url": "https://sfist.com/2026/03/02/trump-administration-still-used-sfs-anthropic-in-iran-strikes-mere-hours-after-trump-banned-anthropic/",
+      "points": 17,
+      "comments": 0,
+      "author": "cdrnsf",
+      "createdAt": "2026-03-02T22:40:55Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47225221"
+    },
+    {
+      "title": "Anthropic's Claude rises to No. 2 in the App Store following Pentagon dispute",
+      "url": "https://techcrunch.com/2026/02/28/anthropics-claude-rises-to-no-2-in-the-app-store-following-pentagon-dispute/",
+      "points": 42,
+      "comments": 2,
+      "author": "Philpax",
+      "createdAt": "2026-02-28T22:33:09Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47201028"
+    },
+    {
+      "title": "Hacker used Anthropic's Claude chatbot to attack government agencies in Mexico",
+      "url": "https://www.engadget.com/ai/hacker-used-anthropics-claude-chatbot-to-attack-multiple-government-agencies-in-mexico-171237255.html",
+      "points": 17,
+      "comments": 1,
+      "author": "LordAtlas",
+      "createdAt": "2026-02-25T18:13:17Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47155342"
+    },
+    {
+      "title": "Hacker Used Anthropic's Claude to Steal Sensitive Mexican Data",
+      "url": "https://www.bloomberg.com/news/articles/2026-02-25/hacker-used-anthropic-s-claude-to-steal-sensitive-mexican-data",
+      "points": 15,
+      "comments": 1,
+      "author": "wslh",
+      "createdAt": "2026-02-25T14:26:57Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47151915"
+    },
+    {
+      "title": "Pentagon might ask contractors to certify they don't use Anthropic's Claude",
+      "url": "https://www.wsj.com/politics/national-security/woke-ai-spat-escalates-between-pentagon-and-anthropic-433b7c5c",
+      "points": 15,
+      "comments": 8,
+      "author": "fortran77",
+      "createdAt": "2026-02-18T04:50:43Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47057294"
+    },
+    {
+      "title": "Pentagon Used Anthropic's Claude in Maduro Venezuela Raid",
+      "url": "https://www.wsj.com/politics/national-security/pentagon-used-anthropics-claude-in-maduro-venezuela-raid-583aff17",
+      "points": 25,
+      "comments": 5,
+      "author": "2OEH8eoCRo0",
+      "createdAt": "2026-02-13T23:04:52Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47009058"
+    },
+    {
+      "title": "Charged $591 Instead of $5.91 on Anthropic (Claude API) – Anyone Faced Similar?",
+      "url": "https://news.ycombinator.com/item?id=44709840",
+      "points": 16,
+      "comments": 7,
+      "author": "iapi",
+      "createdAt": "2025-07-28T11:39:23Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=44709840"
+    },
+    {
+      "title": "Why Anthropic's Claude still hasn't beaten Pokémon",
+      "url": "https://arstechnica.com/ai/2025/03/why-anthropics-claude-still-hasnt-beaten-pokemon/",
+      "points": 53,
+      "comments": 65,
+      "author": "Workaccount2",
+      "createdAt": "2025-03-24T15:07:37Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=43461944"
+    },
+    {
+      "title": "Anthropic Claude 3.5 Sonnet and Haiku",
+      "url": "https://twitter.com/anthropicai/status/1848742740420341988",
+      "points": 18,
+      "comments": 3,
+      "author": "tosh",
+      "createdAt": "2024-10-22T15:10:01Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=41915060"
+    },
+    {
+      "title": "Anthropic Claude 3.5 can create icalendar files, so I did this",
+      "url": "https://gregsramblings.com/stupid-but-useful-ai-tricks-creating-calendar-entries-from-an-image-using-anthropic-claude-35",
+      "points": 367,
+      "comments": 170,
+      "author": "gw5815",
+      "createdAt": "2024-08-25T02:27:51Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=41343826"
+    },
+    {
+      "title": "Improving Tiptap's Performance for Anthropic's Claude Interface",
+      "url": "https://news.ycombinator.com/item?id=41036078",
+      "points": 24,
+      "comments": 15,
+      "author": "philipisik",
+      "createdAt": "2024-07-22T16:12:17Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=41036078"
+    },
+    {
+      "title": "Claude by Anthropic Now on Google Play Store",
+      "url": "https://play.google.com/store/apps/details?id=com.anthropic.claude&hl=en_US",
+      "points": 39,
+      "comments": 20,
+      "author": "vyrotek",
+      "createdAt": "2024-07-18T17:41:40Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=40998008"
+    },
+    {
+      "title": "Anthropic: Claude 3.5 Sonnet output limit doubled from 4096 to 8192",
+      "url": "https://twitter.com/alexalbert__/status/1812921642143900036",
+      "points": 29,
+      "comments": 1,
+      "author": "tosh",
+      "createdAt": "2024-07-16T08:47:28Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=40974664"
+    },
+    {
+      "title": "Anthropic's Claude 3.5 Sonnet wows AI power users",
+      "url": "https://venturebeat.com/ai/anthropics-claude-3-5-sonnet-wows-ai-power-users-this-is-wild/",
+      "points": 15,
+      "comments": 0,
+      "author": "belter",
+      "createdAt": "2024-06-23T09:13:36Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=40765930"
+    },
+    {
+      "title": "Anthropic's Claude 3 Models in Google Cloud Vertex AI",
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning/announcing-anthropics-claude-3-models-in-google-cloud-vertex-ai",
+      "points": 16,
+      "comments": 1,
+      "author": "redbell",
+      "createdAt": "2024-03-06T18:33:46Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=39619304"
+    },
+    {
+      "title": "Tell HN: Anthropic's Claude is significantly better than ChatGPT",
+      "url": "https://news.ycombinator.com/item?id=35141867",
+      "points": 19,
+      "comments": 11,
+      "author": "vagabund",
+      "createdAt": "2023-03-13T20:16:48Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=35141867"
+    },
+    {
+      "title": "Meet “Claude”: Anthropic’s rival to ChatGPT",
+      "url": "https://scale.com/blog/chatgpt-vs-claude",
+      "points": 188,
+      "comments": 156,
+      "author": "goodside",
+      "createdAt": "2023-01-18T06:28:52Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=34423979"
+    },
+    {
+      "title": "Anthropic's Claude is said to improve on ChatGPT, but still has limitations",
+      "url": "https://techcrunch.com/2023/01/09/anthropics-claude-improves-on-chatgpt-but-still-suffers-from-limitations/",
+      "points": 81,
+      "comments": 51,
+      "author": "metadat",
+      "createdAt": "2023-01-10T21:00:01Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=34331396"
+    }
+  ]
+}

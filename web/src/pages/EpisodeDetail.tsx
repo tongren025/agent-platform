@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsive } from '../hooks/useResponsive';
-import { Breadcrumb, Button, Card, Col, Drawer, Empty, Image, Row, Space, Spin, Tag, Tooltip, Typography, Tabs, Badge } from 'antd';
+import { Breadcrumb, Button, Card, Col, Drawer, Empty, Image, Input, Modal, Popconfirm, Row, Select, Space, Spin, Tag, Tooltip, Typography, Tabs, Badge } from 'antd';
 import { message } from '../ui';
 import {
   ArrowLeftOutlined, CopyOutlined, CheckOutlined, HomeOutlined,
@@ -17,6 +17,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 const { Text, Title } = Typography;
+const { TextArea } = Input;
 
 interface CardItem {
   card_id: string; project_id: string; stage: string; title: string;
@@ -36,20 +37,20 @@ interface UnitGroup {
   allDone: boolean;
 }
 
-const STAGE_ORDER = ['script', 'storyboard', 'img_prompt', 'vid_prompt', 'img_gen', 'vid_gen', 'final'];
+const STAGE_ORDER = ['script', 'setting', 'design', 'storyboard', 'img_prompt', 'vid_prompt', 'img_gen', 'vid_gen', 'final'];
 const STAGE_LABELS: Record<string, string> = {
   idea: '创意', script: '剧本', setting: '设定', design: '设计',
   storyboard: '分镜', img_prompt: '图片提示词', vid_prompt: '视频提示词',
   img_gen: '生成图片', vid_gen: '生成视频', final: '成片',
 };
 const STAGE_ICONS: Record<string, React.ReactNode> = {
-  script: <FileTextOutlined />, storyboard: <EditOutlined />,
+  script: <FileTextOutlined />, setting: <FileTextOutlined />, design: <PictureOutlined />, storyboard: <EditOutlined />,
   img_prompt: <PictureOutlined />, vid_prompt: <VideoCameraOutlined />,
   img_gen: <PictureOutlined />, vid_gen: <VideoCameraOutlined />,
   final: <CheckCircleOutlined />,
 };
 const STAGE_COLORS: Record<string, string> = {
-  script: '#6366f1', storyboard: '#8b5cf6', img_prompt: '#10b981',
+  script: '#6366f1', setting: '#0ea5e9', design: '#14b8a6', storyboard: '#8b5cf6', img_prompt: '#10b981',
   vid_prompt: '#10b981', img_gen: '#f59e0b', vid_gen: '#f59e0b', final: '#ef4444',
 };
 
@@ -100,6 +101,17 @@ export default function EpisodeDetail() {
   const [projectName, setProjectName] = useState('');
   const [loading, setLoading] = useState(false);
   const [drawerCard, setDrawerCard] = useState<CardItem | null>(null);
+  const [editingCard, setEditingCard] = useState<CardItem | null>(null);
+  const [editDraft, setEditDraft] = useState({ title: '', content: '', prompt: '', negativePrompt: '' });
+  const [saving, setSaving] = useState(false);
+  const [regenerating, setRegenerating] = useState('');
+  const [imageCard, setImageCard] = useState<CardItem | null>(null);
+  const [imageModels, setImageModels] = useState<{ provider: string; modelId: string; modelName: string }[]>([]);
+  const [imageModel, setImageModel] = useState('');
+  const [imagePrompt, setImagePrompt] = useState('');
+  const [imageGenerating, setImageGenerating] = useState(false);
+  const [referencePackCard, setReferencePackCard] = useState<CardItem | null>(null);
+  const [reviewSaving, setReviewSaving] = useState(false);
 
   const loadData = useCallback(async () => {
     if (!pid) return;
@@ -114,7 +126,110 @@ export default function EpisodeDetail() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  const epCards = useMemo(() => allCards.filter(c => c.episode === epNum), [allCards, epNum]);
+  const openEditor = (card: CardItem) => {
+    setEditingCard(card);
+    setEditDraft({
+      title: card.title,
+      content: card.content,
+      prompt: card.prompts[0] || '',
+      negativePrompt: card.negative_prompts?.[0] || '',
+    });
+  };
+
+  const saveCard = async () => {
+    if (!editingCard) return;
+    setSaving(true);
+    try {
+      const prompts = editDraft.prompt.trim()
+        ? [editDraft.prompt.trim(), ...editingCard.prompts.slice(1)]
+        : editingCard.prompts.slice(1);
+      const negativePrompts = editDraft.negativePrompt.trim()
+        ? [editDraft.negativePrompt.trim(), ...(editingCard.negative_prompts || []).slice(1)]
+        : (editingCard.negative_prompts || []).slice(1);
+      await api.updateCard(editingCard.card_id, {
+        title: editDraft.title.trim(), content: editDraft.content,
+        prompts, negative_prompts: negativePrompts,
+      });
+      message.success('卡片与提示词已保存');
+      setEditingCard(null);
+      await loadData();
+    } catch (e: any) { message.error(e.message); }
+    finally { setSaving(false); }
+  };
+
+  const regenerateCard = async (card: CardItem) => {
+    if (!pid) return;
+    setRegenerating(card.card_id);
+    try {
+      await api.generateStage(pid, {
+        target_stage: card.stage, episode: epNum, shot_number: card.shot_number,
+        mode: 'replace', extra_instruction: `只重新生成当前 ${unitLabel(card.shot_number)} 的「${card.title}」，不要改动其他镜头。`,
+      });
+      message.success(`${unitLabel(card.shot_number)} · ${STAGE_LABELS[card.stage] || card.stage} 已重新生成`);
+      await loadData();
+    } catch (e: any) { message.error(e.message); }
+    finally { setRegenerating(''); }
+  };
+
+  const openImageGenerator = async (card: CardItem) => {
+    setImageCard(card);
+    setImagePrompt(card.prompts[0] || card.content || '');
+    try {
+      const models = await api.listImageModels();
+      setImageModels(models);
+      setImageModel(models[0]?.modelId || '');
+      if (!models.length) message.warning('没有已启用的生图模型，请先到设置中配置');
+    } catch (e: any) { message.error(e.message); }
+  };
+
+  const generateImage = async () => {
+    if (!pid || !imageCard || !imageModel) return;
+    setImageGenerating(true);
+    try {
+      await api.generateCardImage(pid, imageCard.card_id, {
+        model: imageModel, prompt: imagePrompt, size: '1024x1536',
+      });
+      message.success('新图片已生成并保留为一个新版本');
+      setImageCard(null);
+      await loadData();
+    } catch (e: any) { message.error(e.message); }
+    finally { setImageGenerating(false); }
+  };
+
+  const setActiveImage = async (card: CardItem, url: string) => {
+    try {
+      await api.updateCard(card.card_id, { metadata: { ...card.metadata, active_image: url } });
+      message.success('已设为当前版本');
+      await loadData();
+    } catch (e: any) { message.error(e.message); }
+  };
+
+  const splitStoryboard = async (card: CardItem) => {
+    if (!pid) return;
+    try {
+      const result = await api.splitStoryboardCard(pid, card.card_id);
+      message.success(`已拆成 ${result.split} 张逐镜故事板卡，可分别生图`);
+      await loadData();
+    } catch (e: any) { message.error(e.message); }
+  };
+
+  // GC 项目沿用全局卡片（episode=null）；普通剧集仍严格按集过滤。
+  const epCards = useMemo(() => {
+    const exact = allCards.filter(c => c.episode === epNum);
+    return exact.length ? exact : allCards.filter(c => c.episode == null && c.shot_number > 0);
+  }, [allCards, epNum]);
+
+  const approveVideoPack = async (card: CardItem) => {
+    setReviewSaving(true);
+    try {
+      const metadata = { ...card.metadata, video_review_status: 'approved', video_approved_at: new Date().toISOString() };
+      const updated = await api.updateCard(card.card_id, { metadata, status: 'done' });
+      setReferencePackCard(updated);
+      message.success('该镜视频参考包已审核通过');
+      await loadData();
+    } catch (e: any) { message.error(e.message); }
+    finally { setReviewSaving(false); }
+  };
 
   const epTitle = useMemo(() => {
     const brief = epCards.find(c => c.stage === 'idea');
@@ -294,7 +409,7 @@ export default function EpisodeDetail() {
                       marginTop: 8, height: 60, borderRadius: 6, overflow: 'hidden',
                       background: '#f5f5f5',
                     }}>
-                      <img src={thumbUrl(imgCard.images[0], 128)} alt="" loading="lazy" decoding="async"
+                      <img src={thumbUrl(imgCard.metadata?.active_image || imgCard.images[0], 128)} alt="" loading="lazy" decoding="async"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         onError={onImageError} />
                     </div>
@@ -347,6 +462,39 @@ export default function EpisodeDetail() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                           <Text strong>{card.title}</Text>
                           <Space size={4}>
+                            <Tooltip title="编辑当前卡片和提示词">
+                              <Button size="small" icon={<EditOutlined />} onClick={() => openEditor(card)}>编辑</Button>
+                            </Tooltip>
+                            {['script', 'setting', 'design', 'storyboard', 'img_prompt', 'vid_prompt'].includes(card.stage) && (
+                              <Popconfirm
+                                title={`只重新生成 ${unitLabel(card.shot_number)} 的${STAGE_LABELS[card.stage] || card.stage}？`}
+                                description="同镜头、同阶段的旧卡会被替换，其他镜头不受影响。"
+                                onConfirm={() => regenerateCard(card)}
+                              >
+                                <Button size="small" loading={regenerating === card.card_id}>重新生成</Button>
+                              </Popconfirm>
+                            )}
+                            {card.stage === 'img_prompt' && (
+                              <Button size="small" type="primary" icon={<PictureOutlined />} onClick={() => openImageGenerator(card)}>
+                                立即生图
+                              </Button>
+                            )}
+                            {card.stage === 'storyboard' && (
+                              <>
+                                {(card.content.match(/^###\s*镜头/gm)?.length || 0) >= 2 && (
+                                  <Popconfirm title="拆成一镜一卡？" description="原大分镜卡会替换为逐镜卡，已有图片保留在第一镜。"
+                                    onConfirm={() => splitStoryboard(card)}>
+                                    <Button size="small">拆成逐镜卡</Button>
+                                  </Popconfirm>
+                                )}
+                                <Button size="small" type="primary" icon={<PictureOutlined />} onClick={() => openImageGenerator(card)}>
+                                  生成故事板图
+                                </Button>
+                              </>
+                            )}
+                            {card.stage === 'vid_prompt' && (
+                              <Button size="small" onClick={() => setReferencePackCard(card)}>视频参考包</Button>
+                            )}
                             {/* 提示词正文存在 content 字段，必须能一键复制去生成端 */}
                             {card.content && <CopyBtn text={card.content} />}
                             <Tag color={card.status === 'done' ? 'success' : card.status === 'review' ? 'processing' : 'warning'}>
@@ -416,12 +564,22 @@ export default function EpisodeDetail() {
                             </Text>
                             <Image.PreviewGroup>
                               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                {card.images.map((url, i) => (
-                                  <Image key={i} src={thumbUrl(url, 256)} preview={{ src: url }} loading="lazy"
-                                    width={120} height={120}
-                                    style={{ objectFit: 'cover', borderRadius: 8 }}
-                                    fallback="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iIGZpbGw9IiNjY2MiIGZvbnQtc2l6ZT0iMTIiPuWbvueJh+WKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=" />
-                                ))}
+                                {card.images.map((url, i) => {
+                                  const active = (card.metadata?.active_image || card.images[0]) === url;
+                                  return (
+                                    <div key={url || i} style={{ position: 'relative' }}>
+                                      <Image src={thumbUrl(url, 256)} preview={{ src: url }} loading="lazy"
+                                        width={120} height={120}
+                                        style={{ objectFit: 'cover', borderRadius: 8, border: active ? '3px solid #52c41a' : '1px solid #eee' }}
+                                        fallback="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iIGZpbGw9IiNjY2MiIGZvbnQtc2l6ZT0iMTIiPuWbvueJh+WKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=" />
+                                      <Button size="small" type={active ? 'primary' : 'default'}
+                                        onClick={() => !active && setActiveImage(card, url)}
+                                        style={{ width: 120, marginTop: 4 }}>
+                                        {active ? '当前版本' : '设为当前'}
+                                      </Button>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             </Image.PreviewGroup>
                           </div>
@@ -451,6 +609,76 @@ export default function EpisodeDetail() {
           return <Tabs items={tabItems} defaultActiveKey={tabItems[0]?.key} />;
         })()}
       </Drawer>
+
+      <Modal title="编辑镜头卡片" open={!!editingCard} onCancel={() => setEditingCard(null)}
+        onOk={saveCard} confirmLoading={saving} okText="保存">
+        <Space direction="vertical" style={{ width: '100%' }} size={12}>
+          <div><Text type="secondary">标题</Text><Input value={editDraft.title} onChange={e => setEditDraft(v => ({ ...v, title: e.target.value }))} /></div>
+          <div><Text type="secondary">正文</Text><TextArea rows={8} value={editDraft.content} onChange={e => setEditDraft(v => ({ ...v, content: e.target.value }))} /></div>
+          <div><Text type="secondary">主提示词（下一次生图直接读取这里）</Text><TextArea rows={8} value={editDraft.prompt} onChange={e => setEditDraft(v => ({ ...v, prompt: e.target.value }))} /></div>
+          <div><Text type="secondary">主负向提示词</Text><TextArea rows={4} value={editDraft.negativePrompt} onChange={e => setEditDraft(v => ({ ...v, negativePrompt: e.target.value }))} /></div>
+        </Space>
+      </Modal>
+
+      <Modal title={`立即生图${imageCard ? ` · ${imageCard.title}` : ''}`} open={!!imageCard}
+        onCancel={() => setImageCard(null)} onOk={generateImage} confirmLoading={imageGenerating}
+        okButtonProps={{ disabled: !imageModel || !imagePrompt.trim() }} okText="生成新版本">
+        <Space direction="vertical" style={{ width: '100%' }} size={12}>
+          <div><Text type="secondary">生图模型</Text><Select style={{ width: '100%' }} value={imageModel || undefined}
+            placeholder="请选择已启用的生图模型" onChange={setImageModel}
+            options={imageModels.map(m => ({ value: m.modelId, label: `${m.provider} / ${m.modelName}` }))} /></div>
+          <div><Text type="secondary">本次使用的提示词</Text><TextArea rows={12} value={imagePrompt} onChange={e => setImagePrompt(e.target.value)} /></div>
+          <Text type="secondary">不会覆盖旧图片；生成后可在版本列表中切换当前图。</Text>
+        </Space>
+      </Modal>
+
+      <Modal title={`视频参考包${referencePackCard ? ` · ${unitLabel(referencePackCard.shot_number)}` : ''}`}
+        open={!!referencePackCard} onCancel={() => setReferencePackCard(null)} footer={null} width={820}>
+        {referencePackCard && (() => {
+          const unitCards = epCards.filter(c => c.shot_number === referencePackCard.shot_number);
+          const storyboardImages = unitCards.filter(c => c.stage === 'storyboard').flatMap(c => c.images.map(url => ({ url, title: c.title })));
+          const frameImages = unitCards.filter(c => c.stage === 'img_prompt').flatMap(c => c.images.map(url => ({ url, title: c.title })));
+          const characterImages = allCards
+            .filter(c => c.episode == null && ['setting', 'design'].includes(c.stage) && c.images.length > 0
+              && /角色|人物|三视图|定妆|character/i.test(`${c.title} ${c.content}`))
+            .flatMap(c => c.images.map(url => ({ url, title: c.title }))).slice(0, 12);
+          const groups = [
+            { label: '逐镜故事板图', items: storyboardImages },
+            { label: '首帧 / 末帧', items: frameImages },
+            { label: '人物三视图 / 定妆参考', items: characterImages },
+          ];
+          const seedanceInput = referencePackCard.metadata?.seedance_input;
+          const approved = referencePackCard.metadata?.video_review_status === 'approved';
+          return <Space direction="vertical" size={16} style={{ width: '100%' }}>
+            <Space>
+              <Tag color={approved ? 'success' : 'processing'}>{approved ? '已审核，可生视频' : '待你审核'}</Tag>
+              <Button type={approved ? 'default' : 'primary'} loading={reviewSaving} disabled={approved}
+                onClick={() => approveVideoPack(referencePackCard)}>
+                {approved ? '已审核通过' : '审核通过此镜'}
+              </Button>
+              {seedanceInput && <Button icon={<CopyOutlined />}
+                onClick={() => navigator.clipboard.writeText(JSON.stringify(seedanceInput, null, 2)).then(() => message.success('已复制 Seedance 输入'))}>
+                复制一键生视频输入
+              </Button>}
+            </Space>
+            <Text>视频提示词</Text>
+            <div style={{ background: '#1e293b', color: '#e2e8f0', borderRadius: 8, padding: 12, whiteSpace: 'pre-wrap' }}>
+              {referencePackCard.prompts[0] || referencePackCard.content}
+            </div>
+            {groups.map(group => <div key={group.label}>
+              <Text strong>{group.label}（{group.items.length}）</Text>
+              {group.items.length ? <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+                {group.items.map((item, index) => <div key={`${item.url}-${index}`} style={{ width: 120 }}>
+                  <Image src={thumbUrl(item.url, 256)} preview={{ src: item.url }} width={120} height={120}
+                    style={{ objectFit: 'cover', borderRadius: 8 }} />
+                  <Text ellipsis style={{ display: 'block', fontSize: 11 }} title={item.title}>{item.title}</Text>
+                </div>)}
+              </div> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有素材；先给对应故事板或人物设计卡生图" />}
+            </div>)}
+            <Text type="secondary">先逐镜审核图片、提示词和参考图；审核通过后再由你手动触发视频生成。系统不会在后台自动提交或扣费。</Text>
+          </Space>;
+        })()}
+      </Modal>
     </div>
   );
 }

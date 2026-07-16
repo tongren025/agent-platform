@@ -1,0 +1,228 @@
+
+########## 运行于 2026-06-26T14:20:11.306440 ##########
+
+>>>>> query: topic:mcp
+
+=== 星最多的 skill（query: topic:mcp） ===
+
+ 1. 221844 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 194095 ⭐  n8n-io/n8n [TypeScript]
+     Fair-code workflow automation platform with native AI capabilities. Combine visual buildin…
+     https://github.com/n8n-io/n8n
+ 3. 156626 ⭐  Snailclimb/JavaGuide [JavaScript]
+     Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+     https://github.com/Snailclimb/JavaGuide
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1393.2 ⭐/天 (共221844⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2.  686.1 ⭐/天 (共56405⭐)  MemPalace/mempalace [Python]
+     The best-benchmarked open-source AI memory system. And it's free.
+     https://github.com/MemPalace/mempalace
+ 3.  365.8 ⭐/天 (共36393⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+
+=== 真实近期增长 ===
+  首次运行该 query，已建立基线快照。下次运行即可看到真实涨星对比。
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\topic_mcp\20260626_062011.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260626_142014.json
+
+########## 运行于 2026-06-26T15:22:44.745506 ##########
+
+>>>>> query: skill
+
+=== 星最多的 skill（query: skill） ===
+
+ 1. 238949 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 221867 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 182437 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 4. 155332 ⭐  anthropics/skills [Python]
+     Public repository for Agent Skills
+     https://github.com/anthropics/skills
+ 5. 146681 ⭐  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .claude directory.
+     https://github.com/mattpocock/skills
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1393.0 ⭐/天 (共221867⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 1215.1 ⭐/天 (共182437⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3. 1206.6 ⭐/天 (共71336⭐)  nexu-io/open-design [TypeScript]
+     🎨 Local-first, open-source Claude Design alternative. 🖥️ Native desktop app. ⚡ 259+ Skills…
+     https://github.com/nexu-io/open-design
+ 4. 1026.9 ⭐/天 (共146681⭐)  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .claude directory.
+     https://github.com/mattpocock/skills
+ 5.  929.1 ⭐/天 (共77009⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+
+=== 真实近期增长 ===
+  首次运行该 query，已建立基线快照。下次运行即可看到真实涨星对比。
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\skill\20260626_072244.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260626_152248.json
+
+>>>>> query: claude skill
+
+=== 星最多的 skill（query: claude skill） ===
+
+ 1. 221867 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 182437 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3. 146681 ⭐  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .claude directory.
+     https://github.com/mattpocock/skills
+ 4.  96613 ⭐  nextlevelbuilder/ui-ux-pro-max-skill [Python]
+     An AI SKILL that provide design intelligence for building professional UI/UX multiple plat…
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 5.  77009 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1393.0 ⭐/天 (共221867⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 1215.1 ⭐/天 (共182437⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3. 1206.6 ⭐/天 (共71336⭐)  nexu-io/open-design [TypeScript]
+     🎨 Local-first, open-source Claude Design alternative. 🖥️ Native desktop app. ⚡ 259+ Skills…
+     https://github.com/nexu-io/open-design
+ 4. 1026.9 ⭐/天 (共146681⭐)  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .claude directory.
+     https://github.com/mattpocock/skills
+ 5.  929.1 ⭐/天 (共77009⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+
+=== 真实近期增长 ===
+  首次运行该 query，已建立基线快照。下次运行即可看到真实涨星对比。
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\claude_skill\20260626_072248.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260626_152251.json
+
+>>>>> query: topic:mcp
+
+=== 星最多的 skill（query: topic:mcp） ===
+
+ 1. 221867 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 194103 ⭐  n8n-io/n8n [TypeScript]
+     Fair-code workflow automation platform with native AI capabilities. Combine visual buildin…
+     https://github.com/n8n-io/n8n
+ 3. 156627 ⭐  Snailclimb/JavaGuide [JavaScript]
+     Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+     https://github.com/Snailclimb/JavaGuide
+ 4. 146616 ⭐  langgenius/dify [TypeScript]
+     Production-ready platform for agentic workflow development.
+     https://github.com/langgenius/dify
+ 5. 143047 ⭐  open-webui/open-webui [Python]
+     User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
+     https://github.com/open-webui/open-webui
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1393.0 ⭐/天 (共221867⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2.  685.7 ⭐/天 (共56408⭐)  MemPalace/mempalace [Python]
+     The best-benchmarked open-source AI memory system. And it's free.
+     https://github.com/MemPalace/mempalace
+ 3.  365.7 ⭐/天 (共36403⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 4.  340.3 ⭐/天 (共41596⭐)  Panniantong/Agent-Reach [Python]
+     Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube…
+     https://github.com/Panniantong/Agent-Reach
+ 5.  302.8 ⭐/天 (共51311⭐)  headroomlabs-ai/headroom [Python]
+     Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer…
+     https://github.com/headroomlabs-ai/headroom
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.0 天前的快照）
+
+ 1. +   23 ⭐ (+528.1/天)  affaan-m/ECC [JavaScript]  共221867⭐
+     https://github.com/affaan-m/ECC
+ 2. +   10 ⭐ (+229.6/天)  rohitg00/ai-engineering-from-scratch [Python]  共36403⭐
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 3. +    8 ⭐ (+183.7/天)  n8n-io/n8n [TypeScript]  共194103⭐
+     https://github.com/n8n-io/n8n
+ 4. +    3 ⭐ (+68.9/天)  MemPalace/mempalace [Python]  共56408⭐
+     https://github.com/MemPalace/mempalace
+ 5. +    1 ⭐ (+23.0/天)  Snailclimb/JavaGuide [JavaScript]  共156627⭐
+     https://github.com/Snailclimb/JavaGuide
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\topic_mcp\20260626_072251.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260626_152254.json
+
+>>>>> query: agent skill
+
+=== 星最多的 skill（query: agent skill） ===
+
+ 1. 238949 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 221867 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 155332 ⭐  anthropics/skills [Python]
+     Public repository for Agent Skills
+     https://github.com/anthropics/skills
+ 4.  74794 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+ 5.  66871 ⭐  addyosmani/agent-skills [Shell]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1393.0 ⭐/天 (共221867⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2.  512.6 ⭐/天 (共66871⭐)  addyosmani/agent-skills [Shell]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 3.  404.8 ⭐/天 (共51169⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 4.  304.9 ⭐/天 (共46788⭐)  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+ 5.  298.3 ⭐/天 (共19014⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+
+=== 真实近期增长 ===
+  首次运行该 query，已建立基线快照。下次运行即可看到真实涨星对比。
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\agent_skill\20260626_072254.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260626_152257.json

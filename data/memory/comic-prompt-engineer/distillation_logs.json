@@ -1940,5 +1940,52 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 22218,
     "error": null
+  },
+  {
+    "logId": "dist_b24c51b6affa",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-15T19:00:23.517672Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "mem_40e745ae2346",
+        "mergeIntoId": "mem_19876ddf2cb1",
+        "newContent": "用户要求为特定剧本镜头编写 Seedance 2.0 提示词，并强调必须按既定规范输出。采用三层结构（全局头部 → 逐镜头时间码 → 三件套文件），详细拆解角色设定、镜头运动、光影音效及具体的 Image/Motion Prompt 和 JSON 脚本。结果成功提供了高度结构化、专业且可直接用于生产的视频提示词方案。",
+        "newImportance": null,
+        "reason": "两条经验记忆描述的是完全相同的任务场景、操作行为和结果，属于高度重复。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "v3_epi_08_water_dragon_prompt",
+        "mergeIntoId": "v3_epi_04_xianxia_three_phase",
+        "newContent": "仙侠/动漫战斗场景节奏优化：避免平铺直叙，采用三段式节奏：蓄力(2-3s慢速特写+环境压力/如水龙汇聚) → 爆发(3-5s关键一击+粒子特效+快切/如雷电降落) → 余韵(2-3s粒子沉降+角色定格/如冲击波扩散)。必须指定具体特效类型（法阵/能量波/水花四溅）并配合独立运镜（低角度仰拍→跟随拍→远景定格），视觉冲击力大幅提升。",
+        "newImportance": null,
+        "reason": "两条记忆分别从仙侠和鬼灭风验证了相同的“三段式战斗节奏”规律，合并可形成更通用的战斗提示词模式。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "v3_epi_05_camera_action_separate",
+        "mergeIntoId": "v3_sem_04_camera_separate",
+        "newContent": "镜头运动和角色动作必须分开描述。错误示例：「镜头环绕旋转,女子翩翩起舞」→ 正确示例：「一位女子缓慢旋转舞动,双臂上扬。镜头以稳定弧线环绕她(orbit)」。每镜只写一个运镜动作,中英双写。运镜术语：dolly/pan/tracking/orbit/handheld/fixed/crane/push in/pull out/tilt/whip pan。实战证明分开描述可彻底解决模型无法分辨运动主体的问题。",
+        "newImportance": null,
+        "reason": "语义记忆v3_sem_04提供了规则，经验记忆v3_epi_05提供了该规则的实战验证，合并可将理论与实践闭环。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 12,
+      "procedural": 9
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 12,
+      "procedural_count": 9
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15421,
+    "error": null
   }
 ]

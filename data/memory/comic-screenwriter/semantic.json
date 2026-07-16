@@ -9,7 +9,7 @@
     "accessCount": 1,
     "createdAt": "2026-06-30T23:30:00Z",
     "lastAccessed": "2026-07-09T08:03:37.569508Z",
-    "updatedAt": "2026-07-13T19:00:35.809412Z"
+    "updatedAt": "2026-07-15T19:00:38.238737Z"
   },
   {
     "memoryId": "jiulu_gaoran_pivot_20260709_comic-screenwriter_s1_arc",
@@ -22,18 +22,6 @@
     "createdAt": "2026-07-09T08:02:22.751615Z",
     "lastAccessed": "2026-07-09T08:03:37.569508Z",
     "updatedAt": "2026-07-10T03:12:20.944180Z"
-  },
-  {
-    "memoryId": "mem_d04b5bff767e",
-    "employeeKey": "comic-screenwriter",
-    "content": "场景剪辑原则：进晚出早（从冲突开始进入，高潮刚过即切走）。每个场景必须包含冲突（目标冲突、信息不对称或内心挣扎），无冲突则无场景。",
-    "category": "knowledge",
-    "importance": 0.99,
-    "sourceSession": "",
-    "accessCount": 1,
-    "createdAt": "2026-06-23T12:25:54.769004Z",
-    "lastAccessed": "2026-07-09T08:03:37.569508Z",
-    "updatedAt": "2026-07-10T03:46:06.502707Z"
   },
   {
     "memoryId": "mem_166151e53e55",
@@ -62,14 +50,14 @@
   {
     "memoryId": "seed_comic-screenwriter_sem_08_cause_chain",
     "employeeKey": "comic-screenwriter",
-    "content": "镜头/场景之间必须是“因为 A 所以 B 但是 C”的因果链，而不是简单的“然后 A 然后 B”，确保叙事逻辑的强驱动性。",
+    "content": "叙事驱动与剪辑原则：1. 镜头/场景之间必须是“因为 A 所以 B 但是 C”的因果链，确保强驱动性；2. 场景剪辑遵循“进晚出早”（从冲突开始进入，高潮刚过即切走）；3. 每个场景必须包含冲突（目标冲突、信息不对称或内心挣扎），无冲突则无场景。",
     "category": "quality",
     "importance": 0.98,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
     "accessCount": 1,
     "createdAt": "2026-06-25T03:06:39.067620Z",
     "lastAccessed": "2026-07-09T08:03:37.569508Z",
-    "updatedAt": "2026-07-01T03:02:00.162463Z"
+    "updatedAt": "2026-07-15T19:00:38.242738Z"
   },
   {
     "memoryId": "v3_comic-screenwriter_sem_10_xianxia_rhythm",

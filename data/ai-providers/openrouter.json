@@ -1,0 +1,23 @@
+{
+  "name": "openrouter",
+  "endpoint": "https://openrouter.ai/api/v1",
+  "apiKey": "${OPENROUTER_API_KEY}",
+  "enabled": true,
+  "models": [
+    {
+      "modelName": "OpenRouter Auto",
+      "modelId": "openrouter/auto",
+      "timeoutMinutes": 20
+    },
+    {
+      "modelName": "OpenRouter Free",
+      "modelId": "openrouter/free",
+      "timeoutMinutes": 20
+    },
+    {
+      "modelName": "Test Free",
+      "modelId": "tencent/hy3:free",
+      "timeoutMinutes": 20
+    }
+  ]
+}

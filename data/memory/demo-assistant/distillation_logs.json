@@ -1292,5 +1292,34 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 8046,
     "error": null
+  },
+  {
+    "logId": "dist_eb45a3aaec63",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-15T19:00:21.541796Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 的具体案例已完全被语义记忆 mem_3dbb51e63cbe 概括并内化为通用偏好，将其合并以消除冗余。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 7812,
+    "error": null
   }
 ]

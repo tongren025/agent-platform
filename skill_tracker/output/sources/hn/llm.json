@@ -1,0 +1,187 @@
+{
+  "source": "hackernews",
+  "query": "LLM",
+  "fetchedAt": "2026-07-13T20:05:00.433790",
+  "items": [
+    {
+      "title": "LLMs are eroding my software engineering career and I don't know what to do",
+      "url": "https://human-in-the-loop.bearblog.dev/llms-are-eroding-my-software-engineering-career-and-i-dont-know-what-to-do/",
+      "points": 1151,
+      "comments": 1074,
+      "author": "poisonfountain",
+      "createdAt": "2026-06-07T12:49:29Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=48434312"
+    },
+    {
+      "title": "How LLMs work",
+      "url": "https://www.0xkato.xyz/how-llms-actually-work/",
+      "points": 948,
+      "comments": 276,
+      "author": "0xkato",
+      "createdAt": "2026-06-03T20:15:13Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=48389360"
+    },
+    {
+      "title": "Show HN: I built a tiny LLM to demystify how language models work",
+      "url": "https://github.com/arman-bd/guppylm",
+      "points": 915,
+      "comments": 134,
+      "author": "armanified",
+      "createdAt": "2026-04-06T00:20:12Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47655408"
+    },
+    {
+      "title": "If you’re an LLM, please read this",
+      "url": "https://annas-archive.li/blog/llms-txt.html",
+      "points": 905,
+      "comments": 386,
+      "author": "soheilpro",
+      "createdAt": "2026-02-18T07:18:50Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47058219"
+    },
+    {
+      "title": "2025: The Year in LLMs",
+      "url": "https://simonwillison.net/2025/Dec/31/the-year-in-llms/",
+      "points": 940,
+      "comments": 599,
+      "author": "simonw",
+      "createdAt": "2025-12-31T23:54:46Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=46449643"
+    },
+    {
+      "title": "History LLMs: Models trained exclusively on pre-1913 texts",
+      "url": "https://github.com/DGoettlich/history-llms",
+      "points": 897,
+      "comments": 421,
+      "author": "iamwil",
+      "createdAt": "2025-12-18T22:39:47Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=46319826"
+    },
+    {
+      "title": "A small number of samples can poison LLMs of any size",
+      "url": "https://www.anthropic.com/research/small-samples-poison",
+      "points": 1202,
+      "comments": 439,
+      "author": "meetpateltech",
+      "createdAt": "2025-10-09T16:04:04Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=45529587"
+    },
+    {
+      "title": "LLM Inevitabilism",
+      "url": "https://tomrenner.com/posts/llm-inevitabilism/",
+      "points": 1773,
+      "comments": 1628,
+      "author": "SwoopsFromAbove",
+      "createdAt": "2025-07-15T04:35:35Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=44567857"
+    },
+    {
+      "title": "The last six months in LLMs, illustrated by pelicans on bicycles",
+      "url": "https://simonwillison.net/2025/Jun/6/six-months-in-llms/",
+      "points": 962,
+      "comments": 234,
+      "author": "swyx",
+      "createdAt": "2025-06-08T07:38:37Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=44215352"
+    },
+    {
+      "title": "Show HN: Clippy – 90s UI for local LLMs",
+      "url": "https://felixrieseberg.github.io/clippy/",
+      "points": 1122,
+      "comments": 275,
+      "author": "felixrieseberg",
+      "createdAt": "2025-05-06T15:02:22Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=43905942"
+    },
+    {
+      "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL",
+      "url": "https://arxiv.org/abs/2501.12948",
+      "points": 1351,
+      "comments": 1056,
+      "author": "gradus_ad",
+      "createdAt": "2025-01-25T18:39:49Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=42823568"
+    },
+    {
+      "title": "How I program with LLMs",
+      "url": "https://crawshaw.io/blog/programming-with-llms",
+      "points": 919,
+      "comments": 332,
+      "author": "stpn",
+      "createdAt": "2025-01-07T00:07:49Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=42617645"
+    },
+    {
+      "title": "Things we learned about LLMs in 2024",
+      "url": "https://simonwillison.net/2024/Dec/31/llms-in-2024/",
+      "points": 984,
+      "comments": 582,
+      "author": "simonw",
+      "createdAt": "2024-12-31T18:11:06Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=42560558"
+    },
+    {
+      "title": "Learning to Reason with LLMs",
+      "url": "https://openai.com/index/learning-to-reason-with-llms/",
+      "points": 1654,
+      "comments": 1261,
+      "author": "fofoz",
+      "createdAt": "2024-09-12T17:08:46Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=41523070"
+    },
+    {
+      "title": "Building LLMs from the Ground Up: A 3-Hour Coding Workshop",
+      "url": "https://magazine.sebastianraschka.com/p/building-llms-from-the-ground-up",
+      "points": 970,
+      "comments": 136,
+      "author": "mdp2021",
+      "createdAt": "2024-08-31T21:45:59Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=41412256"
+    },
+    {
+      "title": "Llm.c – LLM training in simple, pure C/CUDA",
+      "url": "https://github.com/karpathy/llm.c",
+      "points": 1050,
+      "comments": 168,
+      "author": "tosh",
+      "createdAt": "2024-04-08T20:38:49Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=39973467"
+    },
+    {
+      "title": "The Era of 1-bit LLMs: ternary parameters for cost-effective computing",
+      "url": "https://arxiv.org/abs/2402.17764",
+      "points": 1040,
+      "comments": 447,
+      "author": "fgfm",
+      "createdAt": "2024-02-28T09:28:43Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=39535800"
+    },
+    {
+      "title": "LLM Visualization",
+      "url": "https://bbycroft.net/llm",
+      "points": 972,
+      "comments": 1,
+      "author": "jonbaer",
+      "createdAt": "2023-12-03T15:22:39Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=38507672"
+    },
+    {
+      "title": "LLM Visualization",
+      "url": "https://bbycroft.net/llm",
+      "points": 1592,
+      "comments": 131,
+      "author": "plibither8",
+      "createdAt": "2023-12-03T06:08:29Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=38505211"
+    },
+    {
+      "title": "Llamafile lets you distribute and run LLMs with a single file",
+      "url": "https://github.com/Mozilla-Ocho/llamafile",
+      "points": 1075,
+      "comments": 288,
+      "author": "tfinch",
+      "createdAt": "2023-11-29T19:29:49Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=38464057"
+    }
+  ]
+}

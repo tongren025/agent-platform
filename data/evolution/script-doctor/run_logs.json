@@ -288,5 +288,15 @@
     "llmModel": "",
     "durationMs": 16,
     "error": null
+  },
+  {
+    "logId": "evo_0c70e8d4fe43",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-15T20:00:30.025537Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
   }
 ]

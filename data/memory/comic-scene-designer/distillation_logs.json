@@ -1862,5 +1862,43 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 13406,
     "error": null
+  },
+  {
+    "logId": "dist_1d28f3fa0a4a",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-15T19:00:22.521520Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-scene-designer_sem_06_scene_action_map",
+        "mergeIntoId": "seed_comic-scene-designer_proc_01",
+        "newContent": "每张场景提示词必须包含：固定场景ID、平面方向、镜头方向、角色运动区（起点/终点）、关键地标、遮挡物、危险物、光源方向/色温及氛围元素。正片场景图严禁出现宫格、分格线、黑底多面板、描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印。场景元素必须与动作发生关系（可踩、可撞、可遮挡、可反光、可制造粒子或转场），严禁纯装饰性背景。通过生成场景母版确保10个核心场景的高复用率与风格一致性。",
+        "newImportance": null,
+        "reason": "语义记忆中的场景输出标准与行为记忆中的提示词规则高度重合，且行为记忆包含更强的执行逻辑，将标准合并入流程以提高指令一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
+        "mergeIntoId": "seed_comic-scene-designer_epi_01",
+        "newContent": "观察到战斗镜头场景方向混乱且场景复用率低。行动：1. 先画主场景行动图，指定角色位置和镜头方向；2. 锁定核心场景母版（如scene02:30米深竖井+碎片蓝光+裂缝金绿光丝+幽暗冷调），确保EP内所有镜头复用。结果：动作轨迹连贯，无空间跳变，风格高度统一。",
+        "newImportance": null,
+        "reason": "两条经验记忆均指向‘通过预设场景/路径解决空间一致性’，合并后可形成更完整的‘母版+路径’解决方案。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 8,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 2,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 12875,
+    "error": null
   }
 ]

@@ -45,6 +45,7 @@
 | [ai_providers.py](../app/api/ai_providers.py) | AI Provider 管理 API。 |
 | [canvas.py](../app/api/canvas.py) | 自由画布 API —— 画布 CRUD + 文生图 + 素材上传。 |
 | [common.py](../app/api/common.py) | API 层公共工具函数——消除各 router 文件中的重复定义。 |
+| [director.py](../app/api/director.py) | 导演 Agent API：把剧本、图片、视频与成片收束为一条可执行主线。 |
 | [evolution.py](../app/api/evolution.py) | 自我进化系统 API。 |
 | [knowledge_graph.py](../app/api/knowledge_graph.py) | 知识图谱 API —— 聚合所有实体及关系，供前端可视化。 |
 | [memory_api.py](../app/api/memory_api.py) | 长期记忆管理 API。 |
@@ -140,6 +141,7 @@
 | [memory.py](../app/services/memory.py) | 会话（短期记忆）文件存储。 |
 | [memory_db.py](../app/services/memory_db.py) | 对话会话的 PostgreSQL 仓储 —— M1 迁移，接口镜像 JSON 版 ConversationMemoryStore。 |
 | [memory_extractor.py](../app/services/memory_extractor.py) | 后台记忆提取器。 |
+| [openrouter_media.py](../app/services/openrouter_media.py) | OpenRouter 图片/视频生成与本地成片合成服务。 |
 | [production_quality.py](../app/services/production_quality.py) | 漫剧生产提示词的静态质量门禁。 |
 | [registry.py](../app/services/registry.py) | 通用文件型注册表（Registry）。 |
 | [run_store.py](../app/services/run_store.py) | agent 运行记录存储 —— 每次 run 一份 JSON，供事后审计成本与行为。 |
@@ -241,6 +243,7 @@
 | [AutoLearn.tsx](../web/src/pages/AutoLearn.tsx) | 提示词采集页：采集源 CRUD、手动触发、已采提示词与历史查看。 |
 | [Canvas.tsx](../web/src/pages/Canvas.tsx) | 自由画布 —— 数据的可视化生成台。 |
 | [Dashboard.tsx](../web/src/pages/Dashboard.tsx) | 总览页：以“继续制作、当前阻塞、下一步行动”为核心，而非罗列系统资源数量。 |
+| [DirectorStudio.tsx](../web/src/pages/DirectorStudio.tsx) | 导演 Agent 主页面：创意建项、七步进度、OpenRouter 媒体生成、镜头审片与成片预览。 |
 | [Employees.tsx](../web/src/pages/Employees.tsx) | 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、知识库上传。 |
 | [EpisodeDetail.tsx](../web/src/pages/EpisodeDetail.tsx) | 单集详情页：该集全部 G 生成单元卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。 |
 | [Evolution.tsx](../web/src/pages/Evolution.tsx) | 自我进化页：查看/采纳/拒绝 LLM 分析会话后产出的改进洞察。 |

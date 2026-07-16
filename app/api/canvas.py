@@ -10,12 +10,10 @@
 """
 from __future__ import annotations
 
-import base64
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-import httpx
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
 
@@ -23,6 +21,7 @@ from app.api.common import ok, validate_key
 from app.config import BASE_DIR
 from app.core.logging import get_logger
 from app.dependencies import ai_service
+from app.services.image_generation import generate_image_to_local
 from app.models.conversation import AgentRunRequest
 from app.models.production import STAGES, STAGE_INSTRUCTIONS
 from app.services.invocation import run_invocation
@@ -202,13 +201,6 @@ class GenerateReq(BaseModel):
     size: str = "1024x1024"
 
 
-def _save_image_bytes(content: bytes, ext: str = ".png") -> str:
-    """图片字节落盘到 uploads/canvas,返回可直出的静态 URL。"""
-    filename = f"img_{uuid.uuid4().hex[:10]}{ext}"
-    (UPLOAD_DIR / filename).write_bytes(content)
-    return f"/uploads/canvas/{filename}"
-
-
 @router.post("/canvases/{cid}/generate")
 def generate_image(cid: str, req: GenerateReq):
     """文生图:调 OpenAI 兼容 images 接口,图片落地本地后返回 URL。
@@ -220,46 +212,13 @@ def generate_image(cid: str, req: GenerateReq):
         raise HTTPException(400, "提示词不能为空")
 
     try:
-        client, model_id = ai_service.get_client(req.model)
+        result = generate_image_to_local(req.prompt, req.model, req.size)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(400, f"未找到模型 {req.model}: {exc}")
-
-    try:
-        resp = client.images.generate(
-            model=model_id,
-            prompt=req.prompt,
-            size=req.size,
-            n=1,
-            timeout=120,
-        )
-    except Exception as exc:
-        logger.warning("生图失败 model=%s: %s", model_id, exc)
+        logger.warning("生图失败 model=%s: %s", req.model, exc)
         raise HTTPException(502, f"生图失败: {exc}")
-
-    datum = resp.data[0] if resp.data else None
-    if datum is None:
-        raise HTTPException(502, "生图接口未返回图片")
-
-    if getattr(datum, "b64_json", None):
-        content = base64.b64decode(datum.b64_json)
-        url = _save_image_bytes(content)
-    elif getattr(datum, "url", None):
-        try:
-            r = httpx.get(datum.url, timeout=60, follow_redirects=True)
-            r.raise_for_status()
-        except Exception as exc:
-            raise HTTPException(502, f"下载生成图片失败: {exc}")
-        ext = ".png"
-        ctype = r.headers.get("content-type", "")
-        if "jpeg" in ctype or "jpg" in ctype:
-            ext = ".jpg"
-        elif "webp" in ctype:
-            ext = ".webp"
-        url = _save_image_bytes(r.content, ext)
-    else:
-        raise HTTPException(502, "生图接口返回了未知格式(无 b64_json 也无 url)")
-
-    return ok({"url": url, "model": model_id})
+    return ok(result)
 
 
 # ── 素材上传 ──────────────────────────────────────────────────────

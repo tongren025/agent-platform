@@ -205,3 +205,113 @@ def test_project_runtime_constraints_are_injected_into_generation_prompt(prod_en
     prompt = captured["prompts"][-1]
     assert "单集目标时长 42 秒" in prompt
     assert "画幅 16:9" in prompt
+
+
+def test_gc_generation_inherits_locked_art_bible(prod_env):
+    """GC 生成必须注入正片项目的设定/设计母版，不能只写“沿用 Art Bible”却没有上下文。"""
+    client, captured = prod_env
+    bible_pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={"name": "九陆正片", "source_content": "正片素材"},
+    ).json()["data"]["project_id"]
+    client.post(
+        f"/api/v1/agentapp/production/projects/{bible_pid}/cards",
+        json={"stage": "design", "title": "苍霖母版", "content": "左脸旧疤、深青巨龙",
+              "images": ["/locked/canglin.png"]},
+    )
+    gc_pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={"name": "九陆GC", "source_type": "gc", "source_content": "制作30秒GC"},
+    ).json()["data"]["project_id"]
+    client.put(
+        f"/api/v1/agentapp/production/projects/{gc_pid}",
+        json={"settings": {"art_bible_project_id": bible_pid}},
+    )
+
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{gc_pid}/generate",
+        json={"target_stage": "storyboard", "employee_key": "e1"},
+    )
+    assert response.status_code == 200
+    prompt = captured["prompts"][-1]
+    assert "已锁定 Art Bible" in prompt
+    assert "苍霖母版" in prompt
+    assert "左脸旧疤、深青巨龙" in prompt
+    assert "/locked/canglin.png" in prompt
+
+
+def test_shot_scoped_replace_only_touches_current_unit(prod_env):
+    """镜头级返工只替换指定 G 的同阶段卡片，并把新卡固定回该 G。"""
+    client, captured = prod_env
+    pid = _create_project_with_cards(client)
+    r = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "script", "episode": 1, "shot_number": 1,
+              "mode": "replace", "employee_key": "e1"},
+    )
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert data["replaced"] == 1
+    assert data["shot_number"] == 1
+    assert all(card["shot_number"] == 1 for card in data["cards"])
+    cards = _cards(client, pid)
+    assert any(card["title"] == "EP1剧本B" for card in cards)
+    assert "只返工 G1" in captured["prompts"][-1]
+
+
+def test_card_edit_updates_negative_prompt_and_immediate_image_versions(prod_env, monkeypatch):
+    """单卡编辑可保存负向词；立即生图追加版本而不覆盖旧图，并记录当前版本。"""
+    client, _ = prod_env
+    pid = _create_project_with_cards(client)
+    created = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards",
+        json={"stage": "img_prompt", "title": "G1 首帧", "content": "正文",
+              "episode": 1, "shot_number": 1, "prompts": ["用户主提示词"],
+              },
+    ).json()["data"]
+    card_id = created["card_id"]
+    edited = client.put(
+        f"/api/v1/agentapp/production/cards/{card_id}",
+        json={"negative_prompts": ["不要水印"], "images": ["/uploads/canvas/old.png"]},
+    ).json()["data"]
+    assert edited["negative_prompts"] == ["不要水印"]
+
+    import app.api.production as prod
+    monkeypatch.setattr(prod, "generate_image_to_local", lambda prompt, model, size: {
+        "url": "/uploads/canvas/new.png", "model": "image-model",
+    })
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}/generate-image",
+        json={"model": "image-model"},
+    )
+    assert response.status_code == 200
+    card = response.json()["data"]["card"]
+    assert card["images"] == ["/uploads/canvas/old.png", "/uploads/canvas/new.png"]
+    assert card["metadata"]["active_image"] == "/uploads/canvas/new.png"
+    assert card["metadata"]["last_image_prompt"] == "用户主提示词"
+
+
+def test_split_legacy_storyboard_into_one_card_per_subshot(prod_env):
+    """历史 G 大分镜可无损拆成逐镜卡，供每镜单独生成故事板图。"""
+    client, _ = prod_env
+    pid = _create_project_with_cards(client)
+    content = (
+        "G1 大分镜\n"
+        "### 镜头1｜2s\n画面内容：角色抬头\n角色动作：睁眼\n"
+        "### 镜头2｜3s\n画面内容：角色起身\n角色动作：右手撑地\n"
+    )
+    source = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards",
+        json={"stage": "storyboard", "title": "G1 分镜", "content": content,
+              "episode": 1, "shot_number": 1},
+    ).json()["data"]
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{source['card_id']}/split-storyboard",
+    )
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert data["split"] == 2
+    assert [card["metadata"]["subshot"] for card in data["cards"]] == ["G1-S1", "G1-S2"]
+    assert all(card["shot_number"] == 1 for card in data["cards"])
+    cards = _cards(client, pid)
+    assert not any(card["card_id"] == source["card_id"] for card in cards)

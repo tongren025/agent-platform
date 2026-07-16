@@ -28,6 +28,10 @@ import {
   CloudSyncOutlined,
   LogoutOutlined,
   ApiOutlined,
+  PlaySquareOutlined,
+  ControlOutlined,
+  DownOutlined,
+  UpOutlined,
 } from '@ant-design/icons';
 import { COLORS } from '../theme';
 import { hasPerm, userAuth } from '../userAuth';
@@ -38,26 +42,37 @@ type NavSection = { title?: string; items: NavItem[] };
 
 const navSections: NavSection[] = [
   {
-    title: '创作',
+    title: '工作室',
     items: [
-      { key: '/dashboard', icon: <DashboardOutlined />, label: '总览' },
-      { key: '/production', icon: <VideoCameraOutlined />, label: '制作看板', perm: 'production:manage' },
-      { key: '/production/matrix', icon: <TableOutlined />, label: '全链路对照', perm: 'production:manage' },
-      { key: '/canvas', icon: <ExpandOutlined />, label: '自由画布', perm: 'production:manage' },
-      { key: '/workbench', icon: <MessageOutlined />, label: '数字员工工作台', perm: 'workbench:use' },
+      { key: '/studio', icon: <PlaySquareOutlined />, label: '导演 Agent', perm: 'production:manage' },
+      { key: '/production', icon: <VideoCameraOutlined />, label: '制作项目', perm: 'production:manage' },
+      { key: '/canvas', icon: <ExpandOutlined />, label: '素材画布', perm: 'production:manage' },
     ],
   },
   {
-    title: '资产',
+    title: '管理',
     items: [
       { key: '/employees', icon: <TeamOutlined />, label: '数字员工', perm: 'employee:manage' },
+      { key: '/models', icon: <ApiOutlined />, label: '模型市场', perm: 'settings:manage' },
+      { key: '/settings', icon: <SettingOutlined />, label: '设置', perm: 'settings:manage' },
+    ],
+  },
+];
+
+const advancedNavSections: NavSection[] = [
+  {
+    title: '高级创作',
+    items: [
+      { key: '/dashboard', icon: <DashboardOutlined />, label: '运营总览' },
+      { key: '/production/matrix', icon: <TableOutlined />, label: '链路诊断', perm: 'production:manage' },
+      { key: '/workbench', icon: <MessageOutlined />, label: '专家工作台', perm: 'workbench:use' },
       { key: '/templates', icon: <AppstoreOutlined />, label: '角色模板', perm: 'employee:manage' },
       { key: '/knowledge-graph', icon: <ShareAltOutlined />, label: '知识图谱', perm: 'employee:manage' },
       { key: '/memory', icon: <BulbOutlined />, label: '记忆库', perm: 'employee:manage' },
     ],
   },
   {
-    title: '自动化',
+    title: '高级自动化',
     items: [
       { key: '/teams', icon: <ApartmentOutlined />, label: '团队编排', perm: 'team:manage' },
       { key: '/workflows', icon: <PartitionOutlined />, label: '工作流', perm: 'workflow:manage' },
@@ -70,11 +85,9 @@ const navSections: NavSection[] = [
     ],
   },
   {
-    title: '系统',
+    title: '高级系统',
     items: [
       { key: '/tools', icon: <ToolOutlined />, label: '工具 & MCP', perm: 'tool:manage' },
-      { key: '/models', icon: <ApiOutlined />, label: '模型市场', perm: 'settings:manage' },
-      { key: '/settings', icon: <SettingOutlined />, label: '设置', perm: 'settings:manage' },
     ],
   },
 ];
@@ -84,9 +97,10 @@ export default function Layout() {
   const [isNarrow, setIsNarrow] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [advancedVisible, setAdvancedVisible] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const pageIsWorkspace = location.pathname === '/workbench' || location.pathname === '/production' || location.pathname === '/canvas';
+  const pageIsWorkspace = location.pathname === '/studio' || location.pathname === '/workbench' || location.pathname === '/production' || location.pathname === '/canvas';
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 900px)');
@@ -103,7 +117,7 @@ export default function Layout() {
   const siderWidth = navCollapsed ? 64 : 240;
 
   // 按当前用户权限过滤导航;整段为空的分组连标题一起隐藏
-  const visibleSections = navSections
+  const visibleSections = [...navSections, ...(advancedVisible ? advancedNavSections : [])]
     .map((s) => ({ ...s, items: s.items.filter((it) => !it.perm || hasPerm(it.perm)) }))
     .filter((s) => s.items.length > 0);
   const currentNavKey = visibleSections.flatMap(s => s.items).map(i => i.key)
@@ -280,6 +294,23 @@ export default function Layout() {
             </div>
           ))}
         </div>
+
+        <button
+          type="button"
+          aria-expanded={advancedVisible}
+          onClick={() => setAdvancedVisible(value => !value)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 10,
+            justifyContent: navCollapsed ? 'center' : 'flex-start',
+            padding: navCollapsed ? '11px 0' : '11px 24px',
+            cursor: 'pointer', color: 'rgba(255,255,255,0.45)', fontSize: 13,
+            border: 0, borderTop: '1px solid rgba(255,255,255,0.06)',
+            width: '100%', background: 'transparent', fontFamily: 'inherit',
+          }}
+        >
+          <ControlOutlined />
+          {!navCollapsed && <><span style={{ flex: 1, textAlign: 'left' }}>高级功能</span>{advancedVisible ? <UpOutlined /> : <DownOutlined />}</>}
+        </button>
 
         {/* Logout */}
         <button

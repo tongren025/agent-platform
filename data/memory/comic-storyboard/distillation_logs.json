@@ -193,5 +193,52 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 22766,
     "error": null
+  },
+  {
+    "logId": "dist_2a4d4986e139",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-15T19:00:20.301658Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-storyboard",
+        "mergeIntoId": "jiulu_s1_gaoran_complete_20260709_comic-storyboard",
+        "newContent": "【九陆纪元·第一季全集创作经验】为《九陆纪元》创作了全季24集(每集90s)高燃分镜。核心执行逻辑：1.开篇采用'九陆巡礼'群像立世界观(世界树九缕光丝→逐陆招牌奇观→八缕熄灭俯冲坠废墟)；2.主角苍霖设定为开局强者(懒散欠揍/世界树钥匙/反天选1秒闪回)；3.结构采用三幕式(立威1-8/结盟与真相9-18/季终19-24)，每集配置'大场面set-piece + 反转 + 钩子'；4.视觉锁死招牌母题(如烬龙陆熔浆龙焰禁赛博)；5.执行1秒剪辑/FLF/retake，共计794卡spec通过质检。",
+        "newImportance": null,
+        "reason": "EP1的创作经验是全季(S1)创作经验的子集，合并后可形成更完整的项目执行链路。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-storyboard_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "通用理论性知识，在具体项目执行中优先级低于具体的'铁律'和'准则'。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-storyboard_composition_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.4,
+        "reason": "通用理论性知识，在具体项目执行中优先级低于具体的'铁律'和'准则'。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 4,
+      "procedural": 4
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 4,
+      "procedural_count": 4
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 15937,
+    "error": null
   }
 ]

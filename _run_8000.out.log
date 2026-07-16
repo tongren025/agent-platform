@@ -1,0 +1,1812 @@
+INFO:     Started server process [6200]
+INFO:     Waiting for application startup.
+ÿ�ղɼ�������������
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-07-13T16:16:18.103840Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/healthcheck request_id=a4f91dffc74c42d9b09aa3e9509c97ca status=200
+2026-07-13T16:16:18.142842Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.0 method=GET path=/healthcheck request_id=0a636527181649b2b6e5e02059c1928c status=200
+2026-07-13T16:16:18.337930Z [info     ] request                        client=127.0.0.1 elapsed_ms=73.4 method=GET path=/ request_id=35534f09d47640d7a4dbc8b47bd22b8d status=200
+2026-07-13T16:16:23.249583Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/ request_id=cd6f3cbe240b4af0b9fea82daac4a041 status=200
+2026-07-13T16:16:23.256867Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/index-Cjs0J1y4.js request_id=978e4ff8fdfa45f9892e911d0a99ac22 status=200
+2026-07-13T16:16:23.280864Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/assets/index-DH1lgv_e.css request_id=7fb2ee954b77428cb2466562abe9bef6 status=200
+2026-07-13T16:16:23.992857Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.1 method=GET path=/api/v1/agentapp/auth/check request_id=bc54dda55bab48ea8b3a56ea28723012 status=401
+2026-07-13T16:16:23.993861Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/favicon.ico request_id=770c8cebbec14fe6abdab2136831d6a9 status=200
+2026-07-13T16:16:24.016855Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.3 method=GET path=/assets/TextArea-BYlZLfhb.js request_id=ded2e04012394b4c88e053a3c6097f2c status=200
+2026-07-13T16:16:24.016855Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.9 method=GET path=/assets/UserLogin-B6c07Jnp.js request_id=1075909480fa465bad1f4746ab197eeb status=200
+2026-07-13T16:16:24.017856Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.5 method=GET path=/assets/index-DcaerdNe.js request_id=db865d0cf65b4dd9a6fa8a9c214aa55a status=200
+2026-07-13T16:16:24.053855Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.5 method=GET path=/assets/useVariants-B_DfNHOx.js request_id=899a05406c304067b056c05a2c70534f status=200
+2026-07-13T16:16:24.072859Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/assets/Input-DpDiXcJo.js request_id=58c05d3c75a14c64adbc357a62afe10a status=200
+2026-07-13T16:16:24.073857Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/assets/EyeOutlined-CDvvHKvd.js request_id=4d9940a7a61648e3b47609e2b8a93119 status=200
+2026-07-13T16:16:24.079858Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/assets/SearchOutlined-BaAUilXr.js request_id=393b8669f45e4e6f97a9d58f067bf881 status=200
+2026-07-13T16:16:24.101858Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/UserOutlined-BuFhv-jy.js request_id=fe0fd3a5bcef48a08788659461a4c85c status=200
+2026-07-13T16:16:24.114858Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/favicon.ico request_id=77266b80896c47b981e14e7d90b4ee18 status=200
+2026-07-13T16:16:24.114858Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.8 method=GET path=/assets/LockOutlined-CCVcHLqq.js request_id=299a340d085e4f6bb96af34494afd81b status=200
+2026-07-13T16:16:32.147561Z [info     ] request                        client=127.0.0.1 elapsed_ms=98.4 method=POST path=/api/v1/agentapp/auth/login request_id=f509180239fe49ff8185b6a5f5f46d25 status=200
+2026-07-13T16:16:32.181936Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.8 method=GET path=/api/v1/agentapp/auth/check request_id=3a16a8ffacb9489ba6d185ee8ded4bf8 status=200
+2026-07-13T16:16:32.194935Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/favicon.ico request_id=90624e70d1b74226baf1e1be3995e46e status=200
+2026-07-13T16:16:32.201384Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/api/v1/agentapp/auth/check request_id=f2ce56c0a3974181a20cdf09a7eb059b status=200
+2026-07-13T16:16:32.291108Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.9 method=GET path=/assets/Dashboard-BMQEyJSI.js request_id=55f6187883224122ab6b28944f19d3f0 status=200
+2026-07-13T16:16:32.292100Z [info     ] request                        client=127.0.0.1 elapsed_ms=25.3 method=GET path=/assets/ReloadOutlined-DZrRAJXY.js request_id=5de459cb15f14b2283a6dba256f75bc5 status=200
+2026-07-13T16:16:32.293104Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.3 method=GET path=/assets/api-DPEEF-51.js request_id=e0c809a558c74fe0aff09f027a529d05 status=200
+2026-07-13T16:16:32.326267Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.6 method=GET path=/assets/index-DGx1Kobf.js request_id=6bc33236f885473595178a841370e2a5 status=200
+2026-07-13T16:16:32.327099Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/assets/CheckOutlined-BnzVNL8L.js request_id=f81182fdbc51430fb36b815bc1fe31e2 status=200
+2026-07-13T16:16:32.336097Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/assets/index-BFTt7-yt.js request_id=fa42e684a7804254b3219be9f984d944 status=200
+2026-07-13T16:16:32.350132Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.1 method=GET path=/assets/PlusOutlined-BOLybB1j.js request_id=cfc3c8746a5249c59cd8901fe09fe8fc status=200
+2026-07-13T16:16:32.354211Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/assets/index-GBHW4yUc.js request_id=561558e22e8b4e74b01481483ef051d2 status=200
+2026-07-13T16:16:32.368219Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/assets/index-BEf6eXCT.js request_id=e543be95c4244a0bb25ccf912883e22e status=200
+2026-07-13T16:16:32.372905Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/assets/EllipsisOutlined-Bp3giGmP.js request_id=cab96ddc93004cc6baadfaa30a851a3a status=200
+2026-07-13T16:16:32.383158Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.1 method=GET path=/assets/Overflow-DlRKR7cO.js request_id=af1f15833d2247a195f142df3c71876a status=200
+2026-07-13T16:16:32.402099Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/assets/progress-BxJNoqSj.js request_id=36d4105937f949d2adcd58dbda3ce4d8 status=200
+2026-07-13T16:16:32.423099Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.9 method=GET path=/assets/ArrowRightOutlined-CN-33DhV.js request_id=bc0672d5299347c39e6620aa0eacf008 status=200
+2026-07-13T16:16:32.454099Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/assets/row-D-Tt7xg5.js request_id=8ffbcb3f37ad4c83a13bd5cab55af9ee status=200
+2026-07-13T16:16:32.455098Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.6 method=GET path=/assets/index-BIGy2wfL.js request_id=fa9407354b384c8896a10bb1ad23abc2 status=200
+2026-07-13T16:16:32.460098Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/assets/useBreakpoint-CcmNXtzf.js request_id=3f413a9dbe6d43efab1704532e35cdb1 status=200
+2026-07-13T16:16:32.479222Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/assets/useForceUpdate-CY9_I4TO.js request_id=73a1752e8e4a4211a2055a4b1fc87418 status=200
+2026-07-13T16:16:32.488175Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.8 method=GET path=/assets/index-DzRKieEp.js request_id=0c09d0e5d9ad45ed9e55bb8c36b814bc status=200
+2026-07-13T16:16:32.489557Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/assets/ExclamationCircleOutlined-eg81f8pQ.js request_id=67698d34e156437485a25b758e8a5924 status=200
+2026-07-13T16:16:32.501174Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.5 method=GET path=/assets/CheckCircleOutlined-CoRSArEm.js request_id=bdf2963efab54c62b44a8d7249ba2f2c status=200
+2026-07-13T16:16:32.524523Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/assets/index-Cw6fCy-S.js request_id=c5579b4d765643689a8dc51fb4ff98a0 status=200
+2026-07-13T16:16:32.536206Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/favicon.ico request_id=f12dbf9ac9b948779a3bdcab45576499 status=200
+2026-07-13T16:16:32.886282Z [info     ] request                        client=127.0.0.1 elapsed_ms=334.7 method=GET path=/api/v1/agentapp/production/projects request_id=c080281e97454cd09d2650f8ee16835f status=200
+2026-07-13T16:16:34.647323Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/registry/employees request_id=7bb37a60a2ac4270b3fd3fbd3132fde3 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+2026-07-13T16:16:39.728442Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/ request_id=d667e35580284c59a5225578cba45b5d status=200
+2026-07-13T16:16:39.827417Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/assets/index-DH1lgv_e.css request_id=de5c5bc4e778469aa48571f1cb147f23 status=200
+2026-07-13T16:16:39.827417Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.0 method=GET path=/assets/index-Cjs0J1y4.js request_id=125cf9cfd8ce45009e062ea8c8bab98d status=200
+2026-07-13T16:16:40.633227Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/favicon.ico request_id=df43e7b1419f43fb86fb055e0b0e4111 status=200
+2026-07-13T16:16:40.655229Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/favicon.ico request_id=3ab88087e67548b692a93b5bcbb483de status=200
+2026-07-13T16:16:40.717227Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/favicon.ico request_id=5494112a5b2444eda5b346621044679e status=200
+2026-07-13T16:16:40.724227Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/assets/index-DcaerdNe.js request_id=be2f9b8ce30348e98fb2caac895e5bf0 status=200
+2026-07-13T16:16:40.726228Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.7 method=GET path=/assets/UserLogin-B6c07Jnp.js request_id=93f803af70914e8980d130fd2af317af status=200
+2026-07-13T16:16:40.732294Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/assets/TextArea-BYlZLfhb.js request_id=4e2140a8540e445e88b8dbe51e688ac3 status=200
+2026-07-13T16:16:40.733226Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/assets/useVariants-B_DfNHOx.js request_id=fbded0048d784ea5b1499db73baff83a status=200
+2026-07-13T16:16:40.740227Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/EyeOutlined-CDvvHKvd.js request_id=84f96cb293bf447791dd45c7db5b3edd status=200
+2026-07-13T16:16:40.741297Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/assets/Input-DpDiXcJo.js request_id=05882bbbd23343c892d4c51277fbe19e status=200
+2026-07-13T16:16:40.747258Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/assets/UserOutlined-BuFhv-jy.js request_id=cad31303d29d433a838d61a44b426bd9 status=200
+2026-07-13T16:16:40.747258Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/assets/SearchOutlined-BaAUilXr.js request_id=67c0ecdb5e364fb4a39ffbc5890dd8fb status=200
+2026-07-13T16:16:40.752323Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/assets/LockOutlined-CCVcHLqq.js request_id=225b412208e74a66a9434424b056c90b status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+2026-07-13T16:16:44.340504Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.9 method=GET path=/assets/Production-CIczKQDv.js request_id=864bb0ce96944f16a20dbb3de4da927b status=200
+2026-07-13T16:16:44.341504Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.8 method=GET path=/assets/media-BI8TGDae.js request_id=15bb329dab4b4c44be18bef0c52286e1 status=200
+2026-07-13T16:16:44.342505Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.7 method=GET path=/assets/GlobalOutlined-CS_HEgWT.js request_id=66c3a8befc6241b68fe8517de146d3a9 status=200
+2026-07-13T16:16:44.364525Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.2 method=GET path=/assets/index-BGgkAVJI.js request_id=147ced8521714706a0cb3b465ca26db9 status=200
+2026-07-13T16:16:44.388819Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/assets/DeleteOutlined-BSaeY91P.js request_id=a947708877e045478681797e64b2b735 status=200
+2026-07-13T16:16:44.400776Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/assets/index-CSIeYifG.js request_id=9d4e017a2b224c0f96b348984f5b28a4 status=200
+2026-07-13T16:16:44.413788Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.2 method=GET path=/assets/PurePanel-CCWbiKdh.js request_id=915ab41e06bf426a8a2a54d3e2e11c18 status=200
+2026-07-13T16:16:44.419773Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/DownOutlined-BVhNmCnJ.js request_id=1f0cceb0554648009620031b1c76b0cf status=200
+2026-07-13T16:16:44.438774Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.6 method=GET path=/assets/index-BagP969w.js request_id=6694f4b4567c488bb81cd7eb9df9c373 status=200
+2026-07-13T16:16:44.439882Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/assets/index-CpuDWbwR.js request_id=3e9495df489e46e7adef0506ebd51f65 status=200
+2026-07-13T16:16:44.455776Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/assets/index-C1AWdfZm.js request_id=fa43b041aebc44359377708a471b6223 status=200
+2026-07-13T16:16:44.475776Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/assets/index-CnxFxWCe.js request_id=f8847eb0455f427598544c2b7b9f5950 status=200
+2026-07-13T16:16:44.475776Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.3 method=GET path=/assets/useForm-DufKktzB.js request_id=35a8bd55fe8046c5b26e8d6d98c79802 status=200
+2026-07-13T16:16:44.486806Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.1 method=GET path=/assets/index-CBWJRWs1.js request_id=081c0179a6be4c45a45827f31e949693 status=200
+2026-07-13T16:16:44.507834Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/assets/index-cBvBB6JB.js request_id=9bd69b2ed7e44e1c9326f905597f2334 status=200
+2026-07-13T16:16:44.517877Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.4 method=GET path=/assets/SaveOutlined-BVDYwoRE.js request_id=94096cb9788149c2be284dbb426e44c7 status=200
+2026-07-13T16:16:44.537880Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.6 method=GET path=/assets/index-Da2EfiXP.js request_id=b84cbcc15df84e5283f04702c88fc07a status=200
+2026-07-13T16:16:44.550855Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.8 method=GET path=/assets/addEventListener-D8ptglEV.js request_id=cca036a7d10942db85e7b374488443d4 status=200
+2026-07-13T16:16:44.558804Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/assets/SwapOutlined-D4vlnwVf.js request_id=a9236275027841f1949732d2ce3eeaa7 status=200
+2026-07-13T16:16:44.567835Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/assets/UploadOutlined-B_ZvSiS_.js request_id=366afcdaeecd41fea79d99aa8c747bde status=200
+2026-07-13T16:16:44.579806Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/assets/index-CXQufxud.js request_id=2a439536e2e244a9ae929139644f2afd status=200
+2026-07-13T16:16:44.593868Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/assets/index-BWJKEzqW.js request_id=c184362644684234be53924d9d38e1af status=200
+2026-07-13T16:16:44.593868Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/assets/index-DKwSdgby.js request_id=06989b0b3baa4608946cca8e145dcc23 status=200
+2026-07-13T16:16:44.635864Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.3 method=GET path=/assets/PictureOutlined-DYc6phYE.js request_id=df842e96c705440b93d6de3689a794b7 status=200
+2026-07-13T16:16:44.637387Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.8 method=GET path=/assets/FileTextOutlined-C6f3MwFl.js request_id=17308efafb5446559a537d0cb0cb3db7 status=200
+2026-07-13T16:16:44.637387Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.9 method=GET path=/assets/PlayCircleOutlined-BWuTyoY7.js request_id=62f4263e32fd4235b3bf230625c607a6 status=200
+2026-07-13T16:16:44.638394Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.6 method=GET path=/assets/ClockCircleOutlined-DmHc0JTv.js request_id=34904b84d67e47149f03f77b08b9001f status=200
+2026-07-13T16:16:44.650561Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/favicon.ico request_id=dedfafaf933a4227a60b925083318a51 status=200
+2026-07-13T16:16:44.781619Z [info     ] request                        client=127.0.0.1 elapsed_ms=70.0 method=GET path=/api/v1/agentapp/registry/employees request_id=7ec6106fed5c46bbb213714661346e1b status=200
+2026-07-13T16:16:44.908687Z [info     ] request                        client=127.0.0.1 elapsed_ms=196.2 method=GET path=/api/v1/agentapp/production/projects request_id=8e89c6ebeb464735891cadfadb54feeb status=200
+2026-07-13T16:16:45.065730Z [info     ] request                        client=127.0.0.1 elapsed_ms=85.0 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=0e63c28b192d4cd6b1755a355aa3f880 status=200
+��ѯ�����б�ʧ��
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1083, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1466, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 905, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-13T16:16:45.711620Z [info     ] request                        client=127.0.0.1 elapsed_ms=12821.2 method=GET path=/api/v1/agentapp/tasks request_id=dba3b5d643884ec7884a8ccda86c8cab status=503
+2026-07-13T16:16:46.765007Z [info     ] request                        client=127.0.0.1 elapsed_ms=178.3 method=GET path=/api/v1/agentapp/production/resource/����/��½��Ԫ_ǰ��������/02_����ͼ/����_������ǰ����˺���С��.png request_id=f295e9d5cb6e4cdc8136395c3f9034ee status=200
+2026-07-13T16:16:46.792965Z [info     ] request                        client=127.0.0.1 elapsed_ms=206.3 method=GET path=/api/v1/agentapp/production/resource/����/output/characters/����_����ͼ_����ĵؿ��ؿ񱩰�.png request_id=d355a95eac4640b98d5b1384acb34d0a status=200
+2026-07-13T16:16:46.793964Z [info     ] request                        client=127.0.0.1 elapsed_ms=206.6 method=GET path=/api/v1/agentapp/production/resource/����/output/characters/����_����ͼ_v3_�����������Ըа�.png request_id=4d5a259c9ce24a15925eadf6e404a465 status=200
+2026-07-13T16:16:46.794967Z [info     ] request                        client=127.0.0.1 elapsed_ms=209.7 method=GET path=/api/v1/agentapp/production/resource/����/output/characters/����_����ͼ_������ǰ����˺���С��.png request_id=4656f203a14d4104afa0c394e1a914d4 status=200
+2026-07-13T16:16:46.832962Z [info     ] request                        client=127.0.0.1 elapsed_ms=42.0 method=GET path=/uploads/canvas/img_auto_019f995542c642e398712f414e4577a8.png request_id=586d9639fc764f0b8e31f8e98f608861 status=200
+2026-07-13T16:16:46.839963Z [info     ] request                        client=127.0.0.1 elapsed_ms=248.9 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/����ͼ/11_����ʿ_����½.png request_id=9a92ef4ebd8242129570b6c0aacad2b9 status=200
+2026-07-13T16:16:46.839963Z [info     ] request                        client=127.0.0.1 elapsed_ms=250.0 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/����ͼ/04_����_��ʥ½����ѧͽ.png request_id=7d767c1f2f6a4b2aa331da0b8fd0aee0 status=200
+2026-07-13T16:16:46.857994Z [info     ] request                        client=127.0.0.1 elapsed_ms=49.7 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/����ͼ/10_�Ͽ�_����½.png request_id=aaa383a441d645c3a5bcde04c73702c4 status=200
+2026-07-13T16:16:46.858964Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.5 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/�Ŵ�½����ͼ/01_����½_���Ƿ���.png request_id=238688458a69491a93d52f5a8b19434d status=200
+2026-07-13T16:16:46.858964Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.9 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/����ͼ/EP01_���Ƿ���_���س���_v2.png request_id=883858b8ac75433aa3aa40895c10088e status=200
+2026-07-13T16:16:46.878253Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.2 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/����ͼ/EP01_��������ͼ_�Ĺ���_v1.png request_id=1286d7c21b06455c8e6f2efc008bce47 status=200
+2026-07-13T16:16:46.910094Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.4 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/����ϸ��ͼ/02_��������.png request_id=3cebdfc67c744cb7abc5c4a311431904 status=200
+2026-07-13T16:16:46.911094Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.7 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/����ϸ��ͼ/03_��������������Ƭ.png request_id=4a7cf89b786d4d87b5ce26ea3ab3a079 status=200
+2026-07-13T16:16:46.912094Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.5 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/����ϸ��ͼ/01_��������Ҷ��.png request_id=7fbbf65197ae4d1080f9e877bf4f0f14 status=200
+2026-07-13T16:16:46.924123Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.6 method=GET path=/api/v1/agentapp/production/resource/����/output/storyboard/��½��Ԫ_48��ͷ�Ӿ��־�_v2_Page02_P25-P48.png request_id=9268bc2b6e08476192798fc750717007 status=200
+2026-07-13T16:16:46.930145Z [info     ] request                        client=127.0.0.1 elapsed_ms=43.0 method=GET path=/api/v1/agentapp/production/resource/����/output/storyboard/��½��Ԫ_48��ͷ�Ӿ��־�_v2_Page01_P01-P24.png request_id=2d80bfc1c54746b9b7ae0c411d245e5e status=200
+2026-07-13T16:16:47.022096Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/favicon.ico request_id=205136a895104ddf927e241206c46eff status=200
+2026-07-13T16:16:47.109153Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.1 method=GET path=/assets/dropdown-9-I-zGnQ.js request_id=6c68952bda464fab95924587cc9caa1a status=200
+2026-07-13T16:16:47.110096Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.5 method=GET path=/assets/ProductionMatrix-CuwbX0yf.js request_id=9c9feb6433c84a059204304f03e4310c status=200
+2026-07-13T16:16:47.111098Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.1 method=GET path=/assets/collapse-BbEVqHco.js request_id=0ee4cb7e7e784ea7aaa8329ff960b345 status=200
+2026-07-13T16:16:47.112194Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.8 method=GET path=/assets/FileOutlined-DcyhPHLy.js request_id=002f107afd3548fe9b555dbd77ae35c8 status=200
+2026-07-13T16:16:47.114096Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.6 method=GET path=/assets/InboxOutlined-BCFOezxW.js request_id=47e71e21e95448a38e705c57312fcc78 status=200
+2026-07-13T16:16:47.115100Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.6 method=GET path=/assets/Table-BZj95R7f.js request_id=557ddd37c56e46d9abc8aa14854152e7 status=200
+2026-07-13T16:16:47.445349Z [info     ] request                        client=127.0.0.1 elapsed_ms=212.6 method=GET path=/api/v1/agentapp/production/matrix request_id=c9c34ac70f264d2686fb89d3d83b1f54 status=200
+2026-07-13T16:16:47.446314Z [info     ] request                        client=127.0.0.1 elapsed_ms=211.7 method=GET path=/api/v1/agentapp/production/orphans request_id=44c14d9ef4d54ea4b4e9d6353bf398c7 status=200
+2026-07-13T16:16:47.556325Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.2 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=b98888eebbbb4de1be8bcc9737449353 status=200
+2026-07-13T16:16:48.433355Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/favicon.ico request_id=40d66a50aeef45058a173e54435b0a38 status=200
+2026-07-13T16:16:48.512029Z [info     ] request                        client=127.0.0.1 elapsed_ms=58.8 method=GET path=/api/v1/agentapp/registry/employees request_id=f6657eec9ba24dffa78ed1d99b8de930 status=200
+2026-07-13T16:16:48.582933Z [info     ] request                        client=127.0.0.1 elapsed_ms=131.0 method=GET path=/api/v1/agentapp/production/projects request_id=fa7ec7fe48a5443f8ed21ef7611cbba9 status=200
+2026-07-13T16:16:48.760983Z [info     ] request                        client=127.0.0.1 elapsed_ms=138.7 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=cf70715084874d3e8e7fd9d4ddb1171a status=200
+2026-07-13T16:16:48.880969Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.8 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/�Ŵ�½����ͼ/02_����½_��е񷶥.png request_id=f231cbba7ea0460ca090f21a37d1544c status=200
+2026-07-13T16:16:48.882973Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.5 method=GET path=/api/v1/agentapp/production/resource/����/_�������/��½��Ԫ_ȫ�����ϰ�_20260623_214430/03_���������ο�/�Ŵ�½����ͼ/03_��ʥ½_���ǻ����ճ�.png request_id=96f6b1201e3e46e78d116fb61325c0b0 status=200
+2026-07-13T16:16:50.310074Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/favicon.ico request_id=3d3aa94983fb42a89fce9d661186dd19 status=200
+2026-07-13T16:16:50.603729Z [info     ] request                        client=127.0.0.1 elapsed_ms=219.9 method=GET path=/api/v1/agentapp/production/matrix request_id=4a389332fbf848cf87a6d13c1b25b837 status=200
+2026-07-13T16:16:50.603729Z [info     ] request                        client=127.0.0.1 elapsed_ms=218.8 method=GET path=/api/v1/agentapp/production/orphans request_id=f807d8fa846d4784ac55f06865d618dc status=200
+2026-07-13T16:16:50.671576Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=6557f117aad2451a9d28c2925041ac4f status=200
+2026-07-13T16:16:59.196690Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.8 method=GET path=/assets/EpisodeDetail-Bc0ty0Gq.js request_id=149fc2a6e26d48a0917ac6c8007f767e status=200
+2026-07-13T16:16:59.197899Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.1 method=GET path=/favicon.ico request_id=1cc21263f77442aeb4ff24049f712533 status=200
+2026-07-13T16:16:59.198690Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.1 method=GET path=/assets/HomeOutlined-Ce2X-gr-.js request_id=f4df5032d228413eae4ee4d1f427f20b status=200
+2026-07-13T16:16:59.198690Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.3 method=GET path=/assets/DownloadOutlined-kqpvIgiO.js request_id=3d9377f49ef74619b202e6347decd6f8 status=200
+2026-07-13T16:16:59.199691Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.6 method=GET path=/assets/ArrowLeftOutlined-CcgWeqNI.js request_id=6e01637e004c43d5b907b51392499ce2 status=200
+2026-07-13T16:16:59.349310Z [info     ] request                        client=127.0.0.1 elapsed_ms=84.9 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=99371a27a3bd485ebd2dcc4bf7dd0089 status=200
+2026-07-13T16:17:17.677493Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/assets/Canvas-BuknkNJi.js request_id=47ea250a1c874bf6834b7445e2a74dd8 status=200
+2026-07-13T16:17:17.709527Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/assets/style-B5DZHykP.css request_id=010b93e73e244994a43ae327e7e152db status=200
+2026-07-13T16:17:17.747570Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.0 method=GET path=/assets/style-BPljHo6W.js request_id=7050ec2ab24f4bc2ac37b6de8814fef5 status=200
+2026-07-13T16:17:17.809525Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/assets/SendOutlined-CNMfaw4G.js request_id=f65ac5c3924d4edb907c07f452caae11 status=200
+2026-07-13T16:17:17.842498Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/favicon.ico request_id=6ab10f233605486dab6b9acad92c2fbc status=200
+2026-07-13T16:17:17.899523Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.6 method=GET path=/api/v1/agentapp/canvas/canvases request_id=35792b18d69f41c3a36eff916bb5e050 status=200
+2026-07-13T16:17:17.935523Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.0 method=GET path=/api/v1/agentapp/canvas/image-models request_id=318d62c3dd6248d7b7fdc5bb4d48cbd6 status=200
+2026-07-13T16:17:17.942493Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.4 method=GET path=/api/v1/agentapp/registry/employees request_id=00c83817a21a42f6b46c7449238277ce status=200
+2026-07-13T16:17:17.966494Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=60dd4c02484b4b248e5b13b7b517d4c6 status=200
+2026-07-13T16:17:18.552383Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/favicon.ico request_id=15b47206ac2843989e89e459acf64f05 status=200
+2026-07-13T16:17:18.611410Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.2 method=GET path=/api/v1/agentapp/registry/employees request_id=c2de9fea548e4ed3bcc452da24a96425 status=200
+2026-07-13T16:17:18.678379Z [info     ] request                        client=127.0.0.1 elapsed_ms=107.5 method=GET path=/api/v1/agentapp/production/projects request_id=2a4477b031a84806bb3d60f2380ccdd5 status=200
+2026-07-13T16:17:18.857461Z [info     ] request                        client=127.0.0.1 elapsed_ms=129.6 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=5b26f07a03a243c19d36fe206ce38277 status=200
+2026-07-13T16:17:28.242859Z [info     ] request                        client=127.0.0.1 elapsed_ms=1939.3 method=GET path=/api/v1/agentapp/production/resource/����/output/storyboard/��½��Ԫ_48��ͷ�Ӿ��־�_v2_Page02_P25-P48.png request_id=20138e2119314081b3c1982a2ac60c7a status=200
+2026-07-13T16:17:28.243856Z [info     ] request                        client=127.0.0.1 elapsed_ms=1940.6 method=GET path=/api/v1/agentapp/production/resource/����/output/storyboard/��½��Ԫ_48��ͷ�Ӿ��־�_v2_Page01_P01-P24.png request_id=c834302d85274566b68084e3194d426d status=200
+2026-07-13T16:17:31.115151Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/api/v1/agentapp/production/resource/����/output/storyboard/��½��Ԫ_48��ͷ�Ӿ��־�_v2_Page01_P01-P24.png request_id=ee0313a80cd34612834a2e2f16f2e0f2 status=200
+2026-07-13T16:17:34.945495Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/api/v1/agentapp/production/resource/����/output/storyboard/��½��Ԫ_48��ͷ�Ӿ��־�_v2_Page02_P25-P48.png request_id=7090fe631151458da497f6e2e5a767ed status=200
+2026-07-13T16:18:06.781539Z [info     ] request                        client=127.0.0.1 elapsed_ms=85.9 method=GET path=/api/v1/agentapp/production/projects/jiulu-s2 request_id=51665e0613be47dcb7ba821a6f1794a8 status=200
+2026-07-13T16:18:11.835554Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/favicon.ico request_id=d1fb2095a7334d2c90cd068463688cb9 status=200
+2026-07-13T16:18:11.944596Z [info     ] request                        client=127.0.0.1 elapsed_ms=103.5 method=GET path=/api/v1/agentapp/production/matrix request_id=53b8f02cbc0e4410995eea1f80ed7fb8 status=200
+2026-07-13T16:18:12.041541Z [info     ] request                        client=127.0.0.1 elapsed_ms=94.4 method=GET path=/api/v1/agentapp/production/orphans request_id=79358a61b8ad47988e190ce86b12cd31 status=200
+2026-07-13T16:18:12.103513Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=78985624e8384841a9c6354749109a7d status=200
+2026-07-13T16:18:14.259399Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.2 method=GET path=/api/v1/agentapp/registry/employees request_id=f73e44764e694182a9b86024b129e830 status=200
+2026-07-13T16:18:14.378507Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.4 method=GET path=/favicon.ico request_id=1ad07257d6a141dfa430896a4d3a74f7 status=200
+2026-07-13T16:18:14.380458Z [info     ] request                        client=127.0.0.1 elapsed_ms=162.6 method=GET path=/api/v1/agentapp/production/projects request_id=827656d6d6b040568aaf0a0be5edbb3b status=200
+2026-07-13T16:18:14.499507Z [info     ] request                        client=127.0.0.1 elapsed_ms=84.6 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=0ecf74789966461e84b232fdf3abc579 status=200
+��ʱ��������ͬ�� @ 02:00
+HTTP Request: GET https://api.github.com/search/repositories?q=agent+skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=agent+skill+created%3A%3E2026-01-14&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: agent skill） ===
+
+ 1. 253700 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 229185 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 160835 ⭐  anthropics/skills [Python]
+     Public repository for Agent Skills
+     https://github.com/anthropics/skills
+ 4.  77853 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 5.  76927 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+ 6.  62874 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 7.  51915 ⭐  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+ 8.  49935 ⭐  hesreallyhim/awesome-claude-code [Python]
+     A hand-picked collection of the finest of resources for the most awesome of agents, Claude…
+     https://github.com/hesreallyhim/awesome-claude-code
+ 9.  47046 ⭐  jeecgboot/JeecgBoot [Java]
+     【低代码迈入 v2.0】AI低代码平台，AI Skills 一句话生成整个系统；一键生成前后端代码甚至整个模块。 AI Skills 一句话画流程、设计表单、生成报表、大屏。内置 …
+     https://github.com/jeecgboot/JeecgBoot
+10.  45955 ⭐  zhayujie/CowAgent [Python]
+     Open-source super AI assistant & Agent Harness. Plans tasks, runs tools and skills, self-e…
+     https://github.com/zhayujie/CowAgent
+11.  43078 ⭐  sickn33/agentic-awesome-skills [Python]
+     Installable GitHub library of 1,900+ agentic skills for Claude Code, Cursor, Codex CLI, Au…
+     https://github.com/sickn33/agentic-awesome-skills
+12.  41624 ⭐  kepano/obsidian-skills
+     Agent skills for Obsidian. Teach your agent to use Obsidian CLI and open formats including…
+     https://github.com/kepano/obsidian-skills
+13.  40674 ⭐  danny-avila/LibreChat [TypeScript]
+     Enhanced ChatGPT Clone: Features Agents, MCP, Skills, DeepSeek, Anthropic, AWS, OpenAI, Re…
+     https://github.com/danny-avila/LibreChat
+14.  40185 ⭐  multica-ai/multica [Go]
+     The open-source managed agents platform. Turn coding agents into real teammates — assign t…
+     https://github.com/multica-ai/multica
+15.  38355 ⭐  coreyhaines31/marketingskills [JavaScript]
+     Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and grow…
+     https://github.com/coreyhaines31/marketingskills
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1296.9 ⭐/天 (共229185⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2.  526.4 ⭐/天 (共77853⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 3.  437.1 ⭐/天 (共62874⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 4.  357.5 ⭐/天 (共37937⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ a…
+     https://github.com/calesthio/OpenMontage
+ 5.  303.8 ⭐/天 (共51915⭐)  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+ 6.  260.9 ⭐/天 (共21187⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+ 7.  250.9 ⭐/天 (共21364⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+ 8.  223.1 ⭐/天 (共29662⭐)  googleworkspace/cli [Rust]
+     Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Cha…
+     https://github.com/googleworkspace/cli
+ 9.  214.4 ⭐/天 (共38355⭐)  coreyhaines31/marketingskills [JavaScript]
+     Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and grow…
+     https://github.com/coreyhaines31/marketingskills
+10.  188.3 ⭐/天 (共12515⭐)  microsoft/SkillOpt [Python]
+     SkillOpt is a text-space optimizer that trains reusable natural-language skills for frozen…
+     https://github.com/microsoft/SkillOpt
+11.  184.2 ⭐/天 (共25483⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+12.  176.6 ⭐/天 (共23620⭐)  phuryn/pm-skills
+     PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to stra…
+     https://github.com/phuryn/pm-skills
+13.  152.8 ⭐/天 (共25480⭐)  zarazhangrui/frontend-slides [JavaScript]
+     Create beautiful slides on the web using a coding agent's frontend skills
+     https://github.com/zarazhangrui/frontend-slides
+14.  151.3 ⭐/天 (共22922⭐)  Donchitos/Claude-Code-Game-Studios [Shell]
+     Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a com…
+     https://github.com/Donchitos/Claude-Code-Game-Studios
+15.  147.9 ⭐/天 (共18786⭐)  tanweai/pua [TypeScript]
+     你是一个曾经被寄予厚望的 P8 级工程师。Anthropic 当初给你定级的时候，对你的期望是很高的。  一个agent使用的高能动性的skill。  Your AI has be…
+     https://github.com/tanweai/pua
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  642 ⭐ (+943.3/天)  obra/superpowers [Shell]  共253700⭐
+     https://github.com/obra/superpowers
+ 2. +  420 ⭐ (+617.1/天)  coreyhaines31/marketingskills [JavaScript]  共38355⭐
+     https://github.com/coreyhaines31/marketingskills
+ 3. +  393 ⭐ (+577.5/天)  calesthio/OpenMontage [Python]  共37937⭐
+     https://github.com/calesthio/OpenMontage
+ 4. +  368 ⭐ (+540.7/天)  Leonxlnx/taste-skill [JavaScript]  共62874⭐
+     https://github.com/Leonxlnx/taste-skill
+ 5. +  250 ⭐ (+367.3/天)  anthropics/skills [Python]  共160835⭐
+     https://github.com/anthropics/skills
+ 6. +  245 ⭐ (+360.0/天)  addyosmani/agent-skills [JavaScript]  共77853⭐
+     https://github.com/addyosmani/agent-skills
+ 7. +  224 ⭐ (+329.1/天)  affaan-m/ECC [JavaScript]  共229185⭐
+     https://github.com/affaan-m/ECC
+ 8. +  221 ⭐ (+324.7/天)  kepano/obsidian-skills  共41624⭐
+     https://github.com/kepano/obsidian-skills
+ 9. +  218 ⭐ (+320.3/天)  multica-ai/multica [Go]  共40185⭐
+     https://github.com/multica-ai/multica
+10. +  191 ⭐ (+280.6/天)  mvanhorn/last30days-skill [Python]  共51915⭐
+     https://github.com/mvanhorn/last30days-skill
+11. +  165 ⭐ (+242.4/天)  microsoft/SkillOpt [Python]  共12515⭐
+     https://github.com/microsoft/SkillOpt
+12. +  127 ⭐ (+186.6/天)  zarazhangrui/frontend-slides [JavaScript]  共25480⭐
+     https://github.com/zarazhangrui/frontend-slides
+13. +  104 ⭐ (+152.8/天)  op7418/guizang-ppt-skill [HTML]  共21187⭐
+     https://github.com/op7418/guizang-ppt-skill
+14. +   79 ⭐ (+116.1/天)  mukul975/Anthropic-Cybersecurity-Skills [Python]  共25483⭐
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+15. +   74 ⭐ (+108.7/天)  bytedance/deer-flow [Python]  共76927⭐
+     https://github.com/bytedance/deer-flow
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\agent_skill\20260713_180016.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260714_020019.json
+HTTP Request: GET https://api.github.com/search/repositories?q=claude+skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=claude+skill+created%3A%3E2026-01-14&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: claude skill） ===
+
+ 1. 229185 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 191560 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3. 168123 ⭐  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .claude directory.
+     https://github.com/mattpocock/skills
+ 4. 105082 ⭐  nextlevelbuilder/ui-ux-pro-max-skill [Python]
+     An AI SKILL that provide design intelligence for building professional UI/UX multiple plat…
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 5.  88986 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 6.  84309 ⭐  Graphify-Labs/graphify [Python]
+     AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Tu…
+     https://github.com/Graphify-Labs/graphify
+ 7.  67627 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+ 8.  62874 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 9.  51915 ⭐  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+10.  49935 ⭐  hesreallyhim/awesome-claude-code [Python]
+     A hand-picked collection of the finest of resources for the most awesome of agents, Claude…
+     https://github.com/hesreallyhim/awesome-claude-code
+11.  45955 ⭐  zhayujie/CowAgent [Python]
+     Open-source super AI assistant & Agent Harness. Plans tasks, runs tools and skills, self-e…
+     https://github.com/zhayujie/CowAgent
+12.  43078 ⭐  sickn33/agentic-awesome-skills [Python]
+     Installable GitHub library of 1,900+ agentic skills for Claude Code, Cursor, Codex CLI, Au…
+     https://github.com/sickn33/agentic-awesome-skills
+13.  41624 ⭐  kepano/obsidian-skills
+     Agent skills for Obsidian. Teach your agent to use Obsidian CLI and open formats including…
+     https://github.com/kepano/obsidian-skills
+14.  40674 ⭐  danny-avila/LibreChat [TypeScript]
+     Enhanced ChatGPT Clone: Features Agents, MCP, Skills, DeepSeek, Anthropic, AWS, OpenAI, Re…
+     https://github.com/danny-avila/LibreChat
+15.  38355 ⭐  coreyhaines31/marketingskills [JavaScript]
+     Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and grow…
+     https://github.com/coreyhaines31/marketingskills
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1296.9 ⭐/天 (共229185⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 1143.0 ⭐/天 (共191560⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3. 1048.9 ⭐/天 (共168123⭐)  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .claude directory.
+     https://github.com/mattpocock/skills
+ 4.  886.9 ⭐/天 (共88986⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  834.0 ⭐/天 (共84309⭐)  Graphify-Labs/graphify [Python]
+     AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Tu…
+     https://github.com/Graphify-Labs/graphify
+ 6.  437.1 ⭐/天 (共62874⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 7.  357.5 ⭐/天 (共37937⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ a…
+     https://github.com/calesthio/OpenMontage
+ 8.  303.8 ⭐/天 (共51915⭐)  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+ 9.  274.0 ⭐/天 (共37667⭐)  Imbad0202/academic-research-skills [Python]
+     Academic Research Skills for Claude Code: research → write → review → revise → finalize
+     https://github.com/Imbad0202/academic-research-skills
+10.  250.9 ⭐/天 (共21364⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+11.  214.4 ⭐/天 (共38355⭐)  coreyhaines31/marketingskills [JavaScript]
+     Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and grow…
+     https://github.com/coreyhaines31/marketingskills
+12.  184.2 ⭐/天 (共25483⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+13.  164.4 ⭐/天 (共29018⭐)  blader/humanizer
+     Claude Code skill that removes signs of AI-generated writing from text
+     https://github.com/blader/humanizer
+14.  152.8 ⭐/天 (共25480⭐)  zarazhangrui/frontend-slides [JavaScript]
+     Create beautiful slides on the web using a coding agent's frontend skills
+     https://github.com/zarazhangrui/frontend-slides
+15.  151.3 ⭐/天 (共22922⭐)  Donchitos/Claude-Code-Game-Studios [Shell]
+     Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a com…
+     https://github.com/Donchitos/Claude-Code-Game-Studios
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. + 1255 ⭐ (+1844.2/天)  mattpocock/skills [Shell]  共168123⭐
+     https://github.com/mattpocock/skills
+ 2. +  990 ⭐ (+1454.8/天)  Graphify-Labs/graphify [Python]  共84309⭐
+     https://github.com/Graphify-Labs/graphify
+ 3. +  431 ⭐ (+633.3/天)  JuliusBrussee/caveman [JavaScript]  共88986⭐
+     https://github.com/JuliusBrussee/caveman
+ 4. +  420 ⭐ (+617.2/天)  coreyhaines31/marketingskills [JavaScript]  共38355⭐
+     https://github.com/coreyhaines31/marketingskills
+ 5. +  393 ⭐ (+577.5/天)  calesthio/OpenMontage [Python]  共37937⭐
+     https://github.com/calesthio/OpenMontage
+ 6. +  368 ⭐ (+540.8/天)  Leonxlnx/taste-skill [JavaScript]  共62874⭐
+     https://github.com/Leonxlnx/taste-skill
+ 7. +  325 ⭐ (+477.6/天)  multica-ai/andrej-karpathy-skills  共191560⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 8. +  311 ⭐ (+457.0/天)  nextlevelbuilder/ui-ux-pro-max-skill [Python]  共105082⭐
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 9. +  224 ⭐ (+329.2/天)  affaan-m/ECC [JavaScript]  共229185⭐
+     https://github.com/affaan-m/ECC
+10. +  221 ⭐ (+324.8/天)  kepano/obsidian-skills  共41624⭐
+     https://github.com/kepano/obsidian-skills
+11. +  191 ⭐ (+280.7/天)  mvanhorn/last30days-skill [Python]  共51915⭐
+     https://github.com/mvanhorn/last30days-skill
+12. +  168 ⭐ (+246.9/天)  Imbad0202/academic-research-skills [Python]  共37667⭐
+     https://github.com/Imbad0202/academic-research-skills
+13. +  130 ⭐ (+191.0/天)  blader/humanizer  共29018⭐
+     https://github.com/blader/humanizer
+14. +  127 ⭐ (+186.6/天)  zarazhangrui/frontend-slides [JavaScript]  共25480⭐
+     https://github.com/zarazhangrui/frontend-slides
+15. +   82 ⭐ (+120.5/天)  ComposioHQ/awesome-claude-skills [Python]  共67627⭐
+     https://github.com/ComposioHQ/awesome-claude-skills
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\claude_skill\20260713_180019.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260714_020022.json
+HTTP Request: GET https://api.github.com/search/repositories?q=skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=skill+created%3A%3E2026-01-14&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: skill） ===
+
+ 1. 253700 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 229185 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 191560 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 4. 168123 ⭐  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .claude directory.
+     https://github.com/mattpocock/skills
+ 5. 160835 ⭐  anthropics/skills [Python]
+     Public repository for Agent Skills
+     https://github.com/anthropics/skills
+ 6. 128363 ⭐  Chalarangelo/30-seconds-of-code [JavaScript]
+     Coding articles to level up your development skills
+     https://github.com/Chalarangelo/30-seconds-of-code
+ 7. 105082 ⭐  nextlevelbuilder/ui-ux-pro-max-skill [Python]
+     An AI SKILL that provide design intelligence for building professional UI/UX multiple plat…
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 8.  95820 ⭐  florinpop17/app-ideas
+     A Collection of application ideas which can be used to improve your coding skills.
+     https://github.com/florinpop17/app-ideas
+ 9.  88986 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+10.  84309 ⭐  Graphify-Labs/graphify [Python]
+     AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Tu…
+     https://github.com/Graphify-Labs/graphify
+11.  77853 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+12.  76927 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+13.  67627 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+14.  62874 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+15.  57329 ⭐  zylon-ai/private-gpt [Python]
+     Complete API layer for private AI applications on local models: RAG, skills, tools, MCP, t…
+     https://github.com/zylon-ai/private-gpt
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1296.9 ⭐/天 (共229185⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 1143.0 ⭐/天 (共191560⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3. 1048.9 ⭐/天 (共168123⭐)  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .claude directory.
+     https://github.com/mattpocock/skills
+ 4.  886.9 ⭐/天 (共88986⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  834.0 ⭐/天 (共84309⭐)  Graphify-Labs/graphify [Python]
+     AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Tu…
+     https://github.com/Graphify-Labs/graphify
+ 6.  526.4 ⭐/天 (共77853⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 7.  437.1 ⭐/天 (共62874⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 8.  357.5 ⭐/天 (共37937⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ a…
+     https://github.com/calesthio/OpenMontage
+ 9.  351.2 ⭐/天 (共28314⭐)  Yuan1z0825/nature-skills [Python]
+     符合nature论文学术表达和科研绘图的Skill
+     https://github.com/Yuan1z0825/nature-skills
+10.  303.8 ⭐/天 (共51915⭐)  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+11.  302.2 ⭐/天 (共51173⭐)  VoltAgent/awesome-openclaw-skills
+     The awesome collection of OpenClaw skills. 5,400+ skills filtered and categorized from the…
+     https://github.com/VoltAgent/awesome-openclaw-skills
+12.  278.6 ⭐/天 (共27734⭐)  alchaincyf/nuwa-skill [Python]
+     你想蒸馏的下一个员工，何必是同事。蒸馏任何人的思维方式——心智模型、决策启发式、表达DNA。Distill how anyone thinks.
+     https://github.com/alchaincyf/nuwa-skill
+13.  274.0 ⭐/天 (共37667⭐)  Imbad0202/academic-research-skills [Python]
+     Academic Research Skills for Claude Code: research → write → review → revise → finalize
+     https://github.com/Imbad0202/academic-research-skills
+14.  260.9 ⭐/天 (共21187⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+15.  250.9 ⭐/天 (共21364⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. + 1255 ⭐ (+1844.3/天)  mattpocock/skills [Shell]  共168123⭐
+     https://github.com/mattpocock/skills
+ 2. +  990 ⭐ (+1454.8/天)  Graphify-Labs/graphify [Python]  共84309⭐
+     https://github.com/Graphify-Labs/graphify
+ 3. +  642 ⭐ (+943.4/天)  obra/superpowers [Shell]  共253700⭐
+     https://github.com/obra/superpowers
+ 4. +  431 ⭐ (+633.4/天)  JuliusBrussee/caveman [JavaScript]  共88986⭐
+     https://github.com/JuliusBrussee/caveman
+ 5. +  394 ⭐ (+579.0/天)  calesthio/OpenMontage [Python]  共37937⭐
+     https://github.com/calesthio/OpenMontage
+ 6. +  368 ⭐ (+540.8/天)  Leonxlnx/taste-skill [JavaScript]  共62874⭐
+     https://github.com/Leonxlnx/taste-skill
+ 7. +  325 ⭐ (+477.6/天)  multica-ai/andrej-karpathy-skills  共191560⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 8. +  311 ⭐ (+457.0/天)  nextlevelbuilder/ui-ux-pro-max-skill [Python]  共105082⭐
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 9. +  283 ⭐ (+415.9/天)  Yuan1z0825/nature-skills [Python]  共28314⭐
+     https://github.com/Yuan1z0825/nature-skills
+10. +  250 ⭐ (+367.4/天)  anthropics/skills [Python]  共160835⭐
+     https://github.com/anthropics/skills
+11. +  245 ⭐ (+360.0/天)  addyosmani/agent-skills [JavaScript]  共77853⭐
+     https://github.com/addyosmani/agent-skills
+12. +  224 ⭐ (+329.2/天)  affaan-m/ECC [JavaScript]  共229185⭐
+     https://github.com/affaan-m/ECC
+13. +  191 ⭐ (+280.7/天)  mvanhorn/last30days-skill [Python]  共51915⭐
+     https://github.com/mvanhorn/last30days-skill
+14. +  168 ⭐ (+246.9/天)  Imbad0202/academic-research-skills [Python]  共37667⭐
+     https://github.com/Imbad0202/academic-research-skills
+15. +  116 ⭐ (+170.5/天)  alchaincyf/nuwa-skill [Python]  共27734⭐
+     https://github.com/alchaincyf/nuwa-skill
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\skill\20260713_180022.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260714_020025.json
+HTTP Request: GET https://api.github.com/search/repositories?q=topic%3Amcp&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=topic%3Amcp+created%3A%3E2026-01-14&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: topic:mcp） ===
+
+ 1. 229185 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 196289 ⭐  n8n-io/n8n [TypeScript]
+     Fair-code workflow automation platform with native AI capabilities. Combine visual buildin…
+     https://github.com/n8n-io/n8n
+ 3. 157001 ⭐  Snailclimb/JavaGuide [JavaScript]
+     Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+     https://github.com/Snailclimb/JavaGuide
+ 4. 148698 ⭐  langgenius/dify [TypeScript]
+     Production-ready platform for agentic workflow development.
+     https://github.com/langgenius/dify
+ 5. 145287 ⭐  open-webui/open-webui [Python]
+     User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
+     https://github.com/open-webui/open-webui
+ 6. 116762 ⭐  farion1231/cc-switch [Rust]
+     A cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode, OpenClaw, …
+     https://github.com/farion1231/cc-switch
+ 7.  90696 ⭐  punkpeye/awesome-mcp-servers
+     A collection of MCP servers.
+     https://github.com/punkpeye/awesome-mcp-servers
+ 8.  79802 ⭐  lobehub/lobehub [TypeScript]
+     🤯 LobeHub is your Chief Agent Operator, organizing your agents into 7×24 operations by hir…
+     https://github.com/lobehub/lobehub
+ 9.  79631 ⭐  netdata/netdata [Go]
+     The fastest path to AI-powered full stack observability, even for lean teams.
+     https://github.com/netdata/netdata
+10.  69378 ⭐  D4Vinci/Scrapling [Python]
+     🕷️ An adaptive Web Scraping framework that handles everything from a single request to a f…
+     https://github.com/D4Vinci/Scrapling
+11.  67627 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+12.  61804 ⭐  koala73/worldmonitor [TypeScript]
+     Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitor…
+     https://github.com/koala73/worldmonitor
+13.  60523 ⭐  sansan0/TrendRadar [Python]
+     ⭐AI-driven public opinion & trend monitor with multi-platform aggregation, RSS, and smart …
+     https://github.com/sansan0/TrendRadar
+14.  59041 ⭐  upstash/context7 [TypeScript]
+     Context7 Platform -- Up-to-date code documentation for LLMs and AI code editors
+     https://github.com/upstash/context7
+15.  58927 ⭐  headroomlabs-ai/headroom [Python]
+     Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer…
+     https://github.com/headroomlabs-ai/headroom
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1296.9 ⭐/天 (共229185⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2.  574.6 ⭐/天 (共57288⭐)  MemPalace/mempalace [Python]
+     The best-benchmarked open-source AI memory system. And it's free.
+     https://github.com/MemPalace/mempalace
+ 3.  398.8 ⭐/天 (共55698⭐)  Panniantong/Agent-Reach [Python]
+     Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube…
+     https://github.com/Panniantong/Agent-Reach
+ 4.  326.3 ⭐/天 (共38172⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 5.  276.4 ⭐/天 (共34731⭐)  heygen-com/hyperframes [TypeScript]
+     Write HTML. Render video. Built for agents.
+     https://github.com/heygen-com/hyperframes
+ 6.  223.4 ⭐/天 (共31015⭐)  DeusData/codebase-memory-mcp [C]
+     High-performance code intelligence MCP server. Indexes codebases into a persistent knowled…
+     https://github.com/DeusData/codebase-memory-mcp
+ 7.  211.2 ⭐/天 (共7284⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+ 8.  208.2 ⭐/天 (共21517⭐)  HKUDS/Vibe-Trading [Python]
+     "Vibe-Trading: Your Personal Trading Agent"
+     https://github.com/HKUDS/Vibe-Trading
+ 9.  184.2 ⭐/天 (共25483⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+10.  142.2 ⭐/天 (共19489⭐)  tirth8205/code-review-graph [Python]
+     Local-first code intelligence graph for MCP and CLI. Builds a persistent map of your codeb…
+     https://github.com/tirth8205/code-review-graph
+11.  134.4 ⭐/天 (共18887⭐)  mksglu/context-mode [TypeScript]
+     Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), p…
+     https://github.com/mksglu/context-mode
+12.  133.7 ⭐/天 (共13009⭐)  xbtlin/ai-berkshire [Python]
+     AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berk…
+     https://github.com/xbtlin/ai-berkshire
+13.  129.7 ⭐/天 (共18005⭐)  RightNow-AI/openfang [Rust]
+     Open-source Agent Operating System
+     https://github.com/RightNow-AI/openfang
+14.  111.4 ⭐/天 (共16728⭐)  diegosouzapw/OmniRoute [TypeScript]
+     Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claud…
+     https://github.com/diegosouzapw/OmniRoute
+15.  106.7 ⭐/天 (共10410⭐)  palmier-io/palmier-pro [Swift]
+     macOS video editor built for AI
+     https://github.com/palmier-io/palmier-pro
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  925 ⭐ (+1359.3/天)  HKUDS/Vibe-Trading [Python]  共21517⭐
+     https://github.com/HKUDS/Vibe-Trading
+ 2. +  485 ⭐ (+712.7/天)  diegosouzapw/OmniRoute [TypeScript]  共16728⭐
+     https://github.com/diegosouzapw/OmniRoute
+ 3. +  435 ⭐ (+639.2/天)  farion1231/cc-switch [Rust]  共116762⭐
+     https://github.com/farion1231/cc-switch
+ 4. +  381 ⭐ (+559.9/天)  DeusData/codebase-memory-mcp [C]  共31015⭐
+     https://github.com/DeusData/codebase-memory-mcp
+ 5. +  358 ⭐ (+526.1/天)  Panniantong/Agent-Reach [Python]  共55698⭐
+     https://github.com/Panniantong/Agent-Reach
+ 6. +  252 ⭐ (+370.3/天)  heygen-com/hyperframes [TypeScript]  共34731⭐
+     https://github.com/heygen-com/hyperframes
+ 7. +  224 ⭐ (+329.2/天)  affaan-m/ECC [JavaScript]  共229185⭐
+     https://github.com/affaan-m/ECC
+ 8. +  175 ⭐ (+257.2/天)  headroomlabs-ai/headroom [Python]  共58927⭐
+     https://github.com/headroomlabs-ai/headroom
+ 9. +  111 ⭐ (+163.1/天)  open-webui/open-webui [Python]  共145287⭐
+     https://github.com/open-webui/open-webui
+10. +  108 ⭐ (+158.7/天)  xbtlin/ai-berkshire [Python]  共13009⭐
+     https://github.com/xbtlin/ai-berkshire
+11. +   86 ⭐ (+126.4/天)  langgenius/dify [TypeScript]  共148698⭐
+     https://github.com/langgenius/dify
+12. +   82 ⭐ (+120.5/天)  ComposioHQ/awesome-claude-skills [Python]  共67627⭐
+     https://github.com/ComposioHQ/awesome-claude-skills
+13. +   81 ⭐ (+119.0/天)  D4Vinci/Scrapling [Python]  共69378⭐
+     https://github.com/D4Vinci/Scrapling
+14. +   80 ⭐ (+117.6/天)  n8n-io/n8n [TypeScript]  共196289⭐
+     https://github.com/n8n-io/n8n
+15. +   79 ⭐ (+116.1/天)  mukul975/Anthropic-Cybersecurity-Skills [Python]  共25483⭐
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\topic_mcp\20260713_180025.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260714_020029.json
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+agent&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+agent+created%3A%3E2026-01-14&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: AI agent） ===
+
+ 1. 253701 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 214174 ⭐  NousResearch/hermes-agent [Python]
+     The agent that grows with you
+     https://github.com/NousResearch/hermes-agent
+ 3. 157001 ⭐  Snailclimb/JavaGuide [JavaScript]
+     Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+     https://github.com/Snailclimb/JavaGuide
+ 4. 151819 ⭐  langflow-ai/langflow [Python]
+     Langflow is a powerful tool for building and deploying AI-powered agents and workflows.
+     https://github.com/langflow-ai/langflow
+ 5. 148698 ⭐  langgenius/dify [TypeScript]
+     Production-ready platform for agentic workflow development.
+     https://github.com/langgenius/dify
+ 6. 141873 ⭐  x1xhlol/system-prompts-and-models-of-ai-tools
+     FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, L…
+     https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools
+ 7. 141681 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+ 8. 131078 ⭐  msitarzewski/agency-agents [Shell]
+     A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas…
+     https://github.com/msitarzewski/agency-agents
+ 9. 119416 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agent & RAG apps you can actually run — clone, customize, ship.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+10. 105959 ⭐  google-gemini/gemini-cli [TypeScript]
+     An open-source AI agent that brings the power of Gemini directly into your terminal.
+     https://github.com/google-gemini/gemini-cli
+11. 104552 ⭐  browser-use/browser-use [Python]
+     🌐 Make websites accessible for AI agents. Automate tasks online with ease.
+     https://github.com/browser-use/browser-use
+12.  90998 ⭐  karpathy/autoresearch [Python]
+     AI agents running research on single-GPU nanochat training automatically
+     https://github.com/karpathy/autoresearch
+13.  87080 ⭐  thedotmack/claude-mem [JavaScript]
+     Persistent Context Across Sessions for Every Agent –  Captures everything your agent does …
+     https://github.com/thedotmack/claude-mem
+14.  84955 ⭐  infiniflow/ragflow [Go]
+     RAGFlow is a leading open-source Retrieval-Augmented Generation (RAG) engine that fuses cu…
+     https://github.com/infiniflow/ragflow
+15.  82109 ⭐  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2589.1 ⭐/天 (共82109⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2.  706.3 ⭐/天 (共90998⭐)  karpathy/autoresearch [Python]
+     AI agents running research on single-GPU nanochat training automatically
+     https://github.com/karpathy/autoresearch
+ 3.  526.4 ⭐/天 (共77853⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 4.  437.1 ⭐/天 (共62874⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 5.  398.8 ⭐/天 (共55698⭐)  Panniantong/Agent-Reach [Python]
+     Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube…
+     https://github.com/Panniantong/Agent-Reach
+ 6.  358.4 ⭐/天 (共11918⭐)  XiaomiMiMo/MiMo-Code [TypeScript]
+     MiMo Code: Where Models and Agents Co-Evolve
+     https://github.com/XiaomiMiMo/MiMo-Code
+ 7.  357.5 ⭐/天 (共37937⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ a…
+     https://github.com/calesthio/OpenMontage
+ 8.  322.1 ⭐/天 (共26859⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+ 9.  303.8 ⭐/天 (共51915⭐)  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+10.  279.5 ⭐/天 (共45404⭐)  HKUDS/nanobot [Python]
+     Lightweight, open-source AI agent for your tools, chats, and workflows.
+     https://github.com/HKUDS/nanobot
+11.  276.4 ⭐/天 (共34731⭐)  heygen-com/hyperframes [TypeScript]
+     Write HTML. Render video. Built for agents.
+     https://github.com/heygen-com/hyperframes
+12.  260.9 ⭐/天 (共21187⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+13.  240.0 ⭐/天 (共34778⭐)  tinyhumansai/openhuman [Rust]
+     Your Personal AI super intelligence. A brain that builds a local-first memory of your life…
+     https://github.com/tinyhumansai/openhuman
+14.  229.6 ⭐/天 (共28077⭐)  JCodesMore/ai-website-cloner-template [TypeScript]
+     Clone any website with one command using AI coding agents
+     https://github.com/JCodesMore/ai-website-cloner-template
+15.  223.1 ⭐/天 (共29662⭐)  googleworkspace/cli [Rust]
+     Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Cha…
+     https://github.com/googleworkspace/cli
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  836 ⭐ (+1228.5/天)  Shubhamsaboo/awesome-llm-apps [Python]  共119416⭐
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 2. +  724 ⭐ (+1063.9/天)  DietrichGebert/ponytail [JavaScript]  共82109⭐
+     https://github.com/DietrichGebert/ponytail
+ 3. +  643 ⭐ (+944.9/天)  obra/superpowers [Shell]  共253701⭐
+     https://github.com/obra/superpowers
+ 4. +  425 ⭐ (+624.5/天)  NousResearch/hermes-agent [Python]  共214174⭐
+     https://github.com/NousResearch/hermes-agent
+ 5. +  394 ⭐ (+579.0/天)  calesthio/OpenMontage [Python]  共37937⭐
+     https://github.com/calesthio/OpenMontage
+ 6. +  368 ⭐ (+540.8/天)  Leonxlnx/taste-skill [JavaScript]  共62874⭐
+     https://github.com/Leonxlnx/taste-skill
+ 7. +  358 ⭐ (+526.1/天)  Panniantong/Agent-Reach [Python]  共55698⭐
+     https://github.com/Panniantong/Agent-Reach
+ 8. +  273 ⭐ (+401.2/天)  msitarzewski/agency-agents [Shell]  共131078⭐
+     https://github.com/msitarzewski/agency-agents
+ 9. +  252 ⭐ (+370.3/天)  heygen-com/hyperframes [TypeScript]  共34731⭐
+     https://github.com/heygen-com/hyperframes
+10. +  245 ⭐ (+360.0/天)  addyosmani/agent-skills [JavaScript]  共77853⭐
+     https://github.com/addyosmani/agent-skills
+11. +  191 ⭐ (+280.7/天)  mvanhorn/last30days-skill [Python]  共51915⭐
+     https://github.com/mvanhorn/last30days-skill
+12. +  142 ⭐ (+208.7/天)  JCodesMore/ai-website-cloner-template [TypeScript]  共28077⭐
+     https://github.com/JCodesMore/ai-website-cloner-template
+13. +  141 ⭐ (+207.2/天)  browser-use/browser-use [Python]  共104552⭐
+     https://github.com/browser-use/browser-use
+14. +  104 ⭐ (+152.8/天)  HKUDS/nanobot [Python]  共45404⭐
+     https://github.com/HKUDS/nanobot
+15. +  104 ⭐ (+152.8/天)  op7418/guizang-ppt-skill [HTML]  共21187⭐
+     https://github.com/op7418/guizang-ppt-skill
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\ai_agent\20260713_180029.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260714_020032.json
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM+created%3A%3E2026-01-14&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: LLM） ===
+
+ 1. 229185 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 214176 ⭐  NousResearch/hermes-agent [Python]
+     The agent that grows with you
+     https://github.com/NousResearch/hermes-agent
+ 3. 191561 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 4. 185508 ⭐  Significant-Gravitas/AutoGPT [Python]
+     AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission i…
+     https://github.com/Significant-Gravitas/AutoGPT
+ 5. 176047 ⭐  ollama/ollama [Go]
+     Get up and running with Kimi-K2.6, GLM-5.1, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and ot…
+     https://github.com/ollama/ollama
+ 6. 165632 ⭐  f/prompts.chat [HTML]
+     f.k.a. Awesome ChatGPT Prompts. Share, discover, and collect prompts from the community. F…
+     https://github.com/f/prompts.chat
+ 7. 162569 ⭐  huggingface/transformers [Python]
+     🤗 Transformers: the model-definition framework for state-of-the-art machine learning model…
+     https://github.com/huggingface/transformers
+ 8. 150314 ⭐  firecrawl/firecrawl [TypeScript]
+     The API to search, scrape, and interact with the web at scale. 🔥
+     https://github.com/firecrawl/firecrawl
+ 9. 148698 ⭐  langgenius/dify [TypeScript]
+     Production-ready platform for agentic workflow development.
+     https://github.com/langgenius/dify
+10. 145287 ⭐  open-webui/open-webui [Python]
+     User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
+     https://github.com/open-webui/open-webui
+11. 141681 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+12. 120252 ⭐  ggml-org/llama.cpp [C++]
+     LLM inference in C/C++
+     https://github.com/ggml-org/llama.cpp
+13. 119416 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agent & RAG apps you can actually run — clone, customize, ship.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+14. 104552 ⭐  browser-use/browser-use [Python]
+     🌐 Make websites accessible for AI agents. Automate tasks online with ease.
+     https://github.com/browser-use/browser-use
+15.  99026 ⭐  rasbt/LLMs-from-scratch [Jupyter Notebook]
+     Implement a ChatGPT-like LLM in PyTorch from scratch, step by step
+     https://github.com/rasbt/LLMs-from-scratch
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2589.0 ⭐/天 (共82110⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2. 1296.9 ⭐/天 (共229185⭐)  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 1143.0 ⭐/天 (共191561⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 4.  886.9 ⭐/天 (共88986⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  574.6 ⭐/天 (共57288⭐)  MemPalace/mempalace [Python]
+     The best-benchmarked open-source AI memory system. And it's free.
+     https://github.com/MemPalace/mempalace
+ 6.  411.3 ⭐/天 (共70763⭐)  rtk-ai/rtk [Rust]
+     CLI proxy that reduces LLM token consumption by 60-90% on common dev commands. Single Rust…
+     https://github.com/rtk-ai/rtk
+ 7.  326.3 ⭐/天 (共38172⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 8.  322.1 ⭐/天 (共26859⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+ 9.  279.5 ⭐/天 (共45404⭐)  HKUDS/nanobot [Python]
+     Lightweight, open-source AI agent for your tools, chats, and workflows.
+     https://github.com/HKUDS/nanobot
+10.  227.1 ⭐/天 (共39748⭐)  Hmbown/CodeWhale [Rust]
+     Open-source, community-driven agent harness
+     https://github.com/Hmbown/CodeWhale
+11.  223.3 ⭐/天 (共7199⭐)  omnigent-ai/omnigent [Python]
+     Omnigent is an open-source AI agent framework and meta-harness: orchestrate Claude Code, C…
+     https://github.com/omnigent-ai/omnigent
+12.  211.2 ⭐/天 (共7284⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+13.  208.2 ⭐/天 (共21517⭐)  HKUDS/Vibe-Trading [Python]
+     "Vibe-Trading: Your Personal Trading Agent"
+     https://github.com/HKUDS/Vibe-Trading
+14.  198.4 ⭐/天 (共29384⭐)  AlexsJones/llmfit [Rust]
+     Hundreds of models & providers. One command to find what runs on your hardware.
+     https://github.com/AlexsJones/llmfit
+15.  192.3 ⭐/天 (共15996⭐)  tashfeenahmed/freellmapi [TypeScript]
+     OpenAI-compatible proxy that stacks the free tiers of 16 LLM providers (~1.7B tokens/month…
+     https://github.com/tashfeenahmed/freellmapi
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  925 ⭐ (+1358.2/天)  HKUDS/Vibe-Trading [Python]  共21517⭐
+     https://github.com/HKUDS/Vibe-Trading
+ 2. +  836 ⭐ (+1227.6/天)  Shubhamsaboo/awesome-llm-apps [Python]  共119416⭐
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 3. +  725 ⭐ (+1064.6/天)  DietrichGebert/ponytail [JavaScript]  共82110⭐
+     https://github.com/DietrichGebert/ponytail
+ 4. +  431 ⭐ (+632.9/天)  JuliusBrussee/caveman [JavaScript]  共88986⭐
+     https://github.com/JuliusBrussee/caveman
+ 5. +  427 ⭐ (+627.0/天)  NousResearch/hermes-agent [Python]  共214176⭐
+     https://github.com/NousResearch/hermes-agent
+ 6. +  397 ⭐ (+582.9/天)  firecrawl/firecrawl [TypeScript]  共150314⭐
+     https://github.com/firecrawl/firecrawl
+ 7. +  326 ⭐ (+478.7/天)  multica-ai/andrej-karpathy-skills  共191561⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 8. +  224 ⭐ (+328.9/天)  affaan-m/ECC [JavaScript]  共229185⭐
+     https://github.com/affaan-m/ECC
+ 9. +  196 ⭐ (+287.8/天)  rtk-ai/rtk [Rust]  共70763⭐
+     https://github.com/rtk-ai/rtk
+10. +  141 ⭐ (+207.0/天)  browser-use/browser-use [Python]  共104552⭐
+     https://github.com/browser-use/browser-use
+11. +  111 ⭐ (+163.0/天)  open-webui/open-webui [Python]  共145287⭐
+     https://github.com/open-webui/open-webui
+12. +  104 ⭐ (+152.7/天)  HKUDS/nanobot [Python]  共45404⭐
+     https://github.com/HKUDS/nanobot
+13. +   91 ⭐ (+133.6/天)  esengine/DeepSeek-Reasonix [Go]  共26859⭐
+     https://github.com/esengine/DeepSeek-Reasonix
+14. +   86 ⭐ (+126.3/天)  langgenius/dify [TypeScript]  共148698⭐
+     https://github.com/langgenius/dify
+15. +   79 ⭐ (+116.0/天)  ggml-org/llama.cpp [C++]  共120252⭐
+     https://github.com/ggml-org/llama.cpp
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\llm\20260713_180032.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260714_020121.json
+HTTP Request: GET https://api.github.com/search/repositories?q=generative-ai&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=generative-ai+created%3A%3E2026-01-14&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: generative-ai） ===
+
+ 1. 151819 ⭐  langflow-ai/langflow [Python]
+     Langflow is a powerful tool for building and deploying AI-powered agents and workflows.
+     https://github.com/langflow-ai/langflow
+ 2. 141681 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+ 3. 112950 ⭐  microsoft/generative-ai-for-beginners [Jupyter Notebook]
+     21 Lessons, Get Started Building with Generative AI
+     https://github.com/microsoft/generative-ai-for-beginners
+ 4.  99026 ⭐  rasbt/LLMs-from-scratch [Jupyter Notebook]
+     Implement a ChatGPT-like LLM in PyTorch from scratch, step by step
+     https://github.com/rasbt/LLMs-from-scratch
+ 5.  77808 ⭐  nexu-io/open-design [TypeScript]
+     🎨 The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding ag…
+     https://github.com/nexu-io/open-design
+ 6.  76423 ⭐  dair-ai/Prompt-Engineering-Guide [MDX]
+     🐙 Guides, papers, lessons, notebooks and resources for prompt engineering, context enginee…
+     https://github.com/dair-ai/Prompt-Engineering-Guide
+ 7.  69226 ⭐  microsoft/ai-agents-for-beginners [Jupyter Notebook]
+     12 Lessons to Get Started Building AI Agents
+     https://github.com/microsoft/ai-agents-for-beginners
+ 8.  57164 ⭐  asgeirtj/system_prompts_leaks [JavaScript]
+     Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude De…
+     https://github.com/asgeirtj/system_prompts_leaks
+ 9.  38172 ⭐  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+10.  37195 ⭐  langchain-ai/langgraph [Python]
+     Build resilient agents.
+     https://github.com/langchain-ai/langgraph
+11.  28521 ⭐  NirDiamant/RAG_Techniques [Jupyter Notebook]
+     This repository showcases various advanced techniques for Retrieval-Augmented Generation (…
+     https://github.com/NirDiamant/RAG_Techniques
+12.  28244 ⭐  aishwaryanr/awesome-generative-ai-guide [HTML]
+     A one stop repository for generative AI research updates, interview resources, notebooks a…
+     https://github.com/aishwaryanr/awesome-generative-ai-guide
+13.  27215 ⭐  Stability-AI/generative-models [Python]
+     Generative Models by Stability AI
+     https://github.com/Stability-AI/generative-models
+14.  27093 ⭐  yamadashy/repomix [TypeScript]
+     📦 Repomix is a powerful tool that packs your entire repository into a single, AI-friendly …
+     https://github.com/yamadashy/repomix
+15.  25886 ⭐  deepset-ai/haystack [MDX]
+     Open-source AI orchestration framework for building context-engineered, production-ready L…
+     https://github.com/deepset-ai/haystack
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1016.2 ⭐/天 (共77808⭐)  nexu-io/open-design [TypeScript]
+     🎨 The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding ag…
+     https://github.com/nexu-io/open-design
+ 2.  326.3 ⭐/天 (共38172⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 3.  122.1 ⭐/天 (共7735⭐)  nexu-io/html-anything [HTML]
+     ✨ The agentic HTML editor — your local AI agent writes the HTML, you ship it. 🚀 75 Skills …
+     https://github.com/nexu-io/html-anything
+ 4.   76.7 ⭐/天 (共13208⭐)  waooAI/waoowaoo [TypeScript]
+     首家工业级全流程 AI 影视生产平台。Industry-first professional AI Agent platform for controllable film & v…
+     https://github.com/waooAI/waoowaoo
+ 5.   69.2 ⭐/天 (共11437⭐)  HBAI-Ltd/Toonflow-app [TypeScript]
+     Toonflow 是开源一站式 AI 短剧创作工具，将小说、剧本快速转化为动画短剧。集成 AI 编剧、智能分镜、角色与视频生成，跨平台桌面端轻量部署，助力创作者低成本批量产出视觉内…
+     https://github.com/HBAI-Ltd/Toonflow-app
+ 6.   64.3 ⭐/天 (共7953⭐)  Narcooo/inkos [TypeScript]
+     Story Creation AI Agent for novel, scripts, translation, interactive games, and IP content
+     https://github.com/Narcooo/inkos
+ 7.   53.1 ⭐/天 (共5095⭐)  google/agents-cli [Python]
+     The CLI and skills that turn any coding assistant into an expert at creating, evaluating, …
+     https://github.com/google/agents-cli
+ 8.   37.2 ⭐/天 (共4127⭐)  alvinreal/awesome-opensource-ai [Python]
+     Curated list of the best truly open-source AI projects, models, tools, and infrastructure.…
+     https://github.com/alvinreal/awesome-opensource-ai
+ 9.   36.3 ⭐/天 (共3988⭐)  wiltodelta/remove-ai-watermarks [Python]
+     AI watermark remover. CLI and Python library to strip visible and invisible AI watermarks …
+     https://github.com/wiltodelta/remove-ai-watermarks
+10.   17.7 ⭐/天 (共625⭐)  kadevin/ilab-gpt-conjure [JavaScript]
+     面向 GPT-image-2 的 AI 图片生成 WebUI 工作台，支持 Codex Responses 与 OpenAI 兼容 API 接入，内置公用图库、多类型 Chip 快…
+     https://github.com/kadevin/ilab-gpt-conjure
+11.   17.0 ⭐/天 (共819⭐)  fancyboi999/ai-engineering-from-scratch-zh [Python]
+     Agent工程师最全学习路径 · 从零精通 AI 工程 · 20 阶段 503 课 · 中文全量翻译 + 配套站点 + 动画讲解视频 · 如何成为 AI Agent 工程师的修成指…
+     https://github.com/fancyboi999/ai-engineering-from-scratch-zh
+12.   13.8 ⭐/天 (共1193⭐)  YGYOOO/WorldX [TypeScript]
+     One sentence creates an AI-driven world — generate maps, characters, and watch stories eme…
+     https://github.com/YGYOOO/WorldX
+13.   13.6 ⭐/天 (共1777⭐)  Lightricks/LTX-Desktop [TypeScript]
+     An open-source desktop app for generating videos with LTX models
+     https://github.com/Lightricks/LTX-Desktop
+14.   11.6 ⭐/天 (共1263⭐)  dramaclaw/dramaclaw [TypeScript]
+     A general-purpose AIGC video engine: script to finished film in one pipeline — dramas, ads…
+     https://github.com/dramaclaw/dramaclaw
+15.   11.4 ⭐/天 (共783⭐)  NirDiamant/Agent_Memory_Techniques [Jupyter Notebook]
+     Agent memory for LLMs: 30 runnable Jupyter notebooks covering conversation buffers, vector…
+     https://github.com/NirDiamant/Agent_Memory_Techniques
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  416 ⭐ (+610.8/天)  asgeirtj/system_prompts_leaks [JavaScript]  共57164⭐
+     https://github.com/asgeirtj/system_prompts_leaks
+ 2. +  228 ⭐ (+334.8/天)  nexu-io/open-design [TypeScript]  共77808⭐
+     https://github.com/nexu-io/open-design
+ 3. +  118 ⭐ (+173.3/天)  microsoft/ai-agents-for-beginners [Jupyter Notebook]  共69226⭐
+     https://github.com/microsoft/ai-agents-for-beginners
+ 4. +  107 ⭐ (+157.1/天)  dramaclaw/dramaclaw [TypeScript]  共1263⭐
+     https://github.com/dramaclaw/dramaclaw
+ 5. +   81 ⭐ (+118.9/天)  langchain-ai/langgraph [Python]  共37195⭐
+     https://github.com/langchain-ai/langgraph
+ 6. +   72 ⭐ (+105.7/天)  langchain-ai/langchain [Python]  共141681⭐
+     https://github.com/langchain-ai/langchain
+ 7. +   72 ⭐ (+105.7/天)  rohitg00/ai-engineering-from-scratch [Python]  共38172⭐
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 8. +   50 ⭐ (+73.4/天)  HBAI-Ltd/Toonflow-app [TypeScript]  共11437⭐
+     https://github.com/HBAI-Ltd/Toonflow-app
+ 9. +   44 ⭐ (+64.6/天)  rasbt/LLMs-from-scratch [Jupyter Notebook]  共99026⭐
+     https://github.com/rasbt/LLMs-from-scratch
+10. +   37 ⭐ (+54.3/天)  langflow-ai/langflow [Python]  共151819⭐
+     https://github.com/langflow-ai/langflow
+11. +   33 ⭐ (+48.5/天)  microsoft/generative-ai-for-beginners [Jupyter Notebook]  共112950⭐
+     https://github.com/microsoft/generative-ai-for-beginners
+12. +   27 ⭐ (+39.6/天)  Narcooo/inkos [TypeScript]  共7953⭐
+     https://github.com/Narcooo/inkos
+13. +   26 ⭐ (+38.2/天)  dair-ai/Prompt-Engineering-Guide [MDX]  共76423⭐
+     https://github.com/dair-ai/Prompt-Engineering-Guide
+14. +   18 ⭐ (+26.4/天)  NirDiamant/RAG_Techniques [Jupyter Notebook]  共28521⭐
+     https://github.com/NirDiamant/RAG_Techniques
+15. +   17 ⭐ (+25.0/天)  google/agents-cli [Python]  共5095⭐
+     https://github.com/google/agents-cli
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\generative_ai\20260713_180121.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260714_020124.json
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+coding&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+coding+created%3A%3E2026-01-14&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: AI coding） ===
+
+ 1. 253703 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 196289 ⭐  n8n-io/n8n [TypeScript]
+     Fair-code workflow automation platform with native AI capabilities. Combine visual buildin…
+     https://github.com/n8n-io/n8n
+ 3. 141873 ⭐  x1xhlol/system-prompts-and-models-of-ai-tools
+     FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, L…
+     https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools
+ 4.  88986 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  87080 ⭐  thedotmack/claude-mem [JavaScript]
+     Persistent Context Across Sessions for Every Agent –  Captures everything your agent does …
+     https://github.com/thedotmack/claude-mem
+ 6.  84313 ⭐  Graphify-Labs/graphify [Python]
+     AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Tu…
+     https://github.com/Graphify-Labs/graphify
+ 7.  82110 ⭐  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 8.  77853 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 9.  76927 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+10.  72199 ⭐  daytonaio/daytona
+     Daytona is a Secure and Elastic Infrastructure for Running AI-Generated Code
+     https://github.com/daytonaio/daytona
+11.  70442 ⭐  earendil-works/pi [TypeScript]
+     AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI
+     https://github.com/earendil-works/pi
+12.  65683 ⭐  code-yeongyu/oh-my-openagent [TypeScript]
+     omo/lazycodex: The coding agent for tokenmaxxers;the one and only agent harness for comple…
+     https://github.com/code-yeongyu/oh-my-openagent
+13.  64290 ⭐  ruvnet/ruflo [TypeScript]
+     🌊 The leading agent meta-harness. Deploy intelligent multi-player swarms, coordinate auton…
+     https://github.com/ruvnet/ruflo
+14.  62874 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+15.  62524 ⭐  shanraisshan/claude-code-best-practice [HTML]
+     from vibe coding to agentic engineering - practice makes claude perfect
+     https://github.com/shanraisshan/claude-code-best-practice
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2589.0 ⭐/天 (共82110⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2.  886.9 ⭐/天 (共88986⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 3.  834.0 ⭐/天 (共84313⭐)  Graphify-Labs/graphify [Python]
+     AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Tu…
+     https://github.com/Graphify-Labs/graphify
+ 4.  598.6 ⭐/天 (共59848⭐)  santifer/career-ops [JavaScript]
+     Open-source AI job search: scan job portals, score listings A-F, tailor your CV, track app…
+     https://github.com/santifer/career-ops
+ 5.  526.4 ⭐/天 (共77853⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 6.  437.1 ⭐/天 (共62874⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 7.  358.4 ⭐/天 (共11918⭐)  XiaomiMiMo/MiMo-Code [TypeScript]
+     MiMo Code: Where Models and Agents Co-Evolve
+     https://github.com/XiaomiMiMo/MiMo-Code
+ 8.  357.5 ⭐/天 (共37937⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ a…
+     https://github.com/calesthio/OpenMontage
+ 9.  322.1 ⭐/天 (共26859⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+10.  289.2 ⭐/天 (共29969⭐)  Gitlawb/openclaude [TypeScript]
+     runs anywhere. uses anything
+     https://github.com/Gitlawb/openclaude
+11.  229.6 ⭐/天 (共28077⭐)  JCodesMore/ai-website-cloner-template [TypeScript]
+     Clone any website with one command using AI coding agents
+     https://github.com/JCodesMore/ai-website-cloner-template
+12.  223.3 ⭐/天 (共7199⭐)  omnigent-ai/omnigent [Python]
+     Omnigent is an open-source AI agent framework and meta-harness: orchestrate Claude Code, C…
+     https://github.com/omnigent-ai/omnigent
+13.  214.4 ⭐/天 (共38355⭐)  coreyhaines31/marketingskills [JavaScript]
+     Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and grow…
+     https://github.com/coreyhaines31/marketingskills
+14.  211.2 ⭐/天 (共7284⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+15.  186.0 ⭐/天 (共21792⭐)  MadsLorentzen/ai-job-search [TypeScript]
+     The job search that runs on your machine. AI job application framework built on Claude Cod…
+     https://github.com/MadsLorentzen/ai-job-search
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  994 ⭐ (+1459.6/天)  Graphify-Labs/graphify [Python]  共84313⭐
+     https://github.com/Graphify-Labs/graphify
+ 2. +  725 ⭐ (+1064.6/天)  DietrichGebert/ponytail [JavaScript]  共82110⭐
+     https://github.com/DietrichGebert/ponytail
+ 3. +  645 ⭐ (+947.1/天)  obra/superpowers [Shell]  共253703⭐
+     https://github.com/obra/superpowers
+ 4. +  489 ⭐ (+718.0/天)  earendil-works/pi [TypeScript]  共70442⭐
+     https://github.com/earendil-works/pi
+ 5. +  431 ⭐ (+632.9/天)  JuliusBrussee/caveman [JavaScript]  共88986⭐
+     https://github.com/JuliusBrussee/caveman
+ 6. +  420 ⭐ (+616.7/天)  coreyhaines31/marketingskills [JavaScript]  共38355⭐
+     https://github.com/coreyhaines31/marketingskills
+ 7. +  394 ⭐ (+578.5/天)  calesthio/OpenMontage [Python]  共37937⭐
+     https://github.com/calesthio/OpenMontage
+ 8. +  368 ⭐ (+540.4/天)  Leonxlnx/taste-skill [JavaScript]  共62874⭐
+     https://github.com/Leonxlnx/taste-skill
+ 9. +  245 ⭐ (+359.8/天)  addyosmani/agent-skills [JavaScript]  共77853⭐
+     https://github.com/addyosmani/agent-skills
+10. +  142 ⭐ (+208.5/天)  JCodesMore/ai-website-cloner-template [TypeScript]  共28077⭐
+     https://github.com/JCodesMore/ai-website-cloner-template
+11. +  100 ⭐ (+146.8/天)  thedotmack/claude-mem [JavaScript]  共87080⭐
+     https://github.com/thedotmack/claude-mem
+12. +   99 ⭐ (+145.4/天)  ruvnet/ruflo [TypeScript]  共64290⭐
+     https://github.com/ruvnet/ruflo
+13. +   91 ⭐ (+133.6/天)  esengine/DeepSeek-Reasonix [Go]  共26859⭐
+     https://github.com/esengine/DeepSeek-Reasonix
+14. +   89 ⭐ (+130.7/天)  santifer/career-ops [JavaScript]  共59848⭐
+     https://github.com/santifer/career-ops
+15. +   80 ⭐ (+117.5/天)  n8n-io/n8n [TypeScript]  共196289⭐
+     https://github.com/n8n-io/n8n
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\ai_coding\20260713_180124.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260714_020127.json
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+趋势 AI 报告就绪，模型=Gemma-4-31B-IT-NVFP4
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+趋势简报就绪：6 条(候选 286)
+清理旧趋势产出：删除 54 份，释放 1835.9 KB
+趋势同步完成：新拉 8 个，跳过 0 个（当天已有），共 8 个 query
+定时触发蒸馏：recharge-strategy-assistant @ 03:00
+定时触发蒸馏：comic-keyframe-artist @ 03:00
+定时触发蒸馏：comic-storyboard @ 03:00
+定时触发蒸馏：script-doctor @ 03:00
+定时触发蒸馏：comic-scene-artist @ 03:00
+定时触发蒸馏：comic-director @ 03:00
+定时触发蒸馏：demo-assistant @ 03:00
+定时触发蒸馏：comic-screenwriter @ 03:00
+定时触发蒸馏：comic-character-designer @ 03:00
+定时触发蒸馏：comic-scene-designer @ 03:00
+定时触发蒸馏：comic-vfx-designer @ 03:00
+定时触发蒸馏：comic-trajectory-artist @ 03:00
+定时触发蒸馏：comic-prompt-engineer @ 03:00
+定时触发蒸馏：comic-qa-inspector @ 03:00
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=script-doctor, actions=0, before={'semantic': 1, 'episodic': 0, 'procedural': 0}, after={'semantic_count': 1, 'episodic_count': 0, 'procedural_count': 0}, 3015ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=demo-assistant, actions=1, before={'semantic': 1, 'episodic': 1, 'procedural': 1}, after={'semantic_count': 1, 'episodic_count': 1, 'procedural_count': 1}, 8280ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-vfx-designer, actions=2, before={'semantic': 7, 'episodic': 3, 'procedural': 2}, after={'semantic_count': 7, 'episodic_count': 3, 'procedural_count': 2}, 12405ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-scene-designer, actions=2, before={'semantic': 8, 'episodic': 2, 'procedural': 1}, after={'semantic_count': 8, 'episodic_count': 2, 'procedural_count': 1}, 13469ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-trajectory-artist, actions=1, before={'semantic': 5, 'episodic': 3, 'procedural': 1}, after={'semantic_count': 5, 'episodic_count': 3, 'procedural_count': 1}, 13186ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-director, actions=3, before={'semantic': 13, 'episodic': 5, 'procedural': 3}, after={'semantic_count': 12, 'episodic_count': 5, 'procedural_count': 3}, 17750ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-prompt-engineer, actions=3, before={'semantic': 17, 'episodic': 12, 'procedural': 9}, after={'semantic_count': 17, 'episodic_count': 12, 'procedural_count': 9}, 16656ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-screenwriter, actions=3, before={'semantic': 16, 'episodic': 8, 'procedural': 3}, after={'semantic_count': 16, 'episodic_count': 8, 'procedural_count': 3}, 18704ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-scene-artist, actions=5, before={'semantic': 21, 'episodic': 2, 'procedural': 3}, after={'semantic_count': 17, 'episodic_count': 2, 'procedural_count': 3}, 23280ms
+蒸馏完成: emp=comic-character-designer, actions=2, before={'semantic': 9, 'episodic': 3, 'procedural': 2}, after={'semantic_count': 9, 'episodic_count': 3, 'procedural_count': 2}, 22233ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-qa-inspector, actions=2, before={'semantic': 6, 'episodic': 3, 'procedural': 2}, after={'semantic_count': 6, 'episodic_count': 3, 'procedural_count': 2}, 23655ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-storyboard, actions=5, before={'semantic': 21, 'episodic': 4, 'procedural': 4}, after={'semantic_count': 17, 'episodic_count': 4, 'procedural_count': 4}, 26922ms
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+蒸馏完成: emp=comic-keyframe-artist, actions=7, before={'semantic': 27, 'episodic': 2, 'procedural': 3}, after={'semantic_count': 20, 'episodic_count': 2, 'procedural_count': 3}, 31656ms
+定时触发自我进化：recharge-strategy-assistant @ 04:00
+定时触发自我进化：comic-keyframe-artist @ 04:00
+定时触发自我进化：comic-storyboard @ 04:00
+定时触发自我进化：script-doctor @ 04:00
+定时触发自我进化：comic-scene-artist @ 04:00
+定时触发自我进化：comic-director @ 04:00
+定时触发自我进化：demo-assistant @ 04:00
+定时触发自我进化：comic-screenwriter @ 04:00
+定时触发自我进化：comic-character-designer @ 04:00
+定时触发自我进化：comic-scene-designer @ 04:00
+定时触发自我进化：comic-vfx-designer @ 04:00
+定时触发自我进化：comic-trajectory-artist @ 04:00
+定时触发自我进化：comic-prompt-engineer @ 04:00
+定时触发自我进化：comic-qa-inspector @ 04:00
+HTTP Request: POST http://112.123.118.159:8002/v1/chat/completions "HTTP/1.1 200 OK"
+自我进化分析完成: emp=script-doctor, sessions=3, insights=4, 8985ms
+定时触发采集：jimeng-daily @ 09:00
+开始采集：jimeng-daily (jimeng)
+HTTP Request: GET https://jimeng.jianying.com/ai-tool/home/ "HTTP/1.1 200 OK"
+2026-07-14T01:31:19.412726Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.9 method=GET path=/production request_id=5ac18d1883a440f1916b0f0fb5eb7df6 status=200
+2026-07-14T01:31:19.432769Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.2 method=GET path=/assets/index-DH1lgv_e.css request_id=82fafba038004d678c20200dd4c899cf status=304
+2026-07-14T01:31:19.434721Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.7 method=GET path=/assets/index-Cjs0J1y4.js request_id=4d8176dc8ab14b2496e0b4aa1975624a status=304
+2026-07-14T01:31:19.500892Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/api/v1/agentapp/auth/check request_id=f3063b0e768e4500b346f0341d887e90 status=200
+2026-07-14T01:31:19.501893Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/favicon.ico request_id=9b649c480abd4138b7eaf0c27c92b46c status=200
+2026-07-14T01:31:19.512893Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/assets/Production-CIczKQDv.js request_id=bd5f81d8529241b6b0c80fd80f42437f status=304
+2026-07-14T01:31:19.512893Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/assets/api-DPEEF-51.js request_id=23a23ba9b0ce4c2981814ba17840b837 status=304
+2026-07-14T01:31:19.519992Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.5 method=GET path=/assets/media-BI8TGDae.js request_id=e56b89b39f5042faba3eeedb60a3e800 status=304
+2026-07-14T01:31:19.520992Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/assets/GlobalOutlined-CS_HEgWT.js request_id=2afce38c5acb469f951d4d168c82ecc4 status=304
+2026-07-14T01:31:19.523991Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/assets/CheckOutlined-BnzVNL8L.js request_id=41214e77eb764a01aac863e2aed3557c status=304
+2026-07-14T01:31:19.524992Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/assets/index-DGx1Kobf.js request_id=a566a429220743328f9d9e319e9a1a75 status=304
+2026-07-14T01:31:19.527993Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/assets/TextArea-BYlZLfhb.js request_id=686e44dec9e544dabfaeab4565236774 status=304
+2026-07-14T01:31:19.528994Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/assets/useVariants-B_DfNHOx.js request_id=7e368ec0c68b443d83232cfa47a28045 status=304
+2026-07-14T01:31:19.532894Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/assets/index-BFTt7-yt.js request_id=16f5b0dab04e4bd3a77efa9efe2b500f status=304
+2026-07-14T01:31:19.533895Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.6 method=GET path=/assets/PlusOutlined-BOLybB1j.js request_id=e248b3d7329448a8b7c642ba2c8f4ac2 status=304
+2026-07-14T01:31:19.537893Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/assets/DeleteOutlined-BSaeY91P.js request_id=4c50637c0dfd4684a151565bc4f2ede1 status=304
+2026-07-14T01:31:19.537893Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/assets/index-BGgkAVJI.js request_id=2b7a69db3f15472ab3e491b76c4f05e4 status=304
+2026-07-14T01:31:19.541895Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/assets/progress-BxJNoqSj.js request_id=7302e0720ddf434ebc33337f9bcf92bc status=304
+2026-07-14T01:31:19.541895Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.2 method=GET path=/assets/index-Cw6fCy-S.js request_id=14b891ef7db144d2a388198f810a312d status=304
+2026-07-14T01:31:19.545895Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/assets/Input-DpDiXcJo.js request_id=fd550ccc04a540ebac71bda69d2cd394 status=304
+2026-07-14T01:31:19.546894Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.2 method=GET path=/assets/index-DcaerdNe.js request_id=8651fe65489f448db9d5c044c6e0e6a9 status=304
+2026-07-14T01:31:19.550951Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/assets/EyeOutlined-CDvvHKvd.js request_id=9ac902894026422e83cc03783df45c70 status=304
+2026-07-14T01:31:19.551950Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/assets/SearchOutlined-BaAUilXr.js request_id=56d8c4e6f272435b91ae0fa816f714a4 status=304
+2026-07-14T01:31:19.555951Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/assets/index-CSIeYifG.js request_id=6bc0e679fbb540da85b6cb5c25cb8ada status=304
+2026-07-14T01:31:19.555951Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/assets/Overflow-DlRKR7cO.js request_id=44e9c5b6726445409bccacc381c7cf04 status=304
+2026-07-14T01:31:19.559949Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/assets/DownOutlined-BVhNmCnJ.js request_id=6605b8a9f0de476ba915f376276a4d07 status=304
+2026-07-14T01:31:19.559949Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/assets/PurePanel-CCWbiKdh.js request_id=30890463dc3d46bc8fe343dcc72fbb65 status=304
+2026-07-14T01:31:19.564083Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/assets/index-BEf6eXCT.js request_id=7a3bf1c24abf408fb6055c6a3e7beab8 status=304
+2026-07-14T01:31:19.564950Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/assets/EllipsisOutlined-Bp3giGmP.js request_id=f8b1001b4a6040b58846c90b6f590b09 status=304
+2026-07-14T01:31:19.568949Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/assets/index-CpuDWbwR.js request_id=e1e9b105234f4b318e806a728f95222c status=304
+2026-07-14T01:31:19.569949Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/assets/index-BagP969w.js request_id=0b675023187f428b9db25bc2b6e3b00c status=304
+2026-07-14T01:31:19.574949Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/assets/useForm-DufKktzB.js request_id=6ea260d99d76476fbd2930db553581a3 status=304
+2026-07-14T01:31:19.574949Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.9 method=GET path=/assets/index-C1AWdfZm.js request_id=af05c969232b4756a405b17ef9e327b2 status=304
+2026-07-14T01:31:19.578976Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/assets/UserOutlined-BuFhv-jy.js request_id=a2cfe16692bd4ca7b22a55da1beda4a6 status=304
+2026-07-14T01:31:19.579950Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/index-CnxFxWCe.js request_id=45b5f2c70c7d49909a8d266547efd50f status=304
+2026-07-14T01:31:19.583950Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/assets/useBreakpoint-CcmNXtzf.js request_id=83e367b764f849c1ac73c04058b24d8f status=304
+2026-07-14T01:31:19.584542Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/assets/useForceUpdate-CY9_I4TO.js request_id=aa1f22a04c1842aba8530ceddd82e480 status=304
+2026-07-14T01:31:19.587951Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.6 method=GET path=/assets/index-CBWJRWs1.js request_id=2f01bd4312aa4ab18bc72f2f1e4b90e3 status=304
+2026-07-14T01:31:19.587951Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/index-cBvBB6JB.js request_id=4334320c99974af09d596e30a24746a7 status=304
+2026-07-14T01:31:19.591950Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/assets/index-Da2EfiXP.js request_id=3bbc90f04c4742728d0db800cb5ffb7f status=304
+2026-07-14T01:31:19.591950Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/assets/SaveOutlined-BVDYwoRE.js request_id=9ddb6fe8617643f7ac83e67dbd1ca78c status=304
+2026-07-14T01:31:19.596067Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.6 method=GET path=/assets/addEventListener-D8ptglEV.js request_id=f50c5622420a4149b9762839086af8e5 status=304
+2026-07-14T01:31:19.596067Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/SwapOutlined-D4vlnwVf.js request_id=74b3f8e8b6b94411987f4a9ce57647e0 status=304
+2026-07-14T01:31:19.599949Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/assets/index-CXQufxud.js request_id=2abbefae81834fb5894104083619aab7 status=304
+2026-07-14T01:31:19.600949Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/assets/UploadOutlined-B_ZvSiS_.js request_id=2d40acd537e14023821015b3402c531c status=304
+2026-07-14T01:31:19.604949Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/assets/index-DKwSdgby.js request_id=dbc7999e1db74c329bedfd445356ce05 status=304
+2026-07-14T01:31:19.604949Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/assets/index-BWJKEzqW.js request_id=5b25c41482ed487d9470eef42b96bd8d status=304
+2026-07-14T01:31:19.608950Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/assets/PictureOutlined-DYc6phYE.js request_id=451ee939482246c7b0f6f8752b06a938 status=304
+2026-07-14T01:31:19.609950Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/assets/PlayCircleOutlined-BWuTyoY7.js request_id=fbf011914102448982dcd0c5665bda18 status=304
+2026-07-14T01:31:19.613975Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/assets/FileTextOutlined-C6f3MwFl.js request_id=47ad816692ad41edbcfbcfb5382ecc24 status=304
+2026-07-14T01:31:19.614211Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/assets/ExclamationCircleOutlined-eg81f8pQ.js request_id=e2bb3f867d5a48b5a5572e765b02b8a3 status=304
+2026-07-14T01:31:19.617951Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/assets/CheckCircleOutlined-CoRSArEm.js request_id=8b4a70fbecd54b8e8bd98c6b0dd763ef status=304
+2026-07-14T01:31:19.617951Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/assets/ClockCircleOutlined-DmHc0JTv.js request_id=4e4532e882a3432d935ba18003e96213 status=304
+2026-07-14T01:31:19.703802Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.7 method=GET path=/api/v1/agentapp/registry/employees request_id=1dc31c262a984717ad7f997bddf8c213 status=200
+2026-07-14T01:31:19.771701Z [info     ] request                        client=127.0.0.1 elapsed_ms=106.6 method=GET path=/api/v1/agentapp/production/projects request_id=403e8195735d422aa10775137f200d7d status=200
+2026-07-14T01:31:19.919702Z [info     ] request                        client=127.0.0.1 elapsed_ms=77.9 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=48557e55a13f4cc2b78309fc360cd502 status=200
+2026-07-14T01:31:21.482936Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.2 method=GET path=/uploads/canvas/img_auto_019f995542c642e398712f414e4577a8.png request_id=0e98d55a998841b38d3efd6bc692b90d status=304
+2026-07-14T01:31:21.484934Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.9 method=GET path=/uploads/canvas/img_auto_d7e55957-3dcf-4fae-bc08-4bfe0abfecdc.png request_id=bbd986c547a84dbca84ae093eb920576 status=200
+2026-07-14T01:31:21.485933Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.5 method=GET path=/uploads/canvas/img_auto_a48d2d59-9a78-4245-86d2-a6017b2232a3.png request_id=ece37c9d3fe54c928419171b0cc8532b status=200
+2026-07-14T01:31:21.487933Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.4 method=GET path=/uploads/canvas/img_auto_e8daf59c-5fab-43cc-8f83-af4a9b24fe19.png request_id=fbb6089de413473daafa86eba7741b75 status=200
+2026-07-14T01:31:21.488938Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.2 method=GET path=/uploads/canvas/img_auto_41c1ee23-df56-476e-b9ba-e8fbe2a80fc7.png request_id=80d958b3735f4c3dbc049bc25ad34367 status=200
+2026-07-14T01:31:21.489933Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.4 method=GET path=/uploads/canvas/img_auto_13ed38d1-63aa-4ae8-8d89-f314234815c8.png request_id=fe922405d0e94a9fabac96e6c98aa6e9 status=200
+2026-07-14T01:31:21.550932Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.0 method=GET path=/uploads/canvas/img_auto_f4f42f9c-c9ce-4c92-98f7-bc69055aa25b.png request_id=f4471a4bb7ac4d5e9f418ab09ccc50fb status=200
+2026-07-14T01:31:21.936474Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.4 method=GET path=/uploads/canvas/img_auto_97a08717-e704-475d-a650-104973e79c24.png request_id=8b83bc6a49db40528cd01db853e63232 status=200
+2026-07-14T01:31:21.937469Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.4 method=GET path=/uploads/canvas/img_auto_1ad4f58c-c743-4f0c-8d24-8325be3fdb12.png request_id=561c2d00df864b56a5315033d1bf4edc status=200
+2026-07-14T01:31:21.939471Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.9 method=GET path=/uploads/canvas/img_auto_36097150-3c51-4a51-ac01-79c3cbe75ba4.png request_id=404bdbfe88194cf5acd32d85785abb9c status=200
+2026-07-14T01:31:21.940471Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.9 method=GET path=/uploads/canvas/img_auto_e1437336-90ac-46d7-b91b-6cb8934fde49.png request_id=aa633671b5f74506819e956fc216c120 status=200
+2026-07-14T01:31:21.940471Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.6 method=GET path=/uploads/canvas/img_auto_471c674b-c29a-448d-90ac-6e458ee89584.png request_id=4c07f3cf3a034ddfad706da26f2e6782 status=200
+2026-07-14T01:31:21.941471Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.9 method=GET path=/uploads/canvas/img_auto_8e4a75c5-6cc7-4a2c-b2f7-fa7f83818aed.png request_id=1b72b8d45605428fbf45e7146c64441c status=200
+2026-07-14T01:31:22.010469Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/uploads/canvas/img_auto_1a6a8e1f-f702-4471-8ba5-65c44d2557fe.png request_id=c8faec7338af43a4921678fef8a01a1f status=200
+2026-07-14T01:31:27.990989Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.8 method=GET path=/uploads/canvas/img_auto_2f9a7c01-fe41-40c6-a581-8581fe3d683f.png request_id=0d7bd9a4e5b142a3af8edfb5c3f809fd status=200
+2026-07-14T01:31:27.990989Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.0 method=GET path=/uploads/canvas/img_auto_14d1d828-a7ef-4f2c-9c5c-a7f2fa987e45.png request_id=66ff135ff4d545559632403fe325383a status=200
+2026-07-14T01:31:27.991984Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.5 method=GET path=/uploads/canvas/img_auto_47fadd74-b4bb-4384-b6c1-f8f66afe574d.png request_id=b286b2a94a4540f0975c3bacad5a675d status=200
+2026-07-14T01:31:27.991984Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.7 method=GET path=/uploads/canvas/img_auto_d235e7fc-e7ae-4a5a-b9ba-b32fdc91964f.png request_id=4fca02405286424dbc9bab06ca97557d status=200
+2026-07-14T01:31:27.992984Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.1 method=GET path=/uploads/canvas/img_auto_af3bffa7-1293-45e9-87ad-f62e9e57df35.png request_id=e819c0e0bb3f40058d1a4a15e4a4b1b3 status=200
+2026-07-14T01:31:27.992984Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.9 method=GET path=/uploads/canvas/img_auto_61c8eeea-da54-4147-ad00-c29eef10ea6e.png request_id=c2a754ccd1234bd1b014e3997d1d30cc status=200
+2026-07-14T01:31:32.689314Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.8 method=GET path=/uploads/canvas/img_auto_6cac969f-1ebd-474d-b22e-025644612af8.png request_id=475a2c45a53e42178a94337ad7f02a6d status=200
+2026-07-14T01:31:32.689314Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.1 method=GET path=/uploads/canvas/img_auto_dd166793-a0ef-4481-8944-389f08e59d94.png request_id=aadab22927e447af8ed86e35fe3bd1f5 status=200
+2026-07-14T01:31:32.690165Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.6 method=GET path=/uploads/canvas/img_auto_59604b0d-ad4b-4492-93e7-1116fb877db7.png request_id=78c05ebd02da410fae25f440775a1337 status=200
+2026-07-14T01:31:32.690165Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.1 method=GET path=/uploads/canvas/img_auto_977730db-87f1-4c6d-950d-ce744f4fe543.png request_id=a4063fa637e046a6ae1f5a7b1925c37f status=200
+2026-07-14T04:23:06.881702Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.1 method=GET path=/assets/ProductionMatrix-CuwbX0yf.js request_id=28e324c356654025abf4f891bad0aa12 status=304
+2026-07-14T04:23:06.883435Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.7 method=GET path=/assets/InboxOutlined-BCFOezxW.js request_id=97ad694d159a484b8c016b29b542a4d6 status=304
+2026-07-14T04:23:06.886702Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.8 method=GET path=/assets/Table-BZj95R7f.js request_id=e6828696a92b46da81c9eb87bb54fcd2 status=304
+2026-07-14T04:23:06.887107Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.7 method=GET path=/assets/index-BIGy2wfL.js request_id=382a67ef75ac449eb571f9c8d1fb80a0 status=304
+2026-07-14T04:23:06.887107Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.8 method=GET path=/assets/collapse-BbEVqHco.js request_id=2ce2c74a07b34963b07ba16a9a0bfa1a status=304
+2026-07-14T04:23:06.887702Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.5 method=GET path=/assets/dropdown-9-I-zGnQ.js request_id=86c0fad97f4243409033ecc9e739137d status=304
+2026-07-14T04:23:06.892703Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.6 method=GET path=/favicon.ico request_id=d4e71fa93353421e80264f9bdfb5ba9b status=200
+2026-07-14T04:23:06.893702Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.4 method=GET path=/assets/FileOutlined-DcyhPHLy.js request_id=5aabddd2e2294c1abde528a033f44177 status=304
+2026-07-14T04:23:06.894703Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.8 method=GET path=/assets/row-D-Tt7xg5.js request_id=67c35951a12a458ab46fa3abab264a7b status=304
+2026-07-14T04:23:06.894703Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.5 method=GET path=/assets/LockOutlined-CCVcHLqq.js request_id=1858b2668d8c4f5495f0ca7e2f3d8355 status=304
+2026-07-14T04:23:06.914703Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/api/v1/agentapp/production/matrix request_id=b6d01bc4b24f4e7eb17d96f93d8fa241 status=401
+2026-07-14T04:23:06.915809Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.3 method=GET path=/api/v1/agentapp/production/orphans request_id=5a8d7a192ca5405099f3b3d9031f5576 status=401
+2026-07-14T04:23:06.928826Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.3 method=GET path=/login request_id=ca6f1e4eebf0462398d653b391a7bd60 status=200
+2026-07-14T04:23:06.929910Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/login request_id=228c6077ad1b4e26b06532f935f28593 status=200
+2026-07-14T04:23:06.942252Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.7 method=GET path=/assets/index-DH1lgv_e.css request_id=efe4e1805d8448ea802d082edafb5f66 status=304
+2026-07-14T04:23:06.943181Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.1 method=GET path=/assets/index-Cjs0J1y4.js request_id=7f88e0ebc73f4d39a5318197adf717a1 status=304
+2026-07-14T04:23:07.000184Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.2 method=GET path=/assets/Input-DpDiXcJo.js request_id=6fdc807964ac4024b98364588bd7c282 status=304
+2026-07-14T04:23:07.000184Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.3 method=GET path=/assets/UserLogin-B6c07Jnp.js request_id=8c6bd77629a34bedaef18b06fbee933e status=304
+2026-07-14T04:23:07.001430Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.9 method=GET path=/assets/index-DcaerdNe.js request_id=17f1aab2783040a9a14b66e947c41b36 status=304
+2026-07-14T04:23:07.001430Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.7 method=GET path=/assets/TextArea-BYlZLfhb.js request_id=93b71787a2e24463be8b383b8890e7b3 status=304
+2026-07-14T04:23:07.002183Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.5 method=GET path=/assets/useVariants-B_DfNHOx.js request_id=8169f60ea4314e238e7dd4fbc2e31bdf status=304
+2026-07-14T04:23:07.010183Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.7 method=GET path=/favicon.ico request_id=afb46f8ae0cc4072abe0ae074625dc80 status=200
+2026-07-14T04:23:07.011236Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.7 method=GET path=/assets/SearchOutlined-BaAUilXr.js request_id=357bf10e4d9d4020aed64b3bd5bdab5e status=304
+2026-07-14T04:23:07.011236Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.5 method=GET path=/assets/UserOutlined-BuFhv-jy.js request_id=2f3d42afe819473d8c3155993c8aba02 status=304
+2026-07-14T04:23:07.012182Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.5 method=GET path=/assets/EyeOutlined-CDvvHKvd.js request_id=694647abdad042f38ad23a66c790666f status=304
+2026-07-14T04:23:15.861771Z [info     ] request                        client=127.0.0.1 elapsed_ms=85.9 method=POST path=/api/v1/agentapp/auth/login request_id=fab0eab8ba16439d9664c9bc52ad53a8 status=200
+2026-07-14T04:23:15.872687Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.0 method=GET path=/api/v1/agentapp/auth/check request_id=52e1de8c7d794ca5a2be86df85ef8fcd status=200
+2026-07-14T04:23:15.887379Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/favicon.ico request_id=1169dcc21dfb4096ada414ab25210193 status=200
+2026-07-14T04:23:15.890380Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/api/v1/agentapp/auth/check request_id=ae19ae0749b546b48b0d3a5fbe5fefba status=200
+2026-07-14T04:23:15.906382Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/Dashboard-BMQEyJSI.js request_id=924d0ec88741479f95da98957e6d1849 status=304
+2026-07-14T04:23:15.910809Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/assets/api-DPEEF-51.js request_id=528a3fc5171b48c3a5f3869c98a10ffb status=304
+2026-07-14T04:23:15.914380Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/assets/ReloadOutlined-DZrRAJXY.js request_id=e5988f884576423294465601642ada55 status=304
+2026-07-14T04:23:15.918380Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/index-DGx1Kobf.js request_id=6e4d7b5347ed437e82847f923c028ce3 status=304
+2026-07-14T04:23:15.921380Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/assets/CheckOutlined-BnzVNL8L.js request_id=8fff8394cecc46f183ef513df2a5998b status=304
+2026-07-14T04:23:15.925381Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/assets/index-BFTt7-yt.js request_id=64a3b869f26b4be9a7ce7c08eca5b4d5 status=304
+2026-07-14T04:23:15.930384Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/assets/PlusOutlined-BOLybB1j.js request_id=d84b0712abbd47c390dba467d6f5a1db status=304
+2026-07-14T04:23:15.934380Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/assets/index-GBHW4yUc.js request_id=eb144cdf7a404819b97feb63ee87b33e status=304
+2026-07-14T04:23:15.936382Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/assets/index-BEf6eXCT.js request_id=d10b928365cf4ac6bf746ca1badb7a45 status=304
+2026-07-14T04:23:15.939381Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.3 method=GET path=/assets/EllipsisOutlined-Bp3giGmP.js request_id=53c0652c287d406baeeb0a849cfd5664 status=304
+2026-07-14T04:23:15.941380Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/assets/Overflow-DlRKR7cO.js request_id=8f368ea77baa437e857b5f7f29bd7ec7 status=304
+2026-07-14T04:23:15.943381Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/assets/progress-BxJNoqSj.js request_id=2943fa0ff7f040169010dda4f001fbd9 status=304
+2026-07-14T04:23:15.946382Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.3 method=GET path=/assets/ArrowRightOutlined-CN-33DhV.js request_id=ab57a8adfdc04ae2bb704c22558922bc status=304
+2026-07-14T04:23:15.949381Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.3 method=GET path=/assets/useBreakpoint-CcmNXtzf.js request_id=519a31b548314720a04a4f449978660b status=304
+2026-07-14T04:23:15.951382Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/assets/useForceUpdate-CY9_I4TO.js request_id=1a88021633d7457589e18bdfc5ed2a5d status=304
+2026-07-14T04:23:15.953382Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.1 method=GET path=/assets/index-DzRKieEp.js request_id=c3ea3b8c6fa1479b83383298601b1ee3 status=304
+2026-07-14T04:23:15.956382Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/assets/ExclamationCircleOutlined-eg81f8pQ.js request_id=6b576b1838394694ab04f373ff73dd1b status=304
+2026-07-14T04:23:15.958382Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/assets/CheckCircleOutlined-CoRSArEm.js request_id=e8c656daee2b4273b62360053b7c3981 status=304
+2026-07-14T04:23:15.961381Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.1 method=GET path=/assets/index-Cw6fCy-S.js request_id=2ca72a416222443a9ea1daf5c689d656 status=304
+2026-07-14T04:23:15.963382Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/favicon.ico request_id=bb3129c98af4447281f7db341bfe1ff8 status=200
+2026-07-14T04:23:16.103703Z [info     ] request                        client=127.0.0.1 elapsed_ms=135.7 method=GET path=/api/v1/agentapp/production/projects request_id=5c9ba3f5d97b47be8cf63968ecb9b1c5 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+2026-07-14T04:23:18.607507Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.0 method=GET path=/assets/index-BagP969w.js request_id=819f8767d4df4efaa7888d5e58f1b270 status=304
+2026-07-14T04:23:18.608967Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.9 method=GET path=/assets/index-CSIeYifG.js request_id=eabface9062d44e0a0803f64475b97b1 status=304
+2026-07-14T04:23:18.613611Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.1 method=GET path=/assets/PurePanel-CCWbiKdh.js request_id=c96b0582edbd4fc180eb016e92ebe19f status=304
+2026-07-14T04:23:18.614507Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.4 method=GET path=/assets/addEventListener-D8ptglEV.js request_id=0416fbae24384322856cda297ce046e1 status=304
+2026-07-14T04:23:18.614507Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.9 method=GET path=/assets/DownOutlined-BVhNmCnJ.js request_id=c8fff72fb29d4fb9bb39b825f0d2354b status=304
+2026-07-14T04:23:18.624483Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.9 method=GET path=/assets/index-CpuDWbwR.js request_id=dfebde7ea8034ddbae325b89c014fc5e status=304
+2026-07-14T04:23:18.624483Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.1 method=GET path=/assets/index-C1AWdfZm.js request_id=b8e89991231c457185b92b9ed2c9b198 status=304
+2026-07-14T04:23:18.625487Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.6 method=GET path=/assets/index-CnxFxWCe.js request_id=94033e2ef1d140dcbe3498841a5074f7 status=304
+2026-07-14T04:23:18.625487Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.7 method=GET path=/assets/useForm-DufKktzB.js request_id=8b325285894d4777a076bd63593c3529 status=304
+2026-07-14T04:23:18.625487Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.6 method=GET path=/assets/index-BGgkAVJI.js request_id=efa81d4ac2c945ebaef8f88ecd61ffab status=304
+2026-07-14T04:23:18.632485Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/favicon.ico request_id=e73a3ff4f3aa41d380dff9b22a2bf02e status=200
+2026-07-14T04:23:18.634487Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.4 method=GET path=/assets/FileTextOutlined-C6f3MwFl.js request_id=512ab4adffa74ca8ab46bf11a3724e65 status=304
+2026-07-14T04:23:18.634487Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.7 method=GET path=/assets/index-cBvBB6JB.js request_id=b345bd5338dc4a11833c9b142141cc2f status=304
+2026-07-14T04:23:18.635487Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.5 method=GET path=/assets/PictureOutlined-DYc6phYE.js request_id=85d68c90ef114801894a258a9099e474 status=304
+2026-07-14T04:23:18.871210Z [info     ] request                        client=127.0.0.1 elapsed_ms=229.1 method=GET path=/api/v1/agentapp/production/orphans request_id=6c21499d6a6a40198e6f87c117da8e1a status=200
+2026-07-14T04:23:18.901297Z [info     ] request                        client=127.0.0.1 elapsed_ms=259.7 method=GET path=/api/v1/agentapp/production/matrix request_id=6c33b5d268d948af950f6356a63b24bd status=200
+2026-07-14T04:23:19.018270Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.8 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=40748ab071c44044bb4e6e7a57358436 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+2026-07-14T04:23:19.161590Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.8 method=GET path=/assets/style-BPljHo6W.js request_id=d45bc2d3f0004b61a72b5307f0e40a10 status=304
+2026-07-14T04:23:19.161590Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.2 method=GET path=/assets/media-BI8TGDae.js request_id=de6bb6e3eade41c49d5ad673e037a350 status=304
+2026-07-14T04:23:19.162458Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.3 method=GET path=/assets/Canvas-BuknkNJi.js request_id=42b8811921a4473e9b8021632e7172c1 status=304
+2026-07-14T04:23:19.162458Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.2 method=GET path=/assets/style-B5DZHykP.css request_id=9807fa50ce5d4f0a891608094e53abe0 status=304
+2026-07-14T04:23:19.163461Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.1 method=GET path=/assets/index-Da2EfiXP.js request_id=8c5ea8023ae54c018513373651330aba status=304
+2026-07-14T04:23:19.172458Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.4 method=GET path=/assets/DownloadOutlined-kqpvIgiO.js request_id=9d4d3968a1c042b48c910afbe07518dc status=304
+2026-07-14T04:23:19.173458Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.8 method=GET path=/assets/DeleteOutlined-BSaeY91P.js request_id=d7e873b2d1784b8eb3c35e0db3968b32 status=304
+2026-07-14T04:23:19.173690Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.9 method=GET path=/assets/SendOutlined-CNMfaw4G.js request_id=f3a530a4ca1d4340a6de6daf43822f2d status=304
+2026-07-14T04:23:19.174458Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.1 method=GET path=/assets/UploadOutlined-B_ZvSiS_.js request_id=73f6fb1226f84142808d307d0359acb6 status=304
+2026-07-14T04:23:19.176461Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.2 method=GET path=/assets/SwapOutlined-D4vlnwVf.js request_id=073f3c5f7bb242348c3d534013001e83 status=304
+2026-07-14T04:23:19.179459Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/favicon.ico request_id=1979c9cd6fb24484a2883f9a89d921f0 status=200
+2026-07-14T04:23:19.180484Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.5 method=GET path=/assets/SaveOutlined-BVDYwoRE.js request_id=1a5b0166eb55456b8d853a71e9599578 status=304
+2026-07-14T04:23:19.225054Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/api/v1/agentapp/canvas/image-models request_id=f41d62c600df41429053a2fc2acd5f11 status=200
+2026-07-14T04:23:19.231107Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.9 method=GET path=/api/v1/agentapp/registry/employees request_id=a4a01220461141778154bef031d044ab status=200
+2026-07-14T04:23:19.234054Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.3 method=GET path=/api/v1/agentapp/canvas/canvases request_id=d0c4b62413124ade918bf1e6d0d8afe9 status=200
+2026-07-14T04:23:19.263197Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.9 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=5adfbefe973a4a57a1aa153e030a605b status=200
+2026-07-14T04:23:20.757694Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.1 method=PUT path=/api/v1/agentapp/canvas/canvases/359d205a request_id=ef85c3ae81f44282aa8b6207cceba04c status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+2026-07-14T04:23:21.735636Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.8 method=GET path=/favicon.ico request_id=6bc413ed37824b60b2fee50c992217f5 status=200
+2026-07-14T04:23:21.926766Z [info     ] request                        client=127.0.0.1 elapsed_ms=193.0 method=GET path=/api/v1/agentapp/production/orphans request_id=e67233c5765d4bde94caba28ed70485b status=200
+2026-07-14T04:23:21.926766Z [info     ] request                        client=127.0.0.1 elapsed_ms=195.4 method=GET path=/api/v1/agentapp/production/matrix request_id=06aa572ee441486b887c9544d4deea57 status=200
+2026-07-14T04:23:21.991737Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=bbf7b34bcb2e43be91e2e8f9df2bcb50 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+查询任务列表失败
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1083, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1466, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 905, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-14T04:23:27.180769Z [info     ] request                        client=127.0.0.1 elapsed_ms=11073.0 method=GET path=/api/v1/agentapp/tasks request_id=2f8ae75c8d59435d82fa05a1808a5b5e status=503
+2026-07-14T04:23:28.836851Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/assets/EpisodeDetail-Bc0ty0Gq.js request_id=b917f0bffedc490f8bfa59d40da01fb2 status=304
+2026-07-14T04:23:28.840976Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/assets/HomeOutlined-Ce2X-gr-.js request_id=edca65aa19484676b587a76ddac4f6e3 status=304
+2026-07-14T04:23:28.844851Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/assets/ArrowLeftOutlined-CcgWeqNI.js request_id=60f32ac51306443c8941627381dafffe status=304
+2026-07-14T04:23:28.849851Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/assets/ClockCircleOutlined-DmHc0JTv.js request_id=22c5b60a620a4ec898d9b9c1ba650751 status=304
+2026-07-14T04:23:28.851851Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/assets/index-CXQufxud.js request_id=d79702f3e5ae48caa410edf5baecac69 status=304
+2026-07-14T04:23:28.855850Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/assets/index-DKwSdgby.js request_id=0669deeab0584d68bb448c948677abfc status=304
+2026-07-14T04:23:28.858852Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/favicon.ico request_id=367ca45f841e484fbc13a9af54af9c22 status=200
+2026-07-14T04:23:28.959984Z [info     ] request                        client=127.0.0.1 elapsed_ms=79.8 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=2a6584f7410d48fcabe0ad048b575023 status=200
+2026-07-14T04:23:29.056041Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/uploads/canvas/img_auto_36097150-3c51-4a51-ac01-79c3cbe75ba4.png request_id=05046f6e4ee74261933713f0f32881b1 status=304
+2026-07-14T04:23:29.058966Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/uploads/canvas/img_auto_e1437336-90ac-46d7-b91b-6cb8934fde49.png request_id=60237d8af085409199e4914f5f87e86e status=304
+2026-07-14T04:23:29.062965Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/uploads/canvas/img_auto_1a6a8e1f-f702-4471-8ba5-65c44d2557fe.png request_id=b4f181901ce649cea0e64587ae3a23f2 status=304
+2026-07-14T04:23:29.065967Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/uploads/canvas/img_auto_471c674b-c29a-448d-90ac-6e458ee89584.png request_id=c908a6bb1b8847849d214b49c34ff535 status=304
+2026-07-14T04:23:29.068964Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/uploads/canvas/img_auto_8e4a75c5-6cc7-4a2c-b2f7-fa7f83818aed.png request_id=20ef66b1febe42a79a253c420f7a352f status=304
+2026-07-14T04:23:29.072146Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/uploads/canvas/img_auto_97a08717-e704-475d-a650-104973e79c24.png request_id=477936f2a6ae449ab8aadb65882817e4 status=304
+2026-07-14T04:23:29.074992Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/uploads/canvas/img_auto_1ad4f58c-c743-4f0c-8d24-8325be3fdb12.png request_id=b2600cf505ab4c4080de75aedbfcd699 status=304
+2026-07-14T04:23:33.992013Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.8 method=GET path=/favicon.ico request_id=7316dbfd6ce44b1ba7465670ccbb4704 status=200
+2026-07-14T04:23:34.232932Z [info     ] request                        client=127.0.0.1 elapsed_ms=245.8 method=GET path=/api/v1/agentapp/production/orphans request_id=407a1ed46e3e419593637c16d59b65c1 status=200
+2026-07-14T04:23:34.232932Z [info     ] request                        client=127.0.0.1 elapsed_ms=247.6 method=GET path=/api/v1/agentapp/production/matrix request_id=4b595bcbf69a4202a218f301c33020da status=200
+2026-07-14T04:23:34.299288Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=733c6b819d1c4b679a678b8e8cf58f3f status=200
+2026-07-14T04:23:35.756247Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/favicon.ico request_id=509e39455a494f819b701c75eee9d637 status=200
+2026-07-14T04:23:35.843969Z [info     ] request                        client=127.0.0.1 elapsed_ms=91.3 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=327bb30218b745d8aa3966182b2ecb2a status=200
+2026-07-14T04:23:46.924790Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.4 method=GET path=/favicon.ico request_id=8f2aa832ab46490fb40804c012585861 status=200
+2026-07-14T04:23:47.129184Z [info     ] request                        client=127.0.0.1 elapsed_ms=207.7 method=GET path=/api/v1/agentapp/production/matrix request_id=a8622775f2164e8890df19efa2684d93 status=200
+2026-07-14T04:23:47.129184Z [info     ] request                        client=127.0.0.1 elapsed_ms=207.6 method=GET path=/api/v1/agentapp/production/orphans request_id=978bbc17b13644df9fd813dde2aad62f status=200
+2026-07-14T04:23:47.209455Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=3341b08993ab4f4898077260b0cef177 status=200
+2026-07-14T04:23:57.430450Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.5 method=GET path=/favicon.ico request_id=f473d241dd9c44e9b69274b668969393 status=200
+2026-07-14T04:23:57.661919Z [info     ] request                        client=127.0.0.1 elapsed_ms=226.5 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=0a2bd4c8881b4b6fb6384daebff98b95 status=200
+2026-07-14T04:24:00.359183Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/favicon.ico request_id=a9606f6b6eaa4ed6b4efd812c753cd2c status=200
+2026-07-14T04:24:00.538516Z [info     ] request                        client=127.0.0.1 elapsed_ms=184.5 method=GET path=/api/v1/agentapp/production/matrix request_id=02a39000fbc647eba77a7b42e4ab35a2 status=200
+2026-07-14T04:24:00.538516Z [info     ] request                        client=127.0.0.1 elapsed_ms=184.5 method=GET path=/api/v1/agentapp/production/orphans request_id=6d5a95118137493982bffee0f5e6ffcb status=200
+2026-07-14T04:24:00.609174Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/archive request_id=b7ffe6312dc045bc8cc1b94359d6d9f4 status=200
+2026-07-14T04:24:01.170913Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.2 method=GET path=/assets/index-CBWJRWs1.js request_id=b6eb8f53773b4ba5925d9def5d29ea97 status=304
+2026-07-14T04:24:01.171913Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.7 method=GET path=/assets/GlobalOutlined-CS_HEgWT.js request_id=701df464f7bb454e91b048b2b0c19dd1 status=304
+2026-07-14T04:24:01.172913Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.5 method=GET path=/assets/Production-CIczKQDv.js request_id=4ffba30e06024c348a5bc479f5c48790 status=304
+2026-07-14T04:24:01.177913Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/favicon.ico request_id=20a5a715f7764908ad0fd12197bd8f73 status=200
+2026-07-14T04:24:01.179912Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.0 method=GET path=/assets/PlayCircleOutlined-BWuTyoY7.js request_id=74dbacc832144982bc8765a914d2ec7c status=304
+2026-07-14T04:24:01.180913Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.4 method=GET path=/assets/index-BWJKEzqW.js request_id=232ace59de9948f2b4aebfaabf34d975 status=304
+2026-07-14T04:24:01.241174Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.0 method=GET path=/api/v1/agentapp/registry/employees request_id=672f5a798d29475b8d71a39448c2e901 status=200
+2026-07-14T04:24:01.304091Z [info     ] request                        client=127.0.0.1 elapsed_ms=102.1 method=GET path=/api/v1/agentapp/production/projects request_id=02c33cea478946149bd29fb426a616a4 status=200
+2026-07-14T04:24:01.487766Z [info     ] request                        client=127.0.0.1 elapsed_ms=138.5 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=d236eb83690843e49841a7a371269384 status=200
+2026-07-14T04:24:02.872073Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.3 method=GET path=/uploads/canvas/img_auto_d7e55957-3dcf-4fae-bc08-4bfe0abfecdc.png request_id=0ceb940c506f48b89abc0b2b25a4c94f status=304
+2026-07-14T04:24:02.872810Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.8 method=GET path=/uploads/canvas/img_auto_a48d2d59-9a78-4245-86d2-a6017b2232a3.png request_id=8313b980206d4e49ab7154dd7895d953 status=304
+2026-07-14T04:24:02.873810Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.8 method=GET path=/uploads/canvas/img_auto_41c1ee23-df56-476e-b9ba-e8fbe2a80fc7.png request_id=1e0b716608c14c10ae53dba70e62c428 status=304
+2026-07-14T04:24:02.875812Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.2 method=GET path=/uploads/canvas/img_auto_e8daf59c-5fab-43cc-8f83-af4a9b24fe19.png request_id=afa901d2e83d4fbc9ae7c2b7e56d3785 status=304
+2026-07-14T04:24:02.875812Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.0 method=GET path=/uploads/canvas/img_auto_13ed38d1-63aa-4ae8-8d89-f314234815c8.png request_id=bf7f581639274159995ffe6201d456de status=304
+2026-07-14T04:24:02.876810Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.6 method=GET path=/uploads/canvas/img_auto_f4f42f9c-c9ce-4c92-98f7-bc69055aa25b.png request_id=e25f83df71164eeeb6a232f139941a7c status=304
+2026-07-14T04:24:24.252935Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.0 method=GET path=/uploads/canvas/img_auto_094a1bd8-c247-42a6-b76b-041fd1aece19.png request_id=9ec40a5c36b74574873d018e7f30b9d0 status=200
+2026-07-14T04:24:24.253398Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.0 method=GET path=/uploads/canvas/img_auto_7562fc40-49fc-4a6c-acbf-4dd9043136e2.png request_id=0ae5a44ad4a346bca64d6a8f22c5825c status=200
+2026-07-14T04:24:24.254368Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.8 method=GET path=/uploads/canvas/img_auto_b985c72b-f256-40eb-b96d-ee66557d4469.png request_id=0a1a8e2b832d42c2adcf17e6b636beaa status=200
+2026-07-14T04:24:24.255540Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.9 method=GET path=/uploads/canvas/img_auto_5f29c02c-b3db-46d6-89c3-d08c55890f27.png request_id=a4d4dcc777314bc2b2160877ff972cdd status=200
+2026-07-14T04:24:24.255540Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.0 method=GET path=/uploads/canvas/img_auto_acca0fed-1523-4f3f-a948-0f6ef4b56a03.png request_id=1601042fcac3476ab3c561af41da1d48 status=200
+2026-07-14T04:26:18.776967Z [info     ] request                        client=127.0.0.1 elapsed_ms=87.4 method=POST path=/api/v1/agentapp/auth/login request_id=2f965beb19f146aa8bca063a5c392fe6 status=200
+2026-07-14T04:26:18.794169Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.7 method=GET path=/api/v1/agentapp/auth/check request_id=8bf429c52bf0465c94db71da0a89f7e1 status=200
+2026-07-14T04:26:18.829693Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/api/v1/agentapp/auth/check request_id=fca26ee2462040d4a0ff641d85aba8a7 status=200
+2026-07-14T04:26:18.837313Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/api/v1/agentapp/auth/check request_id=d9514605f41245ffb2d4fd5f796fcfae status=200
+2026-07-14T04:26:19.157648Z [info     ] request                        client=127.0.0.1 elapsed_ms=97.4 method=GET path=/api/v1/agentapp/production/projects request_id=bb9adaf3f09f4723a9a5fb2d64eedc78 status=200
+2026-07-14T04:26:19.265132Z [info     ] request                        client=127.0.0.1 elapsed_ms=104.9 method=GET path=/api/v1/agentapp/production/projects request_id=62646e23784b43feb5d77270986694e9 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+查询任务列表失败
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1083, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1466, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 905, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-14T04:26:30.305790Z [info     ] request                        client=127.0.0.1 elapsed_ms=11142.2 method=GET path=/api/v1/agentapp/tasks request_id=831e758c96834960813ee7eb3c8293e8 status=503
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+2026-07-14T04:26:32.798194Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/api/v1/agentapp/auth/check request_id=c59373cb38694dacb9fd35e46634cb40 status=200
+2026-07-14T04:26:32.802255Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/auth/check request_id=d1ce2a691faf4293908714d2f7c874fa status=200
+2026-07-14T04:26:33.237770Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.3 method=GET path=/api/v1/agentapp/registry/employees request_id=265f50ff41a04c06b35d44f0873aae8b status=200
+2026-07-14T04:26:33.305055Z [info     ] request                        client=127.0.0.1 elapsed_ms=104.2 method=GET path=/api/v1/agentapp/production/projects request_id=7e30691c30384299904012754a6dd430 status=200
+2026-07-14T04:26:33.311771Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.9 method=GET path=/api/v1/agentapp/registry/employees request_id=c1ec657a29cd407293554e09063d32e1 status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+2026-07-14T04:26:33.484327Z [info     ] request                        client=127.0.0.1 elapsed_ms=176.0 method=GET path=/api/v1/agentapp/production/projects request_id=c79e41e86cc04f4199c1413e932adcf8 status=200
+2026-07-14T04:26:33.576889Z [info     ] request                        client=127.0.0.1 elapsed_ms=93.1 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=4a2437738d6948df88a6f12c9ee8244c status=200
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+redis connection error redis:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+查询任务列表失败
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1083, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1466, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 905, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-14T04:26:41.432607Z [info     ] request                        client=127.0.0.1 elapsed_ms=11122.7 method=GET path=/api/v1/agentapp/tasks request_id=1e8a142203094ec3b46632a979f2f239 status=503
+2026-07-14T06:17:06.036106Z [info     ] request                        client=127.0.0.1 elapsed_ms=81.4 method=POST path=/api/v1/agentapp/auth/login request_id=d2e53f7e92864853a41c32731a65702f status=200
+2026-07-14T06:17:15.122036Z [info     ] request                        client=127.0.0.1 elapsed_ms=101.8 method=GET path=/api/v1/agentapp/production/projects request_id=2573ad7c344b4ef18225249e0203b965 status=200
+2026-07-14T06:17:29.590860Z [info     ] request                        client=127.0.0.1 elapsed_ms=94.8 method=GET path=/api/v1/agentapp/production/projects request_id=acbb55a203ca41818169167460953d2b status=200
+2026-07-14T06:17:41.981537Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.3 method=GET path=/api/v1/agentapp/production/projects request_id=0e5186a96efc4346be6ef5b7d6e59af2 status=401
+2026-07-14T06:17:59.124694Z [info     ] request                        client=127.0.0.1 elapsed_ms=81.2 method=POST path=/api/v1/agentapp/auth/login request_id=c9dffca95bd74a4b80ff69f36edee35a status=200
+2026-07-14T06:17:59.267500Z [info     ] request                        client=127.0.0.1 elapsed_ms=102.6 method=GET path=/api/v1/agentapp/production/projects request_id=5e64fba38e4d44a6bb6ca41a861db946 status=200
+2026-07-14T06:18:31.191219Z [info     ] request                        client=127.0.0.1 elapsed_ms=81.2 method=POST path=/api/v1/agentapp/auth/login request_id=36bf46ba8d304a89aa725d6694d7df36 status=200
+2026-07-14T06:18:31.243928Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.5 method=POST path=/api/v1/agentapp/production/projects request_id=1a4ab37d8814425d9cc50689505cdc4d status=400
+2026-07-14T06:18:45.775539Z [info     ] request                        client=127.0.0.1 elapsed_ms=82.9 method=POST path=/api/v1/agentapp/auth/login request_id=bcd7b839f4764d3fb60bbb89e1e2a2e5 status=200
+2026-07-14T06:18:46.678495Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.1 method=POST path=/api/v1/agentapp/production/projects request_id=7bdd5491d4a340acb56838cc50caa728 status=200
+2026-07-14T06:18:58.802085Z [info     ] request                        client=127.0.0.1 elapsed_ms=82.4 method=POST path=/api/v1/agentapp/auth/login request_id=d7477954b6094eb79546c637670f13ab status=200
+2026-07-14T06:18:59.147822Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.5 method=GET path=/api/v1/agentapp/production/projects/a3ab9f6a request_id=cd381847527c444697b2db3de6fe37ec status=200
+2026-07-14T06:19:30.660823Z [info     ] request                        client=127.0.0.1 elapsed_ms=80.8 method=POST path=/api/v1/agentapp/auth/login request_id=c8f9bee0453d4a4cb7a5d3250104674f status=200
+2026-07-14T06:19:31.012753Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.1 method=GET path=/api/v1/agentapp/production/projects/a3ab9f6a request_id=c50c200580504329a4e8e4b6cac8c89f status=200
+2026-07-14T06:20:44.856390Z [info     ] request                        client=127.0.0.1 elapsed_ms=83.1 method=POST path=/api/v1/agentapp/auth/login request_id=bd8657e7d87f49c89972a7eac940ad37 status=200
+2026-07-14T06:20:45.196891Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.3 method=GET path=/api/v1/agentapp/production/projects/a3ab9f6a request_id=d11369d4b3984a39aeb37871aaf11cbd status=200

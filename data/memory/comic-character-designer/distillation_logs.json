@@ -1844,5 +1844,43 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 21562,
     "error": null
+  },
+  {
+    "logId": "dist_3d1a24f435b0",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-15T19:00:22.188592Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "seed_comic-character-designer_proc_02",
+        "newContent": "角色资产构建与交付标准：1. 结构要求：每个角色必须包含R编号、母版图提示词(含三视图)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。2. 视觉DNA：定义5-8个核心正向固定词(需标注分阶段变化如R3服装/R2体型)，必须逐字复制到每条提示词，禁止缩写或写「同上」，禁用抽象形容词。3. 质量约束：绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。执行顺序：先写不可漂移字段 $\\rightarrow$ 再写可变化字段。",
+        "newImportance": null,
+        "reason": "语义记忆中的Seedance规则与行为记忆中的角色构建流程高度重合，将平台底层规则整合进具体执行流程中，提高操作一致性。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "CHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 $\\rightarrow$ 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点（不可漂移字段）】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) $\\rightarrow$ EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) $\\rightarrow$ EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) $\\rightarrow$ EP04-08中期(同上+旧毯子披风) $\\rightarrow$ EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "经验记忆epi_01是对R1艾拉服装漂移的补救，其结论已直接体现在sem_11的DNA锚点中，将经验转化为具体的语义定义，增强记忆稳定性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21609,
+    "error": null
   }
 ]

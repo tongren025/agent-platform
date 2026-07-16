@@ -827,5 +827,24 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 3077,
     "error": null
+  },
+  {
+    "logId": "dist_a2d6266ccc16",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-15T19:00:20.599567Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 0,
+      "procedural_count": 0
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 3608,
+    "error": null
   }
 ]

@@ -65,7 +65,10 @@ STAGE_INSTRUCTIONS: dict[str, str] = {
         "禁止：不可绘制措辞（环境主导/欲言又止/神情落在/氛围渐浓/悄然变化）；"
         "每个镜头重复通用电影学规则（轴线/三分构图/景深原理）——只写这一镜独有的内容；"
         "单镜超 6 秒——G 超 6 秒必须拆成多个子段。\n\n"
-        "输出格式：每个 G 用 --- 分隔，标题「G1 单元名 分镜」。G 内每个镜头用 ### 镜头N｜Xs。"
+        "输出 JSON cards，**一张卡只对应一个可独立生成的镜头**，禁止把整个 G 的镜头列表塞进一张卡。"
+        "标题格式「G1-S1 单元名 故事板」，content 写上述六项，metadata 必须包含 "
+        "unit_number、subshot（如 G1-S1）、duration_seconds（≤6）、reference_roles（本镜出现的角色名列表）。"
+        "同一 G 有 8 个镜头就必须输出 8 张 storyboard 卡，后续每张卡都要能单独生成故事板图。"
     ),
     # ── 图片提示词 v2：七要素合成一段连贯描述，不用标号 ──
     "img_prompt": (
@@ -119,12 +122,14 @@ STAGE_INSTRUCTIONS: dict[str, str] = {
 GC_STAGES = [
     {"key": "idea", "name": "概念/钩子", "order": 0, "auto": False},
     {"key": "script", "name": "高光剧本", "order": 1, "auto": True},
-    {"key": "storyboard", "name": "分镜", "order": 2, "auto": True},
-    {"key": "img_prompt", "name": "图片提示词", "order": 3, "auto": True},
-    {"key": "vid_prompt", "name": "视频提示词", "order": 4, "auto": True},
-    {"key": "img_gen", "name": "生图", "order": 5, "auto": False},
-    {"key": "vid_gen", "name": "生视频", "order": 6, "auto": False},
-    {"key": "final", "name": "成片", "order": 7, "auto": False},
+    {"key": "setting", "name": "场景/人物锁定", "order": 2, "auto": True},
+    {"key": "design", "name": "视觉设计", "order": 3, "auto": True},
+    {"key": "storyboard", "name": "分镜", "order": 4, "auto": True},
+    {"key": "img_prompt", "name": "图片提示词", "order": 5, "auto": True},
+    {"key": "vid_prompt", "name": "视频提示词", "order": 6, "auto": True},
+    {"key": "img_gen", "name": "生图", "order": 7, "auto": False},
+    {"key": "vid_gen", "name": "生视频", "order": 8, "auto": False},
+    {"key": "final", "name": "成片", "order": 9, "auto": False},
 ]
 
 GC_STAGE_KEYS = [s["key"] for s in GC_STAGES]
@@ -132,25 +137,53 @@ GC_STAGE_KEYS = [s["key"] for s in GC_STAGES]
 GC_STAGE_INSTRUCTIONS: dict[str, str] = {
     "script": (
         "你正在制作一条 15~30 秒的**概念宣传片（GC）**，目标是让观众在前 3 秒被画面钩住，30 秒内决定追剧。\n\n"
-        "从创意/原著中挑选 3~5 个**最炸的视觉瞬间**（不用讲完整剧情），每个瞬间 3~6 秒。\n"
+        "先读取项目视觉风格、Art Bible 与已有角色/生物/场景母版；不得重新发明人物造型或另起画风。\n"
+        "从创意/原著中挑选 3~5 个高光段，并拆成 8~12 个可剪辑镜头；单镜 1.5~4 秒，"
+        "只有需要连续表演的镜头可到 6 秒。GC 必须靠镜头切换建立节奏，禁止用 5 个一镜到底镜头填满全片。\n"
         "选择标准：①画面冲击力（大场面/特效/极端情绪）②信息密度（一眼看出世界观类型）③悬念钩子。\n\n"
         "第一段标题「GC 高光表」，用表格列出：序号、瞬间名称、时长、景别、核心画面、情绪关键词。\n"
         "后续每段对应一个瞬间，标题「G1 瞬间名称 [时长]」，写出：画面里有什么、主角在做什么、情绪。\n"
         "最后一个瞬间必须是**悬念钩子**——看完想知道后面发生什么。\n\n"
         "输出格式：每段用 --- 分隔，首行标题。"
     ),
+    "setting": (
+        "根据 GC 高光剧本与已锁定 Art Bible，输出本片实际使用的角色时期、核心场景、关键道具、"
+        "光影色彩和声音母题。只允许引用正片已有设定；如素材不足，明确标记待确认，不得临时发明。\n"
+        "每个场景必须包含：scene_id、叙事功能、空间锚点、前中后景、主辅光、色彩、动态元素、"
+        "连续性锚点、对应镜头、可直接用于场景母版图的纯场景提示词。\n"
+        "输出 JSON cards，一张卡对应一个角色版本、场景或关键道具。"
+    ),
+    "design": (
+        "把 GC 场景/人物锁定结果整理为可复用的视觉参考清单。必须优先引用 Art Bible 已有图片 URL，"
+        "不得重画已存在的苍霖、巨龙、龙蛋、烬龙陆和世界树母版。\n"
+        "每张卡写明 reference_role、适用镜头、不可变特征和 reference_assets；"
+        "只有确实缺失的资产才输出待生成设计提示词。"
+    ),
     "storyboard": (
-        "根据 GC 高光剧本，为每个视觉瞬间输出**一镜到底的分镜**（每个瞬间 = 一条独立生成）。\n\n"
-        "GC 分镜不需要集间连续性，每个瞬间独立成立。每个镜头只写：\n"
+        "根据 GC 高光剧本输出 8~12 张**逐镜故事板卡**，一张卡只对应一个剪辑镜头。\n\n"
+        "镜头之间必须形成：视觉钩子 → 升级 → 世界观奇观 → 异常反转 → 人物悬念钩子。"
+        "同一高光段可拆为远景建立、主体动作、细节反应等多个镜头，但不得重复同一信息。每个镜头只写：\n"
         "1. **画面内容**：谁+在哪+做什么（具体名词动词）\n"
         "2. **角色动作**：身体部位级\n"
         "3. **景别 + 运镜**：优先选冲击力最强的（大远景航拍/特写推进/俯冲）\n"
         "4. **光影**：主光+色温\n"
-        "5. **时长**：3~6秒\n\n"
-        "输出格式：每个瞬间用 --- 分隔，标题「G1 瞬间名称 分镜」。"
+        "5. **时长**：通常1.5~4秒，最长6秒\n"
+        "6. **母版引用**：列出本镜必须继承的角色、服装、生物或场景母版\n"
+        "7. **承接/剪辑点**：明确用动作、视线、光效或构图匹配切到下一镜\n\n"
+        "输出 JSON cards；标题格式「G1-S1 瞬间名称 故事板」，metadata 必须包含 "
+        "unit_number、subshot、duration_seconds、reference_roles、reference_assets。"
     ),
-    "img_prompt": STAGE_INSTRUCTIONS["img_prompt"],
-    "vid_prompt": STAGE_INSTRUCTIONS["vid_prompt"],
+    "img_prompt": (
+        STAGE_INSTRUCTIONS["img_prompt"]
+        + "\n\nGC 追加硬规则：提示词第一句必须逐字继承项目视觉风格，不得只写含糊的“电影质感”；"
+        "必须写明所用母版引用与风格参考图；角色和生物外形以母版为准，不得凭文字重设计。"
+        "风格约束必须区分：高精度数字绘景式漫剧关键帧，不是真人摄影，不是欧美游戏设定稿，不是白底概念图。"
+    ),
+    "vid_prompt": (
+        STAGE_INSTRUCTIONS["vid_prompt"]
+        + "\n\nGC 追加硬规则：视频提示词不再重新描述或发明画风、脸和服装；"
+        "稳定身份与画风全部交给首帧和母版参考图，文字只描述本镜可见动作、唯一运镜、环境变化、光效节奏和声音。"
+    ),
 }
 
 

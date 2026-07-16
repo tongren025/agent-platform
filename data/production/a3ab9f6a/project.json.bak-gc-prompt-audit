@@ -1,0 +1,30 @@
+{
+  "project_id": "a3ab9f6a",
+  "name": "九陆纪元 · GC概念宣传片",
+  "description": "15-30秒概念宣传片 · 3-5个最炸裂视觉瞬间 · 吸引观众入坑",
+  "source_type": "gc",
+  "source_content": "《九陆纪元》概念宣传片\n\n定位：15-30秒竖屏概念宣传片，用3-5个最炸裂的视觉瞬间让观众一眼入坑。\n\n核心素材池（从全五季中挑选最具视觉冲击力的瞬间）：\n1. 烬龙陆·熔浆龙焰——苍霖骑龙升空，熔浆奔涌背景\n2. 青霄陆·万丈悬瀑——世界树根系穿透云层\n3. 觉醒者金色虹膜特写——瞳孔里倒映九大陆轮廓\n4. 龙蛋孵化——裂缝透出冷蓝数据流光芒\n5. 九大陆全景巡礼——从太空视角俯瞰星球\n\n最后一个瞬间必须是悬念钩子：苍霖背影面对未知，字幕「没有人选你。但你还是站起来了。」",
+  "employee_key": "",
+  "team_code": "comic-drama-team",
+  "episode_count": 1,
+  "episode_duration_seconds": 30,
+  "aspect_ratio": "9:16",
+  "visual_style": "",
+  "budget": 0.0,
+  "members": [
+    {
+      "user_id": "admin",
+      "name": "系统管理员",
+      "role": "owner",
+      "avatar": "",
+      "added_at": "2026-07-14T06:18:46.676494+00:00"
+    }
+  ],
+  "settings": {
+    "visibility": "private",
+    "allow_ai_generate": true,
+    "default_status": "pending"
+  },
+  "created_at": "2026-07-14T06:18:46.676494+00:00",
+  "updated_at": "2026-07-14T07:44:58.789093+00:00"
+}

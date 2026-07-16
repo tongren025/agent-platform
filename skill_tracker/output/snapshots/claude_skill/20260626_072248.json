@@ -1,0 +1,12 @@
+{
+  "query": "claude skill",
+  "taken_at": "2026-06-26T07:22:48.264946+00:00",
+  "stars": {
+    "affaan-m/ECC": 221867,
+    "multica-ai/andrej-karpathy-skills": 182437,
+    "mattpocock/skills": 146681,
+    "nextlevelbuilder/ui-ux-pro-max-skill": 96613,
+    "JuliusBrussee/caveman": 77009,
+    "nexu-io/open-design": 71336
+  }
+}

@@ -360,6 +360,26 @@ export const api = {
   restoreCard: (pid: string, cardId: string) =>
     request<{ restored: string }>(`/production/projects/${pid}/archive/${cardId}/restore`, { method: 'POST' }),
 
+  // 导演 Agent：项目状态、OpenRouter 媒体生产与成片合成
+  getDirectorState: (pid: string) => request<any>(`/director/projects/${pid}`),
+  listDirectorMediaModels: (kind: 'image' | 'video') =>
+    request<any[]>(`/director/media-models?kind=${kind}`),
+  generateDirectorImage: (pid: string, cardId: string, data: {
+    model: string; prompt?: string; resolution?: string; aspect_ratio?: string;
+  }) => request<any>(`/director/projects/${pid}/cards/${cardId}/image`, {
+    method: 'POST', body: JSON.stringify(data),
+  }),
+  generateDirectorVideo: (pid: string, cardId: string, data: {
+    model: string; prompt?: string; duration?: number; resolution?: string;
+    aspect_ratio?: string; image_url?: string; generate_audio?: boolean;
+  }) => request<any>(`/director/projects/${pid}/cards/${cardId}/video`, {
+    method: 'POST', body: JSON.stringify(data),
+  }),
+  syncDirectorVideo: (pid: string, cardId: string) =>
+    request<any>(`/director/projects/${pid}/cards/${cardId}/video/sync`, { method: 'POST' }),
+  composeDirectorCut: (pid: string) =>
+    request<any>(`/director/projects/${pid}/compose`, { method: 'POST' }),
+
   // 自由画布
   listCanvases: () => request<any[]>('/canvas/canvases'),
   createCanvas: (name: string) => request<any>('/canvas/canvases', { method: 'POST', body: JSON.stringify({ name }) }),

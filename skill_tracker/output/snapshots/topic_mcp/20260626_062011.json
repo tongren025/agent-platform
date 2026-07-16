@@ -1,0 +1,11 @@
+{
+  "query": "topic:mcp",
+  "taken_at": "2026-06-26T06:20:11.306440+00:00",
+  "stars": {
+    "affaan-m/ECC": 221844,
+    "n8n-io/n8n": 194095,
+    "Snailclimb/JavaGuide": 156626,
+    "MemPalace/mempalace": 56405,
+    "rohitg00/ai-engineering-from-scratch": 36393
+  }
+}

@@ -1,15 +1,5 @@
 [
   {
-    "logId": "evo_957a1e6c1091",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-06-29T13:12:23.964046Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_de511e038bbb",
     "employeeKey": "comic-screenwriter",
     "ranAt": "2026-06-29T13:50:01.495769Z",
@@ -497,6 +487,16 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_2ba83562ef3c",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-15T20:00:30.056877Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
     "error": null
   }
 ]

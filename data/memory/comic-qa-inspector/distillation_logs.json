@@ -1429,5 +1429,43 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 22985,
     "error": null
+  },
+  {
+    "logId": "dist_a80fcbbf984c",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-15T19:00:23.852837Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 seed_comic-qa-inspector_epi_02 关于 Seedance 2.0 负向词转正向的经验与 semantic 记忆中的红线清单第⑩项完全重合，将其整合进标准红线清单可提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。",
+        "newImportance": null,
+        "reason": "episodic 记忆 learn_consolidation_20260630_comic-qa-inspector_epi_01 关于“快速”禁止词的案例已在 semantic 红线清单第③项中明确定义，无需单独作为经验记忆存储。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 6,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 21780,
+    "error": null
   }
 ]

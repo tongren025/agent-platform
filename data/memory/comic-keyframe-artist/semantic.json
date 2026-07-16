@@ -132,40 +132,28 @@
     "updatedAt": "2026-06-30T11:44:56.150698Z"
   },
   {
-    "memoryId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_02",
-    "employeeKey": "comic-keyframe-artist",
-    "content": "伦勃朗光的判定标志=暗侧脸颊下方一个三角光斑，宽不过眼、长不过鼻；辅光约主光一半功率。压迫/戏剧场景首选。（来源:StudioBinder Rembrandt Lighting）",
-    "category": "craft",
-    "importance": 0.7,
-    "sourceSession": "pro_craft_deep_20260630",
-    "accessCount": 0,
-    "createdAt": "2026-06-30T12:34:27.366500Z",
-    "lastAccessed": null,
-    "updatedAt": "2026-07-14T19:00:34.603547Z"
-  },
-  {
     "memoryId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_03",
     "employeeKey": "comic-keyframe-artist",
-    "content": "布光核心准则：提示词必须包含'位置+高度+强度比'三要素（如主光侧面30-45°且高于眼平线，辅光对侧强度50-75%，轮廓光后上方分离），而非笼统描述。光的方向决定脸部塑形与情绪。（来源:StudioBinder布光指南）",
+    "content": "布光核心准则：提示词必须包含'位置+高度+强度比'三要素（如主光侧面30-45°且高于眼平线，辅光对侧强度50-75%，轮廓光后上方分离）。压迫/戏剧场景首选伦勃朗光（标志：暗侧脸颊下方一个宽不过眼、长不过鼻的三角光斑）。光的方向决定脸部塑形与情绪。（来源:StudioBinder布光指南）",
     "category": "craft",
     "importance": 0.7,
     "sourceSession": "pro_craft_deep_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:34:27.366500Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-14T19:00:34.614437Z"
+    "updatedAt": "2026-07-15T19:00:37.577796Z"
   },
   {
     "memoryId": "pro_craft_deep_20260630_comic-keyframe-artist_animation12_01",
     "employeeKey": "comic-keyframe-artist",
     "content": "动画12原则实操：1.挤压拉伸需遵循体积守恒（变宽必变矮），确保重量感；2.Timing（帧数）决定速度，AI视频中慢速连续小动作更稳，不易变形；3.运动走弧线而非直线，且必须包含预备动作(Anticipation)与缓入缓出，避免机器人感。",
     "category": "craft",
-    "importance": 0.55,
+    "importance": 0.7,
     "sourceSession": "pro_craft_deep_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:34:27.366500Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-13T19:00:47.150046Z"
+    "updatedAt": "2026-07-15T19:00:37.612382Z"
   },
   {
     "memoryId": "pro_craft_deep2_20260630_comic-keyframe-artist_expression_01",
@@ -182,26 +170,14 @@
   {
     "memoryId": "pro_craft_deep2_20260630_comic-keyframe-artist_env_layer_01",
     "employeeKey": "comic-keyframe-artist",
-    "content": "环境纵深构建：分前景（最深暗）、中景（主焦点最亮）、背景（低对比柔色/空气透视）三层。每幅画面必须仅设定一个由形状/颜色/光引导的‘压过一切的注意元素’，防止视线分散。",
+    "content": "环境纵深与构图构建：1.分层法：前景（最深暗）、中景（主焦点最亮）、背景（低对比柔色/空气透视）；2.构图原则：三分法（主体置于交点），利用三角轴或斜线引导视线；3.视觉锚点：每幅画面必须仅设定一个由形状/颜色/光引导的‘压过一切的注意元素’，光影应组织成‘有情感的组合’而非平均打亮，防止视线分散。",
     "category": "craft",
     "importance": 0.55,
     "sourceSession": "pro_craft_deep2_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:40:38.660400Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-13T19:00:47.181945Z"
-  },
-  {
-    "memoryId": "pro_canon_wiki_20260630_comic-keyframe-artist_composition_01",
-    "employeeKey": "comic-keyframe-artist",
-    "content": "构图基础原则：1.三分法（主体置于交点）；2.通过前/中/背景对比分层，利用三角轴或斜线引导视线；3.光影本身即构图元素，应组织成‘有情感的光影组合’强化主题，而非平均打亮。",
-    "category": "knowledge",
-    "importance": 0.55,
-    "sourceSession": "pro_canon_wiki_20260630",
-    "accessCount": 0,
-    "createdAt": "2026-06-30T12:28:25.765700Z",
-    "lastAccessed": null,
-    "updatedAt": "2026-07-13T19:00:47.197105Z"
+    "updatedAt": "2026-07-15T19:00:37.589290Z"
   },
   {
     "memoryId": "pro_canon_wiki_20260630_comic-keyframe-artist_montage_01",

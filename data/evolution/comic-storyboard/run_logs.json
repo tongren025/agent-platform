@@ -28,5 +28,15 @@
     "llmModel": "",
     "durationMs": 0,
     "error": null
+  },
+  {
+    "logId": "evo_4bc5c046420e",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-15T20:00:30.017545Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
   }
 ]

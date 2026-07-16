@@ -1,15 +1,5 @@
 [
   {
-    "logId": "evo_c71932eee7fc",
-    "employeeKey": "comic-trajectory-artist",
-    "ranAt": "2026-06-29T13:12:24.015046Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_6fcd2f2bfe7e",
     "employeeKey": "comic-trajectory-artist",
     "ranAt": "2026-06-29T13:50:01.540970Z",
@@ -497,6 +487,16 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_d4830205974e",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-15T20:00:30.091592Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
     "error": null
   }
 ]

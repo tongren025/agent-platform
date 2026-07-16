@@ -202,5 +202,52 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 19453,
     "error": null
+  },
+  {
+    "logId": "dist_afcc4e1fcb2d",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-15T19:00:19.927939Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_02",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_03",
+        "newContent": "布光核心准则：提示词必须包含'位置+高度+强度比'三要素（如主光侧面30-45°且高于眼平线，辅光对侧强度50-75%，轮廓光后上方分离）。压迫/戏剧场景首选伦勃朗光（标志：暗侧脸颊下方一个宽不过眼、长不过鼻的三角光斑）。光的方向决定脸部塑形与情绪。（来源:StudioBinder布光指南）",
+        "newImportance": null,
+        "reason": "两条记忆均关于布光技术，且均源自StudioBinder，将具体的伦勃朗光案例合并入通用布光准则中，提高知识密度。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-keyframe-artist_composition_01",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-keyframe-artist_env_layer_01",
+        "newContent": "环境纵深与构图构建：1.分层法：前景（最深暗）、中景（主焦点最亮）、背景（低对比柔色/空气透视）；2.构图原则：三分法（主体置于交点），利用三角轴或斜线引导视线；3.视觉锚点：每幅画面必须仅设定一个由形状/颜色/光引导的‘压过一切的注意元素’，光影应组织成‘有情感的组合’而非平均打亮，防止视线分散。",
+        "newImportance": null,
+        "reason": "构图基础原则与环境纵深构建在视觉逻辑上高度重合，合并后形成一套完整的画面空间构建指南。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_animation12_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "虽然是基础理论，但在AI视频生成流程中，Timing和预备动作对稳定性的影响极大，应提升其权重以指导Prompt编写。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 18,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 16,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 17687,
+    "error": null
   }
 ]

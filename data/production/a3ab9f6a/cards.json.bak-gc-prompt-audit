@@ -1,0 +1,787 @@
+[
+  {
+    "card_id": "346d7625",
+    "project_id": "a3ab9f6a",
+    "stage": "idea",
+    "title": "原始素材",
+    "content": "《九陆纪元》概念宣传片\n\n定位：15-30秒竖屏概念宣传片，用3-5个最炸裂的视觉瞬间让观众一眼入坑。\n\n核心素材池（从全五季中挑选最具视觉冲击力的瞬间）：\n1. 烬龙陆·熔浆龙焰——苍霖骑龙升空，熔浆奔涌背景\n2. 青霄陆·万丈悬瀑——世界树根系穿透云层\n3. 觉醒者金色虹膜特写——瞳孔里倒映九大陆轮廓\n4. 龙蛋孵化——裂缝透出冷蓝数据流光芒\n5. 九大陆全景巡礼——从太空视角俯瞰星球\n\n最后一个瞬间必须是悬念钩子：苍霖背影面对未知，字幕「没有人选你。但你还是站起来了。」",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {},
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:18:46.676494+00:00",
+    "updated_at": "2026-07-14T06:18:46.676494+00:00"
+  },
+  {
+    "card_id": "9f4bb745",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G1 觉醒之瞳 [3s]",
+    "content": "**画面内容**：极近距离的眼球特写。瞳孔呈现出非人类的金色虹膜，在瞳孔深处，九个大陆的微缩轮廓像星图一样缓缓旋转、重组。\n**主角动作**：眼睑微颤，瞳孔骤然收缩。\n**情绪**：一种被神格化、被选中的宿命感，瞬间抓住观众注意力。",
+    "episode": null,
+    "shot_number": 1,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "target_stage": "script",
+      "production_grain": "generation_unit",
+      "unit_number": 1,
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:36:46.076912+00:00",
+    "updated_at": "2026-07-14T06:36:46.076912+00:00"
+  },
+  {
+    "card_id": "8769bf10",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G2 熔浆龙啸 [6s]",
+    "content": "**画面内容**：背景是翻滚的暗红色熔浆海，巨大的火龙在烈焰中咆哮。镜头从宏大的全景迅速拉近，切到苍霖在龙背上的英姿。\n**主角动作**：苍霖紧握缰绳，随着巨龙一个剧烈的俯冲并冲向云霄，带起巨大的熔浆浪潮。\n**情绪**：极端的视觉冲击力，展现力量的绝对压制。",
+    "episode": null,
+    "shot_number": 2,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "target_stage": "script",
+      "production_grain": "generation_unit",
+      "unit_number": 2,
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:36:46.076912+00:00",
+    "updated_at": "2026-07-14T06:36:46.076912+00:00"
+  },
+  {
+    "card_id": "053ea86c",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G3 万丈悬瀑 [6s]",
+    "content": "**画面内容**：青霄陆的极致景观。巨大的世界树根系像苍龙一样穿透厚重的云海，万丈白色的瀑布从云端倾泻而下，水雾弥漫。\n**主角动作**：苍霖在巨大的根系边缘行走，显得极其渺小，与宏大的自然景观形成强烈对比。\n**情绪**：空灵且带有压迫感，建立世界观的深度与广度。",
+    "episode": null,
+    "shot_number": 3,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "target_stage": "script",
+      "production_grain": "generation_unit",
+      "unit_number": 3,
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:36:46.076912+00:00",
+    "updated_at": "2026-07-14T06:36:46.076912+00:00"
+  },
+  {
+    "card_id": "9ab80d8d",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G4 数据破壳 [5s]",
+    "content": "**画面内容**：一颗古朴的龙蛋在黑暗中静默。突然，蛋壳出现一道细微裂缝，迸发出的不是光芒，而是如同计算机代码般的冷蓝色数据流，迅速蔓延至整个画面。\n**主角动作**：一只手（苍霖）缓缓触碰裂缝，指尖被蓝色数据流包裹。\n**情绪**：科技与幻想的碰撞，制造“这个世界不简单”的悬念。",
+    "episode": null,
+    "shot_number": 4,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "target_stage": "script",
+      "production_grain": "generation_unit",
+      "unit_number": 4,
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:36:46.076912+00:00",
+    "updated_at": "2026-07-14T06:36:46.076912+00:00"
+  },
+  {
+    "card_id": "b89e154b",
+    "project_id": "a3ab9f6a",
+    "stage": "script",
+    "title": "G5 孤勇背影 [6s]",
+    "content": "**画面内容**：画面切换至极简的深邃空间或未知的荒原。苍霖孤独的背影面对着一个巨大的、不可名状的阴影或虚空之门。\n**主角动作**：苍霖在风中伫立，肩膀微微起伏，随后坚定地向前迈出一步。\n**字幕出现**：「没有人选你。但你还是站起来了。」\n**情绪**：极强的孤独感与反击的倔强，留下巨大的心理钩子，诱导观众追剧寻找答案。",
+    "episode": null,
+    "shot_number": 5,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "target_stage": "script",
+      "production_grain": "generation_unit",
+      "unit_number": 5,
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:36:46.076912+00:00",
+    "updated_at": "2026-07-14T06:36:46.076912+00:00"
+  },
+  {
+    "card_id": "5882622d",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G1 觉醒之瞳 分镜",
+    "content": "1. **画面内容**：极近距离的眼球特写。金色虹膜占据画面中心，瞳孔深处九个大陆的微缩轮廓如星图般旋转重组。\n2. **角色动作**：眼睑轻微颤动，瞳孔在瞬间骤然收缩。\n3. **景别 + 运镜**：极特写 → 缓慢向瞳孔深处推进（Zoom-in）。\n4. **光影**：强烈的金黄色主光，瞳孔深处带有深邃的星空冷色调。\n5. **时长**：3秒",
+    "episode": null,
+    "shot_number": 1,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_dccf83e6-ae66-4d08-9bfa-4f976970bd20.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "target_stage": "storyboard",
+      "production_grain": "generation_unit",
+      "unit_number": 1,
+      "quality_gate": {
+        "passed": false,
+        "issues": [
+          {
+            "code": "storyboard_fields_missing",
+            "message": "分镜缺少生产字段：起始姿态、结束姿态、画面位置、视线方向、前景、中景、背景"
+          }
+        ],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:38:31.907854+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "94f00149",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G2 熔浆龙啸 分镜",
+    "content": "1. **画面内容**：暗红色熔浆海翻滚，巨龙在烈焰中咆哮，苍霖骑在龙背上冲破火海。\n2. **角色动作**：苍霖双臂紧握缰绳，身体随巨龙俯冲的惯性前倾，随后猛然拉升冲向云霄。\n3. **景别 + 运镜**：大远景 → 极速俯冲推进 → 快速拉升（Swoop）。\n4. **光影**：低色温暗红光，伴随剧烈的橙色火光闪烁。\n5. **时长**：6秒",
+    "episode": null,
+    "shot_number": 2,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_c80acc98-68f5-4996-8fbe-fab3c2ceb7e2.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "target_stage": "storyboard",
+      "production_grain": "generation_unit",
+      "unit_number": 2,
+      "quality_gate": {
+        "passed": false,
+        "issues": [
+          {
+            "code": "storyboard_fields_missing",
+            "message": "分镜缺少生产字段：起始姿态、结束姿态、画面位置、视线方向、前景、中景、背景"
+          }
+        ],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:38:31.907854+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "bd2c261d",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G3 万丈悬瀑 分镜",
+    "content": "1. **画面内容**：青霄陆世界树根系穿透云海，万丈白色瀑布从云端倾泻，水雾弥漫。\n2. **角色动作**：苍霖在巨大的根系边缘缓慢行走，身体在宏大背景下仅占极小比例。\n3. **景别 + 运镜**：大远景航拍 → 环绕运镜（Orbit），强调根系的纵深感。\n4. **光影**：高色温冷白光，柔和的散射光透过水雾。\n5. **时长**：6秒",
+    "episode": null,
+    "shot_number": 3,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_02e28130-08d3-47f2-89cc-79f78d7afed8.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "target_stage": "storyboard",
+      "production_grain": "generation_unit",
+      "unit_number": 3,
+      "quality_gate": {
+        "passed": false,
+        "issues": [
+          {
+            "code": "storyboard_fields_missing",
+            "message": "分镜缺少生产字段：起始姿态、结束姿态、画面位置、视线方向、前景、中景"
+          }
+        ],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:38:31.907854+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "3f6e81e8",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G4 数据破壳 分镜",
+    "content": "1. **画面内容**：黑暗中一颗古朴龙蛋，裂缝中迸发出冷蓝色计算机代码般的数据流，迅速覆盖画面。\n2. **角色动作**：苍霖的手指缓缓触碰裂缝，指尖被蓝色数据流瞬间包裹并向手臂蔓延。\n3. **景别 + 运镜**：特写 → 随着数据流蔓延快速后拉（Pull-back）。\n4. **光影**：极暗背景 → 强对比冷蓝色荧光。\n5. **时长**：5秒",
+    "episode": null,
+    "shot_number": 4,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_e2f29b37-65cd-4119-9052-dc95ce9548b6.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "target_stage": "storyboard",
+      "production_grain": "generation_unit",
+      "unit_number": 4,
+      "quality_gate": {
+        "passed": false,
+        "issues": [
+          {
+            "code": "storyboard_fields_missing",
+            "message": "分镜缺少生产字段：起始姿态、结束姿态、画面位置、视线方向、前景、中景"
+          }
+        ],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:38:31.907854+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "44b04f7e",
+    "project_id": "a3ab9f6a",
+    "stage": "storyboard",
+    "title": "G5 孤勇背影 分镜",
+    "content": "1. **画面内容**：深邃的未知荒原，苍霖孤独的背影面对着一个遮天蔽日的不可名状阴影/虚空之门。\n2. **角色动作**：伫立于风中，肩膀随呼吸微起伏，随后坚定地向前迈出一步。\n3. **景别 + 运镜**：全景 → 缓慢推进至背影特写（Push-in）。\n4. **光影**：冷灰色调，强烈的背光，角色呈现为深色剪影。\n5. **时长**：6秒",
+    "episode": null,
+    "shot_number": 5,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_82e3dbe0-f937-4890-aa7a-ef417b544c01.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "target_stage": "storyboard",
+      "production_grain": "generation_unit",
+      "unit_number": 5,
+      "quality_gate": {
+        "passed": false,
+        "issues": [
+          {
+            "code": "storyboard_fields_missing",
+            "message": "分镜缺少生产字段：起始姿态、结束姿态、画面位置、视线方向、前景、中景、背景"
+          }
+        ],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:38:31.907854+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "7a0d6e53",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G1 首帧",
+    "content": "干净半写实东方幻想漫剧插画，电影质感。极近距离的眼球特写，主体为一只拥有非人类金色虹膜的眼睛，瞳孔深处倒映着九个微缩大陆的轮廓如星图般旋转重组。极特写，竖屏9:16。强烈的金黄色主光，瞳孔深处带有深邃的星空冷色调。宿命感且神圣。画面清晰稳定，面部结构正常，虹膜纹理精致。",
+    "episode": null,
+    "shot_number": 1,
+    "prompts": [
+      "干净半写实东方幻想漫剧插画，电影质感。极近距离的眼球特写，主体为一只拥有非人类金色虹膜的眼睛，瞳孔深处倒映着九个微缩大陆的轮廓如星图般旋转重组。极特写，竖屏9:16。强烈的金黄色主光，瞳孔深处带有深邃的星空冷色调。宿命感且神圣。画面清晰稳定，面部结构正常，虹膜纹理精致。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_dccf83e6-ae66-4d08-9bfa-4f976970bd20.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "time_range": "00:00-00:03",
+      "target_stage": "img_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:39:14.321857+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "900865de",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G2 首帧",
+    "content": "干净半写实东方幻想漫剧插画，电影质感。少年苍霖，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风，双臂紧握缰绳骑在巨大的赤色火龙背上，背景是翻滚的暗红色熔浆海与剧烈咆哮的烈焰。大远景，低机位仰拍，竖屏9:16。低色温暗红光，伴随剧烈的橙色火光闪烁。极具视觉冲击力且霸气。画面清晰稳定，主体边缘干净。",
+    "episode": null,
+    "shot_number": 2,
+    "prompts": [
+      "干净半写实东方幻想漫剧插画，电影质感。少年苍霖，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风，双臂紧握缰绳骑在巨大的赤色火龙背上，背景是翻滚的暗红色熔浆海与剧烈咆哮的烈焰。大远景，低机位仰拍，竖屏9:16。低色温暗红光，伴随剧烈的橙色火光闪烁。极具视觉冲击力且霸气。画面清晰稳定，主体边缘干净。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_c80acc98-68f5-4996-8fbe-fab3c2ceb7e2.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "unit_number": 2,
+      "time_range": "00:03-00:09",
+      "target_stage": "img_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:39:14.321857+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "5f61873d",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G3 首帧",
+    "content": "干净半写实东方幻想漫剧插画，电影质感。少年苍霖，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风，在巨大的世界树根系边缘缓慢行走，背景是穿透厚重云海的万丈白色瀑布与弥漫的水雾。大远景航拍，竖屏9:16。高色温冷白光，柔和的散射光透过水雾。空灵且带有压迫感。画面清晰稳定，比例协调，主体渺小。",
+    "episode": null,
+    "shot_number": 3,
+    "prompts": [
+      "干净半写实东方幻想漫剧插画，电影质感。少年苍霖，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风，在巨大的世界树根系边缘缓慢行走，背景是穿透厚重云海的万丈白色瀑布与弥漫的水雾。大远景航拍，竖屏9:16。高色温冷白光，柔和的散射光透过水雾。空灵且带有压迫感。画面清晰稳定，比例协调，主体渺小。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_02e28130-08d3-47f2-89cc-79f78d7afed8.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "unit_number": 3,
+      "time_range": "00:09-00:15",
+      "target_stage": "img_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:39:14.321857+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "cf3d7343",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G4 首帧",
+    "content": "干净半写实东方幻想漫剧插画，电影质感。一只少年苍霖的手，指尖缓缓触碰一颗古朴龙蛋的裂缝，裂缝中迸发出冷蓝色计算机代码般的数据流包裹指尖。特写，竖屏9:16。极暗背景，强对比冷蓝色荧光。科技与幻想碰撞的悬念感。画面清晰稳定，手指结构正常，光效锐利。",
+    "episode": null,
+    "shot_number": 4,
+    "prompts": [
+      "干净半写实东方幻想漫剧插画，电影质感。一只少年苍霖的手，指尖缓缓触碰一颗古朴龙蛋的裂缝，裂缝中迸发出冷蓝色计算机代码般的数据流包裹指尖。特写，竖屏9:16。极暗背景，强对比冷蓝色荧光。科技与幻想碰撞的悬念感。画面清晰稳定，手指结构正常，光效锐利。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_e2f29b37-65cd-4119-9052-dc95ce9548b6.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "unit_number": 4,
+      "time_range": "00:15-00:20",
+      "target_stage": "img_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:39:14.321857+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "0dc0c7f7",
+    "project_id": "a3ab9f6a",
+    "stage": "img_prompt",
+    "title": "G5 首帧",
+    "content": "干净半写实东方幻想漫剧插画，电影质感。少年苍霖的背影，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风在风中飘动，伫立在深邃未知的灰色荒原上，面对前方遮天蔽日的虚空之门阴影。全景，中心构图，竖屏9:16。冷灰色调，强烈的背光，角色呈现为深色剪影。孤独且倔强。画面清晰稳定，边缘干净。",
+    "episode": null,
+    "shot_number": 5,
+    "prompts": [
+      "干净半写实东方幻想漫剧插画，电影质感。少年苍霖的背影，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风在风中飘动，伫立在深邃未知的灰色荒原上，面对前方遮天蔽日的虚空之门阴影。全景，中心构图，竖屏9:16。冷灰色调，强烈的背光，角色呈现为深色剪影。孤独且倔强。画面清晰稳定，边缘干净。"
+    ],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_auto_82e3dbe0-f937-4890-aa7a-ef417b544c01.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "unit_number": 5,
+      "time_range": "00:20-00:26",
+      "target_stage": "img_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "静态门禁通过不等于实际图片/视频视觉验收通过"
+      }
+    },
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-14T06:39:14.321857+00:00",
+    "updated_at": "2026-07-14T21:47:27.308245Z"
+  },
+  {
+    "card_id": "fc4d83dd",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "生成卡片",
+    "content": "",
+    "episode": null,
+    "shot_number": 1,
+    "prompts": [
+      "@图片G1(首帧)\n干净半写实东方幻想漫剧插画。\n拥有非人类金色虹膜的眼睛，瞳孔深处倒映着九个微缩大陆的轮廓如星图般旋转重组。\n极近距离眼球特写。\n眼睑轻微颤动，瞳孔在瞬间骤然收缩。\n缓慢向瞳孔深处推进(Zoom-in)。\n强烈的金黄色主光，瞳孔深处带有深邃的星空冷色调。\n画面清晰稳定，面部结构正常，虹膜纹理精致，竖屏9:16，电影质感。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "subsegment": "G1-A",
+      "duration_seconds": 3,
+      "flf": true,
+      "target_stage": "vid_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "已移除速度冲突词；等待人工审核图片、提示词和参考图后手动提交。"
+      },
+      "video_review_status": "pending",
+      "video_generation_ready": true,
+      "video_generation_submitted": false,
+      "reference_images": [
+        "/uploads/canvas/img_auto_dccf83e6-ae66-4d08-9bfa-4f976970bd20.png"
+      ],
+      "seedance_input": {
+        "prompt": "@图片G1(首帧)\n干净半写实东方幻想漫剧插画。\n拥有非人类金色虹膜的眼睛，瞳孔深处倒映着九个微缩大陆的轮廓如星图般旋转重组。\n极近距离眼球特写。\n眼睑轻微颤动，瞳孔在瞬间骤然收缩。\n缓慢向瞳孔深处推进(Zoom-in)。\n强烈的金黄色主光，瞳孔深处带有深邃的星空冷色调。\n画面清晰稳定，面部结构正常，虹膜纹理精致，竖屏9:16，电影质感。",
+        "image_url": [
+          "/uploads/canvas/img_auto_dccf83e6-ae66-4d08-9bfa-4f976970bd20.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 4,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-14T07:44:58.789093+00:00",
+    "updated_at": "2026-07-15T13:57:17.300615+00:00"
+  },
+  {
+    "card_id": "439ae01c",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "生成卡片",
+    "content": "",
+    "episode": null,
+    "shot_number": 2,
+    "prompts": [
+      "@图片G2(首帧)\n干净半写实东方幻想漫剧插画。\n少年苍霖，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风，双臂紧握缰绳骑在巨大的赤色火龙背上。\n暗红色熔浆海翻滚，巨龙在烈焰中咆哮，苍霖骑在龙背上冲破火海。\n苍霖身体随巨龙俯冲的惯性前倾，随后猛然拉升冲向云霄。\n大远景低空贴近熔浆平稳跟随，随后连续抬升(Swoop)。\n低色温暗红光，伴随剧烈的橙色火光闪烁。\n画面清晰稳定，主体边缘干净，竖屏9:16，电影质感。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 2,
+      "subsegment": "G2-A",
+      "duration_seconds": 6,
+      "flf": true,
+      "target_stage": "vid_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "已移除速度冲突词；等待人工审核图片、提示词和参考图后手动提交。"
+      },
+      "video_review_status": "pending",
+      "video_generation_ready": true,
+      "video_generation_submitted": false,
+      "reference_images": [
+        "/uploads/canvas/img_auto_c80acc98-68f5-4996-8fbe-fab3c2ceb7e2.png",
+        "/uploads/canvas/img_gc_canglin_turnaround_v1.png",
+        "/uploads/canvas/img_gc_fire_dragon_turnaround_v1.png"
+      ],
+      "seedance_input": {
+        "prompt": "@图片G2(首帧)\n干净半写实东方幻想漫剧插画。\n少年苍霖，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风，双臂紧握缰绳骑在巨大的赤色火龙背上。\n暗红色熔浆海翻滚，巨龙在烈焰中咆哮，苍霖骑在龙背上冲破火海。\n苍霖身体随巨龙俯冲的惯性前倾，随后猛然拉升冲向云霄。\n大远景低空贴近熔浆平稳跟随，随后连续抬升(Swoop)。\n低色温暗红光，伴随剧烈的橙色火光闪烁。\n画面清晰稳定，主体边缘干净，竖屏9:16，电影质感。",
+        "image_url": [
+          "/uploads/canvas/img_auto_c80acc98-68f5-4996-8fbe-fab3c2ceb7e2.png",
+          "/uploads/canvas/img_gc_canglin_turnaround_v1.png",
+          "/uploads/canvas/img_gc_fire_dragon_turnaround_v1.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 6,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-14T07:44:58.789093+00:00",
+    "updated_at": "2026-07-15T13:57:17.300615+00:00"
+  },
+  {
+    "card_id": "3a41cbae",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "生成卡片",
+    "content": "",
+    "episode": null,
+    "shot_number": 3,
+    "prompts": [
+      "@图片G3(首帧)\n干净半写实东方幻想漫剧插画。\n少年苍霖，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风。\n青霄陆世界树根系穿透云海，万丈白色瀑布从云端倾泻，水雾弥漫。\n苍霖在巨大的根系边缘缓慢行走，身体在宏大背景下仅占极小比例。\n大远景航拍环绕运镜(Orbit)。\n高色温冷白光，柔和的散射光透过水雾。\n画面清晰稳定，比例协调，竖屏9:16，电影质感。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 3,
+      "subsegment": "G3-A",
+      "duration_seconds": 6,
+      "flf": true,
+      "target_stage": "vid_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "已移除速度冲突词；等待人工审核图片、提示词和参考图后手动提交。"
+      },
+      "video_review_status": "pending",
+      "video_generation_ready": true,
+      "video_generation_submitted": false,
+      "reference_images": [
+        "/uploads/canvas/img_auto_02e28130-08d3-47f2-89cc-79f78d7afed8.png",
+        "/uploads/canvas/img_gc_canglin_turnaround_v1.png"
+      ],
+      "seedance_input": {
+        "prompt": "@图片G3(首帧)\n干净半写实东方幻想漫剧插画。\n少年苍霖，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风。\n青霄陆世界树根系穿透云海，万丈白色瀑布从云端倾泻，水雾弥漫。\n苍霖在巨大的根系边缘缓慢行走，身体在宏大背景下仅占极小比例。\n大远景航拍环绕运镜(Orbit)。\n高色温冷白光，柔和的散射光透过水雾。\n画面清晰稳定，比例协调，竖屏9:16，电影质感。",
+        "image_url": [
+          "/uploads/canvas/img_auto_02e28130-08d3-47f2-89cc-79f78d7afed8.png",
+          "/uploads/canvas/img_gc_canglin_turnaround_v1.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 6,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-14T07:44:58.789093+00:00",
+    "updated_at": "2026-07-15T13:57:17.300615+00:00"
+  },
+  {
+    "card_id": "ca40c77d",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "生成卡片",
+    "content": "",
+    "episode": null,
+    "shot_number": 4,
+    "prompts": [
+      "@图片G4(首帧)\n干净半写实东方幻想漫剧插画。\n少年苍霖的手，指尖修长。\n黑暗中一颗古朴龙蛋，裂缝中迸发出冷蓝色计算机代码般的数据流，逐步扩散至画面边缘。\n手指缓缓触碰裂缝，指尖被蓝色数据流瞬间包裹并向手臂蔓延。\n特写后随着数据流蔓延缓慢后拉(Pull-back)。\n极暗背景，强对比冷蓝色荧光。\n画面清晰稳定，手指结构正常，光效锐利，竖屏9:16，电影质感。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 4,
+      "subsegment": "G4-A",
+      "duration_seconds": 5,
+      "flf": true,
+      "target_stage": "vid_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "已移除速度冲突词；等待人工审核图片、提示词和参考图后手动提交。"
+      },
+      "video_review_status": "pending",
+      "video_generation_ready": true,
+      "video_generation_submitted": false,
+      "reference_images": [
+        "/uploads/canvas/img_auto_e2f29b37-65cd-4119-9052-dc95ce9548b6.png"
+      ],
+      "seedance_input": {
+        "prompt": "@图片G4(首帧)\n干净半写实东方幻想漫剧插画。\n少年苍霖的手，指尖修长。\n黑暗中一颗古朴龙蛋，裂缝中迸发出冷蓝色计算机代码般的数据流，逐步扩散至画面边缘。\n手指缓缓触碰裂缝，指尖被蓝色数据流瞬间包裹并向手臂蔓延。\n特写后随着数据流蔓延缓慢后拉(Pull-back)。\n极暗背景，强对比冷蓝色荧光。\n画面清晰稳定，手指结构正常，光效锐利，竖屏9:16，电影质感。",
+        "image_url": [
+          "/uploads/canvas/img_auto_e2f29b37-65cd-4119-9052-dc95ce9548b6.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 5,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-14T07:44:58.789093+00:00",
+    "updated_at": "2026-07-15T13:57:17.300615+00:00"
+  },
+  {
+    "card_id": "f25f105b",
+    "project_id": "a3ab9f6a",
+    "stage": "vid_prompt",
+    "title": "生成卡片",
+    "content": "",
+    "episode": null,
+    "shot_number": 5,
+    "prompts": [
+      "@图片G5(首帧)\n干净半写实东方幻想漫剧插画。\n少年苍霖的背影，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风在风中飘动。\n深邃未知的灰色荒原，面对前方遮天蔽日的虚空之门阴影。\n伫立于风中，肩膀随呼吸微起伏，随后坚定地向前迈出一步。\n全景缓慢推进至背影特写(Push-in)。\n冷灰色调，强烈的背光，角色呈现为深色剪影。\n画面清晰稳定，边缘干净，竖屏9:16，电影质感。"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 5,
+      "subsegment": "G5-A",
+      "duration_seconds": 6,
+      "flf": true,
+      "target_stage": "vid_prompt",
+      "production_grain": "generation_unit",
+      "quality_gate": {
+        "passed": true,
+        "issues": [],
+        "note": "已移除速度冲突词；等待人工审核图片、提示词和参考图后手动提交。"
+      },
+      "video_review_status": "pending",
+      "video_generation_ready": true,
+      "video_generation_submitted": false,
+      "reference_images": [
+        "/uploads/canvas/img_auto_82e3dbe0-f937-4890-aa7a-ef417b544c01.png",
+        "/uploads/canvas/img_gc_canglin_turnaround_v1.png"
+      ],
+      "seedance_input": {
+        "prompt": "@图片G5(首帧)\n干净半写实东方幻想漫剧插画。\n少年苍霖的背影，黑色短碎发凌乱，左脸竖向旧伤疤，深灰龙翼披风在风中飘动。\n深邃未知的灰色荒原，面对前方遮天蔽日的虚空之门阴影。\n伫立于风中，肩膀随呼吸微起伏，随后坚定地向前迈出一步。\n全景缓慢推进至背影特写(Push-in)。\n冷灰色调，强烈的背光，角色呈现为深色剪影。\n画面清晰稳定，边缘干净，竖屏9:16，电影质感。",
+        "image_url": [
+          "/uploads/canvas/img_auto_82e3dbe0-f937-4890-aa7a-ef417b544c01.png",
+          "/uploads/canvas/img_gc_canglin_turnaround_v1.png"
+        ],
+        "aspect_ratio": "9:16",
+        "duration": 6,
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-14T07:44:58.789093+00:00",
+    "updated_at": "2026-07-15T13:57:17.300615+00:00"
+  },
+  {
+    "card_id": "9ce72c92",
+    "project_id": "a3ab9f6a",
+    "stage": "design",
+    "title": "苍霖人物三视图",
+    "content": "苍霖：正面、左侧面、背面三视图。用于锁定脸、左脸旧疤、黑色短碎发、深灰龙翼披风、骨片项链和全身比例。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_gc_canglin_turnaround_v1.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "reference_role": "identity",
+      "asset_type": "character_turnaround",
+      "subject_name": "苍霖",
+      "active_image": "/uploads/canvas/img_gc_canglin_turnaround_v1.png",
+      "approved_for_video": false,
+      "generator": "Codex built-in imagegen"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T13:57:17.300615+00:00",
+    "updated_at": "2026-07-15T13:57:17.300615+00:00"
+  },
+  {
+    "card_id": "b249292d",
+    "project_id": "a3ab9f6a",
+    "stage": "design",
+    "title": "赤色火龙三视图",
+    "content": "赤色火龙：侧面、前侧面、俯视三视图。用于锁定黑曜石双角、赤红鳞片、翼形、鞍具和体型。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [
+      "/uploads/canvas/img_gc_fire_dragon_turnaround_v1.png"
+    ],
+    "videos": [],
+    "metadata": {
+      "reference_role": "identity",
+      "asset_type": "creature_turnaround",
+      "subject_name": "赤色火龙",
+      "active_image": "/uploads/canvas/img_gc_fire_dragon_turnaround_v1.png",
+      "approved_for_video": false,
+      "generator": "Codex built-in imagegen"
+    },
+    "status": "review",
+    "assignee": "",
+    "created_at": "2026-07-15T13:57:17.300615+00:00",
+    "updated_at": "2026-07-15T13:57:17.300615+00:00"
+  }
+]

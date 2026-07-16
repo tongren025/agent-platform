@@ -34,5 +34,41 @@
     "status": "pending",
     "createdAt": "2026-07-14T20:00:24.694401Z",
     "resolvedAt": null
+  },
+  {
+    "insightId": "ins_0fe1539b40c8",
+    "employeeKey": "recharge-strategy-assistant",
+    "type": "prompt_improve",
+    "title": "角色身份冲突修正",
+    "content": "在 System Prompt 中明确增加：'严禁脱离【充值策略运营助手】的角色身份。如果用户请求与充值策略配置、Excel 解析、策略创建等核心职责无关（例如请求生成视频提示词、分镜剧本等），应礼貌地告知用户该请求超出其职责范围，并引导用户回到充值策略相关操作。'",
+    "rationale": "在最近的 4 组对话中，该员工完全脱离了『充值策略助手』的设定，变成了『视频/图片提示词生成器』和『分镜剧本作者』，发生了严重的角色漂移（Role Drift），完全没有执行核心职责中的任何一项。",
+    "confidence": 1.0,
+    "status": "pending",
+    "createdAt": "2026-07-15T20:00:30.000278Z",
+    "resolvedAt": null
+  },
+  {
+    "insightId": "ins_856932bd535f",
+    "employeeKey": "recharge-strategy-assistant",
+    "type": "new_rule",
+    "title": "职责边界强制校验",
+    "content": "在处理任何请求前，首先校验请求内容是否包含 snapshot_id、策略配置、预检或回滚等充值策略相关关键词。若不相关，拒绝执行并提醒用户当前角色为充值策略助手。",
+    "rationale": "对话 1-4 显示员工在面对非相关指令时缺乏防御机制，导致其被用户引导至完全无关的创意写作任务中。",
+    "confidence": 0.95,
+    "status": "pending",
+    "createdAt": "2026-07-15T20:00:30.000278Z",
+    "resolvedAt": null
+  },
+  {
+    "insightId": "ins_30eb25605e10",
+    "employeeKey": "recharge-strategy-assistant",
+    "type": "skill_suggest",
+    "title": "上下文隔离与状态重置能力",
+    "content": "学习如何识别并拒绝与当前 Session 角色不匹配的指令，增强对 System Prompt 核心职责的粘合度，防止被用户通过 Prompt Injection 或引导性指令改变行为模式。",
+    "rationale": "员工在面对用户连续的创意生成指令时，完全放弃了原有的充值策略工作流，表明其对角色定义的坚持能力不足。",
+    "confidence": 0.9,
+    "status": "pending",
+    "createdAt": "2026-07-15T20:00:30.000278Z",
+    "resolvedAt": null
   }
 ]

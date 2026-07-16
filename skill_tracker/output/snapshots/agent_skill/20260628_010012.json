@@ -1,0 +1,29 @@
+{
+  "query": "agent skill",
+  "taken_at": "2026-06-28T01:00:12.537087+00:00",
+  "stars": {
+    "obra/superpowers": 240056,
+    "affaan-m/ECC": 222644,
+    "anthropics/skills": 155903,
+    "bytedance/deer-flow": 75052,
+    "addyosmani/agent-skills": 67279,
+    "Leonxlnx/taste-skill": 52047,
+    "hesreallyhim/awesome-claude-code": 47459,
+    "mvanhorn/last30days-skill": 47179,
+    "jeecgboot/JeecgBoot": 46900,
+    "zhayujie/CowAgent": 45643,
+    "sickn33/antigravity-awesome-skills": 41876,
+    "danny-avila/LibreChat": 39913,
+    "kepano/obsidian-skills": 38548,
+    "multica-ai/multica": 38257,
+    "github/awesome-copilot": 35831,
+    "op7418/guizang-ppt-skill": 19192,
+    "alchaincyf/huashu-design": 20075,
+    "calesthio/OpenMontage": 25289,
+    "googleworkspace/cli": 28990,
+    "coreyhaines31/marketingskills": 35214,
+    "microsoft/SkillOpt": 9512,
+    "phuryn/pm-skills": 21374,
+    "mukul975/Anthropic-Cybersecurity-Skills": 22200
+  }
+}

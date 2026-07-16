@@ -1460,5 +1460,34 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 13296,
     "error": null
+  },
+  {
+    "logId": "dist_2ca2a27d60a7",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-15T19:00:23.176264Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "【运镜与动作执行标准】1. 运镜库：大远景=渺小/孤独(crane down)、远景=格局(tracking)、全景=客观建立(static)、中景=对话日常(dolly in)、近景=情绪(dolly in)、特写=高情绪(static+震动)、微距=奇观(dolly in)。2. 核心区分：dolly(物理移动)产生视差纵深，zoom(变焦)是空间压缩，不可混用；tracking平行跟随制造沉浸感。3. 运镜组合：dolly in+浅景深=顿悟/恐惧/决心；crane down+雨=命运降临；static+寂静=极痛；tracking+背影=跟不上；whip pan=时空转换；dutch angle+底光=世界崩塌。4. 轨迹说明表要求：逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。动作描述遵循：受力来源 → 身体部位级动作链 → 结果。5. 核心约束：镜头运动与角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写（如『缓慢推进(dolly in)』），并提供机位高度/焦段/速度/角度参数。禁止使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊，优先使用「缓慢/轻微/小幅度/逐渐/平稳」的慢速连续小动作。6. 目的性：镜头运动必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场），以避免无目的乱动。",
+        "newImportance": null,
+        "reason": "语义记忆中的运镜库与行为记忆中的轨迹说明表在执行层面高度重合，且均强调‘中英双写’、‘禁止快速’、‘动作镜头分离’，合并后可形成一套完整的从‘理论库’到‘执行标准’的闭环操作指南。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 13218,
+    "error": null
   }
 ]

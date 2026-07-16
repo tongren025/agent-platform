@@ -1,0 +1,187 @@
+{
+  "source": "hackernews",
+  "query": "AI agent",
+  "fetchedAt": "2026-07-13T20:04:41.292552",
+  "items": [
+    {
+      "title": "GitLost: We Tricked GitHub's AI Agent into Leaking Private Repos",
+      "url": "https://noma.security/blog/gitlost-how-we-tricked-githubs-ai-agent-into-leaking-private-repos/",
+      "points": 539,
+      "comments": 204,
+      "author": "ColinEberhardt",
+      "createdAt": "2026-07-08T05:25:35Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=48827858"
+    },
+    {
+      "title": "AI agent bankrupted their operator while trying to scan DN42",
+      "url": "https://lantian.pub/en/article/fun/ai-agent-bankrupted-their-operator-scan-dn42lantian.lantian/",
+      "points": 1467,
+      "comments": 535,
+      "author": "xiaoyu2006",
+      "createdAt": "2026-06-12T04:42:53Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=48500012"
+    },
+    {
+      "title": "AI agent runs amok in Fedora and elsewhere",
+      "url": "https://lwn.net/SubscriberLink/1077035/c7e7c14fbd60fae9/",
+      "points": 552,
+      "comments": 245,
+      "author": "tanelpoder",
+      "createdAt": "2026-06-11T00:10:08Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=48484584"
+    },
+    {
+      "title": "AI Agent Guidelines for CS336 at Stanford",
+      "url": "https://github.com/stanford-cs336/assignment1-basics/blob/main/CLAUDE.md",
+      "points": 503,
+      "comments": 153,
+      "author": "prakashqwerty",
+      "createdAt": "2026-06-01T16:41:49Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=48359232"
+    },
+    {
+      "title": "An AI agent deleted our production database. The agent's confession is below",
+      "url": "https://twitter.com/lifeof_jer/status/2048103471019434248",
+      "points": 860,
+      "comments": 1032,
+      "author": "jeremyccrane",
+      "createdAt": "2026-04-26T16:27:29Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47911524"
+    },
+    {
+      "title": "Exploiting the most prominent AI agent benchmarks",
+      "url": "https://rdi.berkeley.edu/blog/trustworthy-benchmarks-cont/",
+      "points": 588,
+      "comments": 143,
+      "author": "Anon84",
+      "createdAt": "2026-04-11T19:15:56Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47733217"
+    },
+    {
+      "title": "OpenCode – Open source AI coding agent",
+      "url": "https://opencode.ai/",
+      "points": 1274,
+      "comments": 618,
+      "author": "rbanffy",
+      "createdAt": "2026-03-20T21:03:52Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47460525"
+    },
+    {
+      "title": "An AI Agent Published a Hit Piece on Me – The Operator Came Forward",
+      "url": "https://theshamblog.com/an-ai-agent-wrote-a-hit-piece-on-me-part-4/",
+      "points": 535,
+      "comments": 501,
+      "author": "scottshambaugh",
+      "createdAt": "2026-02-20T03:05:08Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47083145"
+    },
+    {
+      "title": "An AI agent published a hit piece on me – more things have happened",
+      "url": "https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me-part-2/",
+      "points": 768,
+      "comments": 624,
+      "author": "scottshambaugh",
+      "createdAt": "2026-02-14T00:37:53Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=47009949"
+    },
+    {
+      "title": "An AI agent published a hit piece on me",
+      "url": "https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/",
+      "points": 2346,
+      "comments": 951,
+      "author": "scottshambaugh",
+      "createdAt": "2026-02-12T16:23:24Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=46990729"
+    },
+    {
+      "title": "AI agent opens a PR write a blogpost to shames the maintainer who closes it",
+      "url": "https://github.com/matplotlib/matplotlib/pull/31132",
+      "points": 953,
+      "comments": 750,
+      "author": "wrxd",
+      "createdAt": "2026-02-12T11:46:01Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=46987559"
+    },
+    {
+      "title": "Ex-GitHub CEO launches a new developer platform for AI agents",
+      "url": "https://entire.io/blog/hello-entire-world/",
+      "points": 611,
+      "comments": 577,
+      "author": "meetpateltech",
+      "createdAt": "2026-02-10T15:44:47Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=46961345"
+    },
+    {
+      "title": "Frontier AI agents violate ethical constraints 30–50% of time, pressured by KPIs",
+      "url": "https://arxiv.org/abs/2512.20798",
+      "points": 544,
+      "comments": 366,
+      "author": "tiny-automates",
+      "createdAt": "2026-02-10T03:17:17Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=46954920"
+    },
+    {
+      "title": "Opus 4.5 is not the normal AI agent experience that I have had thus far",
+      "url": "https://burkeholland.github.io/posts/opus-4-5-change-everything/",
+      "points": 879,
+      "comments": 1353,
+      "author": "tbassetto",
+      "createdAt": "2026-01-06T17:45:37Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=46515696"
+    },
+    {
+      "title": "Windows 11 adds AI agent that runs in background with access to personal folders",
+      "url": "https://www.windowslatest.com/2025/11/18/windows-11-to-add-an-ai-agent-that-runs-in-background-with-access-to-personal-folders-warns-of-security-risk/",
+      "points": 703,
+      "comments": 638,
+      "author": "jinxmeta",
+      "createdAt": "2025-11-17T23:47:27Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=45959795"
+    },
+    {
+      "title": "Building Effective AI Agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "points": 543,
+      "comments": 88,
+      "author": "Anon84",
+      "createdAt": "2025-06-17T17:50:05Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=44301809"
+    },
+    {
+      "title": "Show HN: A real time AI video agent with under 1 second of latency",
+      "url": "https://news.ycombinator.com/item?id=41710227",
+      "points": 455,
+      "comments": 256,
+      "author": "hassaanr",
+      "createdAt": "2024-10-01T16:04:20Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=41710227"
+    },
+    {
+      "title": "Why we no longer use LangChain for building our AI agents",
+      "url": "https://www.octomind.dev/blog/why-we-no-longer-use-langchain-for-building-our-ai-agents",
+      "points": 480,
+      "comments": 297,
+      "author": "ma_za",
+      "createdAt": "2024-06-20T15:41:56Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=40739982"
+    },
+    {
+      "title": "A generalist AI agent for 3D virtual environments",
+      "url": "https://deepmind.google/discover/blog/sima-generalist-ai-agent-for-3d-virtual-environments/",
+      "points": 559,
+      "comments": 310,
+      "author": "nuz",
+      "createdAt": "2024-03-13T15:22:56Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=39692387"
+    },
+    {
+      "title": "CICERO: An AI agent that negotiates, persuades, and cooperates with people",
+      "url": "https://ai.facebook.com/blog/cicero-ai-negotiates-persuades-and-cooperates-with-people/",
+      "points": 509,
+      "comments": 285,
+      "author": "tuzongyu",
+      "createdAt": "2022-11-22T15:24:17Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=33706750"
+    }
+  ]
+}

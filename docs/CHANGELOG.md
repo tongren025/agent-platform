@@ -5,6 +5,26 @@
 
 ---
 
+## [2026-07-16] feat: 导演 Agent 一站式制片与 OpenRouter 图片/视频生成
+
+**动机**：一人团队不应在员工、工作流、卡片和设置之间手工搬运结果；用户需要从创意直接推进到
+剧本、分镜、图片、审片看板和视频成片，并且只在需要拍板或付费时介入。
+
+**变更**：
+- 新增默认入口 `/studio`“导演 Agent”，聚合项目七步生产进度、唯一下一步、镜头审片、待审状态与成片预览。
+- 新增 `/api/v1/agentapp/director/*`：项目导演态、OpenRouter 图片/视频模型目录、单镜生图、异步视频提交/同步、FFmpeg 成片合成。
+- OpenRouter 图片使用专用 `/images` API；视频使用 `/videos` 异步任务并在完成后下载到
+  `data/uploads/production/<project_id>/`，API Key 继续只从已有供应商配置/环境变量解析。
+- 批量媒体生成必须在前端二次确认，显示模型、镜头数和可用价格信息；打开页面、刷新、同步任务都不会触发付费生成。
+- 导航默认收束为工作室与管理入口，其余页面进入“高级功能”；新增手机端单列审片与阶段条局部横向滚动。
+- 成片接口使用本机 FFmpeg 统一项目画幅并按集数/G 单元顺序串接已落地视频，生成 final 卡片和 MP4 预览。
+
+**影响面**：新增 director API/服务/页面；`app.main` 注册新路由；用户端写权限沿用
+`production:manage`；新增本地媒体目录，无数据库迁移。验证：相关后端 39 项测试通过、前端生产构建通过、
+桌面 1440px 与手机 319px 页面无主体横向溢出。
+
+---
+
 ## [2026-07-15] feat: OpenRouter 模型市场页
 
 **动机**：用户希望单独查看 OpenRouter 模型，标出免费模型，并可自行选择加入平台使用。
@@ -27,9 +47,34 @@
 - `appsettings*.json` 的 `aiModels[].apiKey` 支持 `${ENV_NAME}` 环境变量占位，避免把 OpenRouter key 写死进 JSON。
 - 业务配置加载时会读取仓库根 `.env`，保证 `OPENROUTER_API_KEY` 在 `app.config` 先导入时也能解析。
 - `.env.example` 新增 `OPENROUTER_API_KEY` 示例。
-- RUNBOOK 补充 OpenRouter 最小配置，endpoint 使用 `https://openrouter.ai/api/v1`，模型可先用 `openrouter/auto` 或替换为控制台里的模型 ID。
+- README / RUNBOOK 补充 OpenRouter 最小配置，endpoint 使用 `https://openrouter.ai/api/v1`，模型可先用 `openrouter/auto` 或替换为控制台里的模型 ID。
 
 **影响面**：`app/config.py` 配置解析；本地/生产配置可用环境变量承载 LLM provider 密钥；无数据库或 API schema 变更。
+
+---
+
+## [2026-07-15] feat: 单集镜头级返工台与图片版本管理
+
+**动机**：单人创作时只能按整集替换阶段，无法针对某个 G 镜头返工；单集详情页也只能查看提示词，
+图片失败后缺少编辑提示词、立即重画和版本回退闭环。
+
+**变更**：
+- 单集详情页的剧本、分镜、图片提示词和视频提示词卡新增直接编辑，可保存正文、主提示词和负向提示词。
+- 阶段生成请求新增可选 `shot_number`；`replace` 在传入该字段时只替换同项目、同集、同 G、同阶段卡片，
+  并强制新卡仍落回该 G，不影响其他镜头。
+- 图片提示词卡新增“立即生图”，读取刚编辑的主提示词并调用已启用的 OpenAI 兼容 images 模型；
+  图片持久化到 `data/uploads/canvas/`。
+- 新图以版本形式追加，旧图不覆盖；卡片 `metadata.active_image` 记录当前版本，单集页可随时切换。
+- 分镜规范升级为“一镜一卡”：每个 ≤6 秒子镜头独立 storyboard 卡；历史上一张 G 内含多个
+  `### 镜头N` 的大分镜可在单集页一键拆成逐镜卡，每镜可单独生成故事板图。
+- 视频提示词卡新增“视频参考包”，自动汇总同 G 的逐镜故事板图、首尾帧，以及项目全局人物三视图/定妆图，
+  便于按 Veo 等视频模型的参考图限制选择素材，而不是只拿一段文字盲生视频。
+- 抽取 `app/services/image_generation.py`，让画布和制作看板共用同一套远端图片落地逻辑。
+
+**影响面**：`POST /api/v1/agentapp/production/projects/{pid}/generate` 新增 `shot_number`；新增
+`POST /api/v1/agentapp/production/projects/{pid}/cards/{card_id}/generate-image`；卡片更新接口补充
+`negative_prompts` 写入；新增 `split-storyboard`；前端单集详情页新增返工、编辑、生图、逐镜拆分、
+视频参考包和版本选择操作。
 
 ---
 
@@ -1133,3 +1178,12 @@ JSON 默认(单人自用清爽),PG 备用(要查/演示/上量时一个环境变
 - **配置**:新增环境变量 `APP_ENV/DATABASE_URL/REDIS_URL/LOG_LEVEL/LOG_JSON/CORS_ORIGINS/ADMIN_*/DASHSCOPE_API_KEY`。
 - `.gitignore`:忽略 `.env`。
 - 启动方式:`docker compose up -d --build` 一键起全套。
+## [2026-07-15] GC 视频前置审核与参考资产
+
+- 单集详情兼容 `episode=null` 的 GC 全局生成单元，避免概念片卡片在详情页缺失。
+- 视频参考包增加逐镜人工审核状态与 Seedance 输入复制；仅准备提示词、参考图和参数，不自动提交视频任务。
+- GC 生成模板改为继承正片项目的锁定 Art Bible，并将 3~5 个高光段拆为 8~12 个 1.5~4 秒剪辑镜头，禁止用少量一镜到底镜头填满全片。
+- GC 流程补回“场景/人物锁定”和“视觉设计”阶段；场景必须先产出可复用母版提示词，角色必须锁定具体时期后才能进入故事板与生图提示词。
+- 图片提示词必须继承明确视觉风格与母版参考；视频提示词只负责动作、运镜、环境和声音，不再重新发明人物与画风。
+- GC 运行数据重写为抖音剧情型 11 镜、30 秒版本：命运拒绝→龙蛋选择→成长兑现→删除令→熔浆龙焰→世界树钥匙；同时新增 5 个场景提示词与 4 个角色时期锁定卡。错误三视图保持 rejected 并退出下游引用，未生成新图片。
+- 影响面：`web/src/pages/EpisodeDetail.tsx`、`data/production/a3ab9f6a/cards.json`、`data/uploads/canvas/`。

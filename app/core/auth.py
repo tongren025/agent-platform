@@ -38,6 +38,7 @@ _WRITE_PERMS: list[tuple[str, str]] = [
     ("/api/v1/agentapp/registry/mcp-servers", "tool:manage"),
     ("/api/v1/agentapp/registry", "employee:manage"),
     ("/api/v1/agentapp/workflow", "workflow:manage"),
+    ("/api/v1/agentapp/director", "production:manage"),
     ("/api/v1/agentapp/production", "production:manage"),
     ("/api/v1/agentapp/canvas", "production:manage"),
     ("/api/v1/pipeline", "production:manage"),

@@ -1,0 +1,187 @@
+{
+  "source": "hackernews",
+  "query": "GPT OpenAI",
+  "fetchedAt": "2026-07-13T20:05:54.721023",
+  "items": [
+    {
+      "title": "OpenAI's GPT-5.2 model cites Grokipedia",
+      "url": "https://www.engadget.com/ai/report-reveals-that-openais-gpt-52-model-cites-grokipedia-192532977.html",
+      "points": 49,
+      "comments": 20,
+      "author": "bhouston",
+      "createdAt": "2026-01-25T02:33:05Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=46750118"
+    },
+    {
+      "title": "Apple brings OpenAI's GPT-5 to iOS and macOS",
+      "url": "https://arstechnica.com/ai/2025/08/apple-brings-openais-gpt-5-to-ios-and-macos/",
+      "points": 69,
+      "comments": 64,
+      "author": "Brajeshwar",
+      "createdAt": "2025-08-11T14:51:53Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=44864803"
+    },
+    {
+      "title": "OpenAI's GPT-5 Bait and Switch",
+      "url": "https://www.vincentschmalbach.com/openais-gpt-5-bait-and-switch/",
+      "points": 38,
+      "comments": 20,
+      "author": "vincent_s",
+      "createdAt": "2025-02-13T11:16:32Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=43034821"
+    },
+    {
+      "title": "My finetuned models beat OpenAI's GPT-4",
+      "url": "https://mlops.systems/posts/2024-07-01-full-finetuned-model-evaluation.html",
+      "points": 414,
+      "comments": 91,
+      "author": "majc2",
+      "createdAt": "2024-07-01T08:53:04Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=40843848"
+    },
+    {
+      "title": "Unbabel (YC W14) says new AI model has dethroned OpenAI's GPT-4 at translation",
+      "url": "https://fortune.com/2024/06/06/unbabel-towerllm-ai-model-beats-openai-gpt-4-translation/",
+      "points": 42,
+      "comments": 1,
+      "author": "carrozo",
+      "createdAt": "2024-06-06T13:27:55Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=40597167"
+    },
+    {
+      "title": "BeeTrove – OpenAI GPTs Open-Source Dataset",
+      "url": "https://beetrove.com/",
+      "points": 83,
+      "comments": 12,
+      "author": "robblbobbl",
+      "createdAt": "2024-04-05T17:43:52Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=39945104"
+    },
+    {
+      "title": "OpenAI GPT-4 vs. Groq Mistral-8x7B",
+      "url": "https://serpapi.com/blog/openai-gpt-4-vs-groq-mistral/",
+      "points": 105,
+      "comments": 133,
+      "author": "tanyongsheng",
+      "createdAt": "2024-03-22T08:44:04Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=39788590"
+    },
+    {
+      "title": "AI girlfriend bots are flooding OpenAI's GPT store",
+      "url": "https://qz.com/ai-girlfriend-bots-are-already-flooding-openai-s-gpt-st-1851159131",
+      "points": 46,
+      "comments": 35,
+      "author": "geox",
+      "createdAt": "2024-01-12T19:37:55Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=38972871"
+    },
+    {
+      "title": "1960s chatbot ELIZA beat OpenAI's GPT-3.5 in a recent Turing test study",
+      "url": "https://arstechnica.com/information-technology/2023/12/real-humans-appeared-human-63-of-the-time-in-recent-turing-test-ai-study/",
+      "points": 136,
+      "comments": 47,
+      "author": "layer8",
+      "createdAt": "2023-12-03T10:56:52Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=38506175"
+    },
+    {
+      "title": "OpenGPTs: Open-source version of OpenAI GPTs",
+      "url": "https://github.com/langchain-ai/opengpts",
+      "points": 40,
+      "comments": 1,
+      "author": "Multiset",
+      "createdAt": "2023-11-12T04:55:28Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=38237442"
+    },
+    {
+      "title": "BlenderGPT: Use commands in English to control Blender with OpenAI's GPT-4",
+      "url": "https://github.com/gd3kr/BlenderGPT",
+      "points": 612,
+      "comments": 294,
+      "author": "alexzeitler",
+      "createdAt": "2023-03-26T22:54:47Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=35320571"
+    },
+    {
+      "title": "Experimental library for scraping websites using OpenAI's GPT API",
+      "url": "https://jamesturk.github.io/scrapeghost/",
+      "points": 378,
+      "comments": 139,
+      "author": "tomberin",
+      "createdAt": "2023-03-25T18:40:14Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=35305655"
+    },
+    {
+      "title": "Microsoft's paper on OpenAI's GPT-4 had hidden information",
+      "url": "https://twitter.com/DV2559106965076/status/1638769434763608064",
+      "points": 317,
+      "comments": 127,
+      "author": "georgehill",
+      "createdAt": "2023-03-23T21:26:28Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=35281527"
+    },
+    {
+      "title": "The new Bing runs on OpenAI’s GPT-4",
+      "url": "https://blogs.bing.com/search/march_2023/Confirmed-the-new-Bing-runs-on-OpenAI%E2%80%99s-GPT-4",
+      "points": 442,
+      "comments": 281,
+      "author": "vitorgrs",
+      "createdAt": "2023-03-14T17:33:32Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=35155198"
+    },
+    {
+      "title": "Microsoft Teams Premium: powered by OpenAI’s GPT-3.5",
+      "url": "https://www.microsoft.com/en-us/microsoft-365/blog/2023/02/01/microsoft-teams-premium-cut-costs-and-add-ai-powered-productivity/",
+      "points": 215,
+      "comments": 159,
+      "author": "cloudking",
+      "createdAt": "2023-02-02T00:23:21Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=34620240"
+    },
+    {
+      "title": "Medical chatbot using OpenAI’s GPT-3 told a fake patient to kill themselves",
+      "url": "https://artificialintelligence-news.com/2020/10/28/medical-chatbot-openai-gpt3-patient-kill-themselves/",
+      "points": 181,
+      "comments": 112,
+      "author": "weare138",
+      "createdAt": "2021-02-26T22:41:25Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=26280727"
+    },
+    {
+      "title": "Microsoft gets exclusive license for OpenAI’s GPT-3 language model",
+      "url": "https://venturebeat.com/2020/09/22/microsoft-gets-exclusive-license-for-openais-gpt-3-language-model/",
+      "points": 244,
+      "comments": 128,
+      "author": "amrrs",
+      "createdAt": "2020-09-22T18:47:50Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=24558329"
+    },
+    {
+      "title": "Demo of OpenAI's GPT-3 generating tweets given a word",
+      "url": "https://thoughts.sushant-kumar.com/hong%20kong",
+      "points": 92,
+      "comments": 85,
+      "author": "hardmaru",
+      "createdAt": "2020-07-20T08:03:13Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=23895706"
+    },
+    {
+      "title": "OpenAI's GPT-3 may be the biggest thing since Bitcoin",
+      "url": "https://maraoz.com/2020/07/18/openai-gpt3/",
+      "points": 1079,
+      "comments": 526,
+      "author": "maraoz",
+      "createdAt": "2020-07-18T23:28:10Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=23885684"
+    },
+    {
+      "title": "Generating Fake Conversations by Fine-Tuning OpenAI's GPT on Data from Messenger",
+      "url": "http://tenoke.github.io/blog/gpt-finetune",
+      "points": 47,
+      "comments": 7,
+      "author": "Tenoke",
+      "createdAt": "2019-03-14T12:18:43Z",
+      "hnUrl": "https://news.ycombinator.com/item?id=19388525"
+    }
+  ]
+}

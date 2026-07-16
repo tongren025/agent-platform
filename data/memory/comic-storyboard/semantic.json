@@ -144,27 +144,27 @@
     "updatedAt": "2026-07-13T19:00:42.764323Z"
   },
   {
-    "memoryId": "pro_canon_wiki_20260630_comic-storyboard_montage_01",
-    "employeeKey": "comic-storyboard",
-    "content": "蒙太奇理论：通过组合不同地点/角度/距离的镜头产生'第三种动作'（库里肖夫效应）,分镜意义在镜与镜的关系。镜头并列直接决定影片节奏与叙事时空，剪辑是创造电影时间/空间的主要手段而非记录。交叉剪辑用于呈现同步多线索情节；创造性地理用剪辑拼出现实中不存在的空间关联。（来源:维基百科·蒙太奇）",
-    "category": "knowledge",
-    "importance": 0.55,
-    "sourceSession": "pro_canon_wiki_20260630",
-    "accessCount": 1,
-    "createdAt": "2026-06-30T12:28:25.765700Z",
-    "lastAccessed": "2026-07-06T06:35:52.140020Z",
-    "updatedAt": "2026-07-13T19:00:42.677458Z"
-  },
-  {
     "memoryId": "pro_canon_wiki_20260630_comic-storyboard_composition_01",
     "employeeKey": "comic-storyboard",
     "content": "构图原则：1.三分法：主体放在分割线交点而非正中；2.层次感：通过主体/客体、前景/背景对比分层,用三角轴或斜线引导视线流动。3.光影构图：光与影本身是构图元素，需组织成'有情感的光影组合'来强化主题，而非平均打亮。（来源:维基百科·構圖）",
     "category": "knowledge",
-    "importance": 0.55,
+    "importance": 0.4,
     "sourceSession": "pro_canon_wiki_20260630",
     "accessCount": 1,
     "createdAt": "2026-06-30T12:28:25.765700Z",
     "lastAccessed": "2026-07-06T06:35:52.140020Z",
-    "updatedAt": "2026-07-13T19:00:42.711348Z"
+    "updatedAt": "2026-07-15T19:00:36.223951Z"
+  },
+  {
+    "memoryId": "pro_canon_wiki_20260630_comic-storyboard_montage_01",
+    "employeeKey": "comic-storyboard",
+    "content": "蒙太奇理论：通过组合不同地点/角度/距离的镜头产生'第三种动作'（库里肖夫效应）,分镜意义在镜与镜的关系。镜头并列直接决定影片节奏与叙事时空，剪辑是创造电影时间/空间的主要手段而非记录。交叉剪辑用于呈现同步多线索情节；创造性地理用剪辑拼出现实中不存在的空间关联。（来源:维基百科·蒙太奇）",
+    "category": "knowledge",
+    "importance": 0.4,
+    "sourceSession": "pro_canon_wiki_20260630",
+    "accessCount": 1,
+    "createdAt": "2026-06-30T12:28:25.765700Z",
+    "lastAccessed": "2026-07-06T06:35:52.140020Z",
+    "updatedAt": "2026-07-15T19:00:36.215259Z"
   }
 ]

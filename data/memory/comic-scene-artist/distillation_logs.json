@@ -166,5 +166,70 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 15672,
     "error": null
+  },
+  {
+    "logId": "dist_592923d0456c",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-15T19:00:20.881633Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-artist_film_color_02",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-artist_sem_02",
+        "newContent": "【色彩体系与叙事决策】配色是情绪工具而非装饰。基础属性为色相/明度/饱和度；互补色制造冲突张力，类似色营造和谐氛围。具体配色方案：龙骨碎片=蓝白脉动光(苍霖核心符号)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。整片应通过color script规划色调随情绪走向变化。",
+        "newImportance": null,
+        "reason": "将色彩的理论原则与具体的项目配色方案合并，使色彩记忆从‘理论+实例’统一化，提高检索效率。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-scene-artist_lighting_03",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-artist_sem_03",
+        "newContent": "【光影×情绪与实操准则】1.情绪映射：伦勃朗光=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。2.实操要求：提示词必须包含'位置+高度+强度比'三要素（如：主光侧面30-45°且略高于眼平线，辅光对侧强度50-75%，轮廓光后上方分离），光向决定脸部塑形与情绪。",
+        "newImportance": null,
+        "reason": "将光影的情绪定义与具体的布光实操参数合并，形成完整的‘光影执行链路’。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-artist_composition_02",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-scene-artist_env_layer_01",
+        "newContent": "【构图与空间纵深原则】1.分层造深：环境分前景(最深暗)、中景(主焦点最亮)、背景(少细节低对比柔色)三层，利用对比和边缘清晰度分离。2.构图引导：基础采用三分法，利用三角轴或斜线引导视线流动。3.光影组织：光影应被组织成'有情感的组合'强化主题，而非平均打亮。",
+        "newImportance": null,
+        "reason": "将环境分层、三分法构图及光影组织合并为统一的‘视觉构图原则’。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-scene-artist_perspective_01",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-scene-artist_env_layer_01",
+        "newContent": "【构图与空间纵深原则】1.分层造深：环境分前景(最深暗)、中景(主焦点最亮)、背景(少细节低对比柔色)三层，利用对比和边缘清晰度分离。2.透视应用：一点透视汇于焦点；视平线决定视角；利用大气透视（近鲜明、远失色）实现'远山无皴远水无波'。3.构图引导：基础采用三分法，利用三角轴或斜线引导视线流动。4.光影组织：光影应被组织成'有情感的组合'强化主题。",
+        "newImportance": null,
+        "reason": "将透视理论与环境分层、构图原则合并，构建完整的空间构建知识库。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-artist_env_layer_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "该记忆关于‘视觉焦点’的原则在实际Prompt生成中具有较高指导意义，原权重0.55过低。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 11,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 25937,
+    "error": null
   }
 ]
