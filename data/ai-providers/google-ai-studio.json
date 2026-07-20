@@ -1,7 +1,7 @@
 {
   "name": "google-ai-studio",
   "endpoint": "https://generativelanguage.googleapis.com/v1beta/openai/",
-  "apiKey": "YOUR_GOOGLE_AI_STUDIO_KEY",
+  "apiKey": "${GOOGLE_AI_STUDIO_API_KEY}",
   "enabled": false,
   "models": [
     {

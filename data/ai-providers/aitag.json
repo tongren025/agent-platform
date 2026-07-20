@@ -1,7 +1,7 @@
 {
   "name": "aitag",
   "endpoint": "http://112.123.118.159:8002/v1",
-  "apiKey": "no-key",
+  "apiKey": "${AITAG_API_KEY}",
   "enabled": true,
   "models": [
     {

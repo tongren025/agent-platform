@@ -88,19 +88,27 @@ fi
 if [ -d "${INSTALL_DIR}/.git" ]; then
     log "更新代码..."
     cd "${INSTALL_DIR}"
-    # data/ 和 resouce/ 是 bind mount 的运行时数据，不受 git 管理；
-    # git reset --hard 只影响被 git 跟踪的文件（data/production/ 的 cards.json）。
-    # 服务器上可能已有通过 UI 修改的卡片数据，先备份再 reset。
-    if [ -d "data/production" ]; then
-        cp -r data/production /tmp/agent-production-backup 2>/dev/null || true
-    fi
+    # 私有仓库会跟踪普通 data/ 快照，但生产服务器上的 UI 修改必须优先保留。
+    # reset 前备份三类服务器权威数据：制作看板、后台供应商配置、供应商加密主密钥。
+    RUNTIME_BACKUP="/tmp/agent-runtime-backup"
+    rm -rf "${RUNTIME_BACKUP}"
+    mkdir -p "${RUNTIME_BACKUP}"
+    for REL_PATH in production ai-providers .secrets; do
+        if [ -d "data/${REL_PATH}" ]; then
+            cp -a "data/${REL_PATH}" "${RUNTIME_BACKUP}/${REL_PATH}"
+        fi
+    done
     git fetch origin
     git reset --hard "origin/${BRANCH}"
-    # 恢复服务器上已有的生产数据（优先保留服务器版本）
-    if [ -d /tmp/agent-production-backup ]; then
-        cp -rn /tmp/agent-production-backup/* data/production/ 2>/dev/null || true
-        rm -rf /tmp/agent-production-backup
-    fi
+    # 完整恢复服务器版本；不能用 cp -n，否则 reset 出来的同名文件会挡住运行时数据。
+    for REL_PATH in production ai-providers .secrets; do
+        if [ -d "${RUNTIME_BACKUP}/${REL_PATH}" ]; then
+            rm -rf "data/${REL_PATH}"
+            mkdir -p data
+            cp -a "${RUNTIME_BACKUP}/${REL_PATH}" "data/${REL_PATH}"
+        fi
+    done
+    rm -rf "${RUNTIME_BACKUP}"
 else
     log "克隆仓库..."
     git clone --depth 1 -b "${BRANCH}" "${REPO_URL}" "${INSTALL_DIR}"

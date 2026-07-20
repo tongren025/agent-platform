@@ -164,7 +164,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 纯场景母版图，无人物。圆形石台被九道枯竭光柱包围，地面金绿法则纹残缺，四周龙骨石柱向内倾斜；前景碎石，中景觉醒台，背景暗红天幕。顶部冷灰天光，地面残存金绿微光。空气灰尘缓慢下落。 竖屏9:16，空间关系清楚，前中后景可供后续镜头复用，画面中不生成文字、标志或界面。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_scene_01_觉醒遗迹_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "scene_id": "scene_gc01",
@@ -173,10 +175,10 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1"
     },
-    "status": "review",
+    "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "0852f63e",
@@ -190,7 +192,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 纯场景母版图，无人物。狭窄潮湿矿洞，粗糙岩壁嵌蓝白矿脉，角落简陋布铺，中央古朴龙蛋置于浅水石窝；前景水滴，中景龙蛋，背景黑暗洞口。龙骨碎片蓝白脉动为主光，远处暖橙矿灯为辅光。 竖屏9:16，空间关系清楚，前中后景可供后续镜头复用，画面中不生成文字、标志或界面。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_scene_02_废矿坑龙蛋巢_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "scene_id": "scene_gc02",
@@ -199,10 +203,10 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1"
     },
-    "status": "review",
+    "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "becad3f3",
@@ -216,7 +220,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 纯场景母版图，无人物。熔浆河谷贯穿深红黑色荒原，巨大龙骨山峦插向天空，远处废墟城被暗红火云包围；前景黑色龙骨，中景熔浆，背景冷蓝舰队压境。熔浆赤金底光与舰队冷蓝顶光形成硬碰撞。 竖屏9:16，空间关系清楚，前中后景可供后续镜头复用，画面中不生成文字、标志或界面。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_scene_03_烬龙陆龙骨荒原_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "scene_id": "scene_gc03",
@@ -225,10 +231,10 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1"
     },
-    "status": "review",
+    "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "f493cebe",
@@ -242,7 +248,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 纯场景母版图，无人物。世界树根系横贯云海与九大陆剪影，九缕金绿光丝连接远方大陆，其中八缕依次熄灭；前景云层，中景树根，背景九陆轮廓。冷蓝天幕，金绿生命光为唯一暖色。 竖屏9:16，空间关系清楚，前中后景可供后续镜头复用，画面中不生成文字、标志或界面。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_scene_04_垂死世界树天穹_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "scene_id": "scene_gc04",
@@ -251,10 +259,10 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1"
     },
-    "status": "review",
+    "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "9e060b8d",
@@ -268,7 +276,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 纯场景母版图，无人物。苍霖脚下龙骨断崖通向巨大黑色虚空门，门后隐约连接垂死世界树；前景断裂龙骨，中景少年与巨龙背影，背景遮天虚空门。冷灰逆光勾边，门内同时出现一线赤金与蓝白裂光。 竖屏9:16，空间关系清楚，前中后景可供后续镜头复用，画面中不生成文字、标志或界面。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_scene_05_世界树钥匙虚空_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "scene_id": "scene_gc05",
@@ -277,122 +287,130 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1"
     },
-    "status": "review",
+    "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "b07f0246",
     "project_id": "a3ab9f6a",
     "stage": "design",
     "title": "R3-A 苍霖前期",
-    "content": "**适用镜头**：G2-G4\n**不可变视觉DNA**：16岁，偏瘦有韧劲，黑色短碎发，左脸颊竖向旧疤，深褐近黑瞳孔，破烂灰褐麻布短衣，赤脚，胸口布条绑龙骨碎片；隐忍疲惫。\n**锁定母版**：/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_三个月前赤脚伤痕弱小版.png\n禁止跨时期混穿；巨龙体色锁定深青，只有龙焰使用赤金。",
+    "content": "**适用镜头**：G2-G4\n**不可变视觉DNA**：16岁，偏瘦有韧劲，黑色短碎发，左脸颊竖向旧疤，深褐近黑瞳孔，破烂灰褐麻布短衣，赤脚，胸口布条绑龙骨碎片；隐忍疲惫。\n**锁定母版**：/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_前期三视图_v1.png\n禁止跨时期混穿；巨龙体色锁定深青，只有龙焰使用赤金。",
     "episode": null,
     "shot_number": 0,
     "prompts": [
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_前期三视图_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "asset_type": "locked_character_version",
       "used_by": "G2-G4",
       "reference_role": "identity",
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_三个月前赤脚伤痕弱小版.png"
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_前期三视图_v1.png"
       ],
       "approved_for_video": true
     },
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "362cbc0f",
     "project_id": "a3ab9f6a",
     "stage": "design",
     "title": "R3-B 苍霖后期",
-    "content": "**适用镜头**：G5-G11\n**不可变视觉DNA**：16岁同一张脸与旧疤，修补后的深褐短衣，深灰龙翼披风带龙鳞纹，粗绳项链挂龙骨碎片；懒散但有压场感。\n**锁定母版**：/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png\n禁止跨时期混穿；巨龙体色锁定深青，只有龙焰使用赤金。",
+    "content": "**适用镜头**：G5-G11\n**不可变视觉DNA**：16岁同一张脸与旧疤，修补后的深褐短衣，深灰龙翼披风带龙鳞纹，粗绳项链挂龙骨碎片；懒散但有压场感。\n**锁定母版**：/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png\n禁止跨时期混穿；巨龙体色锁定深青，只有龙焰使用赤金。",
     "episode": null,
     "shot_number": 0,
     "prompts": [
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "asset_type": "locked_character_version",
       "used_by": "G5-G11",
       "reference_role": "identity",
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png"
       ],
       "approved_for_video": true
     },
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "78795eec",
     "project_id": "a3ab9f6a",
     "stage": "design",
     "title": "R2-A 幼龙",
-    "content": "**适用镜头**：G4\n**不可变视觉DNA**：拳头大小，湿漉漉的深青鳞片，腹部浅灰，翼膜半透明，鳞缘蓝光纹，金色竖瞳占脸部较大比例。\n**锁定母版**：/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png\n禁止跨时期混穿；巨龙体色锁定深青，只有龙焰使用赤金。",
+    "content": "**适用镜头**：G4\n**不可变视觉DNA**：拳头大小，湿漉漉的深青鳞片，腹部浅灰，翼膜半透明，鳞缘蓝光纹，金色竖瞳占脸部较大比例。\n**锁定母版**：/api/v1/agentapp/production/resource/漫剧/output/characters/巨龙_正式母版_幼龙_v1.png\n禁止跨时期混穿；巨龙体色锁定深青，只有龙焰使用赤金。",
     "episode": null,
     "shot_number": 0,
     "prompts": [
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/巨龙_正式母版_幼龙_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "asset_type": "locked_character_version",
       "used_by": "G4",
       "reference_role": "identity",
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/巨龙_正式母版_幼龙_v1.png"
       ],
       "approved_for_video": true
     },
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "530ccb78",
     "project_id": "a3ab9f6a",
     "stage": "design",
     "title": "R2-B 成年巨龙",
-    "content": "**适用镜头**：G5-G11\n**不可变视觉DNA**：深青鳞片、腹部浅灰、半透明翼膜带蓝光纹、后弯深黑双角、金色竖瞳；龙焰为赤金白热，身体本身不是赤红色。\n**锁定母版**：/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png\n禁止跨时期混穿；巨龙体色锁定深青，只有龙焰使用赤金。",
+    "content": "**适用镜头**：G5-G11\n**不可变视觉DNA**：深青鳞片、腹部浅灰、半透明翼膜带蓝光纹、后弯深黑双角、金色竖瞳；龙焰为赤金白热，身体本身不是赤红色。\n**锁定母版**：/api/v1/agentapp/production/resource/漫剧/output/characters/巨龙_正式母版_成年龙三视图_v1.png\n禁止跨时期混穿；巨龙体色锁定深青，只有龙焰使用赤金。",
     "episode": null,
     "shot_number": 0,
     "prompts": [
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/巨龙_正式母版_成年龙三视图_v1.png"
+    ],
     "videos": [],
     "metadata": {
       "asset_type": "locked_character_version",
       "used_by": "G5-G11",
       "reference_role": "identity",
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/巨龙_正式母版_成年龙三视图_v1.png"
       ],
       "approved_for_video": true
     },
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "89d8f8c8",
@@ -472,7 +490,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 金色虹膜占满竖屏，瞳孔深处映出九大陆与垂死世界树，八处微光正在变暗。 眼睑从黑暗中突然睁开，虹膜金纹向瞳孔中心收束。 微距极特写，固定机位轻微推进，竖屏9:16。虹膜赤金自发光，瞳孔深处蓝黑冷色 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/7fa38a18_d2cf4f.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 1,
@@ -494,7 +514,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T04:23:56.353206+00:00"
   },
   {
     "card_id": "f1bb3e9f",
@@ -632,7 +652,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 前期苍霖赤脚跪在残破觉醒台中央，九道光柱同时熄灭，金绿法则环从他胸前碎开。 苍霖抬起的手停在半空，随后慢慢垂下；他低声说“也是”。 中近景，固定机位，竖屏9:16。上方冷灰光压住人物，胸前最后一点金绿光熄灭 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/7c1e4c92_4c039d.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 2,
@@ -657,7 +679,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T04:28:27.580653+00:00"
   },
   {
     "card_id": "85ef6229",
@@ -800,7 +822,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 黑暗矿洞里，苍霖胸口龙骨碎片与石窝中的龙蛋隔空发出同频蓝白脉动，水面出现两圈相交波纹。 苍霖捂住流血胸口抬头，龙蛋跟着他的心跳轻轻震动。 俯拍中景，缓慢推进，竖屏9:16。龙骨碎片和龙蛋裂纹交替蓝白自发光 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/77c0d19d_bbd063.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 3,
@@ -825,7 +849,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T04:31:22.799637+00:00"
   },
   {
     "card_id": "84401fe0",
@@ -972,7 +996,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 湿漉漉的深青幼龙从蛋壳探出，金色竖瞳看向苍霖，鼻尖轻碰他带伤的手指。 幼龙向前蹭入苍霖掌心；苍霖先愣住，右侧嘴角第一次轻微扬起。 手与脸同框近景，固定机位，竖屏9:16。幼龙鳞缘蓝光照亮苍霖伤疤，背景保留暖橙矿灯 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/939b89ba_95a666.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 4,
@@ -999,7 +1025,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T04:36:02.882940+00:00"
   },
   {
     "card_id": "c44fec69",
@@ -1152,7 +1178,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 成年巨龙金色竖瞳睁开，镜头揭示后期苍霖伏在深青巨龙背上，前方是熔浆龙骨荒原。 巨龙抬头展开带蓝光纹的翼膜，苍霖俯身握紧缰绳。 龙眼特写切同镜揭示为低机位全景，升镜头，竖屏9:16。熔浆赤金底光勾勒深青鳞片与深灰龙翼披风 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/87130af9_76bbba.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 5,
@@ -1180,7 +1208,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T04:41:16.857839+00:00"
   },
   {
     "card_id": "7b31daef",
@@ -1336,7 +1364,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 暗场揭开冷蓝净化舰队压住天际，上百道锁定光点落在苍霖与巨龙身上。 苍霖没有躲，左眼从披风阴影里缓缓睁开；巨龙压低身体蓄势。 大远景切苍霖近景，剪辑切换而非单镜复合运镜，竖屏9:16。冷蓝舰队顶光侵入赤金荒原，苍霖半脸冷暖分割 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/5b945663_898ed4.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 6,
@@ -1364,7 +1394,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T04:46:46.254097+00:00"
   },
   {
     "card_id": "8f525040",
@@ -1516,7 +1546,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 苍霖左脸带疤一侧近景，锁定红点扫过深褐瞳孔，身后龙翼披风被热风扬起。 苍霖嘴角轻挑，抬眼看向舰队，只说“又来？”。 中近景，固定机位，竖屏9:16。左侧赤金熔浆光，右侧冷蓝锁定光 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/d1a01856_c1b75a.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 7,
@@ -1542,7 +1574,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T04:51:10.930905+00:00"
   },
   {
     "card_id": "066c0896",
@@ -1694,7 +1726,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 深青巨龙贴着熔浆河谷掠行，翼尖卷起赤金火浪，随后迎着冷蓝光束抬升。 巨龙完成一次有力振翼和连续抬升，苍霖始终压低重心抓稳缰绳。 大远景，低机位平稳跟随，竖屏9:16。下方白热赤金龙焰为主光，上方冷蓝光束为对抗色 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/502e4bba_e4d700.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 8,
@@ -1722,7 +1756,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T04:57:19.459615+00:00"
   },
   {
     "card_id": "cd540b35",
@@ -1878,7 +1912,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 白热龙焰横扫舰队，冷蓝飞船在赤金火海中成排熔断，苍霖与巨龙从爆炸前景穿出。 巨龙保持直线喷吐龙焰；苍霖转头看向燃烧舰队，说出一句话。 极大远景，水平跟随，竖屏9:16。白热龙焰与冷蓝舰体形成强烈双色爆点 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/7d6d5ea5_4a77e7.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 9,
@@ -1906,7 +1942,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T05:02:54.761825+00:00"
   },
   {
     "card_id": "8be945cc",
@@ -2060,7 +2096,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 世界树横贯天穹，连接九大陆的九缕金绿光丝中八缕连续熄灭，最后一缕落在苍霖胸口龙骨碎片。 苍霖低头看见碎片亮起；巨龙在他身旁停止咆哮，望向远方。 极大远景，缓慢后拉，竖屏9:16。金绿光丝逐根熄灭，环境由辉煌转为冷暗 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/7c6288e2_344ff1.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 10,
@@ -2087,7 +2125,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T05:07:13.243292+00:00"
   },
   {
     "card_id": "8d65864b",
@@ -2238,7 +2276,9 @@
       "干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边；赤金龙焰、蓝白法则光、金绿世界树光脉形成统一三色体系。人物保持东方国漫二维半写实审美，环境具有高精度数字绘景质感；不是欧美游戏设定稿，不是真人摄影。 苍霖与巨龙背对镜头站在龙骨断崖，面对遮天虚空门；最后一缕金绿光穿过少年胸口延伸进门内。 苍霖停顿一次呼吸，抬手握住龙骨碎片，向门前迈出一步。 全景，缓慢推进，竖屏9:16。冷灰逆光勾勒人物，胸口金绿微光与门内蓝白裂光呼应 严格继承本镜角色时期、场景母版和48镜故事板风格锚；主体信息一眼可读，背景服务叙事，不在画面内生成字幕、文字、UI或水印。"
     ],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/1d16fa63_2967ac.png"
+    ],
     "videos": [],
     "metadata": {
       "unit_number": 11,
@@ -2265,7 +2305,7 @@
     "status": "review",
     "assignee": "",
     "created_at": "2026-07-16T02:47:19.008027+00:00",
-    "updated_at": "2026-07-16T02:47:19.008027+00:00"
+    "updated_at": "2026-07-16T05:11:52.468145+00:00"
   },
   {
     "card_id": "7655a9fa",

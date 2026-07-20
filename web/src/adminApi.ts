@@ -90,7 +90,7 @@ export interface AdminProvider {
   name: string;
   endpoint: string;
   apiKeyMasked: string;
-  apiKey?: string;
+  hasApiKey: boolean;
   enabled: boolean;
   models: { modelId?: string; modelName?: string }[];
   managed: boolean;

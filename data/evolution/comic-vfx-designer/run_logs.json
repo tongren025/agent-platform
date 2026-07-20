@@ -1,25 +1,5 @@
 [
   {
-    "logId": "evo_342b61b470cd",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-06-29T13:50:01.529792Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_c2de60284ae2",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-06-30T01:56:06.810046Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_5f945390b955",
     "employeeKey": "comic-vfx-designer",
     "ranAt": "2026-06-30T01:59:08.138369Z",
@@ -497,6 +477,26 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_9b8d25b1cf7a",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-16T20:00:25.832893Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_1264bd75e8f6",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-16T20:00:29.530760Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
     "error": null
   }
 ]

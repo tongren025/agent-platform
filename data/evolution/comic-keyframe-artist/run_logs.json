@@ -38,5 +38,25 @@
     "llmModel": "",
     "durationMs": 16,
     "error": null
+  },
+  {
+    "logId": "evo_c38693fd7a8c",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-16T20:00:25.767056Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_112dc6ed7c96",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-16T20:00:29.393121Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
   }
 ]

@@ -1,25 +1,5 @@
 [
   {
-    "logId": "evo_c36249b3f823",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-06-30T01:55:54.610562Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 453,
-    "error": null
-  },
-  {
-    "logId": "evo_9dfc1d2c3e34",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-06-30T01:58:53.818464Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 14,
-    "error": null
-  },
-  {
     "logId": "evo_b8eb13bcd667",
     "employeeKey": "recharge-strategy-assistant",
     "ranAt": "2026-06-30T01:59:18.228218Z",
@@ -498,5 +478,25 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 7844,
     "error": null
+  },
+  {
+    "logId": "evo_aca401f2988f",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-16T20:00:25.755157Z",
+    "sessionsAnalyzed": 4,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "evo_6e47cb80a961",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-16T20:00:20.961569Z",
+    "sessionsAnalyzed": 4,
+    "insightsGenerated": 0,
+    "llmModel": "Gemma-4-31B-IT-NVFP4",
+    "durationMs": 8422,
+    "error": "LLM 调用失败: Connection error."
   }
 ]

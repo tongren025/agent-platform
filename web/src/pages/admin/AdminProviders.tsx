@@ -139,7 +139,14 @@ export default function AdminProviders() {
       title: 'API Key',
       dataIndex: 'apiKeyMasked',
       key: 'apiKey',
-      render: (v: string) => <span style={{ fontFamily: 'monospace', fontSize: 12, color: COLORS.slate }}>{v}</span>,
+      render: (v: string, record: AdminProvider) => (
+        <Space size={6}>
+          <span style={{ fontFamily: 'monospace', fontSize: 12, color: COLORS.slate }}>
+            {record.hasApiKey ? v : '未配置'}
+          </span>
+          {record.hasApiKey && <Tag color="green">服务器加密</Tag>}
+        </Space>
+      ),
     },
     {
       title: '模型',
@@ -301,8 +308,13 @@ export default function AdminProviders() {
           <Form.Item label="Endpoint" name="endpoint" rules={[{ required: true, message: '请输入 API 地址' }]}>
             <Input placeholder="https://api.openai.com/v1" />
           </Form.Item>
-          <Form.Item label="API Key" name="apiKey">
-            <Input.Password placeholder={editing ? '留空保持原 Key 不变' : '输入 API Key'} />
+          <Form.Item
+            label="API Key"
+            name="apiKey"
+            rules={editing?.managed ? [] : [{ required: true, message: '请输入 API Key' }]}
+            extra={editing?.managed ? '留空保持服务器上已加密保存的 Key 不变' : 'Key 仅发送到服务器并加密保存，不会回传到浏览器'}
+          >
+            <Input.Password placeholder={editing?.managed ? '留空保持原 Key 不变' : '输入 API Key'} />
           </Form.Item>
           <Form.Item label="启用" name="enabled" valuePropName="checked">
             <Switch />

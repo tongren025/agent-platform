@@ -1,25 +1,5 @@
 [
   {
-    "logId": "evo_a4923c5edb0f",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-06-29T13:50:01.483734Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_2f2aac7fbafe",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-06-30T01:56:06.717715Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_278eb8df0f61",
     "employeeKey": "demo-assistant",
     "ranAt": "2026-06-30T01:59:08.087948Z",
@@ -493,6 +473,26 @@
     "logId": "evo_ab724cc9db11",
     "employeeKey": "demo-assistant",
     "ranAt": "2026-07-15T20:00:30.049143Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_5f86440926d1",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-16T20:00:25.801812Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_35d23c34e359",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-16T20:00:29.469926Z",
     "sessionsAnalyzed": 0,
     "insightsGenerated": 0,
     "llmModel": "",

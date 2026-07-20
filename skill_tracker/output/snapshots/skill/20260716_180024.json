@@ -1,0 +1,29 @@
+{
+  "query": "skill",
+  "taken_at": "2026-07-16T18:00:24.662560+00:00",
+  "stars": {
+    "obra/superpowers": 255898,
+    "affaan-m/ECC": 230333,
+    "multica-ai/andrej-karpathy-skills": 193191,
+    "mattpocock/skills": 173938,
+    "anthropics/skills": 161644,
+    "Chalarangelo/30-seconds-of-code": 128400,
+    "nextlevelbuilder/ui-ux-pro-max-skill": 106513,
+    "florinpop17/app-ideas": 95930,
+    "JuliusBrussee/caveman": 90094,
+    "Graphify-Labs/graphify": 88705,
+    "addyosmani/agent-skills": 78738,
+    "bytedance/deer-flow": 77208,
+    "ComposioHQ/awesome-claude-skills": 67874,
+    "Leonxlnx/taste-skill": 64158,
+    "zylon-ai/private-gpt": 57335,
+    "calesthio/OpenMontage": 39200,
+    "Yuan1z0825/nature-skills": 29155,
+    "mvanhorn/last30days-skill": 52416,
+    "VoltAgent/awesome-openclaw-skills": 51263,
+    "alchaincyf/nuwa-skill": 28078,
+    "Imbad0202/academic-research-skills": 38103,
+    "op7418/guizang-ppt-skill": 21586,
+    "alchaincyf/huashu-design": 21554
+  }
+}

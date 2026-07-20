@@ -5,5 +5,6 @@
 appsettings.Development.json
 _tok.txt
 *_tok.txt
+data/.secrets/
 
 # 其余运行数据、备份、日志、构建产物、依赖与缓存均同步到私有远程仓库。

@@ -21,7 +21,7 @@ cd web && npm run dev
 - **不需要** `.env`——`app/core/settings.py` 全字段有默认值。
 - **不需要** `appsettings.Development.json`——缺失时按空配置处理（`app/config.py:84`）。
 - **不需要** PostgreSQL / Redis / DashScope——见 §4 可选服务矩阵。
-- **LLM 供应商可以事后配**：管理端 UI 添加（落盘 `data/ai-providers/*.json`），或写
+- **LLM 供应商可以事后配**：管理端 UI 添加（Key 加密落盘 `data/ai-providers/*.json`），或写
   `appsettings.Development.json` 的 `aiModels` 段。没配之前服务照常跑、能登录能点页面，
   只有真正调 LLM 时才报「没有可用的 AI provider」（`app/services/ai.py:186`）。
 
@@ -105,15 +105,22 @@ python -m app.tasks.worker      # 或 arq app.tasks.worker.WorkerSettings
 | `SEED_DEMO_WORKFLOWS` | false | true 才种入漫剧演示工作流 |
 | `DATABASE_URL` / `REDIS_URL` | 指向 compose 服务名 `postgres`/`redis` | **裸机开发必须手改为 127.0.0.1**，否则连不上 |
 | `DASHSCOPE_API_KEY` | 空 | 空=embedding 跳过、语义检索静默降级为关键词检索，不影响启动 |
+| `AI_PROVIDER_ENCRYPTION_KEY` | 空 | 后台供应商 Key 的 Fernet 主密钥；空时自动生成到持久化 `data/.secrets/`，多机部署必须统一配置 |
 | `ADMIN_SECRET` | 空 | 空=管理端 token 每次重启全部失效 |
 | `TRENDS_AUTO_SYNC` / `TRENDS_SYNC_TIME` | true / 02:00 | 趋势雷达每日同步 |
 | `aiModels`（appsettings） | 无 | 一旦写了，`name/endpoint/apiKey` 三键必填——缺键会在 **import 期 KeyError 崩掉 uvicorn** |
 
-**密钥现状（三个地方，按优先级）**：管理端 UI 落盘的 `data/ai-providers/*.json`（最优先）>
-`appsettings.Development.json` 的 `aiModels` > 无。`aiModels[].apiKey` 支持 `${ENV_NAME}` 占位符，
+**密钥来源（按优先级）**：管理端 UI 托管的 `data/ai-providers/*.json`（最优先，Key 为 Fernet 密文）>
+`appsettings.Development.json` 的 `aiModels` > 无。后台接口只返回掩码和 `hasApiKey`，不会把明文发回浏览器。
+`aiModels[].apiKey` 支持 `${ENV_NAME}` 占位符，
 例如 OpenRouter 可写 `"apiKey": "${OPENROUTER_API_KEY}"`，真实 key 放 `.env` 或系统环境变量。
 `.env` 也管基础设施密钥（DashScope 等）。
 `appsettings.Development.json` 已 gitignore，但它在盘上是明文——不要把它复制进任何会入库的路径。
+若未设置 `AI_PROVIDER_ENCRYPTION_KEY`，首次在后台保存 Key 会自动创建
+`data/.secrets/provider-encryption.key`；标准 Compose 的三个后端进程共享 `app_data` 卷，生产 Compose
+共享服务器 `./data` bind mount。`deploy-server.sh` 会在 `git reset` 前后保护 `ai-providers/.secrets`，
+`sync-assets.sh` 也不会从本地覆盖这两处服务器权威数据。
+备份/迁移必须连同主密钥一起做，主密钥丢失后已有供应商密文无法解密。
 另注意其中 `AdminApiBaseUrl`（:5040）指向的是**外部充值策略 admin API**（`app/api/strategy_proxy.py` 消费），
 与本仓 :8001 的 admin/ 服务重名不同物。
 
@@ -158,11 +165,13 @@ OpenRouter 配置最小例子：
 | 页面白屏且强刷才恢复 | 浏览器缓存了旧 index.html | 已在服务端修（index.html 强制 no-cache）；仍出现就 Ctrl+Shift+R |
 | 起在 5311 端口 | 用了 `python -m app.main` | 改用 `uvicorn app.main:app --port 8000` |
 | 管理端重启后全员被踢 | `ADMIN_SECRET` 为空每次随机 | `.env` 固定长随机串 |
+| 后台供应商消失/提示 Key 无法解密 | 更换服务器后未带上原主密钥 | 恢复原 `AI_PROVIDER_ENCRYPTION_KEY` 或 `data/.secrets/provider-encryption.key`，再重启 app/admin/worker |
 | 生产卡片素材图 404 | 克隆后没有 `resouce/` 目录（gitignore） | 素材在 682MB `漫剧.zip` 里，解压到 `resouce/`；注意目录名拼写就是少个 r，代码硬编码，**别建 `resource/`** |
 
 ## 6. data/ 目录地图（运行时状态，新人最容易懵）
 
-`data/` 默认全部 gitignore，**唯一例外 `data/production/`（漫剧卡池，已入库 5 季 4062 卡）**。
+`data/` 是运行时状态；当前私有仓库可以同步普通运行数据，但 `data/.secrets/` 永远不进 Git。
+标准 Docker 部署由 `app_data:/app/data` 持久卷承载；生产部署由服务器 `./data:/app/data` 承载。
 按生产者分四类：
 
 | 子目录 | 谁写 | 说明 |
@@ -170,7 +179,8 @@ OpenRouter 配置最小例子：
 | employees / teams / tools / skills / mcp-servers / role-templates / workflows / workflow-runs / agent-runs / sessions | 注册表与运行链路 | 平台核心对象，`app/config.py` 可改路径 |
 | knowledge/&lt;员工&gt; / memory/&lt;员工&gt; / evolution/&lt;员工&gt; | 知识库上传 / 记忆提取 / 蒸馏进化 | **按员工 key 分子目录** |
 | scrape-sources / scrape-history / collected-prompts / learn-sources / learn-history | 自动学习采集 | 定时或手动触发 |
-| ai-providers | 管理端 UI | LLM 供应商配置（优先级最高的那份） |
+| ai-providers | 管理端 UI | LLM 供应商配置；API Key 为 Fernet 密文（优先级最高） |
+| .secrets | `AiProviderStore` | 自动生成的供应商加密主密钥；**不进 Git，备份/迁移时必须保留** |
 | production/jiulu-s1..s5 | 制作看板 | **删了不可再生**；每项目 project.json + cards.json + archive/ + uploads/ |
 | canvas | 自由画布 | 1.2s 防抖自动保存 |
 | platform | 用户/角色（users.json、roles.json） | 用户端登录鉴权数据 |

@@ -6,7 +6,7 @@ import {
   ApiOutlined, SettingOutlined, SafetyCertificateOutlined,
   CloudServerOutlined, PlusOutlined, DeleteOutlined,
   EditOutlined, ExperimentOutlined, CheckCircleOutlined,
-  CloseCircleOutlined, EyeOutlined, EyeInvisibleOutlined,
+  CloseCircleOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 import { useResponsive } from '../hooks/useResponsive';
@@ -36,8 +36,8 @@ interface AiModel {
 interface AiProvider {
   name: string;
   endpoint: string;
-  apiKey?: string;
   apiKeyMasked?: string;
+  hasApiKey?: boolean;
   enabled: boolean;
   models: AiModel[];
   managed?: boolean;
@@ -56,8 +56,6 @@ export default function Settings() {
 
   const [testingName, setTestingName] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<{ name: string; success: boolean; reply?: string; error?: string } | null>(null);
-
-  const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
 
   const fetchAll = async () => {
     setLoading(true);
@@ -92,18 +90,13 @@ export default function Settings() {
     setModalOpen(true);
   };
 
-  const openEdit = async (provider: AiProvider) => {
+  const openEdit = (provider: AiProvider) => {
     setEditing(provider);
     form.resetFields();
-    let apiKey = '';
-    try {
-      const full = await api.getAiProvider(provider.name);
-      apiKey = full.apiKey || '';
-    } catch { /* use empty */ }
     const vals = {
       name: provider.name,
       endpoint: provider.endpoint,
-      apiKey,
+      apiKey: '',
       enabled: provider.enabled,
       models: provider.models?.length
         ? provider.models.map(m => ({ modelName: m.modelName, modelId: m.modelId, timeoutMinutes: m.timeoutMinutes || 10 }))
@@ -244,14 +237,9 @@ export default function Settings() {
                 <Descriptions.Item label="API Key">
                   <Space size={4}>
                     <Text code style={{ fontSize: 12 }}>
-                      {showKeys[p.name] && p.apiKey ? p.apiKey : (p.apiKeyMasked || '****')}
+                      {p.hasApiKey ? (p.apiKeyMasked || '****') : '未配置'}
                     </Text>
-                    <Button
-                      type="text"
-                      size="small"
-                      icon={showKeys[p.name] ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-                      onClick={() => setShowKeys(prev => ({ ...prev, [p.name]: !prev[p.name] }))}
-                    />
+                    {p.hasApiKey && <Tag color="green" icon={<SafetyCertificateOutlined />}>服务端加密</Tag>}
                   </Space>
                 </Descriptions.Item>
                 <Descriptions.Item label="模型数量">
@@ -347,10 +335,10 @@ export default function Settings() {
           <Form.Item
             label="API Key"
             name="apiKey"
-            rules={editing ? [] : [{ required: true, message: '请输入 API Key' }]}
-            extra={editing ? '留空表示不修改现有 Key' : undefined}
+            rules={editing?.managed ? [] : [{ required: true, message: '请输入 API Key' }]}
+            extra={editing?.managed ? '留空表示不修改服务器上已加密保存的 Key' : 'Key 只发送到服务器并加密保存，不会由接口回传'}
           >
-            <Input.Password placeholder="sk-..." visibilityToggle />
+            <Input.Password placeholder={editing?.managed ? '留空保持原 Key' : '输入 API Key'} visibilityToggle />
           </Form.Item>
           <Form.Item label="启用" name="enabled" valuePropName="checked">
             <Switch />

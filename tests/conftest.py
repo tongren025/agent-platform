@@ -9,7 +9,7 @@
   app.dependencies 在 import 时就实例化了所有单例，事后改 BASE_DIR 无效。
   但 `Path(BASE_DIR) / <绝对路径>` 会被绝对路径「替换」（Windows/POSIX 同理），
   因此单元层直接用绝对 tmp 路径新建 store 即可隔离，无需 monkeypatch 全局。
-- AiProviderStore 的目录是模块级常量 `_PROVIDER_DIR`，需在实例化前改指 tmp。
+- AiProviderStore 支持显式传入目录；测试同时注入临时 Fernet 主密钥，磁盘与密钥均隔离。
 """
 from __future__ import annotations
 
@@ -53,11 +53,12 @@ def make_registry(tmp_path):
 
 @pytest.fixture
 def provider_store(tmp_path, monkeypatch):
-    """AiProviderStore 用模块级 _PROVIDER_DIR；改指 tmp 后再实例化，避免碰真实 data/。"""
-    import app.services.ai as ai_mod
+    """供应商存储与 Fernet 主密钥全部落在 tmp，避免碰真实 data/ 与本机密钥。"""
+    from cryptography.fernet import Fernet
+    from app.services.ai import AiProviderStore
 
-    monkeypatch.setattr(ai_mod, "_PROVIDER_DIR", tmp_path / "ai-providers")
-    return ai_mod.AiProviderStore()
+    monkeypatch.setenv("AI_PROVIDER_ENCRYPTION_KEY", Fernet.generate_key().decode("ascii"))
+    return AiProviderStore(provider_dir=tmp_path / "ai-providers")
 
 
 # ── 土台：LLM 桩 ───────────────────────────────────────────────────

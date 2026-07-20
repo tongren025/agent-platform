@@ -208,7 +208,8 @@ docker compose up -d --build
 ### 方式二：本地开发（以下 1-5 步）
 
 > **零配置就能跑**：不建 `.env`、不建 `appsettings.Development.json`、不起 PG/Redis，后端照样启动，
-> 默认账号 **admin / admin123**。LLM 供应商可以事后在管理端 UI 配置（落盘 `data/ai-providers/`）。
+> 默认账号 **admin / admin123**。LLM 供应商可以事后在管理端 UI 配置；API Key 会在服务器加密后
+> 落盘 `data/ai-providers/`，接口只返回掩码。
 > 端口坑、可选服务矩阵、常见报错解法见 **[docs/RUNBOOK.md](docs/RUNBOOK.md)**。
 
 ### 环境要求
@@ -225,7 +226,22 @@ cd agent-platform
 
 ### 2. 后端配置
 
-创建 `appsettings.Development.json`（此文件已被 `.gitignore` 排除，不会泄露密钥）：
+推荐先启动服务，登录管理端 `/admin/providers` 添加供应商。浏览器提交真实 Key 后，服务器使用 Fernet
+加密写入 `data/ai-providers/*.json`；刷新、编辑和查询接口都只会返回掩码。标准 Compose 使用
+`app_data` 持久卷，生产 Compose 使用服务器 `./data` bind mount；部署脚本会在更新代码前后专门保护
+`ai-providers` 与 `.secrets`，所以远程服务器重启、重建容器或重新部署都不会丢失。
+
+生产环境建议在服务器 `.env` 固定一把主密钥（不提交 Git）：
+
+```bash
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+# 把输出保存为服务器 .env 的 AI_PROVIDER_ENCRYPTION_KEY=...
+```
+
+留空也能使用：服务器第一次保存供应商 Key 时会在持久卷自动生成主密钥。备份或迁移服务器时必须同时
+保留主密钥，否则已有密文无法恢复。
+
+也可以创建 `appsettings.Development.json`（此文件已被 `.gitignore` 排除）使用环境变量引用：
 
 ```json
 {

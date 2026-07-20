@@ -1,0 +1,854 @@
+{
+  "source_script": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_24集正式剧本_v2.md",
+  "summary": {
+    "episodes": 24,
+    "episode_key_images": 24,
+    "episode_storyboards": 24,
+    "detailed_storyboards": 5,
+    "season_overviews": 2,
+    "scene_supplements": 1,
+    "total_images": 56
+  },
+  "assets": [
+    {
+      "kind": "key_overview",
+      "episode": null,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\清单与提示词\\九陆纪元_S1烬龙陆篇_v2_EP01-EP24_补图总览.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\season-key-overview.jpg",
+      "source_sha256": "fe8f1b03d88f291b2405d39abee3a169899c7beacc63bb7972af1452be7d5e1e",
+      "source_size": [
+        1440,
+        1416
+      ],
+      "output_size": [
+        1098,
+        1080
+      ]
+    },
+    {
+      "kind": "storyboard_overview",
+      "episode": null,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\总览与清单\\九陆纪元_S1烬龙陆篇_v2_EP01-EP24_分镜总览.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\season-storyboard-overview.jpg",
+      "source_sha256": "0217044e4765d9796aa5f17055469ac1416d1ede0bac0d000447e4b2d27b9355",
+      "source_size": [
+        3000,
+        2260
+      ],
+      "output_size": [
+        1434,
+        1080
+      ]
+    },
+    {
+      "kind": "scene_supplement",
+      "episode": null,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\场景补充\\scene04_矿洞场景母版.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\scene04-mining-cave.jpg",
+      "source_sha256": "d88d022eaabb5bd30975681e67ff2ec7446bb9cae29d5dea6a95a8aeb8eb1d1b",
+      "source_size": [
+        941,
+        1672
+      ],
+      "output_size": [
+        941,
+        1672
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 1,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP01_泥里的人.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep01-key.jpg",
+      "source_sha256": "a494ae69dd243d85f86a5449c5fd132c48aa9a3b8e1ca6edad8ea8de474ea382",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 1,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP01_泥里的人_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep01-storyboard.jpg",
+      "source_sha256": "4cf113f48cd8fe27d4b1a31f05035b3ac495b14ff50f73c2de5a7ab86b4ccf05",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 2,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP02_假觉醒.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep02-key.jpg",
+      "source_sha256": "ab75a498ae88c191b67d1d60843dd1b52e3fb15da2d7f05efdee5eb534f319cd",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 2,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP02_假觉醒_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep02-storyboard.jpg",
+      "source_sha256": "ae6caed20c49ed098c47648e1cc5a98d1e273876295eb8df133e8521827d0640",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 3,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP03_星蓝的手.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep03-key.jpg",
+      "source_sha256": "8d5b20c57e3a63b1901b1f11442de8d39825bf86cd73ef63371ff2d5baaaf81a",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 3,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP03_星蓝的手_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep03-storyboard.jpg",
+      "source_sha256": "8f8792d2789e85bc61ac8d32c7e7674af3ba5733bf25c9bf651ac3975a72352e",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 4,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP04_谁都孵不出的蛋.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep04-key.jpg",
+      "source_sha256": "485485eaacc12007271375c080a7a6924edc570001b254ea71fc4f12cbed46e3",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 4,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP04_谁都孵不出的蛋_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep04-storyboard.jpg",
+      "source_sha256": "044dc330eabc14c64155cdb8db1b212763e0e669a7fbe4147326d6866055f632",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 5,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP05_它只认你.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep05-key.jpg",
+      "source_sha256": "e6bd751349a9acacf205f5acb0453de8966b48b62d7e810b4a2fa323c7b3d198",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 5,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP05_它只认你_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep05-storyboard.jpg",
+      "source_sha256": "534c2f21e8a6670a752be83211f37d5e35cb2d4c316bc2171fbeede938cdbf0f",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 6,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP06_第一口火.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep06-key.jpg",
+      "source_sha256": "3927f6a7f6d09e9900466d3ac01e7e4955ec4915455fa5152657761f2449ac7f",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 6,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP06_第一口火_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep06-storyboard.jpg",
+      "source_sha256": "89cab5844b69c3589bc88020d0912e2cf24b47e2a816621680f529fb7eba84b3",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 7,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP07_三天.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep07-key.jpg",
+      "source_sha256": "d0f50bbe1874936783301e9e32e3f5c039326d5609fbda6ff8168f514412a3ff",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 7,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP07_三天_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep07-storyboard.jpg",
+      "source_sha256": "a07144b8e7b66ea2469167e66085507626786811254d29390c27a468224ca9e5",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 8,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP08_龙的梦.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep08-key.jpg",
+      "source_sha256": "dfbf51c47fec49cf17927b14b6fee1a38935f17f38fdd2017a190226a8bc5769",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 8,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP08_龙的梦_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep08-storyboard.jpg",
+      "source_sha256": "58bb3e46f8ebedb3382d2cf12a7dab1e311a8fefe0e7b187b727e84e017905fb",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 9,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP09_矿坑追捕.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep09-key.jpg",
+      "source_sha256": "3a8ea2e49d612a0829f7e7f38261588bd44076d9080f7355aed60c7fd893183f",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 9,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP09_矿坑追捕_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep09-storyboard.jpg",
+      "source_sha256": "36b2d1d1cf99e5d18ef834aebc56e266f52f5144979b472f75113f3d29ac0a2c",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 10,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP10_踩过别人的人.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep10-key.jpg",
+      "source_sha256": "1a471a650901ad10274c21c92fb7bf7cf9aa9b41feb0dddff8506a58b7d015ad",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 10,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP10_踩过别人的人_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep10-storyboard.jpg",
+      "source_sha256": "9eae4cee9f21a1f4afb21419f635beaa7d6a09e0cdd81387352a9d8adc3af27a",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 11,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP11_北城的灰.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep11-key.jpg",
+      "source_sha256": "ca5b4a5951d462b2e174e4f01fe7291c20251b04c5881f8f833515a42fd709ac",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 11,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP11_北城的灰_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep11-storyboard.jpg",
+      "source_sha256": "3ab1f78b22bce5e65da2ac9ed9e97cddcd712a9bb071bcd7cc3c9578c8f429d6",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 12,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP12_幼龙护主.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep12-key.jpg",
+      "source_sha256": "fd6e60a3e055613617e29783f7a224ac2637521779a4c8c14954f6653b11322b",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 12,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP12_幼龙护主_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep12-storyboard.jpg",
+      "source_sha256": "5e4b6d40d6c8dfb7ea086933580794416b7c0c673de1e504fc20374d2e3b203d",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 13,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP13_龙骨旧案.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep13-key.jpg",
+      "source_sha256": "e519901c8ed0dc4d09771300385d4d5c6895c40c97cc1e0e26e13349f4c55a8d",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 13,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP13_龙骨旧案_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep13-storyboard.jpg",
+      "source_sha256": "c5184f8a2a6737610e80bf9ffbc57e8bc391d20be8b02c79aff30996659f9580",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 14,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP14_父亲的碎片.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep14-key.jpg",
+      "source_sha256": "e3ca40004d5d4f96848829379a611e6e7a5519eaab98bff97c394ee5561b3798",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 14,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP14_父亲的碎片_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep14-storyboard.jpg",
+      "source_sha256": "5e3660e2f34b09ea880d25a3deeba1cd0ff1bc98f4677570e2bb8c3fd01614d2",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 15,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP15_废物名单.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep15-key.jpg",
+      "source_sha256": "a83fe5b21655ee1b6e457be5b0e14b4c94df0dc26c9a17612ed8fb9c3fd09d2e",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 15,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP15_废物名单_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep15-storyboard.jpg",
+      "source_sha256": "31499be2a998bac0a856afd1260566bc2488c02b7117ced2ebfbc1ad2f9ff8f9",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 16,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP16_艾拉训练.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep16-key.jpg",
+      "source_sha256": "287905ba809759e05cdb14e17ec3559b3b98912bc015a872429fab8a406458e7",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 16,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP16_艾拉训练_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep16-storyboard.jpg",
+      "source_sha256": "694c552ae8828053276306e768c1b7669b186ca0de93efa3ff884f74535f943e",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 17,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP17_苹果.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep17-key.jpg",
+      "source_sha256": "e0a0a7ce08a504137c36f142c902a4a0d220bfbc850ddf4d1b8dadb2d97592aa",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 17,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP17_苹果_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep17-storyboard.jpg",
+      "source_sha256": "6ad84c4538b525ba93638aaee7f9db9d3ff1e56a55293fb33bd2a27d94e388a4",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 18,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP18_老矿工的劝阻.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep18-key.jpg",
+      "source_sha256": "6e4cb01a4bea3d4b2d3e1eec22f8fa0c19d203a918a4195fc24b4d86189b365a",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 18,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP18_老矿工的劝阻_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep18-storyboard.jpg",
+      "source_sha256": "313ac6eec632b57f0920cb79a6f2d1f67f3d6993eb08f0251d8931f8fb5ffe6b",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 19,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP19_追兵入巷.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep19-key.jpg",
+      "source_sha256": "5d7981d96c36ae9de92c05721acdbf42c9fb73375f898bcdca91c66f15e664c5",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 19,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP19_追兵入巷_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep19-storyboard.jpg",
+      "source_sha256": "cf2f6668708f1ae1388e1774263e94a37c8a7575f2755822ebc3e2af35f631dc",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 20,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP20_烬白.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep20-key.jpg",
+      "source_sha256": "4db1deef382c21731774b6ac0ab18b633e7d8f31cddf32210f9118603b87113e",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 20,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP20_烬白_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep20-storyboard.jpg",
+      "source_sha256": "5de786b2f30de38cdc921265160345b2c288ee314937975554eeb49f05fa5f3d",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 21,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP21_悬崖逃亡.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep21-key.jpg",
+      "source_sha256": "8d8abe63bf52ae3be885c5d5d38836eb057feb425594cfaa1c07e5c8481350a0",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 21,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP21_悬崖逃亡_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep21-storyboard.jpg",
+      "source_sha256": "1f322515291bb30ba7b2ba2c95e423b2094623d4cadad1f0ad8aa98fc960a76d",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 22,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP22_跳下去.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep22-key.jpg",
+      "source_sha256": "f1478a10d8f4a35181e1d051e0416de4ce8157908d827cb8aa7fbdcc398e2355",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 22,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP22_跳下去_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep22-storyboard.jpg",
+      "source_sha256": "00c59d6e0cbf10289bd0a968bfcfa35eaf676783c6c8064b318573772082582e",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 23,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP23_第一次飞.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep23-key.jpg",
+      "source_sha256": "011baac5b3ab54cbd2ac0bfa8a49896f184805685fe581a4d4333bab18e774d3",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 23,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP23_第一次飞_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep23-storyboard.jpg",
+      "source_sha256": "751292f74919b5057f9d0523c42a61cc31043f166b75d9ef38423ce2ab6a92b4",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "episode_key",
+      "episode": 24,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_补图\\EP关键参考图\\EP24_九陆.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep24-key.jpg",
+      "source_sha256": "d38c373abc3565783f28e2515cb9b61af9c431063d6d91ab2a7f96dcc861e368",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "kind": "episode_storyboard",
+      "episode": 24,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_分镜图\\EP分镜图\\EP24_九陆_分镜图.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep24-storyboard.jpg",
+      "source_sha256": "e7ae1dfcee5245d2c62fbc9610191aef13da99012103feead0eea3c5fac345fd",
+      "source_size": [
+        1920,
+        1080
+      ],
+      "output_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "detailed_storyboard",
+      "episode": 1,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_逐镜头分镜图\\EP01_泥里的人\\EP01_S001_黄昏废巷龙骨化石.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep01-shot-001.jpg",
+      "source_sha256": "2bb60bdb4b4e0f9f7c9dfad3c53b0a55f624e8fd7320f9dbcf7c986ae6aa675e",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1200,
+        675
+      ]
+    },
+    {
+      "kind": "detailed_storyboard",
+      "episode": 1,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_逐镜头分镜图\\EP01_泥里的人\\EP01_S002_苍霖护布包被围.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep01-shot-002.jpg",
+      "source_sha256": "9a30cb4cc0cf4d80e6362cb3d2c42b51652574ce02022a105769687c2844c097",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1200,
+        675
+      ]
+    },
+    {
+      "kind": "detailed_storyboard",
+      "episode": 1,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_逐镜头分镜图\\EP01_泥里的人\\EP01_S003_暴徒甲蹲下羞辱.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep01-shot-003.jpg",
+      "source_sha256": "7edc4870422d43acbd9cbe8bae3d1b20c40bdb709b7ba5eec6e0e842f1a193ca",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1200,
+        675
+      ]
+    },
+    {
+      "kind": "detailed_storyboard",
+      "episode": 1,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_逐镜头分镜图\\EP01_泥里的人\\EP01_S004_沉默抱紧布包.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep01-shot-004.jpg",
+      "source_sha256": "287e477da83ef7b95470c93ffa0262a279f84f32d7927934deb9876162e7566a",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1200,
+        675
+      ]
+    },
+    {
+      "kind": "detailed_storyboard",
+      "episode": 1,
+      "source": "D:\\P\\agent\\resouce\\漫剧\\九陆纪元_S1烬龙陆篇_v2_逐镜头分镜图\\EP01_泥里的人\\EP01_S005_龙骨碎片滚出发光.png",
+      "output": "D:\\P\\agent\\script-assets\\jiulu-s1-v2\\ep01-shot-005.jpg",
+      "source_sha256": "6eac24f439f7b3a9fdbbf9be7dca14fa536e9c018921ec4fe4d49e006a90d6e3",
+      "source_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        1200,
+        675
+      ]
+    }
+  ]
+}

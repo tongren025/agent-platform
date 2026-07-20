@@ -12,7 +12,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from app.api.common import BAD_KEY_RE, ok as _ok
-from app.config import settings
+from app.config import resolve_secret, settings
 from app.dependencies import ai_service
 
 router = APIRouter(prefix="/api/v1/agentapp/agent")
@@ -23,6 +23,21 @@ def _mask_key(key: str) -> str:
     if not key or len(key) <= 8:
         return "****"
     return key[:4] + "****" + key[-4:]
+
+
+def _safe_provider_data(data: dict, *, managed: bool) -> dict:
+    """构造可回传前端的供应商数据，明文/密文 Key 均不得离开服务端。"""
+    raw_key = str(data.get("apiKey", "") or "")
+    resolved_key = resolve_secret(raw_key)
+    safe = {
+        key: value
+        for key, value in data.items()
+        if key not in {"apiKey", "apiKeyEncrypted", "apiKeyStorage"}
+    }
+    safe["apiKeyMasked"] = _mask_key(resolved_key)
+    safe["hasApiKey"] = bool(resolved_key)
+    safe["managed"] = managed
+    return safe
 
 
 class AiProviderBody(BaseModel):
@@ -49,14 +64,13 @@ def list_ai_providers():
     result = []
     for p in providers:
         managed = store.get(p.name)
-        result.append({
+        result.append(_safe_provider_data({
             "name": p.name,
             "endpoint": p.endpoint,
-            "apiKeyMasked": _mask_key(p.api_key),
+            "apiKey": p.api_key,
             "enabled": p.enabled,
             "models": p.models,
-            "managed": managed is not None,
-        })
+        }, managed=managed is not None))
     return _ok(result)
 
 
@@ -153,16 +167,12 @@ def add_ai_provider_model(name: str, body: ProviderModelBody):
         models.append(next_model)
     data["models"] = models
     saved = ai_service.store.save(data)
-    safe = dict(saved)
-    safe["apiKeyMasked"] = _mask_key(safe.get("apiKey", ""))
-    safe.pop("apiKey", None)
-    safe["managed"] = True
-    return _ok(safe)
+    return _ok(_safe_provider_data(saved, managed=True))
 
 
 @router.get("/ai-providers/{name}")
 def get_ai_provider(name: str):
-    """GET /ai-providers/{name}：返回单个供应商详情（含明文 apiKey 供编辑回填）；名称非法返 400，不存在返 404。"""
+    """GET /ai-providers/{name}：返回单个供应商详情；API Key 只返回掩码，名称非法返 400。"""
     if BAD_KEY_RE.search(name):
         raise HTTPException(status_code=400, detail="Invalid provider name")
     store = ai_service.store
@@ -170,20 +180,15 @@ def get_ai_provider(name: str):
     if data is None:
         for p in ai_service.list_all_providers():
             if p.name == name:
-                return _ok({
+                return _ok(_safe_provider_data({
                     "name": p.name,
                     "endpoint": p.endpoint,
                     "apiKey": p.api_key,
-                    "apiKeyMasked": _mask_key(p.api_key),
                     "enabled": p.enabled,
                     "models": p.models,
-                    "managed": False,
-                })
+                }, managed=False))
         raise HTTPException(status_code=404, detail=f"Provider not found: {name}")
-    safe = dict(data)
-    safe["apiKeyMasked"] = _mask_key(safe.get("apiKey", ""))
-    safe["managed"] = True
-    return _ok(safe)
+    return _ok(_safe_provider_data(data, managed=True))
 
 
 @router.post("/ai-providers")
@@ -191,6 +196,8 @@ def save_ai_provider(body: AiProviderBody):
     """POST /ai-providers：新建（或按名称覆盖）一个用户自管供应商；名称非法返 400。"""
     if BAD_KEY_RE.search(body.name):
         raise HTTPException(status_code=400, detail="Invalid provider name")
+    if not body.apiKey:
+        raise HTTPException(status_code=400, detail="API Key is required for a new managed provider")
     data = {
         "name": body.name,
         "endpoint": body.endpoint,
@@ -199,10 +206,7 @@ def save_ai_provider(body: AiProviderBody):
         "models": body.models,
     }
     saved = ai_service.store.save(data)
-    safe = dict(saved)
-    safe["apiKeyMasked"] = _mask_key(safe.get("apiKey", ""))
-    safe["managed"] = True
-    return _ok(safe)
+    return _ok(_safe_provider_data(saved, managed=True))
 
 
 @router.put("/ai-providers/{name}")
@@ -214,6 +218,8 @@ def update_ai_provider(name: str, body: AiProviderBody):
     api_key = body.apiKey
     if not api_key and existing:
         api_key = existing.get("apiKey", "")
+    if not api_key:
+        raise HTTPException(status_code=400, detail="API Key is required when converting to managed storage")
     data = {
         "name": name,
         "endpoint": body.endpoint,
@@ -222,10 +228,7 @@ def update_ai_provider(name: str, body: AiProviderBody):
         "models": body.models,
     }
     saved = ai_service.store.save(data)
-    safe = dict(saved)
-    safe["apiKeyMasked"] = _mask_key(safe.get("apiKey", ""))
-    safe["managed"] = True
-    return _ok(safe)
+    return _ok(_safe_provider_data(saved, managed=True))
 
 
 @router.delete("/ai-providers/{name}")

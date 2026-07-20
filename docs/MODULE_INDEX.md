@@ -129,7 +129,7 @@
 | 文件 | 干什么 |
 |------|--------|
 | [__init__.py](../app/services/__init__.py) | 业务服务层：注册表、会话/记忆/运行记录存储、AI 调用、采集/学习、工作流引擎等。 |
-| [ai.py](../app/services/ai.py) | AI 供应商（provider）配置存储 + LLM 客户端解析。 |
+| [ai.py](../app/services/ai.py) | AI 供应商配置加密存储、旧明文自动迁移 + LLM 客户端解析。 |
 | [distillation.py](../app/services/distillation.py) | Deep Dream 记忆蒸馏 —— 模拟人类睡眠时的记忆整合。 |
 | [evolution.py](../app/services/evolution.py) | 自我进化引擎 —— 审视对话历史，生成改进建议。 |
 | [invocation.py](../app/services/invocation.py) | Agent 调用编排层。 |

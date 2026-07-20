@@ -9,6 +9,7 @@ openai>=1.60.0
 httpx>=0.28.0
 
 # ── 配置 / 密钥(M0)────────────────────────────────────────
+cryptography>=44.0.0
 pydantic-settings>=2.6.0
 python-dotenv>=1.0.1
 

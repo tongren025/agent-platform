@@ -61,6 +61,8 @@ services:
       REDIS_URL: redis://redis:6379/0
       LOG_JSON: "true"
     volumes:
+      # 生产服务器权威运行数据；deploy-server.sh 会在 git reset 前后保护
+      # ai-providers/.secrets，避免后台保存的 Key 配置被代码部署覆盖。
       - ./data:/app/data
       - ./resouce:/app/resouce:ro
     depends_on:
@@ -84,6 +86,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       LOG_JSON: "true"
     volumes:
+      # 与 app 共用同一宿主机 data，保证后台保存后用户端立即可读取。
       - ./data:/app/data
       - ./resouce:/app/resouce:ro
     depends_on:
@@ -107,6 +110,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       LOG_JSON: "true"
     volumes:
+      # worker 也需读取同一份加密供应商配置与主密钥。
       - ./data:/app/data
     depends_on:
       postgres:

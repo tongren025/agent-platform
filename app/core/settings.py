@@ -55,6 +55,8 @@ class CoreSettings(BaseSettings):
     admin_token_ttl: int = 12 * 3600
 
     # LLM / Embedding(M3 起用,国内 DashScope)
+    # 后台托管 provider API Key 的 Fernet 主密钥；留空时生成到持久化 data/.secrets。
+    ai_provider_encryption_key: str = ""
     dashscope_api_key: str = ""
 
     # GitHub 趋势拉取。匿名限流 10 次/分钟,而一次全量同步要打 16 次(8 query × 2 次 search),

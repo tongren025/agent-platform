@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from app.api.common import ok, validate_key
+from app.config import resolve_secret
 from app.dependencies import ai_service
 from admin.auth import require_admin
 
@@ -17,6 +18,20 @@ def _mask_key(key: str) -> str:
     if not key or len(key) <= 8:
         return "****"
     return key[:4] + "****" + key[-4:]
+
+
+def _safe_provider_data(data: dict, *, managed: bool) -> dict:
+    """后台响应只返回 Key 掩码和是否已配置，绝不回传明文或磁盘密文。"""
+    resolved_key = resolve_secret(str(data.get("apiKey", "") or ""))
+    safe = {
+        key: value
+        for key, value in data.items()
+        if key not in {"apiKey", "apiKeyEncrypted", "apiKeyStorage"}
+    }
+    safe["apiKeyMasked"] = _mask_key(resolved_key)
+    safe["hasApiKey"] = bool(resolved_key)
+    safe["managed"] = managed
+    return safe
 
 
 class ProviderBody(BaseModel):
@@ -36,14 +51,13 @@ def list_providers(_: dict = Depends(require_admin)):
     result = []
     for p in providers:
         managed = store.get(p.name)
-        result.append({
+        result.append(_safe_provider_data({
             "name": p.name,
             "endpoint": p.endpoint,
-            "apiKeyMasked": _mask_key(p.api_key),
+            "apiKey": p.api_key,
             "enabled": p.enabled,
             "models": p.models,
-            "managed": managed is not None,
-        })
+        }, managed=managed is not None))
     return ok(result)
 
 
@@ -51,6 +65,8 @@ def list_providers(_: dict = Depends(require_admin)):
 def save_provider(body: ProviderBody, _: dict = Depends(require_admin)):
     """POST /api/admin/providers：新建（同名则覆盖）托管服务商配置；返回脱敏后的保存结果。"""
     validate_key(body.name, label="provider name")
+    if not body.apiKey:
+        raise HTTPException(status_code=400, detail="API Key is required for a new managed provider")
     data = {
         "name": body.name,
         "endpoint": body.endpoint,
@@ -59,10 +75,7 @@ def save_provider(body: ProviderBody, _: dict = Depends(require_admin)):
         "models": body.models,
     }
     saved = ai_service.store.save(data)
-    safe = dict(saved)
-    safe["apiKeyMasked"] = _mask_key(safe.get("apiKey", ""))
-    safe["managed"] = True
-    return ok(safe)
+    return ok(_safe_provider_data(saved, managed=True))
 
 
 @router.put("/{name}")
@@ -73,6 +86,8 @@ def update_provider(name: str, body: ProviderBody, _: dict = Depends(require_adm
     api_key = body.apiKey
     if not api_key and existing:
         api_key = existing.get("apiKey", "")
+    if not api_key:
+        raise HTTPException(status_code=400, detail="API Key is required when converting to managed storage")
     data = {
         "name": name,
         "endpoint": body.endpoint,
@@ -81,10 +96,7 @@ def update_provider(name: str, body: ProviderBody, _: dict = Depends(require_adm
         "models": body.models,
     }
     saved = ai_service.store.save(data)
-    safe = dict(saved)
-    safe["apiKeyMasked"] = _mask_key(safe.get("apiKey", ""))
-    safe["managed"] = True
-    return ok(safe)
+    return ok(_safe_provider_data(saved, managed=True))
 
 
 @router.delete("/{name}")

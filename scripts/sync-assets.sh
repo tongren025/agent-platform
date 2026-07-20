@@ -34,6 +34,8 @@ if [ -d "data" ]; then
     SIZE=$(du -sh data | cut -f1)
     log "同步 data/ (${SIZE}) → ${REMOTE}:${INSTALL_DIR}/data/"
     rsync -avz --progress \
+        --exclude '.secrets/' \
+        --exclude 'ai-providers/' \
         --exclude '*.bak*' \
         --exclude '*_log.jsonl' \
         --exclude 'thumb-cache/' \

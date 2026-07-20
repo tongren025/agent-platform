@@ -516,13 +516,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G01_九陆巡礼_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_019f995542c642e398712f414e4577a8.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G01_九陆巡礼_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -592,13 +598,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G02_废墟·强者登场_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_36097150-3c51-4a51-ac01-79c3cbe75ba4.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G02_废墟·强者登场_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -668,13 +680,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G03_第一波·龙焰横扫_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_471c674b-c29a-448d-90ac-6e458ee89584.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G03_第一波·龙焰横扫_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -744,13 +762,19 @@
     "shot_number": 4,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G04_执行官·反转_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_8e4a75c5-6cc7-4a2c-b2f7-fa7f83818aed.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G04_执行官·反转_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -820,13 +844,19 @@
     "shot_number": 5,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G05_熔浆龙焰主场_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_97a08717-e704-475d-a650-104973e79c24.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G05_熔浆龙焰主场_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -896,13 +926,19 @@
     "shot_number": 6,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G06_觉醒者掀盖_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_1ad4f58c-c743-4f0c-8d24-8325be3fdb12.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G06_觉醒者掀盖_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -972,13 +1008,19 @@
     "shot_number": 7,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G07_嘴替·反打_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_e1437336-90ac-46d7-b91b-6cb8934fde49.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G07_嘴替·反打_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1048,13 +1090,19 @@
     "shot_number": 8,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G08_钩子·世界在死_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_1a6a8e1f-f702-4471-8ba5-65c44d2557fe.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP01/EP01_G08_钩子·世界在死_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1283,13 +1331,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G01_王临废墟_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_d7e55957-3dcf-4fae-bc08-4bfe0abfecdc.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G01_王临废墟_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1359,13 +1413,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G02_天裂余悸_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_0b918324-f7c7-43f5-a9c9-6f3fd0b3fc63.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G02_天裂余悸_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1435,13 +1495,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G03_废墟里的人_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_de12d3be-4d09-48c8-8c54-f42ff34587fc.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G03_废墟里的人_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1511,13 +1577,19 @@
     "shot_number": 4,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G04_龙骨之王_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_9f6e3f20-b6bb-4492-8091-fea3e402f828.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G04_龙骨之王_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1587,13 +1659,19 @@
     "shot_number": 5,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G05_警讯_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_557d9b09-0e3d-448b-a4cc-7f57fb7e5f39.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G05_警讯_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1663,13 +1741,19 @@
     "shot_number": 6,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G06_删除名单_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_f610c361-c4a5-43bf-ba34-73c84a0bda4b.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G06_删除名单_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1739,13 +1823,19 @@
     "shot_number": 7,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G07_迎战姿态_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_43e5aa79-da40-4f5d-bfb7-d8eeaf7bded2.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 5,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP02/EP02_G07_迎战姿态_动作轨迹故事板.jpg",
+        "subshot_count": 5,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -1955,13 +2045,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G01_猎队破墟_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_a48d2d59-9a78-4245-86d2-a6017b2232a3.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G01_猎队破墟_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2031,13 +2127,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G02_龙焰点射_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_2f9a7c01-fe41-40c6-a581-8581fe3d683f.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G02_龙焰点射_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2107,13 +2209,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G03_灾星之名_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_d235e7fc-e7ae-4a5a-b9ba-b32fdc91964f.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G03_灾星之名_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2183,13 +2291,19 @@
     "shot_number": 4,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G04_第二波_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_47fadd74-b4bb-4384-b6c1-f8f66afe574d.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G04_第二波_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2259,13 +2373,19 @@
     "shot_number": 5,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G05_力量苏醒_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_61c8eeea-da54-4147-ad00-c29eef10ea6e.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G05_力量苏醒_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2335,13 +2455,19 @@
     "shot_number": 6,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G06_同类_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_af3bffa7-1293-45e9-87ad-f62e9e57df35.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G06_同类_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2411,13 +2537,19 @@
     "shot_number": 7,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G07_锦洛拦路_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_14d1d828-a7ef-4f2c-9c5c-a7f2fa987e45.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 5,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP03/EP03_G07_锦洛拦路_动作轨迹故事板.jpg",
+        "subshot_count": 5,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2627,13 +2759,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G01_对峙_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_e8daf59c-5fab-43cc-8f83-af4a9b24fe19.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G01_对峙_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2703,13 +2841,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G02_她的恐惧_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_2e135004-91b7-463c-b044-df1650f29682.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G02_她的恐惧_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2779,13 +2923,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G03_灭族闪回_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_c5adb8fc-2ddf-4bb9-ba7c-9243982b8e12.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G03_灭族闪回_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2855,13 +3005,19 @@
     "shot_number": 4,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G04_你不懂_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_21fec4aa-fd35-4de3-ac9d-7381044dda93.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G04_你不懂_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -2931,13 +3087,19 @@
     "shot_number": 5,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G05_天暗了_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_abd82c80-d2e0-482e-a58f-05c01c8ea9cd.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G05_天暗了_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3007,13 +3169,19 @@
     "shot_number": 6,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G06_执行官降临_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_03d0f8f2-019a-4e4e-b2f7-730ba216b292.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G06_执行官降临_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3083,13 +3251,19 @@
     "shot_number": 7,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G07_她挡在前_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_8a2baeff-c8f1-4eb2-b1b7-99a8b17f7ca4.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP04/EP04_G07_她挡在前_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3299,13 +3473,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G01_挡刀之后_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_41c1ee23-df56-476e-b9ba-e8fbe2a80fc7.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G01_挡刀之后_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3375,13 +3555,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G02_冲阵对轰_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_977730db-87f1-4c6d-950d-ce744f4fe543.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G02_冲阵对轰_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3451,13 +3637,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G03_占上风_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_59604b0d-ad4b-4492-93e7-1116fb877db7.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G03_占上风_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3527,13 +3719,19 @@
     "shot_number": 4,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G04_异样_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_6cac969f-1ebd-474d-b22e-025644612af8.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G04_异样_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3603,13 +3801,19 @@
     "shot_number": 5,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G05_识别_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_dd166793-a0ef-4481-8944-389f08e59d94.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G05_识别_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3679,13 +3883,19 @@
     "shot_number": 6,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G06_删除改回收_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_a2073d83-7f09-4c79-b984-e3c5ad6e2125.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G06_删除改回收_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3755,13 +3965,19 @@
     "shot_number": 7,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G07_生擒_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_ca41d683-3c99-45f8-a71c-8e3daae12fd6.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP05/EP05_G07_生擒_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -3971,13 +4187,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G01_引它入巢_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_0b3986e0-7dd4-47b9-ac90-4ef8afae3bff.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G01_引它入巢_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4047,13 +4269,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G02_熔浆迸发_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_b608ca01-2800-4f51-b493-38128d8dc5de.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G02_熔浆迸发_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4123,13 +4351,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G03_以为赢了_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_c266e40a-6697-4635-a474-c0105a86eb51.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G03_以为赢了_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4198,12 +4432,19 @@
     "episode": 6,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G04_没死透_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G04_没死透_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4270,12 +4511,19 @@
     "episode": 6,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G05_分裂成群_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G05_分裂成群_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4342,12 +4590,19 @@
     "episode": 6,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G06_老矿工_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP06/EP06_G06_老矿工_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4552,12 +4807,19 @@
     "episode": 7,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G01_断根一手_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G01_断根一手_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4624,12 +4886,19 @@
     "episode": 7,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G02_龙骑士军团_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G02_龙骑士军团_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4696,12 +4965,19 @@
     "episode": 7,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G03_军团为何没了_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G03_军团为何没了_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4768,12 +5044,19 @@
     "episode": 7,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G04_净化是什么_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G04_净化是什么_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4840,12 +5123,19 @@
     "episode": 7,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G05_那我们就是病_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G05_那我们就是病_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -4912,12 +5202,19 @@
     "episode": 7,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G06_待净化区_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP07/EP07_G06_待净化区_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5120,12 +5417,19 @@
     "episode": 8,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G01_倒计时_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G01_倒计时_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5192,12 +5496,19 @@
     "episode": 8,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G02_你走吧_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G02_你走吧_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5264,12 +5575,19 @@
     "episode": 8,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G03_天空裂开_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G03_天空裂开_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5336,12 +5654,19 @@
     "episode": 8,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G04_他调头了_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G04_他调头了_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5408,12 +5733,19 @@
     "episode": 8,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G05_光丝暴张_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G05_光丝暴张_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5480,12 +5812,19 @@
     "episode": 8,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G06_这破地方我说了算_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP08/EP08_G06_这破地方我说了算_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5688,12 +6027,19 @@
     "episode": 9,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G01_僵持_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G01_僵持_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5760,12 +6106,19 @@
     "episode": 9,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G02_择选方舟_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G02_择选方舟_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5832,12 +6185,19 @@
     "episode": 9,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G03_分裂_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G03_分裂_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5904,12 +6264,19 @@
     "episode": 9,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G04_资格_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G04_资格_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -5976,12 +6343,19 @@
     "episode": 9,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G05_火种_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G05_火种_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6048,12 +6422,19 @@
     "episode": 9,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G06_残党起意_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP09/EP09_G06_残党起意_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6257,13 +6638,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G01_偷袭_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_13ed38d1-63aa-4ae8-8d89-f314234815c8.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G01_偷袭_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6333,13 +6720,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G02_护穹动摇_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_094a1bd8-c247-42a6-b76b-041fd1aece19.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G02_护穹动摇_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6409,13 +6802,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G03_倒戈_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_7562fc40-49fc-4a6c-acbf-4dd9043136e2.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G03_倒戈_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6485,13 +6884,19 @@
     "shot_number": 4,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G04_献祭_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_b985c72b-f256-40eb-b96d-ee66557d4469.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G04_献祭_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6561,13 +6966,19 @@
     "shot_number": 5,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G05_名单是全员_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_acca0fed-1523-4f3f-a948-0f6ef4b56a03.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G05_名单是全员_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6637,13 +7048,19 @@
     "shot_number": 6,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G06_只剩一条路_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_5f29c02c-b3db-46d6-89c3-d08c55890f27.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP10/EP10_G06_只剩一条路_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6853,13 +7270,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G01_点将_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_f4f42f9c-c9ce-4c92-98f7-bc69055aa25b.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G01_点将_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -6929,13 +7352,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G02_弱点变阵_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_eef5aad6-45bd-4f7f-a807-3f10db8e2df2.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G02_弱点变阵_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7005,13 +7434,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G03_誓师_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_76e38477-d3a0-4837-bc01-3b6f2b52a3f3.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G03_誓师_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7081,13 +7516,19 @@
     "shot_number": 4,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G04_备战_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_f68513da-9211-456f-9e8a-168d614cd0ae.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G04_备战_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7157,13 +7598,19 @@
     "shot_number": 5,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G05_敌动_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_6fa94a11-2c82-497b-a74d-ba81d418982c.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G05_敌动_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7233,13 +7680,19 @@
     "shot_number": 6,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G06_主力压来_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_f096fdbc-0a71-403a-9213-571aafe77c4b.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP11/EP11_G06_主力压来_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7449,13 +7902,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G01_接敌_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_ed2be101-918e-4b75-8298-5595783a0fec.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G01_接敌_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7525,13 +7984,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G02_团战大场面_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_30c03902-7e04-4351-a012-3b066f9faea8.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G02_团战大场面_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7601,13 +8066,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G03_曜觉醒_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_5fc7c9b3-1bc5-4ce1-988a-4355162979f7.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G03_曜觉醒_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7677,13 +8148,19 @@
     "shot_number": 4,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G04_喘息_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_528b9282-1387-4a2f-a256-cc0cd424344f.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G04_喘息_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7753,13 +8230,19 @@
     "shot_number": 5,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G05_敌变_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_dee2448e-ad39-45c4-a7b9-0cfa86bea016.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G05_敌变_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -7829,13 +8312,19 @@
     "shot_number": 6,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G06_主炮蓄能_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_4fb896f7-778a-4440-b991-d30a6428757a.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP12/EP12_G06_主炮蓄能_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8045,13 +8534,19 @@
     "shot_number": 1,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G01_一炮_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_78e6c78b-79eb-4533-b29d-5af2d7adecf1.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G01_一炮_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8121,13 +8616,19 @@
     "shot_number": 2,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G02_削平半城_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_9418d9a3-79ba-4eb4-a4b0-e69d65047afe.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G02_削平半城_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8197,13 +8698,19 @@
     "shot_number": 3,
     "prompts": [],
     "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G03_硬接_动作轨迹故事板.jpg",
       "/uploads/canvas/img_auto_137485ca-8a8c-4a40-9cfd-42c48d35c265.png"
     ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G03_硬接_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8272,12 +8779,19 @@
     "episode": 13,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G04_改写_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G04_改写_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8344,12 +8858,19 @@
     "episode": 13,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G05_胜的假象_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G05_胜的假象_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8416,12 +8937,19 @@
     "episode": 13,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G06_光丝暴走_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP13/EP13_G06_光丝暴走_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8626,12 +9154,19 @@
     "episode": 14,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G01_反噬_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G01_反噬_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8698,12 +9233,19 @@
     "episode": 14,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G02_脆弱_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G02_脆弱_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8770,12 +9312,19 @@
     "episode": 14,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G03_她要进去_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G03_她要进去_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8842,12 +9391,19 @@
     "episode": 14,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G04_龙血稳丝_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G04_龙血稳丝_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -8914,12 +9470,19 @@
     "episode": 14,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G05_钥匙不止一把_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP14/EP14_G05_钥匙不止一把_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9122,12 +9685,19 @@
     "episode": 15,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G01_残根_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G01_残根_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9194,12 +9764,19 @@
     "episode": 15,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G02_九缕真相_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G02_九缕真相_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9266,12 +9843,19 @@
     "episode": 15,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G03_八缕已灭_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G03_八缕已灭_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9338,12 +9922,19 @@
     "episode": 15,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G04_离不开我_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G04_离不开我_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9410,12 +10001,19 @@
     "episode": 15,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G05_跨陆信号_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP15/EP15_G05_跨陆信号_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9618,12 +10216,19 @@
     "episode": 16,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G01_算清_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G01_算清_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9690,12 +10295,19 @@
     "episode": 16,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G02_别拦我_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G02_别拦我_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9762,12 +10374,19 @@
     "episode": 16,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G03_人墙_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G03_人墙_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9834,12 +10453,19 @@
     "episode": 16,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G04_谢了_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G04_谢了_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -9906,12 +10532,19 @@
     "episode": 16,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G05_总删除_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP16/EP16_G05_总删除_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10097,12 +10730,19 @@
     "episode": 17,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G01_压下_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G01_压下_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10169,12 +10809,19 @@
     "episode": 17,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G02_托举_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G02_托举_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10241,12 +10888,19 @@
     "episode": 17,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G03_真爆发_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G03_真爆发_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10313,12 +10967,19 @@
     "episode": 17,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G04_缺口_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G04_缺口_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10385,12 +11046,19 @@
     "episode": 17,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G05_冲核心_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP17/EP17_G05_冲核心_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10576,12 +11244,19 @@
     "episode": 18,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G01_杀穿_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G01_杀穿_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10648,12 +11323,19 @@
     "episode": 18,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G02_赤金走廊_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G02_赤金走廊_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10720,12 +11402,19 @@
     "episode": 18,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G03_核心_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G03_核心_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10792,12 +11481,19 @@
     "episode": 18,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G04_不对_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G04_不对_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10864,12 +11560,19 @@
     "episode": 18,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G05_出来挨打_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G05_出来挨打_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -10936,12 +11639,19 @@
     "episode": 18,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G06_终极形态_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP18/EP18_G06_终极形态_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11144,12 +11854,19 @@
     "episode": 19,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G01_开打_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G01_开打_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11216,12 +11933,19 @@
     "episode": 19,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G02_城市级对轰_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G02_城市级对轰_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11288,12 +12012,19 @@
     "episode": 19,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G03_越打越强_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G03_越打越强_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11360,12 +12091,19 @@
     "episode": 19,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G04_差一口气_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G04_差一口气_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11432,12 +12170,19 @@
     "episode": 19,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G05_暂退_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G05_暂退_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11504,12 +12249,19 @@
     "episode": 19,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G06_神力诱惑_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP19/EP19_G06_神力诱惑_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11712,12 +12464,19 @@
     "episode": 20,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G01_金光_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G01_金光_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11784,12 +12543,19 @@
     "episode": 20,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G02_动摇_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G02_动摇_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11856,12 +12622,19 @@
     "episode": 20,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G03_虚假加冕_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G03_虚假加冕_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -11928,12 +12701,19 @@
     "episode": 20,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G04_识破_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G04_识破_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12000,12 +12780,19 @@
     "episode": 20,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G05_我的自己挣_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G05_我的自己挣_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12072,12 +12859,19 @@
     "episode": 20,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G06_我的玩法_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP20/EP20_G06_我的玩法_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12280,12 +13074,19 @@
     "episode": 21,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G01_潜心_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G01_潜心_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12352,12 +13153,19 @@
     "episode": 21,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G02_汲取本源_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G02_汲取本源_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12424,12 +13232,19 @@
     "episode": 21,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G03_崩塌代价_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G03_崩塌代价_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12496,12 +13311,19 @@
     "episode": 21,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G04_核心一击_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G04_核心一击_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12568,12 +13390,19 @@
     "episode": 21,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G05_贯穿_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G05_贯穿_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12640,12 +13469,19 @@
     "episode": 21,
     "shot_number": 6,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G06_核心暴露_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 8,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP21/EP21_G06_核心暴露_动作轨迹故事板.jpg",
+        "subshot_count": 8,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12848,12 +13684,19 @@
     "episode": 22,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G01_直取核心_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G01_直取核心_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12920,12 +13763,19 @@
     "episode": 22,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G02_全押_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G02_全押_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -12992,12 +13842,19 @@
     "episode": 22,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G03_决定性对撞_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G03_决定性对撞_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13064,12 +13921,19 @@
     "episode": 22,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G04_删不掉_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G04_删不掉_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13136,12 +14000,19 @@
     "episode": 22,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G05_惨胜_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP22/EP22_G05_惨胜_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13344,12 +14215,19 @@
     "episode": 23,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G01_崩塌_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G01_崩塌_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13416,12 +14294,19 @@
     "episode": 23,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G02_送别_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 6,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G02_送别_动作轨迹故事板.jpg",
+        "subshot_count": 6,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13488,12 +14373,19 @@
     "episode": 23,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G03_最后一眼_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G03_最后一眼_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13560,12 +14452,19 @@
     "episode": 23,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G04_这地方我说了算_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 7,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G04_这地方我说了算_动作轨迹故事板.jpg",
+        "subshot_count": 7,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13632,12 +14531,19 @@
     "episode": 23,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G05_第一次真飞_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 12,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP23/EP23_G05_第一次真飞_动作轨迹故事板.jpg",
+        "subshot_count": 12,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13840,12 +14746,19 @@
     "episode": 24,
     "shot_number": 1,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G01_云海_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 11,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G01_云海_动作轨迹故事板.jpg",
+        "subshot_count": 11,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13912,12 +14825,19 @@
     "episode": 24,
     "shot_number": 2,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G02_壮阔飞行_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G02_壮阔飞行_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -13984,12 +14904,19 @@
     "episode": 24,
     "shot_number": 3,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G03_回望_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G03_回望_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -14056,12 +14983,19 @@
     "episode": 24,
     "shot_number": 4,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G04_点回来_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 9,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G04_点回来_动作轨迹故事板.jpg",
+        "subshot_count": 9,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -14128,12 +15062,19 @@
     "episode": 24,
     "shot_number": 5,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G05_季终钩_动作轨迹故事板.jpg"
+    ],
     "videos": [],
     "metadata": {
       "storyboard_schema_version": "2.0-detailed",
       "subshot_count": 10,
-      "generation_strategy": "independent_subshots_then_edit"
+      "generation_strategy": "independent_subshots_then_edit",
+      "trajectory_storyboard": {
+        "url": "/api/v1/agentapp/production/resource/漫剧/九陆纪元_S1烬龙陆篇_v2_动作轨迹故事板/EP24/EP24_G05_季终钩_动作轨迹故事板.jpg",
+        "subshot_count": 10,
+        "renderer_version": 1
+      }
     },
     "status": "done",
     "assignee": "",
@@ -14234,13 +15175,20 @@
     "episode": null,
     "shot_number": 0,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_前期三视图_v1.png",
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png"
+    ],
     "videos": [],
-    "metadata": {},
-    "status": "pending",
+    "metadata": {
+      "type": "character_master",
+      "r_id": "R3",
+      "generated_by": "openai_imagegen"
+    },
+    "status": "done",
     "assignee": "",
     "created_at": "2026-06-26T14:14:42.632707+08:00",
-    "updated_at": "2026-06-26T14:14:42.632707+08:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "g-char-aila",
@@ -14251,13 +15199,19 @@
     "episode": null,
     "shot_number": 0,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/艾拉_正式母版_三视图_v1.png"
+    ],
     "videos": [],
-    "metadata": {},
-    "status": "pending",
+    "metadata": {
+      "type": "character_master",
+      "r_id": "R1",
+      "generated_by": "openai_imagegen"
+    },
+    "status": "done",
     "assignee": "",
     "created_at": "2026-06-26T14:14:42.632707+08:00",
-    "updated_at": "2026-06-26T14:14:42.632707+08:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "g-char-dragon",
@@ -14268,13 +15222,20 @@
     "episode": null,
     "shot_number": 0,
     "prompts": [],
-    "images": [],
+    "images": [
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/巨龙_正式母版_幼龙_v1.png",
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/巨龙_正式母版_成年龙三视图_v1.png"
+    ],
     "videos": [],
-    "metadata": {},
-    "status": "pending",
+    "metadata": {
+      "type": "character_master",
+      "r_id": "R2",
+      "generated_by": "openai_imagegen"
+    },
+    "status": "done",
     "assignee": "",
     "created_at": "2026-06-26T14:14:42.632707+08:00",
-    "updated_at": "2026-06-26T14:14:42.632707+08:00"
+    "updated_at": "2026-07-20T13:37:09.7854973+08:00"
   },
   {
     "card_id": "g-scene-bible",
