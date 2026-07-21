@@ -5,6 +5,20 @@
 
 ---
 
+## [2026-07-21] feat: GitHub Actions 自动部署生产服务器
+
+- 现有 CI 扩展为 CI/CD：`master` push 或手动触发时，后端测试与前端类型检查/构建全部通过后才部署。
+- 新增 GitHub `production` Environment 接入，使用受限 SSH 用户、固定 host key 和最小权限部署密钥；
+  部署串行执行，结束后请求公网 `/healthcheck`。
+- `deploy-server.sh` 支持并校验 `DEPLOY_SHA`，只部署当前 `origin/master` 上与本次测试完全一致的 commit，
+  避免连续 push 时部署尚未通过测试的新版本。
+- 服务器 `.env`、制作数据、后台供应商配置与加密主密钥继续保留在服务器，不上传 GitHub Actions。
+
+**影响面**：`.github/workflows/ci.yml`、`scripts/deploy-server.sh`、生产服务器受限 deploy 账号与 GitHub
+Environment；无 API、数据库表或业务数据格式变更。
+
+---
+
 ## [2026-07-20] 《九陆纪元》GC 故事板、场景与角色母版补齐
 
 - 新增 11 张 GC 动作轨迹故事板，每张为 5 格连续动作大图，覆盖 G1「九陆之瞳」至 G11「我自己选」，并在卡片元数据中标记为 `action_trajectory_storyboard`。

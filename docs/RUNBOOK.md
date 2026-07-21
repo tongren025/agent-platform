@@ -223,3 +223,35 @@ docker compose up -d --build
 app :8000 · admin :8001 · Grafana :3000（admin/admin）· Prometheus :9090。
 app/admin/worker 三容器共享同一镜像，仅 command 不同；容器内 `DATABASE_URL/REDIS_URL`
 用 compose 服务名（.env.example 默认值即为此设计）。
+
+## 10. GitHub Actions 自动部署
+
+`.github/workflows/ci.yml` 在 `master` push 或手动触发时执行完整 CI，只有 backend/frontend 都成功后
+才运行 `deploy`。部署 job 使用 GitHub `production` Environment：
+
+| 类型 | 名称 | 内容 |
+|---|---|---|
+| Variable | `DEPLOY_HOST` | 生产服务器地址 |
+| Variable | `DEPLOY_USER` | 受限 SSH 用户，当前为 `deploy` |
+| Variable | `DEPLOY_SSH_KNOWN_HOSTS` | 生产服务器 Ed25519 host key 完整行 |
+| Secret | `DEPLOY_SSH_KEY` | 专用 Ed25519 私钥完整内容 |
+
+服务器公钥必须绑定 forced command；`deploy` 用户不加入 docker/sudo 组，只允许免密执行
+`/usr/local/sbin/deploy-agent-platform <commit-sha>`。入口会校验命令格式，部署脚本还会确认 SHA 等于
+当前 `origin/master`，避免较旧的并发任务部署尚未通过测试的新代码。
+
+排查命令：
+
+```bash
+# GitHub 侧
+gh run list --workflow ci.yml --limit 5
+gh run view <run-id> --log-failed
+
+# 服务器侧
+cd /opt/agent-platform
+docker compose -f docker-compose.prod.yml ps
+curl -fsS https://aikirito.cloud/healthcheck
+```
+
+需要重新部署当前 `master` 时，在 GitHub Actions 的 `CI/CD` 页面选择 **Run workflow**；不要登录服务器
+手工 `git pull`。服务器 `.env` 与运行数据仍按本 Runbook 的数据持久化规则维护。
