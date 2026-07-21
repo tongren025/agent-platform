@@ -207,7 +207,8 @@ GitHub `production` 环境需要配置：
 - Secret：`DEPLOY_SSH_KEY`
 
 服务器 `.env`、`data/production/`、`data/ai-providers/` 与 `data/.secrets/` 不进入 Actions，继续由
-生产服务器持久化和部署脚本保护。具体运维方式见 [docs/RUNBOOK.md](docs/RUNBOOK.md#10-github-actions-自动部署)。
+生产服务器持久化和部署脚本保护。仓库为私有仓库时，服务器另用一把 GitHub **只读 Deploy Key** 拉取
+代码，不保存个人 PAT。具体运维方式见 [docs/RUNBOOK.md](docs/RUNBOOK.md#10-github-actions-自动部署)。
 
 ## 快速开始
 

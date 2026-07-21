@@ -2,9 +2,8 @@
 # ─────────────────────────────────────────────────────────────
 # agent-platform 一键部署脚本（Ubuntu 24.04 / 2G 内存）
 #
-# 首次部署:
-#   ssh root@47.85.46.171
-#   curl -fsSL https://raw.githubusercontent.com/tongren025/agent-platform/master/scripts/deploy-server.sh | bash
+# 首次部署（私有仓库需先配置只读 GitHub Deploy Key）:
+#   bash /path/to/deploy-server.sh
 #
 # 更新部署:
 #   cd /opt/agent-platform && bash scripts/deploy-server.sh
@@ -12,10 +11,12 @@
 set -euo pipefail
 
 INSTALL_DIR="/opt/agent-platform"
-REPO_URL="https://github.com/tongren025/agent-platform.git"
+REPO_URL="git@github.com:tongren025/agent-platform.git"
 BRANCH="master"
 SWAP_SIZE="2G"
 DEPLOY_SHA="${DEPLOY_SHA:-}"
+GITHUB_DEPLOY_KEY="${GITHUB_DEPLOY_KEY:-/root/.ssh/agent-platform-github}"
+GITHUB_KNOWN_HOSTS="${GITHUB_KNOWN_HOSTS:-/root/.ssh/known_hosts_agent_platform}"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -54,6 +55,14 @@ if [ "$(id -u)" -ne 0 ]; then
     err "请用 root 运行: sudo bash $0"
     exit 1
 fi
+
+# 私有仓库只使用 GitHub Deploy Key（只读），不在服务器保存个人 PAT。
+if [ ! -f "${GITHUB_DEPLOY_KEY}" ] || [ ! -f "${GITHUB_KNOWN_HOSTS}" ]; then
+    err "缺少 GitHub Deploy Key 或已验证的 known_hosts"
+    err "需要: ${GITHUB_DEPLOY_KEY} 与 ${GITHUB_KNOWN_HOSTS}"
+    exit 1
+fi
+export GIT_SSH_COMMAND="ssh -i ${GITHUB_DEPLOY_KEY} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=${GITHUB_KNOWN_HOSTS}"
 
 # ── 1. 系统依赖 ───────────────────────────────────────────
 log "安装系统依赖..."

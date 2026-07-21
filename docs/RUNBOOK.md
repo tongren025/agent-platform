@@ -240,6 +240,11 @@ app/admin/worker 三容器共享同一镜像，仅 command 不同；容器内 `D
 `/usr/local/sbin/deploy-agent-platform <commit-sha>`。入口会校验命令格式，部署脚本还会确认 SHA 等于
 当前 `origin/master`，避免较旧的并发任务部署尚未通过测试的新代码。
 
+当前仓库为私有仓库，生产服务器通过 GitHub 仓库 Settings → Deploy keys 中的
+`agent-platform-production-readonly` 拉取代码。该 key 必须保持 **Allow write access 关闭**：私钥仅在
+服务器 `/root/.ssh/agent-platform-github`，GitHub 官方 SSH host keys 固定在
+`/root/.ssh/known_hosts_agent_platform`；服务器不保存个人 PAT。
+
 排查命令：
 
 ```bash

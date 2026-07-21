@@ -12,6 +12,8 @@
   部署串行执行，结束后请求公网 `/healthcheck`。
 - `deploy-server.sh` 支持并校验 `DEPLOY_SHA`，只部署当前 `origin/master` 上与本次测试完全一致的 commit，
   避免连续 push 时部署尚未通过测试的新版本。
+- 私有仓库拉取从匿名 HTTPS 改为服务器专用的 GitHub 只读 Deploy Key；服务器不保存个人 PAT，
+  GitHub host key 使用固定 known_hosts 校验。
 - 服务器 `.env`、制作数据、后台供应商配置与加密主密钥继续保留在服务器，不上传 GitHub Actions。
 
 **影响面**：`.github/workflows/ci.yml`、`scripts/deploy-server.sh`、生产服务器受限 deploy 账号与 GitHub
