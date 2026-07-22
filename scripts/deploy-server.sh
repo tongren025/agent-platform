@@ -285,15 +285,17 @@ fi
 
 # ── 10. 健康检查 ──────────────────────────────────────────
 # app/admin 每次部署会被 recreate，容器 IP 可能变化；nginx 的静态 upstream
-# 只在配置加载时解析服务名。如果 nginx 沿用旧容器，会持续代理到旧 IP 并返回 502。
-log "刷新 Nginx 上游解析..."
-docker compose -f docker-compose.prod.yml restart nginx
+# 只在配置加载时解析服务名。强制重建 nginx，确保配置挂载、Docker 网络与 upstream
+# 都基于本次部署重新建立，避免继续代理到旧容器地址而返回 502。
+log "重建 Nginx 并刷新上游解析..."
+docker compose -f docker-compose.prod.yml up -d --force-recreate --no-deps nginx
 
 log "等待应用健康..."
 APP_HEALTHY=false
 for i in $(seq 1 30); do
     if docker compose -f docker-compose.prod.yml exec -T nginx \
-        wget -qO- http://app:8000/healthcheck > /dev/null 2>&1; then
+        wget --no-check-certificate --header='Host: aikirito.cloud' \
+        -qO- https://127.0.0.1/healthcheck > /dev/null 2>&1; then
         APP_HEALTHY=true
         break
     fi
@@ -301,7 +303,7 @@ for i in $(seq 1 30); do
 done
 
 if [ "${APP_HEALTHY}" != "true" ]; then
-    warn "应用在 60 秒内未通过容器内健康检查，输出诊断日志"
+    warn "应用在 60 秒内未通过 Nginx 容器内完整代理健康检查，输出诊断日志"
     docker compose -f docker-compose.prod.yml ps
     docker compose -f docker-compose.prod.yml logs --tail=200 app nginx
     exit 1

@@ -7,10 +7,10 @@
 
 ## [2026-07-22] fix: 部署后 Nginx 仍指向旧应用容器导致 502
 
-- 生产部署重建 `app` / `admin` 后强制重启 Nginx，使静态 upstream 重新解析新容器 IP，避免 Nginx
-  持续代理到已删除容器并返回 502。
-- 部署脚本新增容器内 `/healthcheck` 等待：最多等待 60 秒；失败时自动输出 app/nginx 状态与最近
-  200 行日志并退出，不再把“容器进程 Up”误判为应用可用。
+- 生产部署重建 `app` / `admin` 后强制重建 Nginx，使配置挂载、Docker 网络和静态 upstream
+  全部基于新容器重新建立，避免 Nginx 持续代理到已删除容器并返回 502。
+- 部署脚本新增经过 Nginx HTTPS 代理链的容器内 `/healthcheck` 等待：最多等待 60 秒；失败时自动
+  输出 app/nginx 状态与最近 200 行日志并退出，不再把“直连 app 正常”误判为公网链路可用。
 
 **影响面**：`scripts/deploy-server.sh` 生产部署健康验证；无 API、数据库表、环境变量或端口变化。
 
