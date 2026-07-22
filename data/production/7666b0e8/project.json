@@ -1,0 +1,37 @@
+{
+  "project_id": "7666b0e8",
+  "name": "九陆纪元 · 九大陆灾变史诗GC",
+  "description": "30秒竖屏世界观型GC：九大陆逐一以标志性巨物与灾变登场，最终揭示所谓世界树并非实体树，而是连接九陆的无形量子羁绊网",
+  "source_type": "gc",
+  "source_content": "《九陆纪元》九大陆灾变史诗GC\n\n创作要求：保留上一版GC不动，另建独立版本。核心任务不是讲单一人物前史，而是让观众在30秒内看懂这是一个由九块大陆组成、共享世界树命脉的宏大世界。必须出现九大陆、虫巢、龙群、海啸、巨神、世界终坑、倒悬神国等标志奇观；画面高级、巨物感强、震撼但不杂乱。\n\n世界树定义：它不是木质巨树，没有树干、树冠、树根或藤蔓；它是九大陆彼此羁绊形成的无形量子网络。视觉如跨越深空的巨大蜘蛛网，由几乎不可见的无痕细线构成，只通过轻微折光、空间涟漪和星尘偏转显形。\n\n核心命题：所谓世界树，其实是九陆彼此相连的羁绊；一处断裂，九陆同坠。\n\n结尾钩子：九陆将倾。谁有资格决定，哪一陆先死？",
+  "employee_key": "",
+  "team_code": "comic-drama-team",
+  "episode_count": 1,
+  "episode_duration_seconds": 30,
+  "aspect_ratio": "9:16",
+  "visual_style": "顶级东方幻想灾变史诗，明亮通透的高级国漫插图；平滑自然的阴影与柔和漫射光，可控的中等细节，简约而精致的纹理，清晰锐利但不过度锐化的边缘，干净的色彩过渡与平滑渐变，平衡对比度。以巨物遮天关系和微小人物尺度锚制造庞大感。九大陆各守独立色彩；所谓世界树只表现为蜘蛛网式无形量子羁绊线，以折光、空间涟漪和星尘偏转隐约显形，绝不画成实体树木、树根、电缆或藤蔓。全片无噪点、颗粒、瑕疵、脏污纹理、浑浊色彩、斑驳阴影、混乱高频细节、强烈硬对比、油腻高光或塑料质感。",
+  "budget": 0.0,
+  "members": [
+    {
+      "user_id": "admin",
+      "name": "系统管理员",
+      "role": "owner",
+      "avatar": "",
+      "added_at": "2026-07-20T18:27:23.3234686Z"
+    }
+  ],
+  "settings": {
+    "visibility": "private",
+    "allow_ai_generate": true,
+    "default_status": "pending",
+    "art_bible_project_id": "jiulu-s1",
+    "style_reference_policy": "inherit_nine_continents_art_bible",
+    "distribution_goal": "worldview_spectacle_launch",
+    "gc_version": "nine_continents_cataclysm_v1",
+    "video_generation_locked_until_review": true,
+    "previous_gc_project_id": "a3ab9f6a",
+    "previous_gc_mutation_policy": "read_only"
+  },
+  "created_at": "2026-07-20T18:27:23.3234686Z",
+  "updated_at": "2026-07-20T18:27:23.3234686Z"
+}

@@ -870,3 +870,28 @@
 [CodeGraph daemon] Listening on \\.\pipe\codegraph-1f2ce3177f2657e2 (pid 4588, v0.9.6). Idle timeout 300000ms.
 [CodeGraph MCP] File watcher active — graph will auto-sync on changes
 [CodeGraph daemon] Shutting down (idle timeout; clients=0).
+[CodeGraph daemon] Listening on \\.\pipe\codegraph-1f2ce3177f2657e2 (pid 13704, v0.9.6). Idle timeout 300000ms.
+[CodeGraph MCP] File watcher active — graph will auto-sync on changes
+[CodeGraph daemon] Listening on \\.\pipe\codegraph-1f2ce3177f2657e2 (pid 12932, v0.9.6). Idle timeout 300000ms.
+[CodeGraph MCP] File watcher active — graph will auto-sync on changes
+[CodeGraph MCP] Auto-synced 1 file(s) in 3485ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1418ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 2052ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1417ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 2042ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1570ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1209ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1172ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1298ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1164ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1205ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1251ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1436ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1325ms
+[CodeGraph MCP] Auto-synced 218 file(s) in 36886ms
+[CodeGraph MCP] Auto-synced 109 file(s) in 26232ms
+[CodeGraph MCP] Auto-synced 109 file(s) in 29607ms
+[CodeGraph] File watcher error {
+  error: "Error: EBUSY: resource busy or locked, watch 'D:\\P\\agent\\output\\visual-development\\九陆纪元_世界树_六方向剪影探索_v1.png'"
+}
+[CodeGraph MCP] Auto-synced 218 file(s) in 44855ms

@@ -318,68 +318,82 @@ export default function DirectorStudio() {
 
   return (
     <div className="director-page">
-      <header className="director-header">
-        <div>
-          <Text className="director-eyebrow">一人制片工作室</Text>
-          <Title level={2}>导演 Agent</Title>
-        </div>
-        <div className="director-header-actions">
-          {projects.length > 0 && (
-            <Select
-              value={projectId}
-              onChange={setProjectId}
-              className="director-project-select"
-              options={projects.map(project => ({ value: project.project_id, label: project.name }))}
-            />
-          )}
-          <Button icon={<PlusOutlined />} onClick={() => setCreateOpen(true)}>新片</Button>
-        </div>
-      </header>
+      <section className="director-command-deck">
+        <div className="director-deck-grid" aria-hidden="true" />
+        <header className="director-header">
+          <div className="director-brand-lockup">
+            <span className="director-reel-mark"><VideoCameraOutlined /></span>
+            <div>
+              <Text className="director-eyebrow">DIRECTOR CONSOLE / 01</Text>
+              <Title level={1}>导演 Agent</Title>
+              <p>把创意、镜头与成片收束在同一条制作主线上</p>
+            </div>
+          </div>
+          <div className="director-header-actions">
+            <span className="director-system-status"><i /> SYSTEM READY</span>
+            {projects.length > 0 && (
+              <Select
+                value={projectId}
+                onChange={setProjectId}
+                className="director-project-select"
+                aria-label="切换制作项目"
+                options={projects.map(project => ({ value: project.project_id, label: project.name }))}
+              />
+            )}
+            <Button className="director-new-button" icon={<PlusOutlined />} onClick={() => setCreateOpen(true)}>新片</Button>
+          </div>
+        </header>
 
-      {!state ? (
-        <div className="director-empty">
-          <Empty description="还没有制作任务">
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateOpen(true)}>建立第一部片</Button>
-          </Empty>
-        </div>
-      ) : (
-        <>
-          <section className="director-project-band">
+        {!state ? (
+          <div className="director-empty">
+            <Empty description="还没有制作任务">
+              <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateOpen(true)}>建立第一部片</Button>
+            </Empty>
+          </div>
+        ) : (
+          <div className="director-project-hero">
             <div className="director-project-copy">
-              <Text type="secondary">当前制作</Text>
-              <Title level={3}>{state.project.name}</Title>
+              <span className="director-live-label"><i /> CURRENT PRODUCTION</span>
+              <Title level={2}>{state.project.name}</Title>
+              <p>{state.project.description || '从创意素材到可交付成片，持续推进当前制作。'}</p>
               <div className="director-project-meta">
-                <Tag>{state.project.source_type === 'gc' ? '概念片' : '漫剧'}</Tag>
-                <Tag>{state.project.aspect_ratio}</Tag>
-                <Tag>{state.totalUnits} 镜</Tag>
-                {state.reviewCount > 0 && <Tag color="warning">{state.reviewCount} 项待审</Tag>}
+                <span>{state.project.source_type === 'gc' ? '概念片' : '漫剧'}</span>
+                <span>{state.project.aspect_ratio}</span>
+                <span>{state.totalUnits} SHOTS</span>
+                {state.reviewCount > 0 && <span className="is-warning">{state.reviewCount} 项待审</span>}
               </div>
             </div>
-            <div className="director-progress-block">
-              <div className="director-progress-number">{state.overallProgress}%</div>
-              <Progress percent={state.overallProgress} showInfo={false} strokeColor="#0f766e" />
-              <Text type="secondary">生产完成度</Text>
+            <div className="director-project-vitals">
+              <div className="director-progress-block">
+                <Progress
+                  type="circle"
+                  percent={state.overallProgress}
+                  size={isMobile ? 112 : 138}
+                  strokeWidth={5}
+                  strokeColor="#e3a84f"
+                  trailColor="rgba(255,255,255,0.1)"
+                  format={percent => <span className="director-progress-number">{percent}<small>%</small></span>}
+                />
+                <span>PRODUCTION</span>
+              </div>
+              <div className="director-vital-list">
+                <div><strong>{state.totalUnits}</strong><span>镜头总数</span></div>
+                <div><strong>{state.activeJobs}</strong><span>运行任务</span></div>
+                <div><strong>{state.reviewCount}</strong><span>待审项目</span></div>
+              </div>
             </div>
-          </section>
+          </div>
+        )}
+      </section>
 
-          <section className="director-pipeline" aria-label="生产阶段">
-            {state.stages.map((stage, index) => {
-              const complete = stagePercent(stage) === 100;
-              return (
-                <div key={stage.key} className={`director-stage ${complete ? 'is-complete' : ''}`}>
-                  <div className="director-stage-icon">{complete ? <CheckCircleFilled /> : STAGE_ICONS[stage.key]}</div>
-                  <div className="director-stage-copy"><strong>{stage.name}</strong><span>{stage.done}/{stage.total}</span></div>
-                  {index < state.stages.length - 1 && <ArrowRightOutlined className="director-stage-arrow" />}
-                </div>
-              );
-            })}
-          </section>
-
+      {state && (
+        <>
           <section className="director-action-band">
+            <div className="director-action-index">NEXT<br /><strong>01</strong></div>
             <div className="director-action-copy">
-              <span className="director-action-label">下一步</span>
+              <span className="director-action-label">推荐动作</span>
               <strong>{state.nextAction.label}</strong>
-              {state.nextAction.count > 0 && <span>{state.nextAction.count} 项</span>}
+              <span>{state.nextAction.count > 0 ? `${state.nextAction.count} 项等待推进` : '制作链路已推进至当前节点'}</span>
             </div>
             <div className="director-action-buttons">
               {state.activeJobs > 0 && (
@@ -388,30 +402,63 @@ export default function DirectorStudio() {
                 </Button>
               )}
               {state.nextAction.kind !== 'done' && (
-                <Button type="primary" icon={<RocketOutlined />} loading={Boolean(busy && busy !== 'sync')} onClick={runNext}>
+                <Button className="director-action-primary" type="primary" icon={<RocketOutlined />} loading={Boolean(busy && busy !== 'sync')} onClick={runNext}>
                   {state.nextAction.label}
                 </Button>
               )}
               <Tooltip title="打开高级制作看板">
-                <Button icon={<FolderOpenOutlined />} onClick={() => navigate(`/production/${projectId}`)}>看板</Button>
+                <Button icon={<FolderOpenOutlined />} onClick={() => navigate(`/production/${projectId}`)}>高级看板</Button>
               </Tooltip>
+            </div>
+          </section>
+
+          <section className="director-pipeline-section" aria-labelledby="director-pipeline-title">
+            <div className="director-section-heading">
+              <div>
+                <Text className="director-section-kicker">PRODUCTION LINE</Text>
+                <Title id="director-pipeline-title" level={3}>制作进程</Title>
+              </div>
+              <span className="director-stage-summary">
+                {state.stages.filter(stage => stagePercent(stage) === 100).length} / {state.stages.length} STAGES
+              </span>
+            </div>
+            <div className="director-pipeline" aria-label="生产阶段">
+              {state.stages.map((stage, index) => {
+                const complete = stagePercent(stage) === 100;
+                const active = !complete && (stage.key === state.nextAction.stage || stage.key === state.nextAction.kind);
+                return (
+                  <div key={stage.key} className={`director-stage ${complete ? 'is-complete' : ''} ${active ? 'is-active' : ''}`}>
+                    <span className="director-stage-number">0{index + 1}</span>
+                    <div className="director-stage-icon">{complete ? <CheckCircleFilled /> : STAGE_ICONS[stage.key]}</div>
+                    <div className="director-stage-copy"><strong>{stage.name}</strong><span>{stage.done} / {stage.total}</span></div>
+                    {index < state.stages.length - 1 && <ArrowRightOutlined className="director-stage-arrow" />}
+                  </div>
+                );
+              })}
             </div>
           </section>
 
           {state.finalUrl && (
             <section className="director-final">
               <div className="director-section-heading">
-                <div><Text type="secondary">最新交付</Text><Title level={4}>成片预览</Title></div>
+                <div><Text className="director-section-kicker">LATEST DELIVERY</Text><Title level={3}>成片预览</Title></div>
                 <Tag color="success" icon={<CheckCircleFilled />}>已合成</Tag>
               </div>
-              <video src={state.finalUrl} controls playsInline />
+              <div className="director-final-frame"><video src={state.finalUrl} controls playsInline /></div>
             </section>
           )}
 
           <section className="director-shots">
             <div className="director-section-heading">
-              <div><Text type="secondary">审片看板</Text><Title level={4}>{state.totalUnits} 个生成镜头</Title></div>
-              <Button icon={<ReloadOutlined />} onClick={() => loadState(projectId)}>刷新</Button>
+              <div>
+                <Text className="director-section-kicker">CONTACT SHEET / REVIEW</Text>
+                <Title level={3}>镜头审片台</Title>
+                <p>以故事顺序检查画面、视频状态与审核问题。</p>
+              </div>
+              <div className="director-shot-heading-actions">
+                <span>{state.totalUnits} SHOTS</span>
+                <Button icon={<ReloadOutlined />} onClick={() => loadState(projectId)}>刷新素材</Button>
+              </div>
             </div>
             {state.shots.length === 0 ? (
               <Empty description="剧本生成后，镜头会出现在这里" />
@@ -429,15 +476,16 @@ export default function DirectorStudio() {
                         ) : (
                           <div className="director-shot-placeholder"><FileTextOutlined /><span>G{shot.unit}</span></div>
                         )}
-                        <div className="director-shot-index">G{shot.unit}</div>
+                        <div className="director-shot-index"><span>SHOT</span> G{shot.unit}</div>
+                        <div className="director-shot-media-state">{shot.videoUrl ? 'VIDEO' : shot.imageUrl ? 'STILL' : 'SCRIPT'}</div>
                       </div>
                       <div className="director-shot-body">
                         <strong className="director-shot-title">{shot.title}</strong>
                         <p>{shot.script || shot.imagePrompt || '等待剧本'}</p>
                         <div className="director-shot-status">
-                          <Tag color={shot.imageUrl ? 'success' : 'default'}>{shot.imageUrl ? '有图' : '待图'}</Tag>
+                          <Tag color={shot.imageUrl ? 'success' : 'default'}>{shot.imageUrl ? '画面就绪' : '等待画面'}</Tag>
                           <Tag color={shot.videoUrl ? 'success' : jobActive ? 'processing' : 'default'}>
-                            {shot.videoUrl ? '有视频' : jobActive ? '生成中' : '待视频'}
+                            {shot.videoUrl ? '视频就绪' : jobActive ? '视频生成中' : '等待视频'}
                           </Tag>
                           {shot.reviewCount > 0 && <Tag color="warning">待审 {shot.reviewCount}</Tag>}
                         </div>
@@ -453,6 +501,10 @@ export default function DirectorStudio() {
           </section>
         </>
       )}
+
+      <a className="director-deerflow" href="https://deerflow.tech" target="_blank" rel="noreferrer">
+        <span /> Created by Deerflow
+      </a>
 
       <Modal
         open={createOpen}

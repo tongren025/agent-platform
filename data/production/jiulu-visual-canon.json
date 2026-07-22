@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "canon_version": "visual-rebase-v1",
+  "effective_date": "2026-07-21",
+  "status": "active",
+  "title": "九陆纪元视觉宪法 v1",
+  "source_document": "resouce/漫剧/九陆纪元_视觉宪法_v1.md",
+  "visual_thesis": "神话遗骸构成的活世界，正在被冷酷的宇宙算法逐层删除。",
+  "continents": [
+    {"order": 1, "id": "jinlong", "name": "烬龙陆"},
+    {"order": 2, "id": "qingxiao", "name": "青霄陆"},
+    {"order": 3, "id": "xingsheng", "name": "星圣陆"},
+    {"order": 4, "id": "chaosheng", "name": "潮生陆"},
+    {"order": 5, "id": "jushen", "name": "巨神陆"},
+    {"order": 6, "id": "wuzhou", "name": "无昼陆"},
+    {"order": 7, "id": "bingfeng", "name": "冰封陆"},
+    {"order": 8, "id": "guixu", "name": "归墟陆"},
+    {"order": 9, "id": "shenguo", "name": "神国陆"}
+  ],
+  "world_tree": {
+    "is_continent": false,
+    "role": "九陆共同的生物基础设施和空间坐标系",
+    "required_connection_nodes": 9,
+    "states": ["沉睡", "濒死", "被删除", "复苏"]
+  },
+  "material_systems": [
+    "古世界遗骸",
+    "世界树生命",
+    "净化系统"
+  ],
+  "deprecated_continent_names": [
+    "青鸾陆",
+    "玄潮陆",
+    "炎脊陆",
+    "寒庭陆",
+    "铸星陆",
+    "森罗陆",
+    "幽冥陆"
+  ],
+  "legacy_asset_policy": "2026-07-21 之前的角色、世界树与九陆概念图只保留为剧情/构图/情绪参考，不得作为风格或身份母版。"
+}

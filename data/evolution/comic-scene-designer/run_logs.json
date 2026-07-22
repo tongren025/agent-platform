@@ -1,25 +1,5 @@
 [
   {
-    "logId": "evo_615ca3be440d",
-    "employeeKey": "comic-scene-designer",
-    "ranAt": "2026-06-30T01:59:08.126377Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_78c2c61b6220",
-    "employeeKey": "comic-scene-designer",
-    "ranAt": "2026-06-30T01:59:29.516116Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_f8e7f20cf190",
     "employeeKey": "comic-scene-designer",
     "ranAt": "2026-06-30T04:07:10.088095Z",
@@ -493,6 +473,26 @@
     "logId": "evo_e14524d0548f",
     "employeeKey": "comic-scene-designer",
     "ranAt": "2026-07-16T20:00:29.515711Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_5c5283bcc863",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-20T20:00:21.911059Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_fb5526f102bf",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-21T20:00:24.397650Z",
     "sessionsAnalyzed": 0,
     "insightsGenerated": 0,
     "llmModel": "",

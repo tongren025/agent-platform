@@ -58,5 +58,25 @@
     "llmModel": "",
     "durationMs": 0,
     "error": null
+  },
+  {
+    "logId": "evo_226993e486fc",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-20T20:00:21.872528Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_a75d05f0cc33",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-21T20:00:24.351169Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
   }
 ]

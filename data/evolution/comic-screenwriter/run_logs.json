@@ -1,25 +1,5 @@
 [
   {
-    "logId": "evo_dbf6bb67eddc",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-06-30T01:59:08.103939Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_d3f68a4aa1a4",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-06-30T01:59:29.494350Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_9224b47ab551",
     "employeeKey": "comic-screenwriter",
     "ranAt": "2026-06-30T04:07:10.064092Z",
@@ -497,6 +477,26 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_2c87657f0671",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-20T20:00:21.895529Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_640cefc9c0fd",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-21T20:00:24.378623Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
     "error": null
   }
 ]

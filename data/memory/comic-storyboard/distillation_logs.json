@@ -270,5 +270,35 @@
     "llmModel": "Gemma-4-31B-IT-NVFP4",
     "durationMs": 8077,
     "error": "LLM 调用失败: Connection error."
+  },
+  {
+    "logId": "dist_59a7a4b9827e",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-20T19:00:19.545306Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 4,
+      "procedural": 4
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 61,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_cf97f14935a2",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-21T19:00:23.073104Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 4,
+      "procedural": 4
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 16,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
   }
 ]

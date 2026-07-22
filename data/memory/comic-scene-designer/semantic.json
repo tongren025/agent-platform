@@ -26,7 +26,7 @@
   {
     "memoryId": "seed_comic-scene-designer_sem_02_style_core",
     "employeeKey": "comic-scene-designer",
-    "content": "九陆纪元视觉核心（所有提示词必带风格锚点）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
+    "content": "九陆纪元视觉核心（所有提示词必带风格锚点）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边。",
     "category": "style",
     "importance": 0.98,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",

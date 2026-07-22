@@ -8,7 +8,7 @@ import {
   ArrowLeftOutlined, CopyOutlined, CheckOutlined, HomeOutlined,
   PictureOutlined, VideoCameraOutlined,
   FileTextOutlined, EditOutlined,
-  CheckCircleOutlined, ClockCircleOutlined, DownloadOutlined,
+  CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, DownloadOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 import { thumbUrl, onImageError } from '../media';
@@ -53,6 +53,32 @@ const STAGE_COLORS: Record<string, string> = {
   script: '#6366f1', setting: '#0ea5e9', design: '#14b8a6', storyboard: '#8b5cf6', img_prompt: '#10b981',
   vid_prompt: '#10b981', img_gen: '#f59e0b', vid_gen: '#f59e0b', final: '#ef4444',
 };
+
+// 废弃原因枚举（与后端 REVIEW_REJECT_REASONS 对齐）——废图必须说清废在哪，
+// 原因分布聚合后能看出"卡在图片关"的最大头，靶向修复而不是全量重做。
+const REJECT_REASONS: { key: string; name: string }[] = [
+  { key: 'tone_off', name: '基调偏差' },
+  { key: 'character_drift', name: '角色走形' },
+  { key: 'composition_mismatch', name: '构图不符分镜' },
+  { key: 'lighting_wrong', name: '光影错误' },
+  { key: 'anatomy_broken', name: '结构崩坏' },
+  { key: 'other', name: '其他' },
+];
+
+interface ReviewStats {
+  total: number; passed: number; rejected: number;
+  reject_reasons: { key: string; name: string; count: number }[];
+  by_episode: Record<string, { passed: number; rejected: number }>;
+}
+
+/** 取某张图最近一次评审结论；无记录返回 undefined。 */
+function lastVerdictOf(card: CardItem, url: string): 'pass' | 'reject' | undefined {
+  const reviews: any[] = card.metadata?.image_reviews || [];
+  for (let i = reviews.length - 1; i >= 0; i--) {
+    if (reviews[i].image === url) return reviews[i].verdict;
+  }
+  return undefined;
+}
 
 function unitLabel(unitNumber: number): string {
   return `G${unitNumber}`;
@@ -112,6 +138,10 @@ export default function EpisodeDetail() {
   const [imageGenerating, setImageGenerating] = useState(false);
   const [referencePackCard, setReferencePackCard] = useState<CardItem | null>(null);
   const [reviewSaving, setReviewSaving] = useState(false);
+  const [rejectTarget, setRejectTarget] = useState<{ card: CardItem; image: string } | null>(null);
+  const [rejectReason, setRejectReason] = useState('tone_off');
+  const [rejectNote, setRejectNote] = useState('');
+  const [reviewStats, setReviewStats] = useState<ReviewStats | null>(null);
 
   const loadData = useCallback(async () => {
     if (!pid) return;
@@ -120,6 +150,8 @@ export default function EpisodeDetail() {
       const data = await api.getProject(pid);
       setProjectName(data.name || pid);
       setAllCards(data.cards || []);
+      // 评审统计失败不阻塞主数据（老后端没有该端点时页面照常可用）
+      api.getReviewStats(pid).then(setReviewStats).catch(() => setReviewStats(null));
     } catch (e: any) { message.error(e.message); }
     finally { setLoading(false); }
   }, [pid]);
@@ -202,6 +234,30 @@ export default function EpisodeDetail() {
       message.success('已设为当前版本');
       await loadData();
     } catch (e: any) { message.error(e.message); }
+  };
+
+  const passImage = async (card: CardItem, image: string) => {
+    if (!pid) return;
+    try {
+      await api.reviewCardImage(pid, card.card_id, { verdict: 'pass', image });
+      message.success('已标记通过');
+      await loadData();
+    } catch (e: any) { message.error(e.message); }
+  };
+
+  const submitReject = async () => {
+    if (!pid || !rejectTarget) return;
+    setReviewSaving(true);
+    try {
+      await api.reviewCardImage(pid, rejectTarget.card.card_id, {
+        verdict: 'reject', image: rejectTarget.image, reason: rejectReason, note: rejectNote.trim(),
+      });
+      message.success('已废弃并记录原因');
+      setRejectTarget(null);
+      setRejectNote('');
+      await loadData();
+    } catch (e: any) { message.error(e.message); }
+    finally { setReviewSaving(false); }
   };
 
   const splitStoryboard = async (card: CardItem) => {
@@ -342,6 +398,23 @@ export default function EpisodeDetail() {
           </Button>
         </Space>
       </div>
+
+      {/* ── 评审统计条：废弃原因分布是"卡在图片关"的诊断数据，占大头的先修 ── */}
+      {reviewStats && reviewStats.total > 0 && (
+        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, padding: '8px 12px', background: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 8, marginBottom: 16 }}>
+          <Text type="secondary" style={{ fontSize: 12 }}>图片评审 {reviewStats.total} 次：</Text>
+          <Tag color="success" style={{ margin: 0 }}>通过 {reviewStats.passed}</Tag>
+          <Tag color="error" style={{ margin: 0 }}>废弃 {reviewStats.rejected}</Tag>
+          {reviewStats.reject_reasons.map(r => (
+            <Tag key={r.key} style={{ margin: 0 }}>{r.name} ×{r.count}</Tag>
+          ))}
+          {reviewStats.rejected > 0 && reviewStats.reject_reasons[0] && (
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              ——废弃主因「{reviewStats.reject_reasons[0].name}」，优先修它
+            </Text>
+          )}
+        </div>
+      )}
 
       {/* ── 集概览卡 ── */}
       {overviewCards.length > 0 && (
@@ -577,6 +650,23 @@ export default function EpisodeDetail() {
                                         style={{ width: 120, marginTop: 4 }}>
                                         {active ? '当前版本' : '设为当前'}
                                       </Button>
+                                      {(() => {
+                                        const verdict = lastVerdictOf(card, url);
+                                        return (
+                                          <Space.Compact style={{ width: 120, marginTop: 4 }}>
+                                            <Button size="small" style={{ width: 60, color: verdict === 'pass' ? '#52c41a' : undefined }}
+                                              icon={verdict === 'pass' ? <CheckCircleOutlined /> : undefined}
+                                              onClick={() => passImage(card, url)}>
+                                              通过
+                                            </Button>
+                                            <Button size="small" danger={verdict === 'reject'} style={{ width: 60 }}
+                                              icon={verdict === 'reject' ? <CloseCircleOutlined /> : undefined}
+                                              onClick={() => setRejectTarget({ card, image: url })}>
+                                              废弃
+                                            </Button>
+                                          </Space.Compact>
+                                        );
+                                      })()}
                                     </div>
                                   );
                                 })}
@@ -609,6 +699,20 @@ export default function EpisodeDetail() {
           return <Tabs items={tabItems} defaultActiveKey={tabItems[0]?.key} />;
         })()}
       </Drawer>
+
+      <Modal title="废弃这张图——废在哪？" open={!!rejectTarget}
+        onCancel={() => setRejectTarget(null)} onOk={submitReject}
+        confirmLoading={reviewSaving} okText="确认废弃" okButtonProps={{ danger: true }}>
+        <Space direction="vertical" style={{ width: '100%' }} size={12}>
+          <Text type="secondary" style={{ fontSize: 12 }}>
+            原因会进入项目评审统计——哪个原因占大头，就先集中修哪个，而不是整批重做。
+          </Text>
+          <Select value={rejectReason} onChange={setRejectReason} style={{ width: '100%' }}
+            options={REJECT_REASONS.map(r => ({ value: r.key, label: r.name }))} />
+          <Input placeholder="补一句具体的（可选），如：冷蓝占比过半，熔浆几乎不可见"
+            value={rejectNote} onChange={e => setRejectNote(e.target.value)} maxLength={100} />
+        </Space>
+      </Modal>
 
       <Modal title="编辑镜头卡片" open={!!editingCard} onCancel={() => setEditingCard(null)}
         onOk={saveCard} confirmLoading={saving} okText="保存">

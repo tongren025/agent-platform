@@ -58,5 +58,25 @@
     "llmModel": "",
     "durationMs": 0,
     "error": null
+  },
+  {
+    "logId": "evo_be21b2df886a",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-20T20:00:21.843457Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_6dbf79b2608e",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-21T20:00:24.330919Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
   }
 ]

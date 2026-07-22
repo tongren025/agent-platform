@@ -318,5 +318,25 @@
     "llmModel": "",
     "durationMs": 0,
     "error": null
+  },
+  {
+    "logId": "evo_4b025da5c397",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-20T20:00:21.864072Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_652b2bbf3dff",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-21T20:00:24.340888Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
   }
 ]

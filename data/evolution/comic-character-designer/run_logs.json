@@ -1,25 +1,5 @@
 [
   {
-    "logId": "evo_e1c68b9c123a",
-    "employeeKey": "comic-character-designer",
-    "ranAt": "2026-06-30T01:59:08.115436Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 15,
-    "error": null
-  },
-  {
-    "logId": "evo_b91c64ed38b2",
-    "employeeKey": "comic-character-designer",
-    "ranAt": "2026-06-30T01:59:29.505095Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 15,
-    "error": null
-  },
-  {
     "logId": "evo_c64987f19f11",
     "employeeKey": "comic-character-designer",
     "ranAt": "2026-06-30T04:07:10.076064Z",
@@ -497,6 +477,26 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_2fac9cc011da",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-20T20:00:21.903399Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_dd40e96e0318",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-21T20:00:24.389627Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
     "error": null
   }
 ]

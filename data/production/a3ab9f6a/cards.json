@@ -456,7 +456,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G01_九陆之瞳_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G01_九陆之瞳_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -474,8 +474,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -620,7 +621,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G02_命运拒绝_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G02_命运拒绝_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -641,8 +642,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -795,7 +797,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G03_双心跳_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G03_双心跳_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -816,8 +818,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -972,7 +975,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G04_第一次被需要_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G04_第一次被需要_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -995,8 +998,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -1158,7 +1162,8 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G05_三个月后_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G05A_三个月后_龙眼特写_制作分镜_v2.png",
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G05B_三个月后_揭示全景_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -1182,8 +1187,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 2,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -1349,7 +1355,8 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G06_删除令_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G06A_删除令_舰队大远景_制作分镜_v2.png",
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G06B_删除令_眼部锁定_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -1373,8 +1380,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 2,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -1538,7 +1546,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G07_又来_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G07_又来_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -1560,8 +1568,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -1721,7 +1730,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G08_熔浆龙焰_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G08_熔浆龙焰_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -1745,8 +1754,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -1912,7 +1922,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G09_不配被删_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G09_不配被删_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -1936,8 +1946,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -2102,7 +2113,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G10_世界在死_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G10_世界在死_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -2125,8 +2136,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",
@@ -2287,7 +2299,7 @@
     "prompts": [],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G11_我自己选_动作轨迹_v1.png"
+      "/api/v1/agentapp/production/resource/production/a3ab9f6a/uploads/gc_storyboard_G11_我自己选_制作分镜_v2.png"
     ],
     "videos": [],
     "metadata": {
@@ -2310,8 +2322,9 @@
       "style_locked": true,
       "art_bible_project_id": "jiulu-s1",
       "version": "douyin_story_hook_v1",
-      "asset_type": "action_trajectory_storyboard",
-      "panel_count": 5,
+      "storyboard_version": "professional_storyboard_v2",
+      "asset_type": "production_storyboard_frame_sequence",
+      "panel_count": 1,
       "generated_by": "openai_imagegen"
     },
     "status": "done",

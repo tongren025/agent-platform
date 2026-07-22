@@ -345,6 +345,13 @@ export const api = {
     request<{ split: number; source_card_id: string; cards: any[] }>(
       `/production/projects/${pid}/cards/${cardId}/split-storyboard`, { method: 'POST' },
     ),
+  /** 两键评审：对卡片某张图记一次通过/废弃；废弃必带枚举 reason。 */
+  reviewCardImage: (pid: string, cardId: string, data: { verdict: 'pass' | 'reject'; image?: string; reason?: string; note?: string }) =>
+    request<any>(`/production/projects/${pid}/cards/${cardId}/review`, { method: 'POST', body: JSON.stringify(data) }),
+  /** 项目级评审统计：废弃原因分布（按数量倒序）+ 按集通过/废弃数。 */
+  getReviewStats: (pid: string) =>
+    request<{ total: number; passed: number; rejected: number; reject_reasons: { key: string; name: string; count: number }[]; by_episode: Record<string, { passed: number; rejected: number }> }>(
+      `/production/projects/${pid}/review-stats`),
   listStages: () => request<any[]>('/production/stages'),
   /** 跨季全链路对照矩阵：每个 G 生成单元一行，只回统计量不回卡片正文。 */
   getMatrix: () => request<{ projects: MatrixProject[]; rows: MatrixRow[] }>('/production/matrix'),

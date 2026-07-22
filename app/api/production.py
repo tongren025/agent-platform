@@ -729,6 +729,100 @@ async def upload_card_file(pid: str, card_id: str, file: UploadFile = File(...),
     return {"code": 200, "data": {"url": url, "card": card.model_dump()}}
 
 
+# ── 两键评审：通过/废弃 + 废弃原因统计 ───────────────────────────
+# 背景：卡片 status=done 只表示"生成完成"，从不承载"人验收了没有、废在哪"。
+# 失败原因不落数据 → 重生成不带修正 → 同一毛病反复返工。评审记录让废图有出口。
+
+REVIEW_REJECT_REASONS = {
+    "tone_off": "基调偏差",
+    "character_drift": "角色走形",
+    "composition_mismatch": "构图不符分镜",
+    "lighting_wrong": "光影错误",
+    "anatomy_broken": "结构崩坏",
+    "other": "其他",
+}
+
+
+class ReviewCardImageReq(BaseModel):
+    """POST /projects/{pid}/cards/{card_id}/review 的请求体。
+
+    verdict=reject 时 reason 必填且必须在 REVIEW_REJECT_REASONS 枚举内。
+    image 省略时默认评审卡片当前版本（metadata.active_image 或 images[0]）。
+    """
+    verdict: str
+    image: str = ""
+    reason: str = ""
+    note: str = ""
+
+
+@router.post("/projects/{pid}/cards/{card_id}/review")
+def review_card_image(pid: str, card_id: str, req: ReviewCardImageReq):
+    """POST …/review：对卡片某张图记一次人工评审（pass/reject），追加进 metadata.image_reviews。
+
+    reject 必须携带枚举内 reason，否则 400——不允许"不满意但说不出哪不满意"进入数据。
+    """
+    if req.verdict not in ("pass", "reject"):
+        raise HTTPException(400, "verdict 必须是 pass 或 reject")
+    if req.verdict == "reject" and req.reason not in REVIEW_REJECT_REASONS:
+        raise HTTPException(400, f"废弃必须选择原因，可选: {list(REVIEW_REJECT_REASONS)}")
+    _load_project(pid)
+    cards = _load_cards(pid)
+    card = next((c for c in cards if c.card_id == card_id), None)
+    if not card:
+        raise HTTPException(404, "卡片不存在")
+    image = req.image or card.metadata.get("active_image") or (card.images[0] if card.images else "")
+    if not image:
+        raise HTTPException(400, "卡片没有可评审的图片")
+    reviews = list(card.metadata.get("image_reviews") or [])
+    reviews.append({
+        "image": image,
+        "verdict": req.verdict,
+        "reason": req.reason if req.verdict == "reject" else "",
+        "note": req.note,
+        "time": _now(),
+    })
+    card.metadata = {**card.metadata, "image_reviews": reviews, "review_verdict": req.verdict}
+    card.updated_at = _now()
+    _save_cards(pid, cards)
+    return {"code": 200, "data": card.model_dump()}
+
+
+@router.get("/projects/{pid}/review-stats")
+def get_review_stats(pid: str):
+    """GET …/review-stats：聚合项目内全部图片评审，返回废弃原因分布（含中文名）与按集统计。
+
+    这是"卡在图片关过不去"的诊断面板数据源：哪个原因占大头，就先修哪个。
+    """
+    _load_project(pid)
+    cards = _load_cards(pid)
+    total = passed = rejected = 0
+    reasons: dict[str, int] = {}
+    by_episode: dict[str, dict] = {}
+    for c in cards:
+        for r in c.metadata.get("image_reviews") or []:
+            total += 1
+            ep = str(c.episode) if c.episode is not None else "全局"
+            slot = by_episode.setdefault(ep, {"passed": 0, "rejected": 0})
+            if r.get("verdict") == "pass":
+                passed += 1
+                slot["passed"] += 1
+            else:
+                rejected += 1
+                slot["rejected"] += 1
+                key = r.get("reason") or "other"
+                reasons[key] = reasons.get(key, 0) + 1
+    return {"code": 200, "data": {
+        "total": total,
+        "passed": passed,
+        "rejected": rejected,
+        "reject_reasons": [
+            {"key": k, "name": REVIEW_REJECT_REASONS.get(k, k), "count": v}
+            for k, v in sorted(reasons.items(), key=lambda kv: -kv[1])
+        ],
+        "by_episode": by_episode,
+    }}
+
+
 @router.post("/cards/{card_id}/move")
 def move_card(card_id: str, stage: str = "idea"):
     """POST /cards/{card_id}/move：把单张卡片移到指定阶段；阶段非法返 400，卡片不存在返 404。"""

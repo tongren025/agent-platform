@@ -2,10 +2,16 @@
   "version": 1,
   "skills": {
     "ai-video-generation": {
-      "source": "halt-catch-fire/skills",
+      "source": "101-skills/skills",
       "sourceType": "github",
       "skillPath": "tools/video/ai-video-generation/SKILL.md",
-      "computedHash": "4b3676be1595da7a745804e01cdaa9b89ef1b4ac4db50120f37f240124d0ed67"
+      "computedHash": "a5a0dec43d5dd799f26f390d168bad50aee98e1a7c150ce1553d05f993292c52"
+    },
+    "belt": {
+      "source": "belt-sh/cli",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/belt/SKILL.md",
+      "computedHash": "a74a9ff97aaba51c241cb77b31aa03c2fa8bb8c91e5cbd2ac264b8e528d06c87"
     },
     "remotion-render": {
       "source": "halt-catch-fire/skills",

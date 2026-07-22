@@ -1,43 +1,5 @@
 [
   {
-    "logId": "dist_dc83d4ffc94d",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-06-30T10:46:20.027516Z",
-    "actions": [],
-    "beforeCounts": {
-      "semantic": 0,
-      "episodic": 0,
-      "procedural": 0
-    },
-    "afterCounts": {
-      "semantic": 0,
-      "episodic": 0,
-      "procedural": 0
-    },
-    "llmModel": "",
-    "durationMs": 15,
-    "error": null
-  },
-  {
-    "logId": "dist_af2b0f59539d",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-06-30T10:51:00.009188Z",
-    "actions": [],
-    "beforeCounts": {
-      "semantic": 0,
-      "episodic": 0,
-      "procedural": 0
-    },
-    "afterCounts": {
-      "semantic": 0,
-      "episodic": 0,
-      "procedural": 0
-    },
-    "llmModel": "",
-    "durationMs": 61,
-    "error": null
-  },
-  {
     "logId": "dist_46da6bc33693",
     "employeeKey": "recharge-strategy-assistant",
     "ranAt": "2026-07-01T03:01:25.622162Z",
@@ -947,6 +909,44 @@
     },
     "llmModel": "",
     "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "dist_37b00391cdd3",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-20T19:00:19.464032Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 0,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "afterCounts": {
+      "semantic": 0,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "dist_dd89a78d371c",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-21T19:00:23.053830Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 0,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "afterCounts": {
+      "semantic": 0,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "llmModel": "",
+    "durationMs": 0,
     "error": null
   }
 ]
