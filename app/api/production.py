@@ -23,10 +23,13 @@ from app.models.production import (
 )
 from app.services.invocation import run_invocation
 from app.services.image_generation import generate_image_to_local
+from app.services.inbox_ingest import parse_inbox_filename, resolve_inbox_target
 from app.services.production_quality import evaluate_production_draft
 
 router = APIRouter(prefix="/api/v1/agentapp/production", tags=["production"])
 logger = get_logger(__name__)
+
+INBOX_MAX_FILE_BYTES = 50 * 1024 * 1024  # 50 MB per file
 
 DATA_DIR = BASE_DIR / "data" / "production"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -727,6 +730,76 @@ async def upload_card_file(pid: str, card_id: str, file: UploadFile = File(...),
     card.updated_at = _now()
     _save_cards(pid, cards)
     return {"code": 200, "data": {"url": url, "card": card.model_dump()}}
+
+
+# ── 回填收件箱：外部生成的图/视频按文件名批量分拣挂卡 ─────────────
+# 出口是「导出提示词」，这里是对称的入口——小云雀/即梦生成的一批文件
+# 拖进来按文件名规则自动挂到对应卡，识别不了的原样返回原因。
+
+
+@router.post("/projects/{pid}/inbox/upload")
+async def inbox_upload(
+    pid: str,
+    files: list[UploadFile] = File(...),
+    default_episode: Optional[int] = Query(None, description="文件名缺集数时的默认集"),
+):
+    """POST …/inbox/upload：批量收文件并按文件名规则分拣挂卡。
+
+    命名约定见 app/services/inbox_ingest.py 模块 docstring。
+    返回 matched（挂到哪张卡）与 unmatched（为什么没挂上），全部文件都会有下落。
+    图片挂上后自动设为该卡当前版本（active_image）——刚生成的就是想用的。
+    """
+    _load_project(pid)
+    cards = _load_cards(pid)
+    upload_dir = _proj_dir(pid) / "uploads"
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    matched, unmatched = [], []
+    dirty = False
+    for f in files:
+        name = f.filename or ""
+        parsed = parse_inbox_filename(name, default_episode)
+        if not parsed.get("ok"):
+            unmatched.append({"filename": name, "reason": parsed.get("reason", "无法解析")})
+            continue
+        card, slot, reason = resolve_inbox_target(cards, parsed)
+        if card is None:
+            unmatched.append({"filename": name, "reason": reason})
+            continue
+        max_bytes = INBOX_MAX_FILE_BYTES
+        chunks: list[bytes] = []
+        total = 0
+        while True:
+            chunk = await f.read(1024 * 256)
+            if not chunk:
+                break
+            total += len(chunk)
+            if total > max_bytes:
+                unmatched.append({"filename": name, "reason": f"超过 {max_bytes // (1024*1024)}MB 上限"})
+                break
+            chunks.append(chunk)
+        if total > max_bytes or total == 0:
+            if total == 0:
+                unmatched.append({"filename": name, "reason": "空文件"})
+            continue
+        data = b"".join(chunks)
+        fname = f"{card.card_id}_{uuid.uuid4().hex[:6]}{parsed['ext']}"
+        (upload_dir / fname).write_bytes(data)
+        url = f"/api/v1/agentapp/production/resource/production/{pid}/uploads/{fname}"
+        if slot == "videos":
+            card.videos.append(url)
+        else:
+            card.images.append(url)
+            card.metadata = {**card.metadata, "active_image": url}
+        card.updated_at = _now()
+        dirty = True
+        matched.append({
+            "filename": name, "card_id": card.card_id, "card_title": card.title,
+            "stage": card.stage, "slot": slot, "url": url,
+        })
+    if dirty:
+        _save_cards(pid, cards)
+    return {"code": 200, "data": {"matched": matched, "unmatched": unmatched}}
 
 
 # ── 两键评审：通过/废弃 + 废弃原因统计 ───────────────────────────

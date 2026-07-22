@@ -2,11 +2,11 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsive } from '../hooks/useResponsive';
-import { Breadcrumb, Button, Card, Col, Drawer, Empty, Image, Input, Modal, Popconfirm, Row, Select, Space, Spin, Tag, Tooltip, Typography, Tabs, Badge } from 'antd';
+import { Breadcrumb, Button, Card, Col, Drawer, Empty, Image, Input, Modal, Popconfirm, Row, Select, Space, Spin, Tag, Tooltip, Typography, Tabs, Badge, Upload } from 'antd';
 import { message } from '../ui';
 import {
   ArrowLeftOutlined, CopyOutlined, CheckOutlined, HomeOutlined,
-  PictureOutlined, VideoCameraOutlined,
+  PictureOutlined, VideoCameraOutlined, InboxOutlined,
   FileTextOutlined, EditOutlined,
   CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, DownloadOutlined,
 } from '@ant-design/icons';
@@ -142,6 +142,10 @@ export default function EpisodeDetail() {
   const [rejectReason, setRejectReason] = useState('tone_off');
   const [rejectNote, setRejectNote] = useState('');
   const [reviewStats, setReviewStats] = useState<ReviewStats | null>(null);
+  const [inboxOpen, setInboxOpen] = useState(false);
+  const [inboxFiles, setInboxFiles] = useState<File[]>([]);
+  const [inboxUploading, setInboxUploading] = useState(false);
+  const [inboxResult, setInboxResult] = useState<{ matched: any[]; unmatched: any[] } | null>(null);
 
   const loadData = useCallback(async () => {
     if (!pid) return;
@@ -260,6 +264,24 @@ export default function EpisodeDetail() {
     finally { setReviewSaving(false); }
   };
 
+  const submitInbox = async () => {
+    if (!pid || !inboxFiles.length) return;
+    setInboxUploading(true);
+    try {
+      const result = await api.inboxUpload(pid, inboxFiles, epNum);
+      setInboxResult(result);
+      if (result.matched.length) {
+        message.success(`${result.matched.length} 个文件已挂卡`);
+        await loadData();
+      }
+      if (result.unmatched.length) {
+        message.warning(`${result.unmatched.length} 个文件未匹配`);
+      }
+      setInboxFiles([]);
+    } catch (e: any) { message.error(e.message); }
+    finally { setInboxUploading(false); }
+  };
+
   const splitStoryboard = async (card: CardItem) => {
     if (!pid) return;
     try {
@@ -325,6 +347,25 @@ export default function EpisodeDetail() {
       });
   }, [epCards]);
 
+  interface BurnItem { unit: number; script: boolean; storyboard: boolean; firstFrame: boolean; frameReviewed: boolean; vidPrompt: boolean; video: boolean; }
+  const burnDown: BurnItem[] = useMemo(() => unitGroups.map(g => {
+    const hasStage = (s: string) => g.cards.some(c => c.stage === s);
+    const imgCards = g.cards.filter(c => c.stage === 'img_prompt' && !c.title.includes('末帧'));
+    const hasPassedImage = imgCards.some(c => {
+      const reviews: any[] = c.metadata?.image_reviews || [];
+      return reviews.some(r => r.verdict === 'pass');
+    });
+    const activeVids = g.cards.filter(c => c.stage === 'vid_prompt' && !(c.metadata?.superseded_by?.length));
+    return {
+      unit: g.unitNumber, script: hasStage('script'), storyboard: hasStage('storyboard'),
+      firstFrame: imgCards.some(c => c.images.length > 0), frameReviewed: hasPassedImage,
+      vidPrompt: activeVids.length > 0, video: g.cards.some(c => c.videos.length > 0),
+    };
+  }), [unitGroups]);
+
+  const burnTotal = burnDown.length;
+  const burnDone = burnDown.filter(b => b.script && b.storyboard && b.firstFrame && b.frameReviewed && b.vidPrompt && b.video).length;
+
   const totalEps = useMemo(() => {
     const eps = new Set<number>();
     allCards.forEach(c => { if (c.episode != null) eps.add(c.episode); });
@@ -383,6 +424,9 @@ export default function EpisodeDetail() {
           </Title>
         </div>
         <Space wrap>
+          <Tooltip title="把小云雀/即梦生成的图片和视频拖进来，按文件名自动分拣挂到对应卡">
+            <Button icon={<InboxOutlined />} onClick={() => { setInboxOpen(true); setInboxResult(null); setInboxFiles([]); }}>收件箱</Button>
+          </Tooltip>
           <Tooltip title="整集级头部 + 每个 G 单元的首帧/视频提示词，按顺序拼成 markdown，下载并复制">
             <Button icon={<DownloadOutlined />} onClick={exportPrompts}>导出提示词</Button>
           </Tooltip>
@@ -413,6 +457,38 @@ export default function EpisodeDetail() {
               ——废弃主因「{reviewStats.reject_reasons[0].name}」，优先修它
             </Text>
           )}
+        </div>
+      )}
+
+      {/* ── 单集 burn-down：每个 G 单元距成片还缺什么 ── */}
+      {burnDown.length > 0 && (
+        <div style={{ padding: '10px 12px', background: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 8, marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <Text strong style={{ fontSize: 13 }}>成片收口 {burnDone}/{burnTotal}</Text>
+            <div style={{ flex: 1, height: 6, background: '#e5e7eb', borderRadius: 3, overflow: 'hidden' }}>
+              <div style={{ width: `${burnTotal ? (burnDone / burnTotal * 100) : 0}%`, height: '100%', background: burnDone === burnTotal ? '#52c41a' : '#1677ff', borderRadius: 3, transition: 'width 0.3s' }} />
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {burnDown.map(b => {
+              const gaps: string[] = [];
+              if (!b.script) gaps.push('剧本');
+              if (!b.storyboard) gaps.push('分镜');
+              if (!b.firstFrame) gaps.push('首帧图');
+              if (!b.frameReviewed) gaps.push('图审核');
+              if (!b.vidPrompt) gaps.push('视频词');
+              if (!b.video) gaps.push('视频');
+              const done = gaps.length === 0;
+              return (
+                <Tooltip key={b.unit} title={done ? '全部就绪' : `缺：${gaps.join('、')}`}>
+                  <Tag color={done ? 'success' : gaps.length >= 3 ? 'error' : 'warning'}
+                    style={{ margin: 0, cursor: 'default', fontSize: 11 }}>
+                    G{b.unit} {done ? '✓' : gaps.length}
+                  </Tag>
+                </Tooltip>
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -734,6 +810,72 @@ export default function EpisodeDetail() {
           <div><Text type="secondary">本次使用的提示词</Text><TextArea rows={12} value={imagePrompt} onChange={e => setImagePrompt(e.target.value)} /></div>
           <Text type="secondary">不会覆盖旧图片；生成后可在版本列表中切换当前图。</Text>
         </Space>
+      </Modal>
+
+      <Modal title="收件箱——批量回填图片/视频" open={inboxOpen}
+        onCancel={() => setInboxOpen(false)}
+        footer={inboxResult ? [
+          <Button key="close" onClick={() => setInboxOpen(false)}>关闭</Button>,
+        ] : [
+          <Button key="cancel" onClick={() => setInboxOpen(false)}>取消</Button>,
+          <Button key="submit" type="primary" loading={inboxUploading}
+            disabled={!inboxFiles.length} onClick={submitInbox}>
+            上传 {inboxFiles.length} 个文件
+          </Button>,
+        ]}
+        width={640}>
+        {!inboxResult ? (
+          <Space direction="vertical" style={{ width: '100%' }} size={12}>
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              文件名约定：EP01_G03_首帧.png / EP01_G1-A.mp4 / TB1.png。
+              缺集数的默认归到当前集 EP{String(epNum).padStart(2, '0')}。
+            </Text>
+            <Upload.Dragger
+              multiple
+              accept=".png,.jpg,.jpeg,.webp,.gif,.mp4,.mov,.webm,.m4v"
+              beforeUpload={(_, fileList) => {
+                setInboxFiles(prev => [...prev, ...fileList]);
+                return false;
+              }}
+              fileList={inboxFiles.map((f, i) => ({ uid: String(i), name: f.name, status: 'done' as const }))}
+              onRemove={(file) => {
+                setInboxFiles(prev => prev.filter((_, i) => String(i) !== file.uid));
+              }}
+            >
+              <p style={{ fontSize: 32, color: '#999', margin: 0 }}><InboxOutlined /></p>
+              <p>拖入文件或点击选择</p>
+            </Upload.Dragger>
+          </Space>
+        ) : (
+          <Space direction="vertical" style={{ width: '100%' }} size={12}>
+            {inboxResult.matched.length > 0 && (
+              <div>
+                <Text strong style={{ color: '#52c41a' }}>已挂卡 ({inboxResult.matched.length})</Text>
+                <div style={{ maxHeight: 200, overflow: 'auto', marginTop: 4 }}>
+                  {inboxResult.matched.map((m, i) => (
+                    <div key={i} style={{ fontSize: 12, padding: '2px 0' }}>
+                      <Tag color="success" style={{ margin: 0 }}>{m.slot === 'videos' ? '视频' : '图片'}</Tag>{' '}
+                      {m.filename} → {m.card_title}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {inboxResult.unmatched.length > 0 && (
+              <div>
+                <Text strong style={{ color: '#ff4d4f' }}>未匹配 ({inboxResult.unmatched.length})</Text>
+                <div style={{ maxHeight: 200, overflow: 'auto', marginTop: 4 }}>
+                  {inboxResult.unmatched.map((u, i) => (
+                    <div key={i} style={{ fontSize: 12, padding: '2px 0' }}>
+                      <Tag color="error" style={{ margin: 0 }}>跳过</Tag>{' '}
+                      {u.filename}：{u.reason}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Space>
+        )}
       </Modal>
 
       <Modal title={`视频参考包${referencePackCard ? ` · ${unitLabel(referencePackCard.shot_number)}` : ''}`}

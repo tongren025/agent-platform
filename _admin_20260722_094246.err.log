@@ -1,0 +1,92 @@
+INFO:     Will watch for changes in these directories: ['D:\\P\\agent']
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [24384] using WatchFiles
+INFO:     Started server process [18568]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'scripts\split_ep01_vid_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [18568]
+WARNING:  WatchFiles detected changes in 'scripts\split_ep01_vid_prompts.py'. Reloading...
+Process SpawnProcess-2:
+Traceback (most recent call last):
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\P\agent\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 76, in subprocess_started
+    config.configure_logging()
+  File "D:\P\agent\.venv\Lib\site-packages\uvicorn\config.py", line 379, in configure_logging
+    logging.config.dictConfig(self.log_config)
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\logging\config.py", line 942, in dictConfig
+    dictConfigClass(config).configure()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\logging\config.py", line 581, in configure
+    _clearExistingHandlers()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\logging\config.py", line 293, in _clearExistingHandlers
+    logging.shutdown(logging._handlerList[:])
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\logging\__init__.py", line 2273, in shutdown
+    h.release()
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\logging\__init__.py", line 980, in release
+    self.lock.release()
+KeyboardInterrupt
+INFO:     Started server process [22672]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app\services\inbox_ingest.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [22672]
+WARNING:  WatchFiles detected changes in 'app\services\inbox_ingest.py', 'app\api\production.py'. Reloading...
+INFO:     Started server process [22436]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [22436]
+INFO:     Started server process [8204]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'tests\test_production_inbox.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [8204]
+WARNING:  WatchFiles detected changes in 'tests\test_production_inbox.py'. Reloading...
+INFO:     Started server process [22192]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [22192]
+INFO:     Started server process [3988]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'tests\test_production_inbox.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3988]
+INFO:     Started server process [19332]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app\api\production.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [19332]
+WARNING:  WatchFiles detected changes in 'tests\test_production_inbox.py', 'app\api\production.py'. Reloading...
+INFO:     Started server process [9844]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9844]
+INFO:     Started server process [19356]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

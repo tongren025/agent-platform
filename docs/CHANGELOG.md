@@ -5,6 +5,39 @@
 
 ---
 
+## [2026-07-22] feat: 单集 burn-down 进度条——每个 G 单元距成片还差什么
+
+- EpisodeDetail.tsx 新增「成片收口 N/M」进度条和 per-G Tag 列表。
+- 每个 G 检查 6 项：剧本、分镜、首帧图、图片审核通过、视频提示词（非 superseded）、视频。
+- 缺 ≥3 项红色、1-2 项橙色、全齐绿色；hover 展示具体缺什么。
+- 纯前端从已加载 cards 中推导，无新 API。
+
+**影响面**：仅 `web/src/pages/EpisodeDetail.tsx`，无后端变更。
+
+---
+
+## [2026-07-22] feat: 收件箱批量回填——按文件名自动分拣挂卡
+
+**动机**：平台有「导出提示词」出口但回填入口只能逐卡手动上传，一集几十个外部生成的图/视频
+文件（小云雀/即梦）拖回来是每天的摩擦。
+
+- **后端** `POST /production/projects/{pid}/inbox/upload`：接收多文件 + 可选 `default_episode`，
+  每个文件经 `parse_inbox_filename()` 解析文件名 → `resolve_inbox_target()` 在卡池中定位目标卡，
+  命中的持久化到 `uploads/` 并追加到卡的 images/videos，未命中的返回原因。
+- **文件名约定**：EP01_G03_首帧.png / EP01_G1-A.mp4 / TB1.png / EP01_G3_分镜.jpg 等，
+  大小写不敏感，支持首帧/末帧/分镜/视频/基调板五种类型自动识别。
+- **前端** EpisodeDetail.tsx 工具栏新增「收件箱」按钮，弹出拖拽上传 Modal，上传后展示
+  matched/unmatched 分拣结果。当前集号自动作为缺省集数。
+- **服务层** `app/services/inbox_ingest.py`：纯函数，23 个单元测试覆盖解析和匹配逻辑。
+- **API 测试** `tests/test_production_inbox.py`：4 个端到端测试（命中/未命中/空文件/缺省集数）。
+- 全量 203 测试通过，TypeScript 编译通过。
+
+**影响面**：`app/api/production.py`、`app/services/inbox_ingest.py`（新）、
+`web/src/api.ts`、`web/src/pages/EpisodeDetail.tsx`、`tests/test_production_inbox.py`（新）。
+无数据库表或环境变量变更。
+
+---
+
 ## [2026-07-21] feat: GitHub Actions 自动部署生产服务器
 
 - 现有 CI 扩展为 CI/CD：`master` push 或手动触发时，后端测试与前端类型检查/构建全部通过后才部署。

@@ -348,6 +348,21 @@ export const api = {
   /** 两键评审：对卡片某张图记一次通过/废弃；废弃必带枚举 reason。 */
   reviewCardImage: (pid: string, cardId: string, data: { verdict: 'pass' | 'reject'; image?: string; reason?: string; note?: string }) =>
     request<any>(`/production/projects/${pid}/cards/${cardId}/review`, { method: 'POST', body: JSON.stringify(data) }),
+  /** 收件箱批量回填：拖入多个文件，按文件名规则自动分拣挂到对应生产卡。 */
+  inboxUpload: async (pid: string, files: File[], defaultEpisode?: number) => {
+    const form = new FormData();
+    for (const f of files) form.append('files', f);
+    const q = defaultEpisode != null ? `?default_episode=${defaultEpisode}` : '';
+    const res = await fetch(`${BASE}/production/projects/${pid}/inbox/upload${q}`, {
+      method: 'POST', body: form, headers: authHeaders(),
+    });
+    const json = await res.json();
+    if (!res.ok || json.code !== 200) throw new Error(json.detail || json.message || '上传失败');
+    return json.data as {
+      matched: { filename: string; card_id: string; card_title: string; stage: string; slot: string; url: string }[];
+      unmatched: { filename: string; reason: string }[];
+    };
+  },
   /** 项目级评审统计：废弃原因分布（按数量倒序）+ 按集通过/废弃数。 */
   getReviewStats: (pid: string) =>
     request<{ total: number; passed: number; rejected: number; reject_reasons: { key: string; name: string; count: number }[]; by_episode: Record<string, { passed: number; rejected: number }> }>(
