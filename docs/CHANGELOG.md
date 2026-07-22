@@ -5,6 +5,17 @@
 
 ---
 
+## [2026-07-22] fix: 部署后 Nginx 仍指向旧应用容器导致 502
+
+- 生产部署重建 `app` / `admin` 后强制重启 Nginx，使静态 upstream 重新解析新容器 IP，避免 Nginx
+  持续代理到已删除容器并返回 502。
+- 部署脚本新增容器内 `/healthcheck` 等待：最多等待 60 秒；失败时自动输出 app/nginx 状态与最近
+  200 行日志并退出，不再把“容器进程 Up”误判为应用可用。
+
+**影响面**：`scripts/deploy-server.sh` 生产部署健康验证；无 API、数据库表、环境变量或端口变化。
+
+---
+
 ## [2026-07-22] feat: 单集 burn-down 进度条——每个 G 单元距成片还差什么
 
 - EpisodeDetail.tsx 新增「成片收口 N/M」进度条和 per-G Tag 列表。
