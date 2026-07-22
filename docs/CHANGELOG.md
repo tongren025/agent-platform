@@ -5,6 +5,22 @@
 
 ---
 
+## [2026-07-21] feat: GitHub Actions 自动部署生产服务器
+
+- 现有 CI 扩展为 CI/CD：`master` push 或手动触发时，后端测试与前端类型检查/构建全部通过后才部署。
+- 新增 GitHub `production` Environment 接入，使用受限 SSH 用户、固定 host key 和最小权限部署密钥；
+  部署串行执行，结束后请求公网 `/healthcheck`。
+- `deploy-server.sh` 支持并校验 `DEPLOY_SHA`，只部署当前 `origin/master` 上与本次测试完全一致的 commit，
+  避免连续 push 时部署尚未通过测试的新版本。
+- 私有仓库拉取从匿名 HTTPS 改为服务器专用的 GitHub 只读 Deploy Key；服务器不保存个人 PAT，
+  GitHub host key 使用固定 known_hosts 校验。
+- 服务器 `.env`、制作数据、后台供应商配置与加密主密钥继续保留在服务器，不上传 GitHub Actions。
+
+**影响面**：`.github/workflows/ci.yml`、`scripts/deploy-server.sh`、生产服务器受限 deploy 账号与 GitHub
+Environment；无 API、数据库表或业务数据格式变更。
+
+---
+
 ## [2026-07-21] feat: 导演工作台视觉重构
 
 - `web/src/pages/DirectorStudio.tsx` 重排为电影制片控制台：新增项目生命体征、环形完成度、推荐动作区、

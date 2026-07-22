@@ -2,9 +2,8 @@
 # ─────────────────────────────────────────────────────────────
 # agent-platform 一键部署脚本（Ubuntu 24.04 / 2G 内存）
 #
-# 首次部署:
-#   ssh root@47.85.46.171
-#   curl -fsSL https://raw.githubusercontent.com/tongren025/agent-platform/master/scripts/deploy-server.sh | bash
+# 首次部署（私有仓库需先配置只读 GitHub Deploy Key）:
+#   bash /path/to/deploy-server.sh
 #
 # 更新部署:
 #   cd /opt/agent-platform && bash scripts/deploy-server.sh
@@ -12,9 +11,12 @@
 set -euo pipefail
 
 INSTALL_DIR="/opt/agent-platform"
-REPO_URL="https://github.com/tongren025/agent-platform.git"
+REPO_URL="git@github.com:tongren025/agent-platform.git"
 BRANCH="master"
 SWAP_SIZE="2G"
+DEPLOY_SHA="${DEPLOY_SHA:-}"
+GITHUB_DEPLOY_KEY="${GITHUB_DEPLOY_KEY:-/root/.ssh/agent-platform-github}"
+GITHUB_KNOWN_HOSTS="${GITHUB_KNOWN_HOSTS:-/root/.ssh/known_hosts_agent_platform}"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -25,11 +27,42 @@ log()  { echo -e "${GREEN}[DEPLOY]${NC} $*"; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
 err()  { echo -e "${RED}[ERROR]${NC} $*" >&2; }
 
+resolve_deploy_ref() {
+    local branch_ref="$1"
+
+    if [ -z "${DEPLOY_SHA}" ]; then
+        printf '%s\n' "${branch_ref}"
+        return
+    fi
+
+    if [[ ! "${DEPLOY_SHA}" =~ ^[0-9a-f]{40}$ ]]; then
+        err "DEPLOY_SHA 必须是 40 位小写 Git commit SHA"
+        return 2
+    fi
+
+    local branch_sha
+    branch_sha="$(git rev-parse "${branch_ref}")"
+    if [ "${branch_sha}" != "${DEPLOY_SHA}" ]; then
+        err "master 已前进：拒绝部署未对应当前 master 的 ${DEPLOY_SHA}"
+        return 3
+    fi
+
+    printf '%s\n' "${DEPLOY_SHA}"
+}
+
 # ── 0. 必须 root ──────────────────────────────────────────
 if [ "$(id -u)" -ne 0 ]; then
     err "请用 root 运行: sudo bash $0"
     exit 1
 fi
+
+# 私有仓库只使用 GitHub Deploy Key（只读），不在服务器保存个人 PAT。
+if [ ! -f "${GITHUB_DEPLOY_KEY}" ] || [ ! -f "${GITHUB_KNOWN_HOSTS}" ]; then
+    err "缺少 GitHub Deploy Key 或已验证的 known_hosts"
+    err "需要: ${GITHUB_DEPLOY_KEY} 与 ${GITHUB_KNOWN_HOSTS}"
+    exit 1
+fi
+export GIT_SSH_COMMAND="ssh -i ${GITHUB_DEPLOY_KEY} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=${GITHUB_KNOWN_HOSTS}"
 
 # ── 1. 系统依赖 ───────────────────────────────────────────
 log "安装系统依赖..."
@@ -99,7 +132,8 @@ if [ -d "${INSTALL_DIR}/.git" ]; then
         fi
     done
     git fetch origin
-    git reset --hard "origin/${BRANCH}"
+    TARGET_REF="$(resolve_deploy_ref "origin/${BRANCH}")"
+    git reset --hard "${TARGET_REF}"
     # 完整恢复服务器版本；不能用 cp -n，否则 reset 出来的同名文件会挡住运行时数据。
     for REL_PATH in production ai-providers .secrets; do
         if [ -d "${RUNTIME_BACKUP}/${REL_PATH}" ]; then
@@ -113,6 +147,8 @@ else
     log "克隆仓库..."
     git clone --depth 1 -b "${BRANCH}" "${REPO_URL}" "${INSTALL_DIR}"
     cd "${INSTALL_DIR}"
+    # CI/CD 首次部署也必须与已测试 SHA 一致；master 已前进时直接失败等待新流水线。
+    resolve_deploy_ref HEAD > /dev/null
 fi
 
 # ── 6. 生成 .env（仅首次）─────────────────────────────────

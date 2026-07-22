@@ -195,6 +195,22 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 | prometheus | 9090 | 指标采集 |
 | grafana | 3000 | 监控面板（自动置备「Agent 运行概览」） |
 
+### GitHub Actions 自动部署
+
+`master` 的 push 或手动触发 Actions 后，会先并行执行后端测试与前端类型检查/构建；全部通过才进入
+`production` 环境，通过受限 SSH 账号调用 `scripts/deploy-server.sh`，最后请求
+`https://aikirito.cloud/healthcheck` 验证外部访问。生产部署串行执行，并校验服务器实际部署的 commit
+必须等于本次已测试的 `GITHUB_SHA`。
+
+GitHub `production` 环境需要配置：
+
+- Variables：`DEPLOY_HOST`、`DEPLOY_USER`、`DEPLOY_SSH_KNOWN_HOSTS`
+- Secret：`DEPLOY_SSH_KEY`
+
+服务器 `.env`、`data/production/`、`data/ai-providers/` 与 `data/.secrets/` 不进入 Actions，继续由
+生产服务器持久化和部署脚本保护。仓库为私有仓库时，服务器另用一把 GitHub **只读 Deploy Key** 拉取
+代码，不保存个人 PAT。具体运维方式见 [docs/RUNBOOK.md](docs/RUNBOOK.md#10-github-actions-自动部署)。
+
 ## 快速开始
 
 ### 方式一：Docker Compose 一键全套
