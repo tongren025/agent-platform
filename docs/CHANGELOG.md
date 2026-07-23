@@ -5,6 +5,50 @@
 
 ---
 
+## [2026-07-23] feat: 视觉资产补全——PWA 图标/404 页/apple-touch-icon
+
+### 新增资产（Codex image_gen 生成）
+- **icon-512.png**（512×512）— PWA 安装/启动屏图标
+- **icon-192.png**（192×192）— PWA 安装小图标
+- **apple-touch-icon.png**（180×180）— iOS 添加到主屏幕图标
+- **empty-404.svg** — 404 页面星球裂纹插画
+
+### 新增页面
+- **NotFound.tsx** — 全局 404 兜底页面，显示 empty-404.svg 插画 + "返回首页"按钮
+
+### 配置变更
+- **App.tsx** — 新增 `<Route path="*">` 兜底路由指向 NotFound
+- **manifest.json** — 新增 192/512 PNG 图标条目（Android/Chrome PWA 安装必需）
+- **index.html** — apple-touch-icon 从 favicon.svg 改为 apple-touch-icon.png（iOS 不支持 SVG touch icon）
+
+**影响面**：前端路由 + PWA 安装 + iOS 主屏书签；无后端改动。
+
+---
+
+## [2026-07-23] feat: 画布 UX 九项增强——快捷键/导出/缩放/自动连线
+
+### 新增功能
+- **Ctrl+C / Ctrl+V 复制粘贴**：选中节点 Ctrl+C 复制到剪贴板(含内部连线)，Ctrl+V 粘贴(自动偏移+60px，ID 重映射保持边关系)
+- **剪贴板图片粘贴**：截图后直接 Ctrl+V 粘贴图片到画布(自动上传生成图片节点)
+- **方向键微调**：选中节点 Arrow ±1px 移动，Shift+Arrow ±10px 移动，500ms 防抖合并快照
+- **PNG 导出**：工具栏📷按钮导出画布为 2x 高清 PNG(过滤 MiniMap/Controls)
+- **缩放栏(ZoomBar)**：替代原适配按钮，显示当前缩放百分比 + 放大/缩小/适配视图按钮，支持 Ctrl+0/+/-
+- **批量改阶段**：多选工具栏新增「改阶段」下拉，一次性修改所有选中节点的 stage
+- **连线样式切换**：工具栏按钮循环切换 bezier⌒/straight╱/step⌐ 三种连线样式，同步更新所有已有连线
+- **拖到空白自动建节点**：从 handle 拖出连线到空白区域松手 → 弹出浮动菜单选择节点类型(数据/分镜/便签)，自动创建并连线
+
+### 组件变更
+- `SelectionToolbar.tsx`：新增 stageOptions/onBatchStage 属性
+- `LabeledEdge.tsx`：支持 data.pathType 动态切换 getBezierPath/getStraightPath/getSmoothStepPath
+- `Canvas.tsx`：新增 ZoomBar 组件、6 个 handler、键盘快捷键扩展、连接菜单浮层
+
+### 性能
+- 保持前一次提交的 React.memo + ref-proxy 性能优化，新功能全部走 stable callback
+
+**影响面**：Canvas.tsx 主文件 + SelectionToolbar + LabeledEdge；无后端改动。
+
+---
+
 ## [2026-07-23] feat: 画布功能全面补齐——对标 Miro/FigJam 级基础能力
 
 ### 新增功能

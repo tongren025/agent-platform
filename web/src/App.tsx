@@ -36,6 +36,7 @@ const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminRoles = lazy(() => import('./pages/admin/AdminRoles'));
 const AdminProviders = lazy(() => import('./pages/admin/AdminProviders'));
 const UserLogin = lazy(() => import('./pages/UserLogin'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
   return (
@@ -83,6 +84,8 @@ export default function App() {
         <Route path="roles" element={<AdminRoles />} />
         <Route path="providers" element={<AdminProviders />} />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
     </Suspense>
   );
