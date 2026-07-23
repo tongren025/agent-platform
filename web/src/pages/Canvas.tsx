@@ -28,6 +28,7 @@ import { useCanvasHistory } from '../hooks/useCanvasHistory';
 import { CanvasCtx, DataNode, GroupNode, GROUP_COLORS, ImageNode, StoryboardNode, StickyNote, STAGE_META, type CanvasActions } from '../components/canvas/CanvasNodes';
 import { LabeledEdge } from '../components/canvas/LabeledEdge';
 import { SelectionToolbar, type AlignAction } from '../components/canvas/SelectionToolbar';
+import { CanvasSidebar } from '../components/canvas/CanvasSidebar';
 import { thumbUrl } from '../media';
 
 const { Text } = Typography;
@@ -551,23 +552,45 @@ export default function Canvas() {
   };
 
   // ── 工具栏操作 ──
-  const addDataNode = () => {
+  const addDataNode = useCallback((pos?: { x: number; y: number }) => {
     takeSnapshot();
     setNodes((ns) => [...ns, {
       id: genId('d'), type: 'data',
-      position: { x: 120 + Math.random() * 120, y: 120 + Math.random() * 120 },
+      position: pos || { x: 120 + Math.random() * 120, y: 120 + Math.random() * 120 },
       data: { stage: '', title: '', content: '' },
     }]);
-  };
+  }, [setNodes, takeSnapshot]);
 
-  const addStickyNote = () => {
+  const addStickyNote = useCallback((pos?: { x: number; y: number }) => {
     takeSnapshot();
     setNodes((ns) => [...ns, {
       id: genId('st'), type: 'sticky',
-      position: { x: 140 + Math.random() * 100, y: 140 + Math.random() * 100 },
+      position: pos || { x: 140 + Math.random() * 100, y: 140 + Math.random() * 100 },
       data: { content: '', color: 'yellow' },
     }]);
-  };
+  }, [setNodes, takeSnapshot]);
+
+  const addStoryboardNode = useCallback((pos?: { x: number; y: number }) => {
+    takeSnapshot();
+    setNodes((ns) => [...ns, {
+      id: genId('sb'), type: 'storyboard',
+      position: pos || { x: 120 + Math.random() * 120, y: 120 + Math.random() * 120 },
+      data: {
+        shotNumber: '', duration: '', cameraType: '', cameraMove: '',
+        description: '', stage: 'storyboard', title: '',
+      },
+    }]);
+  }, [setNodes, takeSnapshot]);
+
+  const addGroupNode = useCallback((x?: number, y?: number, w?: number, h?: number, label?: string) => {
+    takeSnapshot();
+    setNodes((ns) => [...ns, {
+      id: genId('grp'), type: 'group',
+      position: { x: x ?? 60, y: y ?? 60 },
+      style: { width: w ?? 600, height: h ?? 400, zIndex: -1 },
+      data: { label: label || '' },
+    }]);
+  }, [setNodes, takeSnapshot]);
 
   const handleUpload = async (files: FileList | null) => {
     if (!files || !currentId) return;
@@ -696,6 +719,20 @@ export default function Canvas() {
   const handleCanvasDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault();
     if (!currentIdRef.current) return;
+
+    const nodeType = e.dataTransfer.getData('application/canvas-node-type');
+    if (nodeType) {
+      const instance = rfInstanceRef.current;
+      const pos = instance
+        ? instance.screenToFlowPosition({ x: e.clientX, y: e.clientY })
+        : { x: e.clientX - 300, y: e.clientY - 100 };
+      if (nodeType === 'data') { addDataNode(pos); }
+      else if (nodeType === 'storyboard') { addStoryboardNode(pos); }
+      else if (nodeType === 'sticky') { addStickyNote(pos); }
+      else if (nodeType === 'group') { addGroupNode(pos.x, pos.y); }
+      return;
+    }
+
     const files = e.dataTransfer.files;
     if (!files.length) return;
     takeSnapshot();
@@ -714,7 +751,7 @@ export default function Canvas() {
         }]);
       } catch (e: any) { message.error(`${file.name}: ${e.message}`); }
     }
-  }, [setNodes, takeSnapshot]);
+  }, [setNodes, takeSnapshot, addDataNode, addStoryboardNode, addStickyNote, addGroupNode]);
 
   const handleCanvasDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -780,19 +817,6 @@ export default function Canvas() {
     const stage = n.data?.stage;
     return STAGE_META[stage]?.color || '#94a3b8';
   }, []);
-
-  // ── 节点添加 ──
-  const addStoryboardNode = useCallback(() => {
-    takeSnapshot();
-    setNodes((ns) => [...ns, {
-      id: genId('sb'), type: 'storyboard',
-      position: { x: 120 + Math.random() * 120, y: 120 + Math.random() * 120 },
-      data: {
-        shotNumber: '', duration: '', cameraType: '', cameraMove: '',
-        description: '', stage: 'storyboard', title: '',
-      },
-    }]);
-  }, [setNodes, takeSnapshot]);
 
   // ── 复制节点 ──
   const duplicateNode = useCallback((nodeId: string) => {
@@ -934,16 +958,6 @@ export default function Canvas() {
     setEdgePathType(next);
     setEdges((es) => es.map((e) => ({ ...e, data: { ...e.data, pathType: next } })));
   }, [edgePathType, setEdges]);
-
-  const addGroupNode = useCallback((x?: number, y?: number, w?: number, h?: number, label?: string) => {
-    takeSnapshot();
-    setNodes((ns) => [...ns, {
-      id: genId('grp'), type: 'group',
-      position: { x: x ?? 60, y: y ?? 60 },
-      style: { width: w ?? 600, height: h ?? 400, zIndex: -1 },
-      data: { label: label || '' },
-    }]);
-  }, [setNodes, takeSnapshot]);
 
   const createGroupFromSelected = useCallback(() => {
     const selected = getSelected().filter((n) => n.type !== 'group');
@@ -1246,29 +1260,16 @@ export default function Canvas() {
 
           <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
 
-          {/* ── 添加素材 ── */}
-          <span style={{ fontSize: 11, color: '#94a3b8', marginRight: 2 }}>添加</span>
-          <Button icon={<FileTextOutlined />} onClick={addDataNode} disabled={!currentId}>数据</Button>
-          <Button icon={<VideoCameraOutlined />} onClick={addStoryboardNode} disabled={!currentId}>分镜</Button>
-          <Button icon={<HighlightOutlined />} onClick={addStickyNote} disabled={!currentId}>便签</Button>
-          <Button icon={<UploadOutlined />} onClick={() => fileInputRef.current?.click()} disabled={!currentId}>图片</Button>
-          <Button icon={<ImportOutlined />} onClick={openImport} disabled={!currentId}>从看板导入</Button>
-
-          <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
-
           {/* ── 排版工具 ── */}
-          <span style={{ fontSize: 11, color: '#94a3b8', marginRight: 2 }}>排版</span>
           <Tooltip title="搜索节点 Ctrl+F"><Button icon={<SearchOutlined />} onClick={() => setSearchOpen(!searchOpen)} disabled={!currentId} type={searchOpen ? 'primary' : 'default'} /></Tooltip>
           <Tooltip title="自动排版"><Button icon={<AppstoreOutlined />} onClick={autoLayout} disabled={!currentId || nodes.length === 0} /></Tooltip>
           <Tooltip title="分镜条预览"><Button icon={<OrderedListOutlined />} onClick={() => setFilmstripOpen(!filmstripOpen)} disabled={!currentId} type={filmstripOpen ? 'primary' : 'default'} /></Tooltip>
 
           <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
 
-          {/* ── 导出 & 设置 ── */}
+          {/* ── 更多 ── */}
           <Dropdown menu={{ items: [
-            { key: 'group', icon: <GroupOutlined />, label: '分组框', onClick: () => addGroupNode(), disabled: !currentId },
             { key: 'number', icon: <SortAscendingOutlined />, label: '分镜编号', onClick: autoNumberStoryboards, disabled: !currentId || nodes.filter((n) => n.type === 'storyboard').length === 0 },
-            { type: 'divider' },
             { key: 'grid', label: snapGrid ? '关闭对齐网格' : '开启对齐网格', onClick: () => setSnapGrid(!snapGrid), disabled: !currentId },
             { key: 'edge', label: `连线: ${edgePathType === 'bezier' ? '曲线⌒' : edgePathType === 'straight' ? '直线╱' : '折线⌐'}`, onClick: cycleEdgePathType, disabled: !currentId },
             { type: 'divider' },
@@ -1309,11 +1310,23 @@ export default function Canvas() {
         </div>
       )}
 
-      {/* ── 画布 ── */}
-      <div
-        style={{ flex: 1, border: '1px solid #eef0f6', borderRadius: 12, overflow: 'hidden', background: '#fafbfd', position: 'relative' }}
-        onDrop={handleCanvasDrop} onDragOver={handleCanvasDragOver}
-      >
+      {/* ── 素材面板 + 画布 ── */}
+      <div style={{ flex: 1, display: 'flex', gap: 8, minHeight: 0 }}>
+        <CanvasSidebar
+          disabled={!currentId}
+          onAdd={(type) => {
+            if (type === 'data') addDataNode();
+            else if (type === 'storyboard') addStoryboardNode();
+            else if (type === 'sticky') addStickyNote();
+            else if (type === 'group') addGroupNode();
+          }}
+          onImport={openImport}
+          onUpload={() => fileInputRef.current?.click()}
+        />
+        <div
+          style={{ flex: 1, border: '1px solid #eef0f6', borderRadius: 12, overflow: 'hidden', background: '#fafbfd', position: 'relative' }}
+          onDrop={handleCanvasDrop} onDragOver={handleCanvasDragOver}
+        >
         {!currentId ? (
           <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Empty description="新建一个画布开始创作" image={<img src="/empty-create.svg" alt="" width={160} />}>
@@ -1422,7 +1435,7 @@ export default function Canvas() {
                     把创意写成节点，用连线串联生产流程，AI 帮你逐步派生下游素材
                   </div>
                   <Space size={8}>
-                    <Button icon={<FileTextOutlined />} onClick={addDataNode}>写一个创意</Button>
+                    <Button icon={<FileTextOutlined />} onClick={() => addDataNode()}>写一个创意</Button>
                     <Button icon={<ImportOutlined />} onClick={openImport}>从看板导入</Button>
                     <Button icon={<UploadOutlined />} onClick={() => fileInputRef.current?.click()}>贴一张图</Button>
                   </Space>
@@ -1431,6 +1444,7 @@ export default function Canvas() {
             )}
           </CanvasCtx.Provider>
         )}
+        </div>
       </div>
 
       {/* ── 新建画布 ── */}
