@@ -1,0 +1,30 @@
+{
+  "query": "claude skill",
+  "taken_at": "2026-07-22T18:00:21.393303+00:00",
+  "stars": {
+    "affaan-m/ECC": 232161,
+    "multica-ai/andrej-karpathy-skills": 195369,
+    "nextlevelbuilder/ui-ux-pro-max-skill": 108897,
+    "Graphify-Labs/graphify": 93727,
+    "JuliusBrussee/caveman": 92044,
+    "ComposioHQ/awesome-claude-skills": 68654,
+    "Leonxlnx/taste-skill": 66329,
+    "mvanhorn/last30days-skill": 53124,
+    "hesreallyhim/awesome-claude-code": 50641,
+    "zhayujie/CowAgent": 46080,
+    "kepano/obsidian-skills": 42993,
+    "coreyhaines31/marketingskills": 41200,
+    "calesthio/OpenMontage": 41167,
+    "danny-avila/LibreChat": 41131,
+    "Imbad0202/academic-research-skills": 38976,
+    "alchaincyf/huashu-design": 21809,
+    "Nutlope/hallmark": 15491,
+    "mukul975/Anthropic-Cybersecurity-Skills": 26355,
+    "KKKKhazix/khazix-skills": 17735,
+    "zarazhangrui/frontend-slides": 26152,
+    "Donchitos/Claude-Code-Game-Studios": 23313,
+    "zhaoxuya520/reverse-skill": 8772,
+    "virgiliojr94/book-to-skill": 9330,
+    "nexu-io/html-anything": 7905
+  }
+}

@@ -41,6 +41,9 @@ export default function UserLogin() {
         alignItems: 'center',
         justifyContent: 'center',
         background: `linear-gradient(135deg, ${COLORS.ink} 0%, ${COLORS.inkLight} 100%)`,
+        backgroundImage: 'url(/login-bg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <div
@@ -55,24 +58,7 @@ export default function UserLogin() {
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div
-            style={{
-              width: 52,
-              height: 52,
-              borderRadius: 14,
-              margin: '0 auto 14px',
-              background: `linear-gradient(135deg, ${COLORS.iris}, ${COLORS.irisLight})`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontSize: 22,
-              fontWeight: 800,
-              boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
-            }}
-          >
-            A
-          </div>
+          <img src="/favicon.svg" alt="Agent Studio" width={52} height={52} style={{ borderRadius: 14, margin: '0 auto 14px', display: 'block', boxShadow: '0 4px 16px rgba(99,102,241,0.4)' }} />
           <div style={{ fontSize: 20, fontWeight: 700, color: COLORS.slateDark }}>Agent Studio</div>
           <div style={{ fontSize: 13, color: COLORS.slate, marginTop: 4 }}>登录以继续使用</div>
         </div>

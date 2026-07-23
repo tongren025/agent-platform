@@ -105,7 +105,7 @@ export default function Dashboard() {
           </div>
         </Card>
       ) : hasPerm('production:manage') ? (
-        <Card style={{ marginBottom: 22 }}><Empty description="还没有制作项目">
+        <Card style={{ marginBottom: 22 }}><Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="还没有制作项目">
           <Button type="primary" onClick={() => navigate('/production')}>创建第一个项目</Button>
         </Empty></Card>
       ) : null}

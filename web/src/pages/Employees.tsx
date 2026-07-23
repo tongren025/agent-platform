@@ -148,7 +148,21 @@ export default function Employees() {
     {
       title: '名称', dataIndex: 'name', key: 'name',
       render: (v: string, record: Employee) => (
-        <Button type="link" style={{ padding: 0, fontWeight: 500 }} onClick={() => openDetail(record)}>{v}</Button>
+        <Space size={8}>
+          {/* 头像：优先用员工自定义 avatarUrl，缺省或加载失败时兜底到默认机器人剪影 */}
+          <img
+            src={record.avatarUrl || '/avatar-default.svg'}
+            alt=""
+            width={28}
+            height={28}
+            style={{ borderRadius: '50%', objectFit: 'cover', display: 'block', background: '#f8f9fc', border: '1px solid #eef0f6' }}
+            onError={(e) => {
+              const img = e.currentTarget;
+              if (!img.src.endsWith('/avatar-default.svg')) img.src = '/avatar-default.svg';
+            }}
+          />
+          <Button type="link" style={{ padding: 0, fontWeight: 500 }} onClick={() => openDetail(record)}>{v}</Button>
+        </Space>
       ),
     },
     { title: '标识', dataIndex: 'employeeKey', key: 'employeeKey', render: (v: string) => <Text type="secondary" style={{ fontSize: 12 }}>{v}</Text> },

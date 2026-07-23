@@ -327,7 +327,7 @@ export default function AutoLearn() {
           loading={loading}
           pagination={false}
           scroll={{ x: 800 }}
-          locale={{ emptyText: <Empty description="还没有采集源，点击右上角新建" /> }}
+          locale={{ emptyText: <Empty image={<img src="/empty-create.svg" alt="" width={120} />} description="还没有采集源，点击右上角新建" /> }}
         />
       </Card>
 
@@ -410,7 +410,7 @@ export default function AutoLearn() {
         {promptsLoading ? (
           <div style={{ textAlign: 'center', padding: isMobile ? '30px 0' : '60px 0' }}><Spin size="large" /></div>
         ) : prompts.length === 0 ? (
-          <Empty description="还没有采集到提示词，先点「立即采集」" />
+          <Empty image={<img src="/empty-data.svg" alt="" width={120} />} description="还没有采集到提示词，先点「立即采集」" />
         ) : (
           <Row gutter={[12, 12]}>
             {prompts.map((p) => (

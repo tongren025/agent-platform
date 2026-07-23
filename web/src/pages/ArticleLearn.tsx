@@ -160,7 +160,7 @@ export default function ArticleLearn() {
       <Card style={{ borderRadius: 12 }}>
         <Table rowKey="sourceCode" columns={columns as any} dataSource={sources} loading={loading} pagination={false}
           scroll={{ x: 'max-content' }}
-          locale={{ emptyText: <Empty description="还没有学习源，点击右上角新建" /> }} />
+          locale={{ emptyText: <Empty image={<img src="/empty-create.svg" alt="" width={120} />} description="还没有学习源，点击右上角新建" /> }} />
       </Card>
 
       <Modal title={editing ? '编辑学习源' : '新建学习源'} open={modalOpen} onOk={handleSave} onCancel={() => setModalOpen(false)} confirmLoading={saving} destroyOnHidden forceRender width={isMobile ? '100%' : 640}>
@@ -189,7 +189,7 @@ export default function ArticleLearn() {
 
       <Drawer title={`运行历史 · ${historySource?.name ?? ''}`} open={historyOpen} onClose={() => setHistoryOpen(false)} width={isMobile ? '100%' : 640}>
         {historyLoading ? <div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
-          : history.length === 0 ? <Empty description="暂无运行记录" />
+          : history.length === 0 ? <Empty image={<img src="/empty-data.svg" alt="" width={120} />} description="暂无运行记录" />
           : history.map((h, i) => (
             <Card key={i} size="small" style={{ marginBottom: 12, borderRadius: 10 }}>
               <Space style={{ marginBottom: 8 }} wrap>

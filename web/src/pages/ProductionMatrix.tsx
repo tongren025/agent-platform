@@ -165,7 +165,7 @@ export default function ProductionMatrix() {
     return <div style={{ padding: 80, textAlign: 'center' }}><Spin /></div>;
   }
   if (!projects.length) {
-    return <div style={{ padding: 60 }}><Empty description="还没有制作项目" /></div>;
+    return <div style={{ padding: 60 }}><Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="还没有制作项目" /></div>;
   }
 
   return (

@@ -32396,3 +32396,1299 @@ HTTP Request: GET https://jimeng.jianying.com/ai-tool/home/ "HTTP/1.1 200 OK"
 2026-07-22T06:50:37.232790Z [info     ] request                        client=127.0.0.1 elapsed_ms=92.4 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1 request_id=4142600e142b4a229458265bbff01a58 status=200
 2026-07-22T06:50:37.321780Z [info     ] request                        client=127.0.0.1 elapsed_ms=79.3 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/review-stats request_id=3e2a55ca369643d9baecae674e285313 status=200
 2026-07-22T06:50:37.533306Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.6 method=GET path=/api/v1/agentapp/production/projects/jiulu-s1/review-stats request_id=d5bbcaf21ddd467b9c83e247ffb7d4e7 status=200
+2026-07-22T08:06:21.950014Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/healthcheck request_id=ba46481098d14e84aee10143c6bc8438 status=200
+2026-07-22T08:06:35.854823Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.7 method=GET path=/healthcheck request_id=39417272a517419a8fe2bb8257deabca status=200
+2026-07-22T12:31:53.584098Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.5 method=GET path=/api/v1/agentapp/auth/check request_id=643294a5bfd94ceead21096f69bd6fac status=200
+2026-07-22T12:31:53.599948Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/auth/check request_id=3d3cd9a36bae41579088b52da380e1d5 status=200
+2026-07-22T12:31:53.911413Z [info     ] request                        client=127.0.0.1 elapsed_ms=216.9 method=GET path=/api/v1/agentapp/production/projects request_id=0f93dd05eb9143aa821f88c2f830c691 status=200
+2026-07-22T12:31:54.063577Z [info     ] request                        client=127.0.0.1 elapsed_ms=140.4 method=GET path=/api/v1/agentapp/production/projects request_id=c204c0d274214e9887ab816ec734bbf5 status=200
+2026-07-22T12:31:54.349542Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.4 method=GET path=/api/v1/agentapp/director/projects/7666b0e8 request_id=d569621e62874e329ace34ebca0cf34c status=200
+2026-07-22T12:31:54.509323Z [info     ] request                        client=127.0.0.1 elapsed_ms=121.8 method=GET path=/api/v1/agentapp/production/projects request_id=11515e851194424b80a3ee570b7a669b status=200
+2026-07-22T12:33:05.328008Z [info     ] request                        client=127.0.0.1 elapsed_ms=86.6 method=POST path=/api/v1/agentapp/auth/login request_id=0b92d556a7b345f2bcdbc44941d8684f status=200
+2026-07-22T12:33:05.351951Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.0 method=GET path=/api/v1/agentapp/auth/check request_id=a1ff20bc745242c68d32bbf71456e150 status=200
+2026-07-22T12:33:05.382968Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/api/v1/agentapp/auth/check request_id=f620dc797c5f47898a38bdf0033ebab6 status=200
+2026-07-22T12:33:05.398476Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/api/v1/agentapp/auth/check request_id=57e8495cf21a4c9c9b656a70b04b7a0b status=200
+2026-07-22T12:33:05.675026Z [info     ] request                        client=127.0.0.1 elapsed_ms=205.9 method=GET path=/api/v1/agentapp/production/projects request_id=4c1cca72402d427f85ce585b8b9d51ad status=200
+2026-07-22T12:33:05.800623Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.3 method=GET path=/api/v1/agentapp/director/projects/7666b0e8 request_id=1a8231f5b8ac4764bb5164b08cf2ba9b status=200
+2026-07-22T12:33:05.812890Z [info     ] request                        client=127.0.0.1 elapsed_ms=124.5 method=GET path=/api/v1/agentapp/production/projects request_id=0fbf56a0ce694d4794f45688e5c9cc03 status=200
+2026-07-22T12:33:05.932073Z [info     ] request                        client=127.0.0.1 elapsed_ms=108.7 method=GET path=/api/v1/agentapp/production/projects request_id=674fdf71bc864d85ac88863f3aa8b80f status=200
+2026-07-22T12:33:21.583263Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/api/v1/agentapp/auth/check request_id=0f0fc670ac0446389aefa2cbeec18e36 status=200
+2026-07-22T12:33:21.597359Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/api/v1/agentapp/auth/check request_id=a7c55439db5247e9bba0219a8c2ec7af status=200
+2026-07-22T12:33:21.970694Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.8 method=GET path=/api/v1/agentapp/canvas/canvases request_id=6f664f70e9de4ba18132ea663090f4ff status=200
+2026-07-22T12:33:21.982463Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.7 method=GET path=/api/v1/agentapp/registry/employees request_id=b1593459a56547c08b2f362d4622e03f status=200
+2026-07-22T12:33:21.997060Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.0 method=GET path=/api/v1/agentapp/canvas/canvases request_id=109ddf3f8f1b47e8a61fd072a4420cce status=200
+2026-07-22T12:33:22.009063Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.4 method=GET path=/api/v1/agentapp/registry/employees request_id=3a5e8cb81f1b4ec584dcda052350ec67 status=200
+2026-07-22T12:33:22.016710Z [info     ] request                        client=127.0.0.1 elapsed_ms=51.2 method=GET path=/api/v1/agentapp/canvas/image-models request_id=f5fe4c78f20a4302886db21cba6aa52f status=200
+2026-07-22T12:33:22.029640Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/api/v1/agentapp/canvas/image-models request_id=12153f88162f460c95d68966026bafc2 status=200
+2026-07-22T12:33:22.088609Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=944212afff4847e0adb00d01cfe9bd48 status=200
+2026-07-22T12:35:22.633360Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.7 method=GET path=/api/v1/agentapp/canvas/canvases request_id=6fb2192d6a1a4cfdbc774cf317a7dd21 status=200
+2026-07-22T12:35:22.646044Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.4 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=dc8cfcf57eee4525b346e708a036e708 status=200
+2026-07-22T12:35:22.654043Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.3 method=GET path=/api/v1/agentapp/canvas/image-models request_id=69f91dee603d4bbb89601e613d54e016 status=200
+2026-07-22T12:35:22.662043Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.7 method=GET path=/api/v1/agentapp/registry/employees request_id=a7acab96d412484e83c78e1950598909 status=200
+2026-07-22T12:35:28.260017Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.6 method=GET path=/api/v1/agentapp/canvas/canvases request_id=dd76ec32063f482484e379c9685674ce status=200
+2026-07-22T12:35:28.519262Z [info     ] request                        client=127.0.0.1 elapsed_ms=269.2 method=GET path=/api/v1/agentapp/canvas/image-models request_id=a34ad011ac9e49979eab544b1e450902 status=200
+2026-07-22T12:35:28.761208Z [info     ] request                        client=127.0.0.1 elapsed_ms=506.4 method=GET path=/api/v1/agentapp/registry/employees request_id=5658f170f0a14981b49e8237a5216a21 status=200
+2026-07-22T12:35:28.804625Z [info     ] request                        client=127.0.0.1 elapsed_ms=547.9 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=7214c6672afd4158bfb645d3c2afd510 status=200
+2026-07-22T12:35:33.815605Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.2 method=GET path=/api/v1/agentapp/canvas/canvases request_id=a8184b15532b49b6ac86d86065ef1e5c status=200
+2026-07-22T12:35:33.826575Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.8 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=b15efd6d06d14aa7ae9302b56654e971 status=200
+2026-07-22T12:35:33.833606Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.0 method=GET path=/api/v1/agentapp/canvas/image-models request_id=3a96dda7188746a0ba8cc3d8e9e2d3e6 status=200
+2026-07-22T12:35:33.840039Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.2 method=GET path=/api/v1/agentapp/registry/employees request_id=3f0a503501d544f1b0e5d0c5c09fb914 status=200
+2026-07-22T12:37:28.768202Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.5 method=GET path=/api/v1/agentapp/canvas/canvases request_id=a1df0bd832544c26a611c49d6b0b5bd4 status=200
+2026-07-22T12:37:28.792974Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.1 method=GET path=/api/v1/agentapp/canvas/image-models request_id=7be5a153070544859f0bbf3e738405b8 status=200
+2026-07-22T12:37:28.807336Z [info     ] request                        client=127.0.0.1 elapsed_ms=42.3 method=GET path=/api/v1/agentapp/registry/employees request_id=ddd44560a9b442d59ef1c057b4bcc454 status=200
+2026-07-22T12:37:28.828646Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.1 method=GET path=/api/v1/agentapp/canvas/canvases request_id=f5e34274c5334f27914bc97d6f102ba4 status=200
+2026-07-22T12:37:28.844624Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.8 method=GET path=/api/v1/agentapp/canvas/image-models request_id=440352cd2b95477aa633f52e29fbb869 status=200
+2026-07-22T12:37:28.856171Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.9 method=GET path=/api/v1/agentapp/registry/employees request_id=028b490771be4161822b72d1787626cb status=200
+2026-07-22T12:37:28.874612Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=a210812b157e49c389df24d26002369d status=200
+2026-07-22T12:37:47.955845Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.9 method=GET path=/api/v1/agentapp/canvas/canvases request_id=3106c5e26f614c48bc5526f485d8b50f status=200
+2026-07-22T12:37:48.070877Z [info     ] request                        client=127.0.0.1 elapsed_ms=124.6 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=59f73640c3994df999fd362374a01ffa status=200
+2026-07-22T12:37:48.321382Z [info     ] request                        client=127.0.0.1 elapsed_ms=374.2 method=GET path=/api/v1/agentapp/canvas/image-models request_id=65d47d4ccdce4141b4b8549fc08a98f2 status=200
+2026-07-22T12:37:48.546135Z [info     ] request                        client=127.0.0.1 elapsed_ms=601.1 method=GET path=/api/v1/agentapp/registry/employees request_id=5639a6701c6a4eb58dcaf2b226fe280f status=200
+2026-07-22T12:37:56.023456Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.0 method=GET path=/api/v1/agentapp/canvas/canvases request_id=b91e716e9df94e80ab3b19c9d6b64e8f status=200
+2026-07-22T12:37:56.412726Z [info     ] request                        client=127.0.0.1 elapsed_ms=393.3 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=d2dee8d392ec48e19d2dc96b904b7bcf status=200
+2026-07-22T12:37:56.561592Z [info     ] request                        client=127.0.0.1 elapsed_ms=542.8 method=GET path=/api/v1/agentapp/canvas/image-models request_id=9c486e98870d419e91b2caca223232ed status=200
+2026-07-22T12:37:56.786924Z [info     ] request                        client=127.0.0.1 elapsed_ms=767.5 method=GET path=/api/v1/agentapp/registry/employees request_id=60122aa4f4a547db880a62e50db61553 status=200
+2026-07-22T12:38:08.521589Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.6 method=GET path=/api/v1/agentapp/canvas/canvases request_id=980a78a4ef354a2bb3fa324ebdf466ef status=200
+2026-07-22T12:38:08.640541Z [info     ] request                        client=127.0.0.1 elapsed_ms=124.1 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=2879f767b3bf4eb69bec2cb6a184d628 status=200
+2026-07-22T12:38:08.648541Z [info     ] request                        client=127.0.0.1 elapsed_ms=133.1 method=GET path=/api/v1/agentapp/canvas/image-models request_id=b55b91e06d084dcb9323c430197da146 status=200
+2026-07-22T12:38:08.656328Z [info     ] request                        client=127.0.0.1 elapsed_ms=140.5 method=GET path=/api/v1/agentapp/registry/employees request_id=3bdb2f948d884cd18db1f2877de253b3 status=200
+2026-07-22T12:38:19.693426Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.4 method=GET path=/api/v1/agentapp/canvas/canvases request_id=caf3a5d641904299ac8738de887038a1 status=200
+2026-07-22T12:38:19.727164Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.8 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=38d49876aacd4450b7f8495de09d1a43 status=200
+2026-07-22T12:38:19.770218Z [info     ] request                        client=127.0.0.1 elapsed_ms=81.2 method=GET path=/api/v1/agentapp/canvas/image-models request_id=e7681ea076f547a5967603de0f29263c status=200
+2026-07-22T12:38:19.794050Z [info     ] request                        client=127.0.0.1 elapsed_ms=105.6 method=GET path=/api/v1/agentapp/registry/employees request_id=5763cc085e7543baa782d2f4743f985b status=200
+2026-07-22T12:38:32.249815Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.1 method=GET path=/api/v1/agentapp/canvas/canvases request_id=6b6ec0661bfd4a39ac98a71d884ed789 status=200
+2026-07-22T12:38:32.260355Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.0 method=GET path=/api/v1/agentapp/canvas/image-models request_id=2014d54e292c4e768d393892f0561898 status=200
+2026-07-22T12:38:32.268547Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.6 method=GET path=/api/v1/agentapp/registry/employees request_id=a215943f69e9407f895e8976e9512e6c status=200
+2026-07-22T12:38:32.283438Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.2 method=GET path=/api/v1/agentapp/canvas/canvases request_id=2417c153dd7b4e74a20273ac316444b9 status=200
+2026-07-22T12:38:32.306752Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.0 method=GET path=/api/v1/agentapp/canvas/image-models request_id=18056ef124af40b3b4c7f95695f72ffa status=200
+2026-07-22T12:38:32.314913Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.9 method=GET path=/api/v1/agentapp/registry/employees request_id=f707b65a176249dc851fc5fc9dfb0447 status=200
+2026-07-22T12:38:32.327429Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.9 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=d02b66c83a3f48a69b426215aa0d7962 status=200
+2026-07-22T12:38:59.545483Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.5 method=GET path=/api/v1/agentapp/canvas/canvases request_id=884ac23133934564969376653c1f7d48 status=200
+2026-07-22T12:38:59.556537Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.0 method=GET path=/api/v1/agentapp/canvas/image-models request_id=4df804646ccd46c7a27e96236ae67fe6 status=200
+2026-07-22T12:38:59.564538Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.0 method=GET path=/api/v1/agentapp/registry/employees request_id=0e9cd346298b4720bda96f68f6094ca7 status=200
+2026-07-22T12:38:59.579538Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.8 method=GET path=/api/v1/agentapp/canvas/canvases request_id=5a7cfe4033a34c7b93ab5ab467227e3a status=200
+2026-07-22T12:38:59.589099Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.0 method=GET path=/api/v1/agentapp/canvas/image-models request_id=2279057f415041d3b9fa30bd90955189 status=200
+2026-07-22T12:38:59.596121Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.1 method=GET path=/api/v1/agentapp/registry/employees request_id=2b523e0f893e4250b5fa50b7efda84fc status=200
+2026-07-22T12:38:59.608108Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=67c231127cfc40c0a84cd27a9a0d035d status=200
+2026-07-22T12:39:11.426183Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.6 method=GET path=/api/v1/agentapp/canvas/canvases request_id=7157918a410b4ad3bdca4057ca788c08 status=200
+2026-07-22T12:39:11.438341Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.9 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=8f13bdeceba7491cbcdedf6cf85e8891 status=200
+2026-07-22T12:39:11.445287Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.2 method=GET path=/api/v1/agentapp/canvas/image-models request_id=c278f782f3864c0dac233499620ae16a status=200
+2026-07-22T12:39:11.451999Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.6 method=GET path=/api/v1/agentapp/registry/employees request_id=c39664fd65fd4ae7a783954f7060027a status=200
+2026-07-22T12:40:13.380031Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/auth/check request_id=56e7f824ee9b4884ac700e2b682a56d5 status=200
+2026-07-22T12:40:13.393030Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/api/v1/agentapp/auth/check request_id=c5b2da4ff280457c9e50fe5c99deebc7 status=200
+2026-07-22T12:40:13.501565Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.4 method=GET path=/api/v1/agentapp/canvas/canvases request_id=d31c21b256034a03ae147302afac1bae status=200
+2026-07-22T12:40:13.513675Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.8 method=GET path=/api/v1/agentapp/canvas/image-models request_id=11d88dc9cf574dd2ae2da97f36f383f9 status=200
+2026-07-22T12:40:13.521566Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.3 method=GET path=/api/v1/agentapp/registry/employees request_id=ab596de73a8b4b00853161fe6f5544d7 status=200
+2026-07-22T12:40:13.537936Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.0 method=GET path=/api/v1/agentapp/canvas/canvases request_id=f980b05bce5c4bdd82aa14d46bf3ab54 status=200
+2026-07-22T12:40:13.566545Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.1 method=GET path=/api/v1/agentapp/canvas/image-models request_id=c5a81af93bda4807b1e39165036cff35 status=200
+2026-07-22T12:40:13.574553Z [info     ] request                        client=127.0.0.1 elapsed_ms=39.8 method=GET path=/api/v1/agentapp/registry/employees request_id=22e566a558ab4a819a6adca64019d1b4 status=200
+2026-07-22T12:40:13.590621Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=0b29a67a25dc4dc8927c27df9285c2fe status=200
+2026-07-22T12:41:47.427303Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/auth/check request_id=be448329c7764f52bcbee64d835ce3b4 status=200
+2026-07-22T12:41:47.438564Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/api/v1/agentapp/auth/check request_id=21fd9c5b50bc40fda68ea7ae7b505f37 status=200
+2026-07-22T12:41:47.567845Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.8 method=GET path=/api/v1/agentapp/canvas/canvases request_id=a730f74815bb47428a0934493333fe61 status=200
+2026-07-22T12:41:47.579509Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.5 method=GET path=/api/v1/agentapp/canvas/image-models request_id=b547d54daca84aa49cf46a2f07a7c589 status=200
+2026-07-22T12:41:47.588055Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.0 method=GET path=/api/v1/agentapp/registry/employees request_id=cbf874ad79214898af9a1f30e511efab status=200
+2026-07-22T12:41:47.604800Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.5 method=GET path=/api/v1/agentapp/canvas/canvases request_id=6250638d5bcc4dacb0c0cbfd395d5def status=200
+2026-07-22T12:41:47.618184Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.4 method=GET path=/api/v1/agentapp/canvas/image-models request_id=08fb7147a5cd4a39a679762802a85377 status=200
+2026-07-22T12:41:47.625800Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.7 method=GET path=/api/v1/agentapp/registry/employees request_id=b1f21b7fc9d04208acb3cf2f2728d016 status=200
+2026-07-22T12:41:47.663898Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.8 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=aa2fd18ec4c847009dc0a6ac2d978447 status=200
+2026-07-22T12:42:31.128278Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/auth/check request_id=05579da3fffc4b88962129a4bc4f4a7c status=200
+2026-07-22T12:42:31.142279Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/auth/check request_id=9dd7ec3cd2614989a0e68fd83a691d9c status=200
+2026-07-22T12:42:31.425683Z [info     ] request                        client=127.0.0.1 elapsed_ms=177.1 method=GET path=/api/v1/agentapp/production/projects request_id=bfc5d36517a7446196de13e805a61d94 status=200
+2026-07-22T12:42:31.572210Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.4 method=GET path=/api/v1/agentapp/director/projects/7666b0e8 request_id=243c8c9bba3a4fd88d11ea58dc9f3984 status=200
+2026-07-22T12:42:31.586202Z [info     ] request                        client=127.0.0.1 elapsed_ms=149.8 method=GET path=/api/v1/agentapp/production/projects request_id=4af137c7572b44f59bb423fb0d3ae31e status=200
+2026-07-22T12:42:32.049285Z [info     ] request                        client=127.0.0.1 elapsed_ms=136.3 method=GET path=/api/v1/agentapp/production/projects request_id=813e36556f504869940919bb942e3bd9 status=200
+2026-07-22T12:42:36.341071Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/auth/check request_id=1e638adc79e54a8a886afc67c4194109 status=200
+2026-07-22T12:42:36.354072Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/api/v1/agentapp/auth/check request_id=4e745f37211240dc87e29dcf32bfdaf7 status=200
+2026-07-22T12:42:36.514911Z [info     ] request                        client=127.0.0.1 elapsed_ms=112.0 method=GET path=/api/v1/agentapp/production/projects request_id=61e297c3902344878b5ed847e88e5adc status=200
+2026-07-22T12:42:36.703855Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.6 method=GET path=/api/v1/agentapp/director/projects/7666b0e8 request_id=34acfc697b3f4933b3d12af496e070ea status=200
+2026-07-22T12:42:36.714809Z [info     ] request                        client=127.0.0.1 elapsed_ms=190.4 method=GET path=/api/v1/agentapp/production/projects request_id=807bbef67da341149ce89c914bfd9dbe status=200
+2026-07-22T12:42:36.879621Z [info     ] request                        client=127.0.0.1 elapsed_ms=154.1 method=GET path=/api/v1/agentapp/production/projects request_id=935e56a72ad34c87a3ede188eac88af2 status=200
+2026-07-22T12:43:16.830983Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/auth/check request_id=67f40eea47b94223823305a534e5674e status=200
+2026-07-22T12:43:16.843058Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/auth/check request_id=b6dbe7ab1a2649a0a4da2bc341bee903 status=200
+2026-07-22T12:43:16.997884Z [info     ] request                        client=127.0.0.1 elapsed_ms=104.0 method=GET path=/api/v1/agentapp/production/projects request_id=09254d84e0bb48bdbff0e9bc3a804ff8 status=200
+2026-07-22T12:43:17.118293Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.9 method=GET path=/api/v1/agentapp/director/projects/7666b0e8 request_id=c36e8f84c8a2447e8087cbb54c808003 status=200
+2026-07-22T12:43:17.130501Z [info     ] request                        client=127.0.0.1 elapsed_ms=121.0 method=GET path=/api/v1/agentapp/production/projects request_id=82776a6384ec4193bc43dca131b57325 status=200
+2026-07-22T12:43:17.318371Z [info     ] request                        client=127.0.0.1 elapsed_ms=176.6 method=GET path=/api/v1/agentapp/production/projects request_id=38484123627a4022bc6050e9d8fe1af7 status=200
+2026-07-22T12:44:11.917656Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.2 method=GET path=/api/v1/agentapp/canvas/canvases request_id=5d81048902c84c53b7bddd4d18ef0611 status=200
+2026-07-22T12:44:11.928656Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.1 method=GET path=/api/v1/agentapp/canvas/image-models request_id=86e2d2bada19478baae9c4729bc674d3 status=200
+2026-07-22T12:44:11.936967Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.2 method=GET path=/api/v1/agentapp/registry/employees request_id=a85b4fa2310d4c08924224939780d9da status=200
+2026-07-22T12:44:11.952967Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.9 method=GET path=/api/v1/agentapp/canvas/canvases request_id=0c31e096aefc46ca961fb06ab91e0991 status=200
+2026-07-22T12:44:11.983316Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.1 method=GET path=/api/v1/agentapp/canvas/image-models request_id=aa81cb0bca5c4369b117d2499d4195a3 status=200
+2026-07-22T12:44:11.990826Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.0 method=GET path=/api/v1/agentapp/registry/employees request_id=d0252233b98f46a3a487eb1891bb1e67 status=200
+2026-07-22T12:46:04.638230Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/api/v1/agentapp/auth/check request_id=f704c99d9cae466e8a7953effd58cc00 status=200
+2026-07-22T12:46:04.650240Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/api/v1/agentapp/auth/check request_id=ff7ff5fb56c9410dac6a042c766167d7 status=200
+2026-07-22T12:46:04.782463Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.7 method=GET path=/api/v1/agentapp/canvas/canvases request_id=ce55db0a4b8b4ad3b22034a5b932479f status=200
+2026-07-22T12:46:04.794482Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.3 method=GET path=/api/v1/agentapp/canvas/image-models request_id=da38c9ca64b94e17aae9c0e8b12d32a6 status=200
+2026-07-22T12:46:04.803419Z [info     ] request                        client=127.0.0.1 elapsed_ms=25.2 method=GET path=/api/v1/agentapp/registry/employees request_id=9939adb1fe13489ea23a142a0f14837e status=200
+2026-07-22T12:46:04.819560Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.8 method=GET path=/api/v1/agentapp/canvas/canvases request_id=5ed838578c1948539b3ad05f78b3e7e9 status=200
+2026-07-22T12:46:04.830560Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.9 method=GET path=/api/v1/agentapp/canvas/image-models request_id=6ebe1c83149748ee910c566d738c7ea8 status=200
+2026-07-22T12:46:04.838019Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.9 method=GET path=/api/v1/agentapp/registry/employees request_id=27201012883a4ff1aa5123da7e0d53a5 status=200
+2026-07-22T12:46:04.845395Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.2 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=7ecc4628e5df4bf997da5afc67a6b6a1 status=200
+2026-07-22T12:49:10.659846Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/auth/check request_id=dbd5f78e4a6d4cc4b4e438830a23c8f6 status=200
+2026-07-22T12:49:10.672977Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/api/v1/agentapp/auth/check request_id=0e86a307901b4d4ea12306807fe95c71 status=200
+2026-07-22T12:49:10.892736Z [info     ] request                        client=127.0.0.1 elapsed_ms=113.4 method=GET path=/api/v1/agentapp/production/projects request_id=e4c6a5626e18417b9302d0b0249c4840 status=200
+2026-07-22T12:49:11.039355Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.6 method=GET path=/api/v1/agentapp/director/projects/7666b0e8 request_id=b04066483c7c4238ae2368f9f45ffcad status=200
+2026-07-22T12:49:11.053061Z [info     ] request                        client=127.0.0.1 elapsed_ms=147.4 method=GET path=/api/v1/agentapp/production/projects request_id=be4a848e04a54891bb37993bb1031bd0 status=200
+2026-07-22T12:49:11.498004Z [info     ] request                        client=127.0.0.1 elapsed_ms=127.5 method=GET path=/api/v1/agentapp/production/projects request_id=5a2d12afe8bf42e0aa41d0476124c0ca status=200
+2026-07-22T12:49:18.632095Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/api/v1/agentapp/auth/check request_id=553e290262674f3a81903b8111e58640 status=200
+2026-07-22T12:49:18.656016Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/api/v1/agentapp/auth/check request_id=7be3ddf452d34e05b2dc957013ef857e status=200
+2026-07-22T12:49:19.073359Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.9 method=GET path=/api/v1/agentapp/canvas/canvases request_id=88df28da8c9d406784e9cd7c56c5884d status=200
+2026-07-22T12:49:19.085801Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.1 method=GET path=/api/v1/agentapp/canvas/image-models request_id=fa1d480bec0c40bda2b2b75b359d6ab0 status=200
+2026-07-22T12:49:19.093736Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.9 method=GET path=/api/v1/agentapp/registry/employees request_id=36bad24e267e46c0820fc73500e8bab4 status=200
+2026-07-22T12:49:19.108319Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/api/v1/agentapp/canvas/canvases request_id=dff0ad4d12de4572859098f840c1ba8c status=200
+2026-07-22T12:49:19.215072Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/api/v1/agentapp/canvas/image-models request_id=7db6920485754c7f93ec039e6646ca38 status=200
+2026-07-22T12:49:19.421042Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=1c92a41f020c465c970b6b21c62ff5a2 status=200
+2026-07-22T12:49:19.431837Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.6 method=GET path=/api/v1/agentapp/registry/employees request_id=60447dca65f14a758847bcfe44e0368d status=200
+2026-07-22T12:49:26.586069Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/auth/check request_id=d6cff3a61c4946f2b4226d5b3146c703 status=200
+2026-07-22T12:49:26.686596Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/api/v1/agentapp/auth/check request_id=b4edba6e411941ba800410690b8412e4 status=200
+2026-07-22T12:49:26.793458Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/api/v1/agentapp/canvas/canvases request_id=9857564c3da1452ba34d22cb29f90228 status=200
+2026-07-22T12:49:26.906672Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/api/v1/agentapp/canvas/image-models request_id=0c4b8b9ccf6d4e818193105841e54f9b status=200
+2026-07-22T12:49:26.925691Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.9 method=GET path=/api/v1/agentapp/registry/employees request_id=c4f69317c76d48478ed432abf081a23e status=200
+2026-07-22T12:49:27.015912Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/api/v1/agentapp/canvas/canvases request_id=649f9b63da974430b6adb140379c189e status=200
+2026-07-22T12:49:27.109438Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/api/v1/agentapp/canvas/image-models request_id=e6cc18252bde44d3ad2ce6d21104be63 status=200
+2026-07-22T12:49:27.122254Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.1 method=GET path=/api/v1/agentapp/registry/employees request_id=000af4e89f3c4388b3fa9341baa792ec status=200
+2026-07-22T12:49:27.237144Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.0 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=b256f4147990411fa4ebf5f574557603 status=200
+2026-07-22T12:52:34.614323Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/api/v1/agentapp/canvas/canvases request_id=c6ae000ebe1a431990fc9509ad2171b9 status=200
+2026-07-22T12:52:34.663376Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/api/v1/agentapp/canvas/image-models request_id=ac8265a5751741ef91370e55c5de4cd2 status=200
+2026-07-22T12:52:34.933002Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.9 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=2843536e8c2841fda382925a38b13c87 status=200
+2026-07-22T12:52:34.943423Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.2 method=GET path=/api/v1/agentapp/registry/employees request_id=f56cecc046b94487a2d9d207a6e743ac status=200
+2026-07-22T12:52:59.078304Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/api/v1/agentapp/canvas/canvases request_id=5026a2612e88428a9c34db8c6558f54c status=200
+2026-07-22T12:52:59.219283Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/canvas/image-models request_id=cafc5b06cb75405ba157b4b18fe5274a status=200
+2026-07-22T12:52:59.395641Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.7 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=477c9ba026d74eb1b33de6705df6acf7 status=200
+2026-07-22T12:52:59.406599Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.6 method=GET path=/api/v1/agentapp/registry/employees request_id=d0e06d7d052947d98e1d6f0b57b989ae status=200
+2026-07-22T12:53:27.277341Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/auth/check request_id=c2b6edda2cd04711b27d17683a85388c status=200
+2026-07-22T12:53:27.386243Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/auth/check request_id=90477f32a64246df9fa7785fca996329 status=200
+2026-07-22T12:53:27.705125Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.0 method=GET path=/api/v1/agentapp/canvas/canvases request_id=7672324f172e45a5943f17aa5ecd5421 status=200
+2026-07-22T12:53:27.717543Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.4 method=GET path=/api/v1/agentapp/canvas/image-models request_id=3d5e07d6da224e42a2bc437535099d09 status=200
+2026-07-22T12:53:27.725483Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.4 method=GET path=/api/v1/agentapp/registry/employees request_id=944a6d0b133f40deb60046c9c6522b51 status=200
+2026-07-22T12:53:28.039469Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.9 method=GET path=/api/v1/agentapp/canvas/canvases request_id=48c33ab01ae34012a40fe0745ee78b88 status=200
+2026-07-22T12:53:28.058453Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.8 method=GET path=/api/v1/agentapp/canvas/image-models request_id=a3064be579b94559ab9e3f8ada2bc436 status=200
+2026-07-22T12:53:28.070232Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.8 method=GET path=/api/v1/agentapp/registry/employees request_id=e55c85808e86435980b8876cc6951b23 status=200
+2026-07-22T12:53:28.113482Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/api/v1/agentapp/canvas/canvases/359d205a request_id=f59f179298f64bf7b26ebac603a90216 status=200
+定时触发趋势同步 @ 02:00
+HTTP Request: GET https://api.github.com/search/repositories?q=agent+skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=agent+skill+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: agent skill） ===
+
+ 1. 259326 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 232161 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 182031 ⭐  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .agents directory.
+     https://github.com/mattpocock/skills
+ 4. 163390 ⭐  anthropics/skills [Python]
+     Public repository for Agent Skills
+     https://github.com/anthropics/skills
+ 5. 126219 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 6.  79837 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 7.  77611 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+ 8.  66329 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 9.  53124 ⭐  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+10.  50641 ⭐  hesreallyhim/awesome-claude-code [Python]
+     A hand-picked collection of the finest of resources for the most awesome of agents, Claude…
+     https://github.com/hesreallyhim/awesome-claude-code
+11.  47152 ⭐  jeecgboot/JeecgBoot [Java]
+     【低代码 V2.0】AI低代码平台，AI Skills 一句话生成整个系统；一键生成前后端代码甚至整个模块。 AI Skills 一句话画流程、设计表单、生成报表、大屏。内置 AI…
+     https://github.com/jeecgboot/JeecgBoot
+12.  46080 ⭐  zhayujie/CowAgent [Python]
+     Open-source super AI assistant & Agent Harness. Plans tasks, runs tools and skills, self-e…
+     https://github.com/zhayujie/CowAgent
+13.  43724 ⭐  sickn33/agentic-awesome-skills [Python]
+     AAS Core is the local, agent-first control plane for complete catalog discovery, agent-own…
+     https://github.com/sickn33/agentic-awesome-skills
+14.  42993 ⭐  kepano/obsidian-skills
+     Agent skills for Obsidian. Teach your agent to use Obsidian CLI and open formats including…
+     https://github.com/kepano/obsidian-skills
+15.  41561 ⭐  multica-ai/multica [Go]
+     The open-source managed agents platform. Turn coding agents into real teammates — assign t…
+     https://github.com/multica-ai/multica
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1075.3 ⭐/天 (共182031⭐)  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .agents directory.
+     https://github.com/mattpocock/skills
+ 2.  508.8 ⭐/天 (共79837⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 3.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 4.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 5.  245.1 ⭐/天 (共22102⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+ 6.  231.7 ⭐/天 (共21809⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+ 7.  210.7 ⭐/天 (共29904⭐)  googleworkspace/cli [Rust]
+     Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Cha…
+     https://github.com/googleworkspace/cli
+ 8.  190.8 ⭐/天 (共14397⭐)  microsoft/SkillOpt [Python]
+     SkillOpt is a text-space optimizer that trains reusable natural-language skills for frozen…
+     https://github.com/microsoft/SkillOpt
+ 9.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+10.  169.7 ⭐/天 (共24234⭐)  phuryn/pm-skills
+     PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to stra…
+     https://github.com/phuryn/pm-skills
+11.  165.1 ⭐/天 (共17735⭐)  KKKKhazix/khazix-skills [Python]
+     数字生命卡兹克开源的 AI Skills 合集 | Agent Skills: neat-freak 洁癖 (docs/memory closeout), hv-analysis,…
+     https://github.com/KKKKhazix/khazix-skills
+12.  148.8 ⭐/天 (共26152⭐)  zarazhangrui/frontend-slides [JavaScript]
+     Create beautiful slides on the web using a coding agent's frontend skills
+     https://github.com/zarazhangrui/frontend-slides
+13.  145.2 ⭐/天 (共23313⭐)  Donchitos/Claude-Code-Game-Studios [Shell]
+     Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a com…
+     https://github.com/Donchitos/Claude-Code-Game-Studios
+14.  139.6 ⭐/天 (共18991⭐)  tanweai/pua [TypeScript]
+     你是一个曾经被寄予厚望的 P8 级工程师。Anthropic 当初给你定级的时候，对你的期望是很高的。  一个agent使用的高能动性的skill。  Your AI has be…
+     https://github.com/tanweai/pua
+15.  133.0 ⭐/天 (共15022⭐)  google/skills [Python]
+     Agent Skills for Google products and technologies
+     https://github.com/google/skills
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.0 天前的快照）
+
+ 1. +    0 ⭐ (+0.0/天)  obra/superpowers [Shell]  共259326⭐
+     https://github.com/obra/superpowers
+ 2. +    0 ⭐ (+0.0/天)  affaan-m/ECC [JavaScript]  共232161⭐
+     https://github.com/affaan-m/ECC
+ 3. +    0 ⭐ (+0.0/天)  mattpocock/skills [Shell]  共182031⭐
+     https://github.com/mattpocock/skills
+ 4. +    0 ⭐ (+0.0/天)  anthropics/skills [Python]  共163390⭐
+     https://github.com/anthropics/skills
+ 5. +    0 ⭐ (+0.0/天)  Shubhamsaboo/awesome-llm-apps [Python]  共126219⭐
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 6. +    0 ⭐ (+0.0/天)  addyosmani/agent-skills [JavaScript]  共79837⭐
+     https://github.com/addyosmani/agent-skills
+ 7. +    0 ⭐ (+0.0/天)  bytedance/deer-flow [Python]  共77611⭐
+     https://github.com/bytedance/deer-flow
+ 8. +    0 ⭐ (+0.0/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 9. +    0 ⭐ (+0.0/天)  mvanhorn/last30days-skill [Python]  共53124⭐
+     https://github.com/mvanhorn/last30days-skill
+10. +    0 ⭐ (+0.0/天)  hesreallyhim/awesome-claude-code [Python]  共50641⭐
+     https://github.com/hesreallyhim/awesome-claude-code
+11. +    0 ⭐ (+0.0/天)  jeecgboot/JeecgBoot [Java]  共47152⭐
+     https://github.com/jeecgboot/JeecgBoot
+12. +    0 ⭐ (+0.0/天)  zhayujie/CowAgent [Python]  共46080⭐
+     https://github.com/zhayujie/CowAgent
+13. +    0 ⭐ (+0.0/天)  sickn33/agentic-awesome-skills [Python]  共43724⭐
+     https://github.com/sickn33/agentic-awesome-skills
+14. +    0 ⭐ (+0.0/天)  kepano/obsidian-skills  共42993⭐
+     https://github.com/kepano/obsidian-skills
+15. +    0 ⭐ (+0.0/天)  multica-ai/multica [Go]  共41561⭐
+     https://github.com/multica-ai/multica
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\agent_skill\20260722_180017.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020019.json
+HTTP Request: GET https://api.github.com/search/repositories?q=claude+skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=claude+skill+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: claude skill） ===
+
+ 1. 232161 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 195369 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3. 108897 ⭐  nextlevelbuilder/ui-ux-pro-max-skill [Python]
+     An AI SKILL that provide design intelligence for building professional UI/UX multiple plat…
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 4.  93727 ⭐  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 5.  92043 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 6.  68654 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+ 7.  66329 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 8.  53124 ⭐  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+ 9.  50641 ⭐  hesreallyhim/awesome-claude-code [Python]
+     A hand-picked collection of the finest of resources for the most awesome of agents, Claude…
+     https://github.com/hesreallyhim/awesome-claude-code
+10.  46080 ⭐  zhayujie/CowAgent [Python]
+     Open-source super AI assistant & Agent Harness. Plans tasks, runs tools and skills, self-e…
+     https://github.com/zhayujie/CowAgent
+11.  42993 ⭐  kepano/obsidian-skills
+     Agent skills for Obsidian. Teach your agent to use Obsidian CLI and open formats including…
+     https://github.com/kepano/obsidian-skills
+12.  41200 ⭐  coreyhaines31/marketingskills [JavaScript]
+     Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and grow…
+     https://github.com/coreyhaines31/marketingskills
+13.  41167 ⭐  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+14.  41131 ⭐  danny-avila/LibreChat [TypeScript]
+     Enhanced ChatGPT Clone: Features Agents, MCP, Skills, DeepSeek, Anthropic, AWS, OpenAI, Re…
+     https://github.com/danny-avila/LibreChat
+15.  38976 ⭐  Imbad0202/academic-research-skills [Python]
+     Academic Research Skills for Claude Code: research → write → review → revise → finalize
+     https://github.com/Imbad0202/academic-research-skills
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1106.4 ⭐/天 (共195369⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 2.  851.4 ⭐/天 (共93727⭐)  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 3.  841.9 ⭐/天 (共92043⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 4.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 5.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 6.  266.1 ⭐/天 (共38976⭐)  Imbad0202/academic-research-skills [Python]
+     Academic Research Skills for Claude Code: research → write → review → revise → finalize
+     https://github.com/Imbad0202/academic-research-skills
+ 7.  231.7 ⭐/天 (共21809⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+ 8.  180.4 ⭐/天 (共15490⭐)  Nutlope/hallmark [CSS]
+     Anti-AI-slop design skill for Claude Code, Cursor, and Codex.
+     https://github.com/Nutlope/hallmark
+ 9.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+10.  165.1 ⭐/天 (共17735⭐)  KKKKhazix/khazix-skills [Python]
+     数字生命卡兹克开源的 AI Skills 合集 | Agent Skills: neat-freak 洁癖 (docs/memory closeout), hv-analysis,…
+     https://github.com/KKKKhazix/khazix-skills
+11.  148.8 ⭐/天 (共26152⭐)  zarazhangrui/frontend-slides [JavaScript]
+     Create beautiful slides on the web using a coding agent's frontend skills
+     https://github.com/zarazhangrui/frontend-slides
+12.  145.2 ⭐/天 (共23313⭐)  Donchitos/Claude-Code-Game-Studios [Shell]
+     Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a com…
+     https://github.com/Donchitos/Claude-Code-Game-Studios
+13.  125.1 ⭐/天 (共8772⭐)  zhaoxuya520/reverse-skill [PowerShell]
+     Reverse Engineering / Authorized Penetration Testing / Security Research Skill Router Pack…
+     https://github.com/zhaoxuya520/reverse-skill
+14.  112.9 ⭐/天 (共9330⭐)  virgiliojr94/book-to-skill [Python]
+     Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use …
+     https://github.com/virgiliojr94/book-to-skill
+15.  109.3 ⭐/天 (共7905⭐)  nexu-io/html-anything [HTML]
+     ✨ The agentic HTML editor — your local AI agent writes the HTML, you ship it. 🚀 75 Skills …
+     https://github.com/nexu-io/html-anything
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  547 ⭐ (+805.9/天)  Graphify-Labs/graphify [Python]  共93727⭐
+     https://github.com/Graphify-Labs/graphify
+ 2. +  517 ⭐ (+761.7/天)  Nutlope/hallmark [CSS]  共15490⭐
+     https://github.com/Nutlope/hallmark
+ 3. +  325 ⭐ (+478.8/天)  nextlevelbuilder/ui-ux-pro-max-skill [Python]  共108897⭐
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 4. +  290 ⭐ (+427.2/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 5. +  281 ⭐ (+414.0/天)  calesthio/OpenMontage [Python]  共41167⭐
+     https://github.com/calesthio/OpenMontage
+ 6. +  262 ⭐ (+386.0/天)  JuliusBrussee/caveman [JavaScript]  共92043⭐
+     https://github.com/JuliusBrussee/caveman
+ 7. +  256 ⭐ (+377.2/天)  multica-ai/andrej-karpathy-skills  共195369⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 8. +  253 ⭐ (+372.7/天)  affaan-m/ECC [JavaScript]  共232161⭐
+     https://github.com/affaan-m/ECC
+ 9. +  253 ⭐ (+372.7/天)  ComposioHQ/awesome-claude-skills [Python]  共68654⭐
+     https://github.com/ComposioHQ/awesome-claude-skills
+10. +  154 ⭐ (+226.9/天)  Imbad0202/academic-research-skills [Python]  共38976⭐
+     https://github.com/Imbad0202/academic-research-skills
+11. +  127 ⭐ (+187.1/天)  coreyhaines31/marketingskills [JavaScript]  共41200⭐
+     https://github.com/coreyhaines31/marketingskills
+12. +  110 ⭐ (+162.1/天)  mvanhorn/last30days-skill [Python]  共53124⭐
+     https://github.com/mvanhorn/last30days-skill
+13. +   83 ⭐ (+122.3/天)  kepano/obsidian-skills  共42993⭐
+     https://github.com/kepano/obsidian-skills
+14. +   69 ⭐ (+101.7/天)  virgiliojr94/book-to-skill [Python]  共9330⭐
+     https://github.com/virgiliojr94/book-to-skill
+15. +   68 ⭐ (+100.2/天)  KKKKhazix/khazix-skills [Python]  共17735⭐
+     https://github.com/KKKKhazix/khazix-skills
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\claude_skill\20260722_180019.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020021.json
+HTTP Request: GET https://api.github.com/search/repositories?q=skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=skill+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: skill） ===
+
+ 1. 259326 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 232161 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 195369 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 4. 182033 ⭐  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .agents directory.
+     https://github.com/mattpocock/skills
+ 5. 163390 ⭐  anthropics/skills [Python]
+     Public repository for Agent Skills
+     https://github.com/anthropics/skills
+ 6. 128470 ⭐  Chalarangelo/30-seconds-of-code [JavaScript]
+     Coding articles to level up your development skills
+     https://github.com/Chalarangelo/30-seconds-of-code
+ 7. 126220 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 8. 108897 ⭐  nextlevelbuilder/ui-ux-pro-max-skill [Python]
+     An AI SKILL that provide design intelligence for building professional UI/UX multiple plat…
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 9.  96086 ⭐  florinpop17/app-ideas
+     A Collection of application ideas which can be used to improve your coding skills.
+     https://github.com/florinpop17/app-ideas
+10.  93727 ⭐  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+11.  92044 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+12.  79837 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+13.  77611 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+14.  68654 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+15.  66329 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1106.3 ⭐/天 (共195369⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 2. 1075.3 ⭐/天 (共182033⭐)  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .agents directory.
+     https://github.com/mattpocock/skills
+ 3.  851.4 ⭐/天 (共93727⭐)  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 4.  841.9 ⭐/天 (共92044⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  508.8 ⭐/天 (共79837⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 6.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 7.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 8.  340.1 ⭐/天 (共30476⭐)  Yuan1z0825/nature-skills [Python]
+     符合nature论文学术表达和科研绘图的Skill
+     https://github.com/Yuan1z0825/nature-skills
+ 9.  288.5 ⭐/天 (共51452⭐)  VoltAgent/awesome-openclaw-skills
+     The awesome collection of OpenClaw skills. 5,400+ skills filtered and categorized from the…
+     https://github.com/VoltAgent/awesome-openclaw-skills
+10.  266.1 ⭐/天 (共38976⭐)  Imbad0202/academic-research-skills [Python]
+     Academic Research Skills for Claude Code: research → write → review → revise → finalize
+     https://github.com/Imbad0202/academic-research-skills
+11.  262.9 ⭐/天 (共28542⭐)  alchaincyf/nuwa-skill [Python]
+     你想蒸馏的下一个员工，何必是同事。蒸馏任何人的思维方式——心智模型、决策启发式、表达DNA。Distill how anyone thinks.
+     https://github.com/alchaincyf/nuwa-skill
+12.  245.1 ⭐/天 (共22102⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+13.  231.7 ⭐/天 (共21809⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+14.  210.7 ⭐/天 (共29904⭐)  googleworkspace/cli [Rust]
+     Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Cha…
+     https://github.com/googleworkspace/cli
+15.  193.8 ⭐/天 (共30436⭐)  AlexsJones/llmfit [Rust]
+     Hundreds of models & providers. One command to find what runs on your hardware.
+     https://github.com/AlexsJones/llmfit
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. + 1491 ⭐ (+2194.6/天)  mattpocock/skills [Shell]  共182033⭐
+     https://github.com/mattpocock/skills
+ 2. +  547 ⭐ (+805.1/天)  Graphify-Labs/graphify [Python]  共93727⭐
+     https://github.com/Graphify-Labs/graphify
+ 3. +  522 ⭐ (+768.3/天)  obra/superpowers [Shell]  共259326⭐
+     https://github.com/obra/superpowers
+ 4. +  325 ⭐ (+478.4/天)  nextlevelbuilder/ui-ux-pro-max-skill [Python]  共108897⭐
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 5. +  290 ⭐ (+426.8/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 6. +  281 ⭐ (+413.6/天)  calesthio/OpenMontage [Python]  共41167⭐
+     https://github.com/calesthio/OpenMontage
+ 7. +  263 ⭐ (+387.1/天)  JuliusBrussee/caveman [JavaScript]  共92044⭐
+     https://github.com/JuliusBrussee/caveman
+ 8. +  256 ⭐ (+376.8/天)  multica-ai/andrej-karpathy-skills  共195369⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 9. +  253 ⭐ (+372.4/天)  affaan-m/ECC [JavaScript]  共232161⭐
+     https://github.com/affaan-m/ECC
+10. +  253 ⭐ (+372.4/天)  ComposioHQ/awesome-claude-skills [Python]  共68654⭐
+     https://github.com/ComposioHQ/awesome-claude-skills
+11. +  225 ⭐ (+331.2/天)  AlexsJones/llmfit [Rust]  共30436⭐
+     https://github.com/AlexsJones/llmfit
+12. +  196 ⭐ (+288.5/天)  Yuan1z0825/nature-skills [Python]  共30476⭐
+     https://github.com/Yuan1z0825/nature-skills
+13. +  182 ⭐ (+267.9/天)  anthropics/skills [Python]  共163390⭐
+     https://github.com/anthropics/skills
+14. +  154 ⭐ (+226.7/天)  Imbad0202/academic-research-skills [Python]  共38976⭐
+     https://github.com/Imbad0202/academic-research-skills
+15. +  143 ⭐ (+210.5/天)  addyosmani/agent-skills [JavaScript]  共79837⭐
+     https://github.com/addyosmani/agent-skills
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\skill\20260722_180021.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020119.json
+HTTP Request: GET https://api.github.com/search/repositories?q=topic%3Amcp&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=topic%3Amcp+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=topic%3Amcp+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: topic:mcp） ===
+
+ 1. 232162 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 197481 ⭐  n8n-io/n8n [TypeScript]
+     Fair-code workflow automation platform with native AI capabilities. Combine visual buildin…
+     https://github.com/n8n-io/n8n
+ 3. 157224 ⭐  Snailclimb/JavaGuide [JavaScript]
+     Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+     https://github.com/Snailclimb/JavaGuide
+ 4. 149790 ⭐  langgenius/dify [TypeScript]
+     Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collabo…
+     https://github.com/langgenius/dify
+ 5. 146351 ⭐  open-webui/open-webui [Python]
+     User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
+     https://github.com/open-webui/open-webui
+ 6. 120128 ⭐  farion1231/cc-switch [Rust]
+     A cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode, OpenClaw, …
+     https://github.com/farion1231/cc-switch
+ 7.  93727 ⭐  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 8.  91140 ⭐  punkpeye/awesome-mcp-servers
+     A collection of MCP servers.
+     https://github.com/punkpeye/awesome-mcp-servers
+ 9.  80682 ⭐  lobehub/lobehub [TypeScript]
+     🤯 LobeHub is your Chief Agent Operator, organizing your agents into 7×24 operations by hir…
+     https://github.com/lobehub/lobehub
+10.  79794 ⭐  netdata/netdata [Go]
+     The fastest path to AI-powered full stack observability, even for lean teams.
+     https://github.com/netdata/netdata
+11.  70726 ⭐  D4Vinci/Scrapling [Python]
+     🕷️ An adaptive Web Scraping framework that handles everything from a single request to a f…
+     https://github.com/D4Vinci/Scrapling
+12.  68654 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+13.  68369 ⭐  koala73/worldmonitor [TypeScript]
+     Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitor…
+     https://github.com/koala73/worldmonitor
+14.  61190 ⭐  headroomlabs-ai/headroom [Python]
+     Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 20% fewer to…
+     https://github.com/headroomlabs-ai/headroom
+15.  60787 ⭐  sansan0/TrendRadar [Python]
+     ⭐AI-driven public opinion & trend monitor with multi-platform aggregation, RSS, and smart …
+     https://github.com/sansan0/TrendRadar
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1.  851.4 ⭐/天 (共93728⭐)  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 2.  530.0 ⭐/天 (共57610⭐)  MemPalace/mempalace [Python]
+     The best-benchmarked open-source AI memory system. And it's free.
+     https://github.com/MemPalace/mempalace
+ 3.  401.1 ⭐/天 (共59622⭐)  Panniantong/Agent-Reach [Python]
+     Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube…
+     https://github.com/Panniantong/Agent-Reach
+ 4.  334.0 ⭐/天 (共42073⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 5.  273.8 ⭐/天 (共36869⭐)  heygen-com/hyperframes [TypeScript]
+     Write HTML. Render video. Built for agents.
+     https://github.com/heygen-com/hyperframes
+ 6.  235.2 ⭐/天 (共26426⭐)  HKUDS/Vibe-Trading [Python]
+     "Vibe-Trading: Your Personal Trading Agent"
+     https://github.com/HKUDS/Vibe-Trading
+ 7.  230.6 ⭐/天 (共34093⭐)  DeusData/codebase-memory-mcp [C]
+     High-performance code intelligence MCP server. Indexes codebases into a persistent knowled…
+     https://github.com/DeusData/codebase-memory-mcp
+ 8.  209.9 ⭐/天 (共9127⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+ 9.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+10.  172.6 ⭐/天 (共25199⭐)  tirth8205/code-review-graph [Python]
+     Local-first code intelligence graph for MCP and CLI. Builds a persistent map of your codeb…
+     https://github.com/tirth8205/code-review-graph
+11.  156.1 ⭐/天 (共24858⭐)  diegosouzapw/OmniRoute [TypeScript]
+     Never stop coding. Free MIT AI gateway: one endpoint, 268+ providers (50+ free), 500+ mode…
+     https://github.com/diegosouzapw/OmniRoute
+12.  132.9 ⭐/天 (共3097⭐)  oomol-lab/open-connector [TypeScript]
+     Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SDK, CLI, MC…
+     https://github.com/oomol-lab/open-connector
+13.  132.3 ⭐/天 (共11198⭐)  t8y2/dbx [Rust]
+     20 MB lightweight cross-platform database client for 70+ databases, including MySQL, Postg…
+     https://github.com/t8y2/dbx
+14.  128.8 ⭐/天 (共13686⭐)  xbtlin/ai-berkshire [Python]
+     AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berk…
+     https://github.com/xbtlin/ai-berkshire
+15.  128.3 ⭐/天 (共19186⭐)  mksglu/context-mode [TypeScript]
+     Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), p…
+     https://github.com/mksglu/context-mode
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. + 2800 ⭐ (+4117.2/天)  koala73/worldmonitor [TypeScript]  共68369⭐
+     https://github.com/koala73/worldmonitor
+ 2. + 1209 ⭐ (+1777.8/天)  diegosouzapw/OmniRoute [TypeScript]  共24858⭐
+     https://github.com/diegosouzapw/OmniRoute
+ 3. +  618 ⭐ (+908.7/天)  tirth8205/code-review-graph [Python]  共25199⭐
+     https://github.com/tirth8205/code-review-graph
+ 4. +  578 ⭐ (+849.9/天)  rohitg00/ai-engineering-from-scratch [Python]  共42073⭐
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 5. +  548 ⭐ (+805.8/天)  Graphify-Labs/graphify [Python]  共93728⭐
+     https://github.com/Graphify-Labs/graphify
+ 6. +  463 ⭐ (+680.8/天)  Panniantong/Agent-Reach [Python]  共59622⭐
+     https://github.com/Panniantong/Agent-Reach
+ 7. +  392 ⭐ (+576.4/天)  DeusData/codebase-memory-mcp [C]  共34093⭐
+     https://github.com/DeusData/codebase-memory-mcp
+ 8. +  350 ⭐ (+514.7/天)  farion1231/cc-switch [Rust]  共120128⭐
+     https://github.com/farion1231/cc-switch
+ 9. +  281 ⭐ (+413.2/天)  HKUDS/Vibe-Trading [Python]  共26426⭐
+     https://github.com/HKUDS/Vibe-Trading
+10. +  254 ⭐ (+373.5/天)  affaan-m/ECC [JavaScript]  共232162⭐
+     https://github.com/affaan-m/ECC
+11. +  253 ⭐ (+372.0/天)  ComposioHQ/awesome-claude-skills [Python]  共68654⭐
+     https://github.com/ComposioHQ/awesome-claude-skills
+12. +  208 ⭐ (+305.8/天)  heygen-com/hyperframes [TypeScript]  共36869⭐
+     https://github.com/heygen-com/hyperframes
+13. +  171 ⭐ (+251.4/天)  headroomlabs-ai/headroom [Python]  共61190⭐
+     https://github.com/headroomlabs-ai/headroom
+14. +  154 ⭐ (+226.4/天)  D4Vinci/Scrapling [Python]  共70726⭐
+     https://github.com/D4Vinci/Scrapling
+15. +  149 ⭐ (+219.1/天)  cobusgreyling/loop-engineering [JavaScript]  共9127⭐
+     https://github.com/cobusgreyling/loop-engineering
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\topic_mcp\20260722_180119.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020220.json
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+agent&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+agent+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: AI agent） ===
+
+ 1. 259326 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 218879 ⭐  NousResearch/hermes-agent [Python]
+     The agent that grows with you
+     https://github.com/NousResearch/hermes-agent
+ 3. 157224 ⭐  Snailclimb/JavaGuide [JavaScript]
+     Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+     https://github.com/Snailclimb/JavaGuide
+ 4. 152220 ⭐  langflow-ai/langflow [Python]
+     Langflow is a powerful tool for building and deploying AI-powered agents and workflows.
+     https://github.com/langflow-ai/langflow
+ 5. 149790 ⭐  langgenius/dify [TypeScript]
+     Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collabo…
+     https://github.com/langgenius/dify
+ 6. 142336 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+ 7. 142176 ⭐  x1xhlol/system-prompts-and-models-of-ai-tools
+     FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, L…
+     https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools
+ 8. 135827 ⭐  msitarzewski/agency-agents [Shell]
+     A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas…
+     https://github.com/msitarzewski/agency-agents
+ 9. 126220 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+10. 106131 ⭐  google-gemini/gemini-cli [TypeScript]
+     An open-source AI agent that brings the power of Gemini directly into your terminal.
+     https://github.com/google-gemini/gemini-cli
+11. 106104 ⭐  browser-use/browser-use [Python]
+     🌐 Make websites accessible for AI agents. Automate tasks online with ease.
+     https://github.com/browser-use/browser-use
+12.  91813 ⭐  karpathy/autoresearch [Python]
+     AI agents running research on single-GPU nanochat training automatically
+     https://github.com/karpathy/autoresearch
+13.  88231 ⭐  thedotmack/claude-mem [JavaScript]
+     Persistent Context Across Sessions for Every Agent –  Captures everything your agent does …
+     https://github.com/thedotmack/claude-mem
+14.  87783 ⭐  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+15.  85689 ⭐  infiniflow/ragflow [Go]
+     RAGFlow is a leading open-source Retrieval-Augmented Generation (RAG) engine that fuses cu…
+     https://github.com/infiniflow/ragflow
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2156.0 ⭐/天 (共87783⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2.  666.1 ⭐/天 (共91813⭐)  karpathy/autoresearch [Python]
+     AI agents running research on single-GPU nanochat training automatically
+     https://github.com/karpathy/autoresearch
+ 3.  508.8 ⭐/天 (共79837⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 4.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 5.  401.1 ⭐/天 (共59622⭐)  Panniantong/Agent-Reach [Python]
+     Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube…
+     https://github.com/Panniantong/Agent-Reach
+ 6.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 7.  298.3 ⭐/天 (共27559⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+ 8.  291.9 ⭐/天 (共12334⭐)  XiaomiMiMo/MiMo-Code [TypeScript]
+     MiMo Code: Where Models and Agents Co-Evolve
+     https://github.com/XiaomiMiMo/MiMo-Code
+ 9.  273.8 ⭐/天 (共36869⭐)  heygen-com/hyperframes [TypeScript]
+     Write HTML. Render video. Built for agents.
+     https://github.com/heygen-com/hyperframes
+10.  268.8 ⭐/天 (共46085⭐)  HKUDS/nanobot [Python]
+     Lightweight, open-source AI agent for your tools, chats, and workflows.
+     https://github.com/HKUDS/nanobot
+11.  245.0 ⭐/天 (共22102⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+12.  228.8 ⭐/天 (共35211⭐)  tinyhumansai/openhuman [Rust]
+     Your Personal AI super intelligence. A brain that builds a local-first memory of your life…
+     https://github.com/tinyhumansai/openhuman
+13.  225.8 ⭐/天 (共29638⭐)  JCodesMore/ai-website-cloner-template [TypeScript]
+     Clone any website with one command using AI coding agents
+     https://github.com/JCodesMore/ai-website-cloner-template
+14.  210.7 ⭐/天 (共29904⭐)  googleworkspace/cli [Rust]
+     Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Cha…
+     https://github.com/googleworkspace/cli
+15.  209.9 ⭐/天 (共9127⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  522 ⭐ (+767.6/天)  obra/superpowers [Shell]  共259326⭐
+     https://github.com/obra/superpowers
+ 2. +  463 ⭐ (+680.8/天)  Panniantong/Agent-Reach [Python]  共59622⭐
+     https://github.com/Panniantong/Agent-Reach
+ 3. +  460 ⭐ (+676.4/天)  DietrichGebert/ponytail [JavaScript]  共87783⭐
+     https://github.com/DietrichGebert/ponytail
+ 4. +  457 ⭐ (+672.0/天)  NousResearch/hermes-agent [Python]  共218879⭐
+     https://github.com/NousResearch/hermes-agent
+ 5. +  429 ⭐ (+630.8/天)  Shubhamsaboo/awesome-llm-apps [Python]  共126220⭐
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 6. +  405 ⭐ (+595.5/天)  msitarzewski/agency-agents [Shell]  共135827⭐
+     https://github.com/msitarzewski/agency-agents
+ 7. +  290 ⭐ (+426.4/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 8. +  281 ⭐ (+413.2/天)  calesthio/OpenMontage [Python]  共41167⭐
+     https://github.com/calesthio/OpenMontage
+ 9. +  208 ⭐ (+305.8/天)  heygen-com/hyperframes [TypeScript]  共36869⭐
+     https://github.com/heygen-com/hyperframes
+10. +  155 ⭐ (+227.9/天)  browser-use/browser-use [Python]  共106104⭐
+     https://github.com/browser-use/browser-use
+11. +  154 ⭐ (+226.4/天)  JCodesMore/ai-website-cloner-template [TypeScript]  共29638⭐
+     https://github.com/JCodesMore/ai-website-cloner-template
+12. +  149 ⭐ (+219.1/天)  cobusgreyling/loop-engineering [JavaScript]  共9127⭐
+     https://github.com/cobusgreyling/loop-engineering
+13. +  143 ⭐ (+210.3/天)  addyosmani/agent-skills [JavaScript]  共79837⭐
+     https://github.com/addyosmani/agent-skills
+14. +  111 ⭐ (+163.2/天)  langgenius/dify [TypeScript]  共149790⭐
+     https://github.com/langgenius/dify
+15. +   95 ⭐ (+139.7/天)  infiniflow/ragflow [Go]  共85689⭐
+     https://github.com/infiniflow/ragflow
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\ai_agent\20260722_180220.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020223.json
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: LLM） ===
+
+ 1. 232162 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 218879 ⭐  NousResearch/hermes-agent [Python]
+     The agent that grows with you
+     https://github.com/NousResearch/hermes-agent
+ 3. 195369 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 4. 185652 ⭐  Significant-Gravitas/AutoGPT [Python]
+     AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission i…
+     https://github.com/Significant-Gravitas/AutoGPT
+ 5. 176656 ⭐  ollama/ollama [Go]
+     Get up and running with Kimi-K2.6, GLM-5.2, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and ot…
+     https://github.com/ollama/ollama
+ 6. 166209 ⭐  f/prompts.chat [HTML]
+     f.k.a. Awesome ChatGPT Prompts. Share, discover, and collect prompts from the community. F…
+     https://github.com/f/prompts.chat
+ 7. 162843 ⭐  huggingface/transformers [Python]
+     🤗 Transformers: the model-definition framework for state-of-the-art machine learning model…
+     https://github.com/huggingface/transformers
+ 8. 154438 ⭐  firecrawl/firecrawl [TypeScript]
+     The API to search, scrape, and interact with the web at scale. 🔥
+     https://github.com/firecrawl/firecrawl
+ 9. 149790 ⭐  langgenius/dify [TypeScript]
+     Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collabo…
+     https://github.com/langgenius/dify
+10. 146351 ⭐  open-webui/open-webui [Python]
+     User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
+     https://github.com/open-webui/open-webui
+11. 142336 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+12. 126220 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+13. 121279 ⭐  ggml-org/llama.cpp [C++]
+     LLM inference in C/C++
+     https://github.com/ggml-org/llama.cpp
+14. 106104 ⭐  browser-use/browser-use [Python]
+     🌐 Make websites accessible for AI agents. Automate tasks online with ease.
+     https://github.com/browser-use/browser-use
+15.  99571 ⭐  rasbt/LLMs-from-scratch [Jupyter Notebook]
+     Implement a ChatGPT-like LLM in PyTorch from scratch, step by step
+     https://github.com/rasbt/LLMs-from-scratch
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2156.0 ⭐/天 (共87783⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2. 1106.3 ⭐/天 (共195369⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3.  851.4 ⭐/天 (共93730⭐)  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 4.  841.9 ⭐/天 (共92044⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  530.0 ⭐/天 (共57610⭐)  MemPalace/mempalace [Python]
+     The best-benchmarked open-source AI memory system. And it's free.
+     https://github.com/MemPalace/mempalace
+ 6.  334.0 ⭐/天 (共42074⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 7.  298.3 ⭐/天 (共27559⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+ 8.  268.8 ⭐/天 (共46085⭐)  HKUDS/nanobot [Python]
+     Lightweight, open-source AI agent for your tools, chats, and workflows.
+     https://github.com/HKUDS/nanobot
+ 9.  235.2 ⭐/天 (共26426⭐)  HKUDS/Vibe-Trading [Python]
+     "Vibe-Trading: Your Personal Trading Agent"
+     https://github.com/HKUDS/Vibe-Trading
+10.  209.9 ⭐/天 (共9127⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+11.  193.8 ⭐/天 (共30436⭐)  AlexsJones/llmfit [Rust]
+     Hundreds of models & providers. One command to find what runs on your hardware.
+     https://github.com/AlexsJones/llmfit
+12.  190.8 ⭐/天 (共14398⭐)  microsoft/SkillOpt [Python]
+     SkillOpt is a text-space optimizer that trains reusable natural-language skills for frozen…
+     https://github.com/microsoft/SkillOpt
+13.  185.0 ⭐/天 (共7628⭐)  omnigent-ai/omnigent [Python]
+     Omnigent is an open-source AI agent framework and meta-harness: orchestrate Claude Code, C…
+     https://github.com/omnigent-ai/omnigent
+14.  180.8 ⭐/天 (共16663⭐)  tashfeenahmed/freellmapi [TypeScript]
+     OpenAI-compatible proxy that stacks the free tiers of 28 LLM providers (~4B tokens/month) …
+     https://github.com/tashfeenahmed/freellmapi
+15.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  579 ⭐ (+850.6/天)  rohitg00/ai-engineering-from-scratch [Python]  共42074⭐
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 2. +  550 ⭐ (+808.0/天)  Graphify-Labs/graphify [Python]  共93730⭐
+     https://github.com/Graphify-Labs/graphify
+ 3. +  460 ⭐ (+675.8/天)  DietrichGebert/ponytail [JavaScript]  共87783⭐
+     https://github.com/DietrichGebert/ponytail
+ 4. +  456 ⭐ (+669.9/天)  NousResearch/hermes-agent [Python]  共218879⭐
+     https://github.com/NousResearch/hermes-agent
+ 5. +  429 ⭐ (+630.2/天)  Shubhamsaboo/awesome-llm-apps [Python]  共126220⭐
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 6. +  366 ⭐ (+537.7/天)  firecrawl/firecrawl [TypeScript]  共154438⭐
+     https://github.com/firecrawl/firecrawl
+ 7. +  339 ⭐ (+498.0/天)  microsoft/SkillOpt [Python]  共14398⭐
+     https://github.com/microsoft/SkillOpt
+ 8. +  281 ⭐ (+412.8/天)  HKUDS/Vibe-Trading [Python]  共26426⭐
+     https://github.com/HKUDS/Vibe-Trading
+ 9. +  261 ⭐ (+383.4/天)  JuliusBrussee/caveman [JavaScript]  共92044⭐
+     https://github.com/JuliusBrussee/caveman
+10. +  256 ⭐ (+376.1/天)  multica-ai/andrej-karpathy-skills  共195369⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+11. +  254 ⭐ (+373.1/天)  affaan-m/ECC [JavaScript]  共232162⭐
+     https://github.com/affaan-m/ECC
+12. +  224 ⭐ (+329.1/天)  AlexsJones/llmfit [Rust]  共30436⭐
+     https://github.com/AlexsJones/llmfit
+13. +  155 ⭐ (+227.7/天)  browser-use/browser-use [Python]  共106104⭐
+     https://github.com/browser-use/browser-use
+14. +  149 ⭐ (+218.9/天)  cobusgreyling/loop-engineering [JavaScript]  共9127⭐
+     https://github.com/cobusgreyling/loop-engineering
+15. +  110 ⭐ (+161.6/天)  langgenius/dify [TypeScript]  共149790⭐
+     https://github.com/langgenius/dify
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\llm\20260722_180223.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020321.json
+HTTP Request: GET https://api.github.com/search/repositories?q=generative-ai&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=generative-ai+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=generative-ai+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: generative-ai） ===
+
+ 1. 152220 ⭐  langflow-ai/langflow [Python]
+     Langflow is a powerful tool for building and deploying AI-powered agents and workflows.
+     https://github.com/langflow-ai/langflow
+ 2. 142336 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+ 3. 113389 ⭐  microsoft/generative-ai-for-beginners [Jupyter Notebook]
+     21 Lessons, Get Started Building with Generative AI
+     https://github.com/microsoft/generative-ai-for-beginners
+ 4.  99571 ⭐  rasbt/LLMs-from-scratch [Jupyter Notebook]
+     Implement a ChatGPT-like LLM in PyTorch from scratch, step by step
+     https://github.com/rasbt/LLMs-from-scratch
+ 5.  80690 ⭐  nexu-io/open-design [TypeScript]
+     🎨 The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding ag…
+     https://github.com/nexu-io/open-design
+ 6.  76830 ⭐  dair-ai/Prompt-Engineering-Guide [MDX]
+     🐙 Guides, papers, lessons, notebooks and resources for prompt engineering, context enginee…
+     https://github.com/dair-ai/Prompt-Engineering-Guide
+ 7.  70104 ⭐  microsoft/ai-agents-for-beginners [Jupyter Notebook]
+     18 Lessons to Get Started Building AI Agents
+     https://github.com/microsoft/ai-agents-for-beginners
+ 8.  59707 ⭐  asgeirtj/system_prompts_leaks [JavaScript]
+     Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude De…
+     https://github.com/asgeirtj/system_prompts_leaks
+ 9.  42074 ⭐  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+10.  37866 ⭐  langchain-ai/langgraph [Python]
+     Build resilient agents.
+     https://github.com/langchain-ai/langgraph
+11.  28772 ⭐  NirDiamant/RAG_Techniques [Jupyter Notebook]
+     This repository showcases various advanced techniques for Retrieval-Augmented Generation (…
+     https://github.com/NirDiamant/RAG_Techniques
+12.  28391 ⭐  aishwaryanr/awesome-generative-ai-guide [HTML]
+     A one stop repository for generative AI research updates, interview resources, notebooks a…
+     https://github.com/aishwaryanr/awesome-generative-ai-guide
+13.  27307 ⭐  yamadashy/repomix [TypeScript]
+     📦 Repomix is a powerful tool that packs your entire repository into a single, AI-friendly …
+     https://github.com/yamadashy/repomix
+14.  27234 ⭐  Stability-AI/generative-models [Python]
+     Generative Models by Stability AI
+     https://github.com/Stability-AI/generative-models
+15.  25984 ⭐  deepset-ai/haystack [Python]
+     Open-source AI orchestration framework for building context-engineered, production-ready L…
+     https://github.com/deepset-ai/haystack
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1.  943.0 ⭐/天 (共80690⭐)  nexu-io/open-design [TypeScript]
+     🎨 The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding ag…
+     https://github.com/nexu-io/open-design
+ 2.  334.0 ⭐/天 (共42074⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 3.  109.3 ⭐/天 (共7905⭐)  nexu-io/html-anything [HTML]
+     ✨ The agentic HTML editor — your local AI agent writes the HTML, you ship it. 🚀 75 Skills …
+     https://github.com/nexu-io/html-anything
+ 4.   68.7 ⭐/天 (共11974⭐)  HBAI-Ltd/Toonflow-app [TypeScript]
+     Toonflow 是开源一站式 AI 短剧创作工具，将小说、剧本快速转化为动画短剧。集成 AI 编剧、智能分镜、角色与视频生成，跨平台桌面端轻量部署，助力创作者低成本批量产出视觉内…
+     https://github.com/HBAI-Ltd/Toonflow-app
+ 5.   61.6 ⭐/天 (共8177⭐)  Narcooo/inkos [TypeScript]
+     Story Creation AI Agent for novel, scripts, translation, interactive games, and IP content
+     https://github.com/Narcooo/inkos
+ 6.   51.3 ⭐/天 (共392⭐)  0xsline/OpenChatCut [TypeScript]
+     Local-first conversational AI video editor with a professional multi-track timeline, Agent…
+     https://github.com/0xsline/OpenChatCut
+ 7.   50.4 ⭐/天 (共5296⭐)  google/agents-cli [Python]
+     The CLI and skills that turn any coding assistant into an expert at creating, evaluating, …
+     https://github.com/google/agents-cli
+ 8.   42.7 ⭐/天 (共1733⭐)  nolangz/pixel2motion [Python]
+     AI logo animation skill: turn raster logos into smooth SVG animation, animated HTML demos,…
+     https://github.com/nolangz/pixel2motion
+ 9.   35.4 ⭐/天 (共4218⭐)  wiltodelta/remove-ai-watermarks [Python]
+     AI watermark remover. CLI and Python library to strip visible and invisible AI watermarks …
+     https://github.com/wiltodelta/remove-ai-watermarks
+10.   34.9 ⭐/天 (共4192⭐)  alvinreal/awesome-opensource-ai [Python]
+     Curated list of the best truly open-source AI projects, models, tools, and infrastructure.…
+     https://github.com/alvinreal/awesome-opensource-ai
+11.   29.0 ⭐/天 (共351⭐)  Alisa0808/vox-director [Python]
+     Turn one topic into a finished Vox-style paper-collage explainer/ad video — automated end …
+     https://github.com/Alisa0808/vox-director
+12.   19.3 ⭐/天 (共427⭐)  Orkas-AI/Orkas-VideoStudio [TypeScript]
+     Turn your coding agent into a video studio: describe a video in plain language, and your a…
+     https://github.com/Orkas-AI/Orkas-VideoStudio
+13.   16.5 ⭐/天 (共1940⭐)  dramaclaw/dramaclaw [TypeScript]
+     A general-purpose AIGC video engine: script to finished film in one pipeline — dramas, ads…
+     https://github.com/dramaclaw/dramaclaw
+14.   14.5 ⭐/天 (共643⭐)  kadevin/ilab-conjure [JavaScript]
+     面向 GPT-image-2 的 AI 图片生成 WebUI 工作台，支持 Codex Responses 与 OpenAI 兼容 API 接入，内置公用图库、多类型 Chip 快…
+     https://github.com/kadevin/ilab-conjure
+15.   12.8 ⭐/天 (共1793⭐)  Lightricks/LTX-Desktop [TypeScript]
+     An open-source desktop app for generating videos with LTX models
+     https://github.com/Lightricks/LTX-Desktop
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.0 天前的快照）
+
+ 1. +    0 ⭐ (+0.0/天)  langflow-ai/langflow [Python]  共152220⭐
+     https://github.com/langflow-ai/langflow
+ 2. +    0 ⭐ (+0.0/天)  langchain-ai/langchain [Python]  共142336⭐
+     https://github.com/langchain-ai/langchain
+ 3. +    0 ⭐ (+0.0/天)  microsoft/generative-ai-for-beginners [Jupyter Notebook]  共113389⭐
+     https://github.com/microsoft/generative-ai-for-beginners
+ 4. +    0 ⭐ (+0.0/天)  rasbt/LLMs-from-scratch [Jupyter Notebook]  共99571⭐
+     https://github.com/rasbt/LLMs-from-scratch
+ 5. +    0 ⭐ (+0.0/天)  nexu-io/open-design [TypeScript]  共80690⭐
+     https://github.com/nexu-io/open-design
+ 6. +    0 ⭐ (+0.0/天)  dair-ai/Prompt-Engineering-Guide [MDX]  共76830⭐
+     https://github.com/dair-ai/Prompt-Engineering-Guide
+ 7. +    0 ⭐ (+0.0/天)  microsoft/ai-agents-for-beginners [Jupyter Notebook]  共70104⭐
+     https://github.com/microsoft/ai-agents-for-beginners
+ 8. +    0 ⭐ (+0.0/天)  asgeirtj/system_prompts_leaks [JavaScript]  共59707⭐
+     https://github.com/asgeirtj/system_prompts_leaks
+ 9. +    0 ⭐ (+0.0/天)  rohitg00/ai-engineering-from-scratch [Python]  共42074⭐
+     https://github.com/rohitg00/ai-engineering-from-scratch
+10. +    0 ⭐ (+0.0/天)  langchain-ai/langgraph [Python]  共37866⭐
+     https://github.com/langchain-ai/langgraph
+11. +    0 ⭐ (+0.0/天)  NirDiamant/RAG_Techniques [Jupyter Notebook]  共28772⭐
+     https://github.com/NirDiamant/RAG_Techniques
+12. +    0 ⭐ (+0.0/天)  aishwaryanr/awesome-generative-ai-guide [HTML]  共28391⭐
+     https://github.com/aishwaryanr/awesome-generative-ai-guide
+13. +    0 ⭐ (+0.0/天)  yamadashy/repomix [TypeScript]  共27307⭐
+     https://github.com/yamadashy/repomix
+14. +    0 ⭐ (+0.0/天)  Stability-AI/generative-models [Python]  共27234⭐
+     https://github.com/Stability-AI/generative-models
+15. +    0 ⭐ (+0.0/天)  deepset-ai/haystack [Python]  共25984⭐
+     https://github.com/deepset-ai/haystack
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\generative_ai\20260722_180321.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020421.json
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+coding&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+coding+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: AI coding） ===
+
+ 1. 259327 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 197482 ⭐  n8n-io/n8n [TypeScript]
+     Fair-code workflow automation platform with native AI capabilities. Combine visual buildin…
+     https://github.com/n8n-io/n8n
+ 3. 142176 ⭐  x1xhlol/system-prompts-and-models-of-ai-tools
+     FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, L…
+     https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools
+ 4.  92044 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  88232 ⭐  thedotmack/claude-mem [JavaScript]
+     Persistent Context Across Sessions for Every Agent –  Captures everything your agent does …
+     https://github.com/thedotmack/claude-mem
+ 6.  87783 ⭐  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 7.  79837 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 8.  77611 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+ 9.  75432 ⭐  earendil-works/pi [TypeScript]
+     AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI
+     https://github.com/earendil-works/pi
+10.  72205 ⭐  daytonaio/daytona
+     Daytona is a Secure and Elastic Infrastructure for Running AI-Generated Code
+     https://github.com/daytonaio/daytona
+11.  66396 ⭐  code-yeongyu/oh-my-openagent [TypeScript]
+     omo/lazycodex: The coding agent for tokenmaxxers;the one and only agent harness for comple…
+     https://github.com/code-yeongyu/oh-my-openagent
+12.  66329 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+13.  65547 ⭐  ruvnet/ruflo [TypeScript]
+     🌊 The leading agent meta-harness. Deploy intelligent multi-player swarms, coordinate auton…
+     https://github.com/ruvnet/ruflo
+14.  63294 ⭐  shanraisshan/claude-code-best-practice [HTML]
+     from vibe coding to agentic engineering - practice makes claude perfect
+     https://github.com/shanraisshan/claude-code-best-practice
+15.  62115 ⭐  Fission-AI/OpenSpec [TypeScript]
+     Spec-driven development (SDD) for AI coding assistants.
+     https://github.com/Fission-AI/OpenSpec
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2156.0 ⭐/天 (共87783⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2.  841.9 ⭐/天 (共92044⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 3.  560.1 ⭐/天 (共61047⭐)  santifer/career-ops [JavaScript]
+     Open-source AI job search: scan job portals, evaluate listings with a structured A-F rubri…
+     https://github.com/santifer/career-ops
+ 4.  508.8 ⭐/天 (共79837⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 5.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 6.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 7.  298.3 ⭐/天 (共27559⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+ 8.  291.9 ⭐/天 (共12334⭐)  XiaomiMiMo/MiMo-Code [TypeScript]
+     MiMo Code: Where Models and Agents Co-Evolve
+     https://github.com/XiaomiMiMo/MiMo-Code
+ 9.  268.8 ⭐/天 (共30268⭐)  Gitlawb/openclaude [TypeScript]
+     runs anywhere. uses anything
+     https://github.com/Gitlawb/openclaude
+10.  225.8 ⭐/天 (共29638⭐)  JCodesMore/ai-website-cloner-template [TypeScript]
+     Clone any website with one command using AI coding agents
+     https://github.com/JCodesMore/ai-website-cloner-template
+11.  209.9 ⭐/天 (共9127⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+12.  200.0 ⭐/天 (共25224⭐)  MadsLorentzen/ai-job-search [TypeScript]
+     The job search that runs on your machine. AI job application framework built on Claude Cod…
+     https://github.com/MadsLorentzen/ai-job-search
+13.  185.0 ⭐/天 (共7628⭐)  omnigent-ai/omnigent [Python]
+     Omnigent is an open-source AI agent framework and meta-harness: orchestrate Claude Code, C…
+     https://github.com/omnigent-ai/omnigent
+14.  180.4 ⭐/天 (共15492⭐)  Nutlope/hallmark [CSS]
+     Anti-AI-slop design skill for Claude Code, Cursor, and Codex.
+     https://github.com/Nutlope/hallmark
+15.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.0 天前的快照）
+
+ 1. +    0 ⭐ (+0.0/天)  obra/superpowers [Shell]  共259327⭐
+     https://github.com/obra/superpowers
+ 2. +    0 ⭐ (+0.0/天)  n8n-io/n8n [TypeScript]  共197482⭐
+     https://github.com/n8n-io/n8n
+ 3. +    0 ⭐ (+0.0/天)  x1xhlol/system-prompts-and-models-of-ai-tools  共142176⭐
+     https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools
+ 4. +    0 ⭐ (+0.0/天)  JuliusBrussee/caveman [JavaScript]  共92044⭐
+     https://github.com/JuliusBrussee/caveman
+ 5. +    0 ⭐ (+0.0/天)  thedotmack/claude-mem [JavaScript]  共88232⭐
+     https://github.com/thedotmack/claude-mem
+ 6. +    0 ⭐ (+0.0/天)  DietrichGebert/ponytail [JavaScript]  共87783⭐
+     https://github.com/DietrichGebert/ponytail
+ 7. +    0 ⭐ (+0.0/天)  addyosmani/agent-skills [JavaScript]  共79837⭐
+     https://github.com/addyosmani/agent-skills
+ 8. +    0 ⭐ (+0.0/天)  bytedance/deer-flow [Python]  共77611⭐
+     https://github.com/bytedance/deer-flow
+ 9. +    0 ⭐ (+0.0/天)  earendil-works/pi [TypeScript]  共75432⭐
+     https://github.com/earendil-works/pi
+10. +    0 ⭐ (+0.0/天)  daytonaio/daytona  共72205⭐
+     https://github.com/daytonaio/daytona
+11. +    0 ⭐ (+0.0/天)  code-yeongyu/oh-my-openagent [TypeScript]  共66396⭐
+     https://github.com/code-yeongyu/oh-my-openagent
+12. +    0 ⭐ (+0.0/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+13. +    0 ⭐ (+0.0/天)  ruvnet/ruflo [TypeScript]  共65547⭐
+     https://github.com/ruvnet/ruflo
+14. +    0 ⭐ (+0.0/天)  shanraisshan/claude-code-best-practice [HTML]  共63294⭐
+     https://github.com/shanraisshan/claude-code-best-practice
+15. +    0 ⭐ (+0.0/天)  Fission-AI/OpenSpec [TypeScript]  共62115⭐
+     https://github.com/Fission-AI/OpenSpec
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\ai_coding\20260722_180422.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020423.json
+趋势 AI 报告生成失败
+Traceback (most recent call last):
+  File "D:\P\agent\app\services\scheduler.py", line 223, in _run
+    report = await generate_analysis(force=pulled > 0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\api\skills.py", line 321, in generate_analysis
+    client, model = ai_service.get_default_client()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\services\ai.py", line 384, in get_default_client
+    client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\openai\_client.py", line 194, in __init__
+    raise OpenAIError(
+openai.OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+趋势简报生成失败
+Traceback (most recent call last):
+  File "D:\P\agent\app\services\scheduler.py", line 232, in _run
+    d = await generate_digest(force=pulled > 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\services\trend_digest.py", line 255, in generate_digest
+    client, model = ai_service.get_default_client()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\services\ai.py", line 384, in get_default_client
+    client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\openai\_client.py", line 194, in __init__
+    raise OpenAIError(
+openai.OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+趋势同步完成：新拉 8 个，跳过 0 个（当天已有），共 8 个 query
+2026-07-23T01:44:57.472010Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/api/v1/agentapp/auth/check request_id=8503d2d2a24c4c52bedf802159622c43 status=401
+2026-07-23T01:44:57.486816Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.8 method=GET path=/api/v1/agentapp/auth/check request_id=3608de6cb567425b95b6310160d7bfee status=401
+2026-07-23T09:13:06.929640Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.3 method=GET path=/api/v1/agentapp/auth/check request_id=76da4ddc2d2d42f3bd7f07632f7b6291 status=401
+2026-07-23T09:13:06.956268Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.7 method=GET path=/api/v1/agentapp/auth/check request_id=3e803d11a3d34479910e2ab19928feec status=401

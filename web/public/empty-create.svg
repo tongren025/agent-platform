@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" fill="none">
+  <defs>
+    <linearGradient id="create-gradient" x1="38" y1="31" x2="160" y2="132" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="96" cy="137" rx="65" ry="8" fill="#F1F5F9"/>
+
+  <rect x="32" y="29" width="123" height="99" rx="14" fill="white" stroke="url(#create-gradient)" stroke-width="3"/>
+  <path d="M33.5 48.5H153.5" stroke="#F1F5F9" stroke-width="3"/>
+  <circle cx="44" cy="39" r="3" fill="#F1F5F9"/>
+  <circle cx="54" cy="39" r="3" fill="#F1F5F9"/>
+  <circle cx="64" cy="39" r="3" fill="#F1F5F9"/>
+  <rect x="47" y="63" width="65" height="8" rx="4" fill="#F1F5F9"/>
+  <rect x="47" y="78" width="89" height="6" rx="3" fill="#F1F5F9"/>
+  <rect x="47" y="90" width="72" height="6" rx="3" fill="#F1F5F9"/>
+  <rect x="47" y="106" width="31" height="8" rx="4" fill="url(#create-gradient)" opacity=".16"/>
+
+  <g transform="rotate(-42 137 104)">
+    <path d="M132 69a5 5 0 0 1 10 0v47h-10V69Z" fill="url(#create-gradient)"/>
+    <path d="m132 116 5 12 5-12h-10Z" fill="#F1F5F9" stroke="url(#create-gradient)" stroke-linejoin="round" stroke-width="2"/>
+    <path d="M132 76h10" stroke="white" stroke-width="2" opacity=".7"/>
+  </g>
+
+  <path d="M164 35c0 7.2-3.8 11-11 11 7.2 0 11 3.8 11 11 0-7.2 3.8-11 11-11-7.2 0-11-3.8-11-11Z" fill="url(#create-gradient)"/>
+  <path d="M147 22c0 4.6-2.4 7-7 7 4.6 0 7 2.4 7 7 0-4.6 2.4-7 7-7-4.6 0-7-2.4-7-7Z" fill="url(#create-gradient)" opacity=".45"/>
+</svg>

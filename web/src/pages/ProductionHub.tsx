@@ -266,7 +266,7 @@ export default function ProductionHub() {
       </div>
 
       {!project ? (
-        <Empty description="暂无项目" />
+        <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="暂无项目" />
       ) : (
         <>
           {/* ── 总览条 ── */}
@@ -340,7 +340,7 @@ export default function ProductionHub() {
             剧集
           </Title>
           {episodes.length === 0 ? (
-            <Empty description="暂无剧集数据" />
+            <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description="暂无剧集数据" />
           ) : (
             <Row gutter={[14, 14]}>
               {episodes.map(ep => {

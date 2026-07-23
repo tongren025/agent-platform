@@ -895,3 +895,54 @@
   error: "Error: EBUSY: resource busy or locked, watch 'D:\\P\\agent\\output\\visual-development\\九陆纪元_世界树_六方向剪影探索_v1.png'"
 }
 [CodeGraph MCP] Auto-synced 218 file(s) in 44855ms
+[CodeGraph daemon] Listening on \\.\pipe\codegraph-1f2ce3177f2657e2 (pid 11784, v0.9.6). Idle timeout 300000ms.
+[CodeGraph MCP] File watcher active — graph will auto-sync on changes
+[CodeGraph daemon] socket error: write EPIPE
+[CodeGraph daemon] socket error: write EPIPE
+[CodeGraph daemon] socket error: write EPIPE
+[CodeGraph daemon] socket error: write EPIPE
+[CodeGraph daemon] socket error: write EPIPE
+[CodeGraph daemon] socket error: write EPIPE
+[CodeGraph daemon] socket error: write EPIPE
+[CodeGraph MCP] Caught up 226 file(s) changed since last run
+[CodeGraph MCP] Auto-synced 2 file(s) in 1073ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1078ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1020ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1106ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1067ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1096ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1221ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1071ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1724ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1063ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1145ms
+[CodeGraph MCP] Auto-synced 4 file(s) in 1776ms
+[CodeGraph MCP] Auto-synced 3 file(s) in 1697ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 987ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 972ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1020ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1054ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1105ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1071ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1049ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1076ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1073ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1102ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1119ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1062ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1060ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1130ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1040ms
+[CodeGraph MCP] Auto-synced 2 file(s) in 1548ms
+[CodeGraph MCP] Auto-synced 11 file(s) in 2812ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1037ms
+[CodeGraph MCP] Auto-synced 3 file(s) in 1119ms
+[CodeGraph MCP] Auto-synced 2 file(s) in 1095ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 995ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1791ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1144ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1086ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1126ms
+[CodeGraph MCP] Auto-synced 2 file(s) in 2252ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1128ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1390ms

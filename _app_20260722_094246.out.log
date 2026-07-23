@@ -15958,3 +15958,1157 @@ openai.OpenAIError: Missing credentials. Please pass an `api_key`, `workload_ide
 1 change detected
 1 change detected
 6 changes detected
+定时触发趋势同步 @ 02:00
+HTTP Request: GET https://api.github.com/search/repositories?q=agent+skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=agent+skill+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: agent skill） ===
+
+ 1. 259326 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 232161 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 182031 ⭐  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .agents directory.
+     https://github.com/mattpocock/skills
+ 4. 163390 ⭐  anthropics/skills [Python]
+     Public repository for Agent Skills
+     https://github.com/anthropics/skills
+ 5. 126219 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 6.  79837 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 7.  77611 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+ 8.  66329 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 9.  53124 ⭐  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+10.  50641 ⭐  hesreallyhim/awesome-claude-code [Python]
+     A hand-picked collection of the finest of resources for the most awesome of agents, Claude…
+     https://github.com/hesreallyhim/awesome-claude-code
+11.  47152 ⭐  jeecgboot/JeecgBoot [Java]
+     【低代码 V2.0】AI低代码平台，AI Skills 一句话生成整个系统；一键生成前后端代码甚至整个模块。 AI Skills 一句话画流程、设计表单、生成报表、大屏。内置 AI…
+     https://github.com/jeecgboot/JeecgBoot
+12.  46080 ⭐  zhayujie/CowAgent [Python]
+     Open-source super AI assistant & Agent Harness. Plans tasks, runs tools and skills, self-e…
+     https://github.com/zhayujie/CowAgent
+13.  43724 ⭐  sickn33/agentic-awesome-skills [Python]
+     AAS Core is the local, agent-first control plane for complete catalog discovery, agent-own…
+     https://github.com/sickn33/agentic-awesome-skills
+14.  42993 ⭐  kepano/obsidian-skills
+     Agent skills for Obsidian. Teach your agent to use Obsidian CLI and open formats including…
+     https://github.com/kepano/obsidian-skills
+15.  41561 ⭐  multica-ai/multica [Go]
+     The open-source managed agents platform. Turn coding agents into real teammates — assign t…
+     https://github.com/multica-ai/multica
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1075.3 ⭐/天 (共182031⭐)  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .agents directory.
+     https://github.com/mattpocock/skills
+ 2.  508.8 ⭐/天 (共79837⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 3.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 4.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 5.  245.1 ⭐/天 (共22102⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+ 6.  231.7 ⭐/天 (共21809⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+ 7.  210.7 ⭐/天 (共29904⭐)  googleworkspace/cli [Rust]
+     Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Cha…
+     https://github.com/googleworkspace/cli
+ 8.  190.8 ⭐/天 (共14397⭐)  microsoft/SkillOpt [Python]
+     SkillOpt is a text-space optimizer that trains reusable natural-language skills for frozen…
+     https://github.com/microsoft/SkillOpt
+ 9.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+10.  169.7 ⭐/天 (共24234⭐)  phuryn/pm-skills
+     PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to stra…
+     https://github.com/phuryn/pm-skills
+11.  165.1 ⭐/天 (共17735⭐)  KKKKhazix/khazix-skills [Python]
+     数字生命卡兹克开源的 AI Skills 合集 | Agent Skills: neat-freak 洁癖 (docs/memory closeout), hv-analysis,…
+     https://github.com/KKKKhazix/khazix-skills
+12.  148.8 ⭐/天 (共26152⭐)  zarazhangrui/frontend-slides [JavaScript]
+     Create beautiful slides on the web using a coding agent's frontend skills
+     https://github.com/zarazhangrui/frontend-slides
+13.  145.2 ⭐/天 (共23313⭐)  Donchitos/Claude-Code-Game-Studios [Shell]
+     Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a com…
+     https://github.com/Donchitos/Claude-Code-Game-Studios
+14.  139.6 ⭐/天 (共18991⭐)  tanweai/pua [TypeScript]
+     你是一个曾经被寄予厚望的 P8 级工程师。Anthropic 当初给你定级的时候，对你的期望是很高的。  一个agent使用的高能动性的skill。  Your AI has be…
+     https://github.com/tanweai/pua
+15.  133.0 ⭐/天 (共15022⭐)  google/skills [Python]
+     Agent Skills for Google products and technologies
+     https://github.com/google/skills
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. + 1489 ⭐ (+2193.7/天)  mattpocock/skills [Shell]  共182031⭐
+     https://github.com/mattpocock/skills
+ 2. +  523 ⭐ (+770.5/天)  obra/superpowers [Shell]  共259326⭐
+     https://github.com/obra/superpowers
+ 3. +  338 ⭐ (+498.0/天)  microsoft/SkillOpt [Python]  共14397⭐
+     https://github.com/microsoft/SkillOpt
+ 4. +  290 ⭐ (+427.2/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 5. +  281 ⭐ (+414.0/天)  calesthio/OpenMontage [Python]  共41167⭐
+     https://github.com/calesthio/OpenMontage
+ 6. +  253 ⭐ (+372.7/天)  affaan-m/ECC [JavaScript]  共232161⭐
+     https://github.com/affaan-m/ECC
+ 7. +  182 ⭐ (+268.1/天)  anthropics/skills [Python]  共163390⭐
+     https://github.com/anthropics/skills
+ 8. +  144 ⭐ (+212.2/天)  multica-ai/multica [Go]  共41561⭐
+     https://github.com/multica-ai/multica
+ 9. +  143 ⭐ (+210.7/天)  addyosmani/agent-skills [JavaScript]  共79837⭐
+     https://github.com/addyosmani/agent-skills
+10. +  110 ⭐ (+162.1/天)  mvanhorn/last30days-skill [Python]  共53124⭐
+     https://github.com/mvanhorn/last30days-skill
+11. +   94 ⭐ (+138.5/天)  op7418/guizang-ppt-skill [HTML]  共22102⭐
+     https://github.com/op7418/guizang-ppt-skill
+12. +   83 ⭐ (+122.3/天)  kepano/obsidian-skills  共42993⭐
+     https://github.com/kepano/obsidian-skills
+13. +   70 ⭐ (+103.1/天)  phuryn/pm-skills  共24234⭐
+     https://github.com/phuryn/pm-skills
+14. +   68 ⭐ (+100.2/天)  KKKKhazix/khazix-skills [Python]  共17735⭐
+     https://github.com/KKKKhazix/khazix-skills
+15. +   64 ⭐ (+94.3/天)  bytedance/deer-flow [Python]  共77611⭐
+     https://github.com/bytedance/deer-flow
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\agent_skill\20260722_180015.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020018.json
+HTTP Request: GET https://api.github.com/search/repositories?q=claude+skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=claude+skill+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: claude skill） ===
+
+ 1. 232161 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 195369 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3. 108897 ⭐  nextlevelbuilder/ui-ux-pro-max-skill [Python]
+     An AI SKILL that provide design intelligence for building professional UI/UX multiple plat…
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 4.  93727 ⭐  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 5.  92043 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 6.  68654 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+ 7.  66329 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 8.  53124 ⭐  mvanhorn/last30days-skill [Python]
+     AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and th…
+     https://github.com/mvanhorn/last30days-skill
+ 9.  50641 ⭐  hesreallyhim/awesome-claude-code [Python]
+     A hand-picked collection of the finest of resources for the most awesome of agents, Claude…
+     https://github.com/hesreallyhim/awesome-claude-code
+10.  46080 ⭐  zhayujie/CowAgent [Python]
+     Open-source super AI assistant & Agent Harness. Plans tasks, runs tools and skills, self-e…
+     https://github.com/zhayujie/CowAgent
+11.  42993 ⭐  kepano/obsidian-skills
+     Agent skills for Obsidian. Teach your agent to use Obsidian CLI and open formats including…
+     https://github.com/kepano/obsidian-skills
+12.  41200 ⭐  coreyhaines31/marketingskills [JavaScript]
+     Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and grow…
+     https://github.com/coreyhaines31/marketingskills
+13.  41167 ⭐  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+14.  41131 ⭐  danny-avila/LibreChat [TypeScript]
+     Enhanced ChatGPT Clone: Features Agents, MCP, Skills, DeepSeek, Anthropic, AWS, OpenAI, Re…
+     https://github.com/danny-avila/LibreChat
+15.  38976 ⭐  Imbad0202/academic-research-skills [Python]
+     Academic Research Skills for Claude Code: research → write → review → revise → finalize
+     https://github.com/Imbad0202/academic-research-skills
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1106.4 ⭐/天 (共195369⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 2.  851.4 ⭐/天 (共93727⭐)  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 3.  841.9 ⭐/天 (共92043⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 4.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 5.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 6.  266.1 ⭐/天 (共38976⭐)  Imbad0202/academic-research-skills [Python]
+     Academic Research Skills for Claude Code: research → write → review → revise → finalize
+     https://github.com/Imbad0202/academic-research-skills
+ 7.  231.7 ⭐/天 (共21809⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+ 8.  180.4 ⭐/天 (共15490⭐)  Nutlope/hallmark [CSS]
+     Anti-AI-slop design skill for Claude Code, Cursor, and Codex.
+     https://github.com/Nutlope/hallmark
+ 9.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+10.  165.1 ⭐/天 (共17735⭐)  KKKKhazix/khazix-skills [Python]
+     数字生命卡兹克开源的 AI Skills 合集 | Agent Skills: neat-freak 洁癖 (docs/memory closeout), hv-analysis,…
+     https://github.com/KKKKhazix/khazix-skills
+11.  148.8 ⭐/天 (共26152⭐)  zarazhangrui/frontend-slides [JavaScript]
+     Create beautiful slides on the web using a coding agent's frontend skills
+     https://github.com/zarazhangrui/frontend-slides
+12.  145.2 ⭐/天 (共23313⭐)  Donchitos/Claude-Code-Game-Studios [Shell]
+     Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a com…
+     https://github.com/Donchitos/Claude-Code-Game-Studios
+13.  125.1 ⭐/天 (共8772⭐)  zhaoxuya520/reverse-skill [PowerShell]
+     Reverse Engineering / Authorized Penetration Testing / Security Research Skill Router Pack…
+     https://github.com/zhaoxuya520/reverse-skill
+14.  112.9 ⭐/天 (共9330⭐)  virgiliojr94/book-to-skill [Python]
+     Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use …
+     https://github.com/virgiliojr94/book-to-skill
+15.  109.3 ⭐/天 (共7905⭐)  nexu-io/html-anything [HTML]
+     ✨ The agentic HTML editor — your local AI agent writes the HTML, you ship it. 🚀 75 Skills …
+     https://github.com/nexu-io/html-anything
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  547 ⭐ (+805.9/天)  Graphify-Labs/graphify [Python]  共93727⭐
+     https://github.com/Graphify-Labs/graphify
+ 2. +  517 ⭐ (+761.7/天)  Nutlope/hallmark [CSS]  共15490⭐
+     https://github.com/Nutlope/hallmark
+ 3. +  325 ⭐ (+478.8/天)  nextlevelbuilder/ui-ux-pro-max-skill [Python]  共108897⭐
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 4. +  290 ⭐ (+427.2/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 5. +  281 ⭐ (+414.0/天)  calesthio/OpenMontage [Python]  共41167⭐
+     https://github.com/calesthio/OpenMontage
+ 6. +  262 ⭐ (+386.0/天)  JuliusBrussee/caveman [JavaScript]  共92043⭐
+     https://github.com/JuliusBrussee/caveman
+ 7. +  256 ⭐ (+377.2/天)  multica-ai/andrej-karpathy-skills  共195369⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 8. +  253 ⭐ (+372.7/天)  affaan-m/ECC [JavaScript]  共232161⭐
+     https://github.com/affaan-m/ECC
+ 9. +  253 ⭐ (+372.7/天)  ComposioHQ/awesome-claude-skills [Python]  共68654⭐
+     https://github.com/ComposioHQ/awesome-claude-skills
+10. +  154 ⭐ (+226.9/天)  Imbad0202/academic-research-skills [Python]  共38976⭐
+     https://github.com/Imbad0202/academic-research-skills
+11. +  127 ⭐ (+187.1/天)  coreyhaines31/marketingskills [JavaScript]  共41200⭐
+     https://github.com/coreyhaines31/marketingskills
+12. +  110 ⭐ (+162.1/天)  mvanhorn/last30days-skill [Python]  共53124⭐
+     https://github.com/mvanhorn/last30days-skill
+13. +   83 ⭐ (+122.3/天)  kepano/obsidian-skills  共42993⭐
+     https://github.com/kepano/obsidian-skills
+14. +   69 ⭐ (+101.7/天)  virgiliojr94/book-to-skill [Python]  共9330⭐
+     https://github.com/virgiliojr94/book-to-skill
+15. +   68 ⭐ (+100.2/天)  KKKKhazix/khazix-skills [Python]  共17735⭐
+     https://github.com/KKKKhazix/khazix-skills
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\claude_skill\20260722_180018.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020021.json
+HTTP Request: GET https://api.github.com/search/repositories?q=skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=skill&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=skill+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: skill） ===
+
+ 1. 259326 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 232161 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 3. 195369 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 4. 182033 ⭐  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .agents directory.
+     https://github.com/mattpocock/skills
+ 5. 163390 ⭐  anthropics/skills [Python]
+     Public repository for Agent Skills
+     https://github.com/anthropics/skills
+ 6. 128470 ⭐  Chalarangelo/30-seconds-of-code [JavaScript]
+     Coding articles to level up your development skills
+     https://github.com/Chalarangelo/30-seconds-of-code
+ 7. 126220 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 8. 108897 ⭐  nextlevelbuilder/ui-ux-pro-max-skill [Python]
+     An AI SKILL that provide design intelligence for building professional UI/UX multiple plat…
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 9.  96086 ⭐  florinpop17/app-ideas
+     A Collection of application ideas which can be used to improve your coding skills.
+     https://github.com/florinpop17/app-ideas
+10.  93727 ⭐  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+11.  92044 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+12.  79837 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+13.  77611 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+14.  68654 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+15.  66329 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 1106.3 ⭐/天 (共195369⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 2. 1075.3 ⭐/天 (共182033⭐)  mattpocock/skills [Shell]
+     Skills for Real Engineers. Straight from my .agents directory.
+     https://github.com/mattpocock/skills
+ 3.  851.4 ⭐/天 (共93727⭐)  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 4.  841.9 ⭐/天 (共92044⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  508.8 ⭐/天 (共79837⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 6.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 7.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 8.  340.1 ⭐/天 (共30476⭐)  Yuan1z0825/nature-skills [Python]
+     符合nature论文学术表达和科研绘图的Skill
+     https://github.com/Yuan1z0825/nature-skills
+ 9.  288.5 ⭐/天 (共51452⭐)  VoltAgent/awesome-openclaw-skills
+     The awesome collection of OpenClaw skills. 5,400+ skills filtered and categorized from the…
+     https://github.com/VoltAgent/awesome-openclaw-skills
+10.  266.1 ⭐/天 (共38976⭐)  Imbad0202/academic-research-skills [Python]
+     Academic Research Skills for Claude Code: research → write → review → revise → finalize
+     https://github.com/Imbad0202/academic-research-skills
+11.  262.9 ⭐/天 (共28542⭐)  alchaincyf/nuwa-skill [Python]
+     你想蒸馏的下一个员工，何必是同事。蒸馏任何人的思维方式——心智模型、决策启发式、表达DNA。Distill how anyone thinks.
+     https://github.com/alchaincyf/nuwa-skill
+12.  245.1 ⭐/天 (共22102⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+13.  231.7 ⭐/天 (共21809⭐)  alchaincyf/huashu-design [HTML]
+     Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill …
+     https://github.com/alchaincyf/huashu-design
+14.  210.7 ⭐/天 (共29904⭐)  googleworkspace/cli [Rust]
+     Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Cha…
+     https://github.com/googleworkspace/cli
+15.  193.8 ⭐/天 (共30436⭐)  AlexsJones/llmfit [Rust]
+     Hundreds of models & providers. One command to find what runs on your hardware.
+     https://github.com/AlexsJones/llmfit
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. + 1491 ⭐ (+2194.6/天)  mattpocock/skills [Shell]  共182033⭐
+     https://github.com/mattpocock/skills
+ 2. +  547 ⭐ (+805.1/天)  Graphify-Labs/graphify [Python]  共93727⭐
+     https://github.com/Graphify-Labs/graphify
+ 3. +  522 ⭐ (+768.3/天)  obra/superpowers [Shell]  共259326⭐
+     https://github.com/obra/superpowers
+ 4. +  325 ⭐ (+478.4/天)  nextlevelbuilder/ui-ux-pro-max-skill [Python]  共108897⭐
+     https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+ 5. +  290 ⭐ (+426.8/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 6. +  281 ⭐ (+413.6/天)  calesthio/OpenMontage [Python]  共41167⭐
+     https://github.com/calesthio/OpenMontage
+ 7. +  263 ⭐ (+387.1/天)  JuliusBrussee/caveman [JavaScript]  共92044⭐
+     https://github.com/JuliusBrussee/caveman
+ 8. +  256 ⭐ (+376.8/天)  multica-ai/andrej-karpathy-skills  共195369⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 9. +  253 ⭐ (+372.4/天)  affaan-m/ECC [JavaScript]  共232161⭐
+     https://github.com/affaan-m/ECC
+10. +  253 ⭐ (+372.4/天)  ComposioHQ/awesome-claude-skills [Python]  共68654⭐
+     https://github.com/ComposioHQ/awesome-claude-skills
+11. +  225 ⭐ (+331.2/天)  AlexsJones/llmfit [Rust]  共30436⭐
+     https://github.com/AlexsJones/llmfit
+12. +  196 ⭐ (+288.5/天)  Yuan1z0825/nature-skills [Python]  共30476⭐
+     https://github.com/Yuan1z0825/nature-skills
+13. +  182 ⭐ (+267.9/天)  anthropics/skills [Python]  共163390⭐
+     https://github.com/anthropics/skills
+14. +  154 ⭐ (+226.7/天)  Imbad0202/academic-research-skills [Python]  共38976⭐
+     https://github.com/Imbad0202/academic-research-skills
+15. +  143 ⭐ (+210.5/天)  addyosmani/agent-skills [JavaScript]  共79837⭐
+     https://github.com/addyosmani/agent-skills
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\skill\20260722_180021.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020119.json
+HTTP Request: GET https://api.github.com/search/repositories?q=topic%3Amcp&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=topic%3Amcp+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=topic%3Amcp+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: topic:mcp） ===
+
+ 1. 232162 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 197481 ⭐  n8n-io/n8n [TypeScript]
+     Fair-code workflow automation platform with native AI capabilities. Combine visual buildin…
+     https://github.com/n8n-io/n8n
+ 3. 157224 ⭐  Snailclimb/JavaGuide [JavaScript]
+     Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+     https://github.com/Snailclimb/JavaGuide
+ 4. 149790 ⭐  langgenius/dify [TypeScript]
+     Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collabo…
+     https://github.com/langgenius/dify
+ 5. 146351 ⭐  open-webui/open-webui [Python]
+     User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
+     https://github.com/open-webui/open-webui
+ 6. 120128 ⭐  farion1231/cc-switch [Rust]
+     A cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode, OpenClaw, …
+     https://github.com/farion1231/cc-switch
+ 7.  93727 ⭐  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 8.  91140 ⭐  punkpeye/awesome-mcp-servers
+     A collection of MCP servers.
+     https://github.com/punkpeye/awesome-mcp-servers
+ 9.  80682 ⭐  lobehub/lobehub [TypeScript]
+     🤯 LobeHub is your Chief Agent Operator, organizing your agents into 7×24 operations by hir…
+     https://github.com/lobehub/lobehub
+10.  79794 ⭐  netdata/netdata [Go]
+     The fastest path to AI-powered full stack observability, even for lean teams.
+     https://github.com/netdata/netdata
+11.  70726 ⭐  D4Vinci/Scrapling [Python]
+     🕷️ An adaptive Web Scraping framework that handles everything from a single request to a f…
+     https://github.com/D4Vinci/Scrapling
+12.  68654 ⭐  ComposioHQ/awesome-claude-skills [Python]
+     A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI wo…
+     https://github.com/ComposioHQ/awesome-claude-skills
+13.  68369 ⭐  koala73/worldmonitor [TypeScript]
+     Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitor…
+     https://github.com/koala73/worldmonitor
+14.  61190 ⭐  headroomlabs-ai/headroom [Python]
+     Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 20% fewer to…
+     https://github.com/headroomlabs-ai/headroom
+15.  60787 ⭐  sansan0/TrendRadar [Python]
+     ⭐AI-driven public opinion & trend monitor with multi-platform aggregation, RSS, and smart …
+     https://github.com/sansan0/TrendRadar
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1.  851.4 ⭐/天 (共93728⭐)  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 2.  530.0 ⭐/天 (共57610⭐)  MemPalace/mempalace [Python]
+     The best-benchmarked open-source AI memory system. And it's free.
+     https://github.com/MemPalace/mempalace
+ 3.  401.1 ⭐/天 (共59622⭐)  Panniantong/Agent-Reach [Python]
+     Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube…
+     https://github.com/Panniantong/Agent-Reach
+ 4.  334.0 ⭐/天 (共42073⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 5.  273.8 ⭐/天 (共36869⭐)  heygen-com/hyperframes [TypeScript]
+     Write HTML. Render video. Built for agents.
+     https://github.com/heygen-com/hyperframes
+ 6.  235.2 ⭐/天 (共26426⭐)  HKUDS/Vibe-Trading [Python]
+     "Vibe-Trading: Your Personal Trading Agent"
+     https://github.com/HKUDS/Vibe-Trading
+ 7.  230.6 ⭐/天 (共34093⭐)  DeusData/codebase-memory-mcp [C]
+     High-performance code intelligence MCP server. Indexes codebases into a persistent knowled…
+     https://github.com/DeusData/codebase-memory-mcp
+ 8.  209.9 ⭐/天 (共9127⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+ 9.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+10.  172.6 ⭐/天 (共25199⭐)  tirth8205/code-review-graph [Python]
+     Local-first code intelligence graph for MCP and CLI. Builds a persistent map of your codeb…
+     https://github.com/tirth8205/code-review-graph
+11.  156.1 ⭐/天 (共24858⭐)  diegosouzapw/OmniRoute [TypeScript]
+     Never stop coding. Free MIT AI gateway: one endpoint, 268+ providers (50+ free), 500+ mode…
+     https://github.com/diegosouzapw/OmniRoute
+12.  132.9 ⭐/天 (共3097⭐)  oomol-lab/open-connector [TypeScript]
+     Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SDK, CLI, MC…
+     https://github.com/oomol-lab/open-connector
+13.  132.3 ⭐/天 (共11198⭐)  t8y2/dbx [Rust]
+     20 MB lightweight cross-platform database client for 70+ databases, including MySQL, Postg…
+     https://github.com/t8y2/dbx
+14.  128.8 ⭐/天 (共13686⭐)  xbtlin/ai-berkshire [Python]
+     AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berk…
+     https://github.com/xbtlin/ai-berkshire
+15.  128.3 ⭐/天 (共19186⭐)  mksglu/context-mode [TypeScript]
+     Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), p…
+     https://github.com/mksglu/context-mode
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. + 2800 ⭐ (+4117.2/天)  koala73/worldmonitor [TypeScript]  共68369⭐
+     https://github.com/koala73/worldmonitor
+ 2. + 1209 ⭐ (+1777.7/天)  diegosouzapw/OmniRoute [TypeScript]  共24858⭐
+     https://github.com/diegosouzapw/OmniRoute
+ 3. +  618 ⭐ (+908.7/天)  tirth8205/code-review-graph [Python]  共25199⭐
+     https://github.com/tirth8205/code-review-graph
+ 4. +  578 ⭐ (+849.9/天)  rohitg00/ai-engineering-from-scratch [Python]  共42073⭐
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 5. +  548 ⭐ (+805.8/天)  Graphify-Labs/graphify [Python]  共93728⭐
+     https://github.com/Graphify-Labs/graphify
+ 6. +  463 ⭐ (+680.8/天)  Panniantong/Agent-Reach [Python]  共59622⭐
+     https://github.com/Panniantong/Agent-Reach
+ 7. +  392 ⭐ (+576.4/天)  DeusData/codebase-memory-mcp [C]  共34093⭐
+     https://github.com/DeusData/codebase-memory-mcp
+ 8. +  350 ⭐ (+514.6/天)  farion1231/cc-switch [Rust]  共120128⭐
+     https://github.com/farion1231/cc-switch
+ 9. +  281 ⭐ (+413.2/天)  HKUDS/Vibe-Trading [Python]  共26426⭐
+     https://github.com/HKUDS/Vibe-Trading
+10. +  254 ⭐ (+373.5/天)  affaan-m/ECC [JavaScript]  共232162⭐
+     https://github.com/affaan-m/ECC
+11. +  253 ⭐ (+372.0/天)  ComposioHQ/awesome-claude-skills [Python]  共68654⭐
+     https://github.com/ComposioHQ/awesome-claude-skills
+12. +  208 ⭐ (+305.8/天)  heygen-com/hyperframes [TypeScript]  共36869⭐
+     https://github.com/heygen-com/hyperframes
+13. +  171 ⭐ (+251.4/天)  headroomlabs-ai/headroom [Python]  共61190⭐
+     https://github.com/headroomlabs-ai/headroom
+14. +  154 ⭐ (+226.4/天)  D4Vinci/Scrapling [Python]  共70726⭐
+     https://github.com/D4Vinci/Scrapling
+15. +  149 ⭐ (+219.1/天)  cobusgreyling/loop-engineering [JavaScript]  共9127⭐
+     https://github.com/cobusgreyling/loop-engineering
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\topic_mcp\20260722_180119.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020220.json
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+agent&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+agent+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: AI agent） ===
+
+ 1. 259326 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 218879 ⭐  NousResearch/hermes-agent [Python]
+     The agent that grows with you
+     https://github.com/NousResearch/hermes-agent
+ 3. 157224 ⭐  Snailclimb/JavaGuide [JavaScript]
+     Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+     https://github.com/Snailclimb/JavaGuide
+ 4. 152220 ⭐  langflow-ai/langflow [Python]
+     Langflow is a powerful tool for building and deploying AI-powered agents and workflows.
+     https://github.com/langflow-ai/langflow
+ 5. 149790 ⭐  langgenius/dify [TypeScript]
+     Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collabo…
+     https://github.com/langgenius/dify
+ 6. 142336 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+ 7. 142176 ⭐  x1xhlol/system-prompts-and-models-of-ai-tools
+     FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, L…
+     https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools
+ 8. 135827 ⭐  msitarzewski/agency-agents [Shell]
+     A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas…
+     https://github.com/msitarzewski/agency-agents
+ 9. 126220 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+10. 106131 ⭐  google-gemini/gemini-cli [TypeScript]
+     An open-source AI agent that brings the power of Gemini directly into your terminal.
+     https://github.com/google-gemini/gemini-cli
+11. 106104 ⭐  browser-use/browser-use [Python]
+     🌐 Make websites accessible for AI agents. Automate tasks online with ease.
+     https://github.com/browser-use/browser-use
+12.  91813 ⭐  karpathy/autoresearch [Python]
+     AI agents running research on single-GPU nanochat training automatically
+     https://github.com/karpathy/autoresearch
+13.  88231 ⭐  thedotmack/claude-mem [JavaScript]
+     Persistent Context Across Sessions for Every Agent –  Captures everything your agent does …
+     https://github.com/thedotmack/claude-mem
+14.  87783 ⭐  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+15.  85689 ⭐  infiniflow/ragflow [Go]
+     RAGFlow is a leading open-source Retrieval-Augmented Generation (RAG) engine that fuses cu…
+     https://github.com/infiniflow/ragflow
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2156.0 ⭐/天 (共87783⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2.  666.1 ⭐/天 (共91813⭐)  karpathy/autoresearch [Python]
+     AI agents running research on single-GPU nanochat training automatically
+     https://github.com/karpathy/autoresearch
+ 3.  508.8 ⭐/天 (共79837⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 4.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 5.  401.1 ⭐/天 (共59622⭐)  Panniantong/Agent-Reach [Python]
+     Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube…
+     https://github.com/Panniantong/Agent-Reach
+ 6.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 7.  298.3 ⭐/天 (共27559⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+ 8.  291.9 ⭐/天 (共12334⭐)  XiaomiMiMo/MiMo-Code [TypeScript]
+     MiMo Code: Where Models and Agents Co-Evolve
+     https://github.com/XiaomiMiMo/MiMo-Code
+ 9.  273.8 ⭐/天 (共36869⭐)  heygen-com/hyperframes [TypeScript]
+     Write HTML. Render video. Built for agents.
+     https://github.com/heygen-com/hyperframes
+10.  268.8 ⭐/天 (共46085⭐)  HKUDS/nanobot [Python]
+     Lightweight, open-source AI agent for your tools, chats, and workflows.
+     https://github.com/HKUDS/nanobot
+11.  245.0 ⭐/天 (共22102⭐)  op7418/guizang-ppt-skill [HTML]
+     AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layo…
+     https://github.com/op7418/guizang-ppt-skill
+12.  228.8 ⭐/天 (共35211⭐)  tinyhumansai/openhuman [Rust]
+     Your Personal AI super intelligence. A brain that builds a local-first memory of your life…
+     https://github.com/tinyhumansai/openhuman
+13.  225.8 ⭐/天 (共29638⭐)  JCodesMore/ai-website-cloner-template [TypeScript]
+     Clone any website with one command using AI coding agents
+     https://github.com/JCodesMore/ai-website-cloner-template
+14.  210.7 ⭐/天 (共29904⭐)  googleworkspace/cli [Rust]
+     Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Cha…
+     https://github.com/googleworkspace/cli
+15.  209.9 ⭐/天 (共9127⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  522 ⭐ (+767.6/天)  obra/superpowers [Shell]  共259326⭐
+     https://github.com/obra/superpowers
+ 2. +  463 ⭐ (+680.8/天)  Panniantong/Agent-Reach [Python]  共59622⭐
+     https://github.com/Panniantong/Agent-Reach
+ 3. +  460 ⭐ (+676.4/天)  DietrichGebert/ponytail [JavaScript]  共87783⭐
+     https://github.com/DietrichGebert/ponytail
+ 4. +  457 ⭐ (+672.0/天)  NousResearch/hermes-agent [Python]  共218879⭐
+     https://github.com/NousResearch/hermes-agent
+ 5. +  429 ⭐ (+630.8/天)  Shubhamsaboo/awesome-llm-apps [Python]  共126220⭐
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 6. +  405 ⭐ (+595.5/天)  msitarzewski/agency-agents [Shell]  共135827⭐
+     https://github.com/msitarzewski/agency-agents
+ 7. +  290 ⭐ (+426.4/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 8. +  281 ⭐ (+413.2/天)  calesthio/OpenMontage [Python]  共41167⭐
+     https://github.com/calesthio/OpenMontage
+ 9. +  208 ⭐ (+305.8/天)  heygen-com/hyperframes [TypeScript]  共36869⭐
+     https://github.com/heygen-com/hyperframes
+10. +  155 ⭐ (+227.9/天)  browser-use/browser-use [Python]  共106104⭐
+     https://github.com/browser-use/browser-use
+11. +  154 ⭐ (+226.4/天)  JCodesMore/ai-website-cloner-template [TypeScript]  共29638⭐
+     https://github.com/JCodesMore/ai-website-cloner-template
+12. +  149 ⭐ (+219.1/天)  cobusgreyling/loop-engineering [JavaScript]  共9127⭐
+     https://github.com/cobusgreyling/loop-engineering
+13. +  143 ⭐ (+210.3/天)  addyosmani/agent-skills [JavaScript]  共79837⭐
+     https://github.com/addyosmani/agent-skills
+14. +  111 ⭐ (+163.2/天)  langgenius/dify [TypeScript]  共149790⭐
+     https://github.com/langgenius/dify
+15. +   95 ⭐ (+139.7/天)  infiniflow/ragflow [Go]  共85689⭐
+     https://github.com/infiniflow/ragflow
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\ai_agent\20260722_180220.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020223.json
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=LLM+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: LLM） ===
+
+ 1. 232162 ⭐  affaan-m/ECC [JavaScript]
+     The agent harness performance optimization system. Skills, instincts, memory, security, an…
+     https://github.com/affaan-m/ECC
+ 2. 218879 ⭐  NousResearch/hermes-agent [Python]
+     The agent that grows with you
+     https://github.com/NousResearch/hermes-agent
+ 3. 195369 ⭐  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 4. 185652 ⭐  Significant-Gravitas/AutoGPT [Python]
+     AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission i…
+     https://github.com/Significant-Gravitas/AutoGPT
+ 5. 176656 ⭐  ollama/ollama [Go]
+     Get up and running with Kimi-K2.6, GLM-5.2, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and ot…
+     https://github.com/ollama/ollama
+ 6. 166209 ⭐  f/prompts.chat [HTML]
+     f.k.a. Awesome ChatGPT Prompts. Share, discover, and collect prompts from the community. F…
+     https://github.com/f/prompts.chat
+ 7. 162843 ⭐  huggingface/transformers [Python]
+     🤗 Transformers: the model-definition framework for state-of-the-art machine learning model…
+     https://github.com/huggingface/transformers
+ 8. 154438 ⭐  firecrawl/firecrawl [TypeScript]
+     The API to search, scrape, and interact with the web at scale. 🔥
+     https://github.com/firecrawl/firecrawl
+ 9. 149790 ⭐  langgenius/dify [TypeScript]
+     Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collabo…
+     https://github.com/langgenius/dify
+10. 146351 ⭐  open-webui/open-webui [Python]
+     User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
+     https://github.com/open-webui/open-webui
+11. 142336 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+12. 126220 ⭐  Shubhamsaboo/awesome-llm-apps [Python]
+     100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+13. 121279 ⭐  ggml-org/llama.cpp [C++]
+     LLM inference in C/C++
+     https://github.com/ggml-org/llama.cpp
+14. 106104 ⭐  browser-use/browser-use [Python]
+     🌐 Make websites accessible for AI agents. Automate tasks online with ease.
+     https://github.com/browser-use/browser-use
+15.  99571 ⭐  rasbt/LLMs-from-scratch [Jupyter Notebook]
+     Implement a ChatGPT-like LLM in PyTorch from scratch, step by step
+     https://github.com/rasbt/LLMs-from-scratch
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2156.0 ⭐/天 (共87783⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2. 1106.3 ⭐/天 (共195369⭐)  multica-ai/andrej-karpathy-skills
+     A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's ob…
+     https://github.com/multica-ai/andrej-karpathy-skills
+ 3.  851.4 ⭐/天 (共93730⭐)  Graphify-Labs/graphify [Python]
+     Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowled…
+     https://github.com/Graphify-Labs/graphify
+ 4.  841.9 ⭐/天 (共92044⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  530.0 ⭐/天 (共57610⭐)  MemPalace/mempalace [Python]
+     The best-benchmarked open-source AI memory system. And it's free.
+     https://github.com/MemPalace/mempalace
+ 6.  334.0 ⭐/天 (共42074⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 7.  298.3 ⭐/天 (共27559⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+ 8.  268.8 ⭐/天 (共46085⭐)  HKUDS/nanobot [Python]
+     Lightweight, open-source AI agent for your tools, chats, and workflows.
+     https://github.com/HKUDS/nanobot
+ 9.  235.2 ⭐/天 (共26426⭐)  HKUDS/Vibe-Trading [Python]
+     "Vibe-Trading: Your Personal Trading Agent"
+     https://github.com/HKUDS/Vibe-Trading
+10.  209.9 ⭐/天 (共9127⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+11.  193.8 ⭐/天 (共30436⭐)  AlexsJones/llmfit [Rust]
+     Hundreds of models & providers. One command to find what runs on your hardware.
+     https://github.com/AlexsJones/llmfit
+12.  190.8 ⭐/天 (共14398⭐)  microsoft/SkillOpt [Python]
+     SkillOpt is a text-space optimizer that trains reusable natural-language skills for frozen…
+     https://github.com/microsoft/SkillOpt
+13.  185.0 ⭐/天 (共7628⭐)  omnigent-ai/omnigent [Python]
+     Omnigent is an open-source AI agent framework and meta-harness: orchestrate Claude Code, C…
+     https://github.com/omnigent-ai/omnigent
+14.  180.8 ⭐/天 (共16663⭐)  tashfeenahmed/freellmapi [TypeScript]
+     OpenAI-compatible proxy that stacks the free tiers of 28 LLM providers (~4B tokens/month) …
+     https://github.com/tashfeenahmed/freellmapi
+15.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  579 ⭐ (+850.6/天)  rohitg00/ai-engineering-from-scratch [Python]  共42074⭐
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 2. +  550 ⭐ (+808.0/天)  Graphify-Labs/graphify [Python]  共93730⭐
+     https://github.com/Graphify-Labs/graphify
+ 3. +  460 ⭐ (+675.8/天)  DietrichGebert/ponytail [JavaScript]  共87783⭐
+     https://github.com/DietrichGebert/ponytail
+ 4. +  456 ⭐ (+669.9/天)  NousResearch/hermes-agent [Python]  共218879⭐
+     https://github.com/NousResearch/hermes-agent
+ 5. +  429 ⭐ (+630.2/天)  Shubhamsaboo/awesome-llm-apps [Python]  共126220⭐
+     https://github.com/Shubhamsaboo/awesome-llm-apps
+ 6. +  366 ⭐ (+537.7/天)  firecrawl/firecrawl [TypeScript]  共154438⭐
+     https://github.com/firecrawl/firecrawl
+ 7. +  339 ⭐ (+498.0/天)  microsoft/SkillOpt [Python]  共14398⭐
+     https://github.com/microsoft/SkillOpt
+ 8. +  281 ⭐ (+412.8/天)  HKUDS/Vibe-Trading [Python]  共26426⭐
+     https://github.com/HKUDS/Vibe-Trading
+ 9. +  261 ⭐ (+383.4/天)  JuliusBrussee/caveman [JavaScript]  共92044⭐
+     https://github.com/JuliusBrussee/caveman
+10. +  256 ⭐ (+376.1/天)  multica-ai/andrej-karpathy-skills  共195369⭐
+     https://github.com/multica-ai/andrej-karpathy-skills
+11. +  254 ⭐ (+373.1/天)  affaan-m/ECC [JavaScript]  共232162⭐
+     https://github.com/affaan-m/ECC
+12. +  224 ⭐ (+329.1/天)  AlexsJones/llmfit [Rust]  共30436⭐
+     https://github.com/AlexsJones/llmfit
+13. +  155 ⭐ (+227.7/天)  browser-use/browser-use [Python]  共106104⭐
+     https://github.com/browser-use/browser-use
+14. +  149 ⭐ (+218.9/天)  cobusgreyling/loop-engineering [JavaScript]  共9127⭐
+     https://github.com/cobusgreyling/loop-engineering
+15. +  110 ⭐ (+161.6/天)  langgenius/dify [TypeScript]  共149790⭐
+     https://github.com/langgenius/dify
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\llm\20260722_180223.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020321.json
+HTTP Request: GET https://api.github.com/search/repositories?q=generative-ai&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=generative-ai+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: generative-ai） ===
+
+ 1. 152220 ⭐  langflow-ai/langflow [Python]
+     Langflow is a powerful tool for building and deploying AI-powered agents and workflows.
+     https://github.com/langflow-ai/langflow
+ 2. 142336 ⭐  langchain-ai/langchain [Python]
+     The agent engineering platform.
+     https://github.com/langchain-ai/langchain
+ 3. 113389 ⭐  microsoft/generative-ai-for-beginners [Jupyter Notebook]
+     21 Lessons, Get Started Building with Generative AI
+     https://github.com/microsoft/generative-ai-for-beginners
+ 4.  99571 ⭐  rasbt/LLMs-from-scratch [Jupyter Notebook]
+     Implement a ChatGPT-like LLM in PyTorch from scratch, step by step
+     https://github.com/rasbt/LLMs-from-scratch
+ 5.  80690 ⭐  nexu-io/open-design [TypeScript]
+     🎨 The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding ag…
+     https://github.com/nexu-io/open-design
+ 6.  76830 ⭐  dair-ai/Prompt-Engineering-Guide [MDX]
+     🐙 Guides, papers, lessons, notebooks and resources for prompt engineering, context enginee…
+     https://github.com/dair-ai/Prompt-Engineering-Guide
+ 7.  70104 ⭐  microsoft/ai-agents-for-beginners [Jupyter Notebook]
+     18 Lessons to Get Started Building AI Agents
+     https://github.com/microsoft/ai-agents-for-beginners
+ 8.  59707 ⭐  asgeirtj/system_prompts_leaks [JavaScript]
+     Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude De…
+     https://github.com/asgeirtj/system_prompts_leaks
+ 9.  42074 ⭐  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+10.  37866 ⭐  langchain-ai/langgraph [Python]
+     Build resilient agents.
+     https://github.com/langchain-ai/langgraph
+11.  28772 ⭐  NirDiamant/RAG_Techniques [Jupyter Notebook]
+     This repository showcases various advanced techniques for Retrieval-Augmented Generation (…
+     https://github.com/NirDiamant/RAG_Techniques
+12.  28391 ⭐  aishwaryanr/awesome-generative-ai-guide [HTML]
+     A one stop repository for generative AI research updates, interview resources, notebooks a…
+     https://github.com/aishwaryanr/awesome-generative-ai-guide
+13.  27307 ⭐  yamadashy/repomix [TypeScript]
+     📦 Repomix is a powerful tool that packs your entire repository into a single, AI-friendly …
+     https://github.com/yamadashy/repomix
+14.  27234 ⭐  Stability-AI/generative-models [Python]
+     Generative Models by Stability AI
+     https://github.com/Stability-AI/generative-models
+15.  25984 ⭐  deepset-ai/haystack [Python]
+     Open-source AI orchestration framework for building context-engineered, production-ready L…
+     https://github.com/deepset-ai/haystack
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1.  943.0 ⭐/天 (共80690⭐)  nexu-io/open-design [TypeScript]
+     🎨 The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding ag…
+     https://github.com/nexu-io/open-design
+ 2.  334.0 ⭐/天 (共42074⭐)  rohitg00/ai-engineering-from-scratch [Python]
+     Learn it. Build it. Ship it for others.
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 3.  109.3 ⭐/天 (共7905⭐)  nexu-io/html-anything [HTML]
+     ✨ The agentic HTML editor — your local AI agent writes the HTML, you ship it. 🚀 75 Skills …
+     https://github.com/nexu-io/html-anything
+ 4.   68.7 ⭐/天 (共11974⭐)  HBAI-Ltd/Toonflow-app [TypeScript]
+     Toonflow 是开源一站式 AI 短剧创作工具，将小说、剧本快速转化为动画短剧。集成 AI 编剧、智能分镜、角色与视频生成，跨平台桌面端轻量部署，助力创作者低成本批量产出视觉内…
+     https://github.com/HBAI-Ltd/Toonflow-app
+ 5.   61.6 ⭐/天 (共8177⭐)  Narcooo/inkos [TypeScript]
+     Story Creation AI Agent for novel, scripts, translation, interactive games, and IP content
+     https://github.com/Narcooo/inkos
+ 6.   51.3 ⭐/天 (共392⭐)  0xsline/OpenChatCut [TypeScript]
+     Local-first conversational AI video editor with a professional multi-track timeline, Agent…
+     https://github.com/0xsline/OpenChatCut
+ 7.   50.4 ⭐/天 (共5296⭐)  google/agents-cli [Python]
+     The CLI and skills that turn any coding assistant into an expert at creating, evaluating, …
+     https://github.com/google/agents-cli
+ 8.   42.7 ⭐/天 (共1733⭐)  nolangz/pixel2motion [Python]
+     AI logo animation skill: turn raster logos into smooth SVG animation, animated HTML demos,…
+     https://github.com/nolangz/pixel2motion
+ 9.   35.4 ⭐/天 (共4218⭐)  wiltodelta/remove-ai-watermarks [Python]
+     AI watermark remover. CLI and Python library to strip visible and invisible AI watermarks …
+     https://github.com/wiltodelta/remove-ai-watermarks
+10.   34.9 ⭐/天 (共4192⭐)  alvinreal/awesome-opensource-ai [Python]
+     Curated list of the best truly open-source AI projects, models, tools, and infrastructure.…
+     https://github.com/alvinreal/awesome-opensource-ai
+11.   29.0 ⭐/天 (共351⭐)  Alisa0808/vox-director [Python]
+     Turn one topic into a finished Vox-style paper-collage explainer/ad video — automated end …
+     https://github.com/Alisa0808/vox-director
+12.   19.3 ⭐/天 (共427⭐)  Orkas-AI/Orkas-VideoStudio [TypeScript]
+     Turn your coding agent into a video studio: describe a video in plain language, and your a…
+     https://github.com/Orkas-AI/Orkas-VideoStudio
+13.   16.5 ⭐/天 (共1940⭐)  dramaclaw/dramaclaw [TypeScript]
+     A general-purpose AIGC video engine: script to finished film in one pipeline — dramas, ads…
+     https://github.com/dramaclaw/dramaclaw
+14.   14.5 ⭐/天 (共643⭐)  kadevin/ilab-conjure [JavaScript]
+     面向 GPT-image-2 的 AI 图片生成 WebUI 工作台，支持 Codex Responses 与 OpenAI 兼容 API 接入，内置公用图库、多类型 Chip 快…
+     https://github.com/kadevin/ilab-conjure
+15.   12.8 ⭐/天 (共1793⭐)  Lightricks/LTX-Desktop [TypeScript]
+     An open-source desktop app for generating videos with LTX models
+     https://github.com/Lightricks/LTX-Desktop
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  579 ⭐ (+851.3/天)  rohitg00/ai-engineering-from-scratch [Python]  共42074⭐
+     https://github.com/rohitg00/ai-engineering-from-scratch
+ 2. +  257 ⭐ (+377.8/天)  nexu-io/open-design [TypeScript]  共80690⭐
+     https://github.com/nexu-io/open-design
+ 3. +  150 ⭐ (+220.5/天)  asgeirtj/system_prompts_leaks [JavaScript]  共59707⭐
+     https://github.com/asgeirtj/system_prompts_leaks
+ 4. +  113 ⭐ (+166.1/天)  0xsline/OpenChatCut [TypeScript]  共392⭐
+     https://github.com/0xsline/OpenChatCut
+ 5. +  109 ⭐ (+160.3/天)  HBAI-Ltd/Toonflow-app [TypeScript]  共11974⭐
+     https://github.com/HBAI-Ltd/Toonflow-app
+ 6. +   86 ⭐ (+126.4/天)  dramaclaw/dramaclaw [TypeScript]  共1940⭐
+     https://github.com/dramaclaw/dramaclaw
+ 7. +   85 ⭐ (+125.0/天)  langchain-ai/langgraph [Python]  共37866⭐
+     https://github.com/langchain-ai/langgraph
+ 8. +   74 ⭐ (+108.8/天)  microsoft/ai-agents-for-beginners [Jupyter Notebook]  共70104⭐
+     https://github.com/microsoft/ai-agents-for-beginners
+ 9. +   58 ⭐ (+85.3/天)  langchain-ai/langchain [Python]  共142336⭐
+     https://github.com/langchain-ai/langchain
+10. +   50 ⭐ (+73.5/天)  microsoft/generative-ai-for-beginners [Jupyter Notebook]  共113389⭐
+     https://github.com/microsoft/generative-ai-for-beginners
+11. +   44 ⭐ (+64.7/天)  rasbt/LLMs-from-scratch [Jupyter Notebook]  共99571⭐
+     https://github.com/rasbt/LLMs-from-scratch
+12. +   42 ⭐ (+61.7/天)  langflow-ai/langflow [Python]  共152220⭐
+     https://github.com/langflow-ai/langflow
+13. +   39 ⭐ (+57.3/天)  Orkas-AI/Orkas-VideoStudio [TypeScript]  共427⭐
+     https://github.com/Orkas-AI/Orkas-VideoStudio
+14. +   32 ⭐ (+47.0/天)  Alisa0808/vox-director [Python]  共351⭐
+     https://github.com/Alisa0808/vox-director
+15. +   30 ⭐ (+44.1/天)  dair-ai/Prompt-Engineering-Guide [MDX]  共76830⭐
+     https://github.com/dair-ai/Prompt-Engineering-Guide
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\generative_ai\20260722_180321.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020323.json
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+coding&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 403 rate limit exceeded"
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+coding&sort=stars&order=desc&per_page=15&page=1 "HTTP/1.1 200 OK"
+HTTP Request: GET https://api.github.com/search/repositories?q=AI+coding+created%3A%3E2026-01-23&sort=stars&order=desc&per_page=50&page=1 "HTTP/1.1 200 OK"
+
+=== 星最多的 skill（query: AI coding） ===
+
+ 1. 259327 ⭐  obra/superpowers [Shell]
+     An agentic skills framework & software development methodology that works.
+     https://github.com/obra/superpowers
+ 2. 197482 ⭐  n8n-io/n8n [TypeScript]
+     Fair-code workflow automation platform with native AI capabilities. Combine visual buildin…
+     https://github.com/n8n-io/n8n
+ 3. 142176 ⭐  x1xhlol/system-prompts-and-models-of-ai-tools
+     FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, L…
+     https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools
+ 4.  92044 ⭐  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 5.  88232 ⭐  thedotmack/claude-mem [JavaScript]
+     Persistent Context Across Sessions for Every Agent –  Captures everything your agent does …
+     https://github.com/thedotmack/claude-mem
+ 6.  87783 ⭐  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 7.  79837 ⭐  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 8.  77611 ⭐  bytedance/deer-flow [Python]
+     An open-source long-horizon SuperAgent harness that researches, codes, and creates. With t…
+     https://github.com/bytedance/deer-flow
+ 9.  75432 ⭐  earendil-works/pi [TypeScript]
+     AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI
+     https://github.com/earendil-works/pi
+10.  72205 ⭐  daytonaio/daytona
+     Daytona is a Secure and Elastic Infrastructure for Running AI-Generated Code
+     https://github.com/daytonaio/daytona
+11.  66396 ⭐  code-yeongyu/oh-my-openagent [TypeScript]
+     omo/lazycodex: The coding agent for tokenmaxxers;the one and only agent harness for comple…
+     https://github.com/code-yeongyu/oh-my-openagent
+12.  66329 ⭐  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+13.  65547 ⭐  ruvnet/ruflo [TypeScript]
+     🌊 The leading agent meta-harness. Deploy intelligent multi-player swarms, coordinate auton…
+     https://github.com/ruvnet/ruflo
+14.  63294 ⭐  shanraisshan/claude-code-best-practice [HTML]
+     from vibe coding to agentic engineering - practice makes claude perfect
+     https://github.com/shanraisshan/claude-code-best-practice
+15.  62115 ⭐  Fission-AI/OpenSpec [TypeScript]
+     Spec-driven development (SDD) for AI coding assistants.
+     https://github.com/Fission-AI/OpenSpec
+
+=== 近 180 天最新增长最快（按 ⭐/天 估算） ===
+
+ 1. 2156.0 ⭐/天 (共87783⭐)  DietrichGebert/ponytail [JavaScript]
+     Makes your AI agent think like the laziest senior dev in the room. The best code is the co…
+     https://github.com/DietrichGebert/ponytail
+ 2.  841.9 ⭐/天 (共92044⭐)  JuliusBrussee/caveman [JavaScript]
+     🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens b…
+     https://github.com/JuliusBrussee/caveman
+ 3.  560.1 ⭐/天 (共61047⭐)  santifer/career-ops [JavaScript]
+     Open-source AI job search: scan job portals, evaluate listings with a structured A-F rubri…
+     https://github.com/santifer/career-ops
+ 4.  508.8 ⭐/天 (共79837⭐)  addyosmani/agent-skills [JavaScript]
+     Production-grade engineering skills for AI coding agents.
+     https://github.com/addyosmani/agent-skills
+ 5.  434.0 ⭐/天 (共66329⭐)  Leonxlnx/taste-skill [JavaScript]
+     Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop
+     https://github.com/Leonxlnx/taste-skill
+ 6.  357.6 ⭐/天 (共41167⭐)  calesthio/OpenMontage [Python]
+     World's first open-source, agentic video production system. 12 production pipelines, 100+ …
+     https://github.com/calesthio/OpenMontage
+ 7.  298.3 ⭐/天 (共27559⭐)  esengine/DeepSeek-Reasonix [Go]
+     DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stabilit…
+     https://github.com/esengine/DeepSeek-Reasonix
+ 8.  291.9 ⭐/天 (共12334⭐)  XiaomiMiMo/MiMo-Code [TypeScript]
+     MiMo Code: Where Models and Agents Co-Evolve
+     https://github.com/XiaomiMiMo/MiMo-Code
+ 9.  268.8 ⭐/天 (共30268⭐)  Gitlawb/openclaude [TypeScript]
+     runs anywhere. uses anything
+     https://github.com/Gitlawb/openclaude
+10.  225.8 ⭐/天 (共29638⭐)  JCodesMore/ai-website-cloner-template [TypeScript]
+     Clone any website with one command using AI coding agents
+     https://github.com/JCodesMore/ai-website-cloner-template
+11.  209.9 ⭐/天 (共9127⭐)  cobusgreyling/loop-engineering [JavaScript]
+     Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Desig…
+     https://github.com/cobusgreyling/loop-engineering
+12.  200.0 ⭐/天 (共25224⭐)  MadsLorentzen/ai-job-search [TypeScript]
+     The job search that runs on your machine. AI job application framework built on Claude Cod…
+     https://github.com/MadsLorentzen/ai-job-search
+13.  185.0 ⭐/天 (共7628⭐)  omnigent-ai/omnigent [Python]
+     Omnigent is an open-source AI agent framework and meta-harness: orchestrate Claude Code, C…
+     https://github.com/omnigent-ai/omnigent
+14.  180.4 ⭐/天 (共15492⭐)  Nutlope/hallmark [CSS]
+     Anti-AI-slop design skill for Claude Code, Cursor, and Codex.
+     https://github.com/Nutlope/hallmark
+15.  178.9 ⭐/天 (共26355⭐)  mukul975/Anthropic-Cybersecurity-Skills [Python]
+     817 structured cybersecurity skills for AI agents · Mapped to 6 frameworks: MITRE ATT&CK, …
+     https://github.com/mukul975/Anthropic-Cybersecurity-Skills
+
+=== 真实近期增长（按对比快照实际涨星） ===
+（对比 0.7 天前的快照）
+
+ 1. +  732 ⭐ (+1075.2/天)  earendil-works/pi [TypeScript]  共75432⭐
+     https://github.com/earendil-works/pi
+ 2. +  524 ⭐ (+769.7/天)  obra/superpowers [Shell]  共259327⭐
+     https://github.com/obra/superpowers
+ 3. +  519 ⭐ (+762.3/天)  Nutlope/hallmark [CSS]  共15492⭐
+     https://github.com/Nutlope/hallmark
+ 4. +  460 ⭐ (+675.7/天)  DietrichGebert/ponytail [JavaScript]  共87783⭐
+     https://github.com/DietrichGebert/ponytail
+ 5. +  301 ⭐ (+442.1/天)  MadsLorentzen/ai-job-search [TypeScript]  共25224⭐
+     https://github.com/MadsLorentzen/ai-job-search
+ 6. +  290 ⭐ (+426.0/天)  Leonxlnx/taste-skill [JavaScript]  共66329⭐
+     https://github.com/Leonxlnx/taste-skill
+ 7. +  280 ⭐ (+411.3/天)  calesthio/OpenMontage [Python]  共41167⭐
+     https://github.com/calesthio/OpenMontage
+ 8. +  261 ⭐ (+383.4/天)  JuliusBrussee/caveman [JavaScript]  共92044⭐
+     https://github.com/JuliusBrussee/caveman
+ 9. +  169 ⭐ (+248.2/天)  Fission-AI/OpenSpec [TypeScript]  共62115⭐
+     https://github.com/Fission-AI/OpenSpec
+10. +  156 ⭐ (+229.1/天)  santifer/career-ops [JavaScript]  共61047⭐
+     https://github.com/santifer/career-ops
+11. +  154 ⭐ (+226.2/天)  JCodesMore/ai-website-cloner-template [TypeScript]  共29638⭐
+     https://github.com/JCodesMore/ai-website-cloner-template
+12. +  149 ⭐ (+218.9/天)  cobusgreyling/loop-engineering [JavaScript]  共9127⭐
+     https://github.com/cobusgreyling/loop-engineering
+13. +  143 ⭐ (+210.0/天)  addyosmani/agent-skills [JavaScript]  共79837⭐
+     https://github.com/addyosmani/agent-skills
+14. +   99 ⭐ (+145.4/天)  ruvnet/ruflo [TypeScript]  共65547⭐
+     https://github.com/ruvnet/ruflo
+15. +   97 ⭐ (+142.5/天)  n8n-io/n8n [TypeScript]  共197482⭐
+     https://github.com/n8n-io/n8n
+
+快照已存档: D:\P\agent\skill_tracker\output\snapshots\ai_coding\20260722_180323.json
+
+JSON 已写入: D:\P\agent\skill_tracker\output\skills_20260723_020422.json
+趋势 AI 报告生成失败
+Traceback (most recent call last):
+  File "D:\P\agent\app\services\scheduler.py", line 223, in _run
+    report = await generate_analysis(force=pulled > 0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\api\skills.py", line 321, in generate_analysis
+    client, model = ai_service.get_default_client()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\services\ai.py", line 384, in get_default_client
+    client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\openai\_client.py", line 194, in __init__
+    raise OpenAIError(
+openai.OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+趋势简报生成失败
+Traceback (most recent call last):
+  File "D:\P\agent\app\services\scheduler.py", line 232, in _run
+    d = await generate_digest(force=pulled > 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\services\trend_digest.py", line 255, in generate_digest
+    client, model = ai_service.get_default_client()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\services\ai.py", line 384, in get_default_client
+    client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\openai\_client.py", line 194, in __init__
+    raise OpenAIError(
+openai.OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+清理旧趋势产出：删除 11 份，释放 418.7 KB
+趋势同步完成：新拉 8 个，跳过 0 个（当天已有），共 8 个 query
+定时触发蒸馏：recharge-strategy-assistant @ 03:00
+定时触发蒸馏：comic-keyframe-artist @ 03:00
+定时触发蒸馏：comic-storyboard @ 03:00
+定时触发蒸馏：script-doctor @ 03:00
+定时触发蒸馏：comic-scene-artist @ 03:00
+定时触发蒸馏：comic-director @ 03:00
+定时触发蒸馏：demo-assistant @ 03:00
+定时触发蒸馏：comic-screenwriter @ 03:00
+定时触发蒸馏：comic-character-designer @ 03:00
+定时触发蒸馏：comic-scene-designer @ 03:00
+定时触发蒸馏：comic-vfx-designer @ 03:00
+定时触发蒸馏：comic-trajectory-artist @ 03:00
+定时触发蒸馏：comic-prompt-engineer @ 03:00
+定时触发蒸馏：comic-qa-inspector @ 03:00
+定时触发自我进化：recharge-strategy-assistant @ 04:00
+定时触发自我进化：comic-keyframe-artist @ 04:00
+定时触发自我进化：comic-storyboard @ 04:00
+定时触发自我进化：script-doctor @ 04:00
+定时触发自我进化：comic-scene-artist @ 04:00
+定时触发自我进化：comic-director @ 04:00
+定时触发自我进化：demo-assistant @ 04:00
+定时触发自我进化：comic-screenwriter @ 04:00
+定时触发自我进化：comic-character-designer @ 04:00
+定时触发自我进化：comic-scene-designer @ 04:00
+定时触发自我进化：comic-vfx-designer @ 04:00
+定时触发自我进化：comic-trajectory-artist @ 04:00
+定时触发自我进化：comic-prompt-engineer @ 04:00
+定时触发自我进化：comic-qa-inspector @ 04:00
+定时触发采集：jimeng-daily @ 09:00
+开始采集：jimeng-daily (jimeng)
+HTTP Request: GET https://jimeng.jianying.com/ai-tool/home/ "HTTP/1.1 200 OK"

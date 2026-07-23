@@ -585,7 +585,7 @@ export default function Production() {
           display: isNarrow ? 'flex' : 'block', gap: isNarrow ? 8 : 0,
         }}>
           {projects.length === 0 ? (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无项目" style={{ marginTop: 40 }} />
+            <Empty image={<img src="/empty-create.svg" alt="" width={120} />} description="暂无项目" style={{ marginTop: 40 }} />
           ) : projects.map(p => {
             const pStats = p.stats;
             const pProgress = pStats?.overall_progress ?? 0;
@@ -635,7 +635,7 @@ export default function Production() {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, minHeight: 0 }}>
         {!selectedPid ? (
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafbfd' }}>
-            <Empty description="选择或创建一个项目开始制作" />
+            <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="选择或创建一个项目开始制作" />
           </div>
         ) : loading ? (
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1394,7 +1394,7 @@ export default function Production() {
                   </div>
                 ))}
                 {(!project.members || project.members.length === 0) && (
-                  <Empty description="暂无成员" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  <Empty description="暂无成员" image={<img src="/empty-connect.svg" alt="" width={120} />} />
                 )}
               </div>
             </div>

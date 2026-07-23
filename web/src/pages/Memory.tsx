@@ -241,7 +241,7 @@ export default function Memory() {
         }
       >
         {!selectedEmp ? (
-          <Empty description="请选择一个数字员工查看其长期记忆" />
+          <Empty image={<img src="/empty-connect.svg" alt="" width={160} />} description="请选择一个数字员工查看其长期记忆" />
         ) : loading ? (
           <div style={{ textAlign: 'center', padding: isMobile ? '32px 0' : '60px 0' }}>
             <Spin />

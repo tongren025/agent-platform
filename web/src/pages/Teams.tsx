@@ -507,7 +507,7 @@ export default function Teams() {
           ))}
 
           {teamMembers.length === 0 && (
-            <Empty description="团队还没有成员" style={{ padding: '60px 0' }}>
+            <Empty image={<img src="/empty-connect.svg" alt="" width={120} />} description="团队还没有成员" style={{ padding: '60px 0' }}>
               <Button type="primary" icon={<PlusOutlined />} onClick={() => { setAddKeys([]); setAddMemberOpen(true); }}>
                 添加成员
               </Button>
@@ -515,7 +515,7 @@ export default function Teams() {
           )}
         </div>
       ) : (
-        <Empty description="暂无团队" style={{ padding: '80px 0' }} />
+        <Empty image={<img src="/empty-connect.svg" alt="" width={160} />} description="暂无团队" style={{ padding: '80px 0' }} />
       )}
 
       {/* Create/Edit Team Modal */}

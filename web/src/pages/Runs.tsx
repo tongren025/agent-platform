@@ -159,7 +159,7 @@ export default function Runs() {
             <Spin /><div style={{ marginTop: 10, color: '#64748b', fontSize: 13 }}>加载中...</div>
           </div>
         ) : total === 0 ? (
-          <Empty description="还没有运行记录——跑一次数字员工就会出现" />
+          <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description="还没有运行记录——跑一次数字员工就会出现" />
         ) : (
           <Table
             dataSource={runs}

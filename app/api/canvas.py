@@ -56,6 +56,7 @@ class CanvasEdge(BaseModel):
     edge_id: str = ""
     source: str = ""
     target: str = ""
+    data: dict = Field(default_factory=dict)
 
 
 class CanvasDoc(BaseModel):
@@ -166,6 +167,41 @@ def delete_canvas(cid: str):
         raise HTTPException(404, f"画布 {cid} 不存在")
     f.unlink()
     return ok(True)
+
+
+class RenameCanvasReq(BaseModel):
+    """重命名画布请求体。"""
+    name: str
+
+
+@router.patch("/canvases/{cid}")
+def rename_canvas(cid: str, req: RenameCanvasReq):
+    """PATCH /canvases/{cid}：仅重命名画布。"""
+    doc = _load(cid)
+    name = req.name.strip()
+    if not name:
+        raise HTTPException(400, "画布名称不能为空")
+    doc.name = name
+    doc.updated_at = _now()
+    _save(doc)
+    return ok(doc.model_dump())
+
+
+@router.post("/canvases/{cid}/duplicate")
+def duplicate_canvas(cid: str):
+    """POST /canvases/{cid}/duplicate：复制画布(含全部节点/连线)。"""
+    src = _load(cid)
+    new_cid = uuid.uuid4().hex[:8]
+    doc = CanvasDoc(
+        canvas_id=new_cid,
+        name=f"{src.name} (副本)",
+        nodes=src.nodes,
+        edges=src.edges,
+        created_at=_now(),
+        updated_at=_now(),
+    )
+    _save(doc)
+    return ok(doc.model_dump())
 
 
 # ── 生图 ──────────────────────────────────────────────────────────

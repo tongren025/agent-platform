@@ -71,7 +71,7 @@ export default function Workflows() {
       {loading ? (
         <Spin size="large" style={{ display: 'block', marginTop: 100, textAlign: 'center' }} />
       ) : list.length === 0 ? (
-        <Empty description="还没有工作流，点右上角新建" style={{ marginTop: 80 }} />
+        <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="还没有工作流，点右上角新建" style={{ marginTop: 80 }} />
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? '100%' : '300px'}, 1fr))`, gap: isMobile ? 12 : 16 }}>
           {list.map((wf) => (

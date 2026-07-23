@@ -129,7 +129,7 @@ export default function Evolution() {
       {loading ? (
         <Spin size="large" style={{ display: 'block', padding: 80, textAlign: 'center' }} />
       ) : !empKey ? (
-        <Empty description="请先选择一个数字员工" style={{ padding: 80 }} />
+        <Empty image={<img src="/empty-connect.svg" alt="" width={160} />} description="请先选择一个数字员工" style={{ padding: 80 }} />
       ) : (
         <>
           {/* 统计卡片 */}
@@ -239,7 +239,7 @@ export default function Evolution() {
                       },
                     ]}
                   />
-                ) : <Empty description="暂无已处理的建议" />,
+                ) : <Empty image={<img src="/empty-data.svg" alt="" width={120} />} description="暂无已处理的建议" />,
               },
               {
                 key: 'logs',
@@ -271,7 +271,7 @@ export default function Evolution() {
                       },
                     ]}
                   />
-                ) : <Empty description="暂无运行记录" />,
+                ) : <Empty image={<img src="/empty-data.svg" alt="" width={120} />} description="暂无运行记录" />,
               },
             ]}
           />

@@ -63,7 +63,7 @@ function Templates() {
   }
 
   if (templates.length === 0) {
-    return <Empty description="暂无模板" style={{ marginTop: 120 }} />;
+    return <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="暂无模板" style={{ marginTop: 120 }} />;
   }
 
   return (

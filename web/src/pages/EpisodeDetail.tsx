@@ -518,7 +518,7 @@ export default function EpisodeDetail() {
 
       {/* ── 生成单元列表 ── */}
       {unitGroups.length === 0 ? (
-        <Empty description="该集暂无生成单元数据" />
+        <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description="该集暂无生成单元数据" />
       ) : (
         <Row gutter={[12, 12]}>
           {unitGroups.map(sg => (
@@ -919,7 +919,7 @@ export default function EpisodeDetail() {
                     style={{ objectFit: 'cover', borderRadius: 8 }} />
                   <Text ellipsis style={{ display: 'block', fontSize: 11 }} title={item.title}>{item.title}</Text>
                 </div>)}
-              </div> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有素材；先给对应故事板或人物设计卡生图" />}
+              </div> : <Empty image={<img src="/empty-create.svg" alt="" width={120} />} description="还没有素材；先给对应故事板或人物设计卡生图" />}
             </div>)}
             <Text type="secondary">先逐镜审核图片、提示词和参考图；审核通过后再由你手动触发视频生成。系统不会在后台自动提交或扣费。</Text>
           </Space>;

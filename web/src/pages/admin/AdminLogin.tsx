@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input } from 'antd';
 import { message } from '../../ui';
-import { LockOutlined, UserOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { adminApi, adminToken } from '../../adminApi';
 import { COLORS } from '../../theme';
 import { useResponsive } from '../../hooks/useResponsive';
@@ -42,6 +42,9 @@ export default function AdminLogin() {
         alignItems: 'center',
         justifyContent: 'center',
         background: `linear-gradient(135deg, ${COLORS.ink} 0%, ${COLORS.inkLight} 100%)`,
+        backgroundImage: 'url(/login-bg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <div
@@ -56,23 +59,13 @@ export default function AdminLogin() {
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div
-            style={{
-              width: 52,
-              height: 52,
-              borderRadius: 14,
-              margin: '0 auto 14px',
-              background: `linear-gradient(135deg, ${COLORS.iris}, ${COLORS.irisLight})`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontSize: 24,
-              boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
-            }}
-          >
-            <SafetyCertificateOutlined />
-          </div>
+          <img
+            src="/favicon.svg"
+            alt="Agent Studio"
+            width={52}
+            height={52}
+            style={{ borderRadius: 14, margin: '0 auto 14px', display: 'block', boxShadow: '0 4px 16px rgba(99,102,241,0.4)' }}
+          />
           <div style={{ fontSize: 20, fontWeight: 700, color: COLORS.slateDark }}>管理控制台</div>
           <div style={{ fontSize: 13, color: COLORS.slate, marginTop: 4 }}>Admin Console</div>
         </div>

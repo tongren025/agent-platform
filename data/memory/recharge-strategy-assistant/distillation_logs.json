@@ -1,24 +1,5 @@
 [
   {
-    "logId": "dist_46da6bc33693",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-07-01T03:01:25.622162Z",
-    "actions": [],
-    "beforeCounts": {
-      "semantic": 0,
-      "episodic": 0,
-      "procedural": 0
-    },
-    "afterCounts": {
-      "semantic": 0,
-      "episodic": 0,
-      "procedural": 0
-    },
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "dist_fb5e5dc4e149",
     "employeeKey": "recharge-strategy-assistant",
     "ranAt": "2026-07-01T03:02:02.321746Z",
@@ -934,6 +915,25 @@
     "logId": "dist_dd89a78d371c",
     "employeeKey": "recharge-strategy-assistant",
     "ranAt": "2026-07-21T19:00:23.053830Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 0,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "afterCounts": {
+      "semantic": 0,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "dist_ada69b719d44",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-22T19:00:16.821600Z",
     "actions": [],
     "beforeCounts": {
       "semantic": 0,

@@ -376,7 +376,7 @@ export default function Workbench() {
         <div style={{ flex: 1, overflow: 'auto', padding: '24px 28px' }}>
           {!targetReady ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-              <Empty description={mode === 'team' ? '选择一个团队开始协作' : '选择一个数字员工开始对话'} />
+              <Empty image={<img src="/empty-connect.svg" alt="" width={160} />} description={mode === 'team' ? '选择一个团队开始协作' : '选择一个数字员工开始对话'} />
             </div>
           ) : messages.length === 0 && !loading ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>

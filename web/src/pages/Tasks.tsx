@@ -102,7 +102,7 @@ export default function Tasks() {
       <Col xs={12} sm={12} md={6}><Card><Statistic title="失败" value={stats.failed} valueStyle={stats.failed ? { color: '#cf1322' } : undefined} /></Card></Col>
     </Row>
     <Card>
-      {!loading && tasks.length === 0 ? <Empty description="当前账号还没有后台任务" /> : <Table rowKey="job_id" loading={loading} dataSource={tasks} columns={columns as any} pagination={{ pageSize: 20, hideOnSinglePage: true }} scroll={{ x: 'max-content' }} />}
+      {!loading && tasks.length === 0 ? <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description="当前账号还没有后台任务" /> : <Table rowKey="job_id" loading={loading} dataSource={tasks} columns={columns as any} pagination={{ pageSize: 20, hideOnSinglePage: true }} scroll={{ x: 'max-content' }} />}
     </Card>
 
     <Drawer title="任务详情" open={!!detail} onClose={() => setDetail(null)} width={isMobile ? '100%' : 680}>

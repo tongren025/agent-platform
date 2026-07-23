@@ -1,15 +1,5 @@
 [
   {
-    "logId": "evo_761b4aee4b17",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-06-30T04:07:10.100065Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_092055968715",
     "employeeKey": "comic-vfx-designer",
     "ranAt": "2026-06-30T04:13:15.764786Z",
@@ -497,6 +487,16 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_c0dce9c2cee6",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-22T20:00:19.493540Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
     "error": null
   }
 ]

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <title>Agent Studio</title>
+  <defs>
+    <linearGradient id="agent-gradient" x1="4" y1="3" x2="28" y2="29" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#agent-gradient)"/>
+  <g stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 10H8.5L10.5 8" opacity=".4"/>
+    <path d="M22 8H27" opacity=".4"/>
+    <path d="M5 23H8.5L10 24.5" opacity=".4"/>
+    <path d="M22 23H27" opacity=".4"/>
+    <circle cx="5" cy="10" r="1" fill="#FFFFFF" stroke="none" opacity=".7"/>
+    <circle cx="27" cy="8" r="1" fill="#FFFFFF" stroke="none" opacity=".7"/>
+    <circle cx="5" cy="23" r="1" fill="#FFFFFF" stroke="none" opacity=".7"/>
+    <circle cx="27" cy="23" r="1" fill="#FFFFFF" stroke="none" opacity=".7"/>
+  </g>
+  <path d="M8.25 24.5L14.55 8.73C15.07 7.42 16.93 7.42 17.45 8.73L23.75 24.5H20.58L19.02 20.5H12.98L11.42 24.5H8.25ZM14 17.75H18L16 12.43L14 17.75Z" fill="#FFFFFF" fill-rule="evenodd"/>
+  <circle cx="16" cy="18.95" r="1.15" fill="#A5B4FC"/>
+</svg>

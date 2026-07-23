@@ -200,7 +200,7 @@ export default function KnowledgeGraph() {
           <ShareAltOutlined style={{ marginRight: 8, color: COLORS.iris }} />
           知识图谱
         </div>
-        <Empty description="暂无实体数据，请先创建数字员工、工具或工作流" style={{ padding: 80 }} />
+        <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description="暂无实体数据，请先创建数字员工、工具或工作流" style={{ padding: 80 }} />
       </div>
     );
   }

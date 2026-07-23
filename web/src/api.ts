@@ -418,6 +418,10 @@ export const api = {
   }) =>
     request<{ items: { title: string; content: string; stage: string }[]; raw?: string }>(
       `/canvas/canvases/${cid}/derive`, { method: 'POST', body: JSON.stringify(data) }),
+  canvasDuplicate: (cid: string) =>
+    request<any>(`/canvas/canvases/${cid}/duplicate`, { method: 'POST' }),
+  canvasRename: (cid: string, name: string) =>
+    request<any>(`/canvas/canvases/${cid}`, { method: 'PATCH', body: JSON.stringify({ name }) }),
   uploadCanvasAsset: async (cid: string, file: File) => {
     const form = new FormData();
     form.append('file', file);

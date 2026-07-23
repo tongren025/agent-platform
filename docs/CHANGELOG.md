@@ -5,6 +5,74 @@
 
 ---
 
+## [2026-07-23] feat: 画布功能全面补齐——对标 Miro/FigJam 级基础能力
+
+### 新增功能
+- **撤销/重做**：Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y，基于快照的 40 级历史栈。结构变更(添加/删除/移动/连线)前自动取快照，文本编辑不产生快照(防刷)。
+- **多选工具栏**：选中 ≥2 个节点时画布顶部弹出浮动条——左/上/右/底对齐、水平/垂直均分、批量复制/分组/锁定/解锁/删除。
+- **便签节点(StickyNote)**：5 色快速备忘(黄/粉/蓝/绿/紫)，点色块切换颜色，支持锁定。
+- **连线标签(LabeledEdge)**：双击连线添加/编辑标注文字，Escape 取消，自动持久化到 edge.data.label。
+- **画布复制**：工具栏复制按钮 → 后端 POST /duplicate，含全部节点/连线。
+- **画布重命名**：工具栏编辑按钮 → PATCH /canvases/{cid}，仅改名不动节点。
+- **节点锁定**：右键菜单 / 多选工具栏锁定，锁定后不可拖动不可编辑(draggable=false + 输入框 disabled)，半透明视觉标记。
+- **对齐网格**：工具栏开关，开启后节点吸附 18px 网格。
+- **导出 JSON**：工具栏下载按钮，导出当前画布全部节点+连线为 JSON 文件。
+- **全选**：Ctrl+A 选中全部节点。
+- **适配视图**：画布右上角按钮，一键 fitView。
+- **右键菜单增强**：新增「锁定/解锁」条目。
+- **Delete 键改进**：先取快照再删除，删除操作可撤销。
+
+### 后端变更
+- `CanvasEdge` 模型新增 `data: dict` 字段(存连线标签等扩展数据)。
+- 新增 `PATCH /canvases/{cid}` 重命名端点。
+- 新增 `POST /canvases/{cid}/duplicate` 复制端点。
+
+### 前端新文件
+- `web/src/hooks/useCanvasHistory.ts` — 撤销/重做 hook
+- `web/src/components/canvas/SelectionToolbar.tsx` — 多选浮动工具栏
+- `web/src/components/canvas/LabeledEdge.tsx` — 带标签的贝塞尔连线
+- `web/src/components/canvas/CanvasNodes.tsx` — 新增 StickyNote + CanvasActions.updateEdgeLabel
+
+**影响面**：Canvas.tsx 全面重写；canvas.py 增加 2 个端点 + 模型字段；api.ts 增加 2 个方法。
+
+---
+
+## [2026-07-23] feat: 画布核心三件套——分镜连续预览 + 节点分组框 + 右键快捷键
+
+- **分镜连续预览条(Filmstrip)**：画布底部横向条，自动提取所有分镜节点按镜号排列，含缩略图/时长/景别，
+  点击跳转对应节点(fitView)。工具栏「分镜条」按钮控制开关。
+- **节点分组框(GroupNode)**：可缩放虚线框节点(NodeResizer)，用于按场景/段落/集组织节点。
+  Ctrl+G 从选中节点自动创建分组(计算边界框)；工具栏有独立「分组框」按钮。
+  zIndex=-1 始终在普通节点后方。保存/加载时序列化 style.width/height。
+- **右键菜单**：节点右键弹出上下文菜单——AI 派生、复制节点(Ctrl+D)、创建分组(Ctrl+G)、删除(Del)。
+  带快捷键标注，鼠标移出自动关闭。
+- **键盘快捷键**：Ctrl+D 复制选中节点 / Ctrl+G 从选中创建分组 / Ctrl+F 切换搜索 / Ctrl+S 保存。
+  输入框/文本域内不拦截，不干扰正常编辑。
+
+**影响面**：`web/src/pages/Canvas.tsx`（分镜条、分组、右键菜单、快捷键）；
+`web/src/components/canvas/CanvasNodes.tsx`（GroupNode 组件 + NodeResizer）。纯前端，无后端变更。
+
+---
+
+## [2026-07-22] feat: 画布功能大幅增强——导演/编剧向生产力工具
+
+- **MiniMap 小地图**：ReactFlow MiniMap 组件，可缩放可平移，按节点类型/阶段着色。
+- **节点阶段色带**：DataNode 左侧 4px 色带，颜色与看板阶段对齐（紫=剧本/创意，绿=提示词，橙=生成，红=成片）。
+- **分镜格节点(StoryboardNode)**：新节点类型，含镜号、时长、景别(7 种)、运镜(12 种)、画面描述、缩略图槽位。
+- **自动排版**：按阶段分列排版，同阶段内按镜号排序。
+- **新建画布模板**：4 种模板——空白、分镜板(6 格 G1-G6)、角色设定(核心+3 人物卡)、情绪曲线(10 集连线)。
+- **搜索节点**：实时过滤，匹配节点金色高亮，不匹配节点淡化。
+- **文件拖拽上传**：直接拖图片到画布创建 image 节点。
+- **Markdown 预览**：DataNode 新增 eye/edit 切换按钮，内容可在编辑/预览模式间切换(react-markdown)。
+- **节点折叠**：DataNode、StoryboardNode 均支持收起/展开。
+- **收件箱安全加固**：inbox_upload 改为 256KB 分块读取 + 50MB 单文件上限，防止大文件内存溢出。
+
+**影响面**：`web/src/pages/Canvas.tsx`、`web/src/components/canvas/CanvasNodes.tsx`（前端）；
+`app/api/production.py`（后端 inbox_upload 安全加固）。新增 `tests/test_production_inbox.py` 超限测试。
+无数据库表或环境变量变化。
+
+---
+
 ## [2026-07-22] fix: 部署后 Nginx 仍指向旧应用容器导致 502
 
 - 生产部署重建 `app` / `admin` 后强制重建 Nginx，使配置挂载、Docker 网络和静态 upstream

@@ -149,12 +149,7 @@ export default function Layout() {
           }}>
             {drawerOpen ? <CloseOutlined /> : <MenuOutlined />}
           </button>
-          <div style={{
-            width: 28, height: 28, borderRadius: 8,
-            background: `linear-gradient(135deg, ${COLORS.iris}, ${COLORS.irisLight})`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 13, fontWeight: 800, color: '#fff',
-          }}>A</div>
+          <img src="/favicon.svg" alt="Agent Studio" width={28} height={28} style={{ borderRadius: 8 }} />
           <div style={{ color: '#fff', fontWeight: 700, fontSize: 15 }}>Agent Studio</div>
         </div>
       )}
@@ -190,15 +185,7 @@ export default function Layout() {
           gap: 10, flexShrink: 0,
           borderBottom: '1px solid rgba(255,255,255,0.06)',
         }}>
-          <div style={{
-            width: 34, height: 34, borderRadius: 10,
-            background: `linear-gradient(135deg, ${COLORS.iris}, ${COLORS.irisLight})`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 16, fontWeight: 800, color: '#fff', flexShrink: 0,
-            boxShadow: '0 2px 12px rgba(99,102,241,0.35)',
-          }}>
-            A
-          </div>
+          <img src="/favicon.svg" alt="Agent Studio" width={34} height={34} style={{ borderRadius: 10, flexShrink: 0 }} />
           {!navCollapsed && (
             <div>
               <div style={{ color: '#fff', fontWeight: 700, fontSize: 16, lineHeight: 1.2, letterSpacing: '-0.02em' }}>

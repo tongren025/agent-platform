@@ -346,7 +346,7 @@ export default function DirectorStudio() {
 
         {!state ? (
           <div className="director-empty">
-            <Empty description="还没有制作任务">
+            <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="还没有制作任务">
               <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateOpen(true)}>建立第一部片</Button>
             </Empty>
           </div>
@@ -461,7 +461,7 @@ export default function DirectorStudio() {
               </div>
             </div>
             {state.shots.length === 0 ? (
-              <Empty description="剧本生成后，镜头会出现在这里" />
+              <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description="剧本生成后，镜头会出现在这里" />
             ) : (
               <div className="director-shot-grid">
                 {state.shots.map(shot => {

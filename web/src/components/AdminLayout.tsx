@@ -77,7 +77,7 @@ export default function AdminLayout() {
           }}>
             {drawerOpen ? <CloseOutlined /> : <MenuOutlined />}
           </button>
-          <SafetyCertificateOutlined style={{ color: COLORS.iris, fontSize: 18 }} />
+          <img src="/favicon.svg" alt="" width={22} height={22} style={{ borderRadius: 6 }} />
           <div style={{ color: '#fff', fontWeight: 700, fontSize: 15 }}>管理控制台</div>
         </div>
       )}

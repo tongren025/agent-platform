@@ -302,6 +302,7 @@ function DigestPanel() {
         <Spin style={{ display: 'block', padding: 60, textAlign: 'center' }} />
       ) : picks.length === 0 ? (
         <Empty
+          image={<img src="/empty-data.svg" alt="" width={160} />}
           description={
             <span>
               今天没有新的、与你相关的内容<br />
@@ -467,7 +468,7 @@ function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading
       {loading ? (
         <Spin style={{ display: 'block', padding: 60, textAlign: 'center' }} />
       ) : data?.error ? (
-        <Empty description={data.error} style={{ padding: 60 }}>
+        <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description={data.error} style={{ padding: 60 }}>
           <Button icon={<ReloadOutlined />} onClick={() => onSelect(activeKey)}>重试</Button>
         </Empty>
       ) : data?.items?.length ? (
@@ -487,7 +488,7 @@ function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading
           })}
         />
       ) : (
-        <Empty description={`暂无 ${sourceLabel} 数据`} style={{ padding: 60 }} />
+        <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description={`暂无 ${sourceLabel} 数据`} style={{ padding: 60 }} />
       )}
 
       <Drawer
@@ -759,7 +760,7 @@ export default function SkillTracker() {
               </Card>
             </>
           )}
-          {!crossSummary && <Empty description="暂无跨查询汇总数据" style={{ padding: 60 }} />}
+          {!crossSummary && <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description="暂无跨查询汇总数据" style={{ padding: 60 }} />}
         </div>
       ),
     },
@@ -830,11 +831,11 @@ export default function SkillTracker() {
                 children: trendData.realGrowth?.length ? <>
                   <div style={{ color: COLORS.slate, fontSize: 12, marginBottom: 12 }}>基于每日快照对比的真实涨星数据，不是估算 — 谁在真正涨，一目了然</div>
                   <Table dataSource={trendData.realGrowth} columns={[...baseColumns, starCol, deltaCol, actionCol]} rowKey="full_name" pagination={false} size="small" />
-                </> : <Empty description="暂无快照对比数据，需至少积累两天数据" style={{ padding: 40 }} />,
+                </> : <Empty image={<img src="/empty-data.svg" alt="" width={120} />} description="暂无快照对比数据，需至少积累两天数据" style={{ padding: 40 }} />,
               },
             ]} />
           ) : (
-            <Empty description={<span>没有「{activeQuery}」的数据 <Button type="link" onClick={handleRefresh} loading={refreshing}>立即拉取</Button></span>} style={{ padding: 60 }} />
+            <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description={<span>没有「{activeQuery}」的数据 <Button type="link" onClick={handleRefresh} loading={refreshing}>立即拉取</Button></span>} style={{ padding: 60 }} />
           )}
         </div>
       ),
@@ -954,7 +955,7 @@ export default function SkillTracker() {
               </Card>
             </div>
           ) : (
-            <Empty description="点击「生成报告」让 AI 分析全部趋势数据" style={{ padding: 80 }}>
+            <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="点击「生成报告」让 AI 分析全部趋势数据" style={{ padding: 80 }}>
               <Button type="primary" icon={<ExperimentOutlined />} loading={analyzing} onClick={handleAnalyze}>生成 AI 分析报告</Button>
             </Empty>
           )}
