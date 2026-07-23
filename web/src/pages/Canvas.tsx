@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import { toPng } from 'html-to-image';
 import 'reactflow/dist/style.css';
-import { Button, Empty, Input, Modal, Popconfirm, Select, Space, Spin, Tooltip, Typography } from 'antd';
+import { Button, Divider, Dropdown, Empty, Input, Modal, Popconfirm, Select, Space, Spin, Tooltip, Typography } from 'antd';
 import { message } from '../ui';
 import {
   PlusOutlined, DeleteOutlined, SaveOutlined, UploadOutlined,
@@ -20,7 +20,7 @@ import {
   OrderedListOutlined, UndoOutlined, RedoOutlined, LockOutlined, UnlockOutlined,
   DownloadOutlined, ExpandOutlined, EditOutlined, HighlightOutlined,
   QuestionCircleOutlined, SendOutlined, SortAscendingOutlined,
-  CameraOutlined, ZoomInOutlined, ZoomOutOutlined,
+  CameraOutlined, ZoomInOutlined, ZoomOutOutlined, MoreOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 import { useResponsive } from '../hooks/useResponsive';
@@ -1237,58 +1237,59 @@ export default function Canvas() {
             </>
           )}
         </Space>
-        <Space wrap>
-          <Tooltip title="撤销 (Ctrl+Z)">
-            <Button icon={<UndoOutlined />} onClick={handleUndo} disabled={!currentId || !canUndo} />
-          </Tooltip>
-          <Tooltip title="重做 (Ctrl+Shift+Z)">
-            <Button icon={<RedoOutlined />} onClick={handleRedo} disabled={!currentId || !canRedo} />
-          </Tooltip>
-          <Button icon={<FileTextOutlined />} onClick={addDataNode} disabled={!currentId}>数据节点</Button>
-          <Button icon={<VideoCameraOutlined />} onClick={addStoryboardNode} disabled={!currentId}>分镜格</Button>
-          <Tooltip title="便签(随手创意备忘)">
-            <Button icon={<HighlightOutlined />} onClick={addStickyNote} disabled={!currentId}>便签</Button>
-          </Tooltip>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          {/* ── 撤销/重做 ── */}
+          <Space.Compact>
+            <Tooltip title="撤销 Ctrl+Z"><Button icon={<UndoOutlined />} onClick={handleUndo} disabled={!currentId || !canUndo} /></Tooltip>
+            <Tooltip title="重做 Ctrl+Shift+Z"><Button icon={<RedoOutlined />} onClick={handleRedo} disabled={!currentId || !canRedo} /></Tooltip>
+          </Space.Compact>
+
+          <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
+
+          {/* ── 添加素材 ── */}
+          <span style={{ fontSize: 11, color: '#94a3b8', marginRight: 2 }}>添加</span>
+          <Button icon={<FileTextOutlined />} onClick={addDataNode} disabled={!currentId}>数据</Button>
+          <Button icon={<VideoCameraOutlined />} onClick={addStoryboardNode} disabled={!currentId}>分镜</Button>
+          <Button icon={<HighlightOutlined />} onClick={addStickyNote} disabled={!currentId}>便签</Button>
+          <Button icon={<UploadOutlined />} onClick={() => fileInputRef.current?.click()} disabled={!currentId}>图片</Button>
           <Button icon={<ImportOutlined />} onClick={openImport} disabled={!currentId}>从看板导入</Button>
-          <Button icon={<UploadOutlined />} onClick={() => fileInputRef.current?.click()} disabled={!currentId}>上传图片</Button>
-          <Button icon={<GroupOutlined />} onClick={() => addGroupNode()} disabled={!currentId}>分组框</Button>
-          <Button icon={<AppstoreOutlined />} onClick={autoLayout} disabled={!currentId || nodes.length === 0}>自动排版</Button>
-          <Button icon={<OrderedListOutlined />} onClick={() => setFilmstripOpen(!filmstripOpen)} disabled={!currentId}
-            type={filmstripOpen ? 'primary' : 'default'}>分镜条</Button>
-          <Button icon={<SearchOutlined />} onClick={() => setSearchOpen(!searchOpen)} disabled={!currentId}
-            type={searchOpen ? 'primary' : 'default'}>搜索</Button>
-          <Tooltip title={snapGrid ? '关闭对齐网格' : '开启对齐网格'}>
-            <Button onClick={() => setSnapGrid(!snapGrid)} disabled={!currentId}
-              type={snapGrid ? 'primary' : 'default'}>
-              {snapGrid ? '# ON' : '# OFF'}
-            </Button>
-          </Tooltip>
-          <Tooltip title="分镜自动编号(按位置排序)">
-            <Button icon={<SortAscendingOutlined />} onClick={autoNumberStoryboards}
-              disabled={!currentId || nodes.filter((n) => n.type === 'storyboard').length === 0}>编号</Button>
-          </Tooltip>
-          <Tooltip title="导出 JSON">
-            <Button icon={<DownloadOutlined />} onClick={exportJSON} disabled={!currentId || nodes.length === 0} />
-          </Tooltip>
-          <Tooltip title="导出 PNG 截图">
-            <Button icon={<CameraOutlined />} onClick={exportPNG} disabled={!currentId || nodes.length === 0} />
-          </Tooltip>
-          <Tooltip title={`连线样式: ${edgePathType === 'bezier' ? '曲线' : edgePathType === 'straight' ? '直线' : '折线'}(点击切换)`}>
-            <Button onClick={cycleEdgePathType} disabled={!currentId} style={{ fontSize: 12, padding: '0 8px' }}>
-              {edgePathType === 'bezier' ? '⌒' : edgePathType === 'straight' ? '╱' : '⌐'}
-            </Button>
-          </Tooltip>
-          <Tooltip title="快捷键一览">
-            <Button icon={<QuestionCircleOutlined />} onClick={() => setShortcutsOpen(true)} />
-          </Tooltip>
-          <Select
-            value={model || undefined} onChange={setModel}
-            placeholder="生图模型(可选)" style={{ width: 190 }}
-            options={modelOptions} showSearch optionFilterProp="label" allowClear
-          />
-          <Select value={size} onChange={setSize} style={{ width: 110 }} options={SIZES} />
+
+          <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
+
+          {/* ── 排版工具 ── */}
+          <span style={{ fontSize: 11, color: '#94a3b8', marginRight: 2 }}>排版</span>
+          <Tooltip title="搜索节点 Ctrl+F"><Button icon={<SearchOutlined />} onClick={() => setSearchOpen(!searchOpen)} disabled={!currentId} type={searchOpen ? 'primary' : 'default'} /></Tooltip>
+          <Tooltip title="自动排版"><Button icon={<AppstoreOutlined />} onClick={autoLayout} disabled={!currentId || nodes.length === 0} /></Tooltip>
+          <Tooltip title="分镜条预览"><Button icon={<OrderedListOutlined />} onClick={() => setFilmstripOpen(!filmstripOpen)} disabled={!currentId} type={filmstripOpen ? 'primary' : 'default'} /></Tooltip>
+
+          <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
+
+          {/* ── 导出 & 设置 ── */}
+          <Dropdown menu={{ items: [
+            { key: 'group', icon: <GroupOutlined />, label: '分组框', onClick: () => addGroupNode(), disabled: !currentId },
+            { key: 'number', icon: <SortAscendingOutlined />, label: '分镜编号', onClick: autoNumberStoryboards, disabled: !currentId || nodes.filter((n) => n.type === 'storyboard').length === 0 },
+            { type: 'divider' },
+            { key: 'grid', label: snapGrid ? '关闭对齐网格' : '开启对齐网格', onClick: () => setSnapGrid(!snapGrid), disabled: !currentId },
+            { key: 'edge', label: `连线: ${edgePathType === 'bezier' ? '曲线⌒' : edgePathType === 'straight' ? '直线╱' : '折线⌐'}`, onClick: cycleEdgePathType, disabled: !currentId },
+            { type: 'divider' },
+            { key: 'json', icon: <DownloadOutlined />, label: '导出 JSON', onClick: exportJSON, disabled: !currentId || nodes.length === 0 },
+            { key: 'png', icon: <CameraOutlined />, label: '导出 PNG 截图', onClick: exportPNG, disabled: !currentId || nodes.length === 0 },
+            { type: 'divider' },
+            { key: 'shortcuts', icon: <QuestionCircleOutlined />, label: '快捷键一览', onClick: () => setShortcutsOpen(true) },
+          ] }}>
+            <Button icon={<MoreOutlined />}>更多</Button>
+          </Dropdown>
+
+          <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
+
+          {/* ── 生图参数 ── */}
+          <Select value={model || undefined} onChange={setModel} placeholder="生图模型" style={{ width: 160 }}
+            options={modelOptions} showSearch optionFilterProp="label" allowClear size="small" />
+          <Select value={size} onChange={setSize} style={{ width: 100 }} options={SIZES} size="small" />
+
+          {/* ── 保存 ── */}
           <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={() => doSave(false)} disabled={!currentId}>保存</Button>
-        </Space>
+        </div>
       </div>
       <input
         ref={fileInputRef} type="file" accept="image/*" multiple hidden
@@ -1412,11 +1413,20 @@ export default function Canvas() {
             {nodes.length === 0 && (
               <div style={{
                 position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
-                justifyContent: 'center', pointerEvents: 'none',
+                justifyContent: 'center', pointerEvents: 'all',
               }}>
-                <Text type="secondary" style={{ fontSize: 13 }}>
-                  <BranchesOutlined /> 「从看板导入」铺开存量数据,或建一个「数据节点」写下创意,然后 AI 派生
-                </Text>
+                <div style={{ textAlign: 'center', maxWidth: 360 }}>
+                  <div style={{ fontSize: 36, marginBottom: 12, opacity: 0.25 }}><BranchesOutlined /></div>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: '#334155', marginBottom: 6 }}>画布是空的，从这里开始</div>
+                  <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 16, lineHeight: 1.6 }}>
+                    把创意写成节点，用连线串联生产流程，AI 帮你逐步派生下游素材
+                  </div>
+                  <Space size={8}>
+                    <Button icon={<FileTextOutlined />} onClick={addDataNode}>写一个创意</Button>
+                    <Button icon={<ImportOutlined />} onClick={openImport}>从看板导入</Button>
+                    <Button icon={<UploadOutlined />} onClick={() => fileInputRef.current?.click()}>贴一张图</Button>
+                  </Space>
+                </div>
               </div>
             )}
           </CanvasCtx.Provider>
