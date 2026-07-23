@@ -1,5 +1,5 @@
 import { memo, useCallback, useContext, useState } from 'react';
-import { BaseEdge, EdgeLabelRenderer, getBezierPath, type EdgeProps } from 'reactflow';
+import { BaseEdge, EdgeLabelRenderer, getBezierPath, getSmoothStepPath, getStraightPath, type EdgeProps } from 'reactflow';
 import { CanvasCtx } from './CanvasNodes';
 
 export const LabeledEdge = memo(function LabeledEdge({
@@ -7,7 +7,9 @@ export const LabeledEdge = memo(function LabeledEdge({
   sourcePosition, targetPosition, style, markerEnd, data, selected,
 }: EdgeProps) {
   const { updateEdgeLabel } = useContext(CanvasCtx);
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const pathFn = data?.pathType === 'straight' ? getStraightPath
+    : data?.pathType === 'step' ? getSmoothStepPath : getBezierPath;
+  const [edgePath, labelX, labelY] = (pathFn as typeof getBezierPath)({
     sourceX, sourceY, sourcePosition,
     targetX, targetY, targetPosition,
   });

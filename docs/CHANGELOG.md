@@ -5,6 +5,27 @@
 
 ---
 
+## [2026-07-23] feat: 画布导演工位终极补齐——分组色板/边删除/自动编号/快捷键帮助
+
+### 新增功能
+- **分组节点色板**：GroupNode 内嵌 6 色选择器(indigo/emerald/amber/rose/sky/slate)，点击色点即时切色，边框/标题/MiniMap 联动
+- **连线(Edge)选中删除**：Delete/Backspace 同时删除选中的节点和选中的边，修复了之前只删节点不删边的遗漏
+- **分镜自动编号**：工具栏 sort-ascending 按钮，按位置(行优先→列)重编所有分镜节点为 G1/G2/G3...
+- **快捷键帮助面板**：工具栏 ❓ 按钮弹出 Modal，列出全部 20+ 快捷键
+- **右键菜单增强**：对数据/分镜节点显示「AI 派生」和「回写看板」；对所有节点显示「锁定/解锁」切换
+
+### 组件变更
+- `CanvasNodes.tsx`：新增 `GROUP_COLORS` 6 色数组 + `resolveGroupColor` 工具函数，GroupNode 完全重写为色彩感知
+- `Canvas.tsx`：新增 `autoNumberStoryboards` 回调、`shortcutsOpen` 状态、快捷键 Modal、`handleKeyDelete` 修复边删除、`minimapNodeColor` 分组色联动
+
+### 性能
+- GroupNode 色板切换走 `updateNodeData` 不触发全局重排
+- 自动编号仅读取 storyboard 类型节点，排序+批量更新一次性完成
+
+**影响面**：Canvas.tsx + CanvasNodes.tsx 前端组件；无后端改动，无新 API。
+
+---
+
 ## [2026-07-23] feat: 视觉资产补全——PWA 图标/404 页/apple-touch-icon
 
 ### 新增资产（Codex image_gen 生成）

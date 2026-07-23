@@ -5,10 +5,11 @@
 // 出图维持半自动:提示词一键复制 → 小云雀/即梦 → 成品传回;API 生图仅是可选动作。
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactFlow, {
-  Background, Controls, MiniMap, Panel, addEdge, useNodesState, useEdgesState, useReactFlow,
+  Background, Controls, MiniMap, Panel, addEdge, useNodesState, useEdgesState, useReactFlow, useStore,
   ReactFlowProvider,
-  type Connection, type Edge, type Node, MarkerType,
+  type Connection, type Edge, type Node, type ReactFlowInstance, MarkerType,
 } from 'reactflow';
+import { toPng } from 'html-to-image';
 import 'reactflow/dist/style.css';
 import { Button, Empty, Input, Modal, Popconfirm, Select, Space, Spin, Tooltip, Typography } from 'antd';
 import { message } from '../ui';
@@ -18,11 +19,13 @@ import {
   SearchOutlined, VideoCameraOutlined, GroupOutlined, CopyOutlined,
   OrderedListOutlined, UndoOutlined, RedoOutlined, LockOutlined, UnlockOutlined,
   DownloadOutlined, ExpandOutlined, EditOutlined, HighlightOutlined,
+  QuestionCircleOutlined, SendOutlined, SortAscendingOutlined,
+  CameraOutlined, ZoomInOutlined, ZoomOutOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 import { useResponsive } from '../hooks/useResponsive';
 import { useCanvasHistory } from '../hooks/useCanvasHistory';
-import { CanvasCtx, DataNode, GroupNode, ImageNode, StoryboardNode, StickyNote, STAGE_META, type CanvasActions } from '../components/canvas/CanvasNodes';
+import { CanvasCtx, DataNode, GroupNode, GROUP_COLORS, ImageNode, StoryboardNode, StickyNote, STAGE_META, type CanvasActions } from '../components/canvas/CanvasNodes';
 import { LabeledEdge } from '../components/canvas/LabeledEdge';
 import { SelectionToolbar, type AlignAction } from '../components/canvas/SelectionToolbar';
 import { thumbUrl } from '../media';
@@ -96,15 +99,39 @@ function FilmstripStrip({ nodes }: { nodes: Node[] }) {
   );
 }
 
-// ── 适配视图按钮(在 ReactFlowProvider 内) ──────────────────────
-function FitViewButton() {
-  const { fitView } = useReactFlow();
+// ── 缩放控制栏(在 ReactFlowProvider 内) ────────────────────────
+function ZoomBar() {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const zoom = useStore((s) => (s as any).transform[2] as number);
+  const pct = Math.round(zoom * 100);
   return (
-    <Tooltip title="适配视图">
-      <Button size="small" icon={<ExpandOutlined />}
-        style={{ background: 'rgba(255,255,255,.9)', borderColor: '#e2e8f0' }}
-        onClick={() => fitView({ padding: 0.15, duration: 300 })} />
-    </Tooltip>
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 1,
+      background: 'rgba(255,255,255,.92)', borderRadius: 8,
+      border: '1px solid #e2e8f0', padding: '1px 3px',
+      backdropFilter: 'blur(8px)',
+    }}>
+      <Tooltip title="缩小 (Ctrl+-)">
+        <Button size="small" icon={<ZoomOutOutlined />} onClick={() => zoomOut()}
+          style={{ border: 'none', background: 'none', width: 26, height: 26 }} />
+      </Tooltip>
+      <Tooltip title="点击适配视图 (Ctrl+0)">
+        <span onClick={() => fitView({ padding: 0.15, duration: 300 })}
+          style={{ fontSize: 11, color: '#64748b', cursor: 'pointer', padding: '0 4px',
+            minWidth: 36, textAlign: 'center', userSelect: 'none', fontVariantNumeric: 'tabular-nums' }}>
+          {pct}%
+        </span>
+      </Tooltip>
+      <Tooltip title="放大 (Ctrl+=)">
+        <Button size="small" icon={<ZoomInOutlined />} onClick={() => zoomIn()}
+          style={{ border: 'none', background: 'none', width: 26, height: 26 }} />
+      </Tooltip>
+      <div style={{ width: 1, height: 16, background: '#e2e8f0', margin: '0 2px' }} />
+      <Tooltip title="适配视图">
+        <Button size="small" icon={<ExpandOutlined />} onClick={() => fitView({ padding: 0.15, duration: 300 })}
+          style={{ border: 'none', background: 'none', width: 26, height: 26 }} />
+      </Tooltip>
+    </div>
   );
 }
 
@@ -157,8 +184,16 @@ export default function Canvas() {
 
   // 新增:对齐网格
   const [snapGrid, setSnapGrid] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [edgePathType, setEdgePathType] = useState<'bezier' | 'straight' | 'step'>('bezier');
+  const [connectMenu, setConnectMenu] = useState<{ x: number; y: number; sourceId: string } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const clipboardRef = useRef<{ nodes: Node[]; edges: Edge[] } | null>(null);
+  const nudgeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const connectCompletedRef = useRef(false);
+  const connectSourceRef = useRef<string>('');
+  const rfInstanceRef = useRef<ReactFlowInstance | null>(null);
   const nodesRef = useRef<Node[]>([]);
   const edgesRef = useRef<Edge[]>([]);
   const modelRef = useRef(model);
@@ -738,6 +773,10 @@ export default function Canvas() {
     if (n.type === 'image') return '#f59e0b';
     if (n.type === 'storyboard') return '#6366f1';
     if (n.type === 'sticky') return '#facc15';
+    if (n.type === 'group') {
+      const gc = GROUP_COLORS.find((c) => c.key === (n.data?.color || 'indigo'));
+      return gc?.border || '#cbd5e1';
+    }
     const stage = n.data?.stage;
     return STAGE_META[stage]?.color || '#94a3b8';
   }, []);
@@ -802,6 +841,100 @@ export default function Canvas() {
     setEdges((es) => es.filter((e) => !ids.has(e.source) && !ids.has(e.target)));
   }, [setNodes, setEdges, takeSnapshot]);
 
+  // ── 复制到剪贴板(Ctrl+C) ──
+  const copySelected = useCallback(() => {
+    const sel = getSelected();
+    if (sel.length === 0) return;
+    const ids = new Set(sel.map((n) => n.id));
+    const internalEdges = edgesRef.current.filter((e) => ids.has(e.source) && ids.has(e.target));
+    clipboardRef.current = {
+      nodes: sel.map((n) => ({ ...n, position: { ...n.position }, data: { ...n.data } })),
+      edges: internalEdges.map((e) => ({ ...e, data: { ...e.data } })),
+    };
+    message.success(`已复制 ${sel.length} 个节点`);
+  }, []);
+
+  // ── 粘贴(Ctrl+V) ──
+  const pasteClipboard = useCallback(() => {
+    const clip = clipboardRef.current;
+    if (!clip || clip.nodes.length === 0) return;
+    takeSnapshot();
+    const idMap = new Map<string, string>();
+    clip.nodes.forEach((n) => {
+      const prefix = n.type === 'storyboard' ? 'sb' : n.type === 'image' ? 'img' : n.type === 'sticky' ? 'st' : 'd';
+      idMap.set(n.id, genId(prefix));
+    });
+    const newNodes: Node[] = clip.nodes.map((n) => ({
+      ...n, id: idMap.get(n.id)!, selected: false,
+      position: { x: n.position.x + 60, y: n.position.y + 60 },
+      data: { ...n.data, generating: false },
+    }));
+    const newEdges: Edge[] = clip.edges
+      .filter((e) => idMap.has(e.source) && idMap.has(e.target))
+      .map((e) => ({
+        ...e, id: genId('e'), source: idMap.get(e.source)!, target: idMap.get(e.target)!,
+        data: { ...e.data },
+      }));
+    setNodes((ns) => [...ns.map((n) => ({ ...n, selected: false })), ...newNodes.map((n) => ({ ...n, selected: true }))]);
+    if (newEdges.length > 0) setEdges((es) => [...es, ...newEdges]);
+    clipboardRef.current = {
+      nodes: newNodes.map((n) => ({ ...n, position: { ...n.position }, data: { ...n.data } })),
+      edges: newEdges.map((e) => ({ ...e, data: { ...e.data } })),
+    };
+    message.success(`已粘贴 ${newNodes.length} 个节点`);
+  }, [setNodes, setEdges, takeSnapshot]);
+
+  // ── 箭头键微调位置 ──
+  const nudgeSelected = useCallback((dx: number, dy: number) => {
+    const sel = getSelected();
+    if (sel.length === 0) return;
+    if (nudgeTimerRef.current) clearTimeout(nudgeTimerRef.current);
+    else takeSnapshot();
+    const ids = new Set(sel.map((n) => n.id));
+    setNodes((ns) => ns.map((n) => ids.has(n.id)
+      ? { ...n, position: { x: n.position.x + dx, y: n.position.y + dy } } : n));
+    nudgeTimerRef.current = setTimeout(() => { nudgeTimerRef.current = null; }, 500);
+  }, [setNodes, takeSnapshot]);
+
+  // ── 批量改阶段 ──
+  const batchSetStage = useCallback((stage: string) => {
+    const sel = getSelected().filter((n) => n.type !== 'group' && n.type !== 'image');
+    if (sel.length === 0) return;
+    takeSnapshot();
+    const ids = new Set(sel.map((n) => n.id));
+    setNodes((ns) => ns.map((n) => ids.has(n.id) ? { ...n, data: { ...n.data, stage } } : n));
+    message.success(`已将 ${sel.length} 个节点改为「${STAGE_META[stage]?.label || stage}」`);
+  }, [setNodes, takeSnapshot]);
+
+  // ── 导出 PNG ──
+  const exportPNG = useCallback(async () => {
+    const el = document.querySelector('.react-flow') as HTMLElement | null;
+    if (!el) return;
+    message.loading({ content: '正在导出图片...', key: 'export-png', duration: 0 });
+    try {
+      const url = await toPng(el, {
+        backgroundColor: '#fafbfd',
+        pixelRatio: 2,
+        filter: (node) => !node.classList?.contains('react-flow__minimap')
+          && !node.classList?.contains('react-flow__controls'),
+      });
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `canvas_${currentIdRef.current || 'export'}.png`;
+      a.click();
+      message.success({ content: '已导出', key: 'export-png' });
+    } catch {
+      message.error({ content: '导出失败', key: 'export-png' });
+    }
+  }, []);
+
+  // ── 切换边样式 ──
+  const cycleEdgePathType = useCallback(() => {
+    const next = edgePathType === 'bezier' ? 'straight' : edgePathType === 'straight' ? 'step' : 'bezier';
+    setEdgePathType(next);
+    setEdges((es) => es.map((e) => ({ ...e, data: { ...e.data, pathType: next } })));
+  }, [edgePathType, setEdges]);
+
   const addGroupNode = useCallback((x?: number, y?: number, w?: number, h?: number, label?: string) => {
     takeSnapshot();
     setNodes((ns) => [...ns, {
@@ -825,6 +958,24 @@ export default function Canvas() {
     );
     message.success('已创建分组框');
   }, [addGroupNode]);
+
+  // ── 分镜自动编号(按位置左上→右下) ──
+  const autoNumberStoryboards = useCallback(() => {
+    const sbs = nodesRef.current.filter((n) => n.type === 'storyboard');
+    if (sbs.length === 0) { message.info('画布上没有分镜格节点'); return; }
+    takeSnapshot();
+    const sorted = [...sbs].sort((a, b) => {
+      const rowA = Math.round(a.position.y / 150);
+      const rowB = Math.round(b.position.y / 150);
+      if (rowA !== rowB) return rowA - rowB;
+      return a.position.x - b.position.x;
+    });
+    const idToNum = new Map(sorted.map((n, i) => [n.id, `G${i + 1}`]));
+    setNodes((ns) => ns.map((n) =>
+      idToNum.has(n.id) ? { ...n, data: { ...n.data, shotNumber: idToNum.get(n.id) } } : n,
+    ));
+    message.success(`已按位置重编 ${sorted.length} 个分镜号`);
+  }, [setNodes, takeSnapshot]);
 
   // ── 锁定/解锁 ──
   const lockSelected = useCallback(() => {
@@ -900,14 +1051,15 @@ export default function Canvas() {
 
   const closeContextMenu = useCallback(() => setContextMenu(null), []);
 
-  // ── 手动处理 Delete 键(先快照再删) ──
+  // ── 手动处理 Delete 键(先快照再删节点+选中的边) ──
   const handleKeyDelete = useCallback(() => {
-    const sel = getSelected();
-    if (sel.length === 0) return;
+    const selNodes = getSelected();
+    const selEdgeIds = new Set(edgesRef.current.filter((e) => e.selected).map((e) => e.id));
+    if (selNodes.length === 0 && selEdgeIds.size === 0) return;
     takeSnapshot();
-    const ids = new Set(sel.map((n) => n.id));
-    setNodes((ns) => ns.filter((n) => !ids.has(n.id)));
-    setEdges((es) => es.filter((e) => !ids.has(e.source) && !ids.has(e.target)));
+    const nodeIds = new Set(selNodes.map((n) => n.id));
+    if (nodeIds.size > 0) setNodes((ns) => ns.filter((n) => !nodeIds.has(n.id)));
+    setEdges((es) => es.filter((e) => !nodeIds.has(e.source) && !nodeIds.has(e.target) && !selEdgeIds.has(e.id)));
   }, [setNodes, setEdges, takeSnapshot]);
 
   // ── 全选 ──
@@ -920,37 +1072,67 @@ export default function Canvas() {
     const handler = (e: KeyboardEvent) => {
       const tag = (document.activeElement?.tagName || '').toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
-        e.preventDefault(); handleUndo();
+      const mod = e.ctrlKey || e.metaKey;
+      if (mod && e.key === 'z' && !e.shiftKey) { e.preventDefault(); handleUndo(); return; }
+      if (mod && e.key === 'z' && e.shiftKey) { e.preventDefault(); handleRedo(); return; }
+      if (mod && e.key === 'y') { e.preventDefault(); handleRedo(); return; }
+      if (mod && e.key === 'f') { e.preventDefault(); setSearchOpen((v) => !v); return; }
+      if (mod && e.key === 'd') { e.preventDefault(); duplicateSelected(); return; }
+      if (mod && e.key === 'g') { e.preventDefault(); createGroupFromSelected(); return; }
+      if (mod && e.key === 's') { e.preventDefault(); doSave(false); return; }
+      if (mod && e.key === 'a') { e.preventDefault(); selectAll(); return; }
+      if (mod && e.key === 'c') { e.preventDefault(); copySelected(); return; }
+      if (mod && e.key === 'v') { e.preventDefault(); pasteClipboard(); return; }
+      if (mod && (e.key === '0' || e.key === 'Digit0')) {
+        e.preventDefault(); rfInstanceRef.current?.fitView({ padding: 0.15, duration: 300 }); return;
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) {
-        e.preventDefault(); handleRedo();
+      if (mod && (e.key === '=' || e.key === '+')) {
+        e.preventDefault(); rfInstanceRef.current?.zoomIn(); return;
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
-        e.preventDefault(); handleRedo();
+      if (mod && e.key === '-') {
+        e.preventDefault(); rfInstanceRef.current?.zoomOut(); return;
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-        e.preventDefault(); setSearchOpen((v) => !v);
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
-        e.preventDefault(); duplicateSelected();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'g') {
-        e.preventDefault(); createGroupFromSelected();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault(); doSave(false);
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
-        e.preventDefault(); selectAll();
-      }
-      if (e.key === 'Delete' || e.key === 'Backspace') {
-        e.preventDefault(); handleKeyDelete();
-      }
+      if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); handleKeyDelete(); return; }
+      if (e.key === 'Escape') { setConnectMenu(null); return; }
+      const step = e.shiftKey ? 10 : 1;
+      if (e.key === 'ArrowUp') { e.preventDefault(); nudgeSelected(0, -step); return; }
+      if (e.key === 'ArrowDown') { e.preventDefault(); nudgeSelected(0, step); return; }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); nudgeSelected(-step, 0); return; }
+      if (e.key === 'ArrowRight') { e.preventDefault(); nudgeSelected(step, 0); return; }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [duplicateSelected, createGroupFromSelected, doSave, handleUndo, handleRedo, handleKeyDelete, selectAll]);
+  }, [duplicateSelected, createGroupFromSelected, doSave, handleUndo, handleRedo,
+    handleKeyDelete, selectAll, copySelected, pasteClipboard, nudgeSelected]);
+
+  // ── 剪贴板粘贴图片 ──
+  useEffect(() => {
+    const handler = async (e: ClipboardEvent) => {
+      if (!currentIdRef.current) return;
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith('image/')) {
+          e.preventDefault();
+          const file = items[i].getAsFile();
+          if (!file) continue;
+          takeSnapshot();
+          try {
+            const res = await api.uploadCanvasAsset(currentIdRef.current, file);
+            setNodes((ns) => [...ns, {
+              id: genId('img'), type: 'image',
+              position: { x: 200 + Math.random() * 80, y: 200 + Math.random() * 80 },
+              data: { url: res.url },
+            }]);
+            message.success('已粘贴图片');
+          } catch (err: any) { message.error(err.message); }
+          return;
+        }
+      }
+    };
+    window.addEventListener('paste', handler);
+    return () => window.removeEventListener('paste', handler);
+  }, [setNodes, takeSnapshot]);
 
   const handleDelete = async () => {
     try {
@@ -963,9 +1145,45 @@ export default function Canvas() {
   };
 
   const onConnect = useCallback((c: Connection) => {
+    connectCompletedRef.current = true;
     takeSnapshot();
-    setEdges((es) => addEdge({ ...c, id: genId('e'), type: 'labeled', data: {}, ...edgeDefaults }, es));
-  }, [setEdges, takeSnapshot]);
+    setEdges((es) => addEdge({ ...c, id: genId('e'), type: 'labeled', data: { pathType: edgePathType === 'bezier' ? undefined : edgePathType }, ...edgeDefaults }, es));
+  }, [setEdges, takeSnapshot, edgePathType]);
+
+  const onConnectStart = useCallback((_: any, params: { nodeId: string | null }) => {
+    connectCompletedRef.current = false;
+    connectSourceRef.current = params.nodeId || '';
+  }, []);
+
+  const onConnectEnd = useCallback((event: MouseEvent | TouchEvent) => {
+    if (connectCompletedRef.current || !connectSourceRef.current) return;
+    const target = event.target as HTMLElement;
+    if (target.closest('.react-flow__handle')) return;
+    const clientX = 'clientX' in event ? event.clientX : event.changedTouches[0].clientX;
+    const clientY = 'clientY' in event ? event.clientY : event.changedTouches[0].clientY;
+    setConnectMenu({ x: clientX, y: clientY, sourceId: connectSourceRef.current });
+  }, []);
+
+  const handleConnectMenuCreate = useCallback((type: string) => {
+    if (!connectMenu) return;
+    const instance = rfInstanceRef.current;
+    if (!instance) return;
+    const pos = instance.screenToFlowPosition({ x: connectMenu.x, y: connectMenu.y });
+    takeSnapshot();
+    const prefix = type === 'storyboard' ? 'sb' : type === 'image' ? 'img' : type === 'sticky' ? 'st' : 'd';
+    const newId = genId(prefix);
+    const nodeData = type === 'storyboard'
+      ? { shotNumber: '', duration: '', cameraType: '', cameraMove: '', description: '', stage: 'storyboard', title: '' }
+      : type === 'sticky' ? { content: '', color: 'yellow' }
+      : { stage: '', title: '', content: '' };
+    setNodes((ns) => [...ns, { id: newId, type, position: pos, data: nodeData }]);
+    setEdges((es) => [...es, {
+      id: genId('e'), source: connectMenu.sourceId, target: newId,
+      type: 'labeled', data: { pathType: edgePathType === 'bezier' ? undefined : edgePathType },
+      ...edgeDefaults,
+    }]);
+    setConnectMenu(null);
+  }, [connectMenu, setNodes, setEdges, takeSnapshot, edgePathType]);
 
   const modelOptions = useMemo(() => models.map((m) => ({
     value: m.modelId,
@@ -1045,8 +1263,23 @@ export default function Canvas() {
               {snapGrid ? '# ON' : '# OFF'}
             </Button>
           </Tooltip>
+          <Tooltip title="分镜自动编号(按位置排序)">
+            <Button icon={<SortAscendingOutlined />} onClick={autoNumberStoryboards}
+              disabled={!currentId || nodes.filter((n) => n.type === 'storyboard').length === 0}>编号</Button>
+          </Tooltip>
           <Tooltip title="导出 JSON">
             <Button icon={<DownloadOutlined />} onClick={exportJSON} disabled={!currentId || nodes.length === 0} />
+          </Tooltip>
+          <Tooltip title="导出 PNG 截图">
+            <Button icon={<CameraOutlined />} onClick={exportPNG} disabled={!currentId || nodes.length === 0} />
+          </Tooltip>
+          <Tooltip title={`连线样式: ${edgePathType === 'bezier' ? '曲线' : edgePathType === 'straight' ? '直线' : '折线'}(点击切换)`}>
+            <Button onClick={cycleEdgePathType} disabled={!currentId} style={{ fontSize: 12, padding: '0 8px' }}>
+              {edgePathType === 'bezier' ? '⌒' : edgePathType === 'straight' ? '╱' : '⌐'}
+            </Button>
+          </Tooltip>
+          <Tooltip title="快捷键一览">
+            <Button icon={<QuestionCircleOutlined />} onClick={() => setShortcutsOpen(true)} />
           </Tooltip>
           <Select
             value={model || undefined} onChange={setModel}
@@ -1103,11 +1336,14 @@ export default function Canvas() {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                onConnectStart={onConnectStart}
+                onConnectEnd={onConnectEnd}
+                onInit={(i: ReactFlowInstance) => { rfInstanceRef.current = i; }}
                 onNodeContextMenu={onNodeContextMenu}
-                onPaneClick={closeContextMenu}
+                onPaneClick={() => { closeContextMenu(); setConnectMenu(null); }}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
-                defaultEdgeOptions={{ type: 'labeled', data: {}, ...edgeDefaults }}
+                defaultEdgeOptions={{ type: 'labeled', data: { pathType: edgePathType }, ...edgeDefaults }}
                 deleteKeyCode={[]}
                 snapToGrid={snapGrid}
                 snapGrid={[18, 18]}
@@ -1125,7 +1361,7 @@ export default function Canvas() {
                 />
                 {filmstripOpen && <Panel position="bottom-center"><FilmstripStrip nodes={nodes} /></Panel>}
                 <Panel position="top-right">
-                  <FitViewButton />
+                  <ZoomBar />
                 </Panel>
                 {selectedNodes.length >= 2 && (
                   <Panel position="top-center">
@@ -1139,11 +1375,40 @@ export default function Canvas() {
                       onGroup={createGroupFromSelected}
                       onLock={lockSelected}
                       onUnlock={unlockSelected}
+                      stageOptions={stageOptions(ALL_STAGES)}
+                      onBatchStage={batchSetStage}
                     />
                   </Panel>
                 )}
               </ReactFlow>
             </ReactFlowProvider>
+            {connectMenu && (
+              <div
+                style={{
+                  position: 'fixed', left: connectMenu.x, top: connectMenu.y,
+                  zIndex: 50, background: '#fff', borderRadius: 10,
+                  border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,.12)',
+                  padding: 6, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 110,
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
+                <div style={{ fontSize: 11, color: '#94a3b8', padding: '2px 8px' }}>新建节点并连线</div>
+                {(['data', 'storyboard', 'sticky'] as const).map((t) => (
+                  <div
+                    key={t}
+                    onClick={() => handleConnectMenuCreate(t)}
+                    style={{
+                      padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 13,
+                      transition: 'background .12s',
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = '#f1f5f9'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
+                  >
+                    {t === 'data' ? '📄 数据节点' : t === 'storyboard' ? '🎬 分镜节点' : '📝 便签'}
+                  </div>
+                ))}
+              </div>
+            )}
             {nodes.length === 0 && (
               <div style={{
                 position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
@@ -1308,6 +1573,25 @@ export default function Canvas() {
         </div>
       </Modal>
 
+      {/* ── 快捷键帮助 ── */}
+      <Modal title="画布快捷键" open={shortcutsOpen} onCancel={() => setShortcutsOpen(false)} footer={null} width={380}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '6px 16px', fontSize: 13, marginTop: 12 }}>
+          {([
+            ['Ctrl+Z', '撤销'], ['Ctrl+Shift+Z / Ctrl+Y', '重做'],
+            ['Ctrl+A', '全选'], ['Ctrl+D', '复制选中节点'],
+            ['Ctrl+G', '选中节点建分组'], ['Ctrl+S', '手动保存'],
+            ['Ctrl+F', '搜索节点'], ['Delete / Backspace', '删除选中节点/边'],
+            ['鼠标右键', '节点上下文菜单'], ['双击连线', '编辑连线标签'],
+            ['拖放图片文件', '上传为图片节点'],
+          ] as [string, string][]).map(([key, desc], i) => (
+            <div key={i} style={{ display: 'contents' }}>
+              <span style={{ color: '#64748b' }}>{desc}</span>
+              <code style={{ background: '#f1f5f9', padding: '1px 6px', borderRadius: 4, fontSize: 11, whiteSpace: 'nowrap' }}>{key}</code>
+            </div>
+          ))}
+        </div>
+      </Modal>
+
       {/* ── 右键菜单 ── */}
       {contextMenu && (
         <div
@@ -1321,14 +1605,24 @@ export default function Canvas() {
           {(() => {
             const nd = nodesRef.current.find((n) => n.id === contextMenu.nodeId);
             const isLocked = nd?.data?.locked;
-            return [
+            const isGroup = nd?.type === 'group';
+            const isDataOrSb = nd?.type === 'data' || nd?.type === 'storyboard';
+            const items: ({ icon: React.ReactNode; label: string; shortcut: string; action: () => void; danger?: boolean } | null)[] = [];
+            if (isDataOrSb) items.push(
               { icon: <BranchesOutlined />, label: 'AI 派生', shortcut: '', action: () => deriveFrom(contextMenu.nodeId) },
+              { icon: <SendOutlined />, label: '回写看板', shortcut: '', action: () => sendToBoard(contextMenu.nodeId) },
+            );
+            items.push(
               { icon: <CopyOutlined />, label: '复制节点', shortcut: 'Ctrl+D', action: () => duplicateNode(contextMenu.nodeId) },
               { icon: <GroupOutlined />, label: '创建分组', shortcut: 'Ctrl+G', action: () => createGroupFromSelected() },
               { icon: isLocked ? <UnlockOutlined /> : <LockOutlined />, label: isLocked ? '解锁' : '锁定', shortcut: '', action: () => toggleLockNode(contextMenu.nodeId) },
-              null,
+            );
+            if (isGroup) items.push(null);
+            items.push(null);
+            items.push(
               { icon: <DeleteOutlined style={{ color: '#ef4444' }} />, label: '删除', shortcut: 'Del', action: () => deleteNodeById(contextMenu.nodeId), danger: true },
-            ];
+            );
+            return items;
           })().map((item, i) => item === null ? (
             <div key={i} style={{ height: 1, background: '#f1f5f9', margin: '4px 8px' }} />
           ) : (

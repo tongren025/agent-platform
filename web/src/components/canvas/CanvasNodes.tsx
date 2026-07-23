@@ -255,24 +255,51 @@ const selectStyle: React.CSSProperties = {
 
 // ── 分组框:视觉编排用的可缩放虚线框 ───────────────────────────
 
+export const GROUP_COLORS: { key: string; bg: string; border: string; text: string }[] = [
+  { key: 'indigo', bg: 'rgba(99,102,241,0.04)', border: '#6366f1', text: '#6366f1' },
+  { key: 'emerald', bg: 'rgba(16,185,129,0.05)', border: '#10b981', text: '#059669' },
+  { key: 'amber', bg: 'rgba(245,158,11,0.05)', border: '#f59e0b', text: '#b45309' },
+  { key: 'rose', bg: 'rgba(244,63,94,0.05)', border: '#f43f5e', text: '#e11d48' },
+  { key: 'sky', bg: 'rgba(14,165,233,0.05)', border: '#0ea5e9', text: '#0284c7' },
+  { key: 'slate', bg: 'rgba(100,116,139,0.04)', border: '#94a3b8', text: '#64748b' },
+];
+
+function resolveGroupColor(colorKey: string) {
+  return GROUP_COLORS.find((c) => c.key === colorKey) || GROUP_COLORS[0];
+}
+
 export const GroupNode = memo(function GroupNode({ id, data, selected }: NodeProps) {
   const actions = useContext(CanvasCtx);
-  const bg = data.color || 'rgba(99,102,241,0.04)';
+  const gc = resolveGroupColor(data.color || 'indigo');
   return (
     <div style={{
       width: '100%', height: '100%',
-      border: selected ? '2px dashed #6366f1' : '2px dashed #cbd5e1',
-      borderRadius: 16, background: bg, padding: '6px 10px',
+      border: selected ? `2px dashed ${gc.border}` : '2px dashed #cbd5e1',
+      borderRadius: 16, background: gc.bg, padding: '6px 10px',
     }}>
-      <NodeResizer color="#6366f1" isVisible={!!selected} minWidth={200} minHeight={150} />
-      <Input
-        className="nodrag"
-        value={data.label || ''}
-        onChange={(e) => actions.updateNodeData(id, { label: e.target.value })}
-        placeholder="分组名称(场景/段落/集)"
-        variant="borderless"
-        style={{ fontWeight: 700, fontSize: 14, color: '#6366f1', padding: 0, background: 'transparent', width: '100%' }}
-      />
+      <NodeResizer color={gc.border} isVisible={!!selected} minWidth={200} minHeight={150} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <Input
+          className="nodrag"
+          value={data.label || ''}
+          onChange={(e) => actions.updateNodeData(id, { label: e.target.value })}
+          placeholder="分组名称(场景/段落/集)"
+          variant="borderless"
+          style={{ fontWeight: 700, fontSize: 14, color: gc.text, padding: 0, background: 'transparent', flex: 1 }}
+        />
+        <div style={{ display: 'flex', gap: 3 }}>
+          {GROUP_COLORS.map((c) => (
+            <div key={c.key}
+              onClick={() => actions.updateNodeData(id, { color: c.key })}
+              style={{
+                width: 10, height: 10, borderRadius: '50%', background: c.border,
+                cursor: 'pointer', border: (data.color || 'indigo') === c.key ? '2px solid #333' : '1px solid transparent',
+                flexShrink: 0,
+              }}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 });

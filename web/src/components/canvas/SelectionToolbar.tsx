@@ -1,4 +1,4 @@
-import { Button, Divider, Tooltip } from 'antd';
+import { Button, Divider, Select, Tooltip } from 'antd';
 import {
   CopyOutlined, DeleteOutlined, GroupOutlined, LockOutlined, UnlockOutlined,
 } from '@ant-design/icons';
@@ -15,6 +15,8 @@ interface SelectionToolbarProps {
   onGroup: () => void;
   onLock: () => void;
   onUnlock: () => void;
+  stageOptions?: { value: string; label: string }[];
+  onBatchStage?: (stage: string) => void;
 }
 
 const abtn: React.CSSProperties = { fontSize: 13, padding: '0 7px', height: 26, minWidth: 26 };
@@ -22,6 +24,7 @@ const abtn: React.CSSProperties = { fontSize: 13, padding: '0 7px', height: 26, 
 export function SelectionToolbar({
   count, hasLocked, hasUnlocked,
   onAlign, onDelete, onDuplicate, onGroup, onLock, onUnlock,
+  stageOptions, onBatchStage,
 }: SelectionToolbarProps) {
   if (count < 2) return null;
   return (
@@ -71,6 +74,16 @@ export function SelectionToolbar({
       <Tooltip title="删除选中">
         <Button size="small" danger icon={<DeleteOutlined />} onClick={onDelete} />
       </Tooltip>
+      {stageOptions && onBatchStage && (
+        <>
+          <Divider type="vertical" style={{ margin: '0 2px' }} />
+          <Select
+            size="small" placeholder="改阶段" style={{ width: 100 }}
+            options={stageOptions} onChange={onBatchStage} value={undefined}
+            popupMatchSelectWidth={false}
+          />
+        </>
+      )}
       <span style={{ fontSize: 11, color: '#94a3b8', marginLeft: 2 }}>
         {count} 个节点
       </span>
