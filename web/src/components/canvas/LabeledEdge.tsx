@@ -1,8 +1,8 @@
-import { useCallback, useContext, useState } from 'react';
+import { memo, useCallback, useContext, useState } from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, type EdgeProps } from 'reactflow';
 import { CanvasCtx } from './CanvasNodes';
 
-export function LabeledEdge({
+export const LabeledEdge = memo(function LabeledEdge({
   id, sourceX, sourceY, targetX, targetY,
   sourcePosition, targetPosition, style, markerEnd, data, selected,
 }: EdgeProps) {
@@ -86,4 +86,4 @@ export function LabeledEdge({
       </EdgeLabelRenderer>
     </>
   );
-}
+});

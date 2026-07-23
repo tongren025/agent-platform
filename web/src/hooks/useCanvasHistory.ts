@@ -25,36 +25,42 @@ function cloneEdges(edges: Edge[]): Edge[] {
 export function useCanvasHistory(maxSize = 40) {
   const past = useRef<Snapshot[]>([]);
   const future = useRef<Snapshot[]>([]);
-  const [version, setVersion] = useState(0);
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
+
+  const sync = useCallback(() => {
+    setCanUndo(past.current.length > 0);
+    setCanRedo(future.current.length > 0);
+  }, []);
 
   const takeSnapshot = useCallback((nodes: Node[], edges: Edge[]) => {
     past.current.push({ nodes: cloneNodes(nodes), edges: cloneEdges(edges) });
     if (past.current.length > maxSize) past.current.shift();
     future.current = [];
-    setVersion(v => v + 1);
-  }, [maxSize]);
+    sync();
+  }, [maxSize, sync]);
 
   const undo = useCallback((currentNodes: Node[], currentEdges: Edge[]): Snapshot | null => {
     if (past.current.length === 0) return null;
     future.current.push({ nodes: cloneNodes(currentNodes), edges: cloneEdges(currentEdges) });
     const snapshot = past.current.pop()!;
-    setVersion(v => v + 1);
+    sync();
     return snapshot;
-  }, []);
+  }, [sync]);
 
   const redo = useCallback((currentNodes: Node[], currentEdges: Edge[]): Snapshot | null => {
     if (future.current.length === 0) return null;
     past.current.push({ nodes: cloneNodes(currentNodes), edges: cloneEdges(currentEdges) });
     const snapshot = future.current.pop()!;
-    setVersion(v => v + 1);
+    sync();
     return snapshot;
-  }, []);
+  }, [sync]);
 
   const clear = useCallback(() => {
     past.current = [];
     future.current = [];
-    setVersion(v => v + 1);
-  }, []);
+    sync();
+  }, [sync]);
 
-  return { takeSnapshot, undo, redo, clear, canUndo: past.current.length > 0, canRedo: future.current.length > 0, version };
+  return { takeSnapshot, undo, redo, clear, canUndo, canRedo };
 }

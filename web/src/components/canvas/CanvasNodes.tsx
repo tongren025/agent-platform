@@ -2,7 +2,7 @@
 // 画布定位是"数据的可视化生成台"——节点是生产数据(剧本/设定/分镜/提示词),
 // 核心动作是「AI 派生」;图片节点服务参考图与半自动出图(小云雀)工作流。
 // 回调经 CanvasCtx 注入,节点 data 只存可序列化字段。
-import { createContext, useContext, useState } from 'react';
+import { createContext, memo, useContext, useState } from 'react';
 import { Handle, NodeResizer, Position, type NodeProps } from 'reactflow';
 import { Button, Image, Input, Spin, Tag, Tooltip, Typography } from 'antd';
 import {
@@ -72,7 +72,7 @@ function CopyContentBtn({ text }: { text: string }) {
 
 // ── 数据节点(主角):一段生产数据 + AI 派生 ────────────────────
 
-export function DataNode({ id, data, selected }: NodeProps) {
+export const DataNode = memo(function DataNode({ id, data, selected }: NodeProps) {
   const actions = useContext(CanvasCtx);
   const [collapsed, setCollapsed] = useState(false);
   const [preview, setPreview] = useState(false);
@@ -157,14 +157,14 @@ export function DataNode({ id, data, selected }: NodeProps) {
       <Handle type="source" position={Position.Right} style={{ background: COLORS.iris }} />
     </div>
   );
-}
+});
 
 // ── 分镜格节点:镜头 + 时长 + 运镜 + 画面描述 + 缩略图 ──────────
 
 const CAMERA_TYPES = ['全景', '中景', '近景', '特写', '大特写', '鸟瞰', '仰视'];
 const CAMERA_MOVES = ['static', 'dolly in', 'dolly out', 'pan left', 'pan right', 'tilt up', 'tilt down', 'truck', 'zoom in', 'zoom out', 'arc', 'crane'];
 
-export function StoryboardNode({ id, data, selected }: NodeProps) {
+export const StoryboardNode = memo(function StoryboardNode({ id, data, selected }: NodeProps) {
   const actions = useContext(CanvasCtx);
   const [collapsed, setCollapsed] = useState(false);
   const locked = !!data.locked;
@@ -246,7 +246,7 @@ export function StoryboardNode({ id, data, selected }: NodeProps) {
       <Handle type="source" position={Position.Right} style={{ background: COLORS.iris }} />
     </div>
   );
-}
+});
 
 const selectStyle: React.CSSProperties = {
   fontSize: 11, padding: '2px 6px', border: '1px solid #e2e8f0', borderRadius: 6,
@@ -255,7 +255,7 @@ const selectStyle: React.CSSProperties = {
 
 // ── 分组框:视觉编排用的可缩放虚线框 ───────────────────────────
 
-export function GroupNode({ id, data, selected }: NodeProps) {
+export const GroupNode = memo(function GroupNode({ id, data, selected }: NodeProps) {
   const actions = useContext(CanvasCtx);
   const bg = data.color || 'rgba(99,102,241,0.04)';
   return (
@@ -275,11 +275,11 @@ export function GroupNode({ id, data, selected }: NodeProps) {
       />
     </div>
   );
-}
+});
 
 // ── 图片节点:参考图 / 半自动出图回传 / 可选 API 生图 ──────────
 
-export function ImageNode({ id, data, selected }: NodeProps) {
+export const ImageNode = memo(function ImageNode({ id, data, selected }: NodeProps) {
   const actions = useContext(CanvasCtx);
   return (
     <div style={{ ...cardStyle(!!selected), width: 264, overflow: 'hidden' }}>
@@ -333,7 +333,7 @@ export function ImageNode({ id, data, selected }: NodeProps) {
       <Handle type="source" position={Position.Right} style={{ background: COLORS.iris }} />
     </div>
   );
-}
+});
 
 // ── 便签节点:5 色快速备忘,拍脑袋创意用 ────────────────────────
 
@@ -345,7 +345,7 @@ export const STICKY_COLORS: Record<string, { bg: string; border: string }> = {
   purple: { bg: '#f3e8ff', border: '#c084fc' },
 };
 
-export function StickyNote({ id, data, selected }: NodeProps) {
+export const StickyNote = memo(function StickyNote({ id, data, selected }: NodeProps) {
   const actions = useContext(CanvasCtx);
   const color = data.color || 'yellow';
   const c = STICKY_COLORS[color] || STICKY_COLORS.yellow;
@@ -387,4 +387,4 @@ export function StickyNote({ id, data, selected }: NodeProps) {
       <Handle type="source" position={Position.Right} style={{ background: c.border }} />
     </div>
   );
-}
+});

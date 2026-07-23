@@ -175,27 +175,27 @@ export default function Canvas() {
   const [filmstripOpen, setFilmstripOpen] = useState(true);
 
   // ── 撤销/重做 ──
-  const history = useCanvasHistory();
+  const { takeSnapshot: _snap, undo: _undo, redo: _redo, clear: _clearHistory, canUndo, canRedo } = useCanvasHistory();
 
   const takeSnapshot = useCallback(() => {
-    history.takeSnapshot(nodesRef.current, edgesRef.current);
-  }, [history]);
+    _snap(nodesRef.current, edgesRef.current);
+  }, [_snap]);
 
   const handleUndo = useCallback(() => {
-    const snap = history.undo(nodesRef.current, edgesRef.current);
+    const snap = _undo(nodesRef.current, edgesRef.current);
     if (!snap) return;
     skipSaveRef.current = true;
     setNodes(snap.nodes);
     setEdges(snap.edges);
-  }, [history, setNodes, setEdges]);
+  }, [_undo, setNodes, setEdges]);
 
   const handleRedo = useCallback(() => {
-    const snap = history.redo(nodesRef.current, edgesRef.current);
+    const snap = _redo(nodesRef.current, edgesRef.current);
     if (!snap) return;
     skipSaveRef.current = true;
     setNodes(snap.nodes);
     setEdges(snap.edges);
-  }, [history, setNodes, setEdges]);
+  }, [_redo, setNodes, setEdges]);
 
   // ── 节点/连线类型 ──
   const nodeTypes = useMemo(() => ({
@@ -222,7 +222,7 @@ export default function Canvas() {
     try {
       const doc = await api.getCanvas(cid);
       skipSaveRef.current = true;
-      history.clear();
+      _clearHistory();
       setNodes((doc.nodes || []).map((n: any): Node => ({
         id: n.node_id,
         type: n.type === 'prompt' ? 'data' : n.type,
@@ -254,7 +254,7 @@ export default function Canvas() {
       })));
     } catch (e: any) { message.error(e.message); }
     finally { setLoading(false); }
-  }, [setNodes, setEdges, history]);
+  }, [setNodes, setEdges, _clearHistory]);
 
   useEffect(() => {
     (async () => {
@@ -412,9 +412,15 @@ export default function Canvas() {
     loadProjects();
   }, [loadProjects]);
 
-  const actions = useMemo<CanvasActions>(() => ({
-    updateNodeData, deriveFrom, variantFrom, sendToBoard, updateEdgeLabel,
-  }), [updateNodeData, deriveFrom, variantFrom, sendToBoard, updateEdgeLabel]);
+  const actionsRef = useRef<CanvasActions>({ updateNodeData, deriveFrom, variantFrom, sendToBoard, updateEdgeLabel });
+  actionsRef.current = { updateNodeData, deriveFrom, variantFrom, sendToBoard, updateEdgeLabel };
+  const stableActions = useMemo<CanvasActions>(() => ({
+    updateNodeData: (...a) => actionsRef.current.updateNodeData(...a),
+    deriveFrom: (...a) => actionsRef.current.deriveFrom(...a),
+    variantFrom: (...a) => actionsRef.current.variantFrom(...a),
+    sendToBoard: (...a) => actionsRef.current.sendToBoard(...a),
+    updateEdgeLabel: (...a) => actionsRef.current.updateEdgeLabel(...a),
+  }), []);
 
   const handleSendToBoard = async () => {
     const node = nodesRef.current.find((n) => n.id === boardNodeId);
@@ -1015,10 +1021,10 @@ export default function Canvas() {
         </Space>
         <Space wrap>
           <Tooltip title="撤销 (Ctrl+Z)">
-            <Button icon={<UndoOutlined />} onClick={handleUndo} disabled={!currentId || !history.canUndo} />
+            <Button icon={<UndoOutlined />} onClick={handleUndo} disabled={!currentId || !canUndo} />
           </Tooltip>
           <Tooltip title="重做 (Ctrl+Shift+Z)">
-            <Button icon={<RedoOutlined />} onClick={handleRedo} disabled={!currentId || !history.canRedo} />
+            <Button icon={<RedoOutlined />} onClick={handleRedo} disabled={!currentId || !canRedo} />
           </Tooltip>
           <Button icon={<FileTextOutlined />} onClick={addDataNode} disabled={!currentId}>数据节点</Button>
           <Button icon={<VideoCameraOutlined />} onClick={addStoryboardNode} disabled={!currentId}>分镜格</Button>
@@ -1085,7 +1091,7 @@ export default function Canvas() {
             <Spin size="large" />
           </div>
         ) : (
-          <CanvasCtx.Provider value={actions}>
+          <CanvasCtx.Provider value={stableActions}>
             <ReactFlowProvider>
               <ReactFlow
                 key={currentId}
