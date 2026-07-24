@@ -42,7 +42,8 @@ export default function WorkflowNodeCard({ data, selected }: NodeProps<WfNodeDat
         boxShadow: ring
           ? `0 0 0 2px ${ring}, 0 4px 14px rgba(0,0,0,0.06)`
           : selected ? `0 4px 18px ${meta.color}33` : '0 1px 3px rgba(0,0,0,0.05)',
-        overflow: 'hidden',
+        // 不能加 overflow:hidden——会把左右两侧外凸 4px 的连接点裁掉，导致无法连线。
+        // 头部色块自带圆角来代替裁切效果。
       }}
     >
       {hasTarget && <Handle type="target" position={Position.Left} style={{ background: meta.color, width: 9, height: 9 }} />}
@@ -50,6 +51,7 @@ export default function WorkflowNodeCard({ data, selected }: NodeProps<WfNodeDat
       <div style={{
         display: 'flex', alignItems: 'center', gap: 8,
         padding: '8px 12px', background: `${meta.color}12`, borderBottom: '1px solid #f0f1f5',
+        borderRadius: '11px 11px 0 0',
       }}>
         <span style={{ fontSize: 14 }}>{meta.icon}</span>
         <div style={{ flex: 1, minWidth: 0 }}>

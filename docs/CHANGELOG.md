@@ -20,12 +20,13 @@
 ### 画布节点连接点被裁切
 - 卡片容器的 `overflow: hidden` 会把贴边的 React Flow `<Handle>` 裁掉，导致连线不好拖。
 - 移除 `DataNode` / `StoryboardNode` / `ImageNode` 外层的 `overflow: hidden`（图片本身的圆角裁切改由内层容器负责），并统一连接点尺寸为 `HANDLE_SIZE = 10`，四类节点共用 `handleBase`。
+- 同步移除工作流 `WorkflowNodeCard` 外层的 `overflow: hidden`，由头部色块自身圆角维持视觉效果，避免左右连接点被裁切。
 
 ### 一个不是代码 Bug 的排查结论
 - 「常用指令暂时无法加载」不是前端问题：后端进程陈旧导致 `quick_prompts` 路由未注册，请求被 `main.py` 的 SPA fallback（`@app.get("/{full_path:path}")`）兜走返回了 HTML，前端 JSON 解析失败。**重启后端即恢复**，无需改代码。排查时注意 token 存在 localStorage 的 `user_token`（不是 `agent_token`），且 `ADMIN_SECRET` 未写入 `.env` 时每次重启随机生成，旧 token 会签名校验失败。
 
 ### 影响面
-- 仅前端 `web/src/`：10 个页面 + `components/canvas/CanvasNodes.tsx`。
+- 仅前端 `web/src/`：10 个页面 + `components/canvas/CanvasNodes.tsx` + `components/workflow/WorkflowNodeCard.tsx`。
 - 无 API、数据库、环境变量、部署配置变化。`tsc --noEmit` 通过。
 
 ---
