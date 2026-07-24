@@ -36,12 +36,15 @@ export const CanvasSidebar = memo(function CanvasSidebar({ disabled, onAdd, onIm
         border: '1px solid #eef0f6', flexShrink: 0,
       }}>
         <Tooltip title="展开面板" placement="right">
-          <Button size="small" icon={<RightOutlined />} type="text"
+          <Button size="small" icon={<RightOutlined />} type="text" aria-label="展开素材面板"
             onClick={() => setCollapsed(false)} style={{ width: 28, height: 28 }} />
         </Tooltip>
         {ITEMS.map((item) => (
           <Tooltip key={item.type} title={item.label} placement="right">
-            <div
+            <button
+              type="button"
+              aria-label={`添加${item.label}`}
+              disabled={disabled}
               draggable={!disabled}
               onDragStart={(e) => handleDragStart(e, item.type)}
               onClick={() => !disabled && onAdd(item.type)}
@@ -49,13 +52,13 @@ export const CanvasSidebar = memo(function CanvasSidebar({ disabled, onAdd, onIm
                 width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 borderRadius: 6, cursor: disabled ? 'not-allowed' : 'grab', fontSize: 14,
                 color: disabled ? '#d1d5db' : item.color, transition: 'background .12s',
-                opacity: disabled ? 0.5 : 1,
+                opacity: disabled ? 0.5 : 1, border: 0, background: 'transparent', padding: 0,
               }}
               onMouseEnter={(e) => { if (!disabled) (e.currentTarget).style.background = '#f1f5f9'; }}
               onMouseLeave={(e) => { (e.currentTarget).style.background = 'transparent'; }}
             >
               {item.icon}
-            </div>
+            </button>
           </Tooltip>
         ))}
       </div>
@@ -74,14 +77,17 @@ export const CanvasSidebar = memo(function CanvasSidebar({ disabled, onAdd, onIm
         padding: '8px 10px 4px', borderBottom: '1px solid #f1f5f9',
       }}>
         <span style={{ fontSize: 11, fontWeight: 600, color: '#64748b', letterSpacing: 1 }}>素材</span>
-        <Button size="small" icon={<LeftOutlined />} type="text"
+        <Button size="small" icon={<LeftOutlined />} type="text" aria-label="收起素材面板"
           onClick={() => setCollapsed(true)} style={{ width: 22, height: 22, fontSize: 10 }} />
       </div>
 
       {/* 节点列表 */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '6px 6px' }}>
         {ITEMS.map((item) => (
-          <div
+          <button
+            type="button"
+            disabled={disabled}
+            aria-label={`添加${item.label}`}
             key={item.type}
             draggable={!disabled}
             onDragStart={(e) => handleDragStart(e, item.type)}
@@ -90,6 +96,7 @@ export const CanvasSidebar = memo(function CanvasSidebar({ disabled, onAdd, onIm
               display: 'flex', alignItems: 'center', gap: 8,
               padding: '7px 8px', borderRadius: 8, cursor: disabled ? 'not-allowed' : 'grab',
               transition: 'background .12s', marginBottom: 2, opacity: disabled ? 0.5 : 1,
+              width: '100%', border: 0, background: 'transparent', textAlign: 'left',
             }}
             onMouseEnter={(e) => { if (!disabled) (e.currentTarget).style.background = '#f8fafc'; }}
             onMouseLeave={(e) => { (e.currentTarget).style.background = 'transparent'; }}
@@ -102,21 +109,24 @@ export const CanvasSidebar = memo(function CanvasSidebar({ disabled, onAdd, onIm
             </div>
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: '#334155', lineHeight: 1.3 }}>{item.label}</div>
-              <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.3 }}>{item.desc}</div>
+              <div style={{ fontSize: 10, color: '#64748b', lineHeight: 1.3 }}>{item.desc}</div>
             </div>
-          </div>
+          </button>
         ))}
 
         {/* 分隔线 */}
         <div style={{ height: 1, background: '#f1f5f9', margin: '6px 4px' }} />
 
         {/* 导入/上传 */}
-        <div
+        <button
+          type="button"
+          disabled={disabled}
           onClick={() => !disabled && onImport()}
           style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '7px 8px', borderRadius: 8, cursor: disabled ? 'not-allowed' : 'pointer',
             transition: 'background .12s', opacity: disabled ? 0.5 : 1,
+            width: '100%', border: 0, background: 'transparent', textAlign: 'left',
           }}
           onMouseEnter={(e) => { if (!disabled) (e.currentTarget).style.background = '#f8fafc'; }}
           onMouseLeave={(e) => { (e.currentTarget).style.background = 'transparent'; }}
@@ -129,16 +139,19 @@ export const CanvasSidebar = memo(function CanvasSidebar({ disabled, onAdd, onIm
           </div>
           <div>
             <div style={{ fontSize: 12, fontWeight: 600, color: '#334155', lineHeight: 1.3 }}>从看板导入</div>
-            <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.3 }}>铺开已有卡片</div>
+            <div style={{ fontSize: 10, color: '#64748b', lineHeight: 1.3 }}>铺开已有卡片</div>
           </div>
-        </div>
+        </button>
 
-        <div
+        <button
+          type="button"
+          disabled={disabled}
           onClick={() => !disabled && onUpload(null)}
           style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '7px 8px', borderRadius: 8, cursor: disabled ? 'not-allowed' : 'pointer',
             transition: 'background .12s', opacity: disabled ? 0.5 : 1,
+            width: '100%', border: 0, background: 'transparent', textAlign: 'left',
           }}
           onMouseEnter={(e) => { if (!disabled) (e.currentTarget).style.background = '#f8fafc'; }}
           onMouseLeave={(e) => { (e.currentTarget).style.background = 'transparent'; }}
@@ -151,15 +164,15 @@ export const CanvasSidebar = memo(function CanvasSidebar({ disabled, onAdd, onIm
           </div>
           <div>
             <div style={{ fontSize: 12, fontWeight: 600, color: '#334155', lineHeight: 1.3 }}>上传图片</div>
-            <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.3 }}>或 Ctrl+V 粘贴</div>
+            <div style={{ fontSize: 10, color: '#64748b', lineHeight: 1.3 }}>或 Ctrl+V 粘贴</div>
           </div>
-        </div>
+        </button>
       </div>
 
       {/* 底部提示 */}
       <div style={{
         padding: '6px 10px', borderTop: '1px solid #f1f5f9',
-        fontSize: 10, color: '#cbd5e1', textAlign: 'center',
+        fontSize: 10, color: '#64748b', textAlign: 'center',
       }}>
         拖拽到画布 或 点击添加
       </div>

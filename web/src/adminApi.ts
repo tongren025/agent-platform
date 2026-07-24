@@ -1,5 +1,6 @@
 // 管理端 API 封装：走 /api/admin/*（代理到 :8001），带管理端独立 token。
 import type { ApiResult } from './types';
+import { friendlyFetch, getHttpErrorMessage, readJson } from './httpErrors';
 
 const BASE = (import.meta.env.VITE_ADMIN_API_BASE as string) || '/api/admin';
 
@@ -11,42 +12,35 @@ export const adminToken = {
   clear: () => localStorage.removeItem(TOKEN_KEY),
 };
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+async function request<T>(path: string, init?: RequestInit, options?: { isLogin?: boolean }): Promise<T> {
   const token = adminToken.get();
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await friendlyFetch(`${BASE}${path}`, {
+    ...init,
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...init?.headers,
     },
-    ...init,
   });
   if (res.status === 401) {
+    if (options?.isLogin) {
+      adminToken.clear();
+      throw new Error(await getHttpErrorMessage(res, '用户名或密码错误'));
+    }
     adminToken.clear();
     if (!location.pathname.startsWith('/admin/login')) {
       location.href = '/admin/login';
     }
-    throw new Error('未登录或登录已过期');
+    throw new Error('登录已失效，请重新登录');
   }
   if (res.status === 403) {
     throw new Error('权限不足');
   }
   if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    let message = text;
-    try {
-      const j = JSON.parse(text);
-      message = j.detail || j.message || text;
-    } catch { /* keep raw text */ }
-    throw new Error(message || `HTTP ${res.status}`);
+    throw new Error(await getHttpErrorMessage(res));
   }
-  let json: ApiResult<T>;
-  try {
-    json = await res.json();
-  } catch {
-    throw new Error(`服务端返回了非 JSON 响应 (HTTP ${res.status})`);
-  }
-  if (json.code !== 200) throw new Error(json.message || `code ${json.code}`);
+  const json = await readJson<ApiResult<T>>(res);
+  if (json.code !== 200) throw new Error(json.message || '请求失败，请稍后重试');
   return json.data;
 }
 
@@ -108,7 +102,7 @@ export const adminApi = {
     request<{ token: string; username: string; displayName: string; role: string }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
-    }),
+    }, { isLogin: true }),
   me: () => request<PlatformUser & { permissions: string[] }>('/auth/me'),
   overview: () => request<AdminOverview>('/system/overview'),
 

@@ -1,6 +1,6 @@
 // AI 趋势雷达页：GitHub 趋势仓库追踪与 LLM 分析。
 import { useEffect, useState, useCallback } from 'react';
-import { Card, Table, Button, Tabs, Tag, Space, Drawer, Spin, Statistic, Empty, Typography, Tooltip, Progress, Input } from 'antd';
+import { Alert, Card, Table, Button, Tabs, Tag, Space, Drawer, Spin, Statistic, Empty, Typography, Tooltip, Progress, Input } from 'antd';
 import { message } from '../ui';
 import {
   ReloadOutlined, StarFilled, RiseOutlined, FireFilled,
@@ -525,6 +525,8 @@ export default function SkillTracker() {
   const [lookupName, setLookupName] = useState('');     // 正在查/未查到的仓库名，用于空态与标题
   const [history, setHistory] = useState<{ takenAt: string; stars: number }[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState('');
+  const [lookupError, setLookupError] = useState('');
 
   const [crossSummary, setCrossSummary] = useState<CrossSummary | null>(null);
   const [analysis, setAnalysis] = useState<AnalysisReport | null>(null);
@@ -638,10 +640,15 @@ export default function SkillTracker() {
     setLookupName(repo.full_name);
     setDrawerOpen(true);
     setHistoryLoading(true);
+    setHistoryError('');
+    setLookupError('');
     try {
       const pts = await api.getRepoHistory(activeQuery, repo.full_name);
       setHistory(pts);
-    } catch { setHistory([]); }
+    } catch (e: any) {
+      setHistory([]);
+      setHistoryError(e.message || '趋势记录暂时无法加载');
+    }
     finally { setHistoryLoading(false); }
   };
 
@@ -650,6 +657,8 @@ export default function SkillTracker() {
     setDrawerOpen(true);
     setDetailRepo(null);
     setHistory([]);
+    setHistoryError('');
+    setLookupError('');
     setDetailQuery('');
     setHistoryLoading(true);
     setLookupName(fullName);
@@ -660,7 +669,9 @@ export default function SkillTracker() {
         setDetailQuery(found.query);
         setHistory(found.history || []);
       }
-    } catch { /* 保持未找到态 */ }
+    } catch (e: any) {
+      setLookupError(e.message || '项目详情暂时无法加载');
+    }
     finally { setHistoryLoading(false); }
   };
 
@@ -1242,7 +1253,14 @@ export default function SkillTracker() {
       {/* 详情抽屉 */}
       <Drawer title={detailRepo?.full_name || lookupName} open={drawerOpen} onClose={() => setDrawerOpen(false)} width={isMobile ? '100%' : 480}>
         {!detailRepo && historyLoading && <Spin style={{ display: 'block', padding: 60, textAlign: 'center' }} />}
-        {!detailRepo && !historyLoading && lookupName && (
+        {!detailRepo && !historyLoading && lookupError && <Alert
+          showIcon
+          type="error"
+          message="项目详情暂时无法加载"
+          description={lookupError}
+          action={<Button size="small" onClick={() => openRepoByName(lookupName)}>重试</Button>}
+        />}
+        {!detailRepo && !historyLoading && !lookupError && lookupName && (
           <Empty
             description={<span>「{lookupName}」不在已收录的榜单数据里<br />(AI 报告可能提到了榜单之外的项目)</span>}
             style={{ padding: 40 }}
@@ -1288,7 +1306,13 @@ export default function SkillTracker() {
             </div>
             <div style={{ marginBottom: 20 }}>
               <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 8 }}>Star 走势（快照历史）</Text>
-              {historyLoading ? <Spin size="small" /> : history.length >= 2 ? (
+              {historyLoading ? <Spin size="small" /> : historyError ? <Alert
+                showIcon
+                type="warning"
+                message="趋势记录暂时无法加载"
+                description={historyError}
+                action={<Button size="small" onClick={() => openDetail(detailRepo)}>重试</Button>}
+              /> : history.length >= 2 ? (
                 <div>
                   <SparkLine data={history} />
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: COLORS.slate, marginTop: 4 }}>

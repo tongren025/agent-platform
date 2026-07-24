@@ -6,9 +6,9 @@ import ReactFlow, {
   type Connection, type Edge, type Node, MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { Button, Space, Spin, Tag, Typography } from 'antd';
+import { Alert, Button, Result, Space, Spin, Tag, Typography } from 'antd';
 import { message } from '../ui';
-import { ArrowLeftOutlined, SaveOutlined, PlayCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, SaveOutlined, PlayCircleOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
@@ -33,6 +33,7 @@ export default function WorkflowEditor() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [meta, setMeta] = useState<Partial<WorkflowDefinition>>({});
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [saving, setSaving] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [runOpen, setRunOpen] = useState(false);
@@ -41,34 +42,35 @@ export default function WorkflowEditor() {
 
   const nodeTypes = useMemo(() => ({ wf: WorkflowNodeCard }), []);
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const [wf, emps, tls] = await Promise.all([
-          api.getWorkflow(key),
-          api.listEmployees().catch(() => []),
-          api.listTools().catch(() => []),
-        ]);
-        setEmployees(emps); setTools(tls);
-        setMeta({ workflowKey: wf.workflowKey, name: wf.name, description: wf.description, teamCode: wf.teamCode, enabled: wf.enabled });
-        setNodes((wf.nodes || []).map((n: WfNode): Node => ({
-          id: n.nodeKey, type: 'wf', position: n.position || { x: 0, y: 0 },
-          data: { type: n.type, name: n.name, config: n.config || {} },
-        })));
-        setEdges((wf.edges || []).map((e: any): Edge => ({
-          id: e.edgeId, source: e.source, target: e.target,
-          sourceHandle: e.sourceHandle || undefined,
-          markerEnd: { type: MarkerType.ArrowClosed }, style: { stroke: '#94a3b8' },
-          label: e.sourceHandle || undefined,
-        })));
-      } catch (e: any) {
-        message.error(e.message);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [key]); // eslint-disable-line
+  const loadWorkflow = useCallback(async () => {
+    setLoading(true);
+    setLoadError('');
+    try {
+      const [wf, emps, tls] = await Promise.all([
+        api.getWorkflow(key),
+        api.listEmployees().catch(() => []),
+        api.listTools().catch(() => []),
+      ]);
+      setEmployees(emps); setTools(tls);
+      setMeta({ workflowKey: wf.workflowKey, name: wf.name, description: wf.description, teamCode: wf.teamCode, enabled: wf.enabled });
+      setNodes((wf.nodes || []).map((n: WfNode): Node => ({
+        id: n.nodeKey, type: 'wf', position: n.position || { x: 0, y: 0 },
+        data: { type: n.type, name: n.name, config: n.config || {} },
+      })));
+      setEdges((wf.edges || []).map((e: any): Edge => ({
+        id: e.edgeId, source: e.source, target: e.target,
+        sourceHandle: e.sourceHandle || undefined,
+        markerEnd: { type: MarkerType.ArrowClosed }, style: { stroke: '#94a3b8' },
+        label: e.sourceHandle || undefined,
+      })));
+    } catch (e: any) {
+      setLoadError(e.message || '自动化工作暂时无法加载');
+    } finally {
+      setLoading(false);
+    }
+  }, [key, setEdges, setNodes]);
+
+  useEffect(() => { loadWorkflow(); }, [loadWorkflow]);
 
   const onConnect = useCallback((c: Connection) => {
     setEdges((eds) => addEdge({
@@ -140,27 +142,64 @@ export default function WorkflowEditor() {
     nodes: allWfNodes, edges: [] as any, enabled: true, sortOrder: 0, createdAt: '', updatedAt: '',
   }), [key, meta, allWfNodes]);
 
+  if (loading) return <div role="status" aria-live="polite" aria-label="正在加载自动化工作">
+    <Spin size="large" style={{ display: 'block', marginTop: 120, textAlign: 'center' }} />
+  </div>;
+
+  if (loadError) {
+    return <Result
+      status="error"
+      title="自动化工作暂时无法加载"
+      subTitle={loadError}
+      extra={<Space wrap>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/workflows')}>返回列表</Button>
+        <Button type="primary" icon={<ReloadOutlined />} onClick={loadWorkflow}>重新加载</Button>
+      </Space>}
+    />;
+  }
+
   if (isMobile) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 32, textAlign: 'center' }}>
-        <div>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🖥️</div>
-          <h2 style={{ marginBottom: 8 }}>请在桌面端使用</h2>
-          <p style={{ color: '#888' }}>工作流编辑器需要更大的屏幕，请在电脑上打开此页面。</p>
-        </div>
-      </div>
+      <main aria-labelledby="workflow-mobile-title" style={{ maxWidth: 640, margin: '0 auto' }}>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/workflows')} style={{ marginBottom: 16 }}>返回自动化工作</Button>
+        <Typography.Title id="workflow-mobile-title" level={1} style={{ marginTop: 0, fontSize: 24 }}>{meta.name || key}</Typography.Title>
+        {meta.description && <Typography.Paragraph type="secondary">{meta.description}</Typography.Paragraph>}
+        <Alert
+          showIcon
+          type="info"
+          message="手机端为查看模式"
+          description="可以核对步骤和连接数量；拖动、连线和配置步骤请在电脑上继续。"
+          style={{ marginBottom: 18 }}
+        />
+        <Space wrap style={{ marginBottom: 16 }}>
+          <Tag color="blue">{nodes.length} 个步骤</Tag>
+          <Tag color="purple">{edges.length} 条连接</Tag>
+        </Space>
+        {nodes.length === 0 ? <Typography.Text type="secondary">还没有配置步骤。</Typography.Text> : (
+          <ol style={{ margin: 0, paddingLeft: 24 }}>
+            {nodes.map(node => {
+              const nodeType = node.data.type as WorkflowNodeType;
+              return <li key={node.id} style={{
+                padding: '10px 12px', marginBottom: 10, border: '1px solid #e2e8f0',
+                borderRadius: 10, background: '#fff',
+              }}>
+                <Text strong>{node.data.name || NODE_META[nodeType]?.label || '未命名步骤'}</Text>
+                <div><Text type="secondary">{NODE_META[nodeType]?.label || nodeType}</Text></div>
+              </li>;
+            })}
+          </ol>
+        )}
+      </main>
     );
   }
 
-  if (loading) return <Spin size="large" style={{ display: 'block', marginTop: 120, textAlign: 'center' }} />;
-
   return (
-    <div style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column' }}>
+    <main aria-labelledby="workflow-editor-title" style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column' }}>
       {/* Toolbar */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <Space>
           <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/workflows')}>返回</Button>
-          <Text strong style={{ fontSize: 16 }}>{meta.name}</Text>
+          <Typography.Title id="workflow-editor-title" level={1} style={{ fontSize: 18, margin: 0 }}>{meta.name}</Typography.Title>
           <Tag style={{ background: '#f8f9fc', border: '1px solid #eef0f6', color: COLORS.slate }}>{key}</Tag>
         </Space>
         <Space>
@@ -171,26 +210,28 @@ export default function WorkflowEditor() {
 
       <div style={{ flex: 1, display: 'flex', gap: 12, minHeight: 0 }}>
         {/* Palette */}
-        <div style={{ width: 132, flexShrink: 0, background: '#fff', border: '1px solid #eef0f6', borderRadius: 12, padding: 10, overflow: 'auto' }}>
-          <Text type="secondary" style={{ fontSize: 11, fontWeight: 600 }}>添加节点</Text>
+        <aside aria-labelledby="workflow-palette-title" style={{ width: 132, flexShrink: 0, background: '#fff', border: '1px solid #eef0f6', borderRadius: 12, padding: 10, overflow: 'auto' }}>
+          <Text id="workflow-palette-title" type="secondary" style={{ fontSize: 11, fontWeight: 600 }}>添加步骤</Text>
           <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
             {NODE_ORDER.filter((t) => t !== 'start').map((t) => (
-              <div
+              <button
+                type="button"
                 key={t}
                 onClick={() => addNode(t)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 8, padding: '7px 9px', borderRadius: 8,
                   cursor: 'pointer', border: '1px solid #f0f1f5', fontSize: 12, color: '#334155',
+                  background: '#fff', textAlign: 'left',
                 }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = `${NODE_META[t].color}10`; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = ''; }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = `${NODE_META[t].color}10`; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#fff'; }}
               >
                 <span>{NODE_META[t].icon}</span>{NODE_META[t].label}
                 <PlusOutlined style={{ marginLeft: 'auto', fontSize: 10, color: '#cbd5e1' }} />
-              </div>
+              </button>
             ))}
           </div>
-        </div>
+        </aside>
 
         {/* Canvas */}
         <div style={{ flex: 1, border: '1px solid #eef0f6', borderRadius: 12, overflow: 'hidden', background: '#fafbfd' }}>
@@ -224,7 +265,7 @@ export default function WorkflowEditor() {
       />
 
       <RunPanel open={runOpen} workflow={currentDef} onClose={() => setRunOpen(false)} />
-    </div>
+    </main>
   );
 }
 

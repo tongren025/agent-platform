@@ -1,6 +1,6 @@
-// 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、知识库上传。
-import { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Switch, Select, Tag, Space, Popconfirm, Descriptions, Upload, Slider, InputNumber, Divider, Row, Col, Typography } from 'antd';
+// 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、参考资料上传。
+import { useEffect, useRef, useState } from 'react';
+import { Alert, Button, Col, Descriptions, Divider, Empty, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Slider, Space, Spin, Switch, Table, Tag, Typography, Upload } from 'antd';
 import { message } from '../ui';
 import { PlusOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
@@ -15,6 +15,8 @@ const { Text } = Typography;
 export default function Employees() {
   const [list, setList] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const [supportError, setSupportError] = useState('');
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Employee | null>(null);
   const [form] = Form.useForm();
@@ -28,6 +30,9 @@ export default function Employees() {
   const [knowledgeOpen, setKnowledgeOpen] = useState(false);
   const [knowledgeEmp, setKnowledgeEmp] = useState<Employee | null>(null);
   const [knowledgeDocs, setKnowledgeDocs] = useState<any[]>([]);
+  const [knowledgeLoading, setKnowledgeLoading] = useState(false);
+  const [knowledgeError, setKnowledgeError] = useState('');
+  const knowledgeRequestRef = useRef(0);
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailEmp, setDetailEmp] = useState<Employee | null>(null);
@@ -36,13 +41,31 @@ export default function Employees() {
 
   const fetchAll = async () => {
     setLoading(true);
+    setLoadError('');
+    setSupportError('');
     try {
-      const [emp, t, s, m, tm, prov] = await Promise.all([
-        api.listEmployees(), api.listTools(), api.listSkills(), api.listMcpServers(), api.listTeams(),
-        api.listAiProviders().catch(() => []),
+      const emp = await api.listEmployees();
+      setList(emp);
+      const [toolsResult, skillsResult, mcpResult, teamsResult, providersResult] = await Promise.allSettled([
+        api.listTools(), api.listSkills(), api.listMcpServers(), api.listTeams(), api.listAiProviders(),
       ]);
-      setList(emp); setTools(t); setSkills(s); setMcpServers(m); setTeams(tm); setAiProviders(prov);
-    } catch (e: any) { message.error(e.message); }
+      setTools(toolsResult.status === 'fulfilled' ? toolsResult.value : []);
+      setSkills(skillsResult.status === 'fulfilled' ? skillsResult.value : []);
+      setMcpServers(mcpResult.status === 'fulfilled' ? mcpResult.value : []);
+      setTeams(teamsResult.status === 'fulfilled' ? teamsResult.value : []);
+      setAiProviders(providersResult.status === 'fulfilled' ? providersResult.value : []);
+      const unavailable = [
+        toolsResult.status === 'rejected' && '工具',
+        skillsResult.status === 'rejected' && '技能',
+        mcpResult.status === 'rejected' && '连接',
+        teamsResult.status === 'rejected' && '团队',
+        providersResult.status === 'rejected' && '模型',
+      ].filter(Boolean);
+      if (unavailable.length) setSupportError(`${unavailable.join('、')}配置暂时无法加载；员工列表仍可正常查看。`);
+    } catch (e: any) {
+      setList([]);
+      setLoadError(e.message || '数字员工暂时无法加载');
+    }
     finally { setLoading(false); }
   };
 
@@ -95,11 +118,17 @@ export default function Employees() {
     try {
       const values = await form.validateFields();
       const { modelId, temperature, maxTokens, ...rest } = values;
+      const parsedTemperature = Number(temperature);
+      const parsedMaxTokens = Number(maxTokens);
       const payload = {
         ...rest,
         teamCode: values.teamCode || null,
         skillRefs: values.skillRefs ?? [], toolRefs: values.toolRefs ?? [], mcpServerRefs: values.mcpServerRefs ?? [],
-        defaultModelPolicy: { model_id: modelId || 'gpt-4o', temperature: parseFloat(temperature) || 0.7, max_tokens: parseInt(maxTokens) || 4096 },
+        defaultModelPolicy: {
+          model_id: modelId || 'gpt-4o',
+          temperature: Number.isFinite(parsedTemperature) ? parsedTemperature : 0.7,
+          max_tokens: Number.isFinite(parsedMaxTokens) && parsedMaxTokens > 0 ? Math.trunc(parsedMaxTokens) : 4096,
+        },
       };
       if (editing) { await api.updateEmployee(editing.employeeKey, payload); message.success('更新成功'); }
       else { await api.saveEmployee(payload); message.success('创建成功'); }
@@ -111,9 +140,22 @@ export default function Employees() {
   const handleToggle = async (record: Employee) => { try { await api.toggleEnabled(record.employeeKey, !record.enabled); message.success(record.enabled ? '已禁用' : '已启用'); fetchAll(); } catch (e: any) { message.error(e.message); } };
 
   const openKnowledge = async (record: Employee) => {
+    const requestId = ++knowledgeRequestRef.current;
     setKnowledgeEmp(record);
-    try { setKnowledgeDocs(await api.listKnowledge(record.employeeKey)); } catch { setKnowledgeDocs([]); }
     setKnowledgeOpen(true);
+    setKnowledgeLoading(true);
+    setKnowledgeError('');
+    try {
+      const docs = await api.listKnowledge(record.employeeKey);
+      if (knowledgeRequestRef.current === requestId) setKnowledgeDocs(docs);
+    } catch (e: any) {
+      if (knowledgeRequestRef.current === requestId) {
+        setKnowledgeDocs([]);
+        setKnowledgeError(e.message || '参考资料暂时无法加载');
+      }
+    } finally {
+      if (knowledgeRequestRef.current === requestId) setKnowledgeLoading(false);
+    }
   };
 
   const handleDeleteDoc = async (docId: string) => {
@@ -191,7 +233,7 @@ export default function Employees() {
       },
     },
     {
-      title: '知识库', dataIndex: 'hasKnowledgeBase', key: 'knowledge',
+      title: '参考资料', dataIndex: 'hasKnowledgeBase', key: 'knowledge',
       render: (v: boolean, record: Employee) => (
         <Button type="link" size="small" onClick={() => openKnowledge(record)} style={{ fontSize: 13 }}>
           {v ? '已有' : '管理'}
@@ -233,6 +275,23 @@ export default function Employees() {
         </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新建员工</Button>
       </div>
+      {loadError && <Alert
+        showIcon
+        type="error"
+        message="数字员工暂时无法加载"
+        description={loadError}
+        action={<Button size="small" onClick={fetchAll}>重新加载</Button>}
+        style={{ marginBottom: 16 }}
+      />}
+      {supportError && <Alert
+        showIcon
+        closable
+        type="warning"
+        message="部分编辑选项暂时不可用"
+        description={supportError}
+        onClose={() => setSupportError('')}
+        style={{ marginBottom: 16 }}
+      />}
       <Table rowKey="employeeKey" columns={columns} dataSource={list} loading={loading} pagination={{ pageSize: 20 }} scroll={{ x: 'max-content' }} />
 
       <Modal title={editing ? '编辑员工' : '新建员工'} open={open} onOk={handleSave} onCancel={closeEditor} destroyOnHidden forceRender width={isMobile ? '100%' : 720}>
@@ -295,7 +354,7 @@ export default function Employees() {
             <Descriptions.Item label="绑定工具">{getRefNames(detailEmp.toolRefs, tools, 'toolCode', 'name')}</Descriptions.Item>
             <Descriptions.Item label="绑定技能">{getRefNames(detailEmp.skillRefs, skills, 'code', 'name')}</Descriptions.Item>
             <Descriptions.Item label="绑定 MCP 服务器">{getRefNames(detailEmp.mcpServerRefs, mcpServers, 'serverCode', 'name')}</Descriptions.Item>
-            <Descriptions.Item label="知识库">{detailEmp.hasKnowledgeBase ? '已有' : '无'}</Descriptions.Item>
+            <Descriptions.Item label="参考资料">{detailEmp.hasKnowledgeBase ? '已有' : '无'}</Descriptions.Item>
             <Descriptions.Item label="标签">{detailEmp.tags?.length ? detailEmp.tags.join(', ') : '-'}</Descriptions.Item>
             <Descriptions.Item label="来源">{detailEmp.source}</Descriptions.Item>
             <Descriptions.Item label="创建时间">{detailEmp.createdAt}</Descriptions.Item>
@@ -303,32 +362,44 @@ export default function Employees() {
         )}
       </Modal>
 
-      <Modal title={`知识库管理 — ${knowledgeEmp?.name ?? ''}`} open={knowledgeOpen} onCancel={() => setKnowledgeOpen(false)} footer={null} width={isMobile ? '100%' : 600}>
+      <Modal title={`参考资料 — ${knowledgeEmp?.name ?? ''}`} open={knowledgeOpen} onCancel={() => {
+        knowledgeRequestRef.current += 1;
+        setKnowledgeOpen(false);
+      }} footer={null} width={isMobile ? '100%' : 600}>
         <Upload.Dragger
           beforeUpload={(file) => { handleUploadKnowledge(file); return false; }}
           showUploadList={false}
           style={{ marginBottom: 16, borderRadius: 10 }}
         >
           <p><UploadOutlined style={{ fontSize: 24, color: COLORS.iris }} /></p>
-          <p>点击或拖拽文件上传知识文档</p>
+          <p>点击或拖拽，为这位员工添加参考资料</p>
           <p style={{ color: COLORS.slate, fontSize: 12 }}>支持 .txt, .md, .pdf 等文本格式</p>
         </Upload.Dragger>
-        <Table
+        {knowledgeLoading ? <div role="status" aria-live="polite" aria-label="正在加载参考资料">
+          <Spin style={{ display: 'block', padding: 40, textAlign: 'center' }} />
+        </div> : knowledgeError ? <Alert
+          showIcon
+          type="error"
+          message="参考资料暂时无法加载"
+          description={knowledgeError}
+          action={knowledgeEmp && <Button size="small" onClick={() => openKnowledge(knowledgeEmp)}>重试</Button>}
+        /> : <Table
           rowKey="docId" dataSource={knowledgeDocs} pagination={false} size="small" scroll={{ x: 'max-content' }}
+          locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有参考资料" /> }}
           columns={[
             { title: '文件名', dataIndex: 'fileName', key: 'fileName' },
             { title: '片段数', dataIndex: 'chunkCount', key: 'chunkCount', render: (v: number) => v ?? '-' },
             { title: '上传时间', dataIndex: 'createdAt', key: 'createdAt', render: (v: string) => v ? new Date(v).toLocaleString() : '-' },
             {
               title: '操作', key: 'actions', width: 80,
-              render: (_: unknown, r: any) => (
-                <Popconfirm title="确认删除？" onConfirm={() => handleDeleteDoc(r.docId)}>
-                  <Button type="link" size="small" danger icon={<DeleteOutlined />} />
-                </Popconfirm>
-              ),
+                render: (_: unknown, r: any) => (
+                  <Popconfirm title="确认删除？" onConfirm={() => handleDeleteDoc(r.docId)}>
+                  <Button type="link" size="small" danger icon={<DeleteOutlined />} aria-label={`删除资料 ${r.fileName || ''}`} />
+                  </Popconfirm>
+                ),
             },
           ]}
-        />
+        />}
       </Modal>
     </div>
   );

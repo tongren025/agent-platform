@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import { toPng } from 'html-to-image';
 import 'reactflow/dist/style.css';
-import { Button, Divider, Dropdown, Empty, Input, Modal, Popconfirm, Select, Space, Spin, Tooltip, Typography } from 'antd';
+import { Alert, Button, Divider, Dropdown, Empty, Input, Modal, Popconfirm, Result, Select, Space, Spin, Tag, Tooltip, Typography } from 'antd';
 import { message } from '../ui';
 import {
   PlusOutlined, DeleteOutlined, SaveOutlined, UploadOutlined,
@@ -31,7 +31,7 @@ import { SelectionToolbar, type AlignAction } from '../components/canvas/Selecti
 import { CanvasSidebar } from '../components/canvas/CanvasSidebar';
 import { thumbUrl } from '../media';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 const { TextArea } = Input;
 
 interface CanvasSummary { canvas_id: string; name: string; nodeCount: number; updated_at: string }
@@ -57,6 +57,33 @@ const edgeDefaults = {
   style: { stroke: '#94a3b8' },
 };
 
+function canvasPayload(nodes: Node[], edges: Edge[]) {
+  const payload = {
+    nodes: nodes.map((n) => ({
+      node_id: n.id, type: n.type || 'data',
+      position: { x: Math.round(n.position.x), y: Math.round(n.position.y) },
+      ...(n.type === 'group' ? { style: { width: n.style?.width || 600, height: n.style?.height || 400 } } : {}),
+      data: {
+        stage: n.data.stage, title: n.data.title, content: n.data.content,
+        url: n.data.url, prompt: n.data.prompt,
+        locked: n.data.locked || false,
+        color: n.data.color || '',
+        ...(n.type === 'group' ? { label: n.data.label, color: n.data.color } : {}),
+        ...(n.type === 'storyboard' ? {
+          shotNumber: n.data.shotNumber, duration: n.data.duration,
+          cameraType: n.data.cameraType, cameraMove: n.data.cameraMove,
+          description: n.data.description,
+        } : {}),
+      },
+    })),
+    edges: edges.map((e) => ({
+      edge_id: e.id, source: e.source, target: e.target,
+      data: e.data || {},
+    })),
+  };
+  return { payload, snapshot: JSON.stringify(payload) };
+}
+
 // ── 分镜连续预览条(需在 ReactFlow 树内使用 useReactFlow) ──────
 function FilmstripStrip({ nodes }: { nodes: Node[] }) {
   const { fitView } = useReactFlow();
@@ -75,7 +102,8 @@ function FilmstripStrip({ nodes }: { nodes: Node[] }) {
       backdropFilter: 'blur(8px)',
     }}>
       {sbNodes.map((n) => (
-        <div key={n.id}
+        <button key={n.id} type="button"
+          aria-label={`查看分镜 ${n.data.shotNumber || '未编号'}`}
           onClick={() => fitView({ nodes: [{ id: n.id }], padding: 0.5, duration: 300 })}
           style={{
             cursor: 'pointer', padding: '4px 6px', borderRadius: 8,
@@ -94,7 +122,7 @@ function FilmstripStrip({ nodes }: { nodes: Node[] }) {
           <div style={{ color: '#94a3b8', fontSize: 10, whiteSpace: 'nowrap' }}>
             {[n.data.duration, n.data.cameraType].filter(Boolean).join(' ')}
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );
@@ -113,23 +141,24 @@ function ZoomBar() {
       backdropFilter: 'blur(8px)',
     }}>
       <Tooltip title="缩小 (Ctrl+-)">
-        <Button size="small" icon={<ZoomOutOutlined />} onClick={() => zoomOut()}
+        <Button size="small" icon={<ZoomOutOutlined />} aria-label="缩小画布" onClick={() => zoomOut()}
           style={{ border: 'none', background: 'none', width: 26, height: 26 }} />
       </Tooltip>
       <Tooltip title="点击适配视图 (Ctrl+0)">
-        <span onClick={() => fitView({ padding: 0.15, duration: 300 })}
+        <button type="button" aria-label={`当前缩放 ${pct}%，点击适配视图`} onClick={() => fitView({ padding: 0.15, duration: 300 })}
           style={{ fontSize: 11, color: '#64748b', cursor: 'pointer', padding: '0 4px',
-            minWidth: 36, textAlign: 'center', userSelect: 'none', fontVariantNumeric: 'tabular-nums' }}>
+            minWidth: 36, minHeight: 26, textAlign: 'center', userSelect: 'none', fontVariantNumeric: 'tabular-nums',
+            border: 0, background: 'transparent' }}>
           {pct}%
-        </span>
+        </button>
       </Tooltip>
       <Tooltip title="放大 (Ctrl+=)">
-        <Button size="small" icon={<ZoomInOutlined />} onClick={() => zoomIn()}
+        <Button size="small" icon={<ZoomInOutlined />} aria-label="放大画布" onClick={() => zoomIn()}
           style={{ border: 'none', background: 'none', width: 26, height: 26 }} />
       </Tooltip>
       <div style={{ width: 1, height: 16, background: '#e2e8f0', margin: '0 2px' }} />
       <Tooltip title="适配视图">
-        <Button size="small" icon={<ExpandOutlined />} onClick={() => fitView({ padding: 0.15, duration: 300 })}
+        <Button size="small" icon={<ExpandOutlined />} aria-label="适配画布视图" onClick={() => fitView({ padding: 0.15, duration: 300 })}
           style={{ border: 'none', background: 'none', width: 26, height: 26 }} />
       </Tooltip>
     </div>
@@ -141,7 +170,10 @@ export default function Canvas() {
 
   const [canvases, setCanvases] = useState<CanvasSummary[]>([]);
   const [currentId, setCurrentId] = useState('');
+  const [canvasListLoading, setCanvasListLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [canvasListError, setCanvasListError] = useState('');
+  const [canvasError, setCanvasError] = useState('');
   const [saving, setSaving] = useState(false);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -200,6 +232,8 @@ export default function Canvas() {
   const modelRef = useRef(model);
   const sizeRef = useRef(size);
   const currentIdRef = useRef(currentId);
+  const loadedCanvasIdRef = useRef('');
+  const savedCanvasSnapshotRef = useRef('');
   const skipSaveRef = useRef(true);
   nodesRef.current = nodes;
   edgesRef.current = edges;
@@ -242,11 +276,19 @@ export default function Canvas() {
 
   // ── 加载 ──
   const loadCanvases = useCallback(async () => {
+    setCanvasListLoading(true);
+    setCanvasListError('');
     try {
       const list = await api.listCanvases();
       setCanvases(list);
       return list as CanvasSummary[];
-    } catch { return []; }
+    } catch (e: any) {
+      setCanvases([]);
+      setCanvasListError(e.message || '素材画布暂时无法加载');
+      return [];
+    } finally {
+      setCanvasListLoading(false);
+    }
   }, []);
 
   const loadProjects = useCallback(() => {
@@ -254,12 +296,14 @@ export default function Canvas() {
   }, []);
 
   const loadCanvas = useCallback(async (cid: string) => {
+    loadedCanvasIdRef.current = '';
     setLoading(true);
+    setCanvasError('');
     try {
       const doc = await api.getCanvas(cid);
       skipSaveRef.current = true;
       _clearHistory();
-      setNodes((doc.nodes || []).map((n: any): Node => ({
+      const loadedNodes = (doc.nodes || []).map((n: any): Node => ({
         id: n.node_id,
         type: n.type === 'prompt' ? 'data' : n.type,
         position: n.position || { x: 0, y: 0 },
@@ -281,14 +325,20 @@ export default function Canvas() {
             description: n.data?.description || '',
           } : {}),
         },
-      })));
-      setEdges((doc.edges || []).map((e: any): Edge => ({
+      }));
+      const loadedEdges = (doc.edges || []).map((e: any): Edge => ({
         id: e.edge_id, source: e.source, target: e.target,
         type: 'labeled',
         data: e.data || {},
         ...edgeDefaults,
-      })));
-    } catch (e: any) { message.error(e.message); }
+      }));
+      savedCanvasSnapshotRef.current = canvasPayload(loadedNodes, loadedEdges).snapshot;
+      setNodes(loadedNodes);
+      setEdges(loadedEdges);
+      loadedCanvasIdRef.current = cid;
+    } catch (e: any) {
+      setCanvasError(e.message || '画布内容暂时无法加载');
+    }
     finally { setLoading(false); }
   }, [setNodes, setEdges, _clearHistory]);
 
@@ -314,29 +364,10 @@ export default function Canvas() {
     if (!cid) return;
     if (!silent) setSaving(true);
     try {
-      await api.saveCanvas(cid, {
-        nodes: nodesRef.current.map((n) => ({
-          node_id: n.id, type: n.type || 'data',
-          position: { x: Math.round(n.position.x), y: Math.round(n.position.y) },
-          ...(n.type === 'group' ? { style: { width: n.style?.width || 600, height: n.style?.height || 400 } } : {}),
-          data: {
-            stage: n.data.stage, title: n.data.title, content: n.data.content,
-            url: n.data.url, prompt: n.data.prompt,
-            locked: n.data.locked || false,
-            color: n.data.color || '',
-            ...(n.type === 'group' ? { label: n.data.label, color: n.data.color } : {}),
-            ...(n.type === 'storyboard' ? {
-              shotNumber: n.data.shotNumber, duration: n.data.duration,
-              cameraType: n.data.cameraType, cameraMove: n.data.cameraMove,
-              description: n.data.description,
-            } : {}),
-          },
-        })),
-        edges: edgesRef.current.map((e) => ({
-          edge_id: e.id, source: e.source, target: e.target,
-          data: e.data || {},
-        })),
-      });
+      const { payload, snapshot } = canvasPayload(nodesRef.current, edgesRef.current);
+      if (silent && snapshot === savedCanvasSnapshotRef.current) return;
+      await api.saveCanvas(cid, payload);
+      savedCanvasSnapshotRef.current = snapshot;
       if (!silent) message.success('已保存');
     } catch (e: any) {
       if (!silent) message.error(e.message);
@@ -346,11 +377,12 @@ export default function Canvas() {
   }, []);
 
   useEffect(() => {
+    if (isMobile || loading || loadedCanvasIdRef.current !== currentId) return;
     if (skipSaveRef.current) { skipSaveRef.current = false; return; }
     if (!currentId) return;
     const t = setTimeout(() => doSave(true), 1200);
     return () => clearTimeout(t);
-  }, [nodes, edges, currentId, doSave]);
+  }, [nodes, edges, currentId, doSave, isMobile, loading]);
 
   // ── 节点操作 ──
   const updateNodeData = useCallback((id: string, patch: Record<string, any>) => {
@@ -1216,37 +1248,107 @@ export default function Canvas() {
 
   if (isMobile) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 32, textAlign: 'center' }}>
-        <div>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🖥️</div>
-          <h2 style={{ marginBottom: 8 }}>请在桌面端使用</h2>
-          <p style={{ color: '#888' }}>画布功能需要更大的屏幕，请在电脑上打开此页面。</p>
-        </div>
-      </div>
+      <main aria-labelledby="canvas-mobile-title" style={{ maxWidth: 640, margin: '0 auto' }}>
+        <Title id="canvas-mobile-title" level={1} style={{ marginTop: 0, fontSize: 24 }}>整理素材</Title>
+        <Alert
+          showIcon
+          type="info"
+          message="手机端为查看模式"
+          description="可以浏览画布中的素材；拖动、连线和批量整理请在电脑上继续。"
+          style={{ marginBottom: 16 }}
+        />
+        {canvasListLoading && <div role="status" aria-live="polite" aria-label="正在加载素材画布">
+          <Spin style={{ display: 'block', padding: 48, textAlign: 'center' }} />
+        </div>}
+        {!canvasListLoading && canvasListError && <Alert
+          showIcon
+          type="error"
+          message="素材画布暂时无法加载"
+          description={canvasListError}
+          action={<Button size="small" onClick={async () => {
+            const list = await loadCanvases();
+            if (list.length) setCurrentId(list[0].canvas_id);
+          }}>重试</Button>}
+          style={{ marginBottom: 16 }}
+        />}
+        {!canvasListLoading && !canvasListError && canvases.length > 0 && <Select
+          value={currentId || undefined}
+          onChange={setCurrentId}
+          placeholder="选择要查看的画布"
+          aria-label="选择要查看的素材画布"
+          style={{ width: '100%', marginBottom: 16 }}
+          options={canvases.map(canvas => ({
+            value: canvas.canvas_id,
+            label: `${canvas.name}（${canvas.nodeCount || 0} 项素材）`,
+          }))}
+        />}
+        {canvasListLoading || canvasListError ? null : loading ? <div role="status" aria-live="polite" aria-label="正在加载画布内容">
+          <Spin style={{ display: 'block', padding: 48, textAlign: 'center' }} />
+        </div> : canvasError ? <Alert
+          showIcon
+          type="error"
+          message="画布内容暂时无法加载"
+          description={canvasError}
+          action={<Button size="small" onClick={() => currentId && loadCanvas(currentId)}>重试</Button>}
+        /> : !currentId ? <Empty
+          image={<img src="/empty-data.svg" alt="" width={140} />}
+          description="还没有素材画布"
+        >
+          <Button href="/production">先查看制作项目</Button>
+        </Empty> : nodes.length === 0 ? <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="这个画布还没有素材"
+        /> : <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+          {nodes.filter(node => node.type !== 'group').slice(0, 50).map(node => {
+            const title = node.data?.title || node.data?.label || node.data?.shotNumber || '未命名素材';
+            const content = node.data?.content || node.data?.description || node.data?.prompt || '';
+            const stage = STAGE_META[node.data?.stage]?.label || (node.type === 'image' ? '图片' : node.type === 'sticky' ? '便签' : '素材');
+            return <li key={node.id} style={{
+              display: 'flex', alignItems: 'center', gap: 12, padding: 12, marginBottom: 10,
+              border: '1px solid #e2e8f0', borderRadius: 12, background: '#fff',
+            }}>
+              {node.data?.url && <img
+                src={thumbUrl(node.data.url, 128)}
+                alt=""
+                loading="lazy"
+                style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }}
+              />}
+              <div style={{ minWidth: 0 }}>
+                <Space size={6} wrap><Text strong>{title}</Text><Tag>{stage}</Tag></Space>
+                {content && <div style={{
+                  color: '#64748b', fontSize: 13, marginTop: 4, overflow: 'hidden',
+                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                }}>{content}</div>}
+              </div>
+            </li>;
+          })}
+        </ul>}
+      </main>
     );
   }
 
   return (
-    <div style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <main aria-labelledby="canvas-title" style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
       {/* ── 顶栏 ── */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
         <Space>
+          <Title id="canvas-title" level={1} style={{ fontSize: 20, margin: 0 }}>整理素材</Title>
           <Select
             value={currentId || undefined} onChange={setCurrentId}
             placeholder="选择画布" style={{ width: 180 }}
             options={canvases.map((c) => ({ value: c.canvas_id, label: `${c.name} (${c.nodeCount})` }))}
           />
           <Button icon={<PlusOutlined />} onClick={() => setNewOpen(true)}>新建</Button>
-          {currentId && (
+          {currentId && !canvasError && (
             <>
               <Tooltip title="重命名">
-                <Button icon={<EditOutlined />} onClick={openRename} />
+                <Button icon={<EditOutlined />} aria-label="重命名画布" onClick={openRename} />
               </Tooltip>
               <Tooltip title="复制画布">
-                <Button icon={<CopyOutlined />} onClick={handleDuplicate} />
+                <Button icon={<CopyOutlined />} aria-label="复制画布" onClick={handleDuplicate} />
               </Tooltip>
               <Popconfirm title="删除此画布？节点数据不可恢复" onConfirm={handleDelete}>
-                <Button danger icon={<DeleteOutlined />} />
+                <Button danger icon={<DeleteOutlined />} aria-label="删除画布" />
               </Popconfirm>
             </>
           )}
@@ -1254,16 +1356,16 @@ export default function Canvas() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
           {/* ── 撤销/重做 ── */}
           <Space.Compact>
-            <Tooltip title="撤销 Ctrl+Z"><Button icon={<UndoOutlined />} onClick={handleUndo} disabled={!currentId || !canUndo} /></Tooltip>
-            <Tooltip title="重做 Ctrl+Shift+Z"><Button icon={<RedoOutlined />} onClick={handleRedo} disabled={!currentId || !canRedo} /></Tooltip>
+            <Tooltip title="撤销 Ctrl+Z"><Button icon={<UndoOutlined />} aria-label="撤销" onClick={handleUndo} disabled={!currentId || !canUndo} /></Tooltip>
+            <Tooltip title="重做 Ctrl+Shift+Z"><Button icon={<RedoOutlined />} aria-label="重做" onClick={handleRedo} disabled={!currentId || !canRedo} /></Tooltip>
           </Space.Compact>
 
           <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
 
           {/* ── 排版工具 ── */}
-          <Tooltip title="搜索节点 Ctrl+F"><Button icon={<SearchOutlined />} onClick={() => setSearchOpen(!searchOpen)} disabled={!currentId} type={searchOpen ? 'primary' : 'default'} /></Tooltip>
-          <Tooltip title="自动排版"><Button icon={<AppstoreOutlined />} onClick={autoLayout} disabled={!currentId || nodes.length === 0} /></Tooltip>
-          <Tooltip title="分镜条预览"><Button icon={<OrderedListOutlined />} onClick={() => setFilmstripOpen(!filmstripOpen)} disabled={!currentId} type={filmstripOpen ? 'primary' : 'default'} /></Tooltip>
+          <Tooltip title="搜索节点 Ctrl+F"><Button icon={<SearchOutlined />} aria-label="搜索画布素材" onClick={() => setSearchOpen(!searchOpen)} disabled={!currentId} type={searchOpen ? 'primary' : 'default'} /></Tooltip>
+          <Tooltip title="自动排版"><Button icon={<AppstoreOutlined />} aria-label="自动排列素材" onClick={autoLayout} disabled={!currentId || nodes.length === 0} /></Tooltip>
+          <Tooltip title="分镜条预览"><Button icon={<OrderedListOutlined />} aria-label="切换分镜预览条" onClick={() => setFilmstripOpen(!filmstripOpen)} disabled={!currentId} type={filmstripOpen ? 'primary' : 'default'} /></Tooltip>
 
           <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
 
@@ -1327,7 +1429,21 @@ export default function Canvas() {
           style={{ flex: 1, border: '1px solid #eef0f6', borderRadius: 12, overflow: 'hidden', background: '#fafbfd', position: 'relative' }}
           onDrop={handleCanvasDrop} onDragOver={handleCanvasDragOver}
         >
-        {!currentId ? (
+        {canvasListLoading ? (
+          <div role="status" aria-live="polite" aria-label="正在加载素材画布" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Spin size="large" />
+          </div>
+        ) : canvasListError ? (
+          <Result
+            status="error"
+            title="素材画布暂时无法加载"
+            subTitle={canvasListError}
+            extra={<Button type="primary" onClick={async () => {
+              const list = await loadCanvases();
+              if (list.length) setCurrentId(list[0].canvas_id);
+            }}>重新加载</Button>}
+          />
+        ) : !currentId ? (
           <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Empty description="新建一个画布开始创作" image={<img src="/empty-create.svg" alt="" width={160} />}>
               <Button type="primary" icon={<PlusOutlined />} onClick={() => setNewOpen(true)}>新建画布</Button>
@@ -1337,6 +1453,13 @@ export default function Canvas() {
           <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Spin size="large" />
           </div>
+        ) : canvasError ? (
+          <Result
+            status="error"
+            title="画布内容暂时无法加载"
+            subTitle={canvasError}
+            extra={<Button type="primary" onClick={() => currentId && loadCanvas(currentId)}>重新加载</Button>}
+          />
         ) : (
           <CanvasCtx.Provider value={stableActions}>
             <ReactFlowProvider>
@@ -1408,18 +1531,20 @@ export default function Canvas() {
               >
                 <div style={{ fontSize: 11, color: '#94a3b8', padding: '2px 8px' }}>新建节点并连线</div>
                 {(['data', 'storyboard', 'sticky'] as const).map((t) => (
-                  <div
+                  <button
+                    type="button"
                     key={t}
                     onClick={() => handleConnectMenuCreate(t)}
                     style={{
                       padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 13,
+                      border: 0, background: 'transparent', textAlign: 'left',
                       transition: 'background .12s',
                     }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = '#f1f5f9'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = '#f1f5f9'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                   >
                     {t === 'data' ? '📄 数据节点' : t === 'storyboard' ? '🎬 分镜节点' : '📝 便签'}
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -1454,15 +1579,16 @@ export default function Canvas() {
             <Text type="secondary" style={{ fontSize: 12 }}>模板</Text>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 6 }}>
               {Object.entries(TEMPLATES).map(([key, tpl]) => (
-                <div key={key} onClick={() => setNewTemplate(key)} style={{
+                <button type="button" key={key} onClick={() => setNewTemplate(key)}
+                  aria-pressed={newTemplate === key} style={{
                   border: newTemplate === key ? '2px solid #6366f1' : '1px solid #e2e8f0',
                   borderRadius: 8, padding: '10px 12px', cursor: 'pointer',
                   background: newTemplate === key ? '#f5f3ff' : '#fff',
-                  transition: 'all .15s',
+                  transition: 'all .15s', textAlign: 'left',
                 }}>
                   <div style={{ fontWeight: 600, fontSize: 13 }}>{tpl.name}</div>
                   <div style={{ fontSize: 11, color: '#64748b' }}>{tpl.desc}</div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -1619,6 +1745,8 @@ export default function Canvas() {
       {/* ── 右键菜单 ── */}
       {contextMenu && (
         <div
+          role="menu"
+          aria-label="素材操作"
           style={{
             position: 'fixed', top: contextMenu.y, left: contextMenu.x,
             background: '#fff', borderRadius: 10, boxShadow: '0 4px 24px rgba(0,0,0,.14)',
@@ -1648,15 +1776,15 @@ export default function Canvas() {
             );
             return items;
           })().map((item, i) => item === null ? (
-            <div key={i} style={{ height: 1, background: '#f1f5f9', margin: '4px 8px' }} />
+            <div key={i} role="separator" style={{ height: 1, background: '#f1f5f9', margin: '4px 8px' }} />
           ) : (
-            <div key={i}
+            <button type="button" role="menuitem" key={i}
               onClick={() => { item.action(); setContextMenu(null); }}
               style={{
-                display: 'flex', alignItems: 'center', gap: 8, padding: '7px 14px',
+                display: 'flex', alignItems: 'center', gap: 8, padding: '7px 14px', width: '100%',
                 cursor: 'pointer', fontSize: 13,
                 color: (item as any).danger ? '#ef4444' : '#334155',
-                transition: 'background .1s',
+                transition: 'background .1s', border: 0, background: 'transparent', textAlign: 'left',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.background = '#f8fafc'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
@@ -1664,10 +1792,10 @@ export default function Canvas() {
               {item.icon}
               <span style={{ flex: 1 }}>{item.label}</span>
               {item.shortcut && <span style={{ fontSize: 11, color: '#94a3b8' }}>{item.shortcut}</span>}
-            </div>
+            </button>
           ))}
         </div>
       )}
-    </div>
+    </main>
   );
 }

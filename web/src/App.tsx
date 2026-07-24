@@ -15,8 +15,7 @@ const Teams = lazy(() => import('./pages/Teams'));
 const Workflows = lazy(() => import('./pages/Workflows'));
 const WorkflowEditor = lazy(() => import('./pages/WorkflowEditor'));
 const Workbench = lazy(() => import('./pages/Workbench'));
-const AutoLearn = lazy(() => import('./pages/AutoLearn'));
-const ArticleLearn = lazy(() => import('./pages/ArticleLearn'));
+const LearningCenter = lazy(() => import('./pages/LearningCenter'));
 const Memory = lazy(() => import('./pages/Memory'));
 const Runs = lazy(() => import('./pages/Runs'));
 const Tasks = lazy(() => import('./pages/Tasks'));
@@ -30,6 +29,7 @@ const OpenRouterModels = lazy(() => import('./pages/OpenRouterModels'));
 const SkillTracker = lazy(() => import('./pages/SkillTracker'));
 const KnowledgeGraph = lazy(() => import('./pages/KnowledgeGraph'));
 const Evolution = lazy(() => import('./pages/Evolution'));
+const AdvancedCenter = lazy(() => import('./pages/AdvancedCenter'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
@@ -45,7 +45,7 @@ export default function App() {
       <Route path="/login" element={<UserLogin />} />
       <Route element={<UserAuthGuard />}>
         <Route element={<Layout />}>
-          <Route path="/" element={<Navigate to="/studio" replace />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/studio" element={<DirectorStudio />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/employees" element={<Employees />} />
@@ -55,21 +55,26 @@ export default function App() {
           <Route path="/workflows" element={<Workflows />} />
           <Route path="/workflows/:key/edit" element={<WorkflowEditor />} />
           <Route path="/workbench" element={<Workbench />} />
-          <Route path="/auto-learn" element={<AutoLearn />} />
-          <Route path="/article-learn" element={<ArticleLearn />} />
+          <Route path="/learning" element={<LearningCenter />} />
+          {/* 兼容历史收藏与外部链接，并精确落到原功能对应的页签。 */}
+          <Route path="/auto-learn" element={<Navigate to="/learning?tab=prompts" replace />} />
+          <Route path="/article-learn" element={<Navigate to="/learning?tab=articles" replace />} />
           <Route path="/memory" element={<Memory />} />
           <Route path="/runs" element={<Runs />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/production" element={<Production />} />
           {/* 必须排在 /production/:pid 之前，否则 "matrix" 会被当成 pid 匹配掉 */}
           <Route path="/production/matrix" element={<ProductionMatrix />} />
-          <Route path="/production/:pid" element={<ProductionHub />} />
+          <Route path="/production/:pid/matrix" element={<ProductionMatrix />} />
           <Route path="/production/:pid/ep/:ep" element={<EpisodeDetail />} />
           <Route path="/production/:pid/pipeline" element={<Production />} />
+          <Route path="/production/:pid" element={<ProductionHub />} />
           <Route path="/canvas" element={<Canvas />} />
           <Route path="/trends" element={<SkillTracker />} />
           <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
           <Route path="/evolution" element={<Evolution />} />
+          <Route path="/advanced/:section" element={<AdvancedCenter />} />
+          <Route path="/advanced" element={<Navigate to="/dashboard" replace />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/models" element={<OpenRouterModels />} />
         </Route>

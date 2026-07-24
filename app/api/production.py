@@ -11,7 +11,7 @@ from typing import Any, Optional
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query, Request
 from fastapi.responses import FileResponse
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 from app.config import BASE_DIR
 from app.core.logging import get_logger
@@ -19,7 +19,7 @@ from app.models.conversation import AgentRunRequest
 from app.models.production import (
     STAGES, STAGE_KEYS, STAGE_INSTRUCTIONS, ROLES,
     GC_STAGES, GC_STAGE_KEYS, GC_STAGE_INSTRUCTIONS,
-    ProductionCard, ProductionProject, ProjectWithCards, ProjectMember,
+    ProductionCard, ProductionGoal, ProductionProject, ProjectWithCards, ProjectMember,
 )
 from app.services.invocation import run_invocation
 from app.services.image_generation import generate_image_to_local
@@ -41,7 +41,7 @@ def _proj_dir(pid: str) -> Path:
 
 
 def _load_project(pid: str) -> ProductionProject:
-    """从磁盘加载项目 project.json；不存在直接抛 404。"""
+    """从磁盘加载项目；旧数据缺少新增字段时由模型默认值兼容，不在读取时写盘。"""
     f = _proj_dir(pid) / "project.json"
     if not f.exists():
         raise HTTPException(404, f"项目 {pid} 不存在")
@@ -261,7 +261,7 @@ def list_projects():
         for d in sorted(DATA_DIR.iterdir()):
             f = d / "project.json"
             if f.exists():
-                proj = ProductionProject.model_validate_json(f.read_text("utf-8"))
+                proj = _load_project(d.name)
                 cards = _load_cards(proj.project_id)
                 stats = _compute_stats(cards)
                 projects.append({**proj.model_dump(), "cardCount": len(cards), "stats": stats})
@@ -269,7 +269,7 @@ def list_projects():
 
 
 class CreateProjectReq(BaseModel):
-    """POST /projects 的请求体：新建项目的名称、素材来源与默认执行员工/团队。"""
+    """POST /projects 请求体：名称、素材、执行方、交付目标及首页置顶状态。"""
     name: str
     description: str = ""
     source_type: str = "idea"
@@ -281,6 +281,11 @@ class CreateProjectReq(BaseModel):
     aspect_ratio: str = "9:16"
     visual_style: str = ""
     budget: float = Field(default=0, ge=0)
+    production_goal: ProductionGoal = Field(
+        default="final",
+        validation_alias=AliasChoices("production_goal", "productionGoal"),
+    )
+    pinned: bool = False
 
 
 @router.post("/projects")
@@ -304,6 +309,8 @@ def create_project(req: CreateProjectReq, request: Request):
         aspect_ratio=req.aspect_ratio,
         visual_style=req.visual_style,
         budget=req.budget,
+        production_goal=req.production_goal,
+        pinned=req.pinned,
         members=[ProjectMember(user_id=username, name=display_name, role="owner", added_at=now)],
         created_at=now,
         updated_at=now,
@@ -353,6 +360,11 @@ class UpdateProjectReq(BaseModel):
     aspect_ratio: Optional[str] = None
     visual_style: Optional[str] = None
     budget: Optional[float] = Field(default=None, ge=0)
+    production_goal: Optional[ProductionGoal] = Field(
+        default=None,
+        validation_alias=AliasChoices("production_goal", "productionGoal"),
+    )
+    pinned: Optional[bool] = None
     settings: Optional[dict] = None
 
 
@@ -382,6 +394,10 @@ def update_project(pid: str, req: UpdateProjectReq):
         proj.visual_style = req.visual_style
     if req.budget is not None:
         proj.budget = req.budget
+    if req.production_goal is not None:
+        proj.production_goal = req.production_goal
+    if req.pinned is not None:
+        proj.pinned = req.pinned
     if req.settings is not None:
         proj.settings.update(req.settings)
     proj.updated_at = _now()

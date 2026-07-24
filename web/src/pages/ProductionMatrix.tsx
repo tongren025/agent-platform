@@ -4,7 +4,7 @@
 // 无法回答"这一集哪些单元还没图""哪个单元断链了"。本页把主键
 // (季, 集, G单元) 拉成行，把阶段拉成列，缺口一眼可见。
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Table, Tag, Segmented, Space, Typography, Spin, Empty, Tooltip, Badge, Progress, Alert, Button, Drawer, List, Modal, Popconfirm } from 'antd';
 import { message } from '../ui';
 import {
@@ -14,6 +14,7 @@ import {
 import { api, type MatrixProject, type MatrixRow, type OrphanCard, type ArchivedCard } from '../api';
 import { useResponsive } from '../hooks/useResponsive';
 import { COLORS } from '../theme';
+import ProjectViewNav from '../components/ProjectViewNav';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -33,25 +34,29 @@ type Filter = 'all' | 'gap' | 'noimg';
 /** 单元格：有几张就显示几张，0 张时区分"该有却没有"(红叉)与"本就可选"(灰点)。 */
 function Cell({ n, required }: { n: number; required: boolean }) {
   if (n > 0) {
-    return <Text style={{ color: '#389e0d', fontWeight: 600 }}>{n > 1 ? `✓ ${n}` : '✓'}</Text>;
+    return <Text aria-label={`已有 ${n} 项内容`} style={{ color: '#389e0d', fontWeight: 600 }}>{n > 1 ? `✓ ${n}` : '✓'}</Text>;
   }
   return required
-    ? <Tooltip title="链路断在这里"><Text style={{ color: '#cf1322', fontWeight: 600 }}>✗</Text></Tooltip>
-    : <Text type="secondary" style={{ opacity: 0.35 }}>·</Text>;
+    ? <Tooltip title="缺少这个必需步骤"><Text aria-label="缺少必需内容" style={{ color: '#cf1322', fontWeight: 600 }}>✗</Text></Tooltip>
+    : <Text aria-label="此步骤可选，当前没有内容" type="secondary" style={{ opacity: 0.35 }}>·</Text>;
 }
 
 export default function ProductionMatrix() {
   const navigate = useNavigate();
+  const { pid: routePid } = useParams<{ pid: string }>();
   const { isMobile } = useResponsive();
   const [projects, setProjects] = useState<MatrixProject[]>([]);
   const [rows, setRows] = useState<MatrixRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [pid, setPid] = useState<string>('');
+  const [loadError, setLoadError] = useState('');
+  const [pid, setPid] = useState<string>(routePid || '');
   const [filter, setFilter] = useState<Filter>('all');
 
   const [orphans, setOrphans] = useState<OrphanCard[]>([]);
   const [orphanOpen, setOrphanOpen] = useState(false);
   const [archived, setArchived] = useState<ArchivedCard[]>([]);
+  const [archiveLoading, setArchiveLoading] = useState(false);
+  const [archiveError, setArchiveError] = useState('');
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -63,30 +68,58 @@ export default function ProductionMatrix() {
     return m;
   }, []);
 
+  const loadInitial = useCallback(async () => {
+    setLoading(true);
+    setLoadError('');
+    try {
+      const m = await reload();
+        if (!m.projects.length) return;
+        const requested = routePid && m.projects.some(project => project.project_id === routePid)
+          ? routePid
+          : '';
+        setPid(current => requested
+          || (m.projects.some(project => project.project_id === current) ? current : m.projects[0].project_id));
+    } catch {
+      setLoadError('暂时无法加载完整性检查，请稍后重试。');
+    } finally {
+      setLoading(false);
+    }
+  }, [reload, routePid]);
+
   useEffect(() => {
-    reload()
-      .then(m => { if (m.projects.length) setPid(p => p || m.projects[0].project_id); })
-      .catch(() => { /* 拉不到就显示空态 */ })
-      .finally(() => setLoading(false));
-  }, [reload]);
+    void loadInitial();
+  }, [loadInitial]);
+
+  useEffect(() => {
+    if (routePid) setPid(routePid);
+  }, [routePid]);
+
+  const refreshArchive = useCallback(async () => {
+    if (!pid) return;
+    setArchiveLoading(true);
+    setArchiveError('');
+    try {
+      setArchived(await api.listArchive(pid));
+    } catch {
+      setArchiveError('暂时无法加载归档内容，请稍后重试。');
+      setArchived([]);
+    } finally {
+      setArchiveLoading(false);
+    }
+  }, [pid]);
 
   // 归档区按项目分别存放，切季时重新拉
   useEffect(() => {
-    if (!pid) return;
-    api.listArchive(pid).then(setArchived).catch(() => setArchived([]));
-  }, [pid]);
+    void refreshArchive();
+  }, [refreshArchive]);
 
   const myOrphans = useMemo(() => orphans.filter(o => o.project_id === pid), [orphans, pid]);
-
-  const refreshArchive = useCallback(async () => {
-    if (pid) setArchived(await api.listArchive(pid).catch(() => []));
-  }, [pid]);
 
   const handleArchive = async (cards: OrphanCard[]) => {
     if (!cards.length) return;
     setBusy(true);
     try {
-      const reason = '孤儿卡：所属 G 单元不存在（该集无此单元的剧本/分镜/首帧/视频提示词）';
+      const reason = '未归类卡片：所属镜头不存在（该集无此镜头的剧本/分镜/首帧/视频提示词）';
       await api.archiveCards(pid, cards.map(c => c.card_id), reason);
       message.success(`已归档 ${cards.length} 张，可随时恢复`);
       setOrphanOpen(false);
@@ -132,8 +165,8 @@ export default function ProductionMatrix() {
       render: (ep: number) => <Tag color="blue" style={{ margin: 0 }}>EP{String(ep).padStart(2, '0')}</Tag>,
     },
     {
-      title: 'G 单元', dataIndex: 'unit', width: 76, fixed: 'left' as const,
-      render: (u: number) => <Text strong>G{u}</Text>,
+      title: '镜头', dataIndex: 'unit', width: 76, fixed: 'left' as const,
+      render: (u: number) => <Text strong>镜头 {u}</Text>,
     },
     {
       title: '标题', dataIndex: 'title', ellipsis: true,
@@ -150,7 +183,7 @@ export default function ProductionMatrix() {
     },
     ...CHAIN.map(c => ({
       title: (
-        <Tooltip title={c.spec ? '必需环节，缺失即断链' : '可选/产出环节'}>
+        <Tooltip title={c.spec ? '必需步骤，缺失时需要补齐' : '可选或产出步骤'}>
           <span style={{ color: c.color, fontSize: 12 }}>{c.icon} {c.label}</span>
         </Tooltip>
       ),
@@ -162,7 +195,25 @@ export default function ProductionMatrix() {
   ];
 
   if (loading) {
-    return <div style={{ padding: 80, textAlign: 'center' }}><Spin /></div>;
+    return (
+      <div role="status" aria-live="polite" style={{ padding: 80, textAlign: 'center' }}>
+        <Spin />
+        <Text type="secondary" style={{ display: 'block', marginTop: 10 }}>正在检查项目内容…</Text>
+      </div>
+    );
+  }
+  if (loadError) {
+    return (
+      <div role="alert" style={{ padding: isMobile ? 16 : 60, maxWidth: 680, margin: '0 auto' }}>
+        <Alert
+          type="error"
+          showIcon
+          message="完整性检查加载失败"
+          description={loadError}
+          action={<Button onClick={loadInitial}>重试</Button>}
+        />
+      </div>
+    );
   }
   if (!projects.length) {
     return <div style={{ padding: 60 }}><Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="还没有制作项目" /></div>;
@@ -170,13 +221,25 @@ export default function ProductionMatrix() {
 
   return (
     <div style={{ padding: isMobile ? 8 : 16, height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-      <Title level={4} style={{ margin: '0 0 4px' }}>全链路对照</Title>
-      <Text type="secondary" style={{ fontSize: 12 }}>
-        主键 = 季 × 集 × G 生成单元。一行走完剧本 → 分镜 → 首帧 → 视频提示词 → 成图 → 成片，断在哪里一眼可见。
-      </Text>
+      <div style={{
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+        gap: 12, flexWrap: 'wrap',
+      }}>
+        <div>
+          <Title level={4} style={{ margin: '0 0 4px' }}>完整性检查</Title>
+          <Text type="secondary" style={{ fontSize: 12 }}>
+            按集和镜头检查剧本、分镜、提示词、图片与视频，缺少哪一步一眼可见。
+          </Text>
+        </div>
+        <ProjectViewNav projectId={pid} current="diagnostics" />
+      </div>
 
       <Space style={{ margin: isMobile ? '8px 0 6px' : '14px 0 10px', flexWrap: 'wrap' }} wrap>
-        <Segmented value={pid} onChange={v => setPid(v as string)}
+        <Segmented value={pid} onChange={v => {
+          const nextPid = v as string;
+          setPid(nextPid);
+          navigate(`/production/${nextPid}/matrix`);
+        }}
           options={projects.map(p => ({
             value: p.project_id,
             label: `${p.name}（${p.episode_count} 集 / ${p.card_count} 卡）`,
@@ -184,7 +247,7 @@ export default function ProductionMatrix() {
         <Segmented value={filter} onChange={v => setFilter(v as Filter)}
           options={[
             { value: 'all', label: '全部单元' },
-            { value: 'gap', label: '只看断链' },
+            { value: 'gap', label: '只看缺项' },
             { value: 'noimg', label: '只看没图' },
           ]} />
         <Badge count={archived.length} size="small" offset={[-4, 4]}>
@@ -194,19 +257,19 @@ export default function ProductionMatrix() {
 
       {myOrphans.length > 0 && (
         <Alert type="warning" showIcon style={{ marginBottom: 12 }}
-          message={`发现 ${myOrphans.length} 张孤儿卡`}
-          description="这些卡挂在一个不存在的 G 生成单元上——该单元的剧本 / 分镜 / 首帧提示词 / 视频提示词全都没有。它们有真实内容，不会被删除，只会移入归档区。"
+          message={`发现 ${myOrphans.length} 张未归类卡片`}
+          description="这些卡片对应的镜头目前不存在，相关的剧本、分镜和提示词也都没有。内容不会被删除，可以先查看，再决定是否移入归档区。"
           action={<Button size="small" danger onClick={() => setOrphanOpen(true)}>查看并归档</Button>} />
       )}
 
       {stats && (
         <Space size={20} style={{ marginBottom: 12 }} wrap>
           <span><Text type="secondary" style={{ fontSize: 12 }}>集数 </Text><Text strong>{stats.episodes}</Text></span>
-          <span><Text type="secondary" style={{ fontSize: 12 }}>G 单元 </Text><Text strong>{stats.units}</Text></span>
+          <span><Text type="secondary" style={{ fontSize: 12 }}>镜头数 </Text><Text strong>{stats.units}</Text></span>
           <span>
             <Text type="secondary" style={{ fontSize: 12 }}>四阶段齐全 </Text>
             <Text strong style={{ color: '#389e0d' }}>{stats.specDone}</Text>
-            {stats.gaps > 0 && <Badge count={`断链 ${stats.gaps}`} style={{ backgroundColor: '#cf1322', marginLeft: 6 }} />}
+            {stats.gaps > 0 && <Badge count={`缺项 ${stats.gaps}`} style={{ backgroundColor: '#cf1322', marginLeft: 6 }} />}
           </span>
           <span style={{ minWidth: isMobile ? 140 : 200 }}>
             <Text type="secondary" style={{ fontSize: 12 }}>出图进度 </Text>
@@ -228,19 +291,26 @@ export default function ProductionMatrix() {
           scroll={{ x: 1080, y: Math.max(300, window.innerHeight - (isMobile ? 400 : 340)) }}
           onRow={r => ({
             style: { cursor: 'pointer' },
+            tabIndex: 0,
             onClick: () => navigate(`/production/${r.project_id}/ep/${r.episode}`),
+            onKeyDown: event => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                navigate(`/production/${r.project_id}/ep/${r.episode}`);
+              }
+            },
           })}
-          locale={{ emptyText: filter === 'gap' ? '没有断链的单元 🎉' : filter === 'noimg' ? '所有单元都有图 🎉' : '无数据' }}
+          locale={{ emptyText: filter === 'gap' ? '没有缺少步骤的镜头 🎉' : filter === 'noimg' ? '所有镜头都有图 🎉' : '暂无镜头数据' }}
         />
       </div>
 
-      {/* 孤儿卡：先看清内容再决定归档，绝不静默移动 */}
-      <Modal title={`孤儿卡（${myOrphans.length}）`} open={orphanOpen} width={isMobile ? '100%' : 720}
+      {/* 未归类卡片：先看清内容再决定归档，绝不静默移动 */}
+      <Modal title={`未归类卡片（${myOrphans.length}）`} open={orphanOpen} width={isMobile ? '100%' : 720}
         onCancel={() => setOrphanOpen(false)}
         footer={[
           <Button key="c" onClick={() => setOrphanOpen(false)}>取消</Button>,
           <Popconfirm key="a" title={`归档这 ${myOrphans.length} 张卡？`}
-            description="卡片移入 archive/ 目录，内容原样保留，可随时恢复。"
+            description="卡片内容会原样保留，可随时恢复。"
             onConfirm={() => handleArchive(myOrphans)} okText="归档" cancelText="再想想">
             <Button type="primary" loading={busy} icon={<InboxOutlined />}>全部归档</Button>
           </Popconfirm>,
@@ -251,13 +321,13 @@ export default function ProductionMatrix() {
               <div style={{ width: '100%' }}>
                 <Space size={6} wrap>
                   <Tag color="blue">EP{String(o.episode).padStart(2, '0')}</Tag>
-                  <Tag color="red">G{o.shot_number}（该单元不存在）</Tag>
+                  <Tag color="red">镜头 {o.shot_number}（当前不存在）</Tag>
                   <Tag>{o.stage}</Tag>
                   <Text strong style={{ fontSize: 13 }}>{o.title}</Text>
                 </Space>
                 <div style={{ marginTop: 4 }}>
                   <Text type="secondary" style={{ fontSize: 11 }}>
-                    该集实际只有 G{o.episode_units.join('、G')} —— 疑似编号错位或该单元从未写完
+                    该集实际只有镜头 {o.episode_units.join('、')} —— 可能是编号错位或该镜头尚未写完
                   </Text>
                 </div>
                 <Paragraph type="secondary" ellipsis={{ rows: 2 }}
@@ -273,30 +343,47 @@ export default function ProductionMatrix() {
       <Drawer title={`归档区 · ${projects.find(p => p.project_id === pid)?.name || ''}`}
         open={archiveOpen} onClose={() => setArchiveOpen(false)} width={isMobile ? '100%' : 560}>
         <Text type="secondary" style={{ fontSize: 12 }}>
-          归档不是删除。卡片以 <Text code>data/production/{pid}/archive/&lt;card_id&gt;.json</Text> 原样保存，随时可恢复。
+          归档不是删除。卡片内容会原样保留，之后可随时恢复。
         </Text>
-        <List style={{ marginTop: 12 }} dataSource={archived} rowKey={a => a.card_id}
-          locale={{ emptyText: '归档区是空的' }}
-          renderItem={a => (
-            <List.Item actions={[
-              <Button key="r" size="small" icon={<UndoOutlined />} loading={busy}
-                onClick={() => handleRestore(a.card_id)}>恢复</Button>,
-            ]}>
-              <List.Item.Meta
-                title={<Space size={6} wrap>
-                  {a.episode != null && <Tag color="blue">EP{String(a.episode).padStart(2, '0')}</Tag>}
-                  <Tag color="red">G{a.shot_number}</Tag>
-                  <Text strong style={{ fontSize: 13 }}>{a.title}</Text>
-                </Space>}
-                description={<>
-                  <Text type="secondary" style={{ fontSize: 11 }}>
-                    {a.archived_at.slice(0, 19).replace('T', ' ')} · {a.archive_reason}
-                  </Text>
-                  <Paragraph type="secondary" ellipsis={{ rows: 2 }}
-                    style={{ fontSize: 11, margin: '6px 0 0' }}>{a.content}</Paragraph>
-                </>} />
-            </List.Item>
-          )} />
+        {archiveLoading ? (
+          <div role="status" aria-live="polite" style={{ textAlign: 'center', padding: 40 }}>
+            <Spin />
+            <Text type="secondary" style={{ display: 'block', marginTop: 10 }}>正在加载归档内容…</Text>
+          </div>
+        ) : archiveError ? (
+          <Alert
+            role="alert"
+            type="error"
+            showIcon
+            message="归档内容加载失败"
+            description={archiveError}
+            action={<Button size="small" onClick={refreshArchive}>重试</Button>}
+            style={{ marginTop: 12 }}
+          />
+        ) : (
+          <List style={{ marginTop: 12 }} dataSource={archived} rowKey={a => a.card_id}
+            locale={{ emptyText: '归档区是空的' }}
+            renderItem={a => (
+              <List.Item actions={[
+                <Button key="r" size="small" icon={<UndoOutlined />} loading={busy}
+                  onClick={() => handleRestore(a.card_id)}>恢复</Button>,
+              ]}>
+                <List.Item.Meta
+                  title={<Space size={6} wrap>
+                    {a.episode != null && <Tag color="blue">EP{String(a.episode).padStart(2, '0')}</Tag>}
+                    <Tag color="red">镜头 {a.shot_number}</Tag>
+                    <Text strong style={{ fontSize: 13 }}>{a.title}</Text>
+                  </Space>}
+                  description={<>
+                    <Text type="secondary" style={{ fontSize: 11 }}>
+                      {a.archived_at.slice(0, 19).replace('T', ' ')} · {a.archive_reason}
+                    </Text>
+                    <Paragraph type="secondary" ellipsis={{ rows: 2 }}
+                      style={{ fontSize: 11, margin: '6px 0 0' }}>{a.content}</Paragraph>
+                  </>} />
+              </List.Item>
+            )} />
+        )}
       </Drawer>
     </div>
   );

@@ -35,11 +35,13 @@ const STATUS_MAP: Record<string, { color: string; text: string }> = {
   '': { color: 'default', text: '未运行' },
 };
 
-export default function AutoLearn() {
+export default function AutoLearn({ embedded = false }: { embedded?: boolean }) {
   const { isMobile } = useResponsive();
   const [sources, setSources] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const [employeesError, setEmployeesError] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
@@ -52,18 +54,24 @@ export default function AutoLearn() {
   const [drawerSource, setDrawerSource] = useState<any | null>(null);
   const [prompts, setPrompts] = useState<any[]>([]);
   const [promptsLoading, setPromptsLoading] = useState(false);
+  const [promptsError, setPromptsError] = useState('');
 
   const fetchAll = async () => {
     setLoading(true);
+    setLoadError('');
+    setEmployeesError('');
     try {
       const [src, emp] = await Promise.all([
         api.listScrapeSources(),
-        api.listEmployees().catch(() => []),
+        api.listEmployees().catch(() => {
+          setEmployeesError('数字员工列表暂时无法加载；现有参考来源仍可查看。');
+          return [];
+        }),
       ]);
       setSources(src);
       setEmployees(emp);
-    } catch (e: any) {
-      message.error(e.message);
+    } catch {
+      setLoadError('暂时无法加载参考来源，请稍后重试。');
     } finally {
       setLoading(false);
     }
@@ -119,7 +127,7 @@ export default function AutoLearn() {
         message.success('已更新');
       } else {
         await api.saveScrapeSource(payload);
-        message.success('采集源已创建');
+        message.success('参考来源已添加');
       }
       setModalOpen(false);
       fetchAll();
@@ -145,11 +153,11 @@ export default function AutoLearn() {
     try {
       const r = await api.runScrapeSource(code);
       if (r.status === 'success') {
-        message.success(`采集完成：新增 ${r.newCount} 条，累计 ${r.totalCount} 条`);
+        message.success(`收集完成：新增 ${r.newCount} 条，累计 ${r.totalCount} 条`);
       } else if (r.status === 'needs_login') {
         message.warning(r.message || '该平台需要登录');
       } else {
-        message.error(r.message || '采集失败');
+        message.error(r.message || '收集失败');
       }
       fetchAll();
     } catch (e: any) {
@@ -159,20 +167,25 @@ export default function AutoLearn() {
     }
   };
 
-  const openPrompts = async (record: any) => {
-    setDrawerSource(record);
-    setPrompts([]);
-    setDrawerOpen(true);
+  const fetchPrompts = async (record: any) => {
     setPromptsLoading(true);
+    setPromptsError('');
     try {
       const p = await api.listScrapePrompts(record.sourceCode, 200);
       setPrompts(p);
-    } catch (e: any) {
-      message.error(e?.message || '加载失败');
+    } catch {
+      setPromptsError('暂时无法加载已收集的提示词，请稍后重试。');
       setPrompts([]);
     } finally {
       setPromptsLoading(false);
     }
+  };
+
+  const openPrompts = (record: any) => {
+    setDrawerSource(record);
+    setPrompts([]);
+    setDrawerOpen(true);
+    void fetchPrompts(record);
   };
 
   const copyPrompt = async (text: string) => {
@@ -200,12 +213,12 @@ export default function AutoLearn() {
 
   const columns = [
     {
-      title: '采集源',
+      title: '参考来源',
       dataIndex: 'name',
       render: (v: string, r: any) => (
         <Space direction="vertical" size={0}>
           <Text strong>{v}</Text>
-          <Text type="secondary" style={{ fontSize: 12 }}>{r.sourceCode}</Text>
+          <Text type="secondary" style={{ fontSize: 12 }}>定时收集创作参考</Text>
         </Space>
       ),
     },
@@ -218,7 +231,7 @@ export default function AutoLearn() {
       },
     },
     {
-      title: '注入员工',
+      title: '提供给',
       dataIndex: 'targetEmployeeKey',
       render: (v: string) => v ? <Tag icon={<RobotOutlined />}>{empName(v)}</Tag> : <Text type="secondary">未设置</Text>,
     },
@@ -264,13 +277,13 @@ export default function AutoLearn() {
             type="primary" size="small" icon={<ThunderboltOutlined />}
             loading={runningCode === r.sourceCode}
             onClick={() => handleRun(r.sourceCode)}
-          >立即采集</Button>
+          >立即收集</Button>
           <Button size="small" icon={<PictureOutlined />} onClick={() => openPrompts(r)}>
-            提示词库
+            查看提示词
           </Button>
-          <Button size="small" icon={<EditOutlined />} onClick={() => openEdit(r)} />
-          <Popconfirm title="确认删除该采集源及其数据？" onConfirm={() => handleDelete(r.sourceCode)}>
-            <Button size="small" danger icon={<DeleteOutlined />} />
+          <Button size="small" icon={<EditOutlined />} aria-label={`编辑${r.name}`} onClick={() => openEdit(r)} />
+          <Popconfirm title="确认删除这个参考来源及其数据？" onConfirm={() => handleDelete(r.sourceCode)}>
+            <Button size="small" danger icon={<DeleteOutlined />} aria-label={`删除${r.name}`} />
           </Popconfirm>
         </Space>
       ),
@@ -281,11 +294,11 @@ export default function AutoLearn() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
-        <Typography.Title level={4} style={{ margin: 0 }}>自动学习 · 提示词采集</Typography.Title>
+      <div style={{ display: 'flex', justifyContent: embedded ? 'flex-end' : 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        {!embedded && <Typography.Title level={4} style={{ margin: 0 }}>收集创作参考 · 热门提示词</Typography.Title>}
         <Space>
-          <Button icon={<ReloadOutlined />} onClick={fetchAll}>刷新</Button>
-          <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新建采集源</Button>
+          <Button icon={<ReloadOutlined />} loading={loading} onClick={fetchAll}>刷新</Button>
+          <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>添加参考来源</Button>
         </Space>
       </div>
 
@@ -294,9 +307,9 @@ export default function AutoLearn() {
         message="工作原理"
         description={
           <span>
-            系统每天定时从配置的网页抓取热门作品的提示词，自动去重后写入「注入员工」的知识库。
-            该员工对话时即可参考这些真实热门案例来生成更好的提示词 / 图片 / 视频。
-            即梦（Dreamina）首页公开数据可直接抓取；小云雀需登录态，暂不支持服务端采集。
+            系统会定时从你配置的网页收集热门作品提示词，去重后提供给指定的数字员工。
+            后续对话和创作时，它可以参考这些案例来生成提示词、图片或视频。
+            即梦首页的公开内容可直接收集；需要登录的平台暂时不支持自动收集。
           </span>
         }
       />
@@ -304,12 +317,12 @@ export default function AutoLearn() {
       <Row gutter={[16, 12]} style={{ marginBottom: 16 }}>
         <Col xs={24} sm={8}>
           <Card size="small" style={{ borderRadius: 10 }}>
-            <Statistic title="采集源" value={sources.length} prefix={<ThunderboltOutlined />} />
+            <Statistic title="参考来源" value={sources.length} prefix={<ThunderboltOutlined />} />
           </Card>
         </Col>
         <Col xs={12} sm={8}>
           <Card size="small" style={{ borderRadius: 10 }}>
-            <Statistic title="累计提示词" value={totalCollected} prefix={<PictureOutlined />} />
+            <Statistic title="已收集提示词" value={totalCollected} prefix={<PictureOutlined />} />
           </Card>
         </Col>
         <Col xs={12} sm={8}>
@@ -319,6 +332,32 @@ export default function AutoLearn() {
         </Col>
       </Row>
 
+      {loading && (
+        <div role="status" aria-live="polite" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden' }}>
+          正在加载参考来源
+        </div>
+      )}
+      {loadError && (
+        <Alert
+          role="alert"
+          type="error"
+          showIcon
+          message="参考来源加载失败"
+          description={loadError}
+          action={<Button size="small" onClick={fetchAll}>重试</Button>}
+          style={{ marginBottom: 12 }}
+        />
+      )}
+      {employeesError && (
+        <Alert
+          role="alert"
+          type="warning"
+          showIcon
+          message={employeesError}
+          action={<Button size="small" onClick={fetchAll}>重试</Button>}
+          style={{ marginBottom: 12 }}
+        />
+      )}
       <Card style={{ borderRadius: 12 }}>
         <Table
           rowKey="sourceCode"
@@ -327,13 +366,17 @@ export default function AutoLearn() {
           loading={loading}
           pagination={false}
           scroll={{ x: 800 }}
-          locale={{ emptyText: <Empty image={<img src="/empty-create.svg" alt="" width={120} />} description="还没有采集源，点击右上角新建" /> }}
+          locale={{
+            emptyText: loadError
+              ? <div role="alert" style={{ padding: 24 }}>数据未加载，请点击上方“重试”。</div>
+              : <Empty image={<img src="/empty-create.svg" alt="" width={120} />} description="还没有参考来源，点击右上角添加" />,
+          }}
         />
       </Card>
 
       {/* 新建 / 编辑 采集源 */}
       <Modal
-        title={editing ? '编辑采集源' : '新建采集源'}
+        title={editing ? '编辑参考来源' : '添加参考来源'}
         open={modalOpen}
         onOk={handleSave}
         onCancel={() => setModalOpen(false)}
@@ -345,8 +388,8 @@ export default function AutoLearn() {
         <Form form={form} layout="vertical">
           <Row gutter={16}>
             <Col xs={24} sm={12}>
-              <Form.Item label="标识 (sourceCode)" name="sourceCode" rules={[{ required: true, message: '请输入唯一标识' }]}>
-                <Input placeholder="如 jimeng-daily" disabled={!!editing} />
+              <Form.Item label="来源标识" name="sourceCode" rules={[{ required: true, message: '请输入唯一标识' }]} extra="仅用于区分不同来源，创建后不可修改">
+                <Input placeholder="例如 jimeng-daily" disabled={!!editing} />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
@@ -358,13 +401,13 @@ export default function AutoLearn() {
           <Form.Item label="平台" name="platform" rules={[{ required: true }]}>
             <Select options={PLATFORMS.map(p => ({ label: p.label, value: p.value }))} onChange={onPlatformChange} />
           </Form.Item>
-          <Form.Item label="采集地址" name="url" rules={[{ required: true, message: '请输入采集地址' }]}>
+          <Form.Item label="内容网址" name="url" rules={[{ required: true, message: '请输入内容网址' }]}>
             <Input placeholder="https://..." />
           </Form.Item>
           <Form.Item
-            label="注入员工"
+            label="提供给数字员工"
             name="targetEmployeeKey"
-            extra="采集到的提示词将写入该员工的知识库；不选则只入库不注入。"
+            extra="收集到的提示词会供这个数字员工后续创作时参考；不选则只保存在资料库中。"
           >
             <Select
               allowClear
@@ -376,12 +419,12 @@ export default function AutoLearn() {
           </Form.Item>
           <Row gutter={16}>
             <Col xs={12} sm={8}>
-              <Form.Item label="每日采集时间" name="scheduleTime" rules={[{ required: true }]}>
+              <Form.Item label="每日收集时间" name="scheduleTime" rules={[{ required: true }]}>
                 <TimePicker format="HH:mm" style={{ width: '100%' }} minuteStep={5} />
               </Form.Item>
             </Col>
             <Col xs={12} sm={8}>
-              <Form.Item label="单次最多抓取" name="maxItems">
+              <Form.Item label="单次最多收集" name="maxItems">
                 <InputNumber min={1} max={100} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
@@ -408,9 +451,21 @@ export default function AutoLearn() {
         width={isMobile ? '100%' : 760}
       >
         {promptsLoading ? (
-          <div style={{ textAlign: 'center', padding: isMobile ? '30px 0' : '60px 0' }}><Spin size="large" /></div>
+          <div role="status" aria-live="polite" style={{ textAlign: 'center', padding: isMobile ? '30px 0' : '60px 0' }}>
+            <Spin size="large" />
+            <Text type="secondary" style={{ display: 'block', marginTop: 10 }}>正在加载提示词…</Text>
+          </div>
+        ) : promptsError ? (
+          <Alert
+            role="alert"
+            type="error"
+            showIcon
+            message="提示词加载失败"
+            description={promptsError}
+            action={<Button size="small" onClick={() => drawerSource && fetchPrompts(drawerSource)}>重试</Button>}
+          />
         ) : prompts.length === 0 ? (
-          <Empty image={<img src="/empty-data.svg" alt="" width={120} />} description="还没有采集到提示词，先点「立即采集」" />
+          <Empty image={<img src="/empty-data.svg" alt="" width={120} />} description="还没有收集到提示词，先点「立即收集」" />
         ) : (
           <Row gutter={[12, 12]}>
             {prompts.map((p) => (

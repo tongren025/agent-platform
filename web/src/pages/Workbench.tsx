@@ -1,6 +1,6 @@
 // 工作台：与数字员工/团队对话的主界面，含会话管理、附件、产出物与审批。
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { Badge, Button, Collapse, Divider, Drawer, Empty, Image, Input, List, Popconfirm, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Upload } from 'antd';
+import { Alert, Badge, Button, Collapse, Divider, Drawer, Empty, Image, Input, List, Popconfirm, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Upload } from 'antd';
 import { message } from '../ui';
 import {
   CopyOutlined, CheckOutlined,
@@ -10,7 +10,7 @@ import {
   ExpandOutlined, CompressOutlined, BugOutlined,
   ReloadOutlined, StopOutlined,
 } from '@ant-design/icons';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useResponsive } from '../hooks/useResponsive';
 import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
@@ -61,6 +61,7 @@ function CopyBtn({ text }: { text: string }) {
   return (
     <Tooltip title={copied ? '已复制' : '复制'}>
       <Button type="text" size="small" icon={copied ? <CheckOutlined style={{ color: COLORS.mint }} /> : <CopyOutlined />}
+        aria-label={copied ? '已复制' : '复制回复'}
         onClick={copy} style={{ fontSize: 12, width: 28, height: 28, color: COLORS.slate }} />
     </Tooltip>
   );
@@ -132,6 +133,9 @@ export default function Workbench() {
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [sessionsError, setSessionsError] = useState('');
+  const [targetsLoading, setTargetsLoading] = useState(true);
+  const [targetsError, setTargetsError] = useState('');
   const [showArchived, setShowArchived] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<ChatAttachment[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -141,13 +145,33 @@ export default function Workbench() {
   const abortRef = useRef<AbortController | null>(null);
   const msgEndRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { isMobile } = useResponsive();
 
-  useEffect(() => {
-    Promise.all([api.listAgentEmployees(), api.listTeams().catch(() => [])]).then(([emp, tm]) => {
-      setEmployees(emp); setTeams(tm);
-    }).catch((e: any) => message.error(e.message));
+  const loadTargets = useCallback(async () => {
+    setTargetsLoading(true);
+    setTargetsError('');
+    const [employeeResult, teamResult] = await Promise.allSettled([
+      api.listAgentEmployees(),
+      api.listTeams(),
+    ]);
+    if (employeeResult.status === 'fulfilled') setEmployees(employeeResult.value);
+    else setEmployees([]);
+    if (teamResult.status === 'fulfilled') setTeams(teamResult.value);
+    else setTeams([]);
+    if (employeeResult.status === 'rejected' && teamResult.status === 'rejected') {
+      setTargetsError('暂时无法加载数字员工和团队，请稍后重试。');
+    } else if (employeeResult.status === 'rejected') {
+      setTargetsError('数字员工列表暂时无法加载，团队仍可使用。');
+    } else if (teamResult.status === 'rejected') {
+      setTargetsError('团队列表暂时无法加载，数字员工仍可使用。');
+    }
+    setTargetsLoading(false);
   }, []);
+
+  useEffect(() => {
+    void loadTargets();
+  }, [loadTargets]);
 
   useEffect(() => {
     const team = searchParams.get('team');
@@ -168,14 +192,17 @@ export default function Workbench() {
   const targetName = mode === 'team' ? selectedTeam?.name : selectedEmployee?.name;
 
   const refreshSessions = async () => {
-    if (!selectedKey) { setSessions([]); return; }
+    if (!selectedKey) { setSessions([]); setSessionsError(''); return; }
     setSessionsLoading(true);
+    setSessionsError('');
     try {
       const data = mode === 'team'
         ? await api.listTeamSessions(selectedKey, 50, true)
         : await api.listSessions(selectedKey, 50, true);
       setSessions(data);
-    } catch (e: any) { message.error(e.message); }
+    } catch {
+      setSessionsError('暂时无法加载会话记录，请稍后重试。');
+    }
     finally { setSessionsLoading(false); }
   };
 
@@ -293,22 +320,88 @@ export default function Workbench() {
 
   if (isMobile) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 32, textAlign: 'center' }}>
-        <div>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🖥️</div>
-          <h2 style={{ marginBottom: 8 }}>请在桌面端使用</h2>
-          <p style={{ color: '#888' }}>工作台需要更大的屏幕，请在电脑上打开此页面。</p>
+      <main style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100dvh - 80px)', padding: 20 }}>
+        <div style={{ width: '100%', maxWidth: 440, textAlign: 'center' }}>
+          <div aria-hidden="true" style={{ fontSize: 44, marginBottom: 12 }}>🖥️</div>
+          <Typography.Title level={3} style={{ marginBottom: 8 }}>完整工作台请在电脑端使用</Typography.Title>
+          <Paragraph type="secondary" style={{ marginBottom: 20 }}>
+            制作漫剧请用「快速制作」；翻译、调研、写文案等通用任务，可以在电脑端找数字员工帮忙。
+          </Paragraph>
+          {targetsLoading && (
+            <div role="status" aria-live="polite" style={{ marginBottom: 16 }}>
+              <Spin size="small" /> <Text type="secondary">正在检查可用的数字员工…</Text>
+            </div>
+          )}
+          {targetsError && (
+            <Alert
+              role="alert"
+              type="warning"
+              showIcon
+              message={targetsError}
+              action={<Button size="small" onClick={loadTargets}>重试</Button>}
+              style={{ textAlign: 'left', marginBottom: 16 }}
+            />
+          )}
+          <Space direction="vertical" style={{ width: '100%' }} size={10}>
+            <Button type="primary" block size="large" onClick={() => navigate('/studio')}>去快速制作</Button>
+            <Button block size="large" onClick={() => navigate('/production')}>查看我的项目</Button>
+            <Button type="link" block onClick={() => navigate('/dashboard')}>返回今日工作</Button>
+          </Space>
+          <Text type="secondary" style={{ display: 'block', marginTop: 16, fontSize: 12 }}>
+            电脑端还可使用团队协作、附件、多会话和产出物管理。
+          </Text>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="wb-root" style={{ display: 'flex', height: 'calc(100vh - 56px)', background: COLORS.canvas, borderRadius: 14, overflow: 'hidden', border: `1px solid ${COLORS.border}` }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 56px)', minHeight: 0, gap: 10 }}>
+      <section
+        aria-label="工作台用途说明"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 16,
+          padding: '9px 14px',
+          borderRadius: 12,
+          border: `1px solid ${COLORS.border}`,
+          background: '#fff',
+          flexShrink: 0,
+        }}
+      >
+        <div style={{ minWidth: 0 }}>
+          <Text strong style={{ display: 'block', color: '#1e293b' }}>找数字员工处理通用任务</Text>
+          <Text type="secondary" style={{ fontSize: 12 }}>
+            制作之外的事，也可以找数字员工帮忙——翻译、调研、写文案或处理其他日常工作。
+          </Text>
+        </div>
+        <Button type="link" size="small" onClick={() => navigate('/studio')} style={{ flexShrink: 0, paddingInline: 4 }}>
+          要制作漫剧？去快速制作
+        </Button>
+      </section>
+
+      <div className="wb-root" style={{ display: 'flex', flex: 1, minHeight: 0, background: COLORS.canvas, borderRadius: 14, overflow: 'hidden', border: `1px solid ${COLORS.border}` }}>
 
       {/* ── Left: selector + sessions ── */}
       <div className="wb-left" style={{ width: 260, flexShrink: 0, background: '#fff', borderRight: `1px solid ${COLORS.border}`, display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '16px 14px 12px', borderBottom: `1px solid ${COLORS.border}` }}>
+          {targetsLoading && (
+            <div role="status" aria-live="polite" style={{ textAlign: 'center', marginBottom: 10 }}>
+              <Spin size="small" /> <Text type="secondary" style={{ fontSize: 12 }}>正在加载可选对象…</Text>
+            </div>
+          )}
+          {targetsError && (
+            <Alert
+              role="alert"
+              type="warning"
+              showIcon
+              message={targetsError}
+              action={<Button type="link" size="small" onClick={loadTargets}>重试</Button>}
+              style={{ marginBottom: 10, padding: '6px 8px' }}
+            />
+          )}
           <Radio.Group value={mode} onChange={(e) => handleModeChange(e.target.value)} buttonStyle="solid" style={{ width: '100%', display: 'flex', marginBottom: 10 }}>
             <Radio.Button value="employee" style={{ flex: 1, textAlign: 'center', fontSize: 13 }}><UserOutlined /> 员工</Radio.Button>
             <Radio.Button value="team" style={{ flex: 1, textAlign: 'center', fontSize: 13 }}><TeamOutlined /> 团队</Radio.Button>
@@ -325,21 +418,39 @@ export default function Workbench() {
               <Radio.Button value="a" style={{ fontSize: 11, padding: '0 8px' }}>归档 {archivedSessions.length}</Radio.Button>
             </Radio.Group>
           </div>
-          {sessionsLoading ? <div style={{ textAlign: 'center', padding: 24 }}><Spin size="small" /></div>
+          {sessionsLoading ? <div role="status" aria-live="polite" style={{ textAlign: 'center', padding: 24 }}><Spin size="small" /><Text type="secondary" style={{ display: 'block', marginTop: 8, fontSize: 12 }}>正在加载会话记录…</Text></div>
+            : sessionsError ? (
+              <Alert
+                role="alert"
+                type="error"
+                showIcon
+                message="会话记录加载失败"
+                description={sessionsError}
+                action={<Button size="small" onClick={refreshSessions}>重试</Button>}
+                style={{ marginTop: 12 }}
+              />
+            )
             : visibleSessions.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={showArchived ? '暂无归档' : '暂无历史'} style={{ marginTop: 40 }} />
             : visibleSessions.map((s) => {
               const isActive = s.sessionId === sessionId;
               const preview = s.title || s.messages?.[0]?.content?.slice(0, 50) || '(空会话)';
               return (
                 <div key={s.sessionId} className="wb-session-item" onClick={() => handleLoadSession(s)}
+                  role="button" tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      handleLoadSession(s);
+                    }
+                  }}
                   style={{ padding: '10px 12px', borderRadius: 10, cursor: 'pointer', marginBottom: 4, background: isActive ? `${COLORS.iris}0c` : 'transparent', border: isActive ? `1px solid ${COLORS.iris}30` : '1px solid transparent', transition: 'all .15s' }}>
                   <div style={{ fontSize: 13, fontWeight: isActive ? 600 : 400, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{preview}</div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
                     <Text type="secondary" style={{ fontSize: 11 }}>{formatTime(s.lastActiveAt || s.createdAt)}</Text>
                     <Space size={2}>
-                      <Button type="text" size="small" icon={<InboxOutlined />} style={{ fontSize: 12, width: 24, height: 24 }} onClick={(e) => { e.stopPropagation(); handleArchiveSession(s.sessionId, !s.archived); }} />
+                      <Button type="text" size="small" icon={<InboxOutlined />} aria-label={s.archived ? '恢复会话' : '归档会话'} style={{ fontSize: 12, width: 24, height: 24 }} onClick={(e) => { e.stopPropagation(); handleArchiveSession(s.sessionId, !s.archived); }} />
                       <Popconfirm title="确定删除？" onConfirm={(e) => { e?.stopPropagation(); handleDeleteSession(s.sessionId); }} okText="删除" cancelText="取消">
-                        <Button type="text" size="small" danger icon={<DeleteOutlined />} style={{ fontSize: 12, width: 24, height: 24 }} onClick={(e) => e.stopPropagation()} />
+                        <Button type="text" size="small" danger icon={<DeleteOutlined />} aria-label="删除会话" style={{ fontSize: 12, width: 24, height: 24 }} onClick={(e) => e.stopPropagation()} />
                       </Popconfirm>
                     </Space>
                   </div>
@@ -367,7 +478,7 @@ export default function Workbench() {
           <Space size={8}>
             {sessionId && <Tag style={{ fontSize: 11, borderRadius: 6 }}>{sessionId.slice(0, 8)}</Tag>}
             <Tooltip title={rightCollapsed ? '展开面板' : '收起面板'}>
-              <Button type="text" size="small" icon={rightCollapsed ? <ExpandOutlined /> : <CompressOutlined />} onClick={() => setRightCollapsed(!rightCollapsed)} />
+              <Button type="text" size="small" icon={rightCollapsed ? <ExpandOutlined /> : <CompressOutlined />} aria-label={rightCollapsed ? '展开辅助面板' : '收起辅助面板'} onClick={() => setRightCollapsed(!rightCollapsed)} />
             </Tooltip>
           </Space>
         </div>
@@ -430,12 +541,13 @@ export default function Workbench() {
                           <CopyBtn text={msg.content} />
                           {msg.tokenUsage && (
                             <Text type="secondary" style={{ fontSize: 11, marginLeft: 4 }}>
-                              {msg.tokenUsage.totalTokens} tokens
+                              本次模型用量 {msg.tokenUsage.totalTokens}
                             </Text>
                           )}
                           {msg.traces && msg.traces.length > 0 && (
-                            <Tooltip title="查看调用链路">
+                            <Tooltip title="查看执行详情">
                               <Button type="text" size="small" icon={<BugOutlined />} style={{ fontSize: 12, width: 28, height: 28, color: COLORS.slate }}
+                                aria-label="查看这条回复的执行详情"
                                 onClick={() => { setActiveTraces(msg.traces!); setTraceDrawerOpen(true); }} />
                             </Tooltip>
                           )}
@@ -451,7 +563,7 @@ export default function Workbench() {
                 );
               })}
               {loading && (
-                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <div role="status" aria-live="polite" style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                   <div style={{ width: 34, height: 34, borderRadius: 10, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><RobotOutlined /></div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div style={{ padding: '12px 16px', background: '#fff', borderRadius: '16px 16px 16px 4px', border: `1px solid ${COLORS.border}` }}>
@@ -489,7 +601,7 @@ export default function Workbench() {
           <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
             <Upload beforeUpload={(file) => { handleUpload(file as File); return false; }} showUploadList={false} multiple accept="*/*">
               <Tooltip title="上传图片/文件">
-                <Button icon={<PaperClipOutlined />} loading={uploading} disabled={!targetReady || loading} style={{ borderRadius: 10, height: 40, width: 40 }} />
+                <Button icon={<PaperClipOutlined />} aria-label="上传图片或文件" loading={uploading} disabled={!targetReady || loading} style={{ borderRadius: 10, height: 40, width: 40 }} />
               </Tooltip>
             </Upload>
             <TextArea
@@ -572,7 +684,7 @@ export default function Workbench() {
       </Drawer>
 
       {/* Trace debug drawer */}
-      <Drawer title="调用链路" open={traceDrawerOpen} onClose={() => setTraceDrawerOpen(false)} width={640}>
+      <Drawer title="执行详情" open={traceDrawerOpen} onClose={() => setTraceDrawerOpen(false)} width={640}>
         {(activeTraces || []).length === 0 ? <Empty description="无调用记录" /> : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {(activeTraces || []).map((t, i) => (
@@ -601,6 +713,7 @@ export default function Workbench() {
           </div>
         )}
       </Drawer>
+      </div>
     </div>
   );
 }

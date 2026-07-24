@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 STAGES = [
     {"key": "idea", "name": "创意/原著", "order": 0, "auto": False},
@@ -22,6 +22,7 @@ STAGES = [
 STAGE_KEYS = [s["key"] for s in STAGES]
 
 ROLES = ["owner", "editor", "viewer"]
+ProductionGoal = Literal["storyboard", "images", "final"]
 
 # 各阶段的 AI 生成指令模板——看板逐阶段生成与画布 AI 派生共用,
 # 输出约定:条目用 --- 分隔,首行标题,其余为内容。
@@ -222,7 +223,7 @@ class ProductionCard(BaseModel):
 
 
 class ProductionProject(BaseModel):
-    """制作项目：漫剧从创意到成片的十阶段流水线容器，绑定负责员工/团队。"""
+    """制作项目：十阶段流水线容器；记录交付目标、首页置顶状态及负责员工/团队。"""
     project_id: str = ""
     name: str = ""
     description: str = ""
@@ -235,6 +236,11 @@ class ProductionProject(BaseModel):
     aspect_ratio: str = "9:16"
     visual_style: str = ""
     budget: float = 0
+    production_goal: ProductionGoal = Field(
+        default="final",
+        validation_alias=AliasChoices("production_goal", "productionGoal"),
+    )
+    pinned: bool = False
     members: list[ProjectMember] = Field(default_factory=list)
     settings: dict = Field(default_factory=lambda: {
         "visibility": "private",

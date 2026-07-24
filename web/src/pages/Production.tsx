@@ -1,6 +1,6 @@
 // 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。
 import { useEffect, useState, useCallback, useMemo, useRef, type DragEvent } from 'react';
-import { Button, Drawer, Empty, Input, InputNumber, Modal, Popconfirm, Progress, Radio, Select, Space, Spin, Steps, Tag, Tooltip, Typography, Badge, Image, Tabs, Checkbox, Avatar } from 'antd';
+import { Alert, Button, Drawer, Empty, Input, InputNumber, Modal, Popconfirm, Progress, Radio, Select, Space, Spin, Steps, Tag, Tooltip, Typography, Badge, Image, Tabs, Checkbox, Avatar } from 'antd';
 import { message } from '../ui';
 import {
   PlusOutlined, DeleteOutlined, CopyOutlined, CheckOutlined,
@@ -12,10 +12,11 @@ import {
   CloseOutlined, DragOutlined, FilterOutlined, BarChartOutlined,
   CheckCircleOutlined, ClockCircleOutlined, ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api';
 import { thumbUrl, onImageError } from '../media';
 import { COLORS } from '../theme';
+import ProjectViewNav from '../components/ProjectViewNav';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -67,6 +68,7 @@ function CopyBtn({ text, label }: { text: string; label?: string }) {
   ) : (
     <Tooltip title={copied ? '已复制' : '复制'}>
       <Button type="text" size="small" icon={copied ? <CheckOutlined style={{ color: '#52c41a' }} /> : <CopyOutlined />}
+        aria-label={copied ? '已复制' : '复制内容'}
         onClick={(e) => {
           e.stopPropagation();
           navigator.clipboard.writeText(text).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); });
@@ -164,14 +166,19 @@ function CardThumbnails({ images }: { images: string[] }) {
 
 export default function Production() {
   const navigate = useNavigate();
+  const { pid: routePid } = useParams<{ pid: string }>();
   const [projects, setProjects] = useState<Project[]>([]);
-  const [selectedPid, setSelectedPid] = useState('');
+  const [selectedPid, setSelectedPid] = useState(routePid || '');
   const [project, setProject] = useState<Project | null>(null);
   const [cards, setCards] = useState<CardItem[]>([]);
   const [stages, setStages] = useState<StageInfo[]>([]);
   const [loading, setLoading] = useState(false);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState('');
+  const [projectError, setProjectError] = useState('');
   const [generating, setGenerating] = useState('');
   const [employees, setEmployees] = useState<any[]>([]);
+  const [employeesError, setEmployeesError] = useState('');
   const [activeEpisode, setActiveEpisode] = useState<string>('all');
   const [isNarrow, setIsNarrow] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -234,22 +241,58 @@ export default function Production() {
   }, [cards, activeEpisode, globalCards, searchQuery, statusFilter]);
 
   const loadProjects = useCallback(async () => {
-    try { setProjects(await api.listProjects()); } catch { /* ignore */ }
+    setProjectsLoading(true);
+    setProjectsError('');
+    try {
+      setProjects(await api.listProjects());
+    } catch {
+      setProjectsError('暂时无法加载项目，请检查网络后重试。');
+    } finally {
+      setProjectsLoading(false);
+    }
   }, []);
 
   const loadProject = useCallback(async (pid: string) => {
     if (!pid) return;
     setLoading(true);
+    setProjectError('');
+    setProject(null);
+    setCards([]);
+    setStages([]);
     try {
       const data = await api.getProject(pid);
       setProject(data);
       setCards(data.cards || []);
       setStages(data.stages || []);
-    } catch (e: any) { message.error(e.message); }
+    } catch {
+      setProjectError('暂时无法打开这个项目，请稍后重试。');
+    }
     finally { setLoading(false); }
   }, []);
 
-  useEffect(() => { loadProjects(); api.listEmployees().then(setEmployees).catch(() => {}); }, [loadProjects]);
+  const loadEmployees = useCallback(async () => {
+    setEmployeesError('');
+    try {
+      setEmployees(await api.listEmployees());
+    } catch {
+      setEmployeesError('数字员工列表暂时无法加载，你可以先创建项目，稍后再选择。');
+      setEmployees([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadProjects();
+    void loadEmployees();
+  }, [loadEmployees, loadProjects]);
+  useEffect(() => {
+    if (routePid && routePid !== selectedPid) {
+      setSelectedPid(routePid);
+      setActiveEpisode('all');
+      setSelectedCards(new Set());
+    }
+    // selectedPid 由交互立即更新；这里只在 URL 参数变化时同步，避免导航切项目时被旧参数回写。
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routePid]);
   useEffect(() => {
     const media = window.matchMedia('(max-width: 900px)');
     const sync = () => setIsNarrow(media.matches);
@@ -290,6 +333,7 @@ export default function Production() {
       setNewProjForm({ name: '', description: '', sourceType: 'idea', sourceContent: '', employeeKey: '', episodeCount: 24, episodeDurationSeconds: 90, aspectRatio: '9:16', visualStyle: '', budget: 0 });
       await loadProjects();
       setSelectedPid(data.project_id);
+      navigate(`/production/${data.project_id}/pipeline`);
     } catch (e: any) { message.error(e.message); }
   };
 
@@ -297,7 +341,12 @@ export default function Production() {
     try {
       await api.deleteProject(pid);
       message.success('已删除');
-      if (selectedPid === pid) { setSelectedPid(''); setProject(null); setCards([]); }
+      if (selectedPid === pid) {
+        setSelectedPid('');
+        setProject(null);
+        setCards([]);
+        navigate('/production');
+      }
       loadProjects();
     } catch (e: any) { message.error(e.message); }
   };
@@ -554,12 +603,18 @@ export default function Production() {
         }}>
           <Select
             value={selectedPid || undefined}
-            onChange={(v: string) => { setSelectedPid(v); setActiveEpisode('all'); setSelectedCards(new Set()); }}
+            onChange={(v: string) => {
+              setSelectedPid(v);
+              setActiveEpisode('all');
+              setSelectedCards(new Set());
+              navigate(`/production/${v}/pipeline`);
+            }}
             style={{ flex: 1 }} size="small" placeholder="选择项目"
             options={projects.map(p => ({ value: p.project_id, label: `${p.name} (${p.cardCount ?? 0})` }))}
           />
           {selectedPid && (
             <Button type="text" size="small" icon={<AppstoreOutlined />}
+              aria-label="查看项目总览"
               onClick={() => navigate(`/production/${selectedPid}`)}
               style={{ color: COLORS.iris }} />
           )}
@@ -584,16 +639,43 @@ export default function Production() {
           flex: 1, overflow: 'auto', padding: 8,
           display: isNarrow ? 'flex' : 'block', gap: isNarrow ? 8 : 0,
         }}>
-          {projects.length === 0 ? (
+          {projectsLoading ? (
+            <div role="status" aria-live="polite" style={{ textAlign: 'center', padding: 32 }}>
+              <Spin size="small" />
+              <Text type="secondary" style={{ display: 'block', marginTop: 8 }}>正在加载项目…</Text>
+            </div>
+          ) : projectsError ? (
+            <Alert
+              type="error"
+              showIcon
+              message="项目加载失败"
+              description={projectsError}
+              action={<Button size="small" onClick={loadProjects}>重试</Button>}
+              style={{ margin: 8 }}
+            />
+          ) : projects.length === 0 ? (
             <Empty image={<img src="/empty-create.svg" alt="" width={120} />} description="暂无项目" style={{ marginTop: 40 }} />
           ) : projects.map(p => {
             const pStats = p.stats;
             const pProgress = pStats?.overall_progress ?? 0;
             return (
               <div key={p.project_id}
-                onClick={() => { setSelectedPid(p.project_id); setActiveEpisode('all'); setSelectedCards(new Set()); }}
+                onClick={() => {
+                  setSelectedPid(p.project_id);
+                  setActiveEpisode('all');
+                  setSelectedCards(new Set());
+                  navigate(`/production/${p.project_id}/pipeline`);
+                }}
                 role="button" tabIndex={0}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPid(p.project_id); setActiveEpisode('all'); } }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedPid(p.project_id);
+                    setActiveEpisode('all');
+                    setSelectedCards(new Set());
+                    navigate(`/production/${p.project_id}/pipeline`);
+                  }
+                }}
                 style={{
                   padding: '12px 14px', borderRadius: 10, cursor: 'pointer', marginBottom: 4, outline: 'none',
                   background: selectedPid === p.project_id ? `${COLORS.iris}0a` : 'transparent',
@@ -608,11 +690,12 @@ export default function Production() {
                   <Space size={2}>
                     <Tooltip title="层级视图">
                       <Button type="text" size="small" icon={<AppstoreOutlined />}
+                        aria-label={`查看${p.name}的项目总览`}
                         onClick={e => { e.stopPropagation(); navigate(`/production/${p.project_id}`); }}
                         style={{ width: 24, height: 24, opacity: 0.6, color: COLORS.iris }} />
                     </Tooltip>
                     <Popconfirm title="删除此项目？" onConfirm={(e) => { e?.stopPropagation(); handleDeleteProject(p.project_id); }} onCancel={e => e?.stopPropagation()}>
-                      <Button type="text" size="small" danger icon={<DeleteOutlined />} onClick={e => e.stopPropagation()} style={{ width: 24, height: 24, opacity: 0.5 }} />
+                      <Button type="text" size="small" danger icon={<DeleteOutlined />} aria-label={`删除${p.name}`} onClick={e => e.stopPropagation()} style={{ width: 24, height: 24, opacity: 0.5 }} />
                     </Popconfirm>
                   </Space>
                 </div>
@@ -635,11 +718,37 @@ export default function Production() {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, minHeight: 0 }}>
         {!selectedPid ? (
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafbfd' }}>
-            <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="选择或创建一个项目开始制作" />
+            {projectsLoading ? (
+              <div role="status" aria-live="polite" style={{ textAlign: 'center' }}>
+                <Spin size="large" />
+                <Text type="secondary" style={{ display: 'block', marginTop: 12 }}>正在加载项目…</Text>
+              </div>
+            ) : projectsError ? (
+              <Alert
+                type="error"
+                showIcon
+                message="项目加载失败"
+                description={projectsError}
+                action={<Button onClick={loadProjects}>重试</Button>}
+              />
+            ) : (
+              <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="选择或创建一个项目开始制作" />
+            )}
           </div>
         ) : loading ? (
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div role="status" aria-live="polite" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
             <Spin size="large" />
+            <Text type="secondary" style={{ marginTop: 12 }}>正在打开项目…</Text>
+          </div>
+        ) : projectError ? (
+          <div role="alert" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+            <Alert
+              type="error"
+              showIcon
+              message="项目打开失败"
+              description={projectError}
+              action={<Button onClick={() => loadProject(selectedPid)}>重试</Button>}
+            />
           </div>
         ) : (
           <>
@@ -651,16 +760,18 @@ export default function Production() {
               alignItems: isNarrow ? 'stretch' : 'center',
               justifyContent: 'space-between', gap: 8, flexShrink: 0,
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
                   <Text strong style={{ fontSize: 16, whiteSpace: 'nowrap' }}>{project?.name}</Text>
                   <Tooltip title="编辑项目">
                     <Button type="text" size="small" icon={<EditOutlined />}
+                      aria-label="编辑项目信息"
                       onClick={() => { setEditProjectForm({ name: project?.name || '', description: project?.description || '' }); setEditProjectOpen(true); }}
                       style={{ width: 26, height: 26, color: COLORS.slate }} />
                   </Tooltip>
                   <Tooltip title="项目设置">
                     <Button type="text" size="small" icon={<SettingOutlined />}
+                      aria-label="打开项目设置"
                       onClick={() => setSettingsOpen(true)}
                       style={{ width: 26, height: 26, color: COLORS.slate }} />
                   </Tooltip>
@@ -670,6 +781,7 @@ export default function Production() {
                     {project.description}
                   </Text>
                 )}
+                <ProjectViewNav projectId={selectedPid} current="pipeline" />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                 <Input prefix={<SearchOutlined style={{ color: '#bbb' }} />} placeholder="搜索卡片..."
@@ -953,7 +1065,8 @@ export default function Production() {
         </div>}
         {newProjStep === 2 && <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <label><Text type="secondary">{newProjForm.sourceType === 'gc' ? '概念描述' : '原始内容'}</Text><TextArea value={newProjForm.sourceContent} onChange={e => setNewProjForm(p => ({ ...p, sourceContent: e.target.value }))} placeholder={newProjForm.sourceType === 'gc' ? '描述你想要展示的核心视觉瞬间、世界观亮点和情绪钩子' : '粘贴创意、小说章节或剧本大纲；创建后可继续补充'} rows={6} style={{ marginTop: 5 }} /></label>
-          <label><Text type="secondary">默认 AI 员工</Text><Select value={newProjForm.employeeKey} onChange={v => setNewProjForm(p => ({ ...p, employeeKey: v }))} style={{ width: '100%', marginTop: 5 }} allowClear placeholder="可稍后选择" options={employees.map(e => ({ value: e.employeeKey, label: e.name }))} /></label>
+          {employeesError && <Alert type="warning" showIcon message={employeesError} action={<Button size="small" onClick={loadEmployees}>重试</Button>} />}
+          <label><Text type="secondary">默认数字员工</Text><Select value={newProjForm.employeeKey} onChange={v => setNewProjForm(p => ({ ...p, employeeKey: v }))} style={{ width: '100%', marginTop: 5 }} allowClear placeholder="可稍后选择" options={employees.map(e => ({ value: e.employeeKey, label: e.name }))} /></label>
         </div>}
       </Modal>
 
@@ -976,8 +1089,9 @@ export default function Production() {
         open={genDialogOpen} onCancel={() => setGenDialogOpen(false)} onOk={handleGenerate}
         okText="开始生成" okButtonProps={{ icon: <ThunderboltOutlined /> }} width={isNarrow ? '100%' : 480}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
+          {employeesError && <Alert type="warning" showIcon message={employeesError} action={<Button size="small" onClick={loadEmployees}>重试</Button>} />}
           <div>
-            <Text type="secondary" style={{ fontSize: 12 }}>执行员工</Text>
+            <Text type="secondary" style={{ fontSize: 12 }}>执行的数字员工</Text>
             <Select value={genEmpKey} onChange={setGenEmpKey}
               style={{ width: '100%', marginTop: 4 }} placeholder="选择数字员工"
               options={employees.map(e => ({ value: e.employeeKey, label: e.name }))} />
@@ -1022,7 +1136,7 @@ export default function Production() {
           <div>
             <Text type="secondary" style={{ fontSize: 12 }}>标题</Text>
             <Input value={addCardForm.title} onChange={e => setAddCardForm(p => ({ ...p, title: e.target.value }))}
-              placeholder="例：G1 破云坠城 / 角色：苍霖" style={{ marginTop: 4 }} />
+              placeholder="例：镜头 1 破云坠城 / 角色：苍霖" style={{ marginTop: 4 }} />
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
             <div style={{ flex: 1 }}>
@@ -1064,7 +1178,7 @@ export default function Production() {
                 </Tag>
                 {activeCard.episode != null && <Tag color="blue" style={{ margin: 0 }}>EP{String(activeCard.episode).padStart(2, '0')}</Tag>}
                 {activeCard.episode == null && <Tag color="purple" style={{ margin: 0 }}>全局资产</Tag>}
-                {activeCard.shot_number > 0 && <Tag style={{ fontSize: 11, margin: 0 }}>G{activeCard.shot_number}</Tag>}
+                {activeCard.shot_number > 0 && <Tag style={{ fontSize: 11, margin: 0 }}>镜头 {activeCard.shot_number}</Tag>}
               </div>
               <Space>
                 {editMode ? (
@@ -1076,9 +1190,9 @@ export default function Production() {
                   <>
                     <Button size="small" icon={<EditOutlined />} onClick={() => { setEditMode(true); setEditForm({}); }}>编辑</Button>
                     <Popconfirm title="删除此卡片？" onConfirm={() => handleDeleteCard(activeCard.card_id)}>
-                      <Button danger size="small" icon={<DeleteOutlined />} />
+                      <Button danger size="small" icon={<DeleteOutlined />} aria-label="删除卡片" />
                     </Popconfirm>
-                    <Button type="text" size="small" icon={<CloseOutlined />} onClick={() => setCardDrawerOpen(false)} />
+                    <Button type="text" size="small" icon={<CloseOutlined />} aria-label="关闭卡片详情" onClick={() => setCardDrawerOpen(false)} />
                   </>
                 )}
               </Space>
@@ -1180,8 +1294,9 @@ export default function Production() {
                                 fallback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect fill='%23f0f0f0' width='150' height='150'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='12'%3E加载失败%3C/text%3E%3C/svg%3E"
                               />
                               <Button type="text" size="small" danger icon={<DeleteOutlined />}
+                                aria-label={`删除第 ${i + 1} 张图片`}
                                 onClick={() => handleRemoveMedia('images', i)}
-                                style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(255,255,255,.9)', width: 22, height: 22, borderRadius: '50%' }} />
+                                style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(255,255,255,.9)', width: 24, height: 24, borderRadius: '50%' }} />
                             </div>
                           ))}
                         </div>
@@ -1201,8 +1316,9 @@ export default function Production() {
                             <video src={url} controls
                               style={{ width: 280, borderRadius: 8, border: `1px solid ${COLORS.border}`, background: '#000' }} />
                             <Button type="text" size="small" danger icon={<DeleteOutlined />}
+                              aria-label={`删除第 ${i + 1} 个视频`}
                               onClick={() => handleRemoveMedia('videos', i)}
-                              style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(255,255,255,.9)', width: 22, height: 22, borderRadius: '50%' }} />
+                              style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(255,255,255,.9)', width: 24, height: 24, borderRadius: '50%' }} />
                           </div>
                         ))}
                       </div>
@@ -1387,7 +1503,7 @@ export default function Production() {
                         ]} />
                       {m.role !== 'owner' && (
                         <Popconfirm title="移除此成员？" onConfirm={() => handleRemoveMember(m.user_id)}>
-                          <Button size="small" danger icon={<DeleteOutlined />} />
+                          <Button size="small" danger icon={<DeleteOutlined />} aria-label={`移除成员${m.name}`} />
                         </Popconfirm>
                       )}
                     </Space>

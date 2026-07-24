@@ -1,17 +1,17 @@
 // 制作项目层级总览：剧 → 集 → G 生成单元 → 资源逐级下钻的入口页。
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Breadcrumb, Button, Card, Col, Empty, Progress, Row, Select, Space, Spin, Tag, Tooltip, Typography, Badge, Segmented } from 'antd';
-import { message } from '../ui';
+import { Alert, Breadcrumb, Button, Card, Col, Empty, Progress, Row, Select, Space, Spin, Tag, Tooltip, Typography, Badge } from 'antd';
 import {
-  AppstoreOutlined, BarsOutlined, PlayCircleOutlined, PictureOutlined,
+  AppstoreOutlined, PlayCircleOutlined, PictureOutlined,
   VideoCameraOutlined, FileTextOutlined, UserOutlined, SettingOutlined,
-  RightOutlined, HomeOutlined, StarOutlined, SkinOutlined,
+  HomeOutlined, StarOutlined, SkinOutlined,
   EnvironmentOutlined, EditOutlined, BulbOutlined, CheckCircleOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
+import ProjectViewNav from '../components/ProjectViewNav';
 
 const { Text, Title } = Typography;
 
@@ -149,19 +149,35 @@ export default function ProductionHub() {
   const [project, setProject] = useState<Project | null>(null);
   const [cards, setCards] = useState<CardItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState('');
+  const [projectError, setProjectError] = useState('');
 
   const loadProjects = useCallback(async () => {
-    try { setProjects(await api.listProjects()); } catch { /* ignore */ }
+    setProjectsLoading(true);
+    setProjectsError('');
+    try {
+      setProjects(await api.listProjects());
+    } catch {
+      setProjectsError('暂时无法加载项目，请检查网络后重试。');
+    } finally {
+      setProjectsLoading(false);
+    }
   }, []);
 
   const loadProject = useCallback(async (id: string) => {
     if (!id) return;
     setLoading(true);
+    setProjectError('');
+    setProject(null);
+    setCards([]);
     try {
       const data = await api.getProject(id);
       setProject(data);
       setCards(data.cards || []);
-    } catch (e: any) { message.error(e.message); }
+    } catch {
+      setProjectError('暂时无法打开这个项目，请稍后重试。');
+    }
     finally { setLoading(false); }
   }, []);
 
@@ -207,7 +223,7 @@ export default function ProductionHub() {
       const readinessPercent = Math.round(
         specReady / unitTotal * 40 + withImage / unitTotal * 30 + withVideo / unitTotal * 20 + delivered / unitTotal * 10,
       );
-      const nextAction = specReady < units.size ? `修复 ${units.size - specReady} 个断链`
+      const nextAction = specReady < units.size ? `补齐 ${units.size - specReady} 个镜头的缺失步骤`
         : withImage < units.size ? `待出图 ${units.size - withImage}`
           : withVideo < units.size ? `待视频 ${units.size - withVideo}`
             : delivered < units.size ? '待成片交付' : '已交付';
@@ -229,8 +245,39 @@ export default function ProductionHub() {
   const readiness = project?.stats?.readiness;
   const overallProgress = readiness?.overall_progress ?? 0;
 
-  if (loading && !project) {
-    return <div style={{ display: 'flex', justifyContent: 'center', padding: 120 }}><Spin size="large" /></div>;
+  if ((projectsLoading && !selectedPid) || (loading && !project)) {
+    return (
+      <div role="status" aria-live="polite" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', padding: 120 }}>
+        <Spin size="large" />
+        <Text type="secondary" style={{ marginTop: 12 }}>正在加载项目…</Text>
+      </div>
+    );
+  }
+  if (projectsError && !selectedPid) {
+    return (
+      <div role="alert" style={{ padding: isMobile ? 16 : 60, maxWidth: 640, margin: '0 auto' }}>
+        <Alert
+          type="error"
+          showIcon
+          message="项目加载失败"
+          description={projectsError}
+          action={<Button onClick={loadProjects}>重试</Button>}
+        />
+      </div>
+    );
+  }
+  if (projectError) {
+    return (
+      <div role="alert" style={{ padding: isMobile ? 16 : 60, maxWidth: 640, margin: '0 auto' }}>
+        <Alert
+          type="error"
+          showIcon
+          message="项目打开失败"
+          description={projectError}
+          action={<Button onClick={() => loadProject(selectedPid)}>重试</Button>}
+        />
+      </div>
+    );
   }
 
   return (
@@ -239,7 +286,7 @@ export default function ProductionHub() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: isMobile ? 12 : 0 }}>
         <div>
           <Breadcrumb items={[
-            { title: <><HomeOutlined /> 制作</> },
+            { title: <><HomeOutlined /> 我的项目</> },
             ...(project ? [{ title: project.name }] : []),
           ]} />
           {project && (
@@ -249,7 +296,7 @@ export default function ProductionHub() {
             <Text type="secondary" style={{ fontSize: 13 }}>{project.description}</Text>
           )}
         </div>
-        <Space>
+        <Space wrap>
           {projects.length > 1 && (
             <Select
               value={selectedPid}
@@ -258,10 +305,7 @@ export default function ProductionHub() {
               options={projects.map(p => ({ value: p.project_id, label: p.name }))}
             />
           )}
-          <Button icon={<BarsOutlined />}
-            onClick={() => navigate(`/production/${selectedPid}/pipeline`)}>
-            管线视图
-          </Button>
+          <ProjectViewNav projectId={selectedPid} current="overview" />
         </Space>
       </div>
 
@@ -387,7 +431,7 @@ export default function ProductionHub() {
                           {ep.title || `第${ep.episode}集`}
                         </Text>
                         <div style={{ display: 'flex', gap: 12, marginTop: 6, fontSize: 12, color: COLORS.slate }}>
-                          <span>{ep.unitCount} G单元</span>
+                          <span>{ep.unitCount} 个镜头</span>
                           <span>{ep.totalCards} 卡片</span>
                            <span>{pct}% 就绪</span>
                         </div>

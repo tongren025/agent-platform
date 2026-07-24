@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 
 export function useResponsive() {
-  const [isMobile, setIsMobile] = useState(false);
+  // 首次渲染就读取真实断点，避免窄屏先挂载桌面画布再闪回移动版。
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches,
+  );
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)');

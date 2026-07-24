@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" fill="none">
+  <defs>
+    <linearGradient id="g404" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="gStar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C4B5FD"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <!-- 星空散点 -->
+  <circle cx="30" cy="25" r="1.5" fill="#C4B5FD" opacity="0.6"/>
+  <circle cx="70" cy="15" r="1" fill="#A78BFA" opacity="0.5"/>
+  <circle cx="180" cy="20" r="1.2" fill="#C4B5FD" opacity="0.7"/>
+  <circle cx="210" cy="40" r="1" fill="#A78BFA" opacity="0.4"/>
+  <circle cx="45" cy="55" r="0.8" fill="#E0E7FF" opacity="0.5"/>
+  <circle cx="195" cy="65" r="1.3" fill="#C4B5FD" opacity="0.5"/>
+  <circle cx="15" cy="80" r="1" fill="#A78BFA" opacity="0.3"/>
+  <circle cx="225" cy="85" r="0.8" fill="#E0E7FF" opacity="0.4"/>
+  <!-- 悬浮的破碎星球 -->
+  <g transform="translate(120,80)">
+    <!-- 主星球 -->
+    <circle r="38" fill="url(#g404)" opacity="0.15"/>
+    <circle r="32" fill="url(#g404)" opacity="0.25"/>
+    <!-- 环 -->
+    <ellipse rx="52" ry="10" fill="none" stroke="url(#g404)" stroke-width="1.5" opacity="0.4" transform="rotate(-15)"/>
+    <!-- 裂纹 -->
+    <path d="M-8,-28 L-3,-12 L-10,-2 L-2,8 L-8,24" stroke="#C4B5FD" stroke-width="1.2" fill="none" opacity="0.6"/>
+    <path d="M6,-20 L10,-8 L4,4 L12,18" stroke="#A78BFA" stroke-width="1" fill="none" opacity="0.5"/>
+    <!-- 小碎片飘离 -->
+    <rect x="36" y="-22" width="6" height="5" rx="1" fill="#6366F1" opacity="0.35" transform="rotate(25 36 -22)"/>
+    <rect x="-40" y="14" width="5" height="4" rx="1" fill="#8B5CF6" opacity="0.3" transform="rotate(-20 -40 14)"/>
+    <rect x="28" y="20" width="4" height="3" rx="1" fill="#6366F1" opacity="0.25" transform="rotate(40 28 20)"/>
+  </g>
+  <!-- 4 0 4 大字 -->
+  <text x="120" y="155" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="40" font-weight="800" fill="url(#g404)" opacity="0.7" letter-spacing="8">404</text>
+  <!-- 底部虚线路径 —— 代表迷路 -->
+  <path d="M50,175 Q80,165 110,175 Q140,185 170,175 Q190,168 210,175" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4 3" fill="none" opacity="0.35"/>
+  <!-- 小指南针 -->
+  <g transform="translate(120,183)">
+    <circle r="6" fill="none" stroke="#8B5CF6" stroke-width="1" opacity="0.5"/>
+    <path d="M0,-4 L2,2 L0,1 L-2,2 Z" fill="#8B5CF6" opacity="0.6"/>
+  </g>
+</svg>

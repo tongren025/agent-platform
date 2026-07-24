@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" fill="none">
+  <defs>
+    <linearGradient id="connect-gradient" x1="29" y1="50" x2="171" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="100" cy="132" rx="70" ry="8" fill="#F1F5F9"/>
+  <path d="M65 79c20-22 50-22 70 0" stroke="#F1F5F9" stroke-linecap="round" stroke-width="10"/>
+  <path d="M65 79c20-22 50-22 70 0" stroke="url(#connect-gradient)" stroke-dasharray="5 10" stroke-linecap="round" stroke-width="3"/>
+
+  <circle cx="51" cy="82" r="30" fill="#F1F5F9"/>
+  <circle cx="149" cy="82" r="30" fill="#F1F5F9"/>
+  <circle cx="51" cy="82" r="22" fill="white" stroke="url(#connect-gradient)" stroke-width="3"/>
+  <circle cx="149" cy="82" r="22" fill="white" stroke="url(#connect-gradient)" stroke-width="3"/>
+
+  <circle cx="51" cy="77" r="7" fill="url(#connect-gradient)"/>
+  <path d="M39 95c1.8-6 6.2-9 12-9s10.2 3 12 9" fill="url(#connect-gradient)" opacity=".35"/>
+  <circle cx="149" cy="77" r="7" fill="url(#connect-gradient)"/>
+  <path d="M137 95c1.8-6 6.2-9 12-9s10.2 3 12 9" fill="url(#connect-gradient)" opacity=".35"/>
+
+  <circle cx="100" cy="69" r="10" fill="white" stroke="#F1F5F9" stroke-width="4"/>
+  <path d="m96.5 65.5 7 7m0-7-7 7" stroke="url(#connect-gradient)" stroke-linecap="round" stroke-width="2.5"/>
+</svg>

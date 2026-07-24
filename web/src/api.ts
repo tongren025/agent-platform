@@ -1,6 +1,7 @@
 // 用户端 API 封装：统一 BASE 前缀、Bearer 凭证、错误信封解包；401 自动清 token 回登录页。
 import type { ApiResult, AgentRunRecord } from './types';
 import { userToken } from './userAuth';
+import { friendlyFetch, getHttpErrorMessage, readJson } from './httpErrors';
 
 const BASE = '/api/v1/agentapp';
 
@@ -66,18 +67,22 @@ export interface TaskInfo {
   created_at?: number | null;
 }
 
-/** 文件上传等裸 fetch 用的鉴权头——FormData 请求不能设 Content-Type（浏览器要自己拼 boundary）。 */
-function authHeaders(): Record<string, string> {
-  const token = userToken.get();
-  return token ? { Authorization: `Bearer ${token}` } : {};
+export type ProductionGoal = 'storyboard' | 'images' | 'final';
+
+export interface ProductionProjectUpdate {
+  production_goal?: ProductionGoal;
+  pinned?: boolean;
+  [key: string]: unknown;
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = userToken.get();
-  const res = await fetch(`${BASE}${path}`, {
+  // FormData 的 Content-Type 必须由浏览器生成，才能带上正确的 multipart boundary。
+  const isFormData = typeof FormData !== 'undefined' && init?.body instanceof FormData;
+  const res = await friendlyFetch(`${BASE}${path}`, {
     ...init,
     headers: {
-      'Content-Type': 'application/json',
+      ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
       'Accept': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...init?.headers,
@@ -92,23 +97,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error('登录已失效，请重新登录');
   }
   if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    let message = text;
-    try {
-      const json = JSON.parse(text);
-      message = json.detail || json.message || text;
-    } catch {
-      // keep raw text
-    }
-    throw new Error(message || `HTTP ${res.status}`);
+    throw new Error(await getHttpErrorMessage(res));
   }
-  let json: ApiResult<T>;
-  try {
-    json = await res.json();
-  } catch {
-    throw new Error(`服务端返回了非 JSON 响应 (HTTP ${res.status})`);
-  }
-  if (json.code !== 200) throw new Error(json.message || `code ${json.code}`);
+  const json = await readJson<ApiResult<T>>(res);
+  if (json.code !== 200) throw new Error(json.message || '请求失败，请稍后重试');
   return json.data;
 }
 
@@ -179,10 +171,7 @@ export const api = {
   uploadKnowledge: async (key: string, file: File) => {
     const form = new FormData();
     form.append('file', file);
-    const res = await fetch(`${BASE}/registry/employees/${key}/knowledge`, { method: 'POST', body: form, headers: authHeaders() });
-    const json = await res.json();
-    if (json.code !== 200) throw new Error(json.message || 'upload failed');
-    return json.data;
+    return request<any>(`/registry/employees/${key}/knowledge`, { method: 'POST', body: form });
   },
 
   // AI Providers
@@ -268,10 +257,9 @@ export const api = {
   uploadFile: async (file: File) => {
     const form = new FormData();
     form.append('file', file);
-    const res = await fetch(`${BASE}/agent/upload`, { method: 'POST', body: form, headers: authHeaders() });
-    const json = await res.json();
-    if (json.code !== 200) throw new Error(json.message || 'upload failed');
-    return json.data as { fileId: string; fileName: string; fileSize: number; ext: string; isImage: boolean; isText: boolean; textContent: string; url: string };
+    return request<{ fileId: string; fileName: string; fileSize: number; ext: string; isImage: boolean; isText: boolean; textContent: string; url: string }>(
+      '/agent/upload', { method: 'POST', body: form },
+    );
   },
   runAgent: (data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string }) =>
     request<any>('/agent/run', { method: 'POST', body: JSON.stringify(data) }),
@@ -288,10 +276,10 @@ export const api = {
 
   // Production pipeline
   listProjects: () => request<any[]>('/production/projects'),
-  createProject: (data: { name: string; description?: string; sourceType?: string; sourceContent?: string; employeeKey?: string; teamCode?: string; episodeCount?: number; episodeDurationSeconds?: number; aspectRatio?: string; visualStyle?: string; budget?: number }) =>
-    request<any>('/production/projects', { method: 'POST', body: JSON.stringify({ source_type: data.sourceType, source_content: data.sourceContent, employee_key: data.employeeKey, team_code: data.teamCode, episode_count: data.episodeCount, episode_duration_seconds: data.episodeDurationSeconds, aspect_ratio: data.aspectRatio, visual_style: data.visualStyle, budget: data.budget, name: data.name, description: data.description }) }),
+  createProject: (data: { name: string; description?: string; sourceType?: string; sourceContent?: string; employeeKey?: string; teamCode?: string; episodeCount?: number; episodeDurationSeconds?: number; aspectRatio?: string; visualStyle?: string; budget?: number; productionGoal?: ProductionGoal; pinned?: boolean }) =>
+    request<any>('/production/projects', { method: 'POST', body: JSON.stringify({ source_type: data.sourceType, source_content: data.sourceContent, employee_key: data.employeeKey, team_code: data.teamCode, episode_count: data.episodeCount, episode_duration_seconds: data.episodeDurationSeconds, aspect_ratio: data.aspectRatio, visual_style: data.visualStyle, budget: data.budget, production_goal: data.productionGoal, pinned: data.pinned, name: data.name, description: data.description }) }),
   getProject: (pid: string) => request<any>(`/production/projects/${pid}`),
-  updateProject: (pid: string, data: any) =>
+  updateProject: (pid: string, data: ProductionProjectUpdate) =>
     request<any>(`/production/projects/${pid}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteProject: (pid: string) =>
     request<any>(`/production/projects/${pid}`, { method: 'DELETE' }),
@@ -310,10 +298,10 @@ export const api = {
   uploadCardFile: async (pid: string, cardId: string, file: File, fileType: 'image' | 'video' = 'image') => {
     const form = new FormData();
     form.append('file', file);
-    const resp = await fetch(`${BASE}/production/projects/${pid}/cards/${cardId}/upload?file_type=${fileType}`, { method: 'POST', body: form, headers: authHeaders() });
-    const json = await resp.json();
-    if (!resp.ok || json.code !== 200) throw new Error(json.detail || 'Upload failed');
-    return json.data;
+    return request<any>(
+      `/production/projects/${pid}/cards/${cardId}/upload?file_type=${fileType}`,
+      { method: 'POST', body: form },
+    );
   },
   batchDeleteCards: (cardIds: string[]) =>
     request<any>(`/production/cards/batch-delete`, { method: 'POST', body: JSON.stringify({ card_ids: cardIds }) }),
@@ -353,15 +341,10 @@ export const api = {
     const form = new FormData();
     for (const f of files) form.append('files', f);
     const q = defaultEpisode != null ? `?default_episode=${defaultEpisode}` : '';
-    const res = await fetch(`${BASE}/production/projects/${pid}/inbox/upload${q}`, {
-      method: 'POST', body: form, headers: authHeaders(),
-    });
-    const json = await res.json();
-    if (!res.ok || json.code !== 200) throw new Error(json.detail || json.message || '上传失败');
-    return json.data as {
+    return request<{
       matched: { filename: string; card_id: string; card_title: string; stage: string; slot: string; url: string }[];
       unmatched: { filename: string; reason: string }[];
-    };
+    }>(`/production/projects/${pid}/inbox/upload${q}`, { method: 'POST', body: form });
   },
   /** 项目级评审统计：废弃原因分布（按数量倒序）+ 按集通过/废弃数。 */
   getReviewStats: (pid: string) =>
@@ -425,14 +408,10 @@ export const api = {
   uploadCanvasAsset: async (cid: string, file: File) => {
     const form = new FormData();
     form.append('file', file);
-    const token = userToken.get();
-    const res = await fetch(`${BASE}/canvas/canvases/${cid}/upload`, {
-      method: 'POST', body: form,
-      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-    });
-    const json = await res.json();
-    if (!res.ok || json.code !== 200) throw new Error(json.detail || json.message || '上传失败');
-    return json.data as { url: string };
+    return request<{ url: string }>(
+      `/canvas/canvases/${cid}/upload`,
+      { method: 'POST', body: form },
+    );
   },
 
   // AI 趋势雷达 (skill_tracker)

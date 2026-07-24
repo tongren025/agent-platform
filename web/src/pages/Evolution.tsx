@@ -1,17 +1,17 @@
 // 自我进化页：查看/采纳/拒绝 LLM 分析会话后产出的改进洞察。
-import { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Collapse, Descriptions, Empty, Progress, Select, Space, Spin, Statistic, Table, Tag, Typography } from 'antd';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, Button, Card, Collapse, Empty, Progress, Result, Select, Space, Spin, Statistic, Table, Tag, Typography } from 'antd';
 import { message } from '../ui';
 import {
   CheckOutlined, CloseOutlined, ExperimentOutlined,
   RiseOutlined, ThunderboltOutlined, ToolOutlined,
-  BulbOutlined, EditOutlined,
+  BulbOutlined, EditOutlined, ReloadOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 
-const { Text, Paragraph } = Typography;
+const { Text, Paragraph, Title } = Typography;
 
 const TYPE_CONFIG: Record<string, { color: string; label: string; icon: React.ReactNode }> = {
   prompt_improve: { color: COLORS.iris, label: '提示词优化', icon: <EditOutlined /> },
@@ -35,28 +35,57 @@ export default function Evolution() {
   const [insights, setInsights] = useState<any[]>([]);
   const [runLogs, setRunLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [employeesLoading, setEmployeesLoading] = useState(true);
+  const [employeesError, setEmployeesError] = useState('');
+  const [dataError, setDataError] = useState('');
+  const [logsError, setLogsError] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
+  const [resolvingId, setResolvingId] = useState('');
+  const dataRequestRef = useRef(0);
 
-  useEffect(() => {
-    api.listEmployees().then((list: any[]) => {
+  const loadEmployees = useCallback(async () => {
+    setEmployeesLoading(true);
+    setEmployeesError('');
+    try {
+      const list = await api.listEmployees();
       const emps = list.map((e: any) => ({ employeeKey: e.employeeKey, name: e.name || e.employeeKey }));
       setEmployees(emps);
       if (emps.length > 0) setEmpKey(emps[0].employeeKey);
-    }).catch(() => {});
+    } catch (e: any) {
+      setEmployeesError(e.message || '数字员工列表暂时无法加载');
+    } finally {
+      setEmployeesLoading(false);
+    }
   }, []);
+
+  useEffect(() => { loadEmployees(); }, [loadEmployees]);
 
   const loadData = useCallback(async (key: string) => {
     if (!key) return;
+    const requestId = ++dataRequestRef.current;
     setLoading(true);
+    setDataError('');
+    setLogsError('');
     try {
-      const [ins, logs] = await Promise.all([
+      const [insightsResult, logsResult] = await Promise.allSettled([
         api.listInsights(key),
         api.evolutionRunLogs(key),
       ]);
-      setInsights(ins);
-      setRunLogs(logs);
-    } catch { /* empty */ } finally {
-      setLoading(false);
+      if (dataRequestRef.current !== requestId) return;
+      if (insightsResult.status === 'rejected') {
+        setInsights([]);
+        setDataError(insightsResult.reason?.message || '改进建议暂时无法加载');
+      } else {
+        setInsights(insightsResult.value);
+      }
+      if (logsResult.status === 'rejected') {
+        setRunLogs([]);
+        setLogsError(logsResult.reason?.message || '分析记录暂时无法加载');
+      } else {
+        setRunLogs(logsResult.value);
+      }
+    } finally {
+      if (dataRequestRef.current === requestId) setLoading(false);
     }
   }, []);
 
@@ -76,32 +105,49 @@ export default function Evolution() {
   };
 
   const handleAccept = async (insightId: string) => {
+    const key = empKey;
+    setResolvingId(insightId);
     try {
-      await api.acceptInsight(empKey, insightId);
+      await api.acceptInsight(key, insightId);
       message.success('已采纳');
-      await loadData(empKey);
+      await loadData(key);
     } catch (e: any) { message.error(e.message); }
+    finally { setResolvingId(''); }
   };
 
   const handleReject = async (insightId: string) => {
+    const key = empKey;
+    setResolvingId(insightId);
     try {
-      await api.rejectInsight(empKey, insightId);
+      await api.rejectInsight(key, insightId);
       message.info('已拒绝');
-      await loadData(empKey);
+      await loadData(key);
     } catch (e: any) { message.error(e.message); }
+    finally { setResolvingId(''); }
   };
 
   const pending = insights.filter(i => i.status === 'pending');
   const resolved = insights.filter(i => i.status !== 'pending');
 
+  if (employeesLoading) {
+    return <div role="status" aria-live="polite" aria-label="正在加载数字员工">
+      <Spin size="large" style={{ display: 'block', padding: 80, textAlign: 'center' }} />
+    </div>;
+  }
+
+  if (employeesError) {
+    return <Result status="error" title="数字员工列表暂时无法加载" subTitle={employeesError}
+      extra={<Button type="primary" icon={<ReloadOutlined />} onClick={loadEmployees}>重新加载</Button>} />;
+  }
+
   return (
-    <div>
+    <main aria-labelledby="evolution-title">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
         <div>
-          <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700 }}>
+          <Title id="evolution-title" level={2} style={{ fontSize: isMobile ? 18 : 22, margin: 0 }}>
             <RiseOutlined style={{ marginRight: 8, color: COLORS.iris }} />
-            自我进化
-          </div>
+            改进数字员工
+          </Title>
           <div style={{ color: COLORS.slate, fontSize: 13, marginTop: 2 }}>
             自动审视对话历史，生成改进建议——提示词优化、行为规则、技能与工具推荐
           </div>
@@ -110,6 +156,7 @@ export default function Evolution() {
           <Select
             value={empKey || undefined}
             onChange={setEmpKey}
+            disabled={analyzing || Boolean(resolvingId)}
             placeholder="选择员工"
             style={{ width: isMobile ? '100%' : 200, minWidth: 140 }}
             options={employees.map(e => ({ value: e.employeeKey, label: e.name }))}
@@ -127,9 +174,16 @@ export default function Evolution() {
       </div>
 
       {loading ? (
-        <Spin size="large" style={{ display: 'block', padding: 80, textAlign: 'center' }} />
+        <div role="status" aria-live="polite" aria-label="正在加载改进建议">
+          <Spin size="large" style={{ display: 'block', padding: 80, textAlign: 'center' }} />
+        </div>
+      ) : dataError ? (
+        <Result status="error" title="改进建议暂时无法加载" subTitle={dataError}
+          extra={<Button type="primary" icon={<ReloadOutlined />} onClick={() => loadData(empKey)}>重新加载</Button>} />
       ) : !empKey ? (
-        <Empty image={<img src="/empty-connect.svg" alt="" width={160} />} description="请先选择一个数字员工" style={{ padding: 80 }} />
+        <Empty image={<img src="/empty-connect.svg" alt="" width={160} />}
+          description={employees.length ? '请先选择一个数字员工' : '还没有数字员工，请先创建一位'}
+          style={{ padding: 80 }} />
       ) : (
         <>
           {/* 统计卡片 */}
@@ -183,10 +237,13 @@ export default function Evolution() {
                         </div>
                         <Space style={{ marginLeft: isMobile ? 0 : 16 }}>
                           <Button type="primary" icon={<CheckOutlined />} size="small"
+                            loading={resolvingId === ins.insightId}
+                            disabled={Boolean(resolvingId) && resolvingId !== ins.insightId}
                             onClick={() => handleAccept(ins.insightId)} style={{ background: COLORS.mint, borderColor: COLORS.mint }}>
                             采纳
                           </Button>
                           <Button icon={<CloseOutlined />} size="small"
+                            disabled={Boolean(resolvingId)}
                             onClick={() => handleReject(ins.insightId)}>
                             拒绝
                           </Button>
@@ -244,7 +301,13 @@ export default function Evolution() {
               {
                 key: 'logs',
                 label: `运行日志 (${runLogs.length})`,
-                children: runLogs.length > 0 ? (
+                children: logsError ? <Alert
+                  showIcon
+                  type="warning"
+                  message="分析记录暂时无法加载"
+                  description={logsError}
+                  action={<Button size="small" onClick={() => loadData(empKey)}>重试</Button>}
+                /> : runLogs.length > 0 ? (
                   <Table
                     dataSource={[...runLogs].reverse()}
                     rowKey="logId"
@@ -277,6 +340,6 @@ export default function Evolution() {
           />
         </>
       )}
-    </div>
+    </main>
   );
 }

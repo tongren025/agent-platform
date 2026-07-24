@@ -154,6 +154,15 @@
   box-shadow: 0 0 0 4px rgba(101, 211, 185, 0.1);
 }
 
+.director-system-status.is-error {
+  color: #fecdd3;
+}
+
+.director-system-status.is-error i {
+  background: #fb7185;
+  box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.16);
+}
+
 .director-project-select {
   width: min(300px, 29vw);
 }
@@ -246,6 +255,12 @@
   color: #ffd58c;
   background: rgba(227, 168, 79, 0.09);
   border-color: rgba(227, 168, 79, 0.28);
+}
+
+.director-project-meta > span.is-goal {
+  color: #9ce5d4;
+  background: rgba(47, 143, 131, 0.13);
+  border-color: rgba(101, 211, 185, 0.3);
 }
 
 .director-project-vitals {
@@ -529,6 +544,28 @@
   border-color: #e6bc72;
 }
 
+.director-stage.is-target {
+  box-shadow: inset 0 -3px 0 var(--director-teal);
+}
+
+.director-stage.is-active.is-target {
+  box-shadow: inset 0 -3px 0 var(--director-amber);
+}
+
+.director-stage-target-badge {
+  width: fit-content;
+  margin-top: 3px;
+  padding: 2px 5px;
+  color: #1f766c;
+  background: #dff3ed;
+  border-radius: 999px;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
 .director-final-frame {
   width: min(520px, 100%);
   padding: 8px;
@@ -747,6 +784,125 @@
   gap: 16px;
 }
 
+.director-goal-picker {
+  min-width: 0;
+  margin: 0 0 2px;
+  padding: 16px;
+  border: 1px solid #c7d2fe;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #f5f7ff, #eef2ff);
+}
+
+.director-goal-picker legend {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 6px;
+  color: #172554;
+}
+
+.director-goal-picker legend span {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #4338ca;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+}
+
+.director-goal-picker legend strong {
+  font-size: 15px;
+}
+
+.director-goal-picker > p {
+  margin: 1px 0 13px;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.director-goal-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.director-goal-option {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.director-goal-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.director-goal-card {
+  display: flex;
+  min-height: 112px;
+  gap: 9px;
+  padding: 12px 11px;
+  border: 1px solid #dbe3f2;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #334155;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.director-goal-card > span:last-child {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.director-goal-card strong {
+  color: #1e293b;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.director-goal-card small {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 450;
+  line-height: 1.45;
+}
+
+.director-goal-index {
+  flex: 0 0 auto;
+  color: #94a3b8;
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.director-goal-option:hover .director-goal-card {
+  border-color: #818cf8;
+  transform: translateY(-1px);
+}
+
+.director-goal-option input:checked + .director-goal-card {
+  border-color: #4f46e5;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.13);
+}
+
+.director-goal-option input:checked + .director-goal-card .director-goal-index,
+.director-goal-option input:checked + .director-goal-card strong {
+  color: #4338ca;
+}
+
+.director-goal-option input:focus-visible + .director-goal-card {
+  outline: 3px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
 .director-form label,
 .director-media-dialog label {
   display: grid;
@@ -948,6 +1104,11 @@
     width: 100%;
   }
 
+  .director-action-buttons .ant-select {
+    width: 100% !important;
+    flex: 1 0 100%;
+  }
+
   .director-action-buttons .ant-btn {
     flex: 1;
   }
@@ -976,6 +1137,14 @@
   .director-shot-grid,
   .director-form-row {
     grid-template-columns: 1fr;
+  }
+
+  .director-goal-options {
+    grid-template-columns: 1fr;
+  }
+
+  .director-goal-card {
+    min-height: 0;
   }
 
   .director-shot-media {
