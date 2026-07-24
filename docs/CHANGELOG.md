@@ -5,6 +5,29 @@
 
 ---
 
+## [2026-07-25] fix: admin 进程读不到 .env，导致两进程 token 互不认账
+
+### 症状
+登录后立刻被踢回登录页，或前台能用但管理端接口一直 401。
+
+### 根因（两层）
+1. **`admin/config.py` 从不加载 `.env`。** 该模块用裸 `os.environ.get("ADMIN_SECRET")`，且常量在**模块导入时**求值。独立的 admin 进程（`uvicorn admin.main:app`）不经过 `app/config.py`，而 `load_dotenv()` 只写在那里——于是 admin 侧永远读不到 `.env`，静默落到 `or secrets.token_hex(32)` 随机分支。`app/core/auth.py:13-14` 的注释早已预告这个坑，但没人补加载。实测：写好 `.env` 后 `uvicorn app.main` 读到的值 MATCH，`uvicorn admin.main` 却 MISMATCH。
+2. **孤儿 uvicorn 子进程堆积。** `--reload` 模式是父(reloader)+子(server)。杀父不杀子，子进程继承监听 socket 继续服务，而 netstat 仍报已死父进程的 PID（表现为"幽灵端口"）。本机一度在 8000 上并行着 3 个孤儿、8001 上 2 个，**每个各自随机生成 ADMIN_SECRET**：登录请求落到进程 A 拿到 token，下一个请求被分发到 B → 签名校验失败 → 踢回登录页。
+
+### 修复
+- `admin/config.py` 顶部加 `load_dotenv(BASE_DIR / ".env")`，放在所有 `os.environ.get` 之前。
+- 本机 `.env` 补上固定的 `ADMIN_SECRET`（`.env.example:24` 本就预留了该键，只是一直空着）。
+
+### 排障要点（下次直接用）
+- **"幽灵端口"**：netstat 显示 LISTENING 但 `tasklist` 查无此 PID，且端口仍有真实响应 → 找孤儿子进程，不是 Docker/WSL。用 `Get-CimInstance Win32_Process -Filter "Name='python.exe'"` 列**全部** python 进程按父 PID 反查；孤儿的命令行是 `-c "from multiprocessing.spawn import spawn_main..."`，**不含 "uvicorn" 字样**，按关键字过滤会漏掉。
+- 用「不带 token 打受保护接口」去判断多进程密钥是否一致是**无效测试**——任何进程都返回 401，没有区分力。
+
+### 影响面
+- `admin/config.py`（+6 行）。无 API/表结构/前端变化。
+- 行为变化：配置了 `ADMIN_SECRET` 时，admin 进程从"每次启动随机"变为"读 `.env` 固定值"，重启不再令已发 token 失效；未配置时行为不变（仍随机）。
+
+---
+
 ## [2026-07-25] fix: 全站可用性 Bug 修复——弹窗自动弹出 / 员工名缺失 / 画布连接点
 
 ### 弹窗加载即自动弹出（10 个页面 13 处 Modal）

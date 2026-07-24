@@ -7,6 +7,15 @@ from __future__ import annotations
 
 import os
 import secrets
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# 本模块的常量都在导入时求值，所以必须先把 .env 灌进 os.environ 再读。
+# 独立 admin 进程（uvicorn admin.main:app）不经过 app/config.py，
+# 少了这一行就读不到 .env，ADMIN_SECRET 会静默落到下面的随机分支——
+# 结果是 app 与 admin 两进程签发的 token 互不认账。
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 # 管理员账号口令：优先读环境变量，否则用默认（仅本地开发）
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
