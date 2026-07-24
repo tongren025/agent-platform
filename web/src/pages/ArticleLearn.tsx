@@ -206,7 +206,7 @@ export default function ArticleLearn({ embedded = false }: { embedded?: boolean 
           }} />
       </Card>
 
-      <Modal title={editing ? '编辑文章来源' : '添加文章来源'} open={modalOpen} onOk={handleSave} onCancel={() => setModalOpen(false)} confirmLoading={saving} destroyOnHidden forceRender width={isMobile ? '100%' : 640}>
+      <Modal title={editing ? '编辑文章来源' : '添加文章来源'} open={modalOpen} onOk={handleSave} onCancel={() => setModalOpen(false)} confirmLoading={saving} destroyOnHidden width={isMobile ? '100%' : 640}>
         <Form form={form} layout="vertical">
           <Row gutter={16}>
             <Col xs={24} sm={12}><Form.Item label="来源标识" name="sourceCode" rules={[{ required: true, message: '请输入唯一标识' }, { pattern: /^[\w-]+$/, message: '只允许字母、数字、下划线和短横线' }]} extra="仅用于区分不同来源，创建后不可修改"><Input placeholder="例如 design-blogs" disabled={!!editing} /></Form.Item></Col>

@@ -203,7 +203,7 @@ export default function Employees() {
               if (!img.src.endsWith('/avatar-default.svg')) img.src = '/avatar-default.svg';
             }}
           />
-          <Button type="link" style={{ padding: 0, fontWeight: 500 }} onClick={() => openDetail(record)}>{v}</Button>
+          <Button type="link" style={{ padding: 0, fontWeight: 500 }} onClick={() => openDetail(record)}>{v || record.employeeKey}</Button>
         </Space>
       ),
     },
@@ -294,7 +294,7 @@ export default function Employees() {
       />}
       <Table rowKey="employeeKey" columns={columns} dataSource={list} loading={loading} pagination={{ pageSize: 20 }} scroll={{ x: 'max-content' }} />
 
-      <Modal title={editing ? '编辑员工' : '新建员工'} open={open} onOk={handleSave} onCancel={closeEditor} destroyOnHidden forceRender width={isMobile ? '100%' : 720}>
+      <Modal title={editing ? '编辑员工' : '新建员工'} open={open} onOk={handleSave} onCancel={closeEditor} destroyOnHidden width={isMobile ? '100%' : 720}>
         <Form form={form} layout="vertical">
           <Form.Item label="员工标识" name="employeeKey" rules={[{ required: true, message: '请输入员工标识' }]}>
             <Input disabled={!!editing} placeholder="唯一标识，创建后不可修改" />

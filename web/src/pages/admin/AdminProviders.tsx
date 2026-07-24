@@ -298,7 +298,6 @@ export default function AdminProviders() {
         onOk={handleSave}
         onCancel={() => setOpen(false)}
         destroyOnHidden
-        forceRender
         width={isMobile ? '100%' : 560}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>

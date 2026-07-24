@@ -170,7 +170,6 @@ export default function AdminUsers() {
         onOk={handleSave}
         onCancel={() => setOpen(false)}
         destroyOnHidden
-        forceRender
         width={isMobile ? '100%' : 480}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>

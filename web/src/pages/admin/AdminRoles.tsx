@@ -144,7 +144,6 @@ export default function AdminRoles() {
         onOk={handleSave}
         onCancel={() => setOpen(false)}
         destroyOnHidden
-        forceRender
         width={isMobile ? '100%' : 520}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>

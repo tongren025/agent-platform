@@ -382,7 +382,6 @@ export default function AutoLearn({ embedded = false }: { embedded?: boolean }) 
         onCancel={() => setModalOpen(false)}
         confirmLoading={saving}
         destroyOnHidden
-        forceRender
         width={isMobile ? '100%' : 640}
       >
         <Form form={form} layout="vertical">

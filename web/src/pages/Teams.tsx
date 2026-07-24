@@ -519,7 +519,7 @@ export default function Teams() {
       )}
 
       {/* Create/Edit Team Modal */}
-      <Modal title={editingTeam ? '编辑团队' : '新建团队'} open={teamModalOpen} onOk={handleSaveTeam} onCancel={() => setTeamModalOpen(false)} destroyOnHidden forceRender width={isMobile ? '100%' : 500}>
+      <Modal title={editingTeam ? '编辑团队' : '新建团队'} open={teamModalOpen} onOk={handleSaveTeam} onCancel={() => setTeamModalOpen(false)} destroyOnHidden width={isMobile ? '100%' : 500}>
         <Form form={teamForm} layout="vertical">
           <Form.Item label="团队编码" name="teamCode" rules={[{ required: true }]}>
             <Input disabled={!!editingTeam} placeholder="唯一标识" />

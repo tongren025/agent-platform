@@ -5,6 +5,31 @@
 
 ---
 
+## [2026-07-25] fix: 全站可用性 Bug 修复——弹窗自动弹出 / 员工名缺失 / 画布连接点
+
+### 弹窗加载即自动弹出（10 个页面 13 处 Modal）
+- 症状：进入页面时编辑弹窗自己打开，必须先关掉才能操作。
+- 根因：`<Modal>` 同时写了 `forceRender` 和 `destroyOnHidden`，两者语义矛盾。`forceRender` 会在首次打开前就把弹窗 DOM 渲染出来，在 React StrictMode + Vite HMR 的双重挂载周期里触发了 CSS 展开动画。
+- 修复：移除全部 `forceRender`，保留 `destroyOnHidden`。涉及 `Employees` / `Workflows` / `AutoLearn` / `ArticleLearn` / `Teams` / `Tools`(×3) / `Memory` / `Settings` / `admin/AdminUsers` / `admin/AdminRoles` / `admin/AdminProviders`。
+- **已验证不影响表单回填**：这些页面普遍是 `form.setFieldsValue(...)` 紧接 `setOpen(true)`，看似依赖 `forceRender` 预挂载 Form，实则不然——`useForm()` 的 FormStore 存在页面组件的 `useRef` 上（`rc-field-form@2.7.1` useForm.js:886-900），不随 Modal 卸载；Form 挂载时 `setInitialValues` 走 `merge(initialValues, this.store)`（useForm.js:97），**store 优先于 initialValues**。唯一会丢值的分支是 `preserve={false}` 下被卸载的字段，全仓只有 `Settings.tsx` 用了 `preserve={false}`，而它本来就有 `pendingFormValues` + `useEffect` 延迟回填兜底。另：`destroyOnHidden` 每次关闭都会卸载 Form，所以 `forceRender` 本来就只在“第一次打开”生效，若真会丢值，第二次之后的编辑早就坏了。
+
+### 数字员工列表名称为空时不可点击
+- 症状：`name` 为空的员工，列表里那一格是空白，点不到详情。
+- 修复：`Employees.tsx:206` 渲染改为 `{v || record.employeeKey}`，缺名时回退显示员工标识。
+
+### 画布节点连接点被裁切
+- 卡片容器的 `overflow: hidden` 会把贴边的 React Flow `<Handle>` 裁掉，导致连线不好拖。
+- 移除 `DataNode` / `StoryboardNode` / `ImageNode` 外层的 `overflow: hidden`（图片本身的圆角裁切改由内层容器负责），并统一连接点尺寸为 `HANDLE_SIZE = 10`，四类节点共用 `handleBase`。
+
+### 一个不是代码 Bug 的排查结论
+- 「常用指令暂时无法加载」不是前端问题：后端进程陈旧导致 `quick_prompts` 路由未注册，请求被 `main.py` 的 SPA fallback（`@app.get("/{full_path:path}")`）兜走返回了 HTML，前端 JSON 解析失败。**重启后端即恢复**，无需改代码。排查时注意 token 存在 localStorage 的 `user_token`（不是 `agent_token`），且 `ADMIN_SECRET` 未写入 `.env` 时每次重启随机生成，旧 token 会签名校验失败。
+
+### 影响面
+- 仅前端 `web/src/`：10 个页面 + `components/canvas/CanvasNodes.tsx`。
+- 无 API、数据库、环境变量、部署配置变化。`tsc --noEmit` 通过。
+
+---
+
 ## [2026-07-24] chore: Art Bible 图片质量审核 + 垃圾归档
 
 ### 审核

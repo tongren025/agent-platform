@@ -407,7 +407,6 @@ export default function Memory() {
         onOk={() => form.submit()}
         width={isMobile ? '100%' : 520}
         destroyOnHidden
-        forceRender
       >
         <Form form={form} layout="vertical" onFinish={handleAdd}>
           {renderModalFields()}

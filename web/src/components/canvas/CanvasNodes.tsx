@@ -46,6 +46,9 @@ export const CanvasCtx = createContext<CanvasActions>({
   updateEdgeLabel: () => {},
 });
 
+const HANDLE_SIZE = 10;
+const handleBase: React.CSSProperties = { width: HANDLE_SIZE, height: HANDLE_SIZE };
+
 const cardStyle = (selected: boolean): React.CSSProperties => ({
   background: '#fff',
   border: selected ? `2px solid ${COLORS.iris}` : '1px solid #e2e8f0',
@@ -81,7 +84,7 @@ export const DataNode = memo(function DataNode({ id, data, selected }: NodeProps
   const hasContent = (data.content || '').trim().length > 0;
   const locked = !!data.locked;
   return (
-    <div style={{ ...cardStyle(!!selected), width: 300, display: 'flex', overflow: 'hidden', opacity: locked ? 0.85 : 1 }}>
+    <div style={{ ...cardStyle(!!selected), width: 300, display: 'flex', opacity: locked ? 0.85 : 1 }}>
       <div style={{ width: 4, minHeight: '100%', background: barColor, borderRadius: '12px 0 0 12px', flexShrink: 0 }} />
       <div style={{ flex: 1, padding: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
@@ -153,8 +156,8 @@ export const DataNode = memo(function DataNode({ id, data, selected }: NodeProps
           </Tooltip>
         </div>
       </div>
-      <Handle type="target" position={Position.Left} style={{ background: '#94a3b8' }} />
-      <Handle type="source" position={Position.Right} style={{ background: COLORS.iris }} />
+      <Handle type="target" position={Position.Left} style={{ ...handleBase, background: '#94a3b8' }} />
+      <Handle type="source" position={Position.Right} style={{ ...handleBase, background: COLORS.iris }} />
     </div>
   );
 });
@@ -169,7 +172,7 @@ export const StoryboardNode = memo(function StoryboardNode({ id, data, selected 
   const [collapsed, setCollapsed] = useState(false);
   const locked = !!data.locked;
   return (
-    <div style={{ ...cardStyle(!!selected), width: 320, display: 'flex', overflow: 'hidden', opacity: locked ? 0.85 : 1 }}>
+    <div style={{ ...cardStyle(!!selected), width: 320, display: 'flex', opacity: locked ? 0.85 : 1 }}>
       <div style={{ width: 4, minHeight: '100%', background: '#6366f1', borderRadius: '12px 0 0 12px', flexShrink: 0 }} />
       <div style={{ flex: 1, padding: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
@@ -242,8 +245,8 @@ export const StoryboardNode = memo(function StoryboardNode({ id, data, selected 
           </Tooltip>
         </div>
       </div>
-      <Handle type="target" position={Position.Left} style={{ background: '#94a3b8' }} />
-      <Handle type="source" position={Position.Right} style={{ background: COLORS.iris }} />
+      <Handle type="target" position={Position.Left} style={{ ...handleBase, background: '#94a3b8' }} />
+      <Handle type="source" position={Position.Right} style={{ ...handleBase, background: COLORS.iris }} />
     </div>
   );
 });
@@ -309,7 +312,7 @@ export const GroupNode = memo(function GroupNode({ id, data, selected }: NodePro
 export const ImageNode = memo(function ImageNode({ id, data, selected }: NodeProps) {
   const actions = useContext(CanvasCtx);
   return (
-    <div style={{ ...cardStyle(!!selected), width: 264, overflow: 'hidden' }}>
+    <div style={{ ...cardStyle(!!selected), width: 264 }}>
       {data.url ? (
         <div className="nodrag" style={{ borderRadius: '11px 11px 0 0', overflow: 'hidden' }}>
           <Image src={thumbUrl(data.url, 512)} preview={{ src: data.url }} loading="lazy"
@@ -356,8 +359,8 @@ export const ImageNode = memo(function ImageNode({ id, data, selected }: NodePro
           )}
         </div>
       </div>
-      <Handle type="target" position={Position.Left} style={{ background: '#94a3b8' }} />
-      <Handle type="source" position={Position.Right} style={{ background: COLORS.iris }} />
+      <Handle type="target" position={Position.Left} style={{ ...handleBase, background: '#94a3b8' }} />
+      <Handle type="source" position={Position.Right} style={{ ...handleBase, background: COLORS.iris }} />
     </div>
   );
 });
@@ -410,8 +413,8 @@ export const StickyNote = memo(function StickyNote({ id, data, selected }: NodeP
         style={{ fontSize: 12, background: 'transparent', padding: 0 }}
         disabled={locked}
       />
-      <Handle type="target" position={Position.Left} style={{ background: c.border }} />
-      <Handle type="source" position={Position.Right} style={{ background: c.border }} />
+      <Handle type="target" position={Position.Left} style={{ ...handleBase, background: c.border }} />
+      <Handle type="source" position={Position.Right} style={{ ...handleBase, background: c.border }} />
     </div>
   );
 });
