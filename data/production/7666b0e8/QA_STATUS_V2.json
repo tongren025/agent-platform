@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "project_id": "7666b0e8",
+  "version": "nine_continents_no_sacrifice_v2",
+  "quality_gate": {
+    "dimensions": [
+      "world_identity",
+      "shot_narrative",
+      "style_consistency",
+      "scale_and_space",
+      "technical_integrity"
+    ],
+    "min_each": 4,
+    "min_total": 22,
+    "max_total": 25
+  },
+  "p0_assets": {
+    "world_tree_cosmic": {
+      "status": "approved",
+      "asset": "uploads/images/P0_world_tree_cosmic_final.png",
+      "sha256": "e56cef1c1dedfa1fca87fd689bae343052995236dd978a913030da5afbe6a9e0",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 4,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 5
+      },
+      "total": 24,
+      "note": "九个大陆接口、断冠中空树体与低亮金绿生命脉均清晰，可作为宇宙尺度共同锚点。"
+    },
+    "world_tree_continent_scale": {
+      "status": "approved",
+      "asset": "uploads/images/P0_world_tree_continent_interface_final.png",
+      "sha256": "023e071ae0410a606ba33ad644c1e74fd134d970abfc0540b4c91380c17d2ec1",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 4,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 5
+      },
+      "total": 24,
+      "note": "粗根托举、夹持并刺穿大陆地壳，城市与飞行器建立文明尺度。"
+    },
+    "world_tree_human_scale": {
+      "status": "approved",
+      "asset": "uploads/images/P0_world_tree_human_scale_final.png",
+      "sha256": "427acdc593e252e043da44bf762616e52ceca9528034e0ae7d06d1250fc3a2b9",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 5,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 5
+      },
+      "total": 25,
+      "note": "湿润树纤维、神殿遗构、人物尺度与冷白无菌删除面均已锁定。"
+    },
+    "nine_continents_silhouette": {
+      "status": "approved",
+      "asset": "uploads/images/P0_nine_continents_silhouette_final.png",
+      "sha256": "c4e0723259ced8a9ef928b40220d385b2c70abe302f8b94114901d41bcffb387",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 4,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 5
+      },
+      "total": 24,
+      "note": "九种大陆黑色剪影彼此可辨，作为远景轮廓与构图约束。"
+    },
+    "canglin_identity": {
+      "status": "approved",
+      "asset": "uploads/images/P0_canglin_identity_final.png",
+      "sha256": "2d81ad724bf5797163e72886b6f047dc481c4b9abcfbc918c8847b6d8c32ac06",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 4,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 5
+      },
+      "total": 24,
+      "note": "16岁少年比例、画面右侧面颊旧伤、旧矿工衣与哑光龙骨碎片已锁定。"
+    },
+    "jinlong_story": {
+      "status": "approved",
+      "asset": "uploads/images/P0_jinlong_story_final.png",
+      "sha256": "3e6fa435a2a3903b4d3278919fa73dd888161bbd8add819d71c8964d5d395fd5",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 5,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 4
+      },
+      "total": 24,
+      "note": "龙骸长弧、肋骨矿镇、少年尺度锚与冷白静默删除构成正式剧情母版。"
+    },
+    "jushen_story": {
+      "status": "approved",
+      "asset": "uploads/images/P0_jushen_story_final.png",
+      "sha256": "863faca7ba5d8abc066d875b2e5b9c3e1071d38a9925f3ea6f1e039e4708d4b3",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 4,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 5
+      },
+      "total": 24,
+      "note": "横卧巨神即大陆，眼谷城市与微小观察者建立了可靠尺度。"
+    },
+    "chaosheng_story": {
+      "status": "approved",
+      "asset": "uploads/images/P0_chaosheng_story_final.png",
+      "sha256": "e69e44338cc2e45430512642734df9bec0dd5c70977ad09af205d82dc5bd1737",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 4,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 5
+      },
+      "total": 24,
+      "note": "倒碗海体、悬挂海城与船队尺度均成立。"
+    },
+    "purification_deletion": {
+      "status": "approved",
+      "asset": "uploads/images/P0_purification_deletion_final.png",
+      "sha256": "24049b51a5a358b2cb9140f100e3640123ee8ff3f5540f930525cae48a533394",
+      "scores": {
+        "world_identity": 5,
+        "shot_narrative": 5,
+        "style_consistency": 5,
+        "scale_and_space": 5,
+        "technical_integrity": 5
+      },
+      "total": 25,
+      "note": "绝对平直的冷青白无菌切面可读为物质删除，而非光柱、窗户或传送门。"
+    }
+  },
+  "image_progress": {
+    "planned_keyframes": 72,
+    "approved_keyframes": 22,
+    "approved_keyframe_ids": [
+      "S01A",
+      "S01B",
+      "S01C",
+      "S02A",
+      "S02B",
+      "S02C",
+      "S03A",
+      "S03B",
+      "S03C",
+      "S04A",
+      "S04B",
+      "S04C",
+      "S05A",
+      "S05B",
+      "S05C",
+      "S06A",
+      "S06B",
+      "S06C",
+      "S07A",
+      "S07B",
+      "S07C",
+      "S10C"
+    ],
+    "formal_assets": [
+      "uploads/images/S01A.png",
+      "uploads/images/S01B.png",
+      "uploads/images/S01C.png",
+      "uploads/images/S02A.png",
+      "uploads/images/S02B.png",
+      "uploads/images/S02C.png",
+      "uploads/images/S03A.png",
+      "uploads/images/S03B.png",
+      "uploads/images/S03C.png",
+      "uploads/images/S04A.png",
+      "uploads/images/S04B.png",
+      "uploads/images/S04C.png",
+      "uploads/images/S05A.png",
+      "uploads/images/S05B.png",
+      "uploads/images/S05C.png",
+      "uploads/images/S06A.png",
+      "uploads/images/S06B.png",
+      "uploads/images/S06C.png",
+      "uploads/images/S07A.png",
+      "uploads/images/S07B.png",
+      "uploads/images/S07C.png",
+      "uploads/images/S10C.png"
+    ]
+  },
+  "legacy_assets": {
+    "status": "archived_never_delete",
+    "frozen_snapshot": "archive/style-overhaul-v1-original-2026-07-24",
+    "trash_manifest": "trash/style-overhaul-v2/legacy-v1/TRASH_MANIFEST.md"
+  },
+  "updated_at": "2026-07-24T05:26:52.096Z"
+}

@@ -1,15 +1,15 @@
 {
   "project_id": "7666b0e8",
-  "name": "九陆纪元 · 九大陆灾变史诗GC",
-  "description": "30秒竖屏世界观型GC：九大陆逐一以标志性巨物与灾变登场，最终揭示所谓世界树并非实体树，而是连接九陆的无形量子羁绊网",
+  "name": "九陆纪元 · 一陆都不献 GC（导演重制版）",
+  "description": "30秒竖屏电影级东方玄幻漫剧GC：九陆沿濒死世界树同时衰亡，净化古律要求献祭一陆续命八陆；16岁的苍霖拒绝选择牺牲者，以龙骨碎片逆转执行机构。",
   "source_type": "gc",
-  "source_content": "《九陆纪元》九大陆灾变史诗GC\n\n创作要求：保留上一版GC不动，另建独立版本。核心任务不是讲单一人物前史，而是让观众在30秒内看懂这是一个由九块大陆组成、共享世界树命脉的宏大世界。必须出现九大陆、虫巢、龙群、海啸、巨神、世界终坑、倒悬神国等标志奇观；画面高级、巨物感强、震撼但不杂乱。\n\n世界树定义：它不是木质巨树，没有树干、树冠、树根或藤蔓；它是九大陆彼此羁绊形成的无形量子网络。视觉如跨越深空的巨大蜘蛛网，由几乎不可见的无痕细线构成，只通过轻微折光、空间涟漪和星尘偏转显形。\n\n核心命题：所谓世界树，其实是九陆彼此相连的羁绊；一处断裂，九陆同坠。\n\n结尾钩子：九陆将倾。谁有资格决定，哪一陆先死？",
+  "source_content": "《九陆纪元》导演重制版 GC\n\n本版从剧本、分镜、角色、世界树、九大陆、图片提示词与视频提示词全部重建，不沿用旧版“明亮通透国漫插图”和“九大陆逐个报菜名”的导演层。\n\n世界结构服从 2026-07-21 生效的《九陆纪元视觉宪法 v1》：世界树是九陆共同的生物基础设施与空间坐标系，中空、断冠、濒死，九陆分别依附在九个被切断的根枝接口上；净化系统沿九条生命光脉反向入侵，以冷青白、无菌、平整、不可逆的方式删除材质与生命。\n\n剧情命题：当古律要求“献一陆，续八陆”，被判死的烬龙陆少年苍霖没有把祭刃转向另一片大陆，而是将胸前龙骨碎片刺入世界树心室——一陆都不献。\n\n制作规格：30秒，9:16，3个10秒章节，每章24个动作关键位；全片24个真实镜头、72个关键帧。正式图必须通过V2五项质量门，旧图全部保留但不得无验收回流。",
   "employee_key": "",
   "team_code": "comic-drama-team",
   "episode_count": 1,
   "episode_duration_seconds": 30,
   "aspect_ratio": "9:16",
-  "visual_style": "顶级东方幻想灾变史诗，明亮通透的高级国漫插图；平滑自然的阴影与柔和漫射光，可控的中等细节，简约而精致的纹理，清晰锐利但不过度锐化的边缘，干净的色彩过渡与平滑渐变，平衡对比度。以巨物遮天关系和微小人物尺度锚制造庞大感。九大陆各守独立色彩；所谓世界树只表现为蜘蛛网式无形量子羁绊线，以折光、空间涟漪和星尘偏转隐约显形，绝不画成实体树木、树根、电缆或藤蔓。全片无噪点、颗粒、瑕疵、脏污纹理、浑浊色彩、斑驳阴影、混乱高频细节、强烈硬对比、油腻高光或塑料质感。",
+  "visual_style": "电影级写实东方幻想漫剧关键帧；神话遗骸构成的活世界正在被冷酷宇宙算法逐层删除。深炭黑、风化岩灰与深靛蓝为低饱和基底，每镜只保留一种叙事光；真实风蚀石、化石骨、氧化金属、旧织物、湿润生命纤维、水体与冰层材质；体积云雾、空气透视、克制HDR与巨物尺度。先读大轮廓，再读唯一奇观，最后读文明细节。禁止明亮通透国漫、塑料CG、彩色UI、霓虹描边、普通金色世界树、欧美手游海报与无意义粒子堆叠。",
   "budget": 0.0,
   "members": [
     {
@@ -24,14 +24,32 @@
     "visibility": "private",
     "allow_ai_generate": true,
     "default_status": "pending",
-    "art_bible_project_id": "jiulu-s1",
-    "style_reference_policy": "inherit_nine_continents_art_bible",
-    "distribution_goal": "worldview_spectacle_launch",
-    "gc_version": "nine_continents_cataclysm_v1",
+    "visual_canon_version": "visual-rebase-v1",
+    "visual_canon_path": "resouce/漫剧/九陆纪元_视觉宪法_v1.md",
+    "style_reference_policy": "visual_constitution_v1_plus_user_approved_2026_07_24",
+    "style_reference_manifest": "style-references/user-approved-2026-07-24/REFERENCE_MANIFEST.md",
+    "style_bible": "STYLE_BIBLE_V2.md",
+    "distribution_goal": "cinematic_story_hook",
+    "gc_version": "nine_continents_no_sacrifice_v2",
+    "director_rebuild": true,
+    "shot_count": 24,
+    "keyframe_count": 72,
+    "keyframe_structure": "3x10s_24_keyframes_per_pack",
     "video_generation_locked_until_review": true,
+    "required_p0_assets": [
+      "world_tree_three_scale_anchor",
+      "nine_continents_silhouette_anchor",
+      "canglin_v2_identity_anchor",
+      "jinlong_story_anchor",
+      "jushen_story_anchor",
+      "chaosheng_story_anchor",
+      "purification_deletion_anchor"
+    ],
+    "asset_retention_policy": "archive_never_delete",
+    "rebuild_archive": "archive/style-overhaul-v1-original-2026-07-24",
     "previous_gc_project_id": "a3ab9f6a",
     "previous_gc_mutation_policy": "read_only"
   },
   "created_at": "2026-07-20T18:27:23.3234686Z",
-  "updated_at": "2026-07-20T18:27:23.3234686Z"
+  "updated_at": "2026-07-24T05:26:52.096Z"
 }

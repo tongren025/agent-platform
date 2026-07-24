@@ -1904,3 +1904,28 @@
 }
 [CodeGraph MCP] Auto-synced 1 file(s) in 1272ms
 [CodeGraph MCP] Auto-synced 1 file(s) in 1169ms
+[CodeGraph] File watcher error {
+  error: "Error: EBUSY: resource busy or locked, watch 'D:\\P\\agent\\data\\production\\7666b0e8\\archive\\style-overhaul-v1-original-2026-07-24\\uploads\\rejected_painterly_v1\\W08_冰封陆虫母破冰_v1.png'"
+}
+[CodeGraph] File watcher error {
+  error: "Error: EBUSY: resource busy or locked, watch 'D:\\P\\agent\\data\\production\\7666b0e8\\archive\\style-overhaul-v1-original-2026-07-24\\uploads\\rejected_painterly_v1\\W12_九陆同坠世界树断裂_v1.png'"
+}
+[CodeGraph] File watcher error {
+  error: "Error: EBUSY: resource busy or locked, watch 'D:\\P\\agent\\data\\production\\7666b0e8\\archive\\style-overhaul-v1-original-2026-07-24\\uploads\\rejected_style_drift\\W01_九陆总启_gameconcept_rejected.png'"
+}
+[CodeGraph MCP] Auto-synced 1 file(s) in 1508ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1200ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 964ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1237ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1362ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1048ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1118ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1084ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1199ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1190ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1089ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1177ms
+[CodeGraph MCP] Auto-synced 5 file(s) in 1723ms
+[CodeGraph MCP] Auto-synced 5 file(s) in 1554ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 2849ms
+[CodeGraph MCP] Auto-synced 1 file(s) in 1181ms

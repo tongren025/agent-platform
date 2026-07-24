@@ -28614,3 +28614,4 @@ method=GET path=/health request_id=6ea6fed5c376455294013b325ff352fd status=404
 2 changes detected
 2026-07-22T08:06:22.063116Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.2 method=GET path=/healthcheck request_id=def388d707664e5dbb0fd79ee04d4d07 status=200
 2026-07-22T08:06:35.890602Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.6 method=GET path=/healthcheck request_id=8667ee6c82a84cddb9c6fff81128c73b status=200
+2026-07-24T17:35:26.846654Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.7 method=GET path=/api/admin/roles request_id=781d73e8238b47e9bd57e2adf69cc1d9 status=401
