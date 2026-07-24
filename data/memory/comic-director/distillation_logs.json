@@ -1,61 +1,5 @@
 [
   {
-    "logId": "dist_9c7d6ff63878",
-    "employeeKey": "comic-director",
-    "ranAt": "2026-07-01T03:01:25.654250Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-director_sem_04",
-        "mergeIntoId": "seed_comic-director_sem_03",
-        "newContent": "10秒制作包标准目录为：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。",
-        "newImportance": null,
-        "reason": "两条记忆内容完全一致，均为交付目录标准，仅ID不同。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-director_microdrama_03",
-        "mergeIntoId": "duanju_spine_20260630_comic-director_law",
-        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧(单集60-90s)，不是电影。核心目标是'把观众锁到下一集'。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词，绝不靠氛围或漂亮镜头撑时间。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别等电影美术手艺必须服从短剧节奏。",
-        "newImportance": null,
-        "reason": "两条记忆均在定义竖屏短剧的底层逻辑与节奏，合并后强化了时长标准与核心目标。"
-      },
-      {
-        "action": "prune",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-director_production_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": null,
-        "reason": "通用电影制作三阶段知识过于宽泛，对AI员工在具体Seedance工作流中的指导价值极低。"
-      },
-      {
-        "action": "prune",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-director_production_02",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": null,
-        "reason": "通用导演定义知识，与已有具体的'总导演'工作流记忆重复且缺乏实操指导意义。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 32,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 29,
-      "episodic_count": 3,
-      "procedural_count": 5
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 15828,
-    "error": null
-  },
-  {
     "logId": "dist_6520f58196b7",
     "employeeKey": "comic-director",
     "ranAt": "2026-07-01T03:02:02.330960Z",
@@ -2061,6 +2005,21 @@
     "afterCounts": {},
     "llmModel": "",
     "durationMs": 31,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_ea7bf2f34d80",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-23T19:00:17.714593Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 11,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 46,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
   }
 ]

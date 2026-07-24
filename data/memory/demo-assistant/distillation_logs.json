@@ -1,43 +1,5 @@
 [
   {
-    "logId": "dist_af86efd7cc9e",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-07-01T03:01:41.492570Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "mem_4589ed5a6c46",
-        "mergeIntoId": "mem_3dbb51e63cbe",
-        "newContent": "用户偏好电影感的视觉风格和暖色调画面",
-        "newImportance": null,
-        "reason": "两条记忆内容高度重复，仅在措辞上略有差异，合并以消除冗余。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_3dbb51e63cbe",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.95,
-        "reason": "经验记忆 mem_f9c130a07c89 证实了该偏好在实际应用中获得了高满意度，应提升其权重。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 2,
-      "episodic": 1,
-      "procedural": 1
-    },
-    "afterCounts": {
-      "semantic_count": 1,
-      "episodic_count": 1,
-      "procedural_count": 1
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 4031,
-    "error": null
-  },
-  {
     "logId": "dist_505c49110b4d",
     "employeeKey": "demo-assistant",
     "ranAt": "2026-07-01T03:02:17.573247Z",
@@ -1395,6 +1357,21 @@
     "afterCounts": {},
     "llmModel": "",
     "durationMs": 0,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_8173be2e7dfc",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-23T19:00:17.773662Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 16,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
   }
 ]

@@ -12,6 +12,7 @@ import { api } from '../api';
 import { COLORS } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import ProjectViewNav from '../components/ProjectViewNav';
+import CardDetailDrawer, { type CardItem as DrawerCardItem } from '../components/CardDetailDrawer';
 
 const { Text, Title } = Typography;
 
@@ -152,6 +153,8 @@ export default function ProductionHub() {
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [projectsError, setProjectsError] = useState('');
   const [projectError, setProjectError] = useState('');
+  const [drawerCard, setDrawerCard] = useState<DrawerCardItem | null>(null);
+  const [mediaModels, setMediaModels] = useState<{ id: string; name: string; pricing?: any }[] | undefined>();
 
   const loadProjects = useCallback(async () => {
     setProjectsLoading(true);
@@ -193,6 +196,10 @@ export default function ProductionHub() {
     if (pid && pid !== selectedPid) setSelectedPid(pid);
   }, [pid]);
   useEffect(() => { if (selectedPid) loadProject(selectedPid); }, [selectedPid, loadProject]);
+  useEffect(() => {
+    if (!drawerCard || mediaModels) return;
+    api.listDirectorMediaModels('image').then(setMediaModels).catch(() => setMediaModels([]));
+  }, [drawerCard, mediaModels]);
 
   /* ── 数据计算 ── */
   const globalCards = useMemo(() => cards.filter(c => c.episode == null), [cards]);
@@ -361,7 +368,11 @@ export default function ProductionHub() {
                       </div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                         {g.cards.slice(0, 6).map(c => (
-                          <Tag key={c.card_id} style={{ fontSize: 11, margin: 0 }}>
+                          <Tag
+                            key={c.card_id}
+                            style={{ fontSize: 11, margin: 0, cursor: 'pointer' }}
+                            onClick={() => setDrawerCard(c as DrawerCardItem)}
+                          >
                             {c.title.length > 12 ? c.title.slice(0, 12) + '…' : c.title}
                           </Tag>
                         ))}
@@ -446,6 +457,18 @@ export default function ProductionHub() {
           )}
         </>
       )}
+
+      <CardDetailDrawer
+        open={Boolean(drawerCard)}
+        card={drawerCard}
+        projectId={selectedPid}
+        mediaModels={mediaModels}
+        onClose={() => setDrawerCard(null)}
+        onCardUpdated={() => {
+          loadProject(selectedPid);
+          setDrawerCard(null);
+        }}
+      />
     </div>
   );
 }

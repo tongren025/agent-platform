@@ -88,5 +88,15 @@
     "llmModel": "",
     "durationMs": 14,
     "error": null
+  },
+  {
+    "logId": "evo_7df5c06b1a4f",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-23T20:00:19.570240Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
   }
 ]

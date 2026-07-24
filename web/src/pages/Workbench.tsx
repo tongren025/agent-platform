@@ -1,6 +1,6 @@
 // 工作台：与数字员工/团队对话的主界面，含会话管理、附件、产出物与审批。
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { Alert, Badge, Button, Collapse, Divider, Drawer, Empty, Image, Input, List, Popconfirm, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Upload } from 'antd';
+import { Alert, Badge, Button, Collapse, Divider, Drawer, Empty, Image, Input, List, Modal, Popconfirm, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Upload } from 'antd';
 import { message } from '../ui';
 import {
   CopyOutlined, CheckOutlined,
@@ -9,6 +9,7 @@ import {
   PictureOutlined, CloseCircleFilled, FileOutlined,
   ExpandOutlined, CompressOutlined, BugOutlined,
   ReloadOutlined, StopOutlined,
+  EditOutlined, PlusOutlined, BookOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useResponsive } from '../hooks/useResponsive';
@@ -36,6 +37,15 @@ interface ChatAttachment {
   isImage: boolean;
   url: string;
   textContent?: string;
+}
+
+interface QuickPrompt {
+  id: string;
+  title: string;
+  content: string;
+  employee_key?: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 type TargetMode = 'employee' | 'team';
@@ -142,8 +152,17 @@ export default function Workbench() {
   const [rightCollapsed, setRightCollapsed] = useState(false);
   const [traceDrawerOpen, setTraceDrawerOpen] = useState(false);
   const [activeTraces, setActiveTraces] = useState<ChatMessage['traces']>([]);
+  const [quickPrompts, setQuickPrompts] = useState<QuickPrompt[]>([]);
+  const [quickPromptsLoading, setQuickPromptsLoading] = useState(true);
+  const [quickPromptsError, setQuickPromptsError] = useState('');
+  const [quickPromptOpen, setQuickPromptOpen] = useState(false);
+  const [quickPromptSaving, setQuickPromptSaving] = useState(false);
+  const [editingQuickPromptId, setEditingQuickPromptId] = useState<string | null>(null);
+  const [quickPromptForm, setQuickPromptForm] = useState({ title: '', content: '', employee_key: '' });
   const abortRef = useRef<AbortController | null>(null);
   const msgEndRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<any>(null);
+  const quickPromptRequestRef = useRef(0);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { isMobile } = useResponsive();
@@ -169,9 +188,30 @@ export default function Workbench() {
     setTargetsLoading(false);
   }, []);
 
+  const loadQuickPrompts = useCallback(async () => {
+    const requestId = ++quickPromptRequestRef.current;
+    setQuickPromptsLoading(true);
+    setQuickPromptsError('');
+    try {
+      const items = await api.listQuickPrompts();
+      if (requestId !== quickPromptRequestRef.current) return;
+      setQuickPrompts(items);
+    } catch {
+      if (requestId !== quickPromptRequestRef.current) return;
+      setQuickPrompts([]);
+      setQuickPromptsError('常用指令暂时无法加载，你仍然可以正常输入消息。');
+    } finally {
+      if (requestId === quickPromptRequestRef.current) setQuickPromptsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     void loadTargets();
   }, [loadTargets]);
+  useEffect(() => {
+    void loadQuickPrompts();
+    return () => { quickPromptRequestRef.current += 1; };
+  }, [loadQuickPrompts]);
 
   useEffect(() => {
     const team = searchParams.get('team');
@@ -309,62 +349,120 @@ export default function Workbench() {
   const handleKeyDown = (e: React.KeyboardEvent) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
   const insertMention = (emp: Employee) => setInputValue((prev) => prev.endsWith(' ') || !prev ? prev + `@${emp.name} ` : `${prev} @${emp.name} `);
 
+  const insertQuickPrompt = (prompt: QuickPrompt) => {
+    const textArea = composerRef.current?.resizableTextArea?.textArea as HTMLTextAreaElement | undefined;
+    const start = textArea?.selectionStart ?? inputValue.length;
+    const end = textArea?.selectionEnd ?? inputValue.length;
+    const needsSpacing = start > 0 && inputValue.slice(0, start).trim() ? '\n\n' : '';
+    const inserted = `${needsSpacing}${prompt.content}`;
+    const nextValue = inputValue.slice(0, start) + inserted + inputValue.slice(end);
+    const nextCursor = start + inserted.length;
+    setInputValue(nextValue);
+    window.setTimeout(() => {
+      textArea?.focus();
+      textArea?.setSelectionRange(nextCursor, nextCursor);
+    }, 0);
+  };
+
+  const openNewQuickPrompt = () => {
+    const content = inputValue.trim();
+    setEditingQuickPromptId(null);
+    setQuickPromptForm({
+      title: firstLine(content, 24),
+      content,
+      employee_key: mode === 'employee' ? selectedKey : '',
+    });
+    setQuickPromptOpen(true);
+  };
+
+  const openEditQuickPrompt = (prompt: QuickPrompt) => {
+    setEditingQuickPromptId(prompt.id);
+    setQuickPromptForm({
+      title: prompt.title,
+      content: prompt.content,
+      employee_key: prompt.employee_key || '',
+    });
+    setQuickPromptOpen(true);
+  };
+
+  const handleSaveQuickPrompt = async () => {
+    const title = quickPromptForm.title.trim();
+    const content = quickPromptForm.content.trim();
+    if (!title || !content) {
+      message.warning('请填写指令名称和内容');
+      return;
+    }
+    setQuickPromptSaving(true);
+    try {
+      const payload = {
+        title,
+        content,
+        // 编辑时也要显式发送空字符串，否则 JSON.stringify 会丢掉 undefined，
+        // 后端便无法把“仅某员工可用”改回“所有员工通用”。
+        employee_key: quickPromptForm.employee_key,
+      };
+      if (editingQuickPromptId) {
+        const updated = await api.updateQuickPrompt(editingQuickPromptId, payload);
+        setQuickPrompts(prev => prev.map(item => item.id === updated.id ? updated : item));
+        message.success('常用指令已更新');
+      } else {
+        const created = await api.createQuickPrompt(payload);
+        setQuickPrompts(prev => [created, ...prev]);
+        message.success('已保存为常用指令');
+      }
+      setQuickPromptsError('');
+      setQuickPromptOpen(false);
+    } catch {
+      message.error('常用指令暂时无法保存，请稍后重试。');
+    } finally {
+      setQuickPromptSaving(false);
+    }
+  };
+
+  const handleDeleteQuickPrompt = async (id: string) => {
+    try {
+      await api.deleteQuickPrompt(id);
+      setQuickPrompts(prev => prev.filter(item => item.id !== id));
+      if (editingQuickPromptId === id) {
+        setEditingQuickPromptId(null);
+        setQuickPromptForm({ title: '', content: '', employee_key: mode === 'employee' ? selectedKey : '' });
+      }
+      message.success('常用指令已删除');
+    } catch {
+      message.error('暂时无法删除这条常用指令，请稍后重试。');
+    }
+  };
+
   const activeSessions = sessions.filter((s) => !s.archived);
   const archivedSessions = sessions.filter((s) => s.archived);
   const visibleSessions = showArchived ? archivedSessions : activeSessions;
   const targetOptions = mode === 'team'
     ? teams.map((t) => ({ label: `${t.name} (${(t.memberEmployeeKeys || []).length}人)`, value: t.teamCode }))
     : employees.map((e) => ({ label: e.name, value: e.employeeKey }));
+  const applicableQuickPrompts = useMemo(
+    () => quickPrompts.filter(prompt => !prompt.employee_key || (mode === 'employee' && prompt.employee_key === selectedKey)),
+    [quickPrompts, mode, selectedKey],
+  );
 
   const rightWidth = rightCollapsed ? 0 : 320;
 
-  if (isMobile) {
-    return (
-      <main style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100dvh - 80px)', padding: 20 }}>
-        <div style={{ width: '100%', maxWidth: 440, textAlign: 'center' }}>
-          <div aria-hidden="true" style={{ fontSize: 44, marginBottom: 12 }}>🖥️</div>
-          <Typography.Title level={3} style={{ marginBottom: 8 }}>完整工作台请在电脑端使用</Typography.Title>
-          <Paragraph type="secondary" style={{ marginBottom: 20 }}>
-            制作漫剧请用「快速制作」；翻译、调研、写文案等通用任务，可以在电脑端找数字员工帮忙。
-          </Paragraph>
-          {targetsLoading && (
-            <div role="status" aria-live="polite" style={{ marginBottom: 16 }}>
-              <Spin size="small" /> <Text type="secondary">正在检查可用的数字员工…</Text>
-            </div>
-          )}
-          {targetsError && (
-            <Alert
-              role="alert"
-              type="warning"
-              showIcon
-              message={targetsError}
-              action={<Button size="small" onClick={loadTargets}>重试</Button>}
-              style={{ textAlign: 'left', marginBottom: 16 }}
-            />
-          )}
-          <Space direction="vertical" style={{ width: '100%' }} size={10}>
-            <Button type="primary" block size="large" onClick={() => navigate('/studio')}>去快速制作</Button>
-            <Button block size="large" onClick={() => navigate('/production')}>查看我的项目</Button>
-            <Button type="link" block onClick={() => navigate('/dashboard')}>返回今日工作</Button>
-          </Space>
-          <Text type="secondary" style={{ display: 'block', marginTop: 16, fontSize: 12 }}>
-            电脑端还可使用团队协作、附件、多会话和产出物管理。
-          </Text>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 56px)', minHeight: 0, gap: 10 }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      height: isMobile ? 'calc(100dvh - 16px)' : 'calc(100vh - 56px)',
+      minHeight: 0,
+      gap: isMobile ? 6 : 10,
+    }}>
       <section
         aria-label="工作台用途说明"
         style={{
           display: 'flex',
-          alignItems: 'center',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'stretch' : 'center',
           justifyContent: 'space-between',
-          gap: 16,
-          padding: '9px 14px',
+          gap: isMobile ? 4 : 16,
+          padding: isMobile ? '8px 10px' : '9px 14px',
           borderRadius: 12,
           border: `1px solid ${COLORS.border}`,
           background: '#fff',
@@ -374,7 +472,9 @@ export default function Workbench() {
         <div style={{ minWidth: 0 }}>
           <Text strong style={{ display: 'block', color: '#1e293b' }}>找数字员工处理通用任务</Text>
           <Text type="secondary" style={{ fontSize: 12 }}>
-            制作之外的事，也可以找数字员工帮忙——翻译、调研、写文案或处理其他日常工作。
+            {isMobile
+              ? '在手机上也能聊；制作漫剧请切到「快速制作」。'
+              : '制作之外的事，也可以找数字员工帮忙——翻译、调研、写文案或处理其他日常工作。'}
           </Text>
         </div>
         <Button type="link" size="small" onClick={() => navigate('/studio')} style={{ flexShrink: 0, paddingInline: 4 }}>
@@ -382,11 +482,28 @@ export default function Workbench() {
         </Button>
       </section>
 
-      <div className="wb-root" style={{ display: 'flex', flex: 1, minHeight: 0, background: COLORS.canvas, borderRadius: 14, overflow: 'hidden', border: `1px solid ${COLORS.border}` }}>
+      <div className="wb-root" style={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        flex: 1,
+        minHeight: 0,
+        background: COLORS.canvas,
+        borderRadius: isMobile ? 10 : 14,
+        overflow: 'hidden',
+        border: `1px solid ${COLORS.border}`,
+      }}>
 
       {/* ── Left: selector + sessions ── */}
-      <div className="wb-left" style={{ width: 260, flexShrink: 0, background: '#fff', borderRight: `1px solid ${COLORS.border}`, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '16px 14px 12px', borderBottom: `1px solid ${COLORS.border}` }}>
+      <div className="wb-left" style={{
+        width: isMobile ? '100%' : 260,
+        flexShrink: 0,
+        background: '#fff',
+        borderRight: isMobile ? 'none' : `1px solid ${COLORS.border}`,
+        borderBottom: isMobile ? `1px solid ${COLORS.border}` : 'none',
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
+        <div style={{ padding: isMobile ? '8px 10px' : '16px 14px 12px', borderBottom: isMobile ? 'none' : `1px solid ${COLORS.border}` }}>
           {targetsLoading && (
             <div role="status" aria-live="polite" style={{ textAlign: 'center', marginBottom: 10 }}>
               <Spin size="small" /> <Text type="secondary" style={{ fontSize: 12 }}>正在加载可选对象…</Text>
@@ -402,15 +519,17 @@ export default function Workbench() {
               style={{ marginBottom: 10, padding: '6px 8px' }}
             />
           )}
-          <Radio.Group value={mode} onChange={(e) => handleModeChange(e.target.value)} buttonStyle="solid" style={{ width: '100%', display: 'flex', marginBottom: 10 }}>
+          <Radio.Group value={mode} onChange={(e) => handleModeChange(e.target.value)} buttonStyle="solid" style={{ width: '100%', display: 'flex', marginBottom: isMobile ? 6 : 10 }}>
             <Radio.Button value="employee" style={{ flex: 1, textAlign: 'center', fontSize: 13 }}><UserOutlined /> 员工</Radio.Button>
             <Radio.Button value="team" style={{ flex: 1, textAlign: 'center', fontSize: 13 }}><TeamOutlined /> 团队</Radio.Button>
           </Radio.Group>
-          <Select style={{ width: '100%', marginBottom: 10 }} placeholder={mode === 'team' ? '选择团队' : '选择数字员工'} value={selectedKey || undefined} onChange={handleSelectTarget} options={targetOptions} showSearch optionFilterProp="label" />
-          <Button block onClick={handleNewChat} disabled={!targetReady} style={{ borderRadius: 8, fontWeight: 500 }}>+ 新会话</Button>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <Select style={{ flex: 1, minWidth: 0 }} placeholder={mode === 'team' ? '选择团队' : '选择数字员工'} value={selectedKey || undefined} onChange={handleSelectTarget} options={targetOptions} showSearch optionFilterProp="label" />
+            <Button onClick={handleNewChat} disabled={!targetReady} style={{ borderRadius: 8, fontWeight: 500, flexShrink: 0 }}>+ 新会话</Button>
+          </div>
         </div>
 
-        <div style={{ flex: 1, overflow: 'auto', padding: '10px 10px' }}>
+        <div style={{ flex: 1, overflow: 'auto', padding: '10px 10px', display: isMobile ? 'none' : 'block' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, padding: '0 4px' }}>
             <Text strong style={{ fontSize: 12, color: COLORS.slate }}>会话记录</Text>
             <Radio.Group size="small" value={showArchived ? 'a' : 'c'} onChange={(e) => setShowArchived(e.target.value === 'a')}>
@@ -461,9 +580,18 @@ export default function Workbench() {
       </div>
 
       {/* ── Center: chat ── */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', background: COLORS.canvas }}>
+      <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', background: COLORS.canvas }}>
         {/* Chat header */}
-        <div style={{ height: 56, background: '#fff', borderBottom: `1px solid ${COLORS.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+        <div style={{
+          minHeight: isMobile ? 48 : 56,
+          background: '#fff',
+          borderBottom: `1px solid ${COLORS.border}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: isMobile ? '6px 10px' : '0 20px',
+          flexShrink: 0,
+        }}>
           <Space size={12}>
             <div style={{ width: 36, height: 36, borderRadius: 10, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
               {mode === 'team' ? <TeamOutlined /> : <RobotOutlined />}
@@ -477,14 +605,14 @@ export default function Workbench() {
           </Space>
           <Space size={8}>
             {sessionId && <Tag style={{ fontSize: 11, borderRadius: 6 }}>{sessionId.slice(0, 8)}</Tag>}
-            <Tooltip title={rightCollapsed ? '展开面板' : '收起面板'}>
+            {!isMobile && <Tooltip title={rightCollapsed ? '展开面板' : '收起面板'}>
               <Button type="text" size="small" icon={rightCollapsed ? <ExpandOutlined /> : <CompressOutlined />} aria-label={rightCollapsed ? '展开辅助面板' : '收起辅助面板'} onClick={() => setRightCollapsed(!rightCollapsed)} />
-            </Tooltip>
+            </Tooltip>}
           </Space>
         </div>
 
         {/* Messages */}
-        <div style={{ flex: 1, overflow: 'auto', padding: '24px 28px' }}>
+        <div style={{ flex: 1, overflow: 'auto', padding: isMobile ? '12px 10px' : '24px 28px' }}>
           {!targetReady ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
               <Empty image={<img src="/empty-connect.svg" alt="" width={160} />} description={mode === 'team' ? '选择一个团队开始协作' : '选择一个数字员工开始对话'} />
@@ -510,7 +638,7 @@ export default function Workbench() {
                         <RobotOutlined />
                       </div>
                     )}
-                    <div style={{ maxWidth: '72%', minWidth: 60 }}>
+                    <div style={{ maxWidth: isMobile ? '86%' : '72%', minWidth: 60 }}>
                       <div className={isUser ? 'wb-bubble-user' : 'wb-bubble-ai'} style={{
                         padding: '12px 16px', fontSize: 14, lineHeight: 1.7, wordBreak: 'break-word',
                         borderRadius: isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
@@ -578,7 +706,7 @@ export default function Workbench() {
         </div>
 
         {/* Input area */}
-        <div style={{ padding: '12px 20px 16px', background: '#fff', borderTop: `1px solid ${COLORS.border}`, flexShrink: 0 }}>
+        <div style={{ padding: isMobile ? '8px 8px 10px' : '12px 20px 16px', background: '#fff', borderTop: `1px solid ${COLORS.border}`, flexShrink: 0 }}>
           {/* @ mentions for team */}
           {mode === 'team' && teamMembers.length > 0 && (
             <Space size={4} wrap style={{ marginBottom: 8 }}>
@@ -587,6 +715,69 @@ export default function Workbench() {
                 <Tag key={emp.employeeKey} style={{ cursor: 'pointer', fontSize: 12 }} onClick={() => insertMention(emp)}>@{emp.name}</Tag>
               ))}
             </Space>
+          )}
+          {/* 常用指令：点击即插入当前光标位置，仍可继续补充上下文。 */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            marginBottom: 8,
+            minWidth: 0,
+            overflowX: 'auto',
+            paddingBottom: 1,
+          }}>
+            <Text type="secondary" style={{ fontSize: 12, whiteSpace: 'nowrap' }}>
+              <BookOutlined /> 常用指令
+            </Text>
+            {quickPromptsLoading ? (
+              <Spin size="small" />
+            ) : applicableQuickPrompts.length > 0 ? (
+              applicableQuickPrompts.slice(0, isMobile ? 4 : 8).map(prompt => (
+                <Tooltip key={prompt.id} title={prompt.content}>
+                  <Button
+                    size="small"
+                    type="dashed"
+                    onClick={() => insertQuickPrompt(prompt)}
+                    style={{ flexShrink: 0, maxWidth: isMobile ? 130 : 180, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                  >
+                    {prompt.title}
+                  </Button>
+                </Tooltip>
+              ))
+            ) : (
+              <Text type="secondary" style={{ fontSize: 11, whiteSpace: 'nowrap' }}>还没有保存</Text>
+            )}
+            <Button
+              size="small"
+              type="text"
+              icon={<PlusOutlined />}
+              disabled={!inputValue.trim()}
+              onClick={openNewQuickPrompt}
+              style={{ flexShrink: 0 }}
+            >
+              保存当前
+            </Button>
+            <Button
+              size="small"
+              type="link"
+              onClick={() => {
+                setEditingQuickPromptId(null);
+                setQuickPromptForm({ title: '', content: '', employee_key: mode === 'employee' ? selectedKey : '' });
+                setQuickPromptOpen(true);
+              }}
+              style={{ flexShrink: 0 }}
+            >
+              管理
+            </Button>
+          </div>
+          {quickPromptsError && (
+            <Alert
+              type="warning"
+              showIcon
+              message={quickPromptsError}
+              action={<Button size="small" onClick={loadQuickPrompts}>重试</Button>}
+              style={{ marginBottom: 8, padding: '5px 8px' }}
+            />
           )}
           {/* Pending files */}
           {pendingFiles.length > 0 && (
@@ -598,13 +789,14 @@ export default function Workbench() {
               ))}
             </div>
           )}
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '40px minmax(0, 1fr) auto', gap: isMobile ? 6 : 8, alignItems: 'flex-end' }}>
             <Upload beforeUpload={(file) => { handleUpload(file as File); return false; }} showUploadList={false} multiple accept="*/*">
               <Tooltip title="上传图片/文件">
                 <Button icon={<PaperClipOutlined />} aria-label="上传图片或文件" loading={uploading} disabled={!targetReady || loading} style={{ borderRadius: 10, height: 40, width: 40 }} />
               </Tooltip>
             </Upload>
             <TextArea
+              ref={composerRef}
               value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={handleKeyDown}
               placeholder={targetReady ? '输入消息，Enter 发送，Shift+Enter 换行' : '请先选择对象'}
               autoSize={{ minRows: 1, maxRows: 5 }} disabled={!targetReady || loading}
@@ -613,14 +805,14 @@ export default function Workbench() {
             <Button type="primary" icon={<SendOutlined />} onClick={handleSend} loading={loading}
               disabled={!targetReady || (!inputValue.trim() && pendingFiles.length === 0)}
               style={{ borderRadius: 10, height: 40, fontWeight: 500 }}>
-              发送
+              {isMobile ? null : '发送'}
             </Button>
           </div>
         </div>
       </div>
 
       {/* ── Right: context + artifacts ── */}
-      <div style={{ width: rightWidth, flexShrink: 0, background: '#fff', borderLeft: `1px solid ${COLORS.border}`, overflow: 'auto', transition: 'width .2s', display: rightCollapsed ? 'none' : 'block' }}>
+      <div style={{ width: rightWidth, flexShrink: 0, background: '#fff', borderLeft: `1px solid ${COLORS.border}`, overflow: 'auto', transition: 'width .2s', display: isMobile || rightCollapsed ? 'none' : 'block' }}>
         {/* Context */}
         <div style={{ padding: '18px 16px', borderBottom: `1px solid ${COLORS.border}` }}>
           <Text strong style={{ fontSize: 13, color: COLORS.slate, marginBottom: 10, display: 'block' }}>上下文</Text>
@@ -675,6 +867,130 @@ export default function Workbench() {
           )}
         </div>
       </div>
+
+      <Modal
+        title={editingQuickPromptId ? '编辑常用指令' : '管理常用指令'}
+        open={quickPromptOpen}
+        onCancel={() => {
+          if (!quickPromptSaving) setQuickPromptOpen(false);
+        }}
+        onOk={handleSaveQuickPrompt}
+        okText={editingQuickPromptId ? '保存修改' : '新增指令'}
+        cancelText="关闭"
+        confirmLoading={quickPromptSaving}
+        okButtonProps={{ disabled: !quickPromptForm.title.trim() || !quickPromptForm.content.trim() }}
+        width={isMobile ? 'calc(100vw - 24px)' : 620}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 8 }}>
+          <div>
+            <Text type="secondary" style={{ fontSize: 12 }}>指令名称</Text>
+            <Input
+              value={quickPromptForm.title}
+              onChange={event => setQuickPromptForm(prev => ({ ...prev, title: event.target.value }))}
+              placeholder="例如：把台词改得更口语"
+              maxLength={60}
+              style={{ marginTop: 4 }}
+            />
+          </div>
+          <div>
+            <Text type="secondary" style={{ fontSize: 12 }}>指令内容</Text>
+            <TextArea
+              value={quickPromptForm.content}
+              onChange={event => setQuickPromptForm(prev => ({ ...prev, content: event.target.value }))}
+              placeholder="输入以后可以一键插入的完整指令"
+              autoSize={{ minRows: 3, maxRows: 7 }}
+              maxLength={4000}
+              showCount
+              style={{ marginTop: 4 }}
+            />
+          </div>
+          <div>
+            <Text type="secondary" style={{ fontSize: 12 }}>适用员工（可选）</Text>
+            <Select
+              value={quickPromptForm.employee_key || undefined}
+              onChange={value => setQuickPromptForm(prev => ({ ...prev, employee_key: value || '' }))}
+              placeholder="所有数字员工都可用"
+              allowClear
+              showSearch
+              optionFilterProp="label"
+              options={employees.map(employee => ({ value: employee.employeeKey, label: employee.name }))}
+              style={{ width: '100%', marginTop: 4 }}
+            />
+          </div>
+          <Divider style={{ margin: '4px 0 0' }} />
+          <div>
+            <Text strong style={{ fontSize: 13 }}>已保存的指令 ({quickPrompts.length})</Text>
+            {quickPrompts.length === 0 ? (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有常用指令" style={{ marginBlock: 14 }} />
+            ) : (
+              <List
+                size="small"
+                dataSource={quickPrompts}
+                style={{ marginTop: 6, maxHeight: 260, overflow: 'auto' }}
+                renderItem={prompt => (
+                  <List.Item
+                    actions={[
+                      <Button
+                        key="use"
+                        type="link"
+                        size="small"
+                        disabled={quickPromptSaving}
+                        onClick={() => {
+                          insertQuickPrompt(prompt);
+                          setQuickPromptOpen(false);
+                        }}
+                      >
+                        插入
+                      </Button>,
+                      <Button
+                        key="edit"
+                        type="text"
+                        size="small"
+                        icon={<EditOutlined />}
+                        disabled={quickPromptSaving}
+                        aria-label={`编辑常用指令${prompt.title}`}
+                        onClick={() => openEditQuickPrompt(prompt)}
+                      />,
+                      <Popconfirm
+                        key="delete"
+                        title="删除这条常用指令？"
+                        okText="删除"
+                        cancelText="取消"
+                        onConfirm={() => handleDeleteQuickPrompt(prompt.id)}
+                      >
+                        <Button
+                          type="text"
+                          size="small"
+                          danger
+                          icon={<DeleteOutlined />}
+                          disabled={quickPromptSaving}
+                          aria-label={`删除常用指令${prompt.title}`}
+                        />
+                      </Popconfirm>,
+                    ]}
+                  >
+                    <List.Item.Meta
+                      title={<Text style={{ fontSize: 13 }}>{prompt.title}</Text>}
+                      description={
+                        <div>
+                          <Paragraph ellipsis={{ rows: 2 }} style={{ margin: 0, fontSize: 12 }}>
+                            {prompt.content}
+                          </Paragraph>
+                          {prompt.employee_key && (
+                            <Tag style={{ marginTop: 4, fontSize: 10 }}>
+                              {employees.find(employee => employee.employeeKey === prompt.employee_key)?.name || prompt.employee_key}
+                            </Tag>
+                          )}
+                        </div>
+                      }
+                    />
+                  </List.Item>
+                )}
+              />
+            )}
+          </div>
+        </div>
+      </Modal>
 
       {/* Artifact drawer */}
       <Drawer title={activeArtifact?.title || '产出物'} open={artifactOpen} onClose={() => setArtifactOpen(false)} width={720}>

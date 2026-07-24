@@ -1,0 +1,24 @@
+{
+  "canvas_id": "a387bd9e",
+  "name": "空白画布",
+  "nodes": [
+    {
+      "node_id": "d_mrxjbrmo_joxd",
+      "type": "data",
+      "position": {
+        "x": 199,
+        "y": 229
+      },
+      "data": {
+        "stage": "",
+        "title": "",
+        "content": "",
+        "locked": false,
+        "color": ""
+      }
+    }
+  ],
+  "edges": [],
+  "created_at": "2026-07-23T13:14:19.137653+00:00",
+  "updated_at": "2026-07-23T14:13:39.182766+00:00"
+}

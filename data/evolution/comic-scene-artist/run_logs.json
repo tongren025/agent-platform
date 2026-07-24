@@ -88,5 +88,15 @@
     "llmModel": "",
     "durationMs": 0,
     "error": null
+  },
+  {
+    "logId": "evo_a327b03c86cb",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-23T20:00:19.593846Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
   }
 ]

@@ -11,6 +11,7 @@ import {
   SearchOutlined, SettingOutlined, TeamOutlined, UserOutlined,
   CloseOutlined, DragOutlined, FilterOutlined, BarChartOutlined,
   CheckCircleOutlined, ClockCircleOutlined, ExclamationCircleOutlined,
+  MessageOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api';
@@ -122,6 +123,10 @@ interface Project {
   created_at: string; updated_at: string; cardCount?: number;
   cards?: CardItem[]; stages?: StageInfo[]; stats?: any;
 }
+interface CardComment {
+  id: string; project_id: string; card_id: string; content: string; author: string;
+  created_at: string; updated_at: string; resolved: boolean; resolved_at?: string | null;
+}
 
 function StageProgress({ total, done }: { total: number; done: number }) {
   if (total === 0) return null;
@@ -182,6 +187,12 @@ export default function Production() {
   const [activeEpisode, setActiveEpisode] = useState<string>('all');
   const [isNarrow, setIsNarrow] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [stageFilter, setStageFilter] = useState('');
+  const [assigneeFilter, setAssigneeFilter] = useState('');
+  const [searchResults, setSearchResults] = useState<CardItem[] | null>(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState('');
+  const [searchRevision, setSearchRevision] = useState(0);
   const [selectedCards, setSelectedCards] = useState<Set<string>>(new Set());
   const [dragCard, setDragCard] = useState<string | null>(null);
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
@@ -212,6 +223,21 @@ export default function Production() {
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [addMemberForm, setAddMemberForm] = useState({ name: '', role: 'editor' });
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [commentCard, setCommentCard] = useState<CardItem | null>(null);
+  const [comments, setComments] = useState<CardComment[]>([]);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [commentsError, setCommentsError] = useState('');
+  const [commentDraft, setCommentDraft] = useState('');
+  const [commentSaving, setCommentSaving] = useState(false);
+  const searchRequestRef = useRef(0);
+  const projectRequestRef = useRef(0);
+  const commentRequestRef = useRef(0);
+  const commentCountRequestRef = useRef(0);
+  const commentContextRef = useRef('');
+  const selectedPidRef = useRef(selectedPid);
+  selectedPidRef.current = selectedPid;
 
   const episodes = useMemo(() => {
     const eps = new Set<number>();
@@ -222,13 +248,15 @@ export default function Production() {
   const globalCards = useMemo(() => cards.filter(c => c.episode == null), [cards]);
 
   const filteredCards = useMemo(() => {
-    let result = cards;
-    if (activeEpisode === 'global') result = globalCards;
+    let result = searchResults ?? cards;
+    if (activeEpisode === 'global') result = result.filter(c => c.episode == null);
     else if (activeEpisode !== 'all') {
       const ep = parseInt(activeEpisode);
       result = result.filter(c => c.episode === ep);
     }
+    if (stageFilter) result = result.filter(c => c.stage === stageFilter);
     if (statusFilter) result = result.filter(c => c.status === statusFilter);
+    if (assigneeFilter) result = result.filter(c => c.assignee === assigneeFilter);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(c =>
@@ -238,7 +266,16 @@ export default function Production() {
       );
     }
     return result;
-  }, [cards, activeEpisode, globalCards, searchQuery, statusFilter]);
+  }, [cards, searchResults, activeEpisode, globalCards, searchQuery, stageFilter, statusFilter, assigneeFilter]);
+
+  const hasSearchFilters = !!(
+    searchQuery.trim() || stageFilter || statusFilter || assigneeFilter
+    || (activeEpisode !== 'all' && activeEpisode !== 'global')
+  );
+
+  const assigneeOptions = useMemo(() => Array.from(new Set(
+    cards.map(card => card.assignee?.trim()).filter(Boolean) as string[],
+  )).sort((a, b) => a.localeCompare(b, 'zh-CN')), [cards]);
 
   const loadProjects = useCallback(async () => {
     setProjectsLoading(true);
@@ -254,20 +291,29 @@ export default function Production() {
 
   const loadProject = useCallback(async (pid: string) => {
     if (!pid) return;
+    const requestId = ++projectRequestRef.current;
     setLoading(true);
     setProjectError('');
     setProject(null);
     setCards([]);
     setStages([]);
+    setSearchResults(null);
     try {
       const data = await api.getProject(pid);
+      if (requestId !== projectRequestRef.current || selectedPidRef.current !== pid) return;
       setProject(data);
       setCards(data.cards || []);
       setStages(data.stages || []);
+      setSearchRevision(value => value + 1);
     } catch {
+      if (requestId !== projectRequestRef.current || selectedPidRef.current !== pid) return;
       setProjectError('暂时无法打开这个项目，请稍后重试。');
     }
-    finally { setLoading(false); }
+    finally {
+      if (requestId === projectRequestRef.current && selectedPidRef.current === pid) {
+        setLoading(false);
+      }
+    }
   }, []);
 
   const loadEmployees = useCallback(async () => {
@@ -286,9 +332,11 @@ export default function Production() {
   }, [loadEmployees, loadProjects]);
   useEffect(() => {
     if (routePid && routePid !== selectedPid) {
+      searchRequestRef.current += 1;
       setSelectedPid(routePid);
       setActiveEpisode('all');
       setSelectedCards(new Set());
+      setSearchResults(null);
     }
     // selectedPid 由交互立即更新；这里只在 URL 参数变化时同步，避免导航切项目时被旧参数回写。
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -301,6 +349,70 @@ export default function Production() {
   }, []);
   useEffect(() => { if (!selectedPid && projects.length > 0) setSelectedPid(projects[0].project_id); }, [projects, selectedPid]);
   useEffect(() => { if (selectedPid) loadProject(selectedPid); }, [selectedPid, loadProject]);
+  useEffect(() => {
+    commentRequestRef.current += 1;
+    commentContextRef.current = '';
+    setCommentsOpen(false);
+    setCommentCard(null);
+    setComments([]);
+    setCommentDraft('');
+  }, [selectedPid]);
+
+  // 服务端检索带防抖和递增序号，确保慢请求不会覆盖用户刚输入的新条件或新项目。
+  useEffect(() => {
+    const requestId = ++searchRequestRef.current;
+    setSearchError('');
+    if (!selectedPid || !hasSearchFilters) {
+      setSearchResults(null);
+      setSearchLoading(false);
+      return;
+    }
+    setSearchLoading(true);
+    const timer = window.setTimeout(async () => {
+      try {
+        const result = await api.searchCards(selectedPid, {
+          q: searchQuery.trim() || undefined,
+          stage: stageFilter || undefined,
+          status: statusFilter || undefined,
+          episode: activeEpisode !== 'all' && activeEpisode !== 'global'
+            ? Number(activeEpisode)
+            : undefined,
+          assignee: assigneeFilter || undefined,
+        });
+        if (requestId !== searchRequestRef.current) return;
+        setSearchResults(result);
+      } catch {
+        if (requestId !== searchRequestRef.current) return;
+        // 服务端搜索失败时退回本地过滤，避免整个看板突然变空。
+        setSearchResults(null);
+        setSearchError('暂时无法搜索卡片，请稍后重试。');
+      } finally {
+        if (requestId === searchRequestRef.current) setSearchLoading(false);
+      }
+    }, 280);
+    return () => window.clearTimeout(timer);
+  }, [
+    selectedPid, searchQuery, stageFilter, statusFilter, activeEpisode,
+    assigneeFilter, hasSearchFilters, searchRevision,
+  ]);
+
+  useEffect(() => {
+    const requestId = ++commentCountRequestRef.current;
+    if (!selectedPid) {
+      setCommentCounts({});
+      return;
+    }
+    void api.listCardComments(selectedPid, { include_resolved: true })
+      .then((items: CardComment[]) => {
+        if (requestId !== commentCountRequestRef.current) return;
+        const counts: Record<string, number> = {};
+        items.forEach(item => { counts[item.card_id] = (counts[item.card_id] || 0) + 1; });
+        setCommentCounts(counts);
+      })
+      .catch(() => {
+        if (requestId === commentCountRequestRef.current) setCommentCounts({});
+      });
+  }, [selectedPid, searchRevision]);
 
   // 切换项目时，大项目默认落到第一集（或全局资产），避免「全部」视图一次性平铺上千张卡片卡死。
   // 用 ref 记住已初始化过的项目，避免生成/编辑后 loadProject 重跑时把用户手选的集数重置掉。
@@ -317,6 +429,12 @@ export default function Production() {
   }, [project?.project_id, cards, episodes, globalCards]);
 
   // ── Handlers ──
+  const refreshFilteredView = () => {
+    searchRequestRef.current += 1;
+    setSearchResults(null);
+    setSearchRevision(value => value + 1);
+  };
+
   const handleCreateProject = async () => {
     if (!newProjForm.name.trim()) { message.warning('请输入项目名称'); return; }
     try {
@@ -384,6 +502,7 @@ export default function Production() {
     try {
       await api.deleteCard(cardId);
       setCards(prev => prev.filter(c => c.card_id !== cardId));
+      refreshFilteredView();
       if (activeCard?.card_id === cardId) setCardDrawerOpen(false);
     } catch (e: any) { message.error(e.message); }
   };
@@ -392,6 +511,7 @@ export default function Production() {
     try {
       const moved = await api.moveCard(cardId, stage);
       setCards(prev => prev.map(c => c.card_id === cardId ? moved : c));
+      refreshFilteredView();
       if (activeCard?.card_id === cardId) setActiveCard(moved);
     } catch (e: any) { message.error(e.message); }
   };
@@ -404,6 +524,7 @@ export default function Production() {
         episode: addCardForm.episode, shot_number: addCardForm.shot_number, status: 'pending',
       });
       setCards(prev => [...prev, data]);
+      refreshFilteredView();
       setAddCardOpen(false);
       setAddCardForm({ title: '', content: '', episode: null, shot_number: 0 });
       message.success('卡片已创建');
@@ -426,6 +547,7 @@ export default function Production() {
       }
       const updated = await api.updateCard(activeCard.card_id, payload);
       setCards(prev => prev.map(c => c.card_id === activeCard.card_id ? updated : c));
+      refreshFilteredView();
       setActiveCard(updated);
       setEditMode(false);
       message.success('已保存');
@@ -438,6 +560,7 @@ export default function Production() {
     try {
       const res = await api.uploadCardFile(selectedPid, activeCard.card_id, file, type);
       setCards(prev => prev.map(c => c.card_id === activeCard.card_id ? res.card : c));
+      refreshFilteredView();
       setActiveCard(res.card);
       message.success('上传成功');
     } catch (e: any) { message.error(e.message); }
@@ -451,6 +574,7 @@ export default function Production() {
     try {
       const updated = await api.updateCard(activeCard.card_id, { [type]: list });
       setCards(prev => prev.map(c => c.card_id === activeCard.card_id ? updated : c));
+      refreshFilteredView();
       setActiveCard(updated);
       message.success('已删除');
     } catch (e: any) { message.error(e.message); }
@@ -561,11 +685,109 @@ export default function Production() {
     setCardDrawerOpen(true);
   };
 
+  const clearSearchFilters = () => {
+    searchRequestRef.current += 1;
+    setSearchQuery('');
+    setStageFilter('');
+    setStatusFilter('');
+    setAssigneeFilter('');
+    setActiveEpisode('all');
+    setSearchResults(null);
+    setSearchError('');
+    setSearchLoading(false);
+  };
+
+  const loadCardComments = useCallback(async (pid: string, card: CardItem) => {
+    const requestId = ++commentRequestRef.current;
+    const context = `${pid}:${card.card_id}`;
+    setCommentsLoading(true);
+    setCommentsError('');
+    try {
+      const items = await api.listCardComments(pid, {
+        card_id: card.card_id,
+        include_resolved: true,
+      });
+      if (
+        requestId !== commentRequestRef.current
+        || commentContextRef.current !== context
+      ) return;
+      setComments(items);
+      setCommentCounts(prev => ({ ...prev, [card.card_id]: items.length }));
+    } catch {
+      if (requestId !== commentRequestRef.current) return;
+      setComments([]);
+      setCommentsError('暂时无法加载批注，请稍后重试。');
+    } finally {
+      if (requestId === commentRequestRef.current) setCommentsLoading(false);
+    }
+  }, []);
+
+  const openComments = (card: CardItem) => {
+    commentContextRef.current = `${selectedPid}:${card.card_id}`;
+    setCommentCard(card);
+    setCommentDraft('');
+    setComments([]);
+    setCommentsOpen(true);
+    void loadCardComments(selectedPid, card);
+  };
+
+  const closeComments = () => {
+    commentRequestRef.current += 1;
+    commentContextRef.current = '';
+    setCommentsOpen(false);
+    setCommentCard(null);
+    setComments([]);
+    setCommentsError('');
+    setCommentDraft('');
+    setCommentsLoading(false);
+  };
+
+  const handleAddComment = async () => {
+    const card = commentCard;
+    const content = commentDraft.trim();
+    const pid = selectedPid;
+    const context = `${pid}:${card?.card_id || ''}`;
+    if (!card || !content || commentSaving) return;
+    setCommentSaving(true);
+    try {
+      const created = await api.addCardComment(pid, card.card_id, { content });
+      if (commentContextRef.current !== context) return;
+      setComments(prev => [...prev, created]);
+      setCommentCounts(prev => ({ ...prev, [card.card_id]: (prev[card.card_id] || 0) + 1 }));
+      setCommentDraft('');
+      message.success('批注已添加');
+    } catch {
+      message.error('批注暂时无法保存，请稍后重试。');
+    } finally {
+      setCommentSaving(false);
+    }
+  };
+
+  const handleResolveComment = async (item: CardComment) => {
+    const card = commentCard;
+    const pid = selectedPid;
+    const context = `${pid}:${card?.card_id || ''}`;
+    if (!card) return;
+    try {
+      const updated = await api.resolveProjectComment(pid, item.id, { resolved: !item.resolved });
+      if (commentContextRef.current !== context) return;
+      setComments(prev => prev.map(comment => comment.id === item.id ? updated : comment));
+      message.success(updated.resolved ? '批注已解决' : '批注已重新打开');
+    } catch {
+      message.error('暂时无法更新批注状态，请稍后重试。');
+    }
+  };
+
   const stageCards = (stageKey: string) =>
     filteredCards.filter(c => c.stage === stageKey).sort((a, b) => a.shot_number - b.shot_number);
 
   const autoStages = stages.filter(s => s.auto);
-  const nextAutoStage = autoStages.find(s => stageCards(s.key).length === 0);
+  const workflowContextCards = cards.filter(card => {
+    if (activeEpisode === 'global') return card.episode == null;
+    if (activeEpisode !== 'all') return card.episode === Number(activeEpisode);
+    return true;
+  });
+  const nextAutoStage = autoStages.find(stage => !workflowContextCards.some(card => card.stage === stage.key));
 
   const episodeTabs = useMemo(() => {
     const tabs: { key: string; label: React.ReactNode; count: number }[] = [
@@ -604,9 +826,11 @@ export default function Production() {
           <Select
             value={selectedPid || undefined}
             onChange={(v: string) => {
+              searchRequestRef.current += 1;
               setSelectedPid(v);
               setActiveEpisode('all');
               setSelectedCards(new Set());
+              setSearchResults(null);
               navigate(`/production/${v}/pipeline`);
             }}
             style={{ flex: 1 }} size="small" placeholder="选择项目"
@@ -661,18 +885,22 @@ export default function Production() {
             return (
               <div key={p.project_id}
                 onClick={() => {
+                  searchRequestRef.current += 1;
                   setSelectedPid(p.project_id);
                   setActiveEpisode('all');
                   setSelectedCards(new Set());
+                  setSearchResults(null);
                   navigate(`/production/${p.project_id}/pipeline`);
                 }}
                 role="button" tabIndex={0}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
+                    searchRequestRef.current += 1;
                     setSelectedPid(p.project_id);
                     setActiveEpisode('all');
                     setSelectedCards(new Set());
+                    setSearchResults(null);
                     navigate(`/production/${p.project_id}/pipeline`);
                   }
                 }}
@@ -784,18 +1012,6 @@ export default function Production() {
                 <ProjectViewNav projectId={selectedPid} current="pipeline" />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                <Input prefix={<SearchOutlined style={{ color: '#bbb' }} />} placeholder="搜索卡片..."
-                  value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                  allowClear size="small"
-                  style={{ width: isNarrow ? '100%' : 180 }} />
-                <Select size="small" value={statusFilter} onChange={v => setStatusFilter(v ?? '')}
-                  placeholder="状态" allowClear style={{ width: 100 }}
-                  options={[
-                    { value: '', label: '全部状态' },
-                    { value: 'pending', label: '待制作' },
-                    { value: 'done', label: '已完成' },
-                    { value: 'review', label: '审核中' },
-                  ]} />
                 {nextAutoStage && (
                   <Button type="primary" size="small" icon={<ThunderboltOutlined />}
                     loading={!!generating} onClick={() => openGenDialog(nextAutoStage.key)}>
@@ -811,6 +1027,102 @@ export default function Production() {
                   </Tooltip>
                 )}
               </div>
+            </div>
+
+            {/* ── Search and filter toolbar ── */}
+            <div
+              aria-label="搜索和筛选制作卡片"
+              style={{
+                padding: isNarrow ? '10px 12px' : '10px 20px',
+                borderBottom: `1px solid ${COLORS.border}`,
+                background: '#fafbfd',
+                display: 'grid',
+                gridTemplateColumns: isNarrow ? '1fr 1fr' : 'minmax(210px, 1.6fr) repeat(4, minmax(120px, 1fr)) auto',
+                alignItems: 'center',
+                gap: 8,
+                flexShrink: 0,
+              }}
+            >
+              <Input
+                prefix={searchLoading ? <Spin size="small" /> : <SearchOutlined style={{ color: '#999' }} />}
+                placeholder="搜标题、内容或提示词"
+                value={searchQuery}
+                onChange={event => {
+                  searchRequestRef.current += 1;
+                  setSearchQuery(event.target.value);
+                }}
+                allowClear
+                style={{ gridColumn: isNarrow ? '1 / -1' : undefined }}
+              />
+              <Select
+                value={stageFilter || undefined}
+                onChange={value => {
+                  searchRequestRef.current += 1;
+                  setStageFilter(value || '');
+                }}
+                placeholder="制作阶段"
+                allowClear
+                options={stages.map(stage => ({ value: stage.key, label: stage.name }))}
+                style={{ width: '100%' }}
+              />
+              <Select
+                value={statusFilter || undefined}
+                onChange={value => {
+                  searchRequestRef.current += 1;
+                  setStatusFilter(value || '');
+                }}
+                placeholder="卡片状态"
+                allowClear
+                options={[
+                  { value: 'pending', label: '待制作' },
+                  { value: 'done', label: '已完成' },
+                  { value: 'review', label: '审核中' },
+                ]}
+                style={{ width: '100%' }}
+              />
+              <Select
+                value={activeEpisode}
+                onChange={value => {
+                  searchRequestRef.current += 1;
+                  setActiveEpisode(value);
+                }}
+                aria-label="按集数筛选"
+                options={episodeTabs.map(tab => ({
+                  value: tab.key,
+                  label: tab.key === 'all' ? '全部集数' : tab.key === 'global' ? '全局资产' : tab.label,
+                }))}
+                style={{ width: '100%' }}
+              />
+              <Select
+                value={assigneeFilter || undefined}
+                onChange={value => {
+                  searchRequestRef.current += 1;
+                  setAssigneeFilter(value || '');
+                }}
+                placeholder="负责人"
+                allowClear
+                showSearch
+                optionFilterProp="label"
+                options={assigneeOptions.map(name => ({ value: name, label: name }))}
+                style={{ width: '100%' }}
+              />
+              <Button
+                icon={<FilterOutlined />}
+                onClick={clearSearchFilters}
+                disabled={!hasSearchFilters && !searchError}
+                style={{ gridColumn: isNarrow ? '1 / -1' : undefined }}
+              >
+                清空筛选
+              </Button>
+              {searchError && (
+                <Alert
+                  type="warning"
+                  showIcon
+                  message={searchError}
+                  action={<Button size="small" onClick={() => setSearchRevision(value => value + 1)}>重试</Button>}
+                  style={{ gridColumn: '1 / -1' }}
+                />
+              )}
             </div>
 
             {/* ── Batch action bar ── */}
@@ -842,7 +1154,10 @@ export default function Production() {
               padding: isNarrow ? '0 12px' : '0 20px', background: '#fff',
               borderBottom: `1px solid ${COLORS.border}`, flexShrink: 0,
             }}>
-              <Tabs activeKey={activeEpisode} onChange={setActiveEpisode} size="small"
+              <Tabs activeKey={activeEpisode} onChange={value => {
+                searchRequestRef.current += 1;
+                setActiveEpisode(value);
+              }} size="small"
                 style={{ marginBottom: 0 }}
                 items={episodeTabs.map(t => ({
                   key: t.key,
@@ -867,7 +1182,21 @@ export default function Production() {
               scrollSnapType: isNarrow ? 'x mandatory' : undefined,
               WebkitOverflowScrolling: 'touch',
             }}>
-              {stages.map(stage => {
+              {searchLoading && searchResults === null ? (
+                <div role="status" aria-live="polite" style={{ margin: 'auto', textAlign: 'center' }}>
+                  <Spin />
+                  <Text type="secondary" style={{ display: 'block', marginTop: 8 }}>正在查找卡片…</Text>
+                </div>
+              ) : hasSearchFilters && !searchLoading && filteredCards.length === 0 ? (
+                <div style={{ margin: 'auto', minWidth: isNarrow ? 'calc(100vw - 48px)' : 360 }}>
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description="没有找到符合条件的卡片"
+                  >
+                    <Button onClick={clearSearchFilters}>清空筛选</Button>
+                  </Empty>
+                </div>
+              ) : stages.filter(stage => !stageFilter || stage.key === stageFilter).map(stage => {
                 const sc = stageCards(stage.key);
                 // 「全部」概览每列封顶：只渲染前 ALL_VIEW_CAP 张，剩余用一行提示代替，
                 // 避免跨集合并后单列上百张卡片（含 antd Paragraph 省略号逐张 DOM 测量）把主线程铺死。
@@ -999,6 +1328,27 @@ export default function Production() {
                                 <Tag icon={<UserOutlined />} style={{ fontSize: 10, lineHeight: '16px', margin: 0 }}>{card.assignee}</Tag>
                               </div>
                             )}
+                            <div style={{ marginTop: 5, display: 'flex', justifyContent: 'flex-end' }}>
+                              <Button
+                                type="text"
+                                size="small"
+                                icon={<MessageOutlined />}
+                                aria-label={`${card.title}的批注，共 ${commentCounts[card.card_id] || 0} 条`}
+                                onClick={event => {
+                                  event.stopPropagation();
+                                  openComments(card);
+                                }}
+                                onKeyDown={event => event.stopPropagation()}
+                                style={{
+                                  height: 24,
+                                  paddingInline: 5,
+                                  fontSize: 11,
+                                  color: commentCounts[card.card_id] ? COLORS.iris : COLORS.slate,
+                                }}
+                              >
+                                批注 {commentCounts[card.card_id] || 0}
+                              </Button>
+                            </div>
                           </div>
                         );
                       })}
@@ -1035,6 +1385,98 @@ export default function Production() {
       </div>
 
       {/* ── Modals ── */}
+
+      <Modal
+        title={commentCard ? `镜头批注 · ${commentCard.title}` : '镜头批注'}
+        open={commentsOpen}
+        onCancel={closeComments}
+        footer={null}
+        width={isNarrow ? 'calc(100vw - 24px)' : 620}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxHeight: isNarrow ? '72vh' : 620 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <TextArea
+              value={commentDraft}
+              onChange={event => setCommentDraft(event.target.value)}
+              placeholder="写下要修改的构图、台词或节奏问题…"
+              autoSize={{ minRows: 2, maxRows: 5 }}
+              maxLength={1000}
+              showCount
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                type="primary"
+                icon={<MessageOutlined />}
+                loading={commentSaving}
+                disabled={!commentDraft.trim()}
+                onClick={handleAddComment}
+              >
+                添加批注
+              </Button>
+            </div>
+          </div>
+          {commentsError ? (
+            <Alert
+              type="warning"
+              showIcon
+              message={commentsError}
+              action={commentCard && (
+                <Button size="small" onClick={() => loadCardComments(selectedPid, commentCard)}>重试</Button>
+              )}
+            />
+          ) : commentsLoading ? (
+            <div role="status" aria-live="polite" style={{ padding: 32, textAlign: 'center' }}>
+              <Spin />
+              <Text type="secondary" style={{ display: 'block', marginTop: 8 }}>正在加载批注…</Text>
+            </div>
+          ) : comments.length === 0 ? (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有批注，可以在上方写下反馈" />
+          ) : (
+            <div style={{ overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {[...comments]
+                .sort((a, b) => Number(a.resolved) - Number(b.resolved)
+                  || new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+                .map(item => (
+                  <div
+                    key={item.id}
+                    style={{
+                      padding: '11px 12px',
+                      borderRadius: 10,
+                      border: `1px solid ${item.resolved ? COLORS.border : `${COLORS.iris}35`}`,
+                      background: item.resolved ? '#fafafa' : `${COLORS.iris}06`,
+                      opacity: item.resolved ? 0.72 : 1,
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                      <Space size={6} wrap>
+                        <Text strong style={{ fontSize: 12 }}>{item.author || '团队成员'}</Text>
+                        <Text type="secondary" style={{ fontSize: 11 }}>
+                          {new Date(item.created_at).toLocaleString('zh-CN')}
+                        </Text>
+                        <Tag color={item.resolved ? 'default' : 'gold'} style={{ margin: 0, fontSize: 10 }}>
+                          {item.resolved ? '已解决' : '待处理'}
+                        </Tag>
+                      </Space>
+                      <Button type="link" size="small" onClick={() => handleResolveComment(item)}>
+                        {item.resolved ? '重新打开' : '标为解决'}
+                      </Button>
+                    </div>
+                    <Paragraph
+                      style={{
+                        margin: '8px 0 0',
+                        fontSize: 13,
+                        whiteSpace: 'pre-wrap',
+                        textDecoration: item.resolved ? 'line-through' : undefined,
+                      }}
+                    >
+                      {item.content}
+                    </Paragraph>
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      </Modal>
 
       {/* New project */}
       <Modal title="新建制作项目" open={newProjOpen} onCancel={() => setNewProjOpen(false)} width={isNarrow ? '100%' : 620}

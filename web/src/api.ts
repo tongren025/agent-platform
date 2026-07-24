@@ -75,6 +75,40 @@ export interface ProductionProjectUpdate {
   [key: string]: unknown;
 }
 
+export interface ProjectVersion {
+  version_id: string;
+  label: string;
+  reason: string;
+  created_at: string;
+  summary: {
+    description?: string;
+    card_count: number;
+    stage_counts: Record<string, number>;
+    episodes: number[];
+  };
+}
+
+export interface ProjectComment {
+  id: string;
+  project_id: string;
+  card_id: string;
+  content: string;
+  author: string;
+  created_at: string;
+  updated_at: string;
+  resolved: boolean;
+  resolved_at: string | null;
+}
+
+export interface QuickPrompt {
+  id: string;
+  title: string;
+  content: string;
+  employee_key: string;
+  created_at: string;
+  updated_at: string;
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = userToken.get();
   // FormData 的 Content-Type 必须由浏览器生成，才能带上正确的 multipart boundary。
@@ -102,6 +136,53 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const json = await readJson<ApiResult<T>>(res);
   if (json.code !== 200) throw new Error(json.message || '请求失败，请稍后重试');
   return json.data;
+}
+
+async function download(
+  path: string,
+  fallbackName: string,
+  init?: RequestInit,
+): Promise<{ filename: string }> {
+  const token = userToken.get();
+  const res = await friendlyFetch(`${BASE}${path}`, {
+    ...init,
+    headers: {
+      Accept: 'application/zip, application/octet-stream',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...init?.headers,
+    },
+  });
+  if (res.status === 401) {
+    userToken.clear();
+    if (!window.location.pathname.startsWith('/login')) {
+      window.location.href = '/login';
+    }
+    throw new Error('登录已失效，请重新登录');
+  }
+  if (!res.ok) {
+    throw new Error(await getHttpErrorMessage(res));
+  }
+
+  const disposition = res.headers.get('Content-Disposition') || '';
+  const utf8Name = disposition.match(/filename\*=UTF-8''([^;]+)/i)?.[1];
+  const plainName = disposition.match(/filename="?([^";]+)"?/i)?.[1];
+  let filename = fallbackName;
+  try {
+    filename = utf8Name ? decodeURIComponent(utf8Name) : (plainName || fallbackName);
+  } catch {
+    filename = plainName || fallbackName;
+  }
+
+  const url = URL.createObjectURL(await res.blob());
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.style.display = 'none';
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  return { filename };
 }
 
 export const api = {
@@ -274,6 +355,17 @@ export const api = {
   runTeam: (data: { teamCode: string; userInput: string; sessionId?: string; extraContext?: string }) =>
     request<any>('/agent/team-run', { method: 'POST', body: JSON.stringify(data) }),
 
+  // 工作台常用指令：后端按当前登录用户隔离。
+  listQuickPrompts: () => request<QuickPrompt[]>('/quick-prompts'),
+  createQuickPrompt: (data: { title: string; content: string; employee_key?: string }) =>
+    request<QuickPrompt>('/quick-prompts', { method: 'POST', body: JSON.stringify(data) }),
+  updateQuickPrompt: (id: string, data: { title?: string; content?: string; employee_key?: string }) =>
+    request<QuickPrompt>(`/quick-prompts/${encodeURIComponent(id)}`, {
+      method: 'PUT', body: JSON.stringify(data),
+    }),
+  deleteQuickPrompt: (id: string) =>
+    request<{ deleted: string }>(`/quick-prompts/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+
   // Production pipeline
   listProjects: () => request<any[]>('/production/projects'),
   createProject: (data: { name: string; description?: string; sourceType?: string; sourceContent?: string; employeeKey?: string; teamCode?: string; episodeCount?: number; episodeDurationSeconds?: number; aspectRatio?: string; visualStyle?: string; budget?: number; productionGoal?: ProductionGoal; pinned?: boolean }) =>
@@ -316,6 +408,47 @@ export const api = {
     if (params.assignee) qs.set('assignee', params.assignee);
     return request<any[]>(`/production/projects/${pid}/search?${qs.toString()}`);
   },
+  listCardComments: (
+    pid: string,
+    params: { card_id?: string; include_resolved?: boolean } = {},
+  ) => {
+    const qs = new URLSearchParams();
+    if (params.card_id) qs.set('card_id', params.card_id);
+    if (params.include_resolved !== undefined) {
+      qs.set('include_resolved', String(params.include_resolved));
+    }
+    const suffix = qs.toString();
+    return request<ProjectComment[]>(
+      `/production/projects/${pid}/comments${suffix ? `?${suffix}` : ''}`,
+    );
+  },
+  addCardComment: (pid: string, cardId: string, data: { content: string }) =>
+    request<ProjectComment>(
+      `/production/projects/${pid}/cards/${cardId}/comments`,
+      { method: 'POST', body: JSON.stringify(data) },
+    ),
+  resolveProjectComment: (pid: string, commentId: string, data: { resolved: boolean }) =>
+    request<ProjectComment>(
+      `/production/projects/${pid}/comments/${commentId}`,
+      { method: 'PATCH', body: JSON.stringify(data) },
+    ),
+  listProjectVersions: (pid: string) =>
+    request<ProjectVersion[]>(`/production/projects/${pid}/versions`),
+  createProjectVersion: (pid: string, data: { label?: string; reason?: string } = {}) =>
+    request<ProjectVersion>(`/production/projects/${pid}/versions`, {
+      method: 'POST', body: JSON.stringify(data),
+    }),
+  restoreProjectVersion: (pid: string, versionId: string) =>
+    request<{
+      restored_version_id: string;
+      before_restore_version_id: string;
+      project: any;
+      card_count: number;
+    }>(`/production/projects/${pid}/versions/${encodeURIComponent(versionId)}/restore`, {
+      method: 'POST',
+    }),
+  downloadProjectExport: (pid: string) =>
+    download(`/production/projects/${pid}/export`, `project-${pid}.zip`, { method: 'POST' }),
   getProjectStats: (pid: string) => request<any>(`/production/projects/${pid}/stats`),
   addMember: (pid: string, data: { name: string; role?: string; avatar?: string }) =>
     request<any>(`/production/projects/${pid}/members`, { method: 'POST', body: JSON.stringify(data) }),
@@ -369,6 +502,23 @@ export const api = {
   getDirectorState: (pid: string) => request<any>(`/director/projects/${pid}`),
   listDirectorMediaModels: (kind: 'image' | 'video') =>
     request<any[]>(`/director/media-models?kind=${kind}`),
+  updateDirectorImagePrompt: (pid: string, cardId: string, data: { prompt: string }) =>
+    request<any>(`/director/projects/${pid}/cards/${cardId}/image-prompt`, {
+      method: 'PUT', body: JSON.stringify(data),
+    }),
+  reorderDirectorShots: (pid: string, data: {
+    episode: number | null;
+    ordered_units: number[];
+    expected_project_updated_at?: string;
+  }) =>
+    request<{
+      episode: number | null;
+      ordered_units: number[];
+      updated_cards: number;
+      state: any;
+    }>(`/director/projects/${pid}/shots/order`, {
+      method: 'PUT', body: JSON.stringify(data),
+    }),
   generateDirectorImage: (pid: string, cardId: string, data: {
     model: string; prompt?: string; resolution?: string; aspect_ratio?: string;
   }) => request<any>(`/director/projects/${pid}/cards/${cardId}/image`, {

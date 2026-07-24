@@ -63,8 +63,8 @@
     "title": "",
     "author": "煎煎饺",
     "itemType": "image",
-    "favoriteNum": 1799,
-    "usageNum": 822,
+    "favoriteNum": 1922,
+    "usageNum": 850,
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/4b74542a31384a91afe4fcb75d5873c8~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=oW3fWi6lWTfushXzz9m1h6ezBGQ%3D",
     "createTime": 1775648135,
     "collectedAt": "2026-07-03T11:21:36.035622Z"
@@ -77,8 +77,8 @@
     "title": "",
     "author": "一名《墁德》",
     "itemType": "image",
-    "favoriteNum": 1690,
-    "usageNum": 552,
+    "favoriteNum": 1699,
+    "usageNum": 557,
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/9c788a23869c4db99e8b647e00df4970~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=hTjIzHfULchLwAF6kBtD%2FyGf7pU%3D",
     "createTime": 1775534589,
     "collectedAt": "2026-07-06T03:34:19.566051Z"
@@ -91,8 +91,8 @@
     "title": "",
     "author": "九姑娘",
     "itemType": "image",
-    "favoriteNum": 1427,
-    "usageNum": 11406,
+    "favoriteNum": 1492,
+    "usageNum": 12065,
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/86fc55b35dc54c6fb16a427f71aa79a0~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=Jl9VbaCZQzvY4HvOeGaKEFznwDg%3D",
     "createTime": 1775322882,
     "collectedAt": "2026-06-24T01:00:03.720335Z"
@@ -231,8 +231,8 @@
     "title": "",
     "author": "蒹葭苍苍❀",
     "itemType": "image",
-    "favoriteNum": 926,
-    "usageNum": 1248,
+    "favoriteNum": 938,
+    "usageNum": 1272,
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/4a1093bebf9c4a5f9687b57b078fdb7d~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=irE%2FQZ5oSp%2FKaEqZDAiJZqQQTF4%3D",
     "createTime": 1775304492,
     "collectedAt": "2026-06-23T05:02:07.762654Z"
@@ -245,11 +245,25 @@
     "title": "",
     "author": "点赞使用给点动力😏",
     "itemType": "image",
-    "favoriteNum": 904,
+    "favoriteNum": 910,
     "usageNum": 164,
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/95085f8a76e34c069dd8887c195ab8a9~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=6n9%2B0OQ3pNIY%2Bv0Wmqw1Gwg6c40%3D",
     "createTime": 1775478312,
     "collectedAt": "2026-06-25T01:00:05.870122Z"
+  },
+  {
+    "externalId": "7626301402989579530",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "CG建模，古风帅哥，人物特写，面部聚焦，写实风格，冷白皮肤，光滑细腻，绝世容貌，妖冶阴柔，凤眼，清冷感，灰色发丝凌乱抚面，头发无冠无束，披着头发，华丽精致的头饰，发丝间有细碎银饰垂落，穿银白色，白色衣服，领口袖口精致华丽，有银丝和华丽装饰 氛围感，高级感，朦胧梦幻，协调，人物占画面小",
+    "title": "",
+    "author": "一染风雪",
+    "itemType": "image",
+    "favoriteNum": 865,
+    "usageNum": 213,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/0a413a8a064c407099f6a97212576258~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=1UQZZ%2BXi3BMP0%2Bc95Z8eCCjztMQ%3D",
+    "createTime": 1775636665,
+    "collectedAt": "2026-06-23T05:02:58.493129Z"
   },
   {
     "externalId": "7625291296902597938",
@@ -308,20 +322,6 @@
     "collectedAt": "2026-07-16T01:00:06.345363Z"
   },
   {
-    "externalId": "7626301402989579530",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "CG建模，古风帅哥，人物特写，面部聚焦，写实风格，冷白皮肤，光滑细腻，绝世容貌，妖冶阴柔，凤眼，清冷感，灰色发丝凌乱抚面，头发无冠无束，披着头发，华丽精致的头饰，发丝间有细碎银饰垂落，穿银白色，白色衣服，领口袖口精致华丽，有银丝和华丽装饰 氛围感，高级感，朦胧梦幻，协调，人物占画面小",
-    "title": "",
-    "author": "一染风雪",
-    "itemType": "image",
-    "favoriteNum": 848,
-    "usageNum": 200,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/0a413a8a064c407099f6a97212576258~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=1UQZZ%2BXi3BMP0%2Bc95Z8eCCjztMQ%3D",
-    "createTime": 1775636665,
-    "collectedAt": "2026-06-23T05:02:58.493129Z"
-  },
-  {
     "externalId": "7623674617395154186",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -334,6 +334,20 @@
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/7ed7496d88a34e5ba01b2132adefd04c~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=IUNxtZkZ0TQR08CRyF7bjkZFNiE%3D",
     "createTime": 1775025069,
     "collectedAt": "2026-06-30T01:56:07.719448Z"
+  },
+  {
+    "externalId": "7639995078710185226",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "以蓝图的风格制作Q版的毛茸茸的榴莲精灵玩偶，黄绿色短毛，眼睛为棕色为设计草图。并包括尺寸和解释性文本注释。应使用线条和测量值来指示各个部位的尺寸给草图以技术和详细的感觉。除了主要设计外，还包括显示不同角度的零散缩略图，立体景深",
+    "title": "榴莲精灵玩偶",
+    "author": "西郡生活",
+    "itemType": "image",
+    "favoriteNum": 844,
+    "usageNum": 209,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/e22e5fc17196495eab25c84e45b58b44~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=NJhDHOe7Tt0nYU55S2IdNm3GCT8%3D",
+    "createTime": 1778824972,
+    "collectedAt": "2026-06-26T02:33:20.614035Z"
   },
   {
     "externalId": "7624460195493596426",
@@ -385,25 +399,25 @@
     "title": "",
     "author": "悟声冰山🇨🇳",
     "itemType": "image",
-    "favoriteNum": 812,
-    "usageNum": 584,
+    "favoriteNum": 818,
+    "usageNum": 586,
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/f90cf2297e004372aa64177b3985d125~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=mTvrCt92VTz8wTZjOUlLFu9hVjs%3D",
     "createTime": 1775380942,
     "collectedAt": "2026-06-23T05:02:07.762654Z"
   },
   {
-    "externalId": "7639995078710185226",
+    "externalId": "7625897372228390195",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
-    "prompt": "以蓝图的风格制作Q版的毛茸茸的榴莲精灵玩偶，黄绿色短毛，眼睛为棕色为设计草图。并包括尺寸和解释性文本注释。应使用线条和测量值来指示各个部位的尺寸给草图以技术和详细的感觉。除了主要设计外，还包括显示不同角度的零散缩略图，立体景深",
-    "title": "榴莲精灵玩偶",
-    "author": "西郡生活",
+    "prompt": "情绪写意，长焦酷镜头，非对称构图，对焦主体，抓拍曼妙模糊的人影及场景，地铁车站，光影交错，时兴韩系秀发，前卫潮穿搭，虚实与重叠，时尚，名场面，低光，清冷，班驳暖光，情景氛围感，泛朦，过曝，迷离，高噪点，胶片粗颗粒质感，关键视觉，弱印象风，氛围感人像，前卫艺术，高级感，金奖摄影佳作",
+    "title": "",
+    "author": "光年记",
     "itemType": "image",
-    "favoriteNum": 798,
-    "usageNum": 205,
-    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/e22e5fc17196495eab25c84e45b58b44~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=NJhDHOe7Tt0nYU55S2IdNm3GCT8%3D",
-    "createTime": 1778824972,
-    "collectedAt": "2026-06-26T02:33:20.614035Z"
+    "favoriteNum": 799,
+    "usageNum": 733,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/c8c0287d81604e49b39b98564e6dd162~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=6sKOoKmh%2Fd%2BEovpzj5VjT4BfXog%3D",
+    "createTime": 1775542595,
+    "collectedAt": "2026-07-06T03:34:19.566051Z"
   },
   {
     "externalId": "7644033166168182054",
@@ -417,6 +431,20 @@
     "usageNum": 42,
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/b3dbe76499af4616b491c6cacea44b40~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=ZSaiKRj2yluFEYWdR%2BdG0KCuD70%3D",
     "createTime": 1779765163,
+    "collectedAt": "2026-06-23T05:02:07.762654Z"
+  },
+  {
+    "externalId": "7625180611203894554",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "Hanna Wainio风格，笔触细腻，线条流畅，极繁主义，高对比度，撞色美学，光影美学，专业摄影，专业打光，完美品质，超清画质，低饱和度，弥散渐变，随机构图，极致细节，层次感，氛围感，随笔线稿，精细画笔，艺术概念\n卡通动漫插画",
+    "title": "",
+    "author": "无赖姬神",
+    "itemType": "image",
+    "favoriteNum": 786,
+    "usageNum": 140,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/d3cc253a032743ae9d784009249adb1e~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=fPQtf5SuKEKaiod%2B1D%2BtCvOOJd0%3D",
+    "createTime": 1775375713,
     "collectedAt": "2026-06-23T05:02:07.762654Z"
   },
   {
@@ -448,20 +476,6 @@
     "collectedAt": "2026-07-01T03:11:20.308336Z"
   },
   {
-    "externalId": "7625897372228390195",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "情绪写意，长焦酷镜头，非对称构图，对焦主体，抓拍曼妙模糊的人影及场景，地铁车站，光影交错，时兴韩系秀发，前卫潮穿搭，虚实与重叠，时尚，名场面，低光，清冷，班驳暖光，情景氛围感，泛朦，过曝，迷离，高噪点，胶片粗颗粒质感，关键视觉，弱印象风，氛围感人像，前卫艺术，高级感，金奖摄影佳作",
-    "title": "",
-    "author": "光年记",
-    "itemType": "image",
-    "favoriteNum": 752,
-    "usageNum": 691,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/c8c0287d81604e49b39b98564e6dd162~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=6sKOoKmh%2Fd%2BEovpzj5VjT4BfXog%3D",
-    "createTime": 1775542595,
-    "collectedAt": "2026-07-06T03:34:19.566051Z"
-  },
-  {
     "externalId": "7625590151644761370",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -476,6 +490,20 @@
     "collectedAt": "2026-06-24T01:00:03.720335Z"
   },
   {
+    "externalId": "7629578299429227822",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "Moebius (Jean Giraud)风格，Akira电影风格，电影写实风格西安城市宣传海报，点缀少量红色和浅金色，东方美学，新中式风格，极繁主义，不对称构图。洞内，有个敦煌大佛敦煌飞天壁画，超广角，标题叫“敦煌丝路”,16K超高清，鱼眼夸张仰视，，下方有骆驼商队，走在卷轴上，卷轴和盘旋着大佛，#中国好创意#",
+    "title": "",
+    "author": "东方&美学设计",
+    "itemType": "image",
+    "favoriteNum": 726,
+    "usageNum": 152,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/dd7a2ec7f1874f4eadb022fb2979b52a~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=Ts83tXnoPxPSX1gqZCHJcHdu7S8%3D",
+    "createTime": 1776399628,
+    "collectedAt": "2026-07-13T03:14:38.762409Z"
+  },
+  {
     "externalId": "7611079562549579046",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -488,20 +516,6 @@
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/0268cc55da204dc28a429545838f1c1f~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=ua9s%2FklrEL%2B79rUFV3HF7ky8lLg%3D",
     "createTime": 1772092561,
     "collectedAt": "2026-06-24T01:00:03.720335Z"
-  },
-  {
-    "externalId": "7629578299429227822",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "Moebius (Jean Giraud)风格，Akira电影风格，电影写实风格西安城市宣传海报，点缀少量红色和浅金色，东方美学，新中式风格，极繁主义，不对称构图。洞内，有个敦煌大佛敦煌飞天壁画，超广角，标题叫“敦煌丝路”,16K超高清，鱼眼夸张仰视，，下方有骆驼商队，走在卷轴上，卷轴和盘旋着大佛，#中国好创意#",
-    "title": "",
-    "author": "东方&美学设计",
-    "itemType": "image",
-    "favoriteNum": 722,
-    "usageNum": 152,
-    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/dd7a2ec7f1874f4eadb022fb2979b52a~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=Ts83tXnoPxPSX1gqZCHJcHdu7S8%3D",
-    "createTime": 1776399628,
-    "collectedAt": "2026-07-13T03:14:38.762409Z"
   },
   {
     "externalId": "7643000919306636570",
@@ -546,18 +560,32 @@
     "collectedAt": "2026-06-23T05:02:51.452004Z"
   },
   {
-    "externalId": "7625180611203894554",
+    "externalId": "7624514505858485530",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
-    "prompt": "Hanna Wainio风格，笔触细腻，线条流畅，极繁主义，高对比度，撞色美学，光影美学，专业摄影，专业打光，完美品质，超清画质，低饱和度，弥散渐变，随机构图，极致细节，层次感，氛围感，随笔线稿，精细画笔，艺术概念\n卡通动漫插画",
-    "title": "",
-    "author": "无赖姬神",
+    "prompt": "- 主体人物：黑色长直发（头发呈现出自然的黑色，部分发丝在光线照射下有柔和的光泽，整体显得较为蓬松且有自然的动态感），穿着简约的上衣，姿态是自然的自拍角度，脸部神态表情自然（眼神呈现出一种沉静且略带疏离的感觉，面部肌肉状态放松自然）。\n- 环境：室内环境，有光线从一侧（类似窗户方向）照射进来\n- 光影：光线呈现出自然的侧光效果，整体光线柔和且分布自然。\n- 氛围：整体氛围偏静谧、清冷，带有一种随性的生活感。一张非常普通的iPhone拍摄，没有清晰的主体，黑发有刘海，20岁漂亮女生，高鼻梁，全身瘦瘦的，绝世容颜，看镜头，也没有构图感，只是一张随意抓拍的照片。这张照片存在轻微的运动模糊，且因阳光不均或室内光线问题，还有轻微的过曝现象。甜美可爱",
+    "title": "侧光",
+    "author": "晴天",
     "itemType": "image",
-    "favoriteNum": 670,
-    "usageNum": 87,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/d3cc253a032743ae9d784009249adb1e~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=fPQtf5SuKEKaiod%2B1D%2BtCvOOJd0%3D",
-    "createTime": 1775375713,
-    "collectedAt": "2026-06-23T05:02:07.762654Z"
+    "favoriteNum": 641,
+    "usageNum": 2042,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/94c876e696d24e0fb30e7660ba43c8b1~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=Hiob2ELsXWuDhieofeuqfQsSabU%3D",
+    "createTime": 1775220624,
+    "collectedAt": "2026-07-02T03:15:02.263605Z"
+  },
+  {
+    "externalId": "7640265125177347337",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "以彩色铅笔绘制，线条扭曲夸张纹理笨拙笔意，呈现Beatrice Alemagna风格，运用稚拙笔触，描绘出日常生活场景：乖张快意，张力，另类，吐槽感，幽默趣味儿，全景，绿色褐色渐变背景",
+    "title": "",
+    "author": "西青老姐",
+    "itemType": "image",
+    "favoriteNum": 640,
+    "usageNum": 62,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/f2306d2dbb0a4b89aada601029774ec8~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=ui3CTCcBY0ufO4teCZ4bnzezm28%3D",
+    "createTime": 1778887856,
+    "collectedAt": "2026-06-26T02:33:20.614035Z"
   },
   {
     "externalId": "7625183756034379046",
@@ -600,20 +628,6 @@
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/a434d45ee967472bb00c87bcb1c4db32~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=AOo7s2CLoBlHog0jY2LhG7V8%2F3s%3D",
     "createTime": 1774370948,
     "collectedAt": "2026-06-23T05:02:55.042939Z"
-  },
-  {
-    "externalId": "7624514505858485530",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "- 主体人物：黑色长直发（头发呈现出自然的黑色，部分发丝在光线照射下有柔和的光泽，整体显得较为蓬松且有自然的动态感），穿着简约的上衣，姿态是自然的自拍角度，脸部神态表情自然（眼神呈现出一种沉静且略带疏离的感觉，面部肌肉状态放松自然）。\n- 环境：室内环境，有光线从一侧（类似窗户方向）照射进来\n- 光影：光线呈现出自然的侧光效果，整体光线柔和且分布自然。\n- 氛围：整体氛围偏静谧、清冷，带有一种随性的生活感。一张非常普通的iPhone拍摄，没有清晰的主体，黑发有刘海，20岁漂亮女生，高鼻梁，全身瘦瘦的，绝世容颜，看镜头，也没有构图感，只是一张随意抓拍的照片。这张照片存在轻微的运动模糊，且因阳光不均或室内光线问题，还有轻微的过曝现象。甜美可爱",
-    "title": "侧光",
-    "author": "晴天",
-    "itemType": "image",
-    "favoriteNum": 617,
-    "usageNum": 1924,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/94c876e696d24e0fb30e7660ba43c8b1~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=Hiob2ELsXWuDhieofeuqfQsSabU%3D",
-    "createTime": 1775220624,
-    "collectedAt": "2026-07-02T03:15:02.263605Z"
   },
   {
     "externalId": "7643712962724695342",
@@ -770,6 +784,20 @@
     "collectedAt": "2026-06-25T01:00:05.870122Z"
   },
   {
+    "externalId": "7640268177330523443",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "以蓝图的风格制作Q版的毛茸茸的榴莲精灵玩偶，黄绿色短毛，眼睛为棕色为设计草图。并包括尺寸和解释性文本注释。应使用线条和测量值来指示各个部位的尺寸给草图以技术和详细的感觉。除了主要设计外，还包括显示不同角度的零散缩略图，立体景深",
+    "title": "",
+    "author": "云端画卷",
+    "itemType": "image",
+    "favoriteNum": 530,
+    "usageNum": 53,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/ca2ef411b3184746933d925a2968d8f5~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=wFlwuzH7hSuu5lHexmDuJtPmCRY%3D",
+    "createTime": 1778888570,
+    "collectedAt": "2026-06-23T05:02:07.762654Z"
+  },
+  {
     "externalId": "7625073481964719398",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -796,6 +824,20 @@
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/e8f390e8e0c741fa806f6563c98e1dc7~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=iFv4i%2FxWq%2BQK3kRp74iYK4APtHs%3D",
     "createTime": 1775251530,
     "collectedAt": "2026-06-23T05:02:07.762654Z"
+  },
+  {
+    "externalId": "7628625903441956147",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "设置一个纯净的单色背景，描绘一位被发光的魔幻服饰所包围的人物，服饰上装饰有精致的符文和经文，它们不仅增加了服饰的美感，也赋予了它生命力。人物的眼神坚定，仿佛在面对未知的挑战。整个画面充满了压抑和沉闷的气息，通过3.1模型展现出高度的抽象艺术感和独特的魔幻氛围。超广角强透视构图，张力十足，压迫感，细节生动完美。极其震撼的一幕，视觉冲击力强，光影彼此交织错杂的梦幻感，朦胧，明暗对比强烈，阴影过渡自然，电影级构图，视觉冲击，8K画质，超清，极致细节，清晰的线条，高对比，大师级别的作品。立体渲染，精细画笔，超细腻笔触，线条流畅，超清画质，完美品质，高质量，自适应饱和度，专业级打光，大师杰作，自由视角，阴影过渡自然，氛围感，高级感，意境，亮闪，唯美，宿命感拉满，弥散粒子，画面具有层次感。视觉冲击，故事感，高级感，动态感。",
+    "title": "",
+    "author": "许黎",
+    "itemType": "image",
+    "favoriteNum": 520,
+    "usageNum": 77,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/72e7ad07fd04404b9fa875a337986d7c~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=zj0vMDHUo58WvcHheAbOLrGeBo0%3D",
+    "createTime": 1776177886,
+    "collectedAt": "2026-07-21T01:00:08.491621Z"
   },
   {
     "externalId": "7620778458750438666",
@@ -840,34 +882,6 @@
     "collectedAt": "2026-07-16T01:00:06.345363Z"
   },
   {
-    "externalId": "7640268177330523443",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "以蓝图的风格制作Q版的毛茸茸的榴莲精灵玩偶，黄绿色短毛，眼睛为棕色为设计草图。并包括尺寸和解释性文本注释。应使用线条和测量值来指示各个部位的尺寸给草图以技术和详细的感觉。除了主要设计外，还包括显示不同角度的零散缩略图，立体景深",
-    "title": "",
-    "author": "云端画卷",
-    "itemType": "image",
-    "favoriteNum": 517,
-    "usageNum": 53,
-    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/ca2ef411b3184746933d925a2968d8f5~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=wFlwuzH7hSuu5lHexmDuJtPmCRY%3D",
-    "createTime": 1778888570,
-    "collectedAt": "2026-06-23T05:02:07.762654Z"
-  },
-  {
-    "externalId": "7628625903441956147",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "设置一个纯净的单色背景，描绘一位被发光的魔幻服饰所包围的人物，服饰上装饰有精致的符文和经文，它们不仅增加了服饰的美感，也赋予了它生命力。人物的眼神坚定，仿佛在面对未知的挑战。整个画面充满了压抑和沉闷的气息，通过3.1模型展现出高度的抽象艺术感和独特的魔幻氛围。超广角强透视构图，张力十足，压迫感，细节生动完美。极其震撼的一幕，视觉冲击力强，光影彼此交织错杂的梦幻感，朦胧，明暗对比强烈，阴影过渡自然，电影级构图，视觉冲击，8K画质，超清，极致细节，清晰的线条，高对比，大师级别的作品。立体渲染，精细画笔，超细腻笔触，线条流畅，超清画质，完美品质，高质量，自适应饱和度，专业级打光，大师杰作，自由视角，阴影过渡自然，氛围感，高级感，意境，亮闪，唯美，宿命感拉满，弥散粒子，画面具有层次感。视觉冲击，故事感，高级感，动态感。",
-    "title": "",
-    "author": "许黎",
-    "itemType": "image",
-    "favoriteNum": 514,
-    "usageNum": 77,
-    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/72e7ad07fd04404b9fa875a337986d7c~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=zj0vMDHUo58WvcHheAbOLrGeBo0%3D",
-    "createTime": 1776177886,
-    "collectedAt": "2026-07-21T01:00:08.491621Z"
-  },
-  {
     "externalId": "7644704762906168622",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -880,6 +894,20 @@
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/1c4e7d4b2a854bb38bedd695d6a08d6a~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=s%2BrA81DB%2FJAKF0QCtvV0Ug83gxk%3D",
     "createTime": 1779921545,
     "collectedAt": "2026-07-03T11:21:36.035622Z"
+  },
+  {
+    "externalId": "7625849561507974426",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "帅哥，瓷白皮肤、狭长双眼、深色碎发、白衬衫，松垮的领带，五官刻画，细节刻画形象细腻逼真，邪魅、疯批美感、清冷氛围，线条清晰、细节丰富、写实逼真、精致细腻、高清画质，朦胧，少年感，意境，宽肩，五官特写镜头，细腻肌理，强光，垂坠感，高级感，超高清，超高画质，皮肤富有光泽，高级构图、面部聚焦、饱和度较高、有肌理感、发丝发光、五官立体、面部发光、明亮大眼睛、绝美，精致修饰。男生眼神温柔地看向镜头，背景是蓝天白云，正面，真人，Cosplay",
+    "title": "",
+    "author": "那倪",
+    "itemType": "image",
+    "favoriteNum": 506,
+    "usageNum": 112,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/753176706c3e431b8f6382871e923c1a~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=VfY%2FqRUdOXWORd6QNfd%2BJNk4Te0%3D",
+    "createTime": 1775531462,
+    "collectedAt": "2026-06-23T05:02:51.452004Z"
   },
   {
     "externalId": "7625558890205269257",
@@ -987,8 +1015,8 @@
     "title": "",
     "author": "风止啾啾",
     "itemType": "image",
-    "favoriteNum": 482,
-    "usageNum": 95,
+    "favoriteNum": 484,
+    "usageNum": 96,
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/10c9d27f080a4c83830d2d180c14cfc0~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=zI1bi2e2diXWq8qeFuSq0XIqTIU%3D",
     "createTime": 1775391695,
     "collectedAt": "2026-07-10T03:05:59.706171Z"
@@ -1020,20 +1048,6 @@
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/fbb0e1b858bd4f04a7b0f7095ff23caf~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=DSv01qle3h5vBOMxOKpdMNbIz60%3D",
     "createTime": 1775350706,
     "collectedAt": "2026-06-30T01:56:07.719448Z"
-  },
-  {
-    "externalId": "7625849561507974426",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "帅哥，瓷白皮肤、狭长双眼、深色碎发、白衬衫，松垮的领带，五官刻画，细节刻画形象细腻逼真，邪魅、疯批美感、清冷氛围，线条清晰、细节丰富、写实逼真、精致细腻、高清画质，朦胧，少年感，意境，宽肩，五官特写镜头，细腻肌理，强光，垂坠感，高级感，超高清，超高画质，皮肤富有光泽，高级构图、面部聚焦、饱和度较高、有肌理感、发丝发光、五官立体、面部发光、明亮大眼睛、绝美，精致修饰。男生眼神温柔地看向镜头，背景是蓝天白云，正面，真人，Cosplay",
-    "title": "",
-    "author": "那倪",
-    "itemType": "image",
-    "favoriteNum": 473,
-    "usageNum": 109,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/753176706c3e431b8f6382871e923c1a~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=VfY%2FqRUdOXWORd6QNfd%2BJNk4Te0%3D",
-    "createTime": 1775531462,
-    "collectedAt": "2026-06-23T05:02:51.452004Z"
   },
   {
     "externalId": "7616792767959731466",
@@ -1169,11 +1183,25 @@
     "title": "",
     "author": "云舞",
     "itemType": "image",
-    "favoriteNum": 419,
-    "usageNum": 81,
+    "favoriteNum": 422,
+    "usageNum": 82,
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/1475812950b6495289b84185d9cdd0fc~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=MRJoIKktp3WvuHAioix%2BkawWxH8%3D",
     "createTime": 1777846891,
     "collectedAt": "2026-06-23T10:07:16.558631Z"
+  },
+  {
+    "externalId": "7640354106334285094",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "在广袤无垠、绿草如茵的草原之上，小王子与狐狸并肩而立，微风轻拂着他们的发丝，他们的身影被夕阳的余晖温柔地笼罩，画面充满诗意与梦幻，以冰蓝的浪漫诗意视觉风格，冷暖光交织的梦幻唯美场景，来采用OC渲染的朦胧光影氛围、C4D渲染刻画的精准纹理细节、结合UE5渲染达成的自然全局光感，三者协作呈现，画面通过强烈的明暗对比交织出朦胧诗意的氛围，诉说一段如梦境般的小王子的治愈时光叙事故事。超高清画质，富有艺术感的电影画面。",
+    "title": "",
+    "author": "小米粥",
+    "itemType": "image",
+    "favoriteNum": 418,
+    "usageNum": 65,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/234ce43c6e0246618db13ddac5508ffe~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=bE5CcJmSlRfDI%2B%2FV5qLERKfUI34%3D",
+    "createTime": 1778908566,
+    "collectedAt": "2026-07-24T01:00:09.601402Z"
   },
   {
     "externalId": "7618921528259906862",
@@ -1274,6 +1302,20 @@
     "collectedAt": "2026-06-30T01:56:07.719448Z"
   },
   {
+    "externalId": "7625129048024354075",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "帮我生成图片：奇幻写实风格，神明世界里狂风呼啸，空间扭曲变形，巨手带着强大的气势降临，各样有形的气流顺着人物面对的方向汹涌而去，散发着丝丝杀意，风卷着残叶，仿佛要将面前的一切都摧毁，画面采用侧视角，以冷色调为主，增强画面的冲击力。动态模糊强化携带速度线残影，超广角强透视构图，动态模糊边缘虚化，强烈胶片颗粒与高噪点质感，弥散晕染的暗部层次，张力十足，压迫感，细节生动完美。\n威胁压迫感，极其震撼的一幕，光影彼此交织错杂的梦幻感，朦胧，过曝，双重曝光，电影级构图，视觉冲击，8K画质，超清，极致细节，极致刻画，清晰的线条，高对比。",
+    "title": "",
+    "author": "啊福",
+    "itemType": "image",
+    "favoriteNum": 376,
+    "usageNum": 45,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/15484d07b1c54e0e805171b7d7d5e881~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=dS1bXiapr7KFMtHRQ2jTUZfgZ7c%3D",
+    "createTime": 1775363710,
+    "collectedAt": "2026-06-23T05:02:55.043941Z"
+  },
+  {
     "externalId": "7614543481213619483",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -1314,6 +1356,20 @@
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/11a29c3da9b141019084229f73578bea~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=eMrFbaJkOfogn%2Bxdzmvpm1XmCIg%3D",
     "createTime": 1781266358,
     "collectedAt": "2026-07-09T01:00:30.507466Z"
+  },
+  {
+    "externalId": "7630350931917311278",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "绒毛材质，极端透视，干净白背景，3D渲染，极简，Q萌，艺术性，光线追踪，朦胧感，光影加重，硕大的胖嘟嘟的孙悟空(黄衣服，蓝围巾，金箍黄色帽子，眼睛周围红脸)背部特写，扭头，翻白眼，皮毛质感纹理。",
+    "title": "我这款咋样",
+    "author": "知止",
+    "itemType": "image",
+    "favoriteNum": 358,
+    "usageNum": 29,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/e6a4a455019a4f8397b8a119b6d80152~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=%2BC%2B4lJnRMMdgcufp5ZchtzSatrU%3D",
+    "createTime": 1776579522,
+    "collectedAt": "2026-06-23T05:02:51.452004Z"
   },
   {
     "externalId": "7619721306514148659",
@@ -1456,6 +1512,20 @@
     "collectedAt": "2026-06-29T02:24:50.885467Z"
   },
   {
+    "externalId": "7624441366138965299",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "一只拟人化的小兔，以日常快照的视觉风格展现，照片中没有明确的主体或构图感，还带有轻微的运动模糊。主角占据画面中心位置，是自拍的大头照，脸上带着厌世的神情，它脖子上挂着一个带有自己大头照的工牌。背景是办公场景，旁边的电脑屏幕上是平面设计的页面，营造出一种平凡又独特的氛围。",
+    "title": "拟人化的小兔",
+    "author": "八斤半两Foliever",
+    "itemType": "image",
+    "favoriteNum": 343,
+    "usageNum": 90,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/513dfa18f2884f5fa585ec1c31369c50~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=OlJPzkT9kPES6kcxwuy6zMEJuBM%3D",
+    "createTime": 1775203591,
+    "collectedAt": "2026-06-23T05:02:07.762654Z"
+  },
+  {
     "externalId": "7620841207794568486",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -1468,34 +1538,6 @@
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/1661aaed3d4649df9d932bb970214537~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=QlKMh5Dzae8hwRL2qwMN64JSmIs%3D",
     "createTime": 1774365369,
     "collectedAt": "2026-06-23T05:02:51.452004Z"
-  },
-  {
-    "externalId": "7624441366138965299",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "一只拟人化的小兔，以日常快照的视觉风格展现，照片中没有明确的主体或构图感，还带有轻微的运动模糊。主角占据画面中心位置，是自拍的大头照，脸上带着厌世的神情，它脖子上挂着一个带有自己大头照的工牌。背景是办公场景，旁边的电脑屏幕上是平面设计的页面，营造出一种平凡又独特的氛围。",
-    "title": "拟人化的小兔",
-    "author": "八斤半两Foliever",
-    "itemType": "image",
-    "favoriteNum": 337,
-    "usageNum": 82,
-    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/513dfa18f2884f5fa585ec1c31369c50~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=OlJPzkT9kPES6kcxwuy6zMEJuBM%3D",
-    "createTime": 1775203591,
-    "collectedAt": "2026-06-23T05:02:07.762654Z"
-  },
-  {
-    "externalId": "7625129048024354075",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "帮我生成图片：奇幻写实风格，神明世界里狂风呼啸，空间扭曲变形，巨手带着强大的气势降临，各样有形的气流顺着人物面对的方向汹涌而去，散发着丝丝杀意，风卷着残叶，仿佛要将面前的一切都摧毁，画面采用侧视角，以冷色调为主，增强画面的冲击力。动态模糊强化携带速度线残影，超广角强透视构图，动态模糊边缘虚化，强烈胶片颗粒与高噪点质感，弥散晕染的暗部层次，张力十足，压迫感，细节生动完美。\n威胁压迫感，极其震撼的一幕，光影彼此交织错杂的梦幻感，朦胧，过曝，双重曝光，电影级构图，视觉冲击，8K画质，超清，极致细节，极致刻画，清晰的线条，高对比。",
-    "title": "",
-    "author": "啊福",
-    "itemType": "image",
-    "favoriteNum": 331,
-    "usageNum": 36,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/15484d07b1c54e0e805171b7d7d5e881~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=dS1bXiapr7KFMtHRQ2jTUZfgZ7c%3D",
-    "createTime": 1775363710,
-    "collectedAt": "2026-06-23T05:02:55.043941Z"
   },
   {
     "externalId": "7616597719133506826",
@@ -1540,6 +1582,20 @@
     "collectedAt": "2026-06-26T02:33:20.615035Z"
   },
   {
+    "externalId": "7636579227151748390",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "空间布满自上而下的书法和佛经，墨色小人行走在其中。 中国水墨，低角度。动态模糊强化携带速度线残影，超广角强透视构图，动态模糊边缘虚化，弥散晕染的暗部层次，张力十足，压迫感，细节生动完美。威胁压迫感，极其震撼的一幕，光影彼此交织错杂的梦幻感，朦胧，过曝，双重曝光，电影级构图，视觉冲击，8K画质，超清，极致细节，极致刻画，清晰的线条，高对比。",
+    "title": "书法和佛经",
+    "author": "AI李博士aidrlicom",
+    "itemType": "image",
+    "favoriteNum": 323,
+    "usageNum": 22,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/159c0970399c4ab7a80424f6c6a26730~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=JsJpN%2F%2FZ%2F4%2BfhmYpxE1KFEM2z58%3D",
+    "createTime": 1778029664,
+    "collectedAt": "2026-07-24T01:00:09.601402Z"
+  },
+  {
     "externalId": "7624915388949728563",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -1566,20 +1622,6 @@
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/291cbe32df964aca82173c3ca1dfdce9~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=SkHdMo94tz0J1J5oUOgsfYPMDW4%3D",
     "createTime": 1775344907,
     "collectedAt": "2026-07-14T01:00:03.716913Z"
-  },
-  {
-    "externalId": "7630350931917311278",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "绒毛材质，极端透视，干净白背景，3D渲染，极简，Q萌，艺术性，光线追踪，朦胧感，光影加重，硕大的胖嘟嘟的孙悟空(黄衣服，蓝围巾，金箍黄色帽子，眼睛周围红脸)背部特写，扭头，翻白眼，皮毛质感纹理。",
-    "title": "我这款咋样",
-    "author": "知止",
-    "itemType": "image",
-    "favoriteNum": 316,
-    "usageNum": 22,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/e6a4a455019a4f8397b8a119b6d80152~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=%2BC%2B4lJnRMMdgcufp5ZchtzSatrU%3D",
-    "createTime": 1776579522,
-    "collectedAt": "2026-06-23T05:02:51.452004Z"
   },
   {
     "externalId": "7623432508276854025",
@@ -1750,6 +1792,20 @@
     "collectedAt": "2026-06-29T02:24:50.885467Z"
   },
   {
+    "externalId": "7653224902685625650",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "风的三维具象化，透明漩涡中裹挟着草莓、草莓片，花瓣（占50%），形成夏日清凉，三维场景构建：前景-旋转飘落的草莓；中景-风之漩涡与悬浮物；背景-柔和光晕的天空，C4D核心技术： 风漩涡半透明扭曲材质；粒子系统裹挟春之物；动态模糊定格旋转瞬间；逆光强化轮廓，色彩方案： 风透明白(35%)+中国红(30%)+粉红色(25%)+蝶彩(10%)；轻盈通透的春日气息，Octane 渲染，64K高清画质，下方用流动的毛笔手绘粗字体：“Don't wait for inspiration”（纤细的笔画，笔画拉丝，灵动的曲线，有质感），极小的装饰性小字，极细无衬线小字体“202X”，白色极细无衬线字体水印\" LIANG \"+\"躁动的草莓\"+“ INSPIRATION ”+\" AIGC \"+\"Every great idea begins with a spark\"，质感，肌理感，艺术抽象，诗意的，高级，杰作，极具视觉冲击力，获奖作品，大师级配色，大师级排版，高细节，高级感，超高清，布局协调。",
+    "title": "躁动的草莓",
+    "author": "jingcai",
+    "itemType": "image",
+    "favoriteNum": 269,
+    "usageNum": 52,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/15855c1baa624ec9844c30c4a6f797a9~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=9eMethrZMmVbkZFY%2F2XOpRsm%2Fn0%3D",
+    "createTime": 1781905285,
+    "collectedAt": "2026-07-24T01:00:11.978819Z"
+  },
+  {
     "externalId": "7629912388376038702",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -1792,6 +1848,20 @@
     "collectedAt": "2026-06-23T05:02:51.452004Z"
   },
   {
+    "externalId": "7665027239796313371",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "栗棕色森系发型，发丝垂坠且轻抚泛光，瓷感白肌肤，清纯动人，佩戴简约饰品，露出撇嘴的可爱俏皮娇俏微表情，楚楚可怜。画面聚焦面部，高曝低饱和，整体处于暗调静谧房间的慵懒氛围中，呈现生活快照般的随手一拍抓拍风格。中景，光影斑驳。清晰清楚干净画面，环境为大晴天，柔和的光线笼罩。阳光透过发丝照在脸上，突出冷白皮通透自然的肌肤状态，整体神态灵动又不失随性。唯美的氛围感。写实摄影风格，非商业修图，保留轻微的噪点，高光不过曝，阴影有细节，表情自然松弛慵懒休闲，眼神很自然不失真，呈现出慵懒松弛悠闲的状态感觉。氛围感，情绪片，CCD拍摄，大师作品。皮肤美白透亮，甜美氛围，独特韵味的美",
+    "title": "",
+    "author": "十三月",
+    "itemType": "image",
+    "favoriteNum": 259,
+    "usageNum": 1492,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/3f0a95f0c3ce4867b1285feb5813f8cc~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=gbCVFKzPwKM3epc%2Ba%2BlvhyjwI%2Bw%3D",
+    "createTime": 1784653232,
+    "collectedAt": "2026-07-24T01:00:11.978819Z"
+  },
+  {
     "externalId": "7624191851943284006",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -1806,18 +1876,18 @@
     "collectedAt": "2026-07-02T03:15:02.263605Z"
   },
   {
-    "externalId": "7640265125177347337",
+    "externalId": "7628069959347801390",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
-    "prompt": "以彩色铅笔绘制，线条扭曲夸张纹理笨拙笔意，呈现Beatrice Alemagna风格，运用稚拙笔触，描绘出日常生活场景：乖张快意，张力，另类，吐槽感，幽默趣味儿，全景，绿色褐色渐变背景",
-    "title": "",
-    "author": "西青老姐",
+    "prompt": "彩狸猫，调整体画面的色调和氛围相得益彰，展现出独特的高级氛围感和层次感。，使画面充满颗粒感和肌理感。运用厚涂和晕染水粉的技法，展现出颜料的涂抹质的高级氛围感和层次感。氛围感和层次感，结合莫奈油画风格和动漫水彩风格，用清晰笔触和柔和光线展现丰富明朗的色彩。画面中心，运用厚涂技法和流线笔刷，营造朦胧，构图饱满，细节处理细腻，，朦胧，梦幻感，营造出充满故事感氛围的画面。赛璐璐风格与百分之十的水彩过渡相结合，打造出氛围感强烈且神秘的画面。同时具有清冷伪bjd风格。\n画面中呈现出质感光照与自然光线的融合，整体质感十",
+    "title": "小狸花",
+    "author": "喵不可言",
     "itemType": "image",
     "favoriteNum": 254,
-    "usageNum": 14,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/f2306d2dbb0a4b89aada601029774ec8~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=ui3CTCcBY0ufO4teCZ4bnzezm28%3D",
-    "createTime": 1778887856,
-    "collectedAt": "2026-06-26T02:33:20.614035Z"
+    "usageNum": 19,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/c73db5d36ba148aa9d70d2d5377f415d~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=SPG%2BdqRWWu6kp5ynbvQCL5rZYR4%3D",
+    "createTime": 1776048440,
+    "collectedAt": "2026-07-10T03:05:59.706171Z"
   },
   {
     "externalId": "7614825648984558874",
@@ -1834,6 +1904,20 @@
     "collectedAt": "2026-07-03T11:21:36.035622Z"
   },
   {
+    "externalId": "7638291116407786790",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "大师手笔，极致审美，动态姿态，异度叠加态，暗黑數字化，黑金背景，炫光特效，UE5渲染，模糊处理，暗调，恢宏史诗级震撼美学，oc渲染，c4d，高分辨率，强曝光，在极致暗黑的黑色背景中闪耀着金属光泽。内涵渐变，过去与未来，人物生活中展现的一面情愫写意，美好的回忆与留恋，灵感的爆发，极简风格，大面积留白，不拘一格的创意，质感，浮凸，笨庸笔触，内涵，深意，隽永，虚拟，描绘。旷野，戴斗笠的风雪夜归人，背着一把宝剑，远处有高悬的风灯，2K。超广角构图，随机角度，张力十足，压迫感，细节生动完美。极其震撼的一幕，视觉冲击力强，明暗对比强烈，阴影过渡自然，电影级构图，视觉冲击，8K画质，超清，极致细节，清晰的线条，高对比，大师级别的作品。立体渲染，精细画笔，色彩搭配和谐融洽，超细腻笔触，线条流畅，超清画质，完美品质，高质量，自适应饱和度，专业级打光，大师杰作，自由视角，阴影过渡自然，氛围感，高级感，唯美，宿命感拉满，画面具有层次感。视觉冲击，故事感，高级感，动态感。",
+    "title": "",
+    "author": "陌紫",
+    "itemType": "image",
+    "favoriteNum": 253,
+    "usageNum": 53,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/71b7938ec5ac4b48a4b659184e07aad7~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=7KKlH9i8kcAgIpvkGE1A6JuF9rw%3D",
+    "createTime": 1778428245,
+    "collectedAt": "2026-07-23T01:00:05.989966Z"
+  },
+  {
     "externalId": "7641005759584619814",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -1846,20 +1930,6 @@
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/132f0adad788430199835c1f4a176a7c~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=b904SCcy8ku6pVgwgNWqqCr5T28%3D",
     "createTime": 1779060298,
     "collectedAt": "2026-06-23T05:02:51.452004Z"
-  },
-  {
-    "externalId": "7638291116407786790",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "大师手笔，极致审美，动态姿态，异度叠加态，暗黑數字化，黑金背景，炫光特效，UE5渲染，模糊处理，暗调，恢宏史诗级震撼美学，oc渲染，c4d，高分辨率，强曝光，在极致暗黑的黑色背景中闪耀着金属光泽。内涵渐变，过去与未来，人物生活中展现的一面情愫写意，美好的回忆与留恋，灵感的爆发，极简风格，大面积留白，不拘一格的创意，质感，浮凸，笨庸笔触，内涵，深意，隽永，虚拟，描绘。旷野，戴斗笠的风雪夜归人，背着一把宝剑，远处有高悬的风灯，2K。超广角构图，随机角度，张力十足，压迫感，细节生动完美。极其震撼的一幕，视觉冲击力强，明暗对比强烈，阴影过渡自然，电影级构图，视觉冲击，8K画质，超清，极致细节，清晰的线条，高对比，大师级别的作品。立体渲染，精细画笔，色彩搭配和谐融洽，超细腻笔触，线条流畅，超清画质，完美品质，高质量，自适应饱和度，专业级打光，大师杰作，自由视角，阴影过渡自然，氛围感，高级感，唯美，宿命感拉满，画面具有层次感。视觉冲击，故事感，高级感，动态感。",
-    "title": "",
-    "author": "陌紫",
-    "itemType": "image",
-    "favoriteNum": 250,
-    "usageNum": 52,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/71b7938ec5ac4b48a4b659184e07aad7~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=7KKlH9i8kcAgIpvkGE1A6JuF9rw%3D",
-    "createTime": 1778428245,
-    "collectedAt": "2026-07-23T01:00:05.989966Z"
   },
   {
     "externalId": "7652380015337803018",
@@ -1890,18 +1960,18 @@
     "collectedAt": "2026-06-26T02:33:20.615035Z"
   },
   {
-    "externalId": "7628069959347801390",
+    "externalId": "7647593936038464819",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
-    "prompt": "彩狸猫，调整体画面的色调和氛围相得益彰，展现出独特的高级氛围感和层次感。，使画面充满颗粒感和肌理感。运用厚涂和晕染水粉的技法，展现出颜料的涂抹质的高级氛围感和层次感。氛围感和层次感，结合莫奈油画风格和动漫水彩风格，用清晰笔触和柔和光线展现丰富明朗的色彩。画面中心，运用厚涂技法和流线笔刷，营造朦胧，构图饱满，细节处理细腻，，朦胧，梦幻感，营造出充满故事感氛围的画面。赛璐璐风格与百分之十的水彩过渡相结合，打造出氛围感强烈且神秘的画面。同时具有清冷伪bjd风格。\n画面中呈现出质感光照与自然光线的融合，整体质感十",
-    "title": "小狸花",
-    "author": "喵不可言",
+    "prompt": "人物形象提示词：（三视图）\n1.主视觉区 (上方)以 \"正面 + 侧面 + 背面\" 三个核心视角为主体，直观呈现角色的整体身形、服饰搭配和标志性特征，是制作人员对人物 \"整体造型\" 的参考基础。\n2.补充信息区 (左侧)拆分出 \"面部特写\" 和 \"配色板\"(明确毛发、服饰的色值)，补充主视角没覆盖的细节与色彩标准。\n3.局部细节区 (底部)用小模块单独展示关键部件的设计 (配饰、点缀、关键身份识别元素)，把主视角里的 \"模糊细节\" 拆分为精准的制作参考，方便导演确认。\n4.全身照比例照 (右侧)使用黄金比例参考物和人物身高形成对比。\n5.背景为白色，最高品质细节丰富。\n6【真人写实】超写实国风，现代风格，写实风格，质感光照，自然光线，质感十足，8K高清纹理，布料褶皱自然，艺术写实风格，营造出震撼的视觉效果。                                                \n 人物外观设定:19岁清冷少年男性，纯黑利落束发，碎发垂落眉眼，剑眉星目，漆黑凛冽眼眸，高挺鼻梁，淡色薄唇，鹅蛋脸型，身高182cm，气质孤傲隐忍，傲骨凛然，眼神锋利，身形挺拔\n \n- 落魄戏衣版：月白色青衫戏袍，边角磨损泛白，衣身暗纹云纹，素净简约，清冷破碎感",
+    "title": "",
+    "author": "阿A",
     "itemType": "image",
-    "favoriteNum": 237,
-    "usageNum": 17,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/c73db5d36ba148aa9d70d2d5377f415d~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=SPG%2BdqRWWu6kp5ynbvQCL5rZYR4%3D",
-    "createTime": 1776048440,
-    "collectedAt": "2026-07-10T03:05:59.706171Z"
+    "favoriteNum": 240,
+    "usageNum": 25,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/bb2d5945b05d46eea235635949d372a2~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=B1tXlK%2FGuTfMh8YlCaOPuQXroD4%3D",
+    "createTime": 1780594227,
+    "collectedAt": "2026-07-24T01:00:09.601402Z"
   },
   {
     "externalId": "7631404330171518259",
@@ -2002,6 +2072,20 @@
     "collectedAt": "2026-06-23T05:02:07.762654Z"
   },
   {
+    "externalId": "7622516028177665307",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "3D，极致细节，大师作品，超高清，动态，治愈，表情很酷，一只萌猫，金色的毛发，全身毛茸茸的。推掌施展法印（金色，金光闪闪），眼神凌厉霸气十足，时光岁月在脸上并没有留下太多的痕迹，仙风道骨的白色仙袍随风飞扬，CG厚涂，暗黑神话，写实风格，极致细节，线条凌厉，不过曝高光与极暗阴影强烈对比，超高清画质，近距离俯视视角，镜头感强烈，手间高光特效，纯黑背景，倾斜构图。",
+    "title": "推掌施展法印（金色，金光闪闪）",
+    "author": "JM2026Q",
+    "itemType": "image",
+    "favoriteNum": 220,
+    "usageNum": 62,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/7f16d5b6385e4e4a8f903687926a1199~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=kswmVTAOyTU66Dg%2FBoOr%2Bw5yGu0%3D",
+    "createTime": 1774755314,
+    "collectedAt": "2026-06-23T05:02:55.042939Z"
+  },
+  {
     "externalId": "7640542541099568410",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -2028,20 +2112,6 @@
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/fe10b0232ac14b988c40ab3a196d4989~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=T2Hh6n7nkBaOKJnrgUy9WJAZMNI%3D",
     "createTime": 1776527003,
     "collectedAt": "2026-07-07T04:00:25.777427Z"
-  },
-  {
-    "externalId": "7622516028177665307",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "3D，极致细节，大师作品，超高清，动态，治愈，表情很酷，一只萌猫，金色的毛发，全身毛茸茸的。推掌施展法印（金色，金光闪闪），眼神凌厉霸气十足，时光岁月在脸上并没有留下太多的痕迹，仙风道骨的白色仙袍随风飞扬，CG厚涂，暗黑神话，写实风格，极致细节，线条凌厉，不过曝高光与极暗阴影强烈对比，超高清画质，近距离俯视视角，镜头感强烈，手间高光特效，纯黑背景，倾斜构图。",
-    "title": "推掌施展法印（金色，金光闪闪）",
-    "author": "JM2026Q",
-    "itemType": "image",
-    "favoriteNum": 213,
-    "usageNum": 62,
-    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/7f16d5b6385e4e4a8f903687926a1199~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=kswmVTAOyTU66Dg%2FBoOr%2Bw5yGu0%3D",
-    "createTime": 1774755314,
-    "collectedAt": "2026-06-23T05:02:55.042939Z"
   },
   {
     "externalId": "7651316300823727370",
@@ -2100,6 +2170,20 @@
     "collectedAt": "2026-07-13T03:14:38.762409Z"
   },
   {
+    "externalId": "7647512235606117641",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "超现实，英式动画风格结合国风3d动画人物风格，极具东方韵味，一幅超高清的特写画面：在极度蓝色的背景里，夸张抽象变形的东方神秘紅衣美少年，使其从暗处窥视着武林。高品质细节，超精细，高分辦率，最佳品质，C4D，32K壁纸，色彩叙事，现代抽象艺术，诱惑人心的眼神，魅惑的表情，画面极具张力和镜头感，动态感，特写。",
+    "title": "（神 隠）系列～2",
+    "author": "蓮華生輝",
+    "itemType": "image",
+    "favoriteNum": 205,
+    "usageNum": 29,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/9fa78b9b4b7f4a9ea3dc709cd0e53f48~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=5Ogv8bs0FCU%2Bvqzou%2Bi6Kmdo97s%3D",
+    "createTime": 1780575201,
+    "collectedAt": "2026-07-24T01:00:11.978819Z"
+  },
+  {
     "externalId": "7637802908481867058",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -2156,6 +2240,20 @@
     "collectedAt": "2026-07-02T03:15:02.263605Z"
   },
   {
+    "externalId": "7623594343298846002",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "绒毛材质，超现实未来主义，干净，简洁，极简，可爱，萌，艺术性，光线追踪，朦胧感，内容简洁，想象力爆表的获奖作品，光影加重，扁平化，胖嘟嘟的鸡脸部侧脸特写，闭眼，仰头，8K超清画质",
+    "title": "咯咯哒~咯咯哒~",
+    "author": "丁宁",
+    "itemType": "image",
+    "favoriteNum": 192,
+    "usageNum": 14,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/698ce1c167324d1c9a54cfb2166f75c9~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=bLo20Scoz%2Bd064s0Eb4l1SVrFFg%3D",
+    "createTime": 1775006379,
+    "collectedAt": "2026-07-03T11:21:36.035622Z"
+  },
+  {
     "externalId": "7637361926120557851",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -2170,18 +2268,18 @@
     "collectedAt": "2026-06-23T05:02:58.493129Z"
   },
   {
-    "externalId": "7623594343298846002",
+    "externalId": "7624307228849245450",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
-    "prompt": "绒毛材质，超现实未来主义，干净，简洁，极简，可爱，萌，艺术性，光线追踪，朦胧感，内容简洁，想象力爆表的获奖作品，光影加重，扁平化，胖嘟嘟的鸡脸部侧脸特写，闭眼，仰头，8K超清画质",
-    "title": "咯咯哒~咯咯哒~",
-    "author": "丁宁",
+    "prompt": "8K超写实，拟人化胖橘猫，直立行走，卡通写实风格，\n橘白相间毛发，头部圆润，腮部饱满，大眼睛，琥珀色瞳孔，\n身体微胖，体态圆润，毛发蓬松细腻，质感真实，\n无服装，无配饰，无道具，无背景，纯色背景，面部表情温和，\n只锁定本体形象，无多余元素，细节清晰，光影柔和，毛发根根分明",
+    "title": "畅畅518",
+    "author": "婧宸畅谈",
     "itemType": "image",
-    "favoriteNum": 190,
-    "usageNum": 14,
-    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/698ce1c167324d1c9a54cfb2166f75c9~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=bLo20Scoz%2Bd064s0Eb4l1SVrFFg%3D",
-    "createTime": 1775006379,
-    "collectedAt": "2026-07-03T11:21:36.035622Z"
+    "favoriteNum": 184,
+    "usageNum": 325,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/94dc80d133fe4b719194bd0efab9578f~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=UT7lNMEUUMx%2F20qRODY1rPqIWeo%3D",
+    "createTime": 1775172363,
+    "collectedAt": "2026-06-23T10:07:16.558631Z"
   },
   {
     "externalId": "7620675649539198235",
@@ -2198,18 +2296,18 @@
     "collectedAt": "2026-06-30T01:56:07.719448Z"
   },
   {
-    "externalId": "7624307228849245450",
+    "externalId": "7661282595996585243",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
-    "prompt": "8K超写实，拟人化胖橘猫，直立行走，卡通写实风格，\n橘白相间毛发，头部圆润，腮部饱满，大眼睛，琥珀色瞳孔，\n身体微胖，体态圆润，毛发蓬松细腻，质感真实，\n无服装，无配饰，无道具，无背景，纯色背景，面部表情温和，\n只锁定本体形象，无多余元素，细节清晰，光影柔和，毛发根根分明",
-    "title": "畅畅518",
-    "author": "婧宸畅谈",
+    "prompt": "机械姬,超现实主义，真人质感人像摄影，短发清冷机械姬，日常快照风格，非精心构图打光，构图随性自然尽显绚丽日常，害羞温柔神态，迎风动态，灵动与镜头互动，冷白皮透光仿生机械肌肤，精致瓜子脸尖下颌，超真实胶片摄影质感，倾斜构图，低角度仰视拍摄，淡彩白调泛轻微银白科技质感，冷调白光氛围，侧逆光勾勒机械轮廓，多重曝光叠加半透明赛博光影，柔焦失焦朦胧感，超广角镜头，强空间透视压缩背景，极致动态美学，细节生动完美顶级杰作，胶片摄影镜头语言，淡彩通透质感，暗调低光氛围，个性独特视角，意境奇妙融合，倾国倾城机械颜值，肌肤白皙嫩滑通透，仿 Bjd 精致建模质感，头戴繁复华丽未来科技饰品，极致清冷通透透光感，洛丽塔御系机械姬风格，梦幻高级色系，精美繁复机甲服饰与赛博配饰，神秘梦核质感，明亮高级画面，超高颜值，高明暗对比度，柔虚焦视觉既视感，情绪氛围感拉满，细腻胶片颗粒质感，画面层次丰富，写意光影美学，lomo 复古滤镜效果，超现实艺术质感，极致高级感，全站杰作，朦胧空灵氛围，高清4K",
+    "title": "美女",
+    "author": "老王头儿",
     "itemType": "image",
-    "favoriteNum": 174,
-    "usageNum": 291,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/94dc80d133fe4b719194bd0efab9578f~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1784592000&x-signature=UT7lNMEUUMx%2F20qRODY1rPqIWeo%3D",
-    "createTime": 1775172363,
-    "collectedAt": "2026-06-23T10:07:16.558631Z"
+    "favoriteNum": 180,
+    "usageNum": 18,
+    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/35390890c6414d78900832ebacf39797~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=iJltLgffU3kotM9xseGf40QXKow%3D",
+    "createTime": 1783781371,
+    "collectedAt": "2026-07-22T01:00:04.519527Z"
   },
   {
     "externalId": "7646719359922064649",
@@ -2282,20 +2380,6 @@
     "collectedAt": "2026-07-14T01:00:03.716913Z"
   },
   {
-    "externalId": "7661282595996585243",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "机械姬,超现实主义，真人质感人像摄影，短发清冷机械姬，日常快照风格，非精心构图打光，构图随性自然尽显绚丽日常，害羞温柔神态，迎风动态，灵动与镜头互动，冷白皮透光仿生机械肌肤，精致瓜子脸尖下颌，超真实胶片摄影质感，倾斜构图，低角度仰视拍摄，淡彩白调泛轻微银白科技质感，冷调白光氛围，侧逆光勾勒机械轮廓，多重曝光叠加半透明赛博光影，柔焦失焦朦胧感，超广角镜头，强空间透视压缩背景，极致动态美学，细节生动完美顶级杰作，胶片摄影镜头语言，淡彩通透质感，暗调低光氛围，个性独特视角，意境奇妙融合，倾国倾城机械颜值，肌肤白皙嫩滑通透，仿 Bjd 精致建模质感，头戴繁复华丽未来科技饰品，极致清冷通透透光感，洛丽塔御系机械姬风格，梦幻高级色系，精美繁复机甲服饰与赛博配饰，神秘梦核质感，明亮高级画面，超高颜值，高明暗对比度，柔虚焦视觉既视感，情绪氛围感拉满，细腻胶片颗粒质感，画面层次丰富，写意光影美学，lomo 复古滤镜效果，超现实艺术质感，极致高级感，全站杰作，朦胧空灵氛围，高清4K",
-    "title": "美女",
-    "author": "老王头儿",
-    "itemType": "image",
-    "favoriteNum": 141,
-    "usageNum": 17,
-    "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/35390890c6414d78900832ebacf39797~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=iJltLgffU3kotM9xseGf40QXKow%3D",
-    "createTime": 1783781371,
-    "collectedAt": "2026-07-22T01:00:04.519527Z"
-  },
-  {
     "externalId": "7652983193456479498",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -2338,6 +2422,20 @@
     "collectedAt": "2026-07-09T01:00:30.507466Z"
   },
   {
+    "externalId": "7637916096191843610",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "Q版卡通中国古风风格，不要任何背景。3D皮克斯风格Q版明代年轻书生（圆脸 + 大眼睛），Q版唐代书生，穿深红色的衣服，戴着唐朝绿色的官帽，Q版年轻书生抬头仰望，白色长袍随风飘动，眼神向往憧憬。",
+    "title": "",
+    "author": "夜风",
+    "itemType": "image",
+    "favoriteNum": 115,
+    "usageNum": 16,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/b25f1a19b9f84e6eac0ecf7635d2401c~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=m43Agzf62IvZymertgvUYcAU%2FSU%3D",
+    "createTime": 1778340929,
+    "collectedAt": "2026-07-15T01:00:28.761145Z"
+  },
+  {
     "externalId": "7629779883220077850",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -2345,7 +2443,7 @@
     "title": "射手2",
     "author": "金戈米良",
     "itemType": "image",
-    "favoriteNum": 108,
+    "favoriteNum": 110,
     "usageNum": 1,
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/4dc3cc87333a4a968b0faca5f62d4352~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=ER1blAJPLMPCeiYk0kOjOHpNnPU%3D",
     "createTime": 1776446567,
@@ -2366,20 +2464,6 @@
     "collectedAt": "2026-07-10T03:05:59.706171Z"
   },
   {
-    "externalId": "7637916096191843610",
-    "sourceCode": "jimeng-daily",
-    "platform": "jimeng",
-    "prompt": "Q版卡通中国古风风格，不要任何背景。3D皮克斯风格Q版明代年轻书生（圆脸 + 大眼睛），Q版唐代书生，穿深红色的衣服，戴着唐朝绿色的官帽，Q版年轻书生抬头仰望，白色长袍随风飘动，眼神向往憧憬。",
-    "title": "",
-    "author": "夜风",
-    "itemType": "image",
-    "favoriteNum": 98,
-    "usageNum": 14,
-    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/b25f1a19b9f84e6eac0ecf7635d2401c~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=m43Agzf62IvZymertgvUYcAU%2FSU%3D",
-    "createTime": 1778340929,
-    "collectedAt": "2026-07-15T01:00:28.761145Z"
-  },
-  {
     "externalId": "7640991793034579246",
     "sourceCode": "jimeng-daily",
     "platform": "jimeng",
@@ -2387,11 +2471,25 @@
     "title": "",
     "author": "浩浩",
     "itemType": "image",
-    "favoriteNum": 90,
-    "usageNum": 41,
+    "favoriteNum": 96,
+    "usageNum": 42,
     "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/af3cd184ed5d47c3889a0e687845da67~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=kWoW0y%2BFMyLswbB2nySsGTYNVtA%3D",
     "createTime": 1779057049,
     "collectedAt": "2026-07-13T03:14:38.762409Z"
+  },
+  {
+    "externalId": "7651882653125332274",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "Adam Riches风格作品，妖魔化孙悟空，精密线条，以单线连续线条绘画，让木炭在纸上游走成即兴的排线，他的线条时而密集，时而疏朗，构筑立体感，层层叠叠，这些看似无序的线条轨迹，最终重构出古典巴洛克风格与极繁主义叙事。\n拟人国风雕，神秘感，华丽炫酷的花纹和质感、冷色调，整个画面散发出一种美轮美奂的诡异气质，惊艳迷人却又令人感觉到危险和恐惧，极致的细节刻画，极致的立体纹理，奢华、繁琐、恢弘、大气，超高清画质。妖魔化孙悟空，琉璃圣体。超广角构图，张力十足，压迫感，细节生动完美。极其震撼的一幕，视觉冲击力强，明暗对比强烈，阴影过渡自然，电影级构图，视觉冲击，8K画质，超清，极致细节，清晰的线条，高对比，大师级别的作品。立体渲染，精细画笔，色彩搭配和谐融洽，超细腻笔触，线条流畅，超清画质，完美品质，高质量，自适应饱和度，专业级打光，大师杰作，自由视角，阴影过渡自然，氛围感，高级感，唯美，宿命感拉满，画面具有层次感。视觉冲击，故事感，高级感，动态感。镭射放射状闪光勾线及背景。",
+    "title": "孙大圣",
+    "author": "韩啸",
+    "itemType": "image",
+    "favoriteNum": 92,
+    "usageNum": 6,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/5beda9a2fcdc49888c3504b5668c47fe~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=14NRsg6IgguctbJf1PU6WpVJzL0%3D",
+    "createTime": 1781592764,
+    "collectedAt": "2026-07-24T01:00:09.601402Z"
   },
   {
     "externalId": "7644536555134045466",
@@ -2401,7 +2499,7 @@
     "title": "",
     "author": "用户3826814019001",
     "itemType": "image",
-    "favoriteNum": 62,
+    "favoriteNum": 66,
     "usageNum": 77,
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/eca39c77a6fa42e9b6535c1fea558dd8~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1785888000&x-signature=%2FoW%2FcToLVPtNsuth4X%2BiEwanFXU%3D",
     "createTime": 1779882369,
@@ -2420,6 +2518,20 @@
     "imageUrl": "https://p11-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/cba713a92e4e40f0bc651763b8d0acab~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=CAx%2FlwagvKCzcgLmMHEGNJ5faeo%3D",
     "createTime": 1776325540,
     "collectedAt": "2026-07-21T01:00:08.490620Z"
+  },
+  {
+    "externalId": "7663490462681976102",
+    "sourceCode": "jimeng-daily",
+    "platform": "jimeng",
+    "prompt": "复杂设计、层次分明，极致精美的卡通雕塑风格斗神狰，红黑金主色调搭配暗黑银色，整体纤细修长、精致对称、威武霸气，头戴立体精致紫金冠，身披极繁主义夸张重工战甲，全身布满复杂唯美、立体凹凸的精密刻纹，逐帧精细刻画所有金属部件与外部机械构造，细节饱满美观。周身缠绕流动金色雷电，自带立体浮雕质感花纹，手持流体失真、能量弥散、多形态红光特效的如意金箍棒。\n \n全身全景镜头、超广角强透视构图、低角度仰拍，远景广角画面，张力十足、压迫感拉满。人物主体静止不动，四肢、面部表情无任何变化，高冷漠视感拉满，低头姿态，面部与身体自带深重阴影。\n \n整体场景为极暗无光的幽冷黑夜次元空间，地面错落铺展荧光反光的血红色花海，画面正中悬挂巨型血色满月，整体暗红冷调色系。人物身着飘逸红色披风，大风拂动衣摆与羽毛款紫金冠，羽毛晶莹带光影，衣摆呈断续破碎动态模糊，塑造极致速度张力。\n \n画面叠加红色速度流光线条、红光弥散朦胧光描边，前景漫天血色花瓣飞舞，人物周身飘散细碎火红灰烬粒子，自带弥散粒子特效。采用UE5虚幻引擎渲染、伦勃朗逆光专业打光，光影交织错杂，明暗对比强烈，阴影过渡自然，镜面折射、超大景深，压低整体亮度，氛围感、宿命感、高级感拉满。\n \n电影级构图、大师级光影，8K超清画质、极致细节、线条流畅清晰、高对比自适应饱和度，立体渲染、超细腻笔触，动态特效拉满，画面层次感、故事感极强，CG影视质感、电影级流畅度，视觉冲击极致震撼。",
+    "title": "",
+    "author": "vee君子",
+    "itemType": "image",
+    "favoriteNum": 43,
+    "usageNum": 22,
+    "imageUrl": "https://p26-dreamina-sign.byteimg.com/tos-cn-i-tb4s082cfz/38122d1ee288467b83795635b3a00f47~tplv-tb4s082cfz-aigc_resize:2048:2048.webp?lk3s=4fa96020&x-expires=1787184000&x-signature=ih8TkMBNztLUJrRJMdHnogcli8s%3D",
+    "createTime": 1784295424,
+    "collectedAt": "2026-07-24T01:00:11.978819Z"
   },
   {
     "externalId": "7649163480955620617",

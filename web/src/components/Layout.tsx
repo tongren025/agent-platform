@@ -25,6 +25,7 @@ import {
 } from '../advancedNavigation';
 import { COLORS } from '../theme';
 import { hasPerm, userAuth } from '../userAuth';
+import TaskCompletionNotifier from './TaskCompletionNotifier';
 
 // perm 为空的条目所有登录用户可见;有 perm 的按角色权限显隐(与后端中间件的映射一致)
 type NavItem = {
@@ -252,6 +253,7 @@ export default function Layout() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100vw', overflowX: 'hidden' }}>
+      <TaskCompletionNotifier />
       {/* Mobile header */}
       {isMobile && (
         <div style={{
@@ -413,7 +415,7 @@ export default function Layout() {
       }}>
         <div style={{ padding: pageIsWorkspace ? (isMobile ? '6px' : isNarrow ? '8px' : '14px') : (isMobile ? '12px' : isNarrow ? '16px' : '28px'), minWidth: 0 }}>
           {advancedRouteContext && (
-            <nav aria-label="当前位置" style={{ marginBottom: isMobile ? 12 : 18, overflowX: 'auto' }}>
+            <nav aria-label="当前位置" style={{ marginBottom: isMobile ? 12 : 18, overflowX: 'auto', whiteSpace: 'nowrap' }}>
               <ol style={{
                 alignItems: 'center',
                 display: 'flex',

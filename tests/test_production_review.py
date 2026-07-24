@@ -52,13 +52,22 @@ def test_invalid_verdict_is_400(review_env):
 
 
 def test_reviews_append_and_default_image_resolution(review_env):
-    """评审记录逐条追加不覆盖；image 省略时默认取 images[0]。"""
+    """评审记录逐条追加不覆盖；废弃进入返工，通过后关闭待处理状态。"""
     client, pid, (cid, _) = review_env
     base = f"/api/v1/agentapp/production/projects/{pid}/cards/{cid}/review"
     r = client.post(base, json={"verdict": "reject", "reason": "tone_off", "note": "整体偏冷"})
     assert r.status_code == 200, r.text
+    assert r.json()["data"]["status"] == "review"
+    director = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
+    assert director["reviewCount"] == 1
+    assert director["shots"][0]["reviewCount"] == 1
+    assert director["shots"][0]["imageReviewVerdict"] == "reject"
     r = client.post(base, json={"verdict": "pass"})
     assert r.status_code == 200
+    assert r.json()["data"]["status"] == "done"
+    director = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
+    assert director["reviewCount"] == 0
+    assert director["shots"][0]["imageReviewVerdict"] == "pass"
     meta = r.json()["data"]["metadata"]
     reviews = meta["image_reviews"]
     assert len(reviews) == 2

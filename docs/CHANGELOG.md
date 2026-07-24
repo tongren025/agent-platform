@@ -5,6 +5,77 @@
 
 ---
 
+## [2026-07-24] feat: 全局资产卡片可编辑 + Art Bible 风格锁定注入
+
+### ProductionHub 资产卡片编辑
+- 制作看板的角色图/场景图/视觉设计卡片从只读 Tag 升级为可点击打开详情 Drawer，支持：图片预览（含历史版本）、提示词编辑（TextArea + 保存/取消）、选择模型重新生图、通过/退回审核（退回需选原因）。
+- 新增 `CardDetailDrawer` 通用组件，可复用于任何 ProductionCard；媒体模型列表在打开 Drawer 时懒加载。
+- EpisodeDetail 镜头卡片的"立即生图"按钮扩展支持 setting/design 阶段。
+
+### 后端 stage 白名单扩展
+- `update_director_image_prompt` 和 `generate_director_image` 的阶段白名单从 `(img_prompt, storyboard)` 扩展为 `(img_prompt, storyboard, setting, design)`，使角色图/场景图/视觉设计卡片可以编辑提示词和重新生图。
+
+### Art Bible 风格锁定
+- 新增本地 Skill `.claude/skills/art-bible-prompt/SKILL.md`，在 Claude 对话中写角色/场景提示词时自动注入完整 Art Bible 规则（风格锚点句、角色视觉 DNA、7 个场景设定、4 种配色权重、正向约束词、禁止清单、输出格式模板）。
+- 后端 `STAGE_INSTRUCTIONS` 和 `GC_STAGE_INSTRUCTIONS` 的 setting/design 阶段指令注入 Art Bible 硬规则，确保 AI 自动生成的提示词也带风格锁定——杜绝基调漂移和角色走形。
+
+### 影响面
+- **后端**：`app/api/director.py`（白名单扩展）、`app/models/production.py`（STAGE_INSTRUCTIONS 注入）。
+- **前端**：新增 `web/src/components/CardDetailDrawer.tsx`；修改 `ProductionHub.tsx`（Drawer 接入）、`EpisodeDetail.tsx`（setting/design 生图按钮）。
+- **Skill**：新增 `.claude/skills/art-bible-prompt/SKILL.md`。
+- 无数据库迁移、环境变量或部署配置变化。
+
+---
+
+## [2026-07-24] feat: 制作闭环补齐镜头排序、版本回退、协作批注与个人效率
+
+### 镜头调整、恢复与项目备份
+- 快速制作新增按集镜头排序：可拖拽，也可用上移/下移按钮在键盘和手机上调整；保存时一次性重编号同集所有阶段卡片，并使旧成片进入需重新合成状态。
+- 项目新增可读的版本历史：手动保存版本，且在 AI 覆盖生成、镜头提示词修改、关键卡片字段更新、镜头排序和版本回退前自动留档；回退操作会先保存“回退前”保护点，再恢复项目与全部卡片。
+- 快速制作新增项目 ZIP 导出，包含项目配置、卡片元数据、批注、历史版本和项目目录内的本地图片/视频；导出文件名与 ZIP 内路径均做安全收敛，临时文件在响应结束后清理。
+
+### 协作、查找与常用指令
+- 制作看板顶部新增服务端关键词、阶段、状态、集数和负责人筛选；请求带防抖与递增序号，慢请求不会覆盖当前项目或新条件，手机端保持紧凑双列布局。
+- 制作卡片新增项目级批注入口，可留言、标记已解决或重新打开；评论计数一次加载整个项目，打开卡片后才读取正文，避免卡片多时产生 N+1 请求。
+- 数字员工工作台新增账号隔离的常用指令：可把当前输入保存为全局或指定员工短语，点击插入光标位置，并支持编辑、删除和失败重试；手机端同样可使用。
+
+### 接口、存储与影响面
+- **新增 API**：`PUT /api/v1/agentapp/director/projects/{pid}/shots/order`；`GET/POST /api/v1/agentapp/production/projects/{pid}/versions`；`POST /api/v1/agentapp/production/projects/{pid}/versions/{version_id}/restore`；`POST /api/v1/agentapp/production/projects/{pid}/export`；`GET /api/v1/agentapp/production/projects/{pid}/comments`；`POST /api/v1/agentapp/production/projects/{pid}/cards/{card_id}/comments`；`PATCH /api/v1/agentapp/production/projects/{pid}/comments/{comment_id}`；`GET/POST/PUT/DELETE /api/v1/agentapp/quick-prompts`。
+- 版本与批注分别写入项目目录的 `versions/`、`comments.json`；常用指令按登录用户名哈希后写入 `data/quick-prompts/`，账号名不直接进入文件路径。
+- 项目与账号文件写入增加进程内互斥；图片、视频、合成和 AI 阶段生成等长耗时调用结束后会重新读取最新状态再合并，过期任务结果单独保留而不会覆盖当前版本。镜头排序支持乐观并发校验，审核只接受当前图片，版本恢复失败会自动回滚。
+- **影响面**：用户端生产与导演 API、路由注册、快速制作、制作看板、数字员工工作台和前端 API 类型；无数据库迁移、环境变量或部署配置变化。
+- **验证**：完整后端回归 221 项通过；`tsc -b` 与 Vite 生产构建通过。独立服务完成登录、项目列表、导演状态、版本、批注、筛选、常用指令与 ZIP 导出的 HTTP 冒烟，生产静态资源均可加载且三个新增功能分包已写入构建产物；应用内浏览器策略拒绝访问该独立本地端口，因此本轮未重复执行桌面/手机渲染点击和像素级视觉回归。
+
+---
+
+## [2026-07-24] feat: 快速制作补齐镜头返工、审核与交付提醒
+
+### 镜头级返工与审核
+- “镜头审片台”支持直接编辑并保存画面主提示词、单镜头重新生图，以及单镜头视频生成/失败重试；编辑草稿与后台刷新隔离，保存失败不会丢失未提交内容。
+- 镜头卡片内新增画面“通过 / 退回”入口；退回必须选择标准问题原因，可补充说明，审核明确绑定当前展示图片。通过会关闭待处理项，退回会把图片卡送回返工状态。
+- 新增专用主提示词更新接口，仅替换图片卡 `prompts[0]`，保留同卡其余提示词、正文与元数据，避免通用整字段更新误删生产资料。
+
+### 版本有效性、交付与通知
+- 单镜重生图后，来源不匹配的旧视频和旧成片不再计入当前完成度；重新生成视频后，旧成片也会标记过期。合成接口会拒绝混入过期镜头，防止下载到画面与视频不一致的交付物。
+- 成片预览新增“下载成片”，使用同源媒体地址和项目名生成安全文件名；跨域媒体采用安全新窗口降级。
+- 导演页自动同步进行中的视频任务，并仅在状态真正迁移到完成/失败时提示；全局后台任务提醒首屏只建立基线、页面隐藏时暂停、故障后指数退避，避免历史消息轰炸和可选队列不可用时的高频请求。
+
+### 接口与影响面
+- **新增 API**：`PUT /api/v1/agentapp/director/projects/{project_id}/cards/{card_id}/image-prompt`。
+- **行为调整**：`POST /api/v1/agentapp/production/projects/{pid}/cards/{card_id}/review` 会同步维护返工状态；`GET /api/v1/agentapp/director/projects/{project_id}` 新增当前图片审核结果、视频/成片过期状态并收窄图片待处理计数；成片合成会校验所有镜头均为当前有效版本。
+- **前端影响**：快速制作镜头卡片、媒体选择弹窗、成片区与全局登录后布局；无数据库迁移、环境变量或部署配置变化。
+- **验证**：完整后端回归 209 项通过；`tsc -b` 与 Vite 生产构建通过。内置浏览器在 1280px / 390px 下完成提示词编辑取消、单镜生成弹窗、退回原因必填、桌面/窄屏布局与控制台检查，无全页横向溢出、破图或控制台错误；本地 Redis 队列未启动，因此数字员工任务的真实完成迁移未做端到端触发。
+
+---
+
+## [2026-07-24] fix: 收紧移动分流文案与窄屏面包屑
+
+- Workbench 手机端明确说明当前页面可以正常聊天，漫剧制作应切到“快速制作”，避免用户误以为手机端不能完成翻译、调研和文案等通用任务。
+- 高级页面面包屑固定为单行，在窄屏上以横向滚动承载长标题，不再因名称过长折成两行。
+- **影响面**：仅前端 Workbench 移动提示与高级页面面包屑样式；无 API、数据库或部署配置变化。
+
+---
+
 ## [2026-07-23] fix: 新手路径二次收口——入口分工、目标前置与高级上下文
 
 ### 入口分工与任务用语

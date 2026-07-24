@@ -11,14 +11,20 @@ def director_env(tmp_path, monkeypatch, app_client):
     from app.services import openrouter_media
 
     monkeypatch.setattr(production, "DATA_DIR", tmp_path)
+    image_calls = {"count": 0}
+
+    def generate_image(project_id, **kwargs):
+        image_calls["count"] += 1
+        return {
+            "url": f"/uploads/production/{project_id}/shot-{image_calls['count']}.png",
+            "model": kwargs["model"],
+            "usage": {"cost": 0.01},
+        }
+
     monkeypatch.setattr(openrouter_media, "list_media_models", lambda kind: [{
         "id": f"demo/{kind}", "name": f"Demo {kind}", "kind": kind,
     }])
-    monkeypatch.setattr(openrouter_media, "generate_image", lambda project_id, **kwargs: {
-        "url": f"/uploads/production/{project_id}/shot.png",
-        "model": kwargs["model"],
-        "usage": {"cost": 0.01},
-    })
+    monkeypatch.setattr(openrouter_media, "generate_image", generate_image)
     monkeypatch.setattr(openrouter_media, "submit_video", lambda project_id, **kwargs: {
         "id": "job-demo", "status": "pending", "pollingUrl": "/videos/job-demo",
         "model": kwargs["model"],
@@ -91,6 +97,49 @@ def test_director_media_models_are_normalized(director_env):
     assert response.json()["data"][0]["id"] == "demo/video"
 
 
+def test_update_image_prompt_preserves_secondary_prompts(director_env):
+    """镜头编辑只替换首条生产提示词，不误删同卡片上的补充提示。"""
+    client = director_env
+    pid, card_ids = _create_gc(client)
+    card_id = card_ids["img_prompt"]
+    client.put(
+        f"/api/v1/agentapp/production/cards/{card_id}",
+        json={
+            "prompts": ["旧主提示", "角色一致性参考", "光影参考"],
+            "content": "保留的卡片说明",
+            "metadata": {"duration_seconds": 4, "source": "fixture"},
+        },
+    )
+
+    response = client.put(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_id}/image-prompt",
+        json={"prompt": "  新的镜头主提示  "},
+    )
+
+    assert response.status_code == 200, response.text
+    card = response.json()["data"]["card"]
+    assert card["prompts"] == ["新的镜头主提示", "角色一致性参考", "光影参考"]
+    assert card["content"] == "保留的卡片说明"
+    assert card["metadata"] == {"duration_seconds": 4, "source": "fixture"}
+    state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
+    assert state["shots"][0]["imagePrompt"] == "新的镜头主提示"
+
+
+def test_update_image_prompt_rejects_blank_and_non_image_card(director_env):
+    client = director_env
+    pid, card_ids = _create_gc(client)
+    blank = client.put(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['img_prompt']}/image-prompt",
+        json={"prompt": "   "},
+    )
+    wrong_stage = client.put(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['script']}/image-prompt",
+        json={"prompt": "不会被写入"},
+    )
+    assert blank.status_code == 400
+    assert wrong_stage.status_code == 400
+
+
 def test_image_video_and_compose_flow(director_env):
     """单镜从图片到异步视频再到 FFmpeg 成片会持续回填同一项目。"""
     client = director_env
@@ -125,3 +174,40 @@ def test_image_video_and_compose_flow(director_env):
     assert data["clipCount"] == 1
     assert data["state"]["finalUrl"].endswith("/final.mp4")
     assert data["state"]["nextAction"]["kind"] == "done"
+
+    # 退回当前首帧会暂停下游交付；重新通过同一版本后可恢复。
+    reject = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_ids['img_prompt']}/review",
+        json={
+            "verdict": "reject",
+            "image": data["state"]["shots"][0]["imageUrl"],
+            "reason": "composition_mismatch",
+        },
+    )
+    assert reject.status_code == 200
+    rejected_state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
+    assert rejected_state["nextAction"]["kind"] == "image"
+    assert rejected_state["finalUrl"] == ""
+    assert rejected_state["finalStale"] is True
+    approve = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_ids['img_prompt']}/review",
+        json={"verdict": "pass", "image": data["state"]["shots"][0]["imageUrl"]},
+    )
+    assert approve.status_code == 200
+    approved_state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
+    assert approved_state["finalUrl"].endswith("/final.mp4")
+
+    # 重做首帧后，旧视频和旧成片不能继续冒充当前交付版本。
+    regenerate = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['img_prompt']}/image",
+        json={"model": "demo/image", "aspect_ratio": "9:16"},
+    )
+    assert regenerate.status_code == 200
+    stale_state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
+    assert stale_state["shots"][0]["videoUrl"] == ""
+    assert stale_state["shots"][0]["videoStale"] is True
+    assert stale_state["finalUrl"] == ""
+    assert stale_state["finalStale"] is True
+    assert stale_state["nextAction"]["kind"] == "video"
+    blocked_compose = client.post(f"/api/v1/agentapp/director/projects/{pid}/compose")
+    assert blocked_compose.status_code == 400

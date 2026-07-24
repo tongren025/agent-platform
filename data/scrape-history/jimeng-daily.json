@@ -4,6 +4,26 @@
     "status": "success",
     "fetchedCount": 20,
     "newCount": 4,
+    "totalCount": 185,
+    "message": "抓取 20 条，新增 4 条，累计 185 条。",
+    "startedAt": "2026-07-24T01:00:09.340882Z",
+    "finishedAt": "2026-07-24T01:00:12.027622Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 19,
+    "newCount": 4,
+    "totalCount": 181,
+    "message": "抓取 19 条，新增 4 条，累计 181 条。",
+    "startedAt": "2026-07-24T01:00:06.786342Z",
+    "finishedAt": "2026-07-24T01:00:09.678225Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
+    "newCount": 4,
     "totalCount": 177,
     "message": "抓取 20 条，新增 4 条，累计 177 条。",
     "startedAt": "2026-07-23T01:00:04.609200Z",

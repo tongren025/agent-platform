@@ -3,8 +3,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import tempfile
+import threading
 import uuid
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
@@ -12,6 +16,7 @@ from typing import Any, Optional
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import AliasChoices, BaseModel, Field
+from starlette.background import BackgroundTask
 
 from app.config import BASE_DIR
 from app.core.logging import get_logger
@@ -33,11 +38,27 @@ INBOX_MAX_FILE_BYTES = 50 * 1024 * 1024  # 50 MB per file
 
 DATA_DIR = BASE_DIR / "data" / "production"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
+_PROJECT_LOCKS: dict[str, threading.RLock] = {}
+_PROJECT_LOCKS_GUARD = threading.Lock()
+
+
+def _project_lock(pid: str) -> threading.RLock:
+    """返回项目级进程内重入锁，保护 JSON 的读-改-写序列。"""
+    with _PROJECT_LOCKS_GUARD:
+        lock = _PROJECT_LOCKS.get(pid)
+        if lock is None:
+            lock = threading.RLock()
+            _PROJECT_LOCKS[pid] = lock
+        return lock
 
 
 def _proj_dir(pid: str) -> Path:
-    """返回项目 pid 的数据目录路径（data/production/{pid}）。"""
-    return DATA_DIR / pid
+    """返回项目目录，并拒绝任何越出 production 根目录的项目标识。"""
+    root = DATA_DIR.resolve()
+    candidate = (DATA_DIR / pid).resolve()
+    if candidate.parent != root:
+        raise HTTPException(400, "无效项目 ID")
+    return candidate
 
 
 def _load_project(pid: str) -> ProductionProject:
@@ -51,8 +72,7 @@ def _load_project(pid: str) -> ProductionProject:
 def _save_project(proj: ProductionProject) -> None:
     """把项目对象写回磁盘 project.json（目录不存在则创建）。"""
     d = _proj_dir(proj.project_id)
-    d.mkdir(parents=True, exist_ok=True)
-    (d / "project.json").write_text(proj.model_dump_json(indent=2), "utf-8")
+    _write_json_atomic(d / "project.json", proj.model_dump())
 
 
 def _load_cards(pid: str) -> list[ProductionCard]:
@@ -66,17 +86,194 @@ def _load_cards(pid: str) -> list[ProductionCard]:
 
 def _save_cards(pid: str, cards: list[ProductionCard]) -> None:
     """把项目卡片列表整体写回 cards.json（全量覆盖写）。"""
-    d = _proj_dir(pid)
-    d.mkdir(parents=True, exist_ok=True)
-    (d / "cards.json").write_text(
-        json.dumps([c.model_dump() for c in cards], ensure_ascii=False, indent=2),
-        "utf-8",
+    _write_json_atomic(
+        _proj_dir(pid) / "cards.json",
+        [c.model_dump() for c in cards],
     )
 
 
 def _now() -> str:
     """返回当前 UTC 时间的 ISO 格式字符串，作为统一时间戳。"""
     return datetime.now(timezone.utc).isoformat()
+
+
+def _write_json_atomic(path: Path, payload: Any) -> None:
+    """先写同目录临时文件再原子替换，避免进程中断留下半截 JSON。"""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        temp_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2),
+            "utf-8",
+        )
+        temp_path.replace(path)
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
+def _versions_dir(pid: str) -> Path:
+    """返回项目版本目录。"""
+    return _proj_dir(pid) / "versions"
+
+
+def _snapshot_summary(cards: list[ProductionCard], description: str = "") -> dict:
+    """生成读者可理解的版本摘要，避免版本列表只剩一个时间戳。"""
+    stage_counts: dict[str, int] = {}
+    for card in cards:
+        stage_counts[card.stage] = stage_counts.get(card.stage, 0) + 1
+    episodes = sorted({card.episode for card in cards if card.episode is not None})
+    return {
+        "description": description,
+        "card_count": len(cards),
+        "stage_counts": stage_counts,
+        "episodes": episodes,
+    }
+
+
+def _snapshot_hash(project: ProductionProject, cards: list[ProductionCard]) -> str:
+    """计算项目与卡片当前内容指纹，供自动快照去重。"""
+    return _snapshot_payload_hash(
+        project.model_dump(),
+        [card.model_dump() for card in cards],
+    )
+
+
+def _snapshot_payload_hash(project: dict, cards: list[dict]) -> str:
+    """按快照原始 JSON 算指纹，新增模型默认字段时仍能验证旧合法版本。"""
+    canonical = json.dumps(
+        {
+            "project": project,
+            "cards": cards,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _version_metadata(payload: dict) -> dict:
+    """从完整版本文件裁出列表页所需元数据，避免 GET versions 返回全部卡片正文。"""
+    return {
+        "version_id": payload.get("version_id", ""),
+        "label": payload.get("label", ""),
+        "reason": payload.get("reason", ""),
+        "created_at": payload.get("created_at", ""),
+        "summary": payload.get("summary") or {},
+    }
+
+
+def _read_version_files(pid: str) -> list[dict]:
+    """读取项目全部版本文件；坏文件记录告警并跳过，不阻断其余历史。"""
+    directory = _versions_dir(pid)
+    if not directory.exists():
+        return []
+    versions: list[dict] = []
+    for path in directory.glob("*.json"):
+        try:
+            payload = json.loads(path.read_text("utf-8"))
+            if isinstance(payload, dict) and payload.get("version_id"):
+                versions.append(payload)
+        except (OSError, json.JSONDecodeError):
+            logger.warning("版本文件读取失败，已跳过: %s", path, exc_info=True)
+    return sorted(versions, key=lambda item: item.get("created_at", ""), reverse=True)
+
+
+def _create_project_snapshot(
+    pid: str,
+    *,
+    label: str,
+    reason: str,
+    description: str = "",
+    force: bool = False,
+) -> dict | None:
+    """保存项目和全部卡片快照；自动快照与最近内容相同则跳过。"""
+    with _project_lock(pid):
+        project = _load_project(pid)
+        cards = _load_cards(pid)
+        content_hash = _snapshot_hash(project, cards)
+        if not force:
+            existing = _read_version_files(pid)
+            if existing and existing[0].get("content_hash") == content_hash:
+                return None
+
+        now = _now()
+        version_id = (
+            datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+            + "-"
+            + uuid.uuid4().hex[:8]
+        )
+        payload = {
+            "schema_version": 1,
+            "version_id": version_id,
+            "label": label.strip() or "自动快照",
+            "reason": reason.strip() or "automatic",
+            "created_at": now,
+            "summary": _snapshot_summary(cards, description),
+            "content_hash": content_hash,
+            "project": project.model_dump(),
+            "cards": [card.model_dump() for card in cards],
+        }
+        _write_json_atomic(_versions_dir(pid) / f"{version_id}.json", payload)
+        return _version_metadata(payload)
+
+
+def _load_version(pid: str, version_id: str) -> dict:
+    """按安全版本 ID 加载单个快照。"""
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", version_id):
+        raise HTTPException(400, "无效版本 ID")
+    path = _versions_dir(pid) / f"{version_id}.json"
+    if not path.is_file():
+        raise HTTPException(404, f"版本 {version_id} 不存在")
+    try:
+        payload = json.loads(path.read_text("utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(500, "版本文件损坏，无法恢复") from exc
+    if payload.get("version_id") != version_id:
+        raise HTTPException(500, "版本文件标识不一致")
+    if (
+        not isinstance(payload.get("project"), dict)
+        or not isinstance(payload.get("cards"), list)
+        or not isinstance(payload.get("content_hash"), str)
+        or not payload.get("content_hash")
+    ):
+        raise HTTPException(500, "版本文件缺少完整项目、卡片或内容指纹")
+    if payload.get("schema_version") != 1:
+        raise HTTPException(500, "暂不支持该项目版本格式")
+    if (
+        _snapshot_payload_hash(payload["project"], payload["cards"])
+        != payload["content_hash"]
+    ):
+        raise HTTPException(500, "版本文件内容指纹校验失败")
+    try:
+        ProductionProject.model_validate(payload["project"])
+        validated_cards = [
+            ProductionCard.model_validate(item)
+            for item in payload["cards"]
+        ]
+        del validated_cards
+    except Exception as exc:
+        raise HTTPException(500, "版本文件项目或卡片格式错误") from exc
+    return payload
+
+
+def _load_comments(pid: str) -> list[dict]:
+    """读取项目批注；历史项目没有 comments.json 时返回空列表。"""
+    path = _proj_dir(pid) / "comments.json"
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text("utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(500, "项目批注文件损坏") from exc
+    if not isinstance(payload, list):
+        raise HTTPException(500, "项目批注文件格式错误")
+    return [item for item in payload if isinstance(item, dict)]
+
+
+def _save_comments(pid: str, comments: list[dict]) -> None:
+    """原子写回项目批注。"""
+    _write_json_atomic(_proj_dir(pid) / "comments.json", comments)
 
 
 def _extract_json_payload(text: str) -> Any | None:
@@ -315,20 +512,20 @@ def create_project(req: CreateProjectReq, request: Request):
         created_at=now,
         updated_at=now,
     )
-    _save_project(proj)
-
-    if req.source_content.strip():
-        card = ProductionCard(
-            card_id=str(uuid.uuid4())[:8],
-            project_id=pid,
-            stage="idea",
-            title="原始素材",
-            content=req.source_content,
-            status="done",
-            created_at=now,
-            updated_at=now,
-        )
-        _save_cards(pid, [card])
+    with _project_lock(pid):
+        _save_project(proj)
+        if req.source_content.strip():
+            card = ProductionCard(
+                card_id=str(uuid.uuid4())[:8],
+                project_id=pid,
+                stage="idea",
+                title="原始素材",
+                content=req.source_content,
+                status="done",
+                created_at=now,
+                updated_at=now,
+            )
+            _save_cards(pid, [card])
 
     return {"code": 200, "data": proj.model_dump()}
 
@@ -336,14 +533,15 @@ def create_project(req: CreateProjectReq, request: Request):
 @router.get("/projects/{pid}")
 def get_project(pid: str):
     """GET /projects/{pid}：返回项目详情 + 全部卡片 + 进度统计；老数据无成员时自动补 owner。"""
-    proj = _load_project(pid)
-    if not proj.members:
-        proj.members = [ProjectMember(user_id="owner", name="创建者", role="owner", added_at=proj.created_at)]
-        _save_project(proj)
-    cards = _load_cards(pid)
-    stats = _compute_stats(cards)
-    stage_defs = GC_STAGES if proj.source_type == "gc" else STAGES
-    result = ProjectWithCards(**proj.model_dump(), cards=cards, stages=stage_defs, stats=stats)
+    with _project_lock(pid):
+        proj = _load_project(pid)
+        if not proj.members:
+            proj.members = [ProjectMember(user_id="owner", name="创建者", role="owner", added_at=proj.created_at)]
+            _save_project(proj)
+        cards = _load_cards(pid)
+        stats = _compute_stats(cards)
+        stage_defs = GC_STAGES if proj.source_type == "gc" else STAGES
+        result = ProjectWithCards(**proj.model_dump(), cards=cards, stages=stage_defs, stats=stats)
     return {"code": 200, "data": result.model_dump()}
 
 
@@ -371,37 +569,38 @@ class UpdateProjectReq(BaseModel):
 @router.put("/projects/{pid}")
 def update_project(pid: str, req: UpdateProjectReq):
     """PUT /projects/{pid}：按传入字段部分更新项目信息（settings 为合并而非覆盖）。"""
-    proj = _load_project(pid)
-    if req.name is not None:
-        proj.name = req.name
-    if req.description is not None:
-        proj.description = req.description
-    if req.source_type is not None:
-        proj.source_type = req.source_type
-    if req.source_content is not None:
-        proj.source_content = req.source_content
-    if req.employee_key is not None:
-        proj.employee_key = req.employee_key
-    if req.team_code is not None:
-        proj.team_code = req.team_code
-    if req.episode_count is not None:
-        proj.episode_count = req.episode_count
-    if req.episode_duration_seconds is not None:
-        proj.episode_duration_seconds = req.episode_duration_seconds
-    if req.aspect_ratio is not None:
-        proj.aspect_ratio = req.aspect_ratio
-    if req.visual_style is not None:
-        proj.visual_style = req.visual_style
-    if req.budget is not None:
-        proj.budget = req.budget
-    if req.production_goal is not None:
-        proj.production_goal = req.production_goal
-    if req.pinned is not None:
-        proj.pinned = req.pinned
-    if req.settings is not None:
-        proj.settings.update(req.settings)
-    proj.updated_at = _now()
-    _save_project(proj)
+    with _project_lock(pid):
+        proj = _load_project(pid)
+        if req.name is not None:
+            proj.name = req.name
+        if req.description is not None:
+            proj.description = req.description
+        if req.source_type is not None:
+            proj.source_type = req.source_type
+        if req.source_content is not None:
+            proj.source_content = req.source_content
+        if req.employee_key is not None:
+            proj.employee_key = req.employee_key
+        if req.team_code is not None:
+            proj.team_code = req.team_code
+        if req.episode_count is not None:
+            proj.episode_count = req.episode_count
+        if req.episode_duration_seconds is not None:
+            proj.episode_duration_seconds = req.episode_duration_seconds
+        if req.aspect_ratio is not None:
+            proj.aspect_ratio = req.aspect_ratio
+        if req.visual_style is not None:
+            proj.visual_style = req.visual_style
+        if req.budget is not None:
+            proj.budget = req.budget
+        if req.production_goal is not None:
+            proj.production_goal = req.production_goal
+        if req.pinned is not None:
+            proj.pinned = req.pinned
+        if req.settings is not None:
+            proj.settings.update(req.settings)
+        proj.updated_at = _now()
+        _save_project(proj)
     return {"code": 200, "data": proj.model_dump()}
 
 
@@ -409,10 +608,194 @@ def update_project(pid: str, req: UpdateProjectReq):
 def delete_project(pid: str):
     """DELETE /projects/{pid}：删除项目整个数据目录（含卡片与上传文件），幂等操作。"""
     import shutil
-    d = _proj_dir(pid)
-    if d.exists():
-        shutil.rmtree(d)
+    with _project_lock(pid):
+        d = _proj_dir(pid)
+        if d.exists():
+            shutil.rmtree(d)
     return {"code": 200, "data": "ok"}
+
+
+# ── Project Versions ─────────────────────────────────────────────
+
+class CreateVersionReq(BaseModel):
+    """手动版本请求；标签和原因均可省略。"""
+    label: str = Field(default="", max_length=120)
+    reason: str = Field(default="", max_length=200)
+
+
+@router.get("/projects/{pid}/versions")
+def list_project_versions(pid: str):
+    """列出项目版本元数据，按创建时间倒序，不回传大体积卡片正文。"""
+    with _project_lock(pid):
+        _load_project(pid)
+        versions = [_version_metadata(item) for item in _read_version_files(pid)]
+    return {"code": 200, "data": versions}
+
+
+@router.post("/projects/{pid}/versions")
+def create_project_version(pid: str, req: CreateVersionReq | None = None):
+    """手动创建一个永不覆盖的项目版本；即使内容相同也保留用户明确打点。"""
+    body = req or CreateVersionReq()
+    version = _create_project_snapshot(
+        pid,
+        label=body.label or "手动版本",
+        reason=body.reason or "manual",
+        description="用户手动保存的项目版本",
+        force=True,
+    )
+    return {"code": 200, "data": version}
+
+
+@router.post("/projects/{pid}/versions/{version_id}/restore")
+def restore_project_version(pid: str, version_id: str):
+    """恢复指定版本；覆盖当前内容前强制保存 before_restore 快照。"""
+    with _project_lock(pid):
+        current_project = _load_project(pid)
+        current_cards = _load_cards(pid)
+        payload = _load_version(pid, version_id)
+        try:
+            restored_project = ProductionProject.model_validate(payload.get("project"))
+            restored_cards = [
+                ProductionCard.model_validate(item)
+                for item in (payload.get("cards") or [])
+            ]
+        except Exception as exc:
+            raise HTTPException(500, "版本内容损坏，无法恢复") from exc
+        if restored_project.project_id != pid or any(
+            card.project_id != pid for card in restored_cards
+        ):
+            raise HTTPException(400, "版本不属于当前项目")
+
+        before_restore = _create_project_snapshot(
+            pid,
+            label=f"恢复 {payload.get('label') or version_id} 前",
+            reason="before_restore",
+            description=f"恢复版本 {version_id} 前的自动保护点",
+            force=True,
+        )
+        restored_project.updated_at = _now()
+        try:
+            _save_project(restored_project)
+            _save_cards(pid, restored_cards)
+        except Exception as exc:
+            # 两份主数据必须一起恢复；回滚绕过可被测试/插件替换的保存函数，
+            # 确保第二次写失败也不会留下“旧卡片 + 新项目”的混合状态。
+            _write_json_atomic(
+                _proj_dir(pid) / "project.json",
+                current_project.model_dump(),
+            )
+            _write_json_atomic(
+                _proj_dir(pid) / "cards.json",
+                [card.model_dump() for card in current_cards],
+            )
+            raise HTTPException(500, "版本恢复失败，当前项目已回滚") from exc
+        logger.info(
+            "项目版本已恢复 pid=%s target=%s before=%s",
+            pid,
+            version_id,
+            (before_restore or {}).get("version_id"),
+        )
+    return {
+        "code": 200,
+        "data": {
+            "restored_version_id": version_id,
+            "before_restore_version_id": (before_restore or {}).get("version_id"),
+            "project": restored_project.model_dump(),
+            "card_count": len(restored_cards),
+            "previous_updated_at": current_project.updated_at,
+        },
+    }
+
+
+def _safe_export_filename(value: str) -> str:
+    """把用户可编辑的项目名收敛成安全下载文件名。"""
+    cleaned = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", value).strip(" .")
+    return (cleaned or "project")[:80]
+
+
+def _add_export_tree(
+    archive: zipfile.ZipFile,
+    root: Path,
+    archive_prefix: str,
+) -> None:
+    """安全地把目录内普通文件加入 ZIP，跳过符号链接与越界解析路径。"""
+    if not root.is_dir():
+        return
+    resolved_root = root.resolve()
+    for path in root.rglob("*"):
+        if not path.is_file() or path.is_symlink():
+            continue
+        resolved = path.resolve()
+        try:
+            relative = resolved.relative_to(resolved_root)
+        except ValueError:
+            logger.warning("导出时跳过越界文件: %s", path)
+            continue
+        safe_parts = [
+            re.sub(r"[/\\\x00-\x1f]", "_", part)
+            for part in relative.parts
+            if part not in ("", ".", "..")
+        ]
+        if not safe_parts:
+            continue
+        archive.write(
+            resolved,
+            arcname="/".join([archive_prefix.strip("/"), *safe_parts]),
+        )
+
+
+@router.post("/projects/{pid}/export")
+def export_project(pid: str):
+    """导出项目 JSON、批注、版本与本地媒体为可迁移 ZIP 包。"""
+    fd, temp_name = tempfile.mkstemp(prefix="agent-project-", suffix=".zip")
+    os.close(fd)
+    temp_path = Path(temp_name)
+    try:
+        with _project_lock(pid):
+            project = _load_project(pid)
+            cards = _load_cards(pid)
+            comments = _load_comments(pid)
+            project_dir = _proj_dir(pid)
+            with zipfile.ZipFile(
+                temp_path,
+                mode="w",
+                compression=zipfile.ZIP_DEFLATED,
+                allowZip64=True,
+            ) as archive:
+                archive.writestr(
+                    "project.json",
+                    json.dumps(project.model_dump(), ensure_ascii=False, indent=2),
+                )
+                archive.writestr(
+                    "cards.json",
+                    json.dumps(
+                        [card.model_dump() for card in cards],
+                        ensure_ascii=False,
+                        indent=2,
+                    ),
+                )
+                archive.writestr(
+                    "comments.json",
+                    json.dumps(comments, ensure_ascii=False, indent=2),
+                )
+                _add_export_tree(archive, _versions_dir(pid), "versions")
+                _add_export_tree(archive, project_dir / "uploads", "uploads")
+                _add_export_tree(
+                    archive,
+                    BASE_DIR / "data" / "uploads" / "production" / pid,
+                    "uploads/generated",
+                )
+    except Exception:
+        temp_path.unlink(missing_ok=True)
+        raise
+
+    filename = f"{_safe_export_filename(project.name)}-{pid}.zip"
+    return FileResponse(
+        temp_path,
+        media_type="application/zip",
+        filename=filename,
+        background=BackgroundTask(temp_path.unlink, missing_ok=True),
+    )
 
 
 # ── Project Members ──────────────────────────────────────────────
@@ -430,20 +813,21 @@ def add_member(pid: str, req: AddMemberReq):
     """POST /projects/{pid}/members：添加项目成员；角色非法或重名返 400。"""
     if req.role not in ROLES:
         raise HTTPException(400, f"无效角色: {req.role}，可选: {', '.join(ROLES)}")
-    proj = _load_project(pid)
-    for m in proj.members:
-        if m.name == req.name:
-            raise HTTPException(400, f"成员 {req.name} 已存在")
-    member = ProjectMember(
-        user_id=req.user_id or str(uuid.uuid4())[:8],
-        name=req.name,
-        role=req.role,
-        avatar=req.avatar,
-        added_at=_now(),
-    )
-    proj.members.append(member)
-    proj.updated_at = _now()
-    _save_project(proj)
+    with _project_lock(pid):
+        proj = _load_project(pid)
+        for m in proj.members:
+            if m.name == req.name:
+                raise HTTPException(400, f"成员 {req.name} 已存在")
+        member = ProjectMember(
+            user_id=req.user_id or str(uuid.uuid4())[:8],
+            name=req.name,
+            role=req.role,
+            avatar=req.avatar,
+            added_at=_now(),
+        )
+        proj.members.append(member)
+        proj.updated_at = _now()
+        _save_project(proj)
     return {"code": 200, "data": member.model_dump()}
 
 
@@ -457,34 +841,36 @@ def update_member_role(pid: str, user_id: str, req: UpdateMemberReq):
     """PUT /projects/{pid}/members/{user_id}：修改成员角色；不允许把最后一个 owner 降级（返 400），成员不存在返 404。"""
     if req.role not in ROLES:
         raise HTTPException(400, f"无效角色: {req.role}")
-    proj = _load_project(pid)
-    for m in proj.members:
-        if m.user_id == user_id:
-            if m.role == "owner" and req.role != "owner":
-                owners = [mm for mm in proj.members if mm.role == "owner"]
-                if len(owners) <= 1:
-                    raise HTTPException(400, "项目至少需要一个 owner")
-            m.role = req.role
-            proj.updated_at = _now()
-            _save_project(proj)
-            return {"code": 200, "data": m.model_dump()}
+    with _project_lock(pid):
+        proj = _load_project(pid)
+        for m in proj.members:
+            if m.user_id == user_id:
+                if m.role == "owner" and req.role != "owner":
+                    owners = [mm for mm in proj.members if mm.role == "owner"]
+                    if len(owners) <= 1:
+                        raise HTTPException(400, "项目至少需要一个 owner")
+                m.role = req.role
+                proj.updated_at = _now()
+                _save_project(proj)
+                return {"code": 200, "data": m.model_dump()}
     raise HTTPException(404, "成员不存在")
 
 
 @router.delete("/projects/{pid}/members/{user_id}")
 def remove_member(pid: str, user_id: str):
     """DELETE /projects/{pid}/members/{user_id}：移除项目成员；不允许移除最后一个 owner（返 400），成员不存在返 404。"""
-    proj = _load_project(pid)
-    member = next((m for m in proj.members if m.user_id == user_id), None)
-    if not member:
-        raise HTTPException(404, "成员不存在")
-    if member.role == "owner":
-        owners = [m for m in proj.members if m.role == "owner"]
-        if len(owners) <= 1:
-            raise HTTPException(400, "不能移除最后一个 owner")
-    proj.members = [m for m in proj.members if m.user_id != user_id]
-    proj.updated_at = _now()
-    _save_project(proj)
+    with _project_lock(pid):
+        proj = _load_project(pid)
+        member = next((m for m in proj.members if m.user_id == user_id), None)
+        if not member:
+            raise HTTPException(404, "成员不存在")
+        if member.role == "owner":
+            owners = [m for m in proj.members if m.role == "owner"]
+            if len(owners) <= 1:
+                raise HTTPException(400, "不能移除最后一个 owner")
+        proj.members = [m for m in proj.members if m.user_id != user_id]
+        proj.updated_at = _now()
+        _save_project(proj)
     return {"code": 200, "data": "ok"}
 
 
@@ -508,28 +894,29 @@ class CreateCardReq(BaseModel):
 @router.post("/projects/{pid}/cards")
 def add_card(pid: str, req: CreateCardReq):
     """POST /projects/{pid}/cards：在项目下新建一张生产卡片；项目不存在返 404。"""
-    _load_project(pid)
-    cards = _load_cards(pid)
-    now = _now()
-    card = ProductionCard(
-        card_id=str(uuid.uuid4())[:8],
-        project_id=pid,
-        stage=req.stage,
-        title=req.title,
-        content=req.content,
-        episode=req.episode,
-        shot_number=req.shot_number,
-        prompts=req.prompts,
-        images=req.images,
-        videos=req.videos,
-        metadata=req.metadata,
-        status=req.status,
-        assignee=req.assignee,
-        created_at=now,
-        updated_at=now,
-    )
-    cards.append(card)
-    _save_cards(pid, cards)
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        now = _now()
+        card = ProductionCard(
+            card_id=str(uuid.uuid4())[:8],
+            project_id=pid,
+            stage=req.stage,
+            title=req.title,
+            content=req.content,
+            episode=req.episode,
+            shot_number=req.shot_number,
+            prompts=req.prompts,
+            images=req.images,
+            videos=req.videos,
+            metadata=req.metadata,
+            status=req.status,
+            assignee=req.assignee,
+            created_at=now,
+            updated_at=now,
+        )
+        cards.append(card)
+        _save_cards(pid, cards)
     return {"code": 200, "data": card.model_dump()}
 
 
@@ -554,12 +941,42 @@ def update_card(card_id: str, req: UpdateCardReq):
     """PUT /cards/{card_id}：跨全部项目按 card_id 定位并部分更新卡片（以 model_fields_set 判断哪些字段被显式传入）；不存在返 404。"""
     provided = req.model_fields_set
     for d in DATA_DIR.iterdir():
-        cards_file = d / "cards.json"
-        if not cards_file.exists():
-            continue
-        cards = _load_cards(d.name)
-        for c in cards:
-            if c.card_id == card_id:
+        with _project_lock(d.name):
+            cards_file = d / "cards.json"
+            if not cards_file.exists():
+                continue
+            cards = _load_cards(d.name)
+            for c in cards:
+                if c.card_id != card_id:
+                    continue
+                versioned_changes = []
+                if (
+                    "content" in provided
+                    and req.content is not None
+                    and req.content != c.content
+                ):
+                    versioned_changes.append("content")
+                if (
+                    "prompts" in provided
+                    and (req.prompts or []) != c.prompts
+                ):
+                    versioned_changes.append("prompts")
+                if (
+                    "shot_number" in provided
+                    and req.shot_number is not None
+                    and req.shot_number != c.shot_number
+                ):
+                    versioned_changes.append("shot_number")
+                if versioned_changes:
+                    _create_project_snapshot(
+                        d.name,
+                        label=f"修改卡片「{c.title or c.card_id}」前",
+                        reason="card_update",
+                        description=(
+                            f"卡片 {c.card_id} 即将修改字段："
+                            + "、".join(versioned_changes)
+                        ),
+                    )
                 if "stage" in provided and req.stage is not None:
                     c.stage = req.stage
                 if "title" in provided and req.title is not None:
@@ -594,15 +1011,104 @@ def update_card(card_id: str, req: UpdateCardReq):
 def delete_card(card_id: str):
     """DELETE /cards/{card_id}：跨全部项目定位并删除卡片；不存在返 404。"""
     for d in DATA_DIR.iterdir():
-        cards_file = d / "cards.json"
-        if not cards_file.exists():
-            continue
-        cards = _load_cards(d.name)
-        new_cards = [c for c in cards if c.card_id != card_id]
-        if len(new_cards) < len(cards):
-            _save_cards(d.name, new_cards)
-            return {"code": 200, "data": "ok"}
+        with _project_lock(d.name):
+            cards_file = d / "cards.json"
+            if not cards_file.exists():
+                continue
+            cards = _load_cards(d.name)
+            new_cards = [c for c in cards if c.card_id != card_id]
+            if len(new_cards) < len(cards):
+                _save_cards(d.name, new_cards)
+                return {"code": 200, "data": "ok"}
     raise HTTPException(404, "卡片不存在")
+
+
+# ── Card Comments ────────────────────────────────────────────────
+
+class CreateCommentReq(BaseModel):
+    """新建卡片批注请求。"""
+    content: str = Field(max_length=4000)
+
+
+class UpdateCommentReq(BaseModel):
+    """批注解决状态请求。"""
+    resolved: bool
+
+
+@router.get("/projects/{pid}/comments")
+def list_project_comments(
+    pid: str,
+    card_id: str | None = Query(default=None),
+    include_resolved: bool = Query(default=False),
+):
+    """列出项目批注，可按卡片过滤；默认隐藏已解决项。"""
+    with _project_lock(pid):
+        _load_project(pid)
+        if card_id is not None:
+            cards = _load_cards(pid)
+            if not any(card.card_id == card_id for card in cards):
+                raise HTTPException(404, f"卡片 {card_id} 不存在")
+        comments = _load_comments(pid)
+        if card_id is not None:
+            comments = [item for item in comments if item.get("card_id") == card_id]
+        if not include_resolved:
+            comments = [item for item in comments if not item.get("resolved", False)]
+    return {
+        "code": 200,
+        "data": sorted(comments, key=lambda item: item.get("created_at", "")),
+    }
+
+
+@router.post("/projects/{pid}/cards/{card_id}/comments")
+def create_card_comment(
+    pid: str,
+    card_id: str,
+    req: CreateCommentReq,
+    request: Request,
+):
+    """在项目内给指定卡片添加批注，作者取当前鉴权账号。"""
+    content = req.content.strip()
+    if not content:
+        raise HTTPException(400, "批注内容不能为空")
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        if not any(card.card_id == card_id for card in cards):
+            raise HTTPException(404, f"卡片 {card_id} 不存在")
+        now = _now()
+        comment = {
+            "id": uuid.uuid4().hex[:12],
+            "project_id": pid,
+            "card_id": card_id,
+            "content": content,
+            "author": getattr(request.state, "username", "unknown"),
+            "created_at": now,
+            "updated_at": now,
+            "resolved": False,
+            "resolved_at": None,
+        }
+        comments = _load_comments(pid)
+        comments.append(comment)
+        _save_comments(pid, comments)
+    return {"code": 200, "data": comment}
+
+
+@router.patch("/projects/{pid}/comments/{comment_id}")
+def update_project_comment(pid: str, comment_id: str, req: UpdateCommentReq):
+    """在当前项目内解决或重新打开一条批注。"""
+    with _project_lock(pid):
+        _load_project(pid)
+        comments = _load_comments(pid)
+        comment = next((item for item in comments if item.get("id") == comment_id), None)
+        if comment is None:
+            raise HTTPException(404, "批注不存在")
+        if bool(comment.get("resolved", False)) != req.resolved:
+            now = _now()
+            comment["resolved"] = req.resolved
+            comment["resolved_at"] = now if req.resolved else None
+            comment["updated_at"] = now
+            _save_comments(pid, comments)
+    return {"code": 200, "data": comment}
 
 
 class BatchCreateCardReq(BaseModel):
@@ -613,31 +1119,32 @@ class BatchCreateCardReq(BaseModel):
 @router.post("/projects/{pid}/cards/batch")
 def batch_add_cards(pid: str, req: BatchCreateCardReq):
     """POST /projects/{pid}/cards/batch：一次写入多张卡片并返回新建结果；项目不存在返 404。"""
-    _load_project(pid)
-    cards = _load_cards(pid)
-    now = _now()
-    new_cards = []
-    for item in req.cards:
-        card = ProductionCard(
-            card_id=str(uuid.uuid4())[:8],
-            project_id=pid,
-            stage=item.stage,
-            title=item.title,
-            content=item.content,
-            episode=item.episode,
-            shot_number=item.shot_number,
-            prompts=item.prompts,
-            images=item.images,
-            videos=item.videos,
-            metadata=item.metadata,
-            status=item.status,
-            assignee=item.assignee,
-            created_at=now,
-            updated_at=now,
-        )
-        new_cards.append(card)
-        cards.append(card)
-    _save_cards(pid, cards)
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        now = _now()
+        new_cards = []
+        for item in req.cards:
+            card = ProductionCard(
+                card_id=str(uuid.uuid4())[:8],
+                project_id=pid,
+                stage=item.stage,
+                title=item.title,
+                content=item.content,
+                episode=item.episode,
+                shot_number=item.shot_number,
+                prompts=item.prompts,
+                images=item.images,
+                videos=item.videos,
+                metadata=item.metadata,
+                status=item.status,
+                assignee=item.assignee,
+                created_at=now,
+                updated_at=now,
+            )
+            new_cards.append(card)
+            cards.append(card)
+        _save_cards(pid, cards)
     return {"code": 200, "data": [c.model_dump() for c in new_cards]}
 
 
@@ -654,19 +1161,20 @@ def batch_move_cards(req: BatchMoveReq):
         raise HTTPException(400, f"无效阶段: {req.stage}")
     moved = []
     for d in DATA_DIR.iterdir():
-        cards_file = d / "cards.json"
-        if not cards_file.exists():
-            continue
-        cards = _load_cards(d.name)
-        changed = False
-        for c in cards:
-            if c.card_id in req.card_ids:
-                c.stage = req.stage
-                c.updated_at = _now()
-                moved.append(c.card_id)
-                changed = True
-        if changed:
-            _save_cards(d.name, cards)
+        with _project_lock(d.name):
+            cards_file = d / "cards.json"
+            if not cards_file.exists():
+                continue
+            cards = _load_cards(d.name)
+            changed = False
+            for c in cards:
+                if c.card_id in req.card_ids:
+                    c.stage = req.stage
+                    c.updated_at = _now()
+                    moved.append(c.card_id)
+                    changed = True
+            if changed:
+                _save_cards(d.name, cards)
     return {"code": 200, "data": {"moved": moved}}
 
 
@@ -680,15 +1188,16 @@ def batch_delete_cards(req: BatchDeleteReq):
     """POST /cards/batch-delete：跨项目批量删除卡片，返回实际删除的 ID 列表（不存在的 ID 静默跳过）。"""
     deleted = []
     for d in DATA_DIR.iterdir():
-        cards_file = d / "cards.json"
-        if not cards_file.exists():
-            continue
-        cards = _load_cards(d.name)
-        new_cards = [c for c in cards if c.card_id not in req.card_ids]
-        if len(new_cards) < len(cards):
-            removed = [c.card_id for c in cards if c.card_id in req.card_ids]
-            deleted.extend(removed)
-            _save_cards(d.name, new_cards)
+        with _project_lock(d.name):
+            cards_file = d / "cards.json"
+            if not cards_file.exists():
+                continue
+            cards = _load_cards(d.name)
+            new_cards = [c for c in cards if c.card_id not in req.card_ids]
+            if len(new_cards) < len(cards):
+                removed = [c.card_id for c in cards if c.card_id in req.card_ids]
+                deleted.extend(removed)
+                _save_cards(d.name, new_cards)
     return {"code": 200, "data": {"deleted": deleted}}
 
 
@@ -703,48 +1212,51 @@ def batch_update_status(req: BatchUpdateStatusReq):
     """POST /cards/batch-status：跨项目批量更新卡片状态，返回实际更新的 ID 列表。"""
     updated = []
     for d in DATA_DIR.iterdir():
-        cards_file = d / "cards.json"
-        if not cards_file.exists():
-            continue
-        cards = _load_cards(d.name)
-        changed = False
-        for c in cards:
-            if c.card_id in req.card_ids:
-                c.status = req.status
-                c.updated_at = _now()
-                updated.append(c.card_id)
-                changed = True
-        if changed:
-            _save_cards(d.name, cards)
+        with _project_lock(d.name):
+            cards_file = d / "cards.json"
+            if not cards_file.exists():
+                continue
+            cards = _load_cards(d.name)
+            changed = False
+            for c in cards:
+                if c.card_id in req.card_ids:
+                    c.status = req.status
+                    c.updated_at = _now()
+                    updated.append(c.card_id)
+                    changed = True
+            if changed:
+                _save_cards(d.name, cards)
     return {"code": 200, "data": {"updated": updated}}
 
 
 @router.post("/projects/{pid}/cards/{card_id}/upload")
 async def upload_card_file(pid: str, card_id: str, file: UploadFile = File(...), file_type: str = "image"):
     """POST /projects/{pid}/cards/{card_id}/upload：上传图片/视频到卡片，按 file_type 追加到 images 或 videos 列表；卡片不存在返 404。"""
-    _load_project(pid)
-    cards = _load_cards(pid)
-    card = next((c for c in cards if c.card_id == card_id), None)
-    if not card:
-        raise HTTPException(404, "卡片不存在")
-
-    upload_dir = _proj_dir(pid) / "uploads"
-    upload_dir.mkdir(parents=True, exist_ok=True)
-
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        if not any(card.card_id == card_id for card in cards):
+            raise HTTPException(404, "卡片不存在")
     ext = Path(file.filename or "file").suffix or (".png" if file_type == "image" else ".mp4")
     filename = f"{card_id}_{uuid.uuid4().hex[:6]}{ext}"
-    file_path = upload_dir / filename
-
     content = await file.read()
-    file_path.write_bytes(content)
-
-    url = f"/api/v1/agentapp/production/resource/production/{pid}/uploads/{filename}"
-    if file_type == "video":
-        card.videos.append(url)
-    else:
-        card.images.append(url)
-    card.updated_at = _now()
-    _save_cards(pid, cards)
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        card = next((item for item in cards if item.card_id == card_id), None)
+        if not card:
+            raise HTTPException(404, "卡片不存在")
+        upload_dir = _proj_dir(pid) / "uploads"
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        file_path = upload_dir / filename
+        file_path.write_bytes(content)
+        url = f"/api/v1/agentapp/production/resource/production/{pid}/uploads/{filename}"
+        if file_type == "video":
+            card.videos.append(url)
+        else:
+            card.images.append(url)
+        card.updated_at = _now()
+        _save_cards(pid, cards)
     return {"code": 200, "data": {"url": url, "card": card.model_dump()}}
 
 
@@ -765,22 +1277,15 @@ async def inbox_upload(
     返回 matched（挂到哪张卡）与 unmatched（为什么没挂上），全部文件都会有下落。
     图片挂上后自动设为该卡当前版本（active_image）——刚生成的就是想用的。
     """
-    _load_project(pid)
-    cards = _load_cards(pid)
-    upload_dir = _proj_dir(pid) / "uploads"
-    upload_dir.mkdir(parents=True, exist_ok=True)
-
-    matched, unmatched = [], []
-    dirty = False
+    with _project_lock(pid):
+        _load_project(pid)
+    unmatched = []
+    pending_files: list[dict] = []
     for f in files:
         name = f.filename or ""
         parsed = parse_inbox_filename(name, default_episode)
         if not parsed.get("ok"):
             unmatched.append({"filename": name, "reason": parsed.get("reason", "无法解析")})
-            continue
-        card, slot, reason = resolve_inbox_target(cards, parsed)
-        if card is None:
-            unmatched.append({"filename": name, "reason": reason})
             continue
         max_bytes = INBOX_MAX_FILE_BYTES
         chunks: list[bytes] = []
@@ -798,28 +1303,51 @@ async def inbox_upload(
             if total == 0:
                 unmatched.append({"filename": name, "reason": "空文件"})
             continue
-        data = b"".join(chunks)
-        fname = f"{card.card_id}_{uuid.uuid4().hex[:6]}{parsed['ext']}"
-        (upload_dir / fname).write_bytes(data)
-        url = f"/api/v1/agentapp/production/resource/production/{pid}/uploads/{fname}"
-        if slot == "videos":
-            card.videos.append(url)
-        else:
-            card.images.append(url)
-            card.metadata = {**card.metadata, "active_image": url}
-        card.updated_at = _now()
-        dirty = True
-        matched.append({
-            "filename": name, "card_id": card.card_id, "card_title": card.title,
-            "stage": card.stage, "slot": slot, "url": url,
+        pending_files.append({
+            "filename": name,
+            "parsed": parsed,
+            "data": b"".join(chunks),
         })
-    if dirty:
-        _save_cards(pid, cards)
+
+    matched = []
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        upload_dir = _proj_dir(pid) / "uploads"
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        dirty = False
+        for pending in pending_files:
+            name = pending["filename"]
+            parsed = pending["parsed"]
+            card, slot, reason = resolve_inbox_target(cards, parsed)
+            if card is None:
+                unmatched.append({"filename": name, "reason": reason})
+                continue
+            fname = f"{card.card_id}_{uuid.uuid4().hex[:6]}{parsed['ext']}"
+            (upload_dir / fname).write_bytes(pending["data"])
+            url = f"/api/v1/agentapp/production/resource/production/{pid}/uploads/{fname}"
+            if slot == "videos":
+                card.videos.append(url)
+            else:
+                card.images.append(url)
+                card.metadata = {**card.metadata, "active_image": url}
+            card.updated_at = _now()
+            dirty = True
+            matched.append({
+                "filename": name,
+                "card_id": card.card_id,
+                "card_title": card.title,
+                "stage": card.stage,
+                "slot": slot,
+                "url": url,
+            })
+        if dirty:
+            _save_cards(pid, cards)
     return {"code": 200, "data": {"matched": matched, "unmatched": unmatched}}
 
 
 # ── 两键评审：通过/废弃 + 废弃原因统计 ───────────────────────────
-# 背景：卡片 status=done 只表示"生成完成"，从不承载"人验收了没有、废在哪"。
+# 背景：卡片 status=done 主要表示"生成完成"，不是独立的验收历史。
 # 失败原因不落数据 → 重生成不带修正 → 同一毛病反复返工。评审记录让废图有出口。
 
 REVIEW_REJECT_REASONS = {
@@ -854,25 +1382,36 @@ def review_card_image(pid: str, card_id: str, req: ReviewCardImageReq):
         raise HTTPException(400, "verdict 必须是 pass 或 reject")
     if req.verdict == "reject" and req.reason not in REVIEW_REJECT_REASONS:
         raise HTTPException(400, f"废弃必须选择原因，可选: {list(REVIEW_REJECT_REASONS)}")
-    _load_project(pid)
-    cards = _load_cards(pid)
-    card = next((c for c in cards if c.card_id == card_id), None)
-    if not card:
-        raise HTTPException(404, "卡片不存在")
-    image = req.image or card.metadata.get("active_image") or (card.images[0] if card.images else "")
-    if not image:
-        raise HTTPException(400, "卡片没有可评审的图片")
-    reviews = list(card.metadata.get("image_reviews") or [])
-    reviews.append({
-        "image": image,
-        "verdict": req.verdict,
-        "reason": req.reason if req.verdict == "reject" else "",
-        "note": req.note,
-        "time": _now(),
-    })
-    card.metadata = {**card.metadata, "image_reviews": reviews, "review_verdict": req.verdict}
-    card.updated_at = _now()
-    _save_cards(pid, cards)
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        card = next((c for c in cards if c.card_id == card_id), None)
+        if not card:
+            raise HTTPException(404, "卡片不存在")
+        current_image = (
+            str(card.metadata.get("active_image") or "")
+            if "active_image" in card.metadata
+            else (str(card.images[-1]) if card.images else "")
+        )
+        if not current_image:
+            raise HTTPException(400, "卡片没有可评审的图片")
+        if req.image and req.image != current_image:
+            raise HTTPException(409, "图片已更新，请刷新后评审当前版本")
+        image = current_image
+        reviews = list(card.metadata.get("image_reviews") or [])
+        reviews.append({
+            "image": image,
+            "verdict": req.verdict,
+            "reason": req.reason if req.verdict == "reject" else "",
+            "note": req.note,
+            "time": _now(),
+        })
+        card.metadata = {**card.metadata, "image_reviews": reviews, "review_verdict": req.verdict}
+        # status 仍是生产流转态：通过会关闭待处理项，废弃会把卡片重新送入返工队列；
+        # 完整的人审历史以 metadata.image_reviews 为准。
+        card.status = "done" if req.verdict == "pass" else "review"
+        card.updated_at = _now()
+        _save_cards(pid, cards)
     return {"code": 200, "data": card.model_dump()}
 
 
@@ -918,16 +1457,17 @@ def move_card(card_id: str, stage: str = "idea"):
     if stage not in STAGE_KEYS:
         raise HTTPException(400, f"无效阶段: {stage}")
     for d in DATA_DIR.iterdir():
-        cards_file = d / "cards.json"
-        if not cards_file.exists():
-            continue
-        cards = _load_cards(d.name)
-        for c in cards:
-            if c.card_id == card_id:
-                c.stage = stage
-                c.updated_at = _now()
-                _save_cards(d.name, cards)
-                return {"code": 200, "data": c.model_dump()}
+        with _project_lock(d.name):
+            cards_file = d / "cards.json"
+            if not cards_file.exists():
+                continue
+            cards = _load_cards(d.name)
+            for c in cards:
+                if c.card_id == card_id:
+                    c.stage = stage
+                    c.updated_at = _now()
+                    _save_cards(d.name, cards)
+                    return {"code": 200, "data": c.model_dump()}
     raise HTTPException(404, "卡片不存在")
 
 
@@ -995,6 +1535,153 @@ class GenerateReq(BaseModel):
     episode: Optional[int] = None
     shot_number: Optional[int] = None
     mode: str = "append"
+
+
+def _commit_generated_drafts(
+    pid: str,
+    req: GenerateReq,
+    drafts: list[dict],
+    target_name: str,
+) -> dict:
+    """在项目锁内基于最新磁盘状态提交 AI 草稿，避免 await 期间的修改被旧副本覆盖。"""
+    with _project_lock(pid):
+        proj = _load_project(pid)
+        cards = _load_cards(pid)
+        now = _now()
+        new_cards: list[ProductionCard] = []
+        # 替换/续号都只作用于「同阶段 + 同集数」的最新卡片。
+        scope_cards = [
+            card for card in cards
+            if card.stage == req.target_stage
+            and card.episode == req.episode
+            and (
+                req.shot_number is None
+                or card.shot_number == req.shot_number
+            )
+        ]
+        replaced = 0
+        if req.mode == "replace":
+            if scope_cards:
+                scope_name = (
+                    f"EP{req.episode:02d}"
+                    if req.episode is not None
+                    else "全局资产"
+                )
+                if req.shot_number is not None:
+                    scope_name += f" / G{req.shot_number}"
+                _create_project_snapshot(
+                    pid,
+                    label=f"替换 {target_name} 前",
+                    reason="generate_replace",
+                    description=(
+                        f"AI 将替换 {scope_name} 的 {target_name}，"
+                        f"保护 {len(scope_cards)} 张旧卡片"
+                    ),
+                )
+            scope_ids = {card.card_id for card in scope_cards}
+            cards = [card for card in cards if card.card_id not in scope_ids]
+            replaced = len(scope_cards)
+            next_shot = 0
+        else:
+            next_shot = max(
+                (card.shot_number for card in scope_cards),
+                default=0,
+            )
+
+        for index, draft in enumerate(drafts):
+            title = draft["title"] or f"{target_name} {index + 1}"
+            body = draft["content"]
+            metadata = dict(draft.get("metadata") or {})
+            parsed_unit = _detect_generation_unit(title, metadata)
+            if req.shot_number is not None:
+                unit_number = req.shot_number
+            elif parsed_unit is None and _is_overview_card(title):
+                unit_number = 0
+            elif parsed_unit is not None:
+                unit_number = parsed_unit
+                next_shot = max(next_shot, unit_number)
+            else:
+                next_shot += 1
+                unit_number = next_shot
+
+            time_range = metadata.get("time_range") or _detect_time_range(
+                f"{title}\n{body}"
+            )
+            metadata.update({
+                "target_stage": req.target_stage,
+                "production_grain": (
+                    "episode_overview"
+                    if unit_number == 0
+                    else "generation_unit"
+                ),
+            })
+            if unit_number > 0:
+                metadata["unit_number"] = unit_number
+            if time_range:
+                metadata["time_range"] = time_range
+
+            prompts = [
+                str(prompt).strip()
+                for prompt in draft.get("prompts", [])
+                if str(prompt).strip()
+            ]
+            negative_prompts = [
+                str(prompt).strip()
+                for prompt in draft.get("negative_prompts", [])
+                if str(prompt).strip()
+            ]
+            if (
+                req.target_stage in ("img_prompt", "vid_prompt")
+                and not prompts
+                and body
+            ):
+                prompts = [body]
+            quality_issues = evaluate_production_draft(
+                req.target_stage,
+                title,
+                body,
+                prompts,
+            )
+            metadata["quality_gate"] = {
+                "passed": not quality_issues,
+                "issues": quality_issues,
+                "note": "静态门禁通过不等于实际图片/视频视觉验收通过",
+            }
+
+            card = ProductionCard(
+                card_id=str(uuid.uuid4())[:8],
+                project_id=pid,
+                stage=req.target_stage,
+                title=title,
+                content=body,
+                episode=req.episode,
+                shot_number=unit_number,
+                prompts=prompts,
+                negative_prompts=negative_prompts,
+                metadata=metadata,
+                status="done" if not quality_issues else "review",
+                created_at=now,
+                updated_at=now,
+            )
+            new_cards.append(card)
+            cards.append(card)
+
+        _save_cards(pid, cards)
+        proj.updated_at = now
+        _save_project(proj)
+        return {
+            "generated": len(new_cards),
+            "replaced": replaced,
+            "mode": req.mode,
+            "episode": req.episode,
+            "shot_number": req.shot_number,
+            "stage": req.target_stage,
+            "cards": [card.model_dump() for card in new_cards],
+            "quality_issue_count": sum(
+                len(card.metadata.get("quality_gate", {}).get("issues", []))
+                for card in new_cards
+            ),
+        }
 
 
 @router.post("/projects/{pid}/generate")
@@ -1108,95 +1795,10 @@ async def generate_stage(pid: str, req: GenerateReq):
     if not drafts:
         raise HTTPException(500, "AI 返回内容无法拆成卡片")
 
-    now = _now()
-    new_cards = []
-    # 替换/续号都只作用于「同阶段 + 同集数」的卡片，其他集的卡片绝不触碰
-    scope_cards = [
-        c for c in cards
-        if c.stage == req.target_stage
-        and c.episode == req.episode
-        and (req.shot_number is None or c.shot_number == req.shot_number)
-    ]
-    replaced = 0
-    if req.mode == "replace":
-        for ec in scope_cards:
-            cards.remove(ec)
-        replaced = len(scope_cards)
-        next_shot = 0
-    else:
-        next_shot = max((c.shot_number for c in scope_cards), default=0)
-
-    for i, draft in enumerate(drafts):
-        title = draft["title"] or f"{target_name} {i+1}"
-        body = draft["content"]
-        metadata = dict(draft.get("metadata") or {})
-        parsed_unit = _detect_generation_unit(title, metadata)
-        if req.shot_number is not None:
-            unit_number = req.shot_number
-        elif parsed_unit is None and _is_overview_card(title):
-            unit_number = 0
-        elif parsed_unit is not None:
-            unit_number = parsed_unit
-            next_shot = max(next_shot, unit_number)
-        else:
-            next_shot += 1
-            unit_number = next_shot
-
-        time_range = metadata.get("time_range") or _detect_time_range(f"{title}\n{body}")
-        metadata.update({
-            "target_stage": req.target_stage,
-            "production_grain": "episode_overview" if unit_number == 0 else "generation_unit",
-        })
-        if unit_number > 0:
-            metadata["unit_number"] = unit_number
-        if time_range:
-            metadata["time_range"] = time_range
-
-        prompts = [str(p).strip() for p in draft.get("prompts", []) if str(p).strip()]
-        negative_prompts = [str(p).strip() for p in draft.get("negative_prompts", []) if str(p).strip()]
-        if req.target_stage in ("img_prompt", "vid_prompt") and not prompts and body:
-            prompts = [body]
-        quality_issues = evaluate_production_draft(req.target_stage, title, body, prompts)
-        metadata["quality_gate"] = {
-            "passed": not quality_issues,
-            "issues": quality_issues,
-            "note": "静态门禁通过不等于实际图片/视频视觉验收通过",
-        }
-
-        card = ProductionCard(
-            card_id=str(uuid.uuid4())[:8],
-            project_id=pid,
-            stage=req.target_stage,
-            title=title,
-            content=body,
-            episode=req.episode,
-            shot_number=unit_number,
-            prompts=prompts,
-            negative_prompts=negative_prompts,
-            metadata=metadata,
-            status="done" if not quality_issues else "review",
-            created_at=now,
-            updated_at=now,
-        )
-        new_cards.append(card)
-        cards.append(card)
-
-    _save_cards(pid, cards)
-    proj.updated_at = now
-    _save_project(proj)
-
-    return {"code": 200, "data": {
-        "generated": len(new_cards),
-        "replaced": replaced,
-        "mode": req.mode,
-        "episode": req.episode,
-        "shot_number": req.shot_number,
-        "stage": req.target_stage,
-        "cards": [c.model_dump() for c in new_cards],
-        "quality_issue_count": sum(
-            len(c.metadata.get("quality_gate", {}).get("issues", [])) for c in new_cards
-        ),
-    }}
+    return {
+        "code": 200,
+        "data": _commit_generated_drafts(pid, req, drafts, target_name),
+    }
 
 
 class GenerateCardImageReq(BaseModel):
@@ -1209,17 +1811,22 @@ class GenerateCardImageReq(BaseModel):
 @router.post("/projects/{pid}/cards/{card_id}/generate-image")
 def generate_card_image(pid: str, card_id: str, req: GenerateCardImageReq):
     """为图片提示词或故事板卡立即生成新版本，保留旧图并把新 URL 设为当前版本。"""
-    _load_project(pid)
-    cards = _load_cards(pid)
-    card = next((item for item in cards if item.card_id == card_id), None)
-    if card is None:
-        raise HTTPException(404, f"卡片 {card_id} 不存在")
-    if card.stage not in ("img_prompt", "storyboard"):
-        raise HTTPException(400, "只有图片提示词卡或故事板卡可以立即生图")
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        card = next((item for item in cards if item.card_id == card_id), None)
+        if card is None:
+            raise HTTPException(404, f"卡片 {card_id} 不存在")
+        if card.stage not in ("img_prompt", "storyboard"):
+            raise HTTPException(400, "只有图片提示词卡或故事板卡可以立即生图")
 
-    prompt = req.prompt.strip() or (card.prompts[0].strip() if card.prompts else card.content.strip())
-    if not prompt:
-        raise HTTPException(400, "卡片没有可用提示词")
+        prompt = req.prompt.strip() or (
+            card.prompts[0].strip()
+            if card.prompts
+            else card.content.strip()
+        )
+        if not prompt:
+            raise HTTPException(400, "卡片没有可用提示词")
     try:
         result = generate_image_to_local(prompt, req.model, req.size)
     except ValueError as exc:
@@ -1228,21 +1835,66 @@ def generate_card_image(pid: str, card_id: str, req: GenerateCardImageReq):
         logger.warning("单卡生图失败 card=%s model=%s: %s", card_id, req.model, exc)
         raise HTTPException(502, f"生图失败: {exc}") from exc
 
-    card.images.append(result["url"])
-    card.metadata = {
-        **card.metadata,
-        "active_image": result["url"],
-        "last_image_model": result["model"],
-        "last_image_prompt": prompt,
+    with _project_lock(pid):
+        cards = _load_cards(pid)
+        card = next((item for item in cards if item.card_id == card_id), None)
+        if card is None or card.stage not in ("img_prompt", "storyboard"):
+            raise HTTPException(409, "生图期间卡片已被删除或改变，请重新操作")
+        current_prompt = (
+            card.prompts[0].strip()
+            if card.prompts
+            else card.content.strip()
+        )
+        existing_active_image = (
+            str(card.metadata.get("active_image") or "")
+            if "active_image" in card.metadata
+            else (str(card.images[-1]) if card.images else "")
+        )
+        applied = current_prompt == prompt
+        if applied:
+            if result["url"] not in card.images:
+                card.images.append(result["url"])
+            card.metadata = {
+                **card.metadata,
+                "active_image": result["url"],
+                "last_image_model": result["model"],
+                "last_image_prompt": prompt,
+            }
+            card.status = "done"
+        else:
+            late_results = list(card.metadata.get("late_image_results") or [])
+            late_results.append({
+                "url": result["url"],
+                "model": result.get("model") or req.model,
+                "prompt": prompt,
+                "finished_at": _now(),
+            })
+            card.metadata = {
+                **card.metadata,
+                "active_image": existing_active_image,
+                "late_image_results": late_results[-20:],
+            }
+        card.updated_at = _now()
+        _save_cards(pid, cards)
+    return {
+        "code": 200,
+        "data": {
+            **result,
+            "card": card.model_dump(),
+            "applied": applied,
+            "stale": not applied,
+        },
     }
-    card.status = "done"
-    card.updated_at = _now()
-    _save_cards(pid, cards)
-    return {"code": 200, "data": {**result, "card": card.model_dump()}}
 
 
 @router.post("/projects/{pid}/cards/{card_id}/split-storyboard")
 def split_storyboard_card(pid: str, card_id: str):
+    """在项目锁内拆分故事板，避免覆盖同时发生的卡片修改。"""
+    with _project_lock(pid):
+        return _split_storyboard_card_locked(pid, card_id)
+
+
+def _split_storyboard_card_locked(pid: str, card_id: str):
     """把历史上一张 G 内含多个 ``### 镜头N`` 的大分镜拆成一镜一卡，原卡不再保留。"""
     _load_project(pid)
     cards = _load_cards(pid)
@@ -1469,6 +2121,12 @@ class ArchiveReq(BaseModel):
 
 @router.post("/projects/{pid}/archive")
 def archive_cards(pid: str, req: ArchiveReq):
+    """在项目锁内归档卡片。"""
+    with _project_lock(pid):
+        return _archive_cards_locked(pid, req)
+
+
+def _archive_cards_locked(pid: str, req: ArchiveReq):
     """POST /projects/{pid}/archive：把卡片从 cards.json 移入归档目录，一卡一文件。
 
     不是删除——原始卡片内容原样保留，另附 archived_at / archive_reason，可随时 restore。
@@ -1506,6 +2164,12 @@ def list_archive(pid: str):
 
 @router.post("/projects/{pid}/archive/{card_id}/restore")
 def restore_card(pid: str, card_id: str):
+    """在项目锁内恢复归档卡片。"""
+    with _project_lock(pid):
+        return _restore_card_locked(pid, card_id)
+
+
+def _restore_card_locked(pid: str, card_id: str):
     """POST /projects/{pid}/archive/{card_id}/restore：把归档卡片移回 cards.json 并删除归档文件。
 
     卡片已在 cards.json 中（重复恢复）则只清理归档文件，不产生重复卡。

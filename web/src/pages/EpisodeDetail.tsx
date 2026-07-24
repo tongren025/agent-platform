@@ -623,7 +623,7 @@ export default function EpisodeDetail() {
                                 <Button size="small" loading={regenerating === card.card_id}>重新生成</Button>
                               </Popconfirm>
                             )}
-                            {card.stage === 'img_prompt' && (
+                            {(card.stage === 'img_prompt' || card.stage === 'setting' || card.stage === 'design') && (
                               <Button size="small" type="primary" icon={<PictureOutlined />} onClick={() => openImageGenerator(card)}>
                                 立即生图
                               </Button>
