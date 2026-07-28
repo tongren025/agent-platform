@@ -1,6 +1,6 @@
 # scripts/ 脚本清单
 
-> 31 个脚本按「可复用 / 常驻自动化 / 一次性 / 探针」分类。每条标注跑法与破坏性。
+> 脚本按「可复用 / 常驻自动化 / 一次性 / 探针」分类。每条标注跑法与破坏性。
 > 命名约定：**`_` 前缀 = 一次性探针/临时脚本**（根目录的 `_gen_cards_v3/v4.py` 也遵循此约定）。
 >
 > 跑法总规律：
@@ -17,6 +17,11 @@
 | `start_letta.ps1` | 启动 Letta server(:8283)，默认 SQLite，`-UsePG` 复用 compose 的 PG | `.\scripts\start_letta.ps1 [-Port n] [-UsePG]` |
 | `migrate_json_to_pg.py` | data/ JSON 运行态导入 PostgreSQL（幂等 upsert，不动 JSON 源） | 先 `alembic upgrade head` 再 `python -m scripts.migrate_json_to_pg` |
 | `refresh_comic_profiles.py` | 统一刷新漫剧 7 个员工的生产提示词（保留 KNOWLEDGE_MARKER 后的项目知识段）并同步 comic-drama 工作流模板 | `python scripts/refresh_comic_profiles.py` ⚠️ 整体覆盖 comic-* 员工的 roleProfile |
+| `prepare_tiexin_media.py` | 生成《铁心恋人》216 逐镜分镜/72 首帧/216 视频段清单，按审核状态幂等回写 385 张卡片 | `python scripts/prepare_tiexin_media.py` |
+| `render_tiexin_storyboards.py` | 仅在三视图和场景包批准后断点生成216张逐镜分镜 | `python scripts/render_tiexin_storyboards.py --storyboards N --concurrency 1-4 --confirm-external-upload` ⚠️ 上传本地母版并产生费用 |
+| `render_tiexin_media.py` | 仅在同G三张分镜均通过后，通过 OpenRouter 断点生成首帧 | `python scripts/render_tiexin_media.py --frames N --concurrency 1-4 --confirm-external-upload` ⚠️ 上传本地母版并产生费用 |
+| `render_tiexin_videos.py` | 仅在分镜、首帧和提示词通过后生成视频；同场按 A→B→C 末帧承接，跨场硬切使用本段批准分镜；支持跨进程防重复付费、部分 G 续跑和技术校验后独占发布 | `python scripts/render_tiexin_videos.py --g-units N --concurrency 1-4 --confirm-external-upload` ⚠️ 上传本地首帧/分镜并产生费用 |
+| `validate_tiexin_media.py` | 用 Pillow 完整解码静态 PNG，检查非动画、最低尺寸、竖屏 9:16、三视图横向板、场景包全部视图/重复内容/安全路径，并用 ffprobe 检查视频/成片的画幅、时长和音轨 | `python scripts/validate_tiexin_media.py` |
 
 ## 一次性迁移/修复（已完成使命，留档可查）
 

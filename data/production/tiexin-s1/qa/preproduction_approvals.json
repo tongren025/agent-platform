@@ -1,0 +1,267 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-07-28T21:45:00+08:00",
+  "character_turnarounds": {
+    "R1_daily": {
+      "path": "assets/characters/turnarounds/R1_shenyao_daily_turnaround_candidate_v1.png",
+      "status": "rework",
+      "technical_review": "rework_required_identity_markers",
+      "notes": [
+        "正面、90度侧面、背面结构合格",
+        "独立复核判定人物解剖右眉尾旧伤与右耳单耳钉均不足以稳定核验",
+        "v2 虽改善面部身份，但固定标记仍未解决",
+        "v3/v4 已改成解剖右侧严格90度且右耳钉成立，但正面旧伤仍落错侧或不可辨；均退稿且不得进入导演批准"
+      ]
+    },
+    "R1_tactical": {
+      "path": "assets/characters/turnarounds/R1_shenyao_tactical_turnaround_candidate_v1.png",
+      "status": "rework",
+      "technical_review": "rework_required_identity_markers",
+      "notes": [
+        "三视图版式和中立站姿合格",
+        "背心、护臂和裤袋结构连续",
+        "v2 的人物解剖右眉尾旧伤与右耳单耳钉仍不可稳定核验",
+        "v3 疤痕缺失且疑似左耳亮点；v4 清除亮点后仍无疤并丢失右耳钉；均退稿且不得进入导演批准"
+      ]
+    },
+    "R2_suit": {
+      "path": "assets/characters/turnarounds/R2_linghao_suit_turnaround_candidate_v2.png",
+      "status": "candidate",
+      "technical_review": "structure_pass_identity_detail_pending",
+      "notes": [
+        "正面、严格侧面、背面和西装结构合格",
+        "侧视右耳后银色接口可核验",
+        "全身尺度面部仍须与身份近照共同作为下游参考"
+      ]
+    },
+    "R2_tactical": {
+      "path": "assets/characters/turnarounds/R2_linghao_tactical_turnaround_candidate_v2.png",
+      "status": "candidate",
+      "technical_review": "structure_pass_identity_detail_pending",
+      "notes": [
+        "正面、严格侧面、背面和战术服结构合格",
+        "侧视右耳后银色接口可核验",
+        "v1 未批准的侧视上臂银色矩形已删除"
+      ]
+    },
+    "R2_home": {
+      "path": "assets/characters/turnarounds/R2_linghao_home_turnaround_candidate_v5.png",
+      "status": "candidate",
+      "technical_review": "structure_identity_interface_pass_director_review_pending",
+      "notes": [
+        "v3/v4 因裤装重复暗纹退稿；v5 为纯深灰细织物与自然褶皱",
+        "面部、发型和体型已与 face_v3、西装 v2、战术 v2 锁定为同一身份",
+        "侧视右耳后银色接口可核验",
+        "v5 固定为收腰白T、外露抽绳、纯深灰束脚裤和黑袜，后续不得切回外放下摆"
+      ]
+    },
+    "R3_suit": {
+      "path": "assets/characters/turnarounds/R3_hanshaoqing_suit_turnaround_candidate_v1.png",
+      "status": "candidate",
+      "technical_review": "structure_pass_identity_detail_pending",
+      "notes": [
+        "正侧背、三件套、眼镜和中立站姿合格",
+        "面部仍需与身份近照做最终一致性确认"
+      ]
+    }
+  },
+  "scene_packages": {
+    "LAB": {
+      "path": "assets/scenes/LAB.png",
+      "status": "candidate",
+      "required_views": ["A", "B", "C", "D", "PLAN"],
+      "candidate_views": {
+        "A": "assets/scenes/LAB.png",
+        "B": "assets/scenes/packages/LAB/LAB_B_reverse_candidate_v1.png",
+        "C": "assets/scenes/packages/LAB/LAB_C_glass_cell_candidate_v2.png",
+        "D": "assets/scenes/packages/LAB/LAB_D_action_route_candidate_v1.png",
+        "PLAN": "assets/scenes/packages/LAB/LAB_PLAN_candidate_v1.png"
+      },
+      "technical_review": "package_complete_director_review_pending",
+      "notes": [
+        "A正向玻璃在左、箱区在右；B反打左右关系正确",
+        "C v2 已改为正对玻璃实验隔间的90度横向功能侧视",
+        "D新增出口端右上可塌钢梁，采用后必须锁定",
+        "PLAN走廊略宽，入口门和行动箭头需导演确认"
+      ]
+    },
+    "OFFICE": {
+      "path": "assets/scenes/OFFICE.png",
+      "status": "candidate",
+      "required_views": ["A", "B", "C", "MEETING", "MEDICAL", "PLAN"],
+      "candidate_views": {
+        "A": "assets/scenes/OFFICE.png",
+        "B": "assets/scenes/packages/OFFICE/OFFICE_B_reverse_candidate_v2.png",
+        "C": "assets/scenes/packages/OFFICE/OFFICE_C_side_candidate_v1.png",
+        "MEETING": "assets/scenes/packages/OFFICE/OFFICE_MEETING_candidate_v1.png",
+        "MEDICAL": "assets/scenes/packages/OFFICE/OFFICE_MEDICAL_candidate_v1.png",
+        "PLAN": "assets/scenes/packages/OFFICE/OFFICE_PLAN_candidate_v1.png"
+      },
+      "technical_review": "package_complete_technical_pass_director_review_pending",
+      "notes": [
+        "B v1 的南端夹层位置漂移，已由 v2 修正；候选清单仅采用 v2",
+        "A/B 轴线左右关系一致：东侧器械墙在反打画面左侧，西侧楼梯在反打画面右侧",
+        "C 为东向西的严格90度功能侧视，单楼梯、北端夹层与中央训练垫关系可核验",
+        "MEETING 与 MEDICAL 固定为南侧服务组团；采用后需锁定玻璃会议桌、八席座位和单医疗台",
+        "PLAN 为无文字图标版，已表达三机位、180度轴线、北窗主光和人物路线；尺寸仅供镜头连续性参考，不是施工图"
+      ]
+    },
+    "ROOFTOP": {
+      "path": "assets/scenes/ROOFTOP.png",
+      "status": "candidate",
+      "required_views": ["A", "B", "C_LEFT", "C_RIGHT", "PLAN"],
+      "candidate_views": {
+        "A": "assets/scenes/ROOFTOP.png",
+        "B": "assets/scenes/packages/ROOFTOP/ROOFTOP_B_reverse_candidate_v1.png",
+        "C_LEFT": "assets/scenes/packages/ROOFTOP/ROOFTOP_C_LEFT_candidate_v1.png",
+        "C_RIGHT": "assets/scenes/packages/ROOFTOP/ROOFTOP_C_RIGHT_candidate_v2.png",
+        "PLAN": "assets/scenes/packages/ROOFTOP/ROOFTOP_PLAN_candidate_v1.png"
+      },
+      "technical_review": "package_complete_technical_pass_director_review_pending",
+      "notes": [
+        "A/B 轴线反打、C_LEFT/C_RIGHT 会谈区侧向互反关系成立",
+        "两把折叠椅、门屋、灯串、栏杆和盆栽位置已在 PLAN 中锁定",
+        "C_RIGHT v1 因与 C_LEFT 重复针状高楼天际线退稿；v2 固定为低中层城区与远山方向",
+        "PLAN 用四个无字彩色机位三角标识方向，最终需导演确认城市方位"
+      ]
+    },
+    "APARTMENT": {
+      "path": "assets/scenes/APARTMENT.png",
+      "status": "candidate",
+      "required_views": [
+        "INTERIOR_A",
+        "INTERIOR_B",
+        "INTERIOR_PLAN",
+        "GARAGE_A",
+        "GARAGE_B",
+        "GARAGE_PLAN",
+        "SUV_INTERIOR"
+      ],
+      "candidate_views": {
+        "INTERIOR_A": "assets/scenes/APARTMENT.png",
+        "INTERIOR_B": "assets/scenes/packages/APARTMENT/APARTMENT_INTERIOR_B_candidate_v1.png",
+        "INTERIOR_PLAN": "assets/scenes/packages/APARTMENT/APARTMENT_INTERIOR_PLAN_candidate_v1.png",
+        "GARAGE_A": "assets/scenes/packages/APARTMENT/APARTMENT_GARAGE_A_candidate_v1.png",
+        "GARAGE_B": "assets/scenes/packages/APARTMENT/APARTMENT_GARAGE_B_candidate_v1.png",
+        "GARAGE_PLAN": "assets/scenes/packages/APARTMENT/APARTMENT_GARAGE_PLAN_candidate_v2.png",
+        "SUV_INTERIOR": "assets/scenes/packages/APARTMENT/APARTMENT_SUV_INTERIOR_candidate_v1.png"
+      },
+      "technical_review": "package_complete_technical_pass_director_review_pending",
+      "notes": [
+        "INTERIOR_A/B 锁定南端入户门、西侧一字厨房、中央吧台、东侧沙发和北端雨窗书桌；INTERIOR_PLAN 证明轴线与通道连续",
+        "GARAGE_A/B 锁定同一哑光深灰紧凑SUV、固定车位、防火门、消防箱、柱网和出口坡道，车辆未在反打中掉头",
+        "GARAGE_PLAN v2 锁定SUV车头朝防火门、车尾朝坡道、左舵驾驶位和门到驾驶门路线；车辆以倒车方式驶向坡道",
+        "SUV_INTERIOR 为同车左舵内景，固定黑手套、黑色医疗包和不锈钢保温杯",
+        "采用后禁止下游新增卧室/第二外窗、第二车库坡道、额外主要车辆或改变SUV颜色与朝向"
+      ]
+    },
+    "WAREHOUSE": {
+      "path": "assets/scenes/WAREHOUSE.png",
+      "status": "candidate",
+      "required_views": ["A", "B", "C", "UPPER_EAST", "PLAN"],
+      "candidate_views": {
+        "A": "assets/scenes/WAREHOUSE.png",
+        "B": "assets/scenes/packages/WAREHOUSE/WAREHOUSE_B_reverse_candidate_v1.png",
+        "C": "assets/scenes/packages/WAREHOUSE/WAREHOUSE_C_side_candidate_v2.png",
+        "UPPER_EAST": "assets/scenes/packages/WAREHOUSE/WAREHOUSE_UPPER_EAST_candidate_v2.png",
+        "PLAN": "assets/scenes/packages/WAREHOUSE/WAREHOUSE_PLAN_candidate_v1.png"
+      },
+      "technical_review": "package_complete_technical_pass_director_review_pending",
+      "notes": [
+        "A/B 形成同轴反打：A画面左侧货架、右侧墙梯在B中对应为右侧货架、左侧墙梯，中央吊轨云台、顶窗冷光与红警示灯连续",
+        "C v1 仍偏A位正视，未采用；C v2 为严格90度横向功能位，卷帘门仅在最右端侧显，货架—横向通道—叉车/东墙楼梯关系可核验",
+        "UPPER_EAST v1 的叉车占入中央路线且漂出远端楼梯，未采用；v2 已腾空下楼至装卸台的动作路线并移除远端错误楼梯",
+        "UPPER_EAST v2 中叉车停于东墙楼梯平台下方且受近景栏杆局部遮挡，采用后需锁定此停放位",
+        "PLAN 为严格正交俯视无文字图，已表达西侧货架、中央南北通道、东墙楼梯/叉车、南端装卸台、吊轨云台与无字行动路线；机位符号和比例仍需导演确认"
+      ]
+    },
+    "CITY_ROAD": {
+      "path": "assets/scenes/CITY_ROAD.png",
+      "status": "candidate",
+      "required_views": [
+        "STREET_A",
+        "STREET_B",
+        "OVERPASS_A",
+        "OVERPASS_B",
+        "TUNNEL_A",
+        "TUNNEL_B",
+        "DAWN_ROAD_A",
+        "DAWN_ROAD_B",
+        "ROUTE_PLAN"
+      ],
+      "candidate_views": {
+        "STREET_A": "assets/scenes/packages/CITY_ROAD/CITY_ROAD_STREET_A_candidate_v1.png",
+        "STREET_B": "assets/scenes/packages/CITY_ROAD/CITY_ROAD_STREET_B_candidate_v1.png",
+        "OVERPASS_A": "assets/scenes/CITY_ROAD.png",
+        "OVERPASS_B": "assets/scenes/packages/CITY_ROAD/CITY_ROAD_OVERPASS_B_candidate_v1.png",
+        "TUNNEL_A": "assets/scenes/packages/CITY_ROAD/CITY_ROAD_TUNNEL_A_candidate_v2.png",
+        "TUNNEL_B": "assets/scenes/packages/CITY_ROAD/CITY_ROAD_TUNNEL_B_candidate_v2.png",
+        "DAWN_ROAD_A": "assets/scenes/packages/CITY_ROAD/CITY_ROAD_DAWN_ROAD_A_candidate_v1.png",
+        "DAWN_ROAD_B": "assets/scenes/packages/CITY_ROAD/CITY_ROAD_DAWN_ROAD_B_candidate_v1.png",
+        "ROUTE_PLAN": "assets/scenes/packages/CITY_ROAD/CITY_ROAD_ROUTE_PLAN_candidate_v1.png"
+      },
+      "technical_review": "package_complete_technical_pass_director_review_pending",
+      "notes": [
+        "四个子场景是依次连接但彼此独立的路线节点：广告屏街道→雨夜高架→地下服务通道/隧道→黎明离城路；ROUTE_PLAN 以四个分离地点岛表达顺序，不把它们伪装成同一房间",
+        "STREET_A/B 锁定物理北侧深灰商业裙房、空白广告屏和下方装卸口，物理南侧红棕住宅裙房、卷帘门和无字候车棚；反打只交换画面左右",
+        "现有 assets/scenes/CITY_ROAD.png 正式登记为 OVERPASS_A；OVERPASS_A/B 锁定物理西北侧隔音墙、物理东南侧下穿匝道与服务楼梯口，反打保持上下层道路和楼梯位置不漂移",
+        "TUNNEL_A v1 的防火门误成侧向车库门，未采用；TUNNEL_A/B v2 锁定横跨主通道的液压滑动防火门、物理北侧门袋/锁销/单辆维护摩托、物理南侧排水沟/橙灰设备柜和东端上行梯；摩托车头固定朝西",
+        "TUNNEL_B v1 尾牌出现疑似字符，未采用；v2 已改为无字深灰维护牌，其他轴线和锚点不变",
+        "DAWN_ROAD_A/B 锁定物理北侧隔音板/城市边缘、物理南侧护栏/排水沟/开阔地以及同类补丁路面；A向东看见暖色黎明，B向西时暖光来自机后，不重复太阳",
+        "九项候选均已通过技术目检，当前仍仅为 candidate，须导演人工确认机位、比例和路线语义后才能改为 approved"
+      ]
+    },
+    "HANYU_TOWER": {
+      "path": "assets/scenes/HANYU_TOWER.png",
+      "status": "candidate",
+      "required_views": [
+        "EXTERIOR",
+        "LOBBY_A",
+        "LOBBY_B",
+        "CONTROL_ROOM",
+        "ELEVATOR_SHAFT",
+        "ROOFTOP",
+        "VERTICAL_ROUTE_PLAN"
+      ],
+      "candidate_views": {
+        "EXTERIOR": "assets/scenes/packages/HANYU_TOWER/HANYU_TOWER_EXTERIOR_candidate_v1.png",
+        "LOBBY_A": "assets/scenes/HANYU_TOWER.png",
+        "LOBBY_B": "assets/scenes/packages/HANYU_TOWER/HANYU_TOWER_LOBBY_B_reverse_candidate_v1.png",
+        "CONTROL_ROOM": "assets/scenes/packages/HANYU_TOWER/HANYU_TOWER_CONTROL_ROOM_candidate_v1.png",
+        "ELEVATOR_SHAFT": "assets/scenes/packages/HANYU_TOWER/HANYU_TOWER_ELEVATOR_SHAFT_candidate_v1.png",
+        "ROOFTOP": "assets/scenes/packages/HANYU_TOWER/HANYU_TOWER_ROOFTOP_candidate_v2.png",
+        "VERTICAL_ROUTE_PLAN": "assets/scenes/packages/HANYU_TOWER/HANYU_TOWER_VERTICAL_ROUTE_PLAN_candidate_v2.png"
+      },
+      "technical_review": "package_complete_technical_pass_director_review_pending",
+      "notes": [
+        "外部南侧湿地广场经唯一宽台阶进入无框玻璃主入口，低位玻璃雨棚与银灰玻璃幕墙、无缝白色结构带锁定为全塔外观母版",
+        "LOBBY_A 为南侧入口向北看：中央闸机后接双电梯组，前台位于物理东侧并显示在画面右侧；LOBBY_B 从北侧电梯区向南反打，同一前台显示在画面左侧",
+        "CONTROL_ROOM 固定为竖向服务核心上层的独立楼宇总控：三席控制台居中，物理西侧断电隔离柜、东侧玻璃服务器区及后部唯一安全门不得互换或复制",
+        "ELEVATOR_SHAFT 固定为双导轨维护井：前景检修平台、左侧笼梯、错层平台、右侧配重与上方停靠轿厢构成唯一攀爬路线，禁止下游还原成大厅轿厢",
+        "ROOFTOP 采用 v2：西后侧单一服务门至东前侧屋缘保持无遮挡跑线，救援环悬在画面右侧屋缘外约三米，塔身竖向肋与下层玻璃雨棚延续外立面",
+        "VERTICAL_ROUTE_PLAN v2 为无文字压缩剖面，楼板明确隔开外部台阶、大厅、竖井、上层总控与屋顶；下游按台阶→大厅闸机→竖井→总控断电位→屋顶门→救援环单向理解",
+        "残余仅限总控屏幕的不可读微型界面与远景城市灯箱；若后续裁切后出现可读字符必须清除，导演仍需最终确认总控位于东侧、救援环位于东侧的方位选择"
+      ]
+    },
+    "HANYU_LAB": {
+      "path": "assets/scenes/HANYU_LAB.png",
+      "status": "candidate",
+      "required_views": ["A", "B", "C", "CONTROL", "PLAN"],
+      "candidate_views": {
+        "A": "assets/scenes/HANYU_LAB.png",
+        "B": "assets/scenes/packages/HANYU_LAB/HANYU_LAB_B_reverse_candidate_v1.png",
+        "C": "assets/scenes/packages/HANYU_LAB/HANYU_LAB_C_side_candidate_v2.png",
+        "CONTROL": "assets/scenes/packages/HANYU_LAB/HANYU_LAB_CONTROL_candidate_v1.png",
+        "PLAN": "assets/scenes/packages/HANYU_LAB/HANYU_LAB_PLAN_candidate_v2.png"
+      },
+      "technical_review": "package_complete_technical_pass_director_review_pending",
+      "notes": [
+        "A/B 以中央透明核心为轴反打，唯一方舱锁定物理东北象限：A 画面右侧、B 画面左侧；唯一南楼梯在 B 远端可核验",
+        "C v2 为东侧严格90度功能位，方舱在画面右后方/物理北侧，南楼梯在画面左侧，与 A/B 闭环",
+        "CONTROL 固定为北侧二层玻璃控制室，三席控制台、左侧服务器柜和唯一入口已锁定",
+        "PLAN v2 为严格正交俯视无文字图，锁定四台机械臂、方舱东北位、南楼梯、北控制室与行动路线",
+        "采用后需锁定冷蓝光仅来自中央核心底段，禁止下游新增第二核心、方舱或楼梯"
+      ]
+    }
+  }
+}

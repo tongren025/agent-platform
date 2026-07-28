@@ -1,0 +1,52 @@
+{
+  "project_id": "tiexin-s1",
+  "characters": {
+    "expected": 9,
+    "generated": 9
+  },
+  "character_turnarounds": {
+    "expected": 6,
+    "generated": 6,
+    "approved": 0
+  },
+  "scenes": {
+    "expected": 8,
+    "generated": 8
+  },
+  "scene_packages": {
+    "expected": 8,
+    "approved": 0
+  },
+  "storyboards": {
+    "expected": 216,
+    "generated": 0,
+    "approved": 0,
+    "ready_for_generation": 0
+  },
+  "frames": {
+    "expected": 72,
+    "generated": 0,
+    "approved": 0,
+    "ready_for_generation": 0
+  },
+  "video_segments": {
+    "expected": 216,
+    "generated": 0,
+    "present": 0,
+    "approved": 0,
+    "ready_for_generation": 0
+  },
+  "episodes": {
+    "expected": 12,
+    "present": 0,
+    "current": 0,
+    "approved": 0
+  },
+  "cards_changed": 0,
+  "external_generation_gate": {
+    "belt_balance_usd": 0.0,
+    "provider": "openrouter",
+    "material_upload": "requires_explicit_user_authorization",
+    "billing": "requires_confirmed_available_credit"
+  }
+}
