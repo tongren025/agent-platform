@@ -53,7 +53,7 @@
 
 - API：`app/api/production.py` 的图片评审元数据新增 `file_sha256`、`spec_fingerprint`；无路由、数据库、环境变量或部署变化。
 - 脚本：`complete_tiexin_s1.py`、`prepare_tiexin_media.py`、`render_tiexin_storyboards.py`、`render_tiexin_media.py`、`render_tiexin_videos.py`、`validate_tiexin_media.py`。
-- 项目：`data/production/tiexin-s1/cards.json`、`media_manifest.json`、`qa/`、前置资产规格、视觉圣经、角色三视图和场景设定包；本批先行入库 102 张已生成图片，审核状态仍区分 `candidate` / `rework`，不冒充最终验收成品；新增逐图预检记录。
+- 项目：`data/production/tiexin-s1/cards.json`、`media_manifest.json`、`qa/`、前置资产规格、视觉圣经、角色三视图和场景设定包；本批先行入库 103 张已生成图片（含后续补入的沈曜面部 v4 候选），审核状态仍区分 `candidate` / `rework`，不冒充最终验收成品；新增逐图预检记录。
 
 ---
 
