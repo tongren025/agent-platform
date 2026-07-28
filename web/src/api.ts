@@ -2,8 +2,11 @@
 import type { ApiResult, AgentRunRecord } from './types';
 import { userToken } from './userAuth';
 import { friendlyFetch, getHttpErrorMessage, readJson } from './httpErrors';
+import { isSessionExpired, redirectToLogin } from './sessionGuard';
 
 const BASE = '/api/v1/agentapp';
+
+const SESSION_EXPIRED_MESSAGE = '登录已失效，请重新登录';
 
 /** 全链路矩阵：一个项目（季）的概要。 */
 export interface MatrixProject {
@@ -110,6 +113,9 @@ export interface QuickPrompt {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  // 已经在跳登录页的路上就不再发请求：这些请求必然 401，
+  // 只会在页面卸载前刷出一串无意义的失败日志。
+  if (isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = userToken.get();
   // FormData 的 Content-Type 必须由浏览器生成，才能带上正确的 multipart boundary。
   const isFormData = typeof FormData !== 'undefined' && init?.body instanceof FormData;
@@ -125,10 +131,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (res.status === 401) {
     // 凭证失效:统一清 token 回登录页,免得每个页面各自处理
     userToken.clear();
-    if (!window.location.pathname.startsWith('/login')) {
-      window.location.href = '/login';
-    }
-    throw new Error('登录已失效，请重新登录');
+    redirectToLogin('/login');
+    throw new Error(SESSION_EXPIRED_MESSAGE);
   }
   if (!res.ok) {
     throw new Error(await getHttpErrorMessage(res));
@@ -143,6 +147,7 @@ async function download(
   fallbackName: string,
   init?: RequestInit,
 ): Promise<{ filename: string }> {
+  if (isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = userToken.get();
   const res = await friendlyFetch(`${BASE}${path}`, {
     ...init,
@@ -154,10 +159,8 @@ async function download(
   });
   if (res.status === 401) {
     userToken.clear();
-    if (!window.location.pathname.startsWith('/login')) {
-      window.location.href = '/login';
-    }
-    throw new Error('登录已失效，请重新登录');
+    redirectToLogin('/login');
+    throw new Error(SESSION_EXPIRED_MESSAGE);
   }
   if (!res.ok) {
     throw new Error(await getHttpErrorMessage(res));

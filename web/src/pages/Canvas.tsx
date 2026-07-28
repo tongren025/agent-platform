@@ -219,13 +219,17 @@ export default function Canvas() {
   const [snapGrid, setSnapGrid] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [edgePathType, setEdgePathType] = useState<'bezier' | 'straight' | 'step'>('bezier');
-  const [connectMenu, setConnectMenu] = useState<{ x: number; y: number; sourceId: string } | null>(null);
+  // fromHandle 记录用户是从出口(source)还是入口(target)拖出来的,决定新建边的方向
+  const [connectMenu, setConnectMenu] = useState<
+    { x: number; y: number; sourceId: string; fromHandle: 'source' | 'target' } | null
+  >(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const clipboardRef = useRef<{ nodes: Node[]; edges: Edge[] } | null>(null);
   const nudgeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const connectCompletedRef = useRef(false);
   const connectSourceRef = useRef<string>('');
+  const connectHandleTypeRef = useRef<'source' | 'target'>('source');
   const rfInstanceRef = useRef<ReactFlowInstance | null>(null);
   const nodesRef = useRef<Node[]>([]);
   const edgesRef = useRef<Edge[]>([]);
@@ -1196,9 +1200,13 @@ export default function Canvas() {
     setEdges((es) => addEdge({ ...c, id: genId('e'), type: 'labeled', data: { pathType: edgePathType === 'bezier' ? undefined : edgePathType }, ...edgeDefaults }, es));
   }, [setEdges, takeSnapshot, edgePathType]);
 
-  const onConnectStart = useCallback((_: any, params: { nodeId: string | null }) => {
+  const onConnectStart = useCallback((
+    _: any,
+    params: { nodeId: string | null; handleType: 'source' | 'target' | null },
+  ) => {
     connectCompletedRef.current = false;
     connectSourceRef.current = params.nodeId || '';
+    connectHandleTypeRef.current = params.handleType || 'source';
   }, []);
 
   const onConnectEnd = useCallback((event: MouseEvent | TouchEvent) => {
@@ -1207,7 +1215,11 @@ export default function Canvas() {
     if (target.closest('.react-flow__handle')) return;
     const clientX = 'clientX' in event ? event.clientX : event.changedTouches[0].clientX;
     const clientY = 'clientY' in event ? event.clientY : event.changedTouches[0].clientY;
-    setConnectMenu({ x: clientX, y: clientY, sourceId: connectSourceRef.current });
+    setConnectMenu({
+      x: clientX, y: clientY,
+      sourceId: connectSourceRef.current,
+      fromHandle: connectHandleTypeRef.current,
+    });
   }, []);
 
   const handleConnectMenuCreate = useCallback((type: string) => {
@@ -1223,8 +1235,12 @@ export default function Canvas() {
       : type === 'sticky' ? { content: '', color: 'yellow' }
       : { stage: '', title: '', content: '' };
     setNodes((ns) => [...ns, { id: newId, type, position: pos, data: nodeData }]);
+    // 从入口(target)拖出时,新节点是上游,边要反过来连,否则箭头方向和用户预期相反
+    const fromTarget = connectMenu.fromHandle === 'target';
     setEdges((es) => [...es, {
-      id: genId('e'), source: connectMenu.sourceId, target: newId,
+      id: genId('e'),
+      source: fromTarget ? newId : connectMenu.sourceId,
+      target: fromTarget ? connectMenu.sourceId : newId,
       type: 'labeled', data: { pathType: edgePathType === 'bezier' ? undefined : edgePathType },
       ...edgeDefaults,
     }]);

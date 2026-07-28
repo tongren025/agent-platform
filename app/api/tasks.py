@@ -13,6 +13,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from app.api.common import ok as _ok
+from app.core.queue import QueueUnavailable
 from app.core.rate_limit import limiter
 from app.models.conversation import AgentRunRequest
 
@@ -20,6 +21,20 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/agentapp/tasks")
 TASK_META_TTL = 60 * 60 * 24 * 30
+
+
+def _queue_error(action: str, exc: Exception, fallback_status: int = 503) -> HTTPException:
+    """把队列异常统一转成 HTTP 错误。
+
+    "Redis 没起"是一个已知的运行状态而不是代码缺陷：只记一行告警并给出可操作提示，
+    不再为每个请求打完整 traceback（日志曾因此被刷到 2.4MB）。其它异常保留完整栈。
+    """
+    if isinstance(exc, QueueUnavailable):
+        logger.warning("%s失败：%s", action, exc)
+        return HTTPException(status_code=503, detail=str(exc))
+    logger.exception("%s失败", action)
+    detail = f"异步队列不可用: {exc}" if fallback_status == 503 else str(exc)
+    return HTTPException(status_code=fallback_status, detail=detail)
 
 
 def _username(request: Request) -> str:
@@ -101,8 +116,7 @@ async def enqueue_agent_run(request: Request, body: AgentRunRequest):
     except ImportError:
         raise HTTPException(status_code=503, detail="Redis 未连接，异步队列不可用")
     except Exception as exc:
-        logger.exception("入队失败")
-        raise HTTPException(status_code=503, detail=f"异步队列不可用: {exc}")
+        raise _queue_error("入队", exc) from exc
 
 
 @router.get("")
@@ -122,8 +136,7 @@ async def list_tasks(request: Request, limit: int = 50):
                 views.append(view)
         return _ok(views)
     except Exception as exc:
-        logger.exception("查询任务列表失败")
-        raise HTTPException(status_code=503, detail=f"异步队列不可用: {exc}")
+        raise _queue_error("查询任务列表", exc) from exc
 
 
 @router.get("/{job_id}")
@@ -142,8 +155,7 @@ async def get_task_status(request: Request, job_id: str):
     except HTTPException:
         raise
     except Exception as exc:
-        logger.exception("查询任务状态失败")
-        raise HTTPException(status_code=500, detail=str(exc))
+        raise _queue_error("查询任务状态", exc, fallback_status=500) from exc
 
 
 @router.post("/{job_id}/cancel")
@@ -161,8 +173,7 @@ async def cancel_task(request: Request, job_id: str):
     except HTTPException:
         raise
     except Exception as exc:
-        logger.exception("取消任务失败")
-        raise HTTPException(status_code=500, detail=str(exc))
+        raise _queue_error("取消任务", exc, fallback_status=500) from exc
 
 
 @router.post("/{job_id}/retry")
@@ -182,5 +193,4 @@ async def retry_task(request: Request, job_id: str):
     except HTTPException:
         raise
     except Exception as exc:
-        logger.exception("重试任务失败")
-        raise HTTPException(status_code=500, detail=str(exc))
+        raise _queue_error("重试任务", exc, fallback_status=500) from exc

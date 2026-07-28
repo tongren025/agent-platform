@@ -8,6 +8,8 @@
 """
 from __future__ import annotations
 
+import hashlib
+
 import pytest
 
 
@@ -76,6 +78,45 @@ def test_reviews_append_and_default_image_resolution(review_env):
     assert reviews[0]["image"] == "/uploads/g1.png"
     assert reviews[1]["verdict"] == "pass"
     assert meta["review_verdict"] == "pass"  # 最新一次
+
+
+def test_review_binds_project_image_hash_and_generation_spec(review_env):
+    """项目内媒体评审必须绑定当前文件内容和生成规格，覆盖同路径后旧通过失效。"""
+    client, pid, _ = review_env
+    import app.api.production as prod
+
+    image_path = prod._proj_dir(pid) / "assets" / "frame.png"
+    image_path.parent.mkdir(parents=True, exist_ok=True)
+    image_bytes = b"current-frame-v1"
+    image_path.write_bytes(image_bytes)
+    image_url = (
+        f"/api/v1/agentapp/production/resource/production/{pid}"
+        "/assets/frame.png"
+    )
+    created = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards",
+        json={
+            "stage": "img_prompt",
+            "title": "绑定指纹的首帧",
+            "content": "x",
+            "images": [image_url],
+            "metadata": {
+                "active_image": image_url,
+                "generation_spec_fingerprint": "spec-v1",
+            },
+        },
+    )
+    assert created.status_code == 200, created.text
+    card_id = created.json()["data"]["card_id"]
+
+    reviewed = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}/review",
+        json={"verdict": "pass"},
+    )
+    assert reviewed.status_code == 200, reviewed.text
+    record = reviewed.json()["data"]["metadata"]["image_reviews"][-1]
+    assert record["file_sha256"] == hashlib.sha256(image_bytes).hexdigest()
+    assert record["spec_fingerprint"] == "spec-v1"
 
 
 def test_review_card_without_images_is_400(review_env):

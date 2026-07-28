@@ -100,8 +100,9 @@ def generate_image(
     prompt: str,
     resolution: str = "1K",
     aspect_ratio: str = "9:16",
+    reference_paths: list[Path] | None = None,
 ) -> dict:
-    """调用 OpenRouter 专用图片 API，保存首张图片并返回本地 URL。"""
+    """调用 OpenRouter 图片 API；可附带仓库内本地参考图并保存首张结果。"""
     endpoint, api_key = _openrouter_config()
     payload = {
         "model": model,
@@ -111,6 +112,14 @@ def generate_image(
         "n": 1,
         "output_format": "png",
     }
+    if reference_paths:
+        payload["input_references"] = [
+            {
+                "type": "image_url",
+                "image_url": {"url": _path_image_reference(path)},
+            }
+            for path in reference_paths
+        ]
     response = httpx.post(
         f"{endpoint}/images",
         headers=_headers(api_key),
@@ -169,6 +178,19 @@ def _image_reference(url: str) -> str:
     return url
 
 
+def _path_image_reference(path: Path) -> str:
+    """把仓库内本地图片编码为 OpenRouter input_references 可用的 data URL。"""
+    resolved = path.resolve()
+    root = BASE_DIR.resolve()
+    if resolved != root and root not in resolved.parents:
+        raise ValueError(f"参考图不在项目目录内: {path}")
+    if not resolved.is_file():
+        raise ValueError(f"参考图不存在: {path}")
+    media_type = mimetypes.guess_type(resolved.name)[0] or "image/png"
+    encoded = base64.b64encode(resolved.read_bytes()).decode("ascii")
+    return f"data:{media_type};base64,{encoded}"
+
+
 def submit_video(
     project_id: str,
     *,
@@ -178,9 +200,12 @@ def submit_video(
     resolution: str = "720p",
     aspect_ratio: str = "9:16",
     image_url: str = "",
+    image_path: Path | None = None,
     generate_audio: bool = True,
 ) -> dict:
-    """提交 OpenRouter 异步视频任务，返回任务信息但不阻塞等待。"""
+    """提交 OpenRouter 异步视频任务，支持平台 URL 或仓库内本地首帧。"""
+    if image_url and image_path is not None:
+        raise ValueError("image_url 与 image_path 只能提供一个")
     endpoint, api_key = _openrouter_config()
     payload: dict = {
         "model": model,
@@ -194,6 +219,12 @@ def submit_video(
         payload["frame_images"] = [{
             "type": "image_url",
             "image_url": {"url": _image_reference(image_url)},
+            "frame_type": "first_frame",
+        }]
+    elif image_path is not None:
+        payload["frame_images"] = [{
+            "type": "image_url",
+            "image_url": {"url": _path_image_reference(image_path)},
             "frame_type": "first_frame",
         }]
 

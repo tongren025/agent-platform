@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import io
 import json
-import os
 import tempfile as stdlib_tempfile
 import zipfile
 from pathlib import Path

@@ -1360,6 +1360,72 @@ REVIEW_REJECT_REASONS = {
 }
 
 
+def _project_image_path_from_url(pid: str, image: str) -> Path | None:
+    """把本项目 resource URL 安全解析为本地文件；外部 URL 返回 None。"""
+    marker = f"/resource/production/{pid}/"
+    if marker not in image:
+        return None
+    relative = image.split(marker, 1)[1].split("?", 1)[0]
+    project_root = _proj_dir(pid).resolve()
+    candidate = (project_root / relative).resolve()
+    try:
+        candidate.relative_to(project_root)
+    except ValueError:
+        return None
+    return candidate if candidate.is_file() else None
+
+
+def _file_sha256(path: Path | None) -> str:
+    if path is None:
+        return ""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _card_review_spec_fingerprint(card: ProductionCard) -> str:
+    """绑定当前生成规格；媒体清单提供的指纹优先于通用卡片摘要。"""
+    generation_fingerprint = str(
+        card.metadata.get("generation_spec_fingerprint") or ""
+    )
+    if generation_fingerprint:
+        return generation_fingerprint
+    runtime_keys = {
+        "active_image",
+        "image_reviews",
+        "review_verdict",
+        "reviewed_at",
+        "reviewed_by",
+        "media_status",
+        "generated_segments",
+        "episode_media_status",
+    }
+    metadata = {
+        key: value
+        for key, value in card.metadata.items()
+        if key not in runtime_keys
+    }
+    payload = {
+        "stage": card.stage,
+        "episode": card.episode,
+        "shot_number": card.shot_number,
+        "title": card.title,
+        "content": card.content,
+        "prompts": card.prompts,
+        "negative_prompts": card.negative_prompts,
+        "metadata": metadata,
+    }
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 class ReviewCardImageReq(BaseModel):
     """POST /projects/{pid}/cards/{card_id}/review 的请求体。
 
@@ -1398,9 +1464,12 @@ def review_card_image(pid: str, card_id: str, req: ReviewCardImageReq):
         if req.image and req.image != current_image:
             raise HTTPException(409, "图片已更新，请刷新后评审当前版本")
         image = current_image
+        image_path = _project_image_path_from_url(pid, image)
         reviews = list(card.metadata.get("image_reviews") or [])
         reviews.append({
             "image": image,
+            "file_sha256": _file_sha256(image_path),
+            "spec_fingerprint": _card_review_spec_fingerprint(card),
             "verdict": req.verdict,
             "reason": req.reason if req.verdict == "reject" else "",
             "note": req.note,

@@ -1,8 +1,11 @@
 // 管理端 API 封装：走 /api/admin/*（代理到 :8001），带管理端独立 token。
 import type { ApiResult } from './types';
 import { friendlyFetch, getHttpErrorMessage, readJson } from './httpErrors';
+import { isSessionExpired, redirectToLogin } from './sessionGuard';
 
 const BASE = (import.meta.env.VITE_ADMIN_API_BASE as string) || '/api/admin';
+
+const SESSION_EXPIRED_MESSAGE = '登录已失效，请重新登录';
 
 const TOKEN_KEY = 'admin_token';
 
@@ -13,6 +16,8 @@ export const adminToken = {
 };
 
 async function request<T>(path: string, init?: RequestInit, options?: { isLogin?: boolean }): Promise<T> {
+  // 登录请求本身要放行，其余请求在跳登录页期间一律短路，避免 401 请求风暴。
+  if (!options?.isLogin && isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = adminToken.get();
   const res = await friendlyFetch(`${BASE}${path}`, {
     ...init,
@@ -28,10 +33,8 @@ async function request<T>(path: string, init?: RequestInit, options?: { isLogin?
       throw new Error(await getHttpErrorMessage(res, '用户名或密码错误'));
     }
     adminToken.clear();
-    if (!location.pathname.startsWith('/admin/login')) {
-      location.href = '/admin/login';
-    }
-    throw new Error('登录已失效，请重新登录');
+    redirectToLogin('/admin/login');
+    throw new Error(SESSION_EXPIRED_MESSAGE);
   }
   if (res.status === 403) {
     throw new Error('权限不足');

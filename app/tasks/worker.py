@@ -14,7 +14,9 @@ from app.tasks.agent_task import run_agent_task
 class WorkerSettings:
     """arq worker 配置：注册任务函数、Redis 连接、并发数与单任务超时。arq CLI 与 __main__ 都读它。"""
     functions = [run_agent_task]
-    redis_settings: RedisSettings = _redis_settings()
+    # worker 是常驻进程且没有等待中的用户：Redis 稍晚启动时应该多等一会儿再放弃，
+    # 而不是套用 API 进程那套「1 秒内快速失败」的参数直接退出。
+    redis_settings: RedisSettings = _redis_settings(conn_retries=5, conn_retry_delay=1)
     max_jobs = 10
     job_timeout = 600
     queue_name = "default"
