@@ -1,0 +1,145 @@
+{
+  "version": "nine_continents_cataclysm_v3_clean_rework",
+  "generated_with": "built_in_image_gen",
+  "asset_count": 14,
+  "aspect_ratio": "9:16",
+  "contact_sheet": "KEYFRAMES_W01_W14_V3_REWORK_CONTACT_SHEET.jpg",
+  "style_bible": "STYLE_BIBLE_V3.md",
+  "prompt_source": "V3_IMAGE_PROMPTS.json",
+  "rejected_v2_archive": "archive/v2-ai-rejected-2026-07-28",
+  "ai_style_rework": {
+    "date": "2026-07-28",
+    "shots": [
+      "W01",
+      "W02",
+      "W03",
+      "W04",
+      "W08",
+      "W10",
+      "W11",
+      "W12"
+    ],
+    "before_archive": "archive/ai-style-rework-2026-07-28",
+    "candidate_archive": "uploads/candidates"
+  },
+  "previous_gc": {
+    "project_id": "a3ab9f6a",
+    "mutation_policy": "read_only",
+    "project_sha256": "3c6489f628e9db24f3fa712e80d558a0011c9d264793eb9fc9c6456326421889",
+    "cards_sha256": "f11d372f9ab58e06cb4332e9bd45010b091b1961342ec2d5a93649e29631c384"
+  },
+  "assets": [
+    {
+      "id": "W01",
+      "path": "uploads/images/W01.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2012212,
+      "sha256": "78c21afd8e89387d5f754fd7a5e40ef554a2808d4235ccf427453596a3594a86"
+    },
+    {
+      "id": "W02",
+      "path": "uploads/images/W02.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1938581,
+      "sha256": "84f7af8b22ea8ee3160741cbd1fcdda171845715a988ac040c99cc1432f4ee86"
+    },
+    {
+      "id": "W03",
+      "path": "uploads/images/W03.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2058876,
+      "sha256": "7ea4f8779c7561f0b7fcfa89e78abcf00479f3487eb32787ab26c7b3029964de"
+    },
+    {
+      "id": "W04",
+      "path": "uploads/images/W04.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1873714,
+      "sha256": "c74290874a8dc2db303da0829db3272011fe4b534ead834ce67204e86f6eaaa9"
+    },
+    {
+      "id": "W05",
+      "path": "uploads/images/W05.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2075896,
+      "sha256": "4f27efd4645cca99f18c6a9b8e7baa7c9aa97da2329843cca6e0cc861734a484"
+    },
+    {
+      "id": "W06",
+      "path": "uploads/images/W06.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2101784,
+      "sha256": "693f1d3976389025bbddb0dc5af51ca5e331ef73358dd51ac873dd875870114b"
+    },
+    {
+      "id": "W07",
+      "path": "uploads/images/W07.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1907253,
+      "sha256": "7b3282e5651fa041ce0b4fc9d4611efb30b26a7f831fefb549d1393bd15286f6"
+    },
+    {
+      "id": "W08",
+      "path": "uploads/images/W08.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1836651,
+      "sha256": "2665856f9040032748d526de4907c5dfbeebc6774b047fda26acb2c98e7a8dab"
+    },
+    {
+      "id": "W09",
+      "path": "uploads/images/W09.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2057998,
+      "sha256": "ea58a434f74b6fca01615c7829a49b3ba6d1e8348ed0b3d94ea03948e3a569eb"
+    },
+    {
+      "id": "W10",
+      "path": "uploads/images/W10.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1851351,
+      "sha256": "97076be58caa13dc039ecfefca6af45894351fdf7284d88338b16e8e76307d8d"
+    },
+    {
+      "id": "W11",
+      "path": "uploads/images/W11.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1951102,
+      "sha256": "4670e9bc4c58a7ffa314a1ff33cc9af22629aed20fef2f26bceff2fdb26bdd63"
+    },
+    {
+      "id": "W12",
+      "path": "uploads/images/W12.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2073092,
+      "sha256": "056061bae76b9f638df7e36e6be3ed044cb823290e8ac8beae00e273b1df949b"
+    },
+    {
+      "id": "W13",
+      "path": "uploads/images/W13.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2163647,
+      "sha256": "436f2d0664ad2ab87661c338244985fbd00d491a338ffc181a6ca654e70de942"
+    },
+    {
+      "id": "W14",
+      "path": "uploads/images/W14.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1844512,
+      "sha256": "ae22bfcd543e24c89c695323c686e2a68cc002721a545584b43dc536394ddead"
+    }
+  ]
+}
