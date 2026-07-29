@@ -133,9 +133,7 @@ def compile(
                 for child in sk.children:
                     child_code = child.get("code", "")
                     child_name = child.get("name", "")
-                    # 这里只展示摘要，完整说明由 get_skill_detail 按需读取，
-                    # 避免大型树形 Skill 在每轮对话重复占用上下文。
-                    child_desc = child.get("summary") or child.get("description", "")
+                    child_desc = child.get("description", child.get("summary", ""))
                     children_parts.append(
                         f"      <child code=\"{child_code}\" name=\"{child_name}\">"
                         f"{child_desc}</child>"
@@ -144,13 +142,6 @@ def compile(
             line += "\n  </skill>"
             skill_lines.append(line)
         parts.append("<skills>\n" + "\n".join(skill_lines) + "\n</skills>")
-        parts.append(
-            "<skill_usage>\n"
-            "上面的列表只包含技能摘要。任务命中某个技能时，先调用 "
-            "get_skill_detail(skill_code) 读取完整说明，再按说明执行；"
-            "不要仅凭摘要猜测步骤。\n"
-            "</skill_usage>"
-        )
 
     if visible_tools:
         tool_lines: list[str] = []

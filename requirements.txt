@@ -14,7 +14,6 @@ mcp>=1.28,<2
 cryptography>=44.0.0
 pydantic-settings>=2.6.0
 python-dotenv>=1.0.1
-PyYAML>=6.0.2
 
 # ── 结构化日志 / 可观测性(M0)─────────────────────────────
 structlog>=24.4.0
