@@ -101,3 +101,12 @@
 - 返修前原图保存在 `archive/ai-style-rework-2026-07-28/`；本轮采用稿副本保存在 `uploads/candidates/`。
 - 2026-07-24 的错误 V2 结构和 72 张 AI 游戏概念图已完整保存在 `archive/v2-ai-rejected-2026-07-28/`，不再进入正式引用。
 - 上一版 GC 项目 `a3ab9f6a` 只读保护，未作任何改动。
+
+## 视频补充图片交付
+
+- 一致性锚点 2 张：`uploads/supplemental/CHAR_Canglin_anchor.png`、`uploads/supplemental/CRE_Dragon_anchor.png`。
+- 关键运动尾帧 6 张：`W02_end.png`、`W03_end.png`、`W05_end.png`、`W08_end.png`、`W10_end.png`、`W12_end.png`，均位于 `uploads/supplemental/`。
+- W05 尾帧使用宽阔青蓝色带表达浪眼；W08 尾帧使用三条平滑虫潮巨带；W10 尾帧使用近透明空气折射缝，禁止水纹堆料、颗粒虫点和激光线。
+- 补充图提示词：`SUPPLEMENTAL_IMAGE_PROMPTS_V1.json`。
+- 补充图联系表：`SUPPLEMENTAL_IMAGES_V1_CONTACT_SHEET.jpg`。
+- 当前用于正式视频生产的图片共 22 张：14 张首帧 + 6 张尾帧 + 2 张一致性锚点。

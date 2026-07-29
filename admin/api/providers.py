@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from app.api.common import ok, validate_key
 from app.config import resolve_secret
 from app.dependencies import ai_service
+from app.services.chat_response import extract_chat_content
 from admin.auth import require_admin
 
 router = APIRouter(prefix="/api/admin/providers", tags=["admin-providers"])
@@ -131,6 +132,10 @@ def test_provider(name: str, _: dict = Depends(require_admin)):
             max_tokens=5,
             timeout=15,
         )
-        return ok({"success": True, "model": model_id, "reply": resp.choices[0].message.content})
+        return ok({
+            "success": True,
+            "model": model_id,
+            "reply": extract_chat_content(resp),
+        })
     except Exception as exc:
         return ok({"success": False, "model": model_id, "error": str(exc)})

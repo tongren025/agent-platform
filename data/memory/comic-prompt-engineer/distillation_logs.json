@@ -2077,5 +2077,80 @@
     "llmModel": "",
     "durationMs": 62,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_99053d3ed1cc",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-24T19:00:27.444958Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 12,
+      "procedural": 9
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 31,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_e78d7ca81747",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-25T19:00:13.551874Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 12,
+      "procedural": 9
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 62,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_c960d3fcc2af",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-26T19:00:27.105641Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 12,
+      "procedural": 9
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 77,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_41783aedc449",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-28T13:53:36.816823Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 12,
+      "procedural": 9
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 31,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_4850cc9b1fc6",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-28T19:00:15.341955Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 12,
+      "procedural": 9
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 32,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
   }
 ]

@@ -1,0 +1,81 @@
+{
+  "version": "nine_continents_gc_supplemental_v1",
+  "generated_with": "built_in_image_gen",
+  "date": "2026-07-29",
+  "purpose": "补齐视频生产所需的苍霖与成年巨龙一致性锚点，以及六个高运动/强转场镜头的尾帧。正式W01-W14首帧保持不变。",
+  "shared_style": "明亮干净的二维东方幻想动画插图；大轮廓先读，低至中等可控细节，大色块，平滑自然阴影，柔和漫射光，哑光表面，清晰边缘，干净色彩过渡和平滑渐变。",
+  "shared_avoid": "噪点、颗粒、脏污、浑浊色彩、斑驳阴影、过度锐化、油腻高光、塑料质感、游戏概念海报、3D CGI、复制式物件、密集高频纹理、文字、Logo、UI、水印、边框。",
+  "assets": [
+    {
+      "id": "CHAR_Canglin_anchor",
+      "path": "uploads/supplemental/CHAR_Canglin_anchor.png",
+      "role": "character_continuity_anchor",
+      "references": [
+        "uploads/images/W14.png",
+        "uploads/images/W13.png"
+      ],
+      "prompt": "苍霖16岁正式全身锚点：短碎黑发、左脸竖向旧伤、窄金瞳、窄肩长肢、偏瘦少年比例；深炭旅行衣、简洁绑带、实用短靴、胸前一枚浅色龙骨碎片。三分之四自然站姿，明亮蓝白到暖象牙的极简背景，完整手脚，禁止成年英雄肌肉、暴露服装、繁复盔甲和随机配饰。"
+    },
+    {
+      "id": "CRE_Dragon_anchor",
+      "path": "uploads/supplemental/CRE_Dragon_anchor.png",
+      "role": "creature_continuity_anchor",
+      "references": [
+        "uploads/images/W13.png",
+        "uploads/images/W02.png"
+      ],
+      "prompt": "苍霖坐骑成年巨龙正式锚点：四足加双翼，炭黑宽鳞、骨白喉腹甲、暗赤翼膜、琥珀眼，两根后掠主角和克制短颈棘；全身三分之四侧姿，双翼半展，四足落地，尾巴完整，极简明亮背景。禁止多肢、多翼、复制角、密集小鳞和装饰盔甲。"
+    },
+    {
+      "id": "W02_end",
+      "path": "uploads/supplemental/W02_end.png",
+      "role": "end_frame",
+      "shot": "W02",
+      "reference": "uploads/images/W02.png",
+      "prompt": "保留龙颅火山、单一熔浆柱、龙骨桥和微小旅人；最近巨龙的一片暗赤巨大翼膜从镜头上方扫过，占上半画面，翼缘形成三段宽弧以匹配W03机械翼。远处只留五至七头姿态与纵深不同的巨龙。"
+    },
+    {
+      "id": "W03_end",
+      "path": "uploads/supplemental/W03_end.png",
+      "role": "end_frame",
+      "shot": "W03",
+      "reference": "uploads/images/W03.png",
+      "prompt": "机械翼穹三块巨型甲片完全开启，镜头从下层城市升到高处；一座城市尺度炮塔完成转向，单一圆形炮口成为居中主形，匹配W04碎星环。只保留两个不同深度的辅助炮塔与极小轨车、桥梁、人群。"
+    },
+    {
+      "id": "W05_end",
+      "path": "uploads/supplemental/W05_end.png",
+      "role": "end_frame",
+      "shot": "W05",
+      "reference": "uploads/images/W05.png",
+      "prompt": "千米银蓝海啸卷入成一个由透明水体与白色浪冠构成的巨大椭圆浪眼，不出现真实虹膜或生物面孔；水体仅用四至六层宽阔青蓝色带，城市压缩为五至七个象牙体块和一条长桥，只保留三艘深色船影。"
+    },
+    {
+      "id": "W08_end",
+      "path": "uploads/supplemental/W08_end.png",
+      "role": "end_frame",
+      "shot": "W08",
+      "reference": "uploads/images/W08.png",
+      "prompt": "严格俯视冰封陆，中央呼吸孔上方形成一个空心大旋涡；远处虫潮只表现为三条平滑、半不透明的白灰巨型带状流，不画微小虫点；旋涡外恰好保留六只角度和尺度不同的大虫，冰面只留三条主裂缝。"
+    },
+    {
+      "id": "W10_end",
+      "path": "uploads/supplemental/W10_end.png",
+      "role": "end_frame",
+      "shot": "W10",
+      "reference": "uploads/images/W10.png",
+      "prompt": "保留不对称倒悬断冠和恰好九面不同深度的审判镜；禁止九道独立光柱。画面只出现一片极淡的宽阔冷金光面，并在下方逐渐变成仅靠云边错位显形的近透明折射细缝，承接W11无形羁绊线。"
+    },
+    {
+      "id": "W12_end",
+      "path": "uploads/supplemental/W12_end.png",
+      "role": "end_frame",
+      "shot": "W12",
+      "references": [
+        "uploads/images/W12.png",
+        "uploads/images/W13.png"
+      ],
+      "prompt": "九大陆身份保持清楚，其他八陆推远；机械翼大陆下沉到前景并分成三块巨大宽片，两块从画面两侧掠过形成明亮缺口，缺口下方只露出极小骑龙剪影。断裂只以玻璃水面般的局部空气错位表示，禁止爆炸、碎石雨、发光网络和中心节点。"
+    }
+  ]
+}

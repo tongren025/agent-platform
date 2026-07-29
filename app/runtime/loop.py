@@ -22,6 +22,7 @@ from typing import Awaitable, Callable, Optional
 import openai
 
 from app.models.conversation import AgentInvocationTrace, PendingApprovalDetail
+from app.services.chat_response import normalize_chat_completion
 
 SyncOrAsyncClient = openai.OpenAI | openai.AsyncOpenAI
 
@@ -235,6 +236,7 @@ async def run_agent_loop(
             response = await _create_with_retry(
                 client, base_kwargs, is_async, options, iteration
             )
+            response = normalize_chat_completion(response)
         except Exception as exc:
             logger.error(
                 "LLM 调用最终失败（已重试+降级后，iteration=%d）: %s", iteration, exc

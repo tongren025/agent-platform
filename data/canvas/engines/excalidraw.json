@@ -1,0 +1,28 @@
+{
+  "engine": "excalidraw",
+  "content": {
+    "elements": [],
+    "appState": {
+      "viewBackgroundColor": "#f8fafc",
+      "gridSize": 20,
+      "gridStep": 5,
+      "gridModeEnabled": false,
+      "currentItemStrokeColor": "#1e1e1e",
+      "currentItemBackgroundColor": "transparent",
+      "currentItemFillStyle": "solid",
+      "currentItemStrokeWidth": 2,
+      "currentItemStrokeStyle": "solid",
+      "currentItemRoughness": 1,
+      "currentItemOpacity": 100,
+      "currentItemFontFamily": 5,
+      "currentItemFontSize": 20,
+      "currentItemTextAlign": "left",
+      "currentItemStartArrowhead": null,
+      "currentItemEndArrowhead": "arrow",
+      "zenModeEnabled": false,
+      "objectsSnapModeEnabled": false
+    },
+    "files": {}
+  },
+  "updated_at": "2026-07-29T04:07:37.965639+00:00"
+}

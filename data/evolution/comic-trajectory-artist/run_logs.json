@@ -1,55 +1,5 @@
 [
   {
-    "logId": "evo_6f7cd93246bc",
-    "employeeKey": "comic-trajectory-artist",
-    "ranAt": "2026-06-30T04:13:21.092841Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_addf7f8a6216",
-    "employeeKey": "comic-trajectory-artist",
-    "ranAt": "2026-06-30T04:13:51.036642Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_2c4b2e783733",
-    "employeeKey": "comic-trajectory-artist",
-    "ranAt": "2026-06-30T04:15:55.864802Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 14,
-    "error": null
-  },
-  {
-    "logId": "evo_a9bd11c5c7df",
-    "employeeKey": "comic-trajectory-artist",
-    "ranAt": "2026-06-30T10:46:32.826372Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_2648d5e615d1",
-    "employeeKey": "comic-trajectory-artist",
-    "ranAt": "2026-06-30T10:51:15.367685Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_ee3aa60003ee",
     "employeeKey": "comic-trajectory-artist",
     "ranAt": "2026-07-01T03:10:58.594519Z",
@@ -497,6 +447,56 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_534f6b89a4c5",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-24T20:00:30.144380Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_dd6389920c42",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-25T20:00:16.738003Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_4e829cb6d5b7",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-26T20:00:29.771642Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_9fd089fadedc",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-28T13:53:37.210795Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_fb612a294c64",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-28T20:00:16.978358Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
     "error": null
   }
 ]

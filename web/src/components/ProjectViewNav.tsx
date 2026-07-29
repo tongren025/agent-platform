@@ -22,19 +22,19 @@ const views: Array<{
 }> = [
   {
     key: 'overview',
-    label: '项目总览',
+    label: '看故事',
     icon: <AppstoreOutlined />,
     path: projectId => `/production/${projectId}`,
   },
   {
     key: 'pipeline',
-    label: '制作流水线',
+    label: '进入制作',
     icon: <BarsOutlined />,
     path: projectId => `/production/${projectId}/pipeline`,
   },
   {
     key: 'diagnostics',
-    label: '完整性检查',
+    label: '检查缺漏',
     icon: <WarningOutlined />,
     path: projectId => `/production/${projectId}/matrix`,
   },

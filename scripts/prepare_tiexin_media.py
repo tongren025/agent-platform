@@ -52,22 +52,19 @@ RESOURCE_PREFIX = (
 CHARACTER_ASSETS = {
     "R1": {
         "title": "R1 沈曜",
-        "face": CHARACTER_DIR / "R1_shenyao_face_v3.png",
-        "full": CHARACTER_DIR / "R1_shenyao_full_v3.png",
-        "tactical": CHARACTER_DIR / "R1_shenyao_tactical_v3.png",
+        "face": (
+            CHARACTER_DIR
+            / "details"
+            / "R1_shenyao_face_front_candidate_v5.png"
+        ),
     },
     "R2": {
         "title": "R2 零号/凌昊",
         "face": CHARACTER_DIR / "R2_linghao_face_v3.png",
-        "full": CHARACTER_DIR / "R2_linghao_full_v3.png",
-        "tactical": CHARACTER_DIR / "R2_linghao_tactical_v3.png",
-        # v3 居家图是未批准的黑色针织装；服装参考必须使用角色卡规定的白 T 版本。
-        "home": CHARACTER_DIR / "R2_linghao_home.png",
     },
     "R3": {
         "title": "R3 韩少卿",
         "face": CHARACTER_DIR / "R3_hanshaoqing_face_v3.png",
-        "full": CHARACTER_DIR / "R3_hanshaoqing_full_v3.png",
     },
 }
 
@@ -93,6 +90,34 @@ CHARACTER_TURNAROUNDS = {
         / "R3_hanshaoqing_suit_turnaround_candidate_v1.png",
     },
 }
+
+# 微小面部固定标记由高分辨率身份锚验收；身份锚不能替代全身三视图，
+# 但与三视图共同组成角色服装包，并共同参与审批内容指纹。
+R1_IDENTITY_DETAIL_PATHS = {
+    "front_identity": (
+        CHARACTER_DIR
+        / "details"
+        / "R1_shenyao_face_front_candidate_v5.png"
+    ),
+    "right_marker_closeup": (
+        CHARACTER_DIR
+        / "details"
+        / "R1_shenyao_face_right_profile_candidate_v5.png"
+    ),
+    "left_marker_negative": (
+        CHARACTER_DIR
+        / "details"
+        / "R1_shenyao_face_left_profile_negative_candidate_v5.png"
+    ),
+}
+CHARACTER_TURNAROUND_IDENTITY_DETAILS = {
+    "R1_daily": R1_IDENTITY_DETAIL_PATHS,
+    "R1_tactical": R1_IDENTITY_DETAIL_PATHS,
+}
+CHARACTER_STORYBOARD_IDENTITY_ROLES = (
+    "front_identity",
+    "right_marker_closeup",
+)
 
 SCENE_ASSETS = {
     scene_id: SCENE_DIR / f"{scene_id}.png"
@@ -433,6 +458,46 @@ def safe_scene_candidate_paths(
     return safe_paths, issues
 
 
+def safe_character_identity_detail_paths(
+    record: dict[str, Any],
+) -> tuple[dict[str, Path], list[str]]:
+    """解析角色包身份细节锚，并拒绝越出角色资产目录的路径。"""
+    raw_paths = record.get("identity_detail_paths", {})
+    if raw_paths is None:
+        raw_paths = {}
+    if not isinstance(raw_paths, dict):
+        return {}, ["identity_details:not_a_mapping"]
+    safe_paths: dict[str, Path] = {}
+    seen_paths: set[Path] = set()
+    issues: list[str] = []
+    allowed_root = PROJECT_DIR / "assets" / "characters"
+    for role, raw_path in raw_paths.items():
+        if (
+            not isinstance(role, str)
+            or not role.strip()
+            or not isinstance(raw_path, str)
+            or not raw_path.strip()
+        ):
+            issues.append("identity_detail:invalid_entry")
+            continue
+        try:
+            resolved = resolve_project_path(
+                raw_path,
+                allowed_root=allowed_root,
+            )
+        except ValueError:
+            issues.append(
+                f"identity_detail:{role}:path_outside_characters"
+            )
+            continue
+        if resolved in seen_paths:
+            issues.append(f"identity_detail:{role}:duplicate_path")
+            continue
+        safe_paths[role] = resolved
+        seen_paths.add(resolved)
+    return safe_paths, issues
+
+
 def latest_image_review_passed(
     card: dict[str, Any] | None,
     image_url: str,
@@ -495,6 +560,28 @@ def approval_record_matches(
             candidate_path.exists() and candidate_path.is_file()
             for candidate_path in candidate_paths
         )
+    elif group == "character_turnarounds":
+        expected_details = CHARACTER_TURNAROUND_IDENTITY_DETAILS.get(
+            key,
+            {},
+        )
+        safe_details, path_issues = (
+            safe_character_identity_detail_paths(record)
+        )
+        if path_issues or set(safe_details) != set(expected_details):
+            return False
+        for role, expected_path in expected_details.items():
+            if safe_details[role] != expected_path.resolve():
+                return False
+        candidate_paths.extend(
+            safe_details[role] for role in expected_details
+        )
+        bundle_complete = all(
+            candidate_path.exists() and candidate_path.is_file()
+            for candidate_path in candidate_paths
+        )
+    if not bundle_complete:
+        return False
     content_fingerprint = stable_fingerprint([
         {
             "path": project_relative(candidate_path),
@@ -551,16 +638,28 @@ def character_reference_paths(
     scene_id: str,
     battle: bool,
 ) -> list[Path]:
-    assets = CHARACTER_ASSETS[character_id]
     outfit_key = character_outfit_key(
         character_id,
         scene_id=scene_id,
         battle=battle,
     )
-    return [
-        assets["face"],
-        CHARACTER_TURNAROUNDS[character_id][outfit_key],
+    turnaround_key = character_turnaround_key(
+        character_id,
+        outfit_key,
+    )
+    identity_details = CHARACTER_TURNAROUND_IDENTITY_DETAILS.get(
+        turnaround_key,
+        {},
+    )
+    paths = [
+        identity_details[role]
+        for role in CHARACTER_STORYBOARD_IDENTITY_ROLES
+        if role in identity_details
     ]
+    if not paths:
+        paths.append(CHARACTER_ASSETS[character_id]["face"])
+    paths.append(CHARACTER_TURNAROUNDS[character_id][outfit_key])
+    return paths
 
 
 def required_preproduction_assets(
@@ -818,7 +917,6 @@ def build_storyboard_job(
     image_index = 1
     blocked_dependencies: list[str] = []
     for character_id in character_ids:
-        face_path = CHARACTER_ASSETS[character_id]["face"]
         outfit_key = character_outfit_key(
             character_id,
             scene_id=scene_id,
@@ -829,10 +927,35 @@ def build_storyboard_job(
             character_id,
             outfit_key,
         )
-        for path, role in (
-            (face_path, "面部身份"),
-            (turnaround_path, f"{outfit_key}服装三视图"),
-        ):
+        identity_details = CHARACTER_TURNAROUND_IDENTITY_DETAILS.get(
+            turnaround_key,
+            {},
+        )
+        reference_specs: list[tuple[Path, str]] = []
+        if identity_details:
+            role_labels = {
+                "front_identity": "严格正面身份与固定标记",
+                "right_marker_closeup": "解剖右侧身份与固定标记",
+            }
+            reference_specs.extend(
+                (
+                    identity_details[role],
+                    role_labels[role],
+                )
+                for role in CHARACTER_STORYBOARD_IDENTITY_ROLES
+                if role in identity_details
+            )
+        else:
+            reference_specs.append(
+                (
+                    CHARACTER_ASSETS[character_id]["face"],
+                    "面部身份",
+                )
+            )
+        reference_specs.append(
+            (turnaround_path, f"{outfit_key}服装三视图")
+        )
+        for path, role in reference_specs:
             if path not in references:
                 references.append(path)
                 roles.append(

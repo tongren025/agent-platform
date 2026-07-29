@@ -1,55 +1,5 @@
 [
   {
-    "logId": "evo_467b5edaca9c",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-06-30T04:13:40.238952Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_ab358c9d6c45",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-06-30T04:15:44.800929Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 15,
-    "error": null
-  },
-  {
-    "logId": "evo_f52729962cff",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-06-30T10:46:20.575988Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 452,
-    "error": null
-  },
-  {
-    "logId": "evo_0cb57f99d731",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-06-30T10:51:02.144931Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 1405,
-    "error": null
-  },
-  {
-    "logId": "evo_2f9a20b97a62",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-07-01T03:10:47.918492Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 562,
-    "error": null
-  },
-  {
     "logId": "evo_0de360e6f273",
     "employeeKey": "recharge-strategy-assistant",
     "ranAt": "2026-07-01T14:07:17.222198Z",
@@ -497,6 +447,56 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 532,
+    "error": null
+  },
+  {
+    "logId": "evo_8102f72d656f",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-24T20:00:29.806719Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 234,
+    "error": null
+  },
+  {
+    "logId": "evo_71558f189819",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-25T20:00:15.788871Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 858,
+    "error": null
+  },
+  {
+    "logId": "evo_521a96bf00c0",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-26T20:00:28.790790Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 843,
+    "error": null
+  },
+  {
+    "logId": "evo_d497992b0775",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-28T13:53:36.903826Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 234,
+    "error": null
+  },
+  {
+    "logId": "evo_683fd2f35757",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-28T20:00:16.605128Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 219,
     "error": null
   }
 ]

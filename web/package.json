@@ -9,15 +9,22 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
+    "@excalidraw/excalidraw": "^0.18.0",
     "antd": "^5.25.0",
     "dayjs": "^1.11.21",
+    "fabric": "^7.4.0",
     "html-to-image": "^1.11.13",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^6.28.0",
     "reactflow": "^11.11.4",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "rete": "^2.0.6",
+    "rete-area-plugin": "^2.3.2",
+    "rete-connection-plugin": "^2.0.5",
+    "rete-react-plugin": "^2.1.2",
+    "tldraw": "^5.2.5"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",

@@ -4,7 +4,7 @@
 数据落盘 data/canvas/{canvas_id}.json,与制作看板(production)互不依赖;
 出图后前端可通过看板 API 把图片回写成 img_gen 阶段卡片。
 
-生图走 ai_service 的 OpenAI 兼容 images 接口(如豆包/方舟 seedream),
+生图走统一图片生成服务（OpenAI 兼容供应商或 OpenRouter Images）,
 产物统一保存到 data/uploads/canvas/ —— 该目录经 /uploads 静态挂载直出,
 <img> 标签无需携带 Authorization 也能显示。
 """
@@ -13,6 +13,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
@@ -20,8 +21,8 @@ from pydantic import BaseModel, Field
 from app.api.common import ok, validate_key
 from app.config import BASE_DIR
 from app.core.logging import get_logger
-from app.dependencies import ai_service
 from app.services.image_generation import generate_image_to_local
+from app.services import openrouter_media
 from app.models.conversation import AgentRunRequest
 from app.models.production import STAGES, STAGE_INSTRUCTIONS
 from app.services.invocation import run_invocation
@@ -32,6 +33,8 @@ router = APIRouter(prefix="/api/v1/agentapp/canvas", tags=["canvas"])
 
 DATA_DIR = BASE_DIR / "data" / "canvas"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
+ENGINE_DIR = DATA_DIR / "engines"
+ENGINE_DIR.mkdir(parents=True, exist_ok=True)
 UPLOAD_DIR = BASE_DIR / "data" / "uploads" / "canvas"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -69,6 +72,14 @@ class CanvasDoc(BaseModel):
     updated_at: str = ""
 
 
+class CanvasEngineDoc(BaseModel):
+    """第三方画布引擎文档：由 engine 区分序列化格式，服务端只负责可靠落盘。"""
+
+    engine: str
+    content: dict[str, Any] = Field(default_factory=dict)
+    updated_at: str = ""
+
+
 def _now() -> str:
     """UTC 当前时间的 ISO 字符串。"""
     return datetime.now(timezone.utc).isoformat()
@@ -91,6 +102,12 @@ def _load(cid: str) -> CanvasDoc:
 def _save(doc: CanvasDoc) -> None:
     """画布整体落盘（格式化 JSON）。"""
     _path(doc.canvas_id).write_text(doc.model_dump_json(indent=2), "utf-8")
+
+
+def _engine_path(engine: str) -> Path:
+    """第三方引擎文档路径，只接受安全的单段 key。"""
+    validate_key(engine, label="engine")
+    return ENGINE_DIR / f"{engine}.json"
 
 
 # ── 画布 CRUD ─────────────────────────────────────────────────────
@@ -204,30 +221,65 @@ def duplicate_canvas(cid: str):
     return ok(doc.model_dump())
 
 
+# ── 第三方引擎文档 ───────────────────────────────────────────────
+
+
+@router.get("/engines/{engine}")
+def get_canvas_engine(engine: str):
+    """读取 Excalidraw/Fabric/Rete 等引擎的原生 JSON；首次访问返回空文档。"""
+    path = _engine_path(engine)
+    if not path.exists():
+        return ok(CanvasEngineDoc(engine=engine).model_dump())
+    try:
+        doc = CanvasEngineDoc.model_validate_json(path.read_text("utf-8"))
+    except Exception as exc:
+        logger.exception("画布引擎文档损坏: %s", path)
+        raise HTTPException(500, f"{engine} 画布文档无法读取") from exc
+    return ok(doc.model_dump())
+
+
+class SaveCanvasEngineReq(BaseModel):
+    """保存第三方引擎原生 JSON，请求体不绑定某一前端库的数据结构。"""
+
+    content: dict[str, Any] = Field(default_factory=dict)
+
+
+@router.put("/engines/{engine}")
+def save_canvas_engine(engine: str, req: SaveCanvasEngineReq):
+    """整体保存第三方画布引擎文档。"""
+    path = _engine_path(engine)
+    doc = CanvasEngineDoc(engine=engine, content=req.content, updated_at=_now())
+    path.write_text(doc.model_dump_json(indent=2), "utf-8")
+    return ok(doc.model_dump())
+
+
 # ── 生图 ──────────────────────────────────────────────────────────
 
 
 @router.get("/image-models")
 def list_image_models():
-    """列出所有启用供应商下的模型,由用户自选哪个是生图模型。
-
-    平台不猜测模型能力(chat/image 混在同一 models 列表里),
-    前端记住用户上次选择即可。
-    """
-    result = []
-    for p in ai_service.list_all_providers():
-        if not p.enabled:
-            continue
-        for m in p.models:
-            model_id = m.get("modelId", m.get("modelName", ""))
-            if not model_id:
-                continue
-            result.append({
-                "provider": p.name,
-                "modelId": model_id,
-                "modelName": m.get("modelName", model_id),
-            })
-    return ok(result)
+    """只列出实时确认支持图片输出的 OpenRouter 模型，禁止聊天模型混入。"""
+    try:
+        models = openrouter_media.list_media_models("image")
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(502, f"读取 OpenRouter 图片模型失败: {exc}") from exc
+    return ok([
+        {
+            "provider": "openrouter",
+            # 加显式供应商前缀，让通用生图服务走 OpenRouter 专用 /images API。
+            "modelId": f"openrouter:{model['id']}",
+            "actualModelId": model["id"],
+            "modelName": model["name"],
+            "pricing": model["pricing"],
+            "isFree": model["isFree"],
+            "recommended": model["recommended"],
+            "recommendationReason": model["recommendationReason"],
+            "supportedParameters": model["supportedParameters"],
+        }
+        for model in models
+    ])
 
 
 class GenerateReq(BaseModel):

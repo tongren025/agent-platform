@@ -19,6 +19,7 @@ from pydantic import BaseModel
 
 from app.api.common import ok as _ok
 from app.config import BASE_DIR
+from app.services.chat_response import extract_chat_content
 
 router = APIRouter(prefix="/api/v1/agentapp/trend-sources", tags=["trend-sources"])
 
@@ -382,7 +383,7 @@ async def translate_titles(req: TranslateRequest):
                 max_tokens=4000,
             )
         )
-        text = resp.choices[0].message.content.strip()
+        text = extract_chat_content(resp).strip()
         # 提取 JSON 数组
         start = text.find("[")
         end = text.rfind("]") + 1

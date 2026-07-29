@@ -1,29 +1,40 @@
 {
-  "schema_version": "1.0",
-  "updated_at": "2026-07-28T21:45:00+08:00",
+  "schema_version": "1.1",
+  "updated_at": "2026-07-28T22:46:39+08:00",
   "character_turnarounds": {
-    "R1_daily": {
-      "path": "assets/characters/turnarounds/R1_shenyao_daily_turnaround_candidate_v1.png",
-      "status": "rework",
-      "technical_review": "rework_required_identity_markers",
-      "notes": [
-        "正面、90度侧面、背面结构合格",
-        "独立复核判定人物解剖右眉尾旧伤与右耳单耳钉均不足以稳定核验",
-        "v2 虽改善面部身份，但固定标记仍未解决",
-        "v3/v4 已改成解剖右侧严格90度且右耳钉成立，但正面旧伤仍落错侧或不可辨；均退稿且不得进入导演批准"
-      ]
-    },
-    "R1_tactical": {
-      "path": "assets/characters/turnarounds/R1_shenyao_tactical_turnaround_candidate_v1.png",
-      "status": "rework",
-      "technical_review": "rework_required_identity_markers",
-      "notes": [
-        "三视图版式和中立站姿合格",
-        "背心、护臂和裤袋结构连续",
-        "v2 的人物解剖右眉尾旧伤与右耳单耳钉仍不可稳定核验",
-        "v3 疤痕缺失且疑似左耳亮点；v4 清除亮点后仍无疤并丢失右耳钉；均退稿且不得进入导演批准"
-      ]
-    },
+      "R1_daily": {
+        "path": "assets/characters/turnarounds/R1_shenyao_daily_turnaround_candidate_v1.png",
+        "status": "candidate",
+        "technical_review": "structure_and_identity_detail_package_pass_director_review_pending",
+        "identity_detail_paths": {
+          "front_identity": "assets/characters/details/R1_shenyao_face_front_candidate_v5.png",
+          "right_marker_closeup": "assets/characters/details/R1_shenyao_face_right_profile_candidate_v5.png",
+          "left_marker_negative": "assets/characters/details/R1_shenyao_face_left_profile_negative_candidate_v5.png"
+        },
+        "notes": [
+          "v1 主板已独立复核：且仅有完整等比例全身正面、解剖学右侧面（鼻尖朝画布左）和背面，日常服装与主要配件跨视图一致",
+          "微小固定标记不再依赖全身板小脸判读；严格正面、右侧标记近照与左侧无标记反证图共同组成身份细节包，但不能替代全身三视图",
+          "人物解剖学右眉尾旧伤、右耳单耳钉由正面和右侧细节锚确认，左侧反证图必须保持无疤无耳钉",
+          "旧 face/full/tactical v3 及三视图 v2-v5 的错误侧别、标记缺失、双耳钉或配件漂移均不再作为正式输入",
+          "主三视图与三张身份细节图必须联合指纹、联合批准；当前仅为 candidate，未获导演批准"
+        ]
+      },
+      "R1_tactical": {
+        "path": "assets/characters/turnarounds/R1_shenyao_tactical_turnaround_candidate_v1.png",
+        "status": "candidate",
+        "technical_review": "structure_and_identity_detail_package_pass_director_review_pending",
+        "identity_detail_paths": {
+          "front_identity": "assets/characters/details/R1_shenyao_face_front_candidate_v5.png",
+          "right_marker_closeup": "assets/characters/details/R1_shenyao_face_right_profile_candidate_v5.png",
+          "left_marker_negative": "assets/characters/details/R1_shenyao_face_left_profile_negative_candidate_v5.png"
+        },
+        "notes": [
+          "v1 主板已独立复核：且仅有完整等比例全身正面、解剖学右侧面（鼻尖朝画布左）和背面",
+          "立领内搭、板甲背心、肩带、腰带、双前臂护具、无指手套、工装裤与战靴跨视图一致",
+          "人物解剖学右眉尾旧伤与右耳单耳钉由共享的高清身份细节包核验，左侧无标记反证图用于防止下游镜像翻转",
+          "主三视图与三张身份细节图必须联合指纹、联合批准；当前仅为 candidate，未获导演批准"
+        ]
+      },
     "R2_suit": {
       "path": "assets/characters/turnarounds/R2_linghao_suit_turnaround_candidate_v2.png",
       "status": "candidate",

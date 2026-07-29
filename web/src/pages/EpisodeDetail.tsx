@@ -133,7 +133,14 @@ export default function EpisodeDetail() {
   const [saving, setSaving] = useState(false);
   const [regenerating, setRegenerating] = useState('');
   const [imageCard, setImageCard] = useState<CardItem | null>(null);
-  const [imageModels, setImageModels] = useState<{ provider: string; modelId: string; modelName: string }[]>([]);
+  const [imageModels, setImageModels] = useState<{
+    provider: string;
+    modelId: string;
+    modelName: string;
+    isFree?: boolean;
+    recommended?: boolean;
+    recommendationReason?: string;
+  }[]>([]);
   const [imageModel, setImageModel] = useState('');
   const [imagePrompt, setImagePrompt] = useState('');
   const [imageGenerating, setImageGenerating] = useState(false);
@@ -215,10 +222,14 @@ export default function EpisodeDetail() {
       const models = await api.listImageModels();
       setImageModels(models);
       const remembered = readInputHabit('images.model', '');
+      const preferred = models.find(model => model.recommended) ?? models[0];
       setImageModel(models.some(model => model.modelId === remembered)
         ? remembered
-        : (models[0]?.modelId || ''));
+        : (preferred?.modelId || ''));
       if (!models.length) message.warning('没有已启用的生图模型，请先到设置中配置');
+      else if (!models.some(model => model.isFree)) {
+        message.info('OpenRouter 当前没有免费生图模型，已选择推荐的低成本模型');
+      }
     } catch (e: any) { message.error(e.message); }
   };
 
@@ -813,7 +824,10 @@ export default function EpisodeDetail() {
             setImageModel(value);
             writeInputHabit('images.model', value);
           }}
-            options={imageModels.map(m => ({ value: m.modelId, label: `${m.provider} / ${m.modelName}` }))} /></div>
+            options={imageModels.map(m => ({
+              value: m.modelId,
+              label: `${m.recommended ? '推荐 · ' : ''}${m.modelName} · ${m.isFree ? '免费' : '付费'}`,
+            }))} /></div>
           <div><Text type="secondary">本次使用的提示词</Text><TextArea rows={12} value={imagePrompt} onChange={e => setImagePrompt(e.target.value)} /></div>
           <Text type="secondary">不会覆盖旧图片；生成后可在版本列表中切换当前图。</Text>
         </Space>

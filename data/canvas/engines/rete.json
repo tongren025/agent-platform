@@ -1,0 +1,53 @@
+{
+  "engine": "rete",
+  "content": {
+    "version": 1,
+    "nodes": [
+      {
+        "id": "46f5dfcb692246db",
+        "kind": "prompt",
+        "label": "输入提示词",
+        "text": "生成一组漫剧分镜",
+        "position": {
+          "x": 80,
+          "y": 180
+        }
+      },
+      {
+        "id": "b53f6ff32a2091f0",
+        "kind": "agent",
+        "label": "AI 处理节点",
+        "text": "按分镜规范拆解镜头",
+        "position": {
+          "x": 360,
+          "y": 180
+        }
+      },
+      {
+        "id": "6ff73f8f6909078a",
+        "kind": "output",
+        "label": "输出结果",
+        "text": "结构化分镜数据",
+        "position": {
+          "x": 660,
+          "y": 180
+        }
+      }
+    ],
+    "connections": [
+      {
+        "source": "46f5dfcb692246db",
+        "sourceOutput": "output",
+        "target": "b53f6ff32a2091f0",
+        "targetInput": "input"
+      },
+      {
+        "source": "b53f6ff32a2091f0",
+        "sourceOutput": "output",
+        "target": "6ff73f8f6909078a",
+        "targetInput": "input"
+      }
+    ]
+  },
+  "updated_at": "2026-07-29T04:08:16.889520+00:00"
+}

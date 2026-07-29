@@ -99,6 +99,9 @@ interface MediaModel {
   pricing?: Record<string, string | number>;
   supportedResolutions?: string[];
   supportedAspectRatios?: string[];
+  isFree?: boolean;
+  recommended?: boolean;
+  recommendationReason?: string;
 }
 
 const ACTIVE_VIDEO_STATUSES = new Set([
@@ -179,6 +182,8 @@ function stagePercent(stage: StageState) {
 }
 
 function modelPriceLabel(model: MediaModel | undefined, kind: MediaKind) {
+  if (model?.isFree) return '免费';
+  if (kind === 'image') return '付费 · 以 OpenRouter 实际结算为准';
   if (!model?.pricing || Object.keys(model.pricing).length === 0) return '价格以 OpenRouter 结算为准';
   if (kind === 'video') {
     const value = model.pricing['per-video-second'] ?? model.pricing['per_video_second'];
@@ -796,9 +801,10 @@ export default function DirectorStudio() {
         && currentProjectRef.current === mediaProjectId
       ) {
         setMediaModels(models);
+        const recommendedModel = models.find(model => model.recommended) ?? models[0];
         setMediaModel(models.some(model => model.id === rememberedModel)
           ? rememberedModel
-          : (models[0]?.id || ''));
+          : (recommendedModel?.id || ''));
       }
     } catch (error: any) {
       if (
@@ -1827,6 +1833,11 @@ export default function DirectorStudio() {
             <span>{mediaKind === 'image' ? '1K · 项目画幅' : '720p · 首帧转视频 · 同步音频'}</span>
           </div>
           <label>OpenRouter 模型</label>
+          {mediaKind === 'image' && mediaModels.length > 0 && !mediaModels.some(model => model.isFree) && (
+            <div className="director-media-warning">
+              OpenRouter 当前没有免费生图模型；已优先推荐低成本且支持多张角色参考图的模型。
+            </div>
+          )}
           <Select
             showSearch
             loading={modelLoading}
@@ -1839,10 +1850,14 @@ export default function DirectorStudio() {
             optionFilterProp="label"
             options={mediaModels.map(model => ({
               value: model.id,
-              label: `${model.name} · ${modelPriceLabel(model, mediaKind || 'image')}`,
+              label: `${model.recommended ? '推荐 · ' : ''}${model.name} · ${modelPriceLabel(model, mediaKind || 'image')}`,
             }))}
           />
-          {selectedModel && <Text type="secondary">{modelPriceLabel(selectedModel, mediaKind || 'image')}</Text>}
+          {selectedModel && (
+            <Text type="secondary">
+              {selectedModel.recommendationReason || modelPriceLabel(selectedModel, mediaKind || 'image')}
+            </Text>
+          )}
           {busy.startsWith('batch-') && batchProgress.total > 0 && (
             <div
               aria-live="polite"

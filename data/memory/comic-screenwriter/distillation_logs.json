@@ -1,265 +1,5 @@
 [
   {
-    "logId": "dist_c1822194dd41",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-07-01T03:01:45.528254Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-screenwriter_sem_06",
-        "mergeIntoId": "v3_comic-screenwriter_sem_11_short_drama_rhythm",
-        "newContent": "竖屏短剧节奏硬规则：前3秒必须有情绪炸点或视觉冲击(算法推荐关键),单句台词≤10字,单镜头1-2秒,剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),单集15-25分镜,总时长1-3分钟,结尾5秒必须有反转或悬念钩子。不要连续3个同景别。节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。",
-        "newImportance": null,
-        "reason": "两条记忆均在描述竖屏短剧的节奏硬规则，内容高度重合，合并后可覆盖所有关键指标。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "mem_e732e9466139",
-        "mergeIntoId": "seed_comic-screenwriter_sem_08_cause_chain",
-        "newContent": "镜头/场景之间必须是“因为 A 所以 B 但是 C”的因果链，而不是简单的“然后 A 然后 B”，确保叙事逻辑的强驱动性。",
-        "newImportance": null,
-        "reason": "两者均强调因果链叙事而非线性叙事，语义完全一致。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "mem_79ef29e736c9",
-        "mergeIntoId": "mem_f6264eeedcb5",
-        "newContent": "三幕结构是一切叙事的骨架：建置25%(开篇20-30分钟/漫剧前段确立目标)、对抗50%(中点制造重大转折)、解决25%(推向高潮)，任何偏离都需要有意识的理由。",
-        "newImportance": null,
-        "reason": "均在描述三幕剧结构及其时间分布，可合并为通用知识点。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "duanju_spine_20260630_comic-screenwriter_law",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 1.0,
-        "reason": "该记忆被定义为【最高优先级,统管一切】，应将其重要性提升至最高值以确保指令权重。"
-      },
-      {
-        "action": "prune",
-        "memory_type": "semantic",
-        "targetId": "mem_3458fd41db5c",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": null,
-        "reason": "该记忆为对剧本解读维度的泛化描述，其内容已被更具体的“人物弧线”和“三幕结构”记忆覆盖，价值较低。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 34,
-      "episodic": 6,
-      "procedural": 11
-    },
-    "afterCounts": {
-      "semantic_count": 30,
-      "episodic_count": 6,
-      "procedural_count": 11
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 14671,
-    "error": null
-  },
-  {
-    "logId": "dist_b683fb1408fe",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-07-01T03:02:19.946018Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "seed_comic-screenwriter_sem_06_shot_count",
-        "mergeIntoId": "v3_comic-screenwriter_sem_11_short_drama_rhythm",
-        "newContent": "竖屏短剧节奏硬规则：前3秒必须有情绪炸点或视觉冲击(算法推荐关键),单句台词≤10字,单镜头1-2秒,单段≤6秒(超过角色变形),剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),单集15-25分镜,总时长1-3分钟,结尾5秒必须有反转或悬念钩子。不要连续3个同景别。节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。时间码格式[00:00-00:05]。",
-        "newImportance": null,
-        "reason": "两条记忆均涉及分镜时长、单集分镜数及Seedance生成限制，合并后形成完整的节奏控制标准。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-screenwriter_sem_04",
-        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
-        "newContent": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。每集必须包含：①嘴替台词(可截图传播)②前3秒钩子(不解释设定)③至少1个反转(以为A其实B)④结尾悬念钩子⑤情绪过山车⑥按秒拆解。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别这些电影美术手艺只是工具,必须服从短剧节奏,不是目的。",
-        "newImportance": null,
-        "reason": "两者均定义了短剧的最高优先级逻辑和核心构成要素，合并可强化“短剧法”的完整性。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "procedural",
-        "targetId": "learn_consolidation_20260630_comic-screenwriter_proc_01",
-        "mergeIntoId": "seed_comic-screenwriter_proc_01",
-        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；禁止先写抽象情绪或大纲式概述。Rationale: 下游只能生成可见画面，抽象情绪无法生产，爆款差距在于按秒拆解的执行力。",
-        "newImportance": null,
-        "reason": "两者均强调“可见动作优先”和“拒绝抽象/概述”，合并后统一了镜头拆分的执行标准。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_f6264eeedcb5",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.4,
-        "reason": "该记忆关于传统电影三幕结构，与当前高优先级、快节奏的竖屏短剧逻辑（duanju_spine）存在冲突，降低其权重以防止干扰短剧创作。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_ce076c6ef1af",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.4,
-        "reason": "Save the Cat 节拍表是长篇叙事工具，在 60-90 秒的短剧逻辑中适用性较低，降低权重。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 30,
-      "episodic": 6,
-      "procedural": 11
-    },
-    "afterCounts": {
-      "semantic_count": 28,
-      "episodic_count": 6,
-      "procedural_count": 10
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 18828,
-    "error": null
-  },
-  {
-    "logId": "dist_45fa860fb7c4",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-07-01T03:03:26.470845Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "v3_comic-screenwriter_sem_11_short_drama_rhythm",
-        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
-        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧，不是电影。节奏=信息/反转密度：每1-2秒砸一个新事件/反转/钩子/嘴替台词。核心硬规则：①前3秒必须有情绪炸点或视觉冲击(算法关键)；②单句台词≤10字，单镜头1-2秒，单段≤6秒(防止角色变形)；③剪辑beat 1-2秒(Seedance源片4-5s，后在剪映剪碎)；④每集15-25个事件beat，总长1-3分钟；⑤结尾5秒必须有反转或悬念钩子；⑥不要连续3个同景别，节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。时间码格式[00:00-00:05]。构图/色彩/运镜等美术手艺必须服从短剧节奏。",
-        "newImportance": null,
-        "reason": "两条记忆均在定义竖屏短剧的节奏硬规则，前者侧重于具体参数，后者侧重于核心逻辑，合并后形成完整的短剧执行标准。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "seed_comic-screenwriter_sem_01_quality_clean_negative",
-        "mergeIntoId": "v3_comic-screenwriter_sem_09_seedance_rules",
-        "newContent": "Seedance 2.0生产规则（编剧必须遵守）：1.不读负向提示词,只用正向约束（如：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移） 2.每段≤6秒(超过角色变形) 3.禁止词:夸张/高速/快速/fast/剧烈/激烈(导致运动模糊) 4.动作写身体部位级,优先慢速连续小动作 5.镜头运动和角色动作分开写 6.每镜只一个运镜,中英双写 7.每段末写「口型与字幕：台词内容」 8.音效用「音效：」前缀标注",
-        "newImportance": null,
-        "reason": "两者均涉及 Seedance 2.0 的正向约束规则，将具体的正向表述示例合并入生产规则中，提高检索效率。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "procedural",
-        "targetId": "learn_consolidation_20260630_comic-screenwriter_proc_03",
-        "mergeIntoId": "seed_comic-screenwriter_proc_01",
-        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。禁止先写抽象情绪或大纲式概述。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力。",
-        "newImportance": null,
-        "reason": "两条规则均关于镜头层级的具体执行细节（拆解方式与台词处理），合并后形成统一的镜头写作规范。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_09cf8f59c174",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "该记忆涉及核心戏剧冲突理论，虽为通用知识，但在实际剧本创作中具有较高指导价值，应提升权重。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_166151e53e55",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "对白功能化是专业剧本的基石，提升权重以强化对低质量对白的过滤。"
-      },
-      {
-        "action": "prune",
-        "memory_type": "semantic",
-        "targetId": "mem_ce076c6ef1af",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": null,
-        "reason": "该记忆关于 Save the Cat 的具体分钟数建议与当前主攻的“竖屏短剧/漫剧”极短时长逻辑相矛盾，且价值较低。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 28,
-      "episodic": 6,
-      "procedural": 10
-    },
-    "afterCounts": {
-      "semantic_count": 25,
-      "episodic_count": 6,
-      "procedural_count": 9
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 20453,
-    "error": null
-  },
-  {
-    "logId": "dist_63a092b3168d",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-07-01T03:04:36.123973Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-screenwriter_microdrama_03",
-        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
-        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧，不是电影。节奏=信息/反转密度：每1-2秒砸一个新事件/反转/钩子/嘴替台词。核心硬规则：①前3秒必须有情绪炸点或视觉冲击(算法关键)；②单句台词≤10字，单镜头1-2秒，单段≤6秒(防止角色变形)；③剪辑beat 1-2秒(Seedance源片4-5s，后在剪映剪碎)；④每集15-25个事件beat，总长1-3分钟；⑤结尾5秒必须有反转或悬念钩子；⑥不要连续3个同景别，节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。时间码格式[00:00-00:05]。构图/色彩/运镜等美术手艺必须服从短剧节奏。单集60-90秒竖屏，一切(场景长度/对白节奏/视觉语法)都服从'把观众锁到下一集'这一个目标。",
-        "newImportance": null,
-        "reason": "两条记忆均定义了竖屏短剧的核心节奏与目标，后者是对前者的补充，合并可提高指令密度。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-screenwriter_sem_05",
-        "mergeIntoId": "learn_consolidation_20260630_comic-screenwriter_sem_02",
-        "newContent": "「也是」贯穿线与嘴替台词：EP02苍霖被光拒绝后说「也是」(自嘲接受)→EP08老矿工笑着说「也是」(释然共鸣)。同词,六集成长后完全不同的重量。其他嘴替样例：『你的血流到样本上了。』(EP03艾拉冷淡)、『不是我们的事。』(EP07自欺)、『好大……』(EP10渺小)。",
-        "newImportance": null,
-        "reason": "两条记忆均在讨论“嘴替台词”及其在具体剧集中的应用，合并后形成完整的台词库。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "procedural",
-        "targetId": "mem_7aab15a4c595",
-        "mergeIntoId": "seed_comic-screenwriter_proc_01",
-        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。禁止先写抽象情绪或大纲式概述。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力。",
-        "newImportance": null,
-        "reason": "两者均强调将抽象情绪转化为具体可见画面的执行标准。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_f6264eeedcb5",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.6,
-        "reason": "三幕结构是通用知识，但在高节奏短剧（duanju_spine）的特定法则面前，其优先级应适当降低，避免在极短篇幅中僵化套用。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 25,
-      "episodic": 6,
-      "procedural": 9
-    },
-    "afterCounts": {
-      "semantic_count": 23,
-      "episodic_count": 6,
-      "procedural_count": 8
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 17093,
-    "error": null
-  },
-  {
     "logId": "dist_d87f50a753b6",
     "employeeKey": "comic-screenwriter",
     "ranAt": "2026-07-01T03:06:38.582513Z",
@@ -2279,6 +2019,81 @@
     "afterCounts": {},
     "llmModel": "",
     "durationMs": 30,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_eab1ee3d3b62",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-24T19:00:27.290730Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 16,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_b9410aa1d318",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-25T19:00:13.295043Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 46,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_cce4e4f12dc9",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-26T19:00:26.718835Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 77,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_9b15131176a9",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-28T13:53:36.659991Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 32,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_d5acbbbce9e6",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-28T19:00:15.173396Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 45,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
   }
 ]

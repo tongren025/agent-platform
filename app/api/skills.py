@@ -16,6 +16,7 @@ from pydantic import BaseModel
 
 from app.api.common import ok as _ok
 from app.config import BASE_DIR
+from app.services.chat_response import extract_chat_content
 
 router = APIRouter(prefix="/api/v1/agentapp/skills", tags=["skills"])
 
@@ -332,7 +333,7 @@ async def generate_analysis(force: bool = False) -> dict:
             max_tokens=4000,
         )
     )
-    raw = resp.choices[0].message.content or "{}"
+    raw = extract_chat_content(resp) or "{}"
 
     start = raw.find("{")
     end = raw.rfind("}") + 1

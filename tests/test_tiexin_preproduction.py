@@ -372,6 +372,205 @@ def test_scene_candidate_path_cannot_escape_project(
     assert issues == ["scene_view:A:path_outside_project"]
 
 
+def test_character_identity_detail_paths_reject_escape_and_duplicate(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(media_prep, "PROJECT_DIR", tmp_path)
+    character_dir = tmp_path / "assets" / "characters" / "details"
+    character_dir.mkdir(parents=True)
+    detail_path = character_dir / "front.png"
+    detail_path.write_bytes(b"front")
+    record = {
+        "identity_detail_paths": {
+            "front_identity": "assets/characters/details/front.png",
+            "duplicate": "assets/characters/details/front.png",
+            "escape": "assets/scenes/not-a-character.png",
+        },
+    }
+
+    safe_paths, issues = (
+        media_prep.safe_character_identity_detail_paths(record)
+    )
+
+    assert safe_paths == {"front_identity": detail_path.resolve()}
+    assert "identity_detail:duplicate:duplicate_path" in issues
+    assert "identity_detail:escape:path_outside_characters" in issues
+    assert media_prep.safe_character_identity_detail_paths(
+        {"identity_detail_paths": []}
+    ) == ({}, ["identity_details:not_a_mapping"])
+
+
+def test_character_turnaround_approval_binds_identity_detail_files(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(media_prep, "PROJECT_DIR", tmp_path)
+    (tmp_path / "PREPRODUCTION_ASSET_SPEC.md").write_text(
+        "test spec",
+        encoding="utf-8",
+    )
+    character_dir = tmp_path / "assets" / "characters"
+    turnaround_path = character_dir / "turnarounds" / "daily.png"
+    front_path = character_dir / "details" / "front.png"
+    right_path = character_dir / "details" / "right.png"
+    left_path = character_dir / "details" / "left-negative.png"
+    turnaround_path.parent.mkdir(parents=True)
+    front_path.parent.mkdir(parents=True)
+    turnaround_path.write_bytes(b"turnaround")
+    front_path.write_bytes(b"front")
+    right_path.write_bytes(b"right")
+    left_path.write_bytes(b"left-negative")
+    expected_details = {
+        "front_identity": front_path,
+        "right_marker_closeup": right_path,
+        "left_marker_negative": left_path,
+    }
+    monkeypatch.setattr(
+        media_prep,
+        "CHARACTER_TURNAROUND_IDENTITY_DETAILS",
+        {"R1_daily": expected_details},
+    )
+    record = {
+        "path": "assets/characters/turnarounds/daily.png",
+        "status": "approved",
+        "identity_detail_paths": {
+            role: media_prep.project_relative(path)
+            for role, path in expected_details.items()
+        },
+        "file_sha256": media_prep.file_sha256(turnaround_path),
+        "spec_fingerprint": media_prep.preproduction_spec_fingerprint(
+            "character_turnarounds",
+            "R1_daily",
+        ),
+    }
+    candidate_paths = [turnaround_path, *expected_details.values()]
+    record["content_fingerprint"] = media_prep.stable_fingerprint([
+        {
+            "path": media_prep.project_relative(path),
+            "file_sha256": media_prep.file_sha256(path),
+        }
+        for path in candidate_paths
+    ])
+    approvals = {"character_turnarounds": {"R1_daily": record}}
+
+    assert media_prep.approval_record_matches(
+        approvals,
+        group="character_turnarounds",
+        key="R1_daily",
+        path=turnaround_path,
+    )
+
+    right_path.write_bytes(b"silently-replaced-right")
+    assert not media_prep.approval_record_matches(
+        approvals,
+        group="character_turnarounds",
+        key="R1_daily",
+        path=turnaround_path,
+    )
+
+
+def test_r1_reference_package_keeps_triptych_and_positive_identity_details() -> None:
+    paths = media_prep.character_reference_paths(
+        "R1",
+        scene_id="LAB",
+        battle=False,
+    )
+
+    assert [path.name for path in paths] == [
+        "R1_shenyao_face_front_candidate_v5.png",
+        "R1_shenyao_face_right_profile_candidate_v5.png",
+        "R1_shenyao_daily_turnaround_candidate_v1.png",
+    ]
+    assert all("left_profile_negative" not in path.name for path in paths)
+
+
+def test_active_character_cards_do_not_reintroduce_legacy_single_angle_outfits() -> None:
+    manifest = build_manifest()
+
+    assert all(
+        set(assets) == {"face"}
+        for assets in manifest["character_assets"].values()
+    )
+    assert not any(
+        legacy_name in path
+        for assets in manifest["character_assets"].values()
+        for path in assets.values()
+        for legacy_name in (
+            "R1_shenyao_full_v3.png",
+            "R1_shenyao_tactical_v3.png",
+            "R2_linghao_full_v3.png",
+            "R2_linghao_tactical_v3.png",
+            "R2_linghao_home.png",
+            "R3_hanshaoqing_full_v3.png",
+        )
+    )
+
+
+def test_character_identity_detail_validation_allows_cross_package_sharing(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(media_prep, "PROJECT_DIR", tmp_path)
+    monkeypatch.setattr(
+        media_validator,
+        "CHARACTER_TURNAROUNDS",
+        {"R1": {"daily": Path("daily.png"), "tactical": Path("tactical.png")}},
+    )
+    character_dir = tmp_path / "assets" / "characters" / "details"
+    character_dir.mkdir(parents=True)
+    detail_paths = {
+        "front_identity": character_dir / "front.png",
+        "right_marker_closeup": character_dir / "right.png",
+        "left_marker_negative": character_dir / "left.png",
+    }
+    for index, path in enumerate(detail_paths.values()):
+        path.write_bytes(f"detail-{index}".encode())
+    expected = {
+        "R1_daily": detail_paths,
+        "R1_tactical": detail_paths,
+    }
+    monkeypatch.setattr(
+        media_validator,
+        "CHARACTER_TURNAROUND_IDENTITY_DETAILS",
+        expected,
+    )
+    monkeypatch.setattr(
+        media_validator,
+        "check_image",
+        lambda path, *, require_portrait: {
+            "path": str(path),
+            "size_bytes": path.stat().st_size,
+            "width": 900,
+            "height": 1600,
+            "valid": True,
+            "errors": [],
+        },
+    )
+    relative_details = {
+        role: path.relative_to(tmp_path).as_posix()
+        for role, path in detail_paths.items()
+    }
+    approvals = {
+        "character_turnarounds": {
+            "R1_daily": {"identity_detail_paths": relative_details},
+            "R1_tactical": {"identity_detail_paths": relative_details},
+        },
+    }
+
+    result = media_validator.validate_character_identity_details(approvals)
+
+    assert result["expected"] == 6
+    assert result["present"] == 6
+    assert result["valid"] == 6
+    assert result["missing"] == []
+    assert result["invalid"] == []
+    assert all(
+        not package["duplicate_role_groups"]
+        for package in result["packages"].values()
+    )
+
+
 def test_scene_package_view_validation_rejects_duplicate_content(
     tmp_path: Path,
     monkeypatch,

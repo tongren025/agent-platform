@@ -17,6 +17,7 @@ from pathlib import Path
 
 from app.config import BASE_DIR
 from app.models.distillation import DistillationAction, DistillationLog
+from app.services.chat_response import extract_chat_content
 
 logger = logging.getLogger(__name__)
 
@@ -196,7 +197,7 @@ async def run_distillation(employee_key: str) -> DistillationLog:
                 max_tokens=3000,
             )
         )
-        raw = resp.choices[0].message.content or "[]"
+        raw = extract_chat_content(resp) or "[]"
     except Exception as exc:
         log.error = f"LLM 调用失败: {exc}"
         log.duration_ms = int((time.monotonic() - t0) * 1000)

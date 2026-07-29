@@ -17,6 +17,7 @@ from pydantic import BaseModel
 from app.api.common import BAD_KEY_RE, ok as _ok
 from app.config import resolve_secret, settings
 from app.dependencies import ai_service
+from app.services.chat_response import extract_chat_content
 
 router = APIRouter(prefix="/api/v1/agentapp/agent")
 logger = logging.getLogger(__name__)
@@ -431,7 +432,11 @@ def test_ai_provider(name: str):
             max_tokens=5,
             timeout=15,
         )
-        return _ok({"success": True, "model": model_id, "reply": resp.choices[0].message.content})
+        return _ok({
+            "success": True,
+            "model": model_id,
+            "reply": extract_chat_content(resp),
+        })
     except Exception as exc:
         return _ok({"success": False, "model": model_id, "error": str(exc)})
 

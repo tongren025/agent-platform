@@ -1,55 +1,5 @@
 [
   {
-    "logId": "evo_52efe1a6c049",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-06-30T04:13:21.080329Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 14,
-    "error": null
-  },
-  {
-    "logId": "evo_2951bbc6d9a1",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-06-30T04:13:51.024119Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_bce0f853b09c",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-06-30T04:15:55.851888Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_1475e1681887",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-06-30T10:46:32.814293Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_14fffbf03b89",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-06-30T10:51:15.308683Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_fee6ad39515d",
     "employeeKey": "comic-vfx-designer",
     "ranAt": "2026-07-01T03:10:58.575202Z",
@@ -497,6 +447,56 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_03aed8a87333",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-24T20:00:30.137016Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_bfc4ef3b32bc",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-25T20:00:16.729358Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_1eec47c60d90",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-26T20:00:29.758637Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_33c8640d9328",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-28T13:53:37.203095Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_eb5889a5ab7a",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-28T20:00:16.963357Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
     "error": null
   }
 ]

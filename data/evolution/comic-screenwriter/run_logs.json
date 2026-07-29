@@ -1,55 +1,5 @@
 [
   {
-    "logId": "evo_5904d4d55cc0",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-06-30T04:13:21.042330Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_4ec0f3f46ca1",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-06-30T04:13:50.974595Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_2deaa1b55a6c",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-06-30T04:15:55.817232Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 15,
-    "error": null
-  },
-  {
-    "logId": "evo_a82f1b13095b",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-06-30T10:46:32.708743Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_3872c7a261a0",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-06-30T10:51:15.061660Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_37ab608c367c",
     "employeeKey": "comic-screenwriter",
     "ranAt": "2026-07-01T03:10:58.500813Z",
@@ -497,6 +447,56 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_07e2d3012bb6",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-24T20:00:30.113718Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_0f5873beac87",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-25T20:00:16.704044Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_2ddd54946126",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-26T20:00:29.720180Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_6d25ec7e87ee",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-28T13:53:37.176093Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_af39d9d5fccb",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-28T20:00:16.910359Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
     "error": null
   }
 ]

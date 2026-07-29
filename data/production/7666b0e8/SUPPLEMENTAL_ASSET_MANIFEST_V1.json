@@ -1,0 +1,77 @@
+{
+  "version": "nine_continents_gc_supplemental_v1",
+  "generated_with": "built_in_image_gen",
+  "date": "2026-07-29",
+  "asset_count": 8,
+  "continuity_anchor_count": 2,
+  "end_frame_count": 6,
+  "contact_sheet": "SUPPLEMENTAL_IMAGES_V1_CONTACT_SHEET.jpg",
+  "prompt_source": "SUPPLEMENTAL_IMAGE_PROMPTS_V1.json",
+  "formal_first_frame_manifest": "V3_ASSET_MANIFEST.json",
+  "assets": [
+    {
+      "id": "CHAR_Canglin_anchor",
+      "path": "uploads/supplemental/CHAR_Canglin_anchor.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1760523,
+      "sha256": "c9eadb662a0c3e4141465ee4b4aec641dda831f47a95886808c9ac278d140064"
+    },
+    {
+      "id": "CRE_Dragon_anchor",
+      "path": "uploads/supplemental/CRE_Dragon_anchor.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1793416,
+      "sha256": "78cacc68516f5348ca1ec5c526b8ef31e4a83707d9b3e6fe1bdb2836b9c8bff7"
+    },
+    {
+      "id": "W02_end",
+      "path": "uploads/supplemental/W02_end.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1877561,
+      "sha256": "fe51a73c5029571befc0ee954e23f4ceb93571ee973aaca5b54f7b8ed5cb72e0"
+    },
+    {
+      "id": "W03_end",
+      "path": "uploads/supplemental/W03_end.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2266050,
+      "sha256": "a9ff80092004ffadb1e4e528a692864b946e74b639e61cbfed15d0a5941bd23b"
+    },
+    {
+      "id": "W05_end",
+      "path": "uploads/supplemental/W05_end.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1646309,
+      "sha256": "53835fee1a4e845134371806a72a9a55166cecb3ebcbbc24fad3ad00b8680a6c"
+    },
+    {
+      "id": "W08_end",
+      "path": "uploads/supplemental/W08_end.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1746669,
+      "sha256": "1a9c9586274ebbd7fab8f9368b2eb818e489dc402ba659d6155641a1ac4ad9a4"
+    },
+    {
+      "id": "W10_end",
+      "path": "uploads/supplemental/W10_end.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1870497,
+      "sha256": "3cd6b55b4eb3e20d48be6db33fcd0b78d5c93db0222111737a87259775239888"
+    },
+    {
+      "id": "W12_end",
+      "path": "uploads/supplemental/W12_end.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2082460,
+      "sha256": "1a82fff44557fbdd7cf4f990660cad6131f28f674ee18e47bfec0e137d27ee68"
+    }
+  ]
+}

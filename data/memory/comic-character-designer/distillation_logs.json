@@ -1,200 +1,5 @@
 [
   {
-    "logId": "dist_f4cfc56a66ad",
-    "employeeKey": "comic-character-designer",
-    "ranAt": "2026-07-01T03:02:00.217435Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-character-designer_sem_02",
-        "mergeIntoId": "seed_comic-character-designer_sem_06_aila_lock",
-        "newContent": "R1艾拉固定方向：明确成年的年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，暗金属法杖/铁管式施法媒介。",
-        "newImportance": null,
-        "reason": "两条记忆均定义艾拉的角色外观，前者侧重于整体方向，后者补充了具体身体特征（蓝瞳、肤色）及R编号，合并后形成完整角色定义。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-character-designer_sem_05",
-        "mergeIntoId": "seed_comic-character-designer_sem_02_style_core",
-        "newContent": "九陆纪元视觉核心（所有提示词必带风格锚点）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
-        "newImportance": null,
-        "reason": "两者内容完全一致，仅一个定义为核心，一个定义为必带锚点，合并以消除冗余。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "mem_05aa727317b1",
-        "mergeIntoId": "learn_consolidation_20260630_comic-character-designer_sem_01",
-        "newContent": "R3苍霖设定：16岁少年/黑色短碎发凌乱/左脸颊竖向旧伤疤/偏瘦有韧劲/深褐近黑瞳孔/偏暗肤色。三阶段服装：EP01-03早期=破烂灰褐麻布短衣/赤脚/胸口布条绑龙骨碎片；EP04-08中期=同上+旧毯子当披风；EP09-10后期=深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚。辨识特征：旧疤+龙骨碎片。表情外化：隐忍=牙关咬紧眼眶泛红不流泪，空洞=瞳孔微放大嘴唇微张。每镜必完整复述。",
-        "newImportance": null,
-        "reason": "mem_05aa727317b1 提供了更详细的身体特征和表情外化描述，而 sem_01 提供了关键的时间线阶段变化，合并后形成完整的角色资产库。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-character-designer_color_03",
-        "mergeIntoId": "pro_craft_deep_20260630_comic-character-designer_film_color_01",
-        "newContent": "色彩是叙事决策而非装饰：配色必须对齐角色/主题/情绪，暖色/冷色触发不同心理联想。整片应先做color script规划色调随情绪走向变化。（来源:StudioBinder/维基百科）",
-        "newImportance": null,
-        "reason": "两者均讨论色彩作为情绪工具的叙事功能，合并后增强理论支撑。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-character-designer_concept_art_02",
-        "mergeIntoId": "pro_canon_wiki_20260630_comic-character-designer_concept_art_01",
-        "newContent": "概念艺术（Concept Art）=用插画把想法视觉化，是视觉开发(visual development)的源头，直接关联分镜与接景。位于3D/正式制作之前，作用是给后续所有环节提供统一的视觉参考与灵感。（来源:维基百科）",
-        "newImportance": null,
-        "reason": "两条记忆均定义概念艺术，内容互补，合并后逻辑更完整。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 34,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 29,
-      "episodic_count": 3,
-      "procedural_count": 5
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 20891,
-    "error": null
-  },
-  {
-    "logId": "dist_cfa3bc4232b7",
-    "employeeKey": "comic-character-designer",
-    "ranAt": "2026-07-01T03:02:38.775276Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "seed_comic-character-designer_sem_01_quality_clean_negative",
-        "mergeIntoId": "v3_comic-character-designer_sem_09_seedance_rules",
-        "newContent": "Seedance 2.0角色管理与质量规则：1.绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。2.每个角色分配R编号(R1=艾拉,R2=巨龙,R3=...),全剧统一。3.角色固定词必须逐字复制到每条提示词,禁止缩写或写「同上」。4.固定词使用具体名词,禁用「漂亮的」等抽象形容词。",
-        "newImportance": null,
-        "reason": "两条记忆均关于Seedance 2.0的正向约束规则和负向词禁用，合并后可提高指令密度，减少冗余。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-character-designer_shape_language_02",
-        "mergeIntoId": "pro_craft_deep_20260630_comic-character-designer_shape_language_01",
-        "newContent": "形状语言与剪影验收：1.形状心理：圆=友善柔软安全，方=稳定可靠/英雄导师，三角=动感攻击/反派。2.剪影测试：通过形状决定剪影、比例、服装、五官，确保仅凭剪影即可识别身份性格，这是角色设计的行业验收标准。（来源:CharacterBazaar/vsquad）",
-        "newImportance": null,
-        "reason": "两条记忆均讨论形状语言及其在角色设计中的应用，逻辑上属于同一知识点。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-character-designer_costume_01",
-        "mergeIntoId": "pro_craft_deep2_20260630_comic-character-designer_costume_02",
-        "newContent": "服装叙事理论：服装是角色开口前的名片，通过颜色/面料/破损/合身度在第一眼传达身份与处境。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 $\rightarrow$ 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。苍霖早中后期服装正是此法。（来源:Studiovity/AMPAS）",
-        "newImportance": null,
-        "reason": "均关于服装设计对角色叙事的影响，合并后将通用理论与具体案例（苍霖）结合。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-character-designer_expression_02",
-        "mergeIntoId": "pro_craft_deep2_20260630_comic-character-designer_expression_01",
-        "newContent": "表情设计准则：1.核心三件套：眉/眼/嘴承担最大情绪表达，先定这三者再加细节。2.普世情绪组合：怒=眉锁下压+抿唇，惧=睁眼扬眉微张嘴，惊=扬眉瞪眼张嘴。要求表情必须一眼可读（1/12秒内识别）。（来源:AnimeOutline/Clip Studio）",
-        "newImportance": null,
-        "reason": "均关于表情设计的具体执行方法，合并后形成完整的从结构到情绪的指南。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-character-designer_anatomy_02",
-        "mergeIntoId": "pro_craft_deep2_20260630_comic-character-designer_anatomy_01",
-        "newContent": "人体比例基准：成人约7.5-8头高(女7.5)，肩宽男2-2.5头/女2头；自然下垂时肘对腰、腕对裆。理想比例仅为基准，可通过有依据地偏离（如Q版大头/英雄8.5头）来创造风格。（来源:TheDrawingSource/Anatomy Masterclass）",
-        "newImportance": null,
-        "reason": "均关于人体比例，将标准比例与风格化偏离合并。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-character-designer_color_02",
-        "mergeIntoId": "pro_canon_wiki_20260630_comic-character-designer_color_01",
-        "newContent": "色彩理论基础：1.三属性：色相/明度/饱和度，通过独立调整其中一项控制画面。2.对比关系：互补色（色轮相对）制造最大对比张力，类似色（色轮相邻）自然和谐。冲突场景用互补，统一氛围用类似。（来源:维基百科）",
-        "newImportance": null,
-        "reason": "均属于基础色彩理论知识点。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 29,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 23,
-      "episodic_count": 3,
-      "procedural_count": 5
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 24639,
-    "error": null
-  },
-  {
-    "logId": "dist_baca5f34ab1c",
-    "employeeKey": "comic-character-designer",
-    "ranAt": "2026-07-01T03:03:46.936584Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "v3_comic-character-designer_sem_10_master_image",
-        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
-        "newContent": "CHAR资产库四层结构：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例 2.装备层(场景内固定,跨场景可切换)=服装结构/标志物/武器法器/材质/配色 3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡 4.母版图层=正面全身定妆照(白色背景,清晰五官和服装细节),作为@图片锚定,是工业化生产角色一致性的基础。每层有明确的变化规则,防止角色漂移。",
-        "newImportance": null,
-        "reason": "母版图机制是CHAR四层结构中的第四层，合并后逻辑更完整，减少冗余。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "procedural",
-        "targetId": "learn_consolidation_20260630_comic-character-designer_proc_02",
-        "mergeIntoId": "seed_comic-character-designer_proc_02",
-        "newContent": "每个角色都要有：R编号、母版图提示词(含正面/侧面/背面三视图供下游@图片引用)、正向固定词(2-3个核心视觉识别特征)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 不写负向提示词。",
-        "newImportance": null,
-        "reason": "三视图母版要求与角色设定标准流程高度重合，合并至通用流程中。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-character-designer_costume_02",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "该理论直接指导了R3苍霖的三阶段服装设计，具有实际应用价值，应提升权重。"
-      },
-      {
-        "action": "prune",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-character-designer_concept_art_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": null,
-        "reason": "纯定义性知识，在已有具体工作流（母版图、CHAR层）的情况下，该通用定义价值极低。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 23,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 21,
-      "episodic_count": 3,
-      "procedural_count": 4
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 12061,
-    "error": null
-  },
-  {
     "logId": "dist_74c04e7ec722",
     "employeeKey": "comic-character-designer",
     "ranAt": "2026-07-01T03:04:53.233754Z",
@@ -1971,6 +1776,81 @@
     "afterCounts": {},
     "llmModel": "",
     "durationMs": 30,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_59de6bab948b",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-24T19:00:27.321660Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 31,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_2f9ec8407816",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-25T19:00:13.341479Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 63,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_8c8f07464e0d",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-26T19:00:26.797560Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 78,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_59dee8b14a05",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-28T13:53:36.697993Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 31,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_cc0b4c8af737",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-28T19:00:15.218398Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 32,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
   }
 ]

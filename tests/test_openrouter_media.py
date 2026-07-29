@@ -7,6 +7,8 @@ import base64
 import pytest
 
 from app.services import openrouter_media
+from app.services import image_generation
+from app.api import canvas
 
 
 class FakeResponse:
@@ -18,6 +20,115 @@ class FakeResponse:
 
     def json(self) -> dict:
         return self._body
+
+
+def test_list_image_models_marks_paid_and_recommends_low_cost_model(monkeypatch):
+    """文本 token 免费不等于图片免费，且角色一致性模型应排在默认首位。"""
+    image_models = {
+        "data": [
+            {
+                "id": "expensive/new-image",
+                "name": "Newest Image",
+                "architecture": {"output_modalities": ["image"]},
+            },
+            {
+                "id": openrouter_media.RECOMMENDED_IMAGE_MODEL,
+                "name": "Recommended Image",
+                "architecture": {
+                    "input_modalities": ["text", "image"],
+                    "output_modalities": ["image"],
+                },
+                "supported_parameters": {
+                    "aspect_ratio": {"values": ["9:16"]},
+                    "input_references": {"max": 14},
+                },
+            },
+        ]
+    }
+    catalog = {
+        "data": [
+            {
+                "id": "expensive/new-image",
+                "pricing": {"prompt": "0", "completion": "0", "image_output": "0.1"},
+            },
+            {
+                "id": openrouter_media.RECOMMENDED_IMAGE_MODEL,
+                "pricing": {"prompt": "0", "completion": "0", "image_output": "0.00003"},
+            },
+        ]
+    }
+
+    monkeypatch.setattr(
+        openrouter_media,
+        "_openrouter_config",
+        lambda: ("https://example.test/api/v1", "secret"),
+    )
+
+    def fake_get(url, **_kwargs):
+        return FakeResponse(catalog if url.endswith("/models") else image_models)
+
+    monkeypatch.setattr(openrouter_media.httpx, "get", fake_get)
+    models = openrouter_media.list_media_models("image")
+
+    assert models[0]["id"] == openrouter_media.RECOMMENDED_IMAGE_MODEL
+    assert models[0]["recommended"] is True
+    assert models[0]["isFree"] is False
+    assert models[1]["isFree"] is False
+
+
+def test_generic_image_generation_routes_openrouter_models(monkeypatch):
+    """带 openrouter 前缀的真实图片模型必须走专用 /images API，而非聊天供应商列表。"""
+    captured = {}
+
+    def fake_generate(**kwargs):
+        captured.update(kwargs)
+        return {
+            "content": b"image",
+            "suffix": ".png",
+            "model": kwargs["model"],
+            "usage": {},
+        }
+
+    monkeypatch.setattr(openrouter_media, "generate_image_bytes", fake_generate)
+    monkeypatch.setattr(
+        image_generation,
+        "_save_image_bytes",
+        lambda content, ext: f"/uploads/canvas/result{ext}",
+    )
+    result = image_generation.generate_image_to_local(
+        "portrait",
+        f"openrouter:{openrouter_media.RECOMMENDED_IMAGE_MODEL}",
+        "720x1280",
+    )
+
+    assert captured["model"] == openrouter_media.RECOMMENDED_IMAGE_MODEL
+    assert captured["aspect_ratio"] == "9:16"
+    assert captured["resolution"] == "1K"
+    assert result["url"] == "/uploads/canvas/result.png"
+
+
+def test_canvas_image_models_only_returns_verified_media_models(monkeypatch):
+    """画布生图下拉框不能再混入 openrouter/free 等纯文字模型。"""
+    monkeypatch.setattr(
+        canvas.openrouter_media,
+        "list_media_models",
+        lambda kind: [{
+            "id": openrouter_media.RECOMMENDED_IMAGE_MODEL,
+            "name": "Recommended Image",
+            "pricing": {"image_output": "0.00003"},
+            "isFree": False,
+            "recommended": True,
+            "recommendationReason": "适合角色一致性",
+            "supportedParameters": {},
+        }],
+    )
+
+    body = canvas.list_image_models()
+    models = body["data"]
+    assert len(models) == 1
+    assert models[0]["modelId"].startswith("openrouter:")
+    assert models[0]["actualModelId"] == openrouter_media.RECOMMENDED_IMAGE_MODEL
+    assert models[0]["recommended"] is True
 
 
 def test_generate_image_encodes_local_input_references(tmp_path, monkeypatch):

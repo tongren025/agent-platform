@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from app.config import BASE_DIR
+from app.services.chat_response import extract_chat_content
 
 logger = logging.getLogger(__name__)
 
@@ -264,7 +265,7 @@ async def generate_digest(force: bool = False) -> dict:
             max_tokens=2000,
         )
     )
-    raw = resp.choices[0].message.content or "[]"
+    raw = extract_chat_content(resp) or "[]"
     start, end = raw.find("["), raw.rfind("]") + 1
     if start < 0 or end <= start:
         raise ValueError("LLM 未返回 JSON 数组")

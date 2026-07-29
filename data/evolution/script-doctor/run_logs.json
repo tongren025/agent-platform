@@ -358,5 +358,55 @@
     "llmModel": "",
     "durationMs": 0,
     "error": null
+  },
+  {
+    "logId": "evo_4468f6e798ca",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-24T20:00:30.081508Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_db524363ec34",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-25T20:00:16.670648Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_9b879c0e1063",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-26T20:00:29.671126Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_b3088c87911a",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-28T13:53:37.142961Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_712b290b59f3",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-28T20:00:16.846534Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
   }
 ]

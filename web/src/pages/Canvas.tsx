@@ -36,7 +36,14 @@ const { Text, Title } = Typography;
 const { TextArea } = Input;
 
 interface CanvasSummary { canvas_id: string; name: string; nodeCount: number; updated_at: string }
-interface ImageModel { provider: string; modelId: string; modelName: string }
+interface ImageModel {
+  provider: string;
+  modelId: string;
+  modelName: string;
+  isFree?: boolean;
+  recommended?: boolean;
+  recommendationReason?: string;
+}
 
 const DERIVE_STAGES = ['script', 'setting', 'design', 'storyboard', 'img_prompt', 'vid_prompt'];
 const ALL_STAGES = Object.keys(STAGE_META);
@@ -166,7 +173,7 @@ function ZoomBar() {
   );
 }
 
-export default function Canvas() {
+export default function Canvas({ embedded = false }: { embedded?: boolean }) {
   const { isMobile } = useResponsive();
 
   const [canvases, setCanvases] = useState<CanvasSummary[]>([]);
@@ -357,6 +364,12 @@ export default function Canvas() {
       if (list.length > 0) setCurrentId(list[0].canvas_id);
     })();
   }, [loadCanvases]);
+
+  useEffect(() => {
+    if (!models.length || models.some(item => item.modelId === model)) return;
+    const preferred = models.find(item => item.recommended) ?? models[0];
+    setModel(preferred.modelId);
+  }, [model, models, setModel]);
 
   useEffect(() => { if (currentId) loadCanvas(currentId); }, [currentId, loadCanvas]);
   // ── 保存(1.2s 防抖 + 手动) ──
@@ -1242,7 +1255,7 @@ export default function Canvas() {
 
   const modelOptions = useMemo(() => models.map((m) => ({
     value: m.modelId,
-    label: `${m.provider} / ${m.modelName}`,
+    label: `${m.recommended ? '推荐 · ' : ''}${m.modelName} · ${m.isFree ? '免费' : '付费'}`,
   })), [models]);
 
   const empOptions = useMemo(() => employees.map((e) => ({
@@ -1337,7 +1350,7 @@ export default function Canvas() {
   }
 
   return (
-    <main aria-labelledby="canvas-title" style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <main aria-labelledby="canvas-title" style={{ height: embedded ? '100%' : 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
       {/* ── 顶栏 ── */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
         <Space>

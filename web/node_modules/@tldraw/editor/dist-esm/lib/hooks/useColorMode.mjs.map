@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/lib/hooks/useColorMode.ts"],
+  "sourcesContent": ["import { useValue } from '@tldraw/state-react'\nimport { useSvgExportContext } from '../editor/types/SvgExportContext'\nimport { useEditor } from './useEditor'\n\n/** @public */\nexport function useColorMode(): 'light' | 'dark' {\n\tconst editor = useEditor()\n\tconst exportContext = useSvgExportContext()\n\treturn useValue(\n\t\t'colorMode',\n\t\t() => {\n\t\t\tif (exportContext) return exportContext.colorMode\n\t\t\treturn editor.getColorMode()\n\t\t},\n\t\t[exportContext, editor]\n\t)\n}\n"],
+  "mappings": "AAAA,SAAS,gBAAgB;AACzB,SAAS,2BAA2B;AACpC,SAAS,iBAAiB;AAGnB,SAAS,eAAiC;AAChD,QAAM,SAAS,UAAU;AACzB,QAAM,gBAAgB,oBAAoB;AAC1C,SAAO;AAAA,IACN;AAAA,IACA,MAAM;AACL,UAAI,cAAe,QAAO,cAAc;AACxC,aAAO,OAAO,aAAa;AAAA,IAC5B;AAAA,IACA,CAAC,eAAe,MAAM;AAAA,EACvB;AACD;",
+  "names": []
+}

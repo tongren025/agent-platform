@@ -17,6 +17,7 @@ from app.models.memory_types import (
     ProceduralMemory,
     SemanticMemory,
 )
+from app.services.chat_response import extract_chat_content
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +109,7 @@ async def extract_memories(
             temperature=0.3,
             max_tokens=2000,
         )
-        raw = resp.choices[0].message.content or ""
+        raw = extract_chat_content(resp)
     except Exception as exc:
         logger.warning("记忆提取 LLM 调用失败: %s", exc)
         return None

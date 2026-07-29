@@ -492,11 +492,15 @@ export default function Employees() {
           <Form.Item label="绑定 MCP 服务器" name="mcpServerRefs">
             <Select mode="multiple" placeholder="选择该员工可连接的 MCP 服务器" options={mcpServers.map(m => ({ label: `${m.name} (${m.serverCode})`, value: m.serverCode }))} />
           </Form.Item>
-          <Divider orientation="left" plain style={{ fontSize: 13 }}>模型配置</Divider>
+          <Divider orientation="left" plain style={{ fontSize: 13 }}>文字与推理模型</Divider>
           <Row gutter={16}>
             <Col xs={24} sm={24} md={12}>
-              <Form.Item label="模型" name="modelId">
-                <Select showSearch placeholder="选择 AI 模型"
+              <Form.Item
+                label="员工思考模型"
+                name="modelId"
+                extra="这里只负责分析、写作和生成提示词，不是最终出图模型；生图时会单独选择真正支持图片输出的模型。"
+              >
+                <Select showSearch placeholder="选择文字/推理模型"
                   options={aiProviders.flatMap(p => (p.models ?? []).map((m: any) => ({ label: `${m.modelName || m.modelId}  (${p.name})`, value: m.modelId || m.modelName })))}
                 />
               </Form.Item>

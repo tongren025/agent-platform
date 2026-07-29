@@ -46445,3 +46445,154 @@ redis.exceptions.TimeoutError: Timeout connecting to server
 2026-07-24T09:29:35.080083Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/api/v1/agentapp/auth/check request_id=7a3c3d98c3534673b42e894e45523b07 status=401
 2026-07-24T09:29:35.092511Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.2 method=GET path=/api/v1/agentapp/auth/check request_id=0e807c432c88459aaa7d63298791f600 status=401
 2026-07-24T17:35:26.641723Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.3 method=GET path=/api/v1/agentapp/quick-prompts request_id=f54d1f56f2f144689e619f09618bdd66 status=401
+2026-07-24T17:46:52.625708Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.8 method=GET path=/health request_id=2cde0747e86548f18f7eba72194d2ffb status=200
+2026-07-24T17:46:58.787566Z [info     ] request                        client=127.0.0.1 elapsed_ms=85.0 method=POST path=/api/v1/agentapp/auth/login request_id=9c8c5ad8d90547f0b5678f8ddf209890 status=200
+2026-07-24T17:46:58.842126Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.0 method=GET path=/api/v1/agentapp/auth/check request_id=825fc3ef38f244009e9efb9e461feca0 status=200
+2026-07-24T17:46:58.888509Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/auth/check request_id=9de5b5d77a6c4f2dbaacd249086658ba status=200
+2026-07-24T17:46:58.902003Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/auth/check request_id=3ef16f89687e4a8ab47c49fe38c7f457 status=200
+2026-07-24T17:46:59.371500Z [info     ] request                        client=127.0.0.1 elapsed_ms=322.2 method=GET path=/api/v1/agentapp/production/projects request_id=6e04d3a482fd4015b8b0f3ea25b98975 status=200
+2026-07-24T17:46:59.524416Z [info     ] request                        client=127.0.0.1 elapsed_ms=140.0 method=GET path=/api/v1/agentapp/production/projects request_id=e9b6e1d7e0644f7eaa38c57eab8cbd20 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+2026-07-24T17:47:07.084391Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/auth/check request_id=f1bd64e1dfca492e8beab89f91858fe5 status=200
+2026-07-24T17:47:07.098049Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/auth/check request_id=c5a29b94aa5b49158183748396397f19 status=200
+2026-07-24T17:47:07.610527Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.8 method=GET path=/api/v1/agentapp/canvas/canvases request_id=940cf21979d54539b4e113443511940a status=200
+2026-07-24T17:47:07.622690Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.6 method=GET path=/api/v1/agentapp/canvas/image-models request_id=cc4b3c452363455cb4823e467563af2c status=200
+2026-07-24T17:47:07.631694Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.8 method=GET path=/api/v1/agentapp/registry/employees request_id=2add597979114555835d893d3d32877b status=200
+2026-07-24T17:47:07.647157Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.8 method=GET path=/api/v1/agentapp/canvas/canvases request_id=5d2d65a3ebe54e278a826e208bc5396c status=200
+2026-07-24T17:47:07.664141Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.7 method=GET path=/api/v1/agentapp/canvas/image-models request_id=e6740787455447bca35b69779a50d07c status=200
+2026-07-24T17:47:07.672143Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.7 method=GET path=/api/v1/agentapp/registry/employees request_id=2da2127a00544683864da4682a85c383 status=200
+2026-07-24T17:47:07.752064Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.9 method=GET path=/api/v1/agentapp/canvas/canvases/a387bd9e request_id=53da2ede608b4b7b9b21750362289405 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 5 retries remaining...
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 4 retries remaining...
+查询任务列表失败
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1107, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1010, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\selector_events.py", line 651, in sock_connect
+    return await fut
+           ^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-24T17:47:10.524412Z [info     ] request                        client=127.0.0.1 elapsed_ms=11137.0 method=GET path=/api/v1/agentapp/tasks request_id=f2c5be0bfe914efca943de464f6636be status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 3 retries remaining...
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 2 retries remaining...
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+查询任务列表失败
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 723, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1107, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1010, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\selector_events.py", line 651, in sock_connect
+    return await fut
+           ^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 290, in connect
+    await self.retry.call_with_retry(
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\retry.py", line 59, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 722, in _connect
+    async with async_timeout(self.socket_connect_timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\P\agent\app\api\tasks.py", line 113, in list_tasks
+    pool = await get_pool()
+           ^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\core\queue.py", line 45, in get_pool
+    _pool = await create_pool(_redis_settings())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\arq\connections.py", line 280, in create_pool
+    await pool.ping()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\client.py", line 641, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1100, in get_connection
+    await self.ensure_connection(connection)
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1133, in ensure_connection
+    await connection.connect()
+  File "D:\P\agent\.venv\Lib\site-packages\redis\asyncio\connection.py", line 296, in connect
+    raise TimeoutError("Timeout connecting to server")
+redis.exceptions.TimeoutError: Timeout connecting to server
+2026-07-24T17:47:17.972284Z [info     ] request                        client=127.0.0.1 elapsed_ms=11096.7 method=GET path=/api/v1/agentapp/tasks request_id=33b505c813ac4917b08463d5e450234c status=503
+2026-07-24T17:47:39.371286Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=afc2a8849f0e4211a85bc5a215311b80 status=401
+2026-07-24T17:47:39.435895Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=3baf1855499c42e986ddd04fffa61c66 status=401
+2026-07-24T17:47:39.496410Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=da435b7af3f74634a0b7d720ca524c07 status=401
+2026-07-24T17:47:39.557927Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=b5ed5c3a97f24265ba3c0492aae6fb73 status=401
+2026-07-24T17:47:39.619397Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=a22f844488144e74be33c74a8e29de73 status=401
+2026-07-24T17:47:39.682765Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=42bea037ea804f709eb6bbdbacd58283 status=401
+2026-07-24T17:47:39.767219Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.3 method=GET path=/api/v1/agentapp/quick-prompts request_id=867c71f210634b7389ec3d7644d48489 status=401
+2026-07-24T17:47:39.821847Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=07ead1195c904d47a7803c7d70b1a86e status=401
+2026-07-24T17:47:39.885688Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=26bfcf84385a48e397cc152ac3103d05 status=401
+2026-07-24T17:47:39.947405Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=1a3ffa7394174b31b027c7dd568e69a4 status=401
+2026-07-24T17:47:40.007729Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=635653fd25d14e7692328fc9081c9abd status=401
+2026-07-24T17:47:40.066215Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.2 method=GET path=/api/v1/agentapp/quick-prompts request_id=ec10e71bbb9c4a87b2abef94c3e5794f status=401
+2026-07-24T17:48:08.813598Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.2 method=POST path=/api/v1/agentapp/auth/login request_id=77fbf5f30c9b416493f43b3e419c00a6 status=401
+2026-07-24T17:48:49.313808Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=POST path=/api/v1/agentapp/auth/login request_id=5bce2638485f4181a93148d628e35da6 status=401
+2026-07-24T17:56:06.638191Z [info     ] request                        client=127.0.0.1 elapsed_ms=0.4 method=GET path=/api/v1/agentapp/quick-prompts request_id=63bcf256382c4e85b63b60c527bc0cb3 status=401

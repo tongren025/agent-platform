@@ -1,55 +1,5 @@
 [
   {
-    "logId": "evo_69789d2a878d",
-    "employeeKey": "comic-prompt-engineer",
-    "ranAt": "2026-06-30T04:13:21.105709Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_f43972a4036d",
-    "employeeKey": "comic-prompt-engineer",
-    "ranAt": "2026-06-30T04:13:51.050641Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 15,
-    "error": null
-  },
-  {
-    "logId": "evo_10fa76757065",
-    "employeeKey": "comic-prompt-engineer",
-    "ranAt": "2026-06-30T04:15:55.876055Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_0eadb4f36181",
-    "employeeKey": "comic-prompt-engineer",
-    "ranAt": "2026-06-30T10:46:32.842749Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
-    "logId": "evo_ecbb1c56be13",
-    "employeeKey": "comic-prompt-engineer",
-    "ranAt": "2026-06-30T10:51:15.407683Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 0,
-    "error": null
-  },
-  {
     "logId": "evo_d05935d8ccfe",
     "employeeKey": "comic-prompt-engineer",
     "ranAt": "2026-07-01T03:10:58.618199Z",
@@ -497,6 +447,56 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 14,
+    "error": null
+  },
+  {
+    "logId": "evo_c5f2cc749bf7",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-24T20:00:30.152973Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_c33581a6e7a6",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-25T20:00:16.746244Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_93604705e77f",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-26T20:00:29.783705Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_dd5416706201",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-28T13:53:37.218796Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_e0cf8a2d78a8",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-28T20:00:16.993359Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
     "error": null
   }
 ]

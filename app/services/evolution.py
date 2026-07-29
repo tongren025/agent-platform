@@ -19,6 +19,7 @@ from pathlib import Path
 
 from app.config import BASE_DIR
 from app.models.evolution import EvolutionInsight, EvolutionRunLog
+from app.services.chat_response import extract_chat_content
 
 logger = logging.getLogger(__name__)
 
@@ -250,7 +251,7 @@ async def run_evolution_analysis(employee_key: str) -> EvolutionRunLog:
             temperature=0.3,
             max_tokens=3000,
         )
-        raw = resp.choices[0].message.content or "[]"
+        raw = extract_chat_content(resp) or "[]"
     except Exception as exc:
         run_log.error = f"LLM 调用失败: {exc}"
         run_log.duration_ms = int((time.monotonic() - t0) * 1000)

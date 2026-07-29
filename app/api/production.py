@@ -354,56 +354,210 @@ def _sections_from_reply(reply: str) -> list[dict]:
 
 
 SPEC_STAGES = ("script", "storyboard", "img_prompt", "vid_prompt")
+STORY_IMAGE_STAGE_PRIORITY = {
+    "img_gen": 0,
+    # “我的项目”首先服务于看懂故事；制片故事板比视频首帧更适合人阅读。
+    "storyboard": 1,
+    "img_prompt": 2,
+    "final": 3,
+    "vid_prompt": 4,
+}
+
+
+def _positive_int(value: object) -> int:
+    """把卡片元数据中的正整数安全收敛为 int，异常值按 0 处理。"""
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return 0
+    return parsed if parsed > 0 else 0
+
+
+def _compute_story_preview(cards: list[ProductionCard]) -> dict:
+    """提取项目列表可直接展示的剧情画面摘要，避免前端下载全部卡片后再猜。"""
+    aligned_cards = [
+        card for card in cards
+        if card.images
+        and isinstance(card.metadata.get("prompt_order"), list)
+        and card.metadata.get("prompt_order")
+    ]
+    aligned_cards.sort(
+        key=lambda card: (
+            STORY_IMAGE_STAGE_PRIORITY.get(card.stage, 99),
+            -len(card.images),
+        )
+    )
+
+    expected = 0
+    story_images: list[str] = []
+    video_count = 0
+    if aligned_cards:
+        source = aligned_cards[0]
+        order = source.metadata.get("prompt_order") or []
+        expected = max(
+            len(order),
+            _positive_int(source.metadata.get("shot_count")),
+            _positive_int(source.metadata.get("prompt_count")),
+            _positive_int(source.metadata.get("keyframe_count")),
+        )
+        story_images = list(source.images[:expected or None])
+        video_count = max((len(card.videos) for card in cards), default=0)
+    else:
+        unit_keys = sorted({
+            (card.episode, card.shot_number)
+            for card in cards
+            if card.shot_number > 0
+        }, key=lambda item: (item[0] is None, item[0] or 0, item[1]))
+        if unit_keys:
+            expected = 0
+            for episode, shot_number in unit_keys:
+                unit_cards = [
+                    card for card in cards
+                    if card.episode == episode and card.shot_number == shot_number
+                ]
+                visual_cards = sorted(
+                    (card for card in unit_cards if card.images),
+                    key=lambda card: (
+                        STORY_IMAGE_STAGE_PRIORITY.get(card.stage, 99),
+                        -len(card.images),
+                    ),
+                )
+                if visual_cards:
+                    visual_card = visual_cards[0]
+                    panel_count = max(
+                        len(visual_card.images),
+                        _positive_int(visual_card.metadata.get("panel_count")),
+                        1,
+                    )
+                    expected += panel_count
+                    story_images.extend(visual_card.images[:panel_count])
+                else:
+                    expected += 1
+                if any(card.videos for card in unit_cards):
+                    video_count += 1
+        else:
+            # 老项目可能只有聚合卡且没有 prompt_order；只把生产画面作为故事预览，
+            # 人物三视图和场景母版留给项目详情的“人物与世界”区域。
+            fallback_cards = sorted(
+                (
+                    card for card in cards
+                    if card.images and card.stage not in {"idea", "setting", "design"}
+                ),
+                key=lambda card: (
+                    STORY_IMAGE_STAGE_PRIORITY.get(card.stage, 99),
+                    card.created_at,
+                ),
+            )
+            seen: set[str] = set()
+            for card in fallback_cards:
+                for image in card.images:
+                    if image not in seen:
+                        seen.add(image)
+                        story_images.append(image)
+            expected = max(
+                len(story_images),
+                max(
+                    (
+                        max(
+                            _positive_int(card.metadata.get("shot_count")),
+                            _positive_int(card.metadata.get("prompt_count")),
+                            _positive_int(card.metadata.get("keyframe_count")),
+                        )
+                        for card in cards
+                    ),
+                    default=0,
+                ),
+            )
+            video_count = max((len(card.videos) for card in cards), default=0)
+
+    # 同一批画面常被图片提示词、视频提示词和交付卡重复引用；列表只计一次。
+    story_images = list(dict.fromkeys(story_images))
+    available = len(story_images)
+    final_video_ready = any(
+        card.stage == "final" and card.status == "done" and card.videos
+        for card in cards
+    )
+    approved_images = min(
+        max(
+            (
+                _positive_int(card.metadata.get("approved_image_count"))
+                for card in cards
+            ),
+            default=0,
+        ),
+        available,
+    )
+    if final_video_ready and expected:
+        video_count = expected
+    return {
+        "available_images": available,
+        "approved_images": approved_images,
+        "expected_images": expected,
+        "missing_images": max(expected - available, 0),
+        "preview_images": story_images[:4],
+        "video_count": min(video_count, expected) if expected else video_count,
+        "has_final_video": final_video_ready,
+    }
 
 
 def _compute_readiness(cards: list[ProductionCard]) -> dict:
-    """按 G 生成单元计算真实生产就绪度，避免“文案卡已 done”被误报为成片完成。"""
+    """按镜头计算真实生产就绪度，并兼容把整支预告聚合在一张卡里的项目。"""
     units = sorted({
         (c.episode, c.shot_number)
         for c in cards
-        if c.episode is not None and c.shot_number > 0
+        if c.shot_number > 0
     })
     if not units:
-        return {
-            "units": 0, "spec_ready": 0, "with_image": 0, "with_video": 0,
-            "delivered": 0, "spec_rate": 0, "image_rate": 0,
-            "video_rate": 0, "delivery_rate": 0, "overall_progress": 0,
-            "blockers": 0, "next_action": "先生成剧本与 G 生成单元",
-        }
+        story_preview = _compute_story_preview(cards)
+        total = story_preview["expected_images"]
+        if not total:
+            return {
+                "units": 0, "spec_ready": 0, "with_image": 0, "with_video": 0,
+                "delivered": 0, "spec_rate": 0, "image_rate": 0,
+                "video_rate": 0, "delivery_rate": 0, "overall_progress": 0,
+                "blockers": 0, "next_action": "先生成剧本和镜头画面",
+            }
+        present = {card.stage for card in cards}
+        has_all_specs = all(stage in present for stage in SPEC_STAGES)
+        spec_ready = total if has_all_specs else 0
+        missing_spec = 0 if has_all_specs else total
+        with_image = min(story_preview["available_images"], total)
+        with_video = min(story_preview["video_count"], total)
+        delivered = total if story_preview["has_final_video"] else 0
+    else:
+        spec_ready = with_image = with_video = delivered = 0
+        missing_spec = 0
+        for episode, unit in units:
+            unit_cards = [c for c in cards if c.episode == episode and c.shot_number == unit]
+            present = {c.stage for c in unit_cards}
+            missing = [stage for stage in SPEC_STAGES if stage not in present]
+            if not missing:
+                spec_ready += 1
+            else:
+                missing_spec += 1
+            if any(c.images for c in unit_cards):
+                with_image += 1
+            if any(c.videos for c in unit_cards):
+                with_video += 1
+            if any(c.stage == "final" and c.status == "done" for c in unit_cards):
+                delivered += 1
+        total = len(units)
 
-    spec_ready = with_image = with_video = delivered = 0
-    missing_spec = 0
-    for episode, unit in units:
-        unit_cards = [c for c in cards if c.episode == episode and c.shot_number == unit]
-        present = {c.stage for c in unit_cards}
-        missing = [stage for stage in SPEC_STAGES if stage not in present]
-        if not missing:
-            spec_ready += 1
-        else:
-            missing_spec += 1
-        if any(c.images for c in unit_cards):
-            with_image += 1
-        if any(c.videos for c in unit_cards):
-            with_video += 1
-        if any(c.stage == "final" and c.status == "done" for c in unit_cards):
-            delivered += 1
-
-    total = len(units)
     spec_rate = round(spec_ready / total * 100)
     image_rate = round(with_image / total * 100)
     video_rate = round(with_video / total * 100)
     delivery_rate = round(delivered / total * 100)
     overall = round(spec_rate * 0.4 + image_rate * 0.3 + video_rate * 0.2 + delivery_rate * 0.1)
     if missing_spec:
-        next_action = f"修复 {missing_spec} 个断链单元"
+        next_action = f"补齐 {missing_spec} 个镜头的制作信息"
     elif with_image < total:
-        next_action = f"完成剩余 {total - with_image} 个单元出图"
+        next_action = f"还差 {total - with_image} 个镜头画面"
     elif with_video < total:
-        next_action = f"完成剩余 {total - with_video} 个单元视频"
+        next_action = f"还差 {total - with_video} 个镜头视频"
     elif delivered < total:
-        next_action = "完成剪辑与成片交付"
+        next_action = "完成剪辑并导出成片"
     else:
-        next_action = "项目已具备交付条件"
+        next_action = "成片已经可以交付"
     return {
         "units": total,
         "spec_ready": spec_ready,
@@ -438,6 +592,7 @@ def _compute_stats(cards: list[ProductionCard]) -> dict:
         by_status[c.status] = by_status.get(c.status, 0) + 1
     done_total = by_status.get("done", 0)
     readiness = _compute_readiness(cards)
+    story_preview = _compute_story_preview(cards)
     return {
         "total": total,
         "by_stage": by_stage,
@@ -445,6 +600,7 @@ def _compute_stats(cards: list[ProductionCard]) -> dict:
         "card_status_progress": round(done_total / total * 100) if total else 0,
         "overall_progress": readiness["overall_progress"],
         "readiness": readiness,
+        "story_preview": story_preview,
     }
 
 

@@ -1,6 +1,6 @@
 {
   "project_id": "tiexin-s1",
-  "generated_at": "2026-07-28T13:48:37.885059+00:00",
+  "generated_at": "2026-07-28T15:02:22.711721+00:00",
   "result": "partial",
   "invalid_count": 0,
   "missing_count": 516,
@@ -116,8 +116,8 @@
   "media_status": {
     "project_id": "tiexin-s1",
     "characters": {
-      "expected": 9,
-      "generated": 9
+      "expected": 3,
+      "generated": 3
     },
     "character_turnarounds": {
       "expected": 6,
@@ -167,43 +167,15 @@
   },
   "groups": {
     "characters": {
-      "expected": 9,
-      "present": 9,
-      "valid": 9,
+      "expected": 3,
+      "present": 3,
+      "valid": 3,
       "missing": [],
       "invalid": [],
       "files": [
         {
-          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\R1_shenyao_face_v3.png",
-          "size_bytes": 2081272,
-          "width": 941,
-          "height": 1672,
-          "format": "PNG",
-          "mode": "RGB",
-          "frame_count": 1,
-          "is_animated": false,
-          "duration_seconds": null,
-          "has_audio": false,
-          "valid": true,
-          "errors": []
-        },
-        {
-          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\R1_shenyao_full_v3.png",
-          "size_bytes": 1956060,
-          "width": 941,
-          "height": 1672,
-          "format": "PNG",
-          "mode": "RGB",
-          "frame_count": 1,
-          "is_animated": false,
-          "duration_seconds": null,
-          "has_audio": false,
-          "valid": true,
-          "errors": []
-        },
-        {
-          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\R1_shenyao_tactical_v3.png",
-          "size_bytes": 1878371,
+          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\details\\R1_shenyao_face_front_candidate_v5.png",
+          "size_bytes": 2084589,
           "width": 941,
           "height": 1672,
           "format": "PNG",
@@ -230,64 +202,8 @@
           "errors": []
         },
         {
-          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\R2_linghao_full_v3.png",
-          "size_bytes": 1952375,
-          "width": 941,
-          "height": 1672,
-          "format": "PNG",
-          "mode": "RGB",
-          "frame_count": 1,
-          "is_animated": false,
-          "duration_seconds": null,
-          "has_audio": false,
-          "valid": true,
-          "errors": []
-        },
-        {
-          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\R2_linghao_tactical_v3.png",
-          "size_bytes": 1930497,
-          "width": 941,
-          "height": 1672,
-          "format": "PNG",
-          "mode": "RGB",
-          "frame_count": 1,
-          "is_animated": false,
-          "duration_seconds": null,
-          "has_audio": false,
-          "valid": true,
-          "errors": []
-        },
-        {
-          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\R2_linghao_home.png",
-          "size_bytes": 1844563,
-          "width": 941,
-          "height": 1672,
-          "format": "PNG",
-          "mode": "RGB",
-          "frame_count": 1,
-          "is_animated": false,
-          "duration_seconds": null,
-          "has_audio": false,
-          "valid": true,
-          "errors": []
-        },
-        {
           "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\R3_hanshaoqing_face_v3.png",
           "size_bytes": 2147166,
-          "width": 941,
-          "height": 1672,
-          "format": "PNG",
-          "mode": "RGB",
-          "frame_count": 1,
-          "is_animated": false,
-          "duration_seconds": null,
-          "has_audio": false,
-          "valid": true,
-          "errors": []
-        },
-        {
-          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\R3_hanshaoqing_full_v3.png",
-          "size_bytes": 1792722,
           "width": 941,
           "height": 1672,
           "format": "PNG",
@@ -393,6 +309,163 @@
           "errors": []
         }
       ]
+    },
+    "character_identity_details": {
+      "expected": 6,
+      "present": 6,
+      "valid": 6,
+      "missing": [],
+      "invalid": [],
+      "files": [
+        {
+          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\details\\R1_shenyao_face_front_candidate_v5.png",
+          "size_bytes": 2084589,
+          "width": 941,
+          "height": 1672,
+          "format": "PNG",
+          "mode": "RGB",
+          "frame_count": 1,
+          "is_animated": false,
+          "duration_seconds": null,
+          "has_audio": false,
+          "valid": true,
+          "errors": [],
+          "turnaround_key": "R1_daily",
+          "role": "front_identity"
+        },
+        {
+          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\details\\R1_shenyao_face_right_profile_candidate_v5.png",
+          "size_bytes": 2021356,
+          "width": 941,
+          "height": 1672,
+          "format": "PNG",
+          "mode": "RGB",
+          "frame_count": 1,
+          "is_animated": false,
+          "duration_seconds": null,
+          "has_audio": false,
+          "valid": true,
+          "errors": [],
+          "turnaround_key": "R1_daily",
+          "role": "right_marker_closeup"
+        },
+        {
+          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\details\\R1_shenyao_face_left_profile_negative_candidate_v5.png",
+          "size_bytes": 1990087,
+          "width": 941,
+          "height": 1672,
+          "format": "PNG",
+          "mode": "RGB",
+          "frame_count": 1,
+          "is_animated": false,
+          "duration_seconds": null,
+          "has_audio": false,
+          "valid": true,
+          "errors": [],
+          "turnaround_key": "R1_daily",
+          "role": "left_marker_negative"
+        },
+        {
+          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\details\\R1_shenyao_face_front_candidate_v5.png",
+          "size_bytes": 2084589,
+          "width": 941,
+          "height": 1672,
+          "format": "PNG",
+          "mode": "RGB",
+          "frame_count": 1,
+          "is_animated": false,
+          "duration_seconds": null,
+          "has_audio": false,
+          "valid": true,
+          "errors": [],
+          "turnaround_key": "R1_tactical",
+          "role": "front_identity"
+        },
+        {
+          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\details\\R1_shenyao_face_right_profile_candidate_v5.png",
+          "size_bytes": 2021356,
+          "width": 941,
+          "height": 1672,
+          "format": "PNG",
+          "mode": "RGB",
+          "frame_count": 1,
+          "is_animated": false,
+          "duration_seconds": null,
+          "has_audio": false,
+          "valid": true,
+          "errors": [],
+          "turnaround_key": "R1_tactical",
+          "role": "right_marker_closeup"
+        },
+        {
+          "path": "D:\\P\\agent\\data\\production\\tiexin-s1\\assets\\characters\\details\\R1_shenyao_face_left_profile_negative_candidate_v5.png",
+          "size_bytes": 1990087,
+          "width": 941,
+          "height": 1672,
+          "format": "PNG",
+          "mode": "RGB",
+          "frame_count": 1,
+          "is_animated": false,
+          "duration_seconds": null,
+          "has_audio": false,
+          "valid": true,
+          "errors": [],
+          "turnaround_key": "R1_tactical",
+          "role": "left_marker_negative"
+        }
+      ],
+      "packages": {
+        "R1_daily": {
+          "expected_roles": [
+            "front_identity",
+            "right_marker_closeup",
+            "left_marker_negative"
+          ],
+          "present": 3,
+          "valid_files": 3,
+          "duplicate_role_groups": [],
+          "errors": []
+        },
+        "R1_tactical": {
+          "expected_roles": [
+            "front_identity",
+            "right_marker_closeup",
+            "left_marker_negative"
+          ],
+          "present": 3,
+          "valid_files": 3,
+          "duplicate_role_groups": [],
+          "errors": []
+        },
+        "R2_suit": {
+          "expected_roles": [],
+          "present": 0,
+          "valid_files": 0,
+          "duplicate_role_groups": [],
+          "errors": []
+        },
+        "R2_tactical": {
+          "expected_roles": [],
+          "present": 0,
+          "valid_files": 0,
+          "duplicate_role_groups": [],
+          "errors": []
+        },
+        "R2_home": {
+          "expected_roles": [],
+          "present": 0,
+          "valid_files": 0,
+          "duplicate_role_groups": [],
+          "errors": []
+        },
+        "R3_suit": {
+          "expected_roles": [],
+          "present": 0,
+          "valid_files": 0,
+          "duplicate_role_groups": [],
+          "errors": []
+        }
+      }
     },
     "scenes": {
       "expected": 8,

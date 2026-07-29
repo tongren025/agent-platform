@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "jobs": {
+    "EP01_G01_A": {
+      "remote_id": "",
+      "status": "technical_failed",
+      "model": "test/video-model",
+      "job_version_fingerprint": "be779f998851c513156f941c559f67063b34ccb04befb102eaa2e8b6a4d0fc0f",
+      "input_file_sha256": "9dff50df08c635815f4b19da10f756605a34a79a48d4ba48712782502975a70e",
+      "input_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_invalid_download_is_rejec0\\frame.png",
+      "output_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_invalid_download_is_rejec0\\A.mp4",
+      "submission_intent": {
+        "attempt_id": "c0ef5555564242e69741ee59269309d4",
+        "job_version_fingerprint": "be779f998851c513156f941c559f67063b34ccb04befb102eaa2e8b6a4d0fc0f",
+        "model": "test/video-model",
+        "input_file_sha256": "9dff50df08c635815f4b19da10f756605a34a79a48d4ba48712782502975a70e",
+        "started_at": "2026-07-28T13:07:05.745216+00:00",
+        "resolved_remote_id": "completed-but-invalid",
+        "resolved_at": "2026-07-28T13:07:05.749217+00:00"
+      },
+      "error": "",
+      "updated_at": "2026-07-28T13:07:05.781216+00:00",
+      "submitted_at": "2026-07-28T13:07:05.749217+00:00",
+      "usage": {},
+      "technical_errors": [
+        "分辨率必须严格为 720x1280"
+      ],
+      "preserved_candidate_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_invalid_download_is_rejec0\\rejected\\EP01_G01_A_b5c05c8cd377_20260728T130705773216Z_4cb59483.mp4",
+      "last_remote_id": "completed-but-invalid",
+      "superseded": [
+        {
+          "remote_id": "completed-but-invalid",
+          "job_version_fingerprint": "be779f998851c513156f941c559f67063b34ccb04befb102eaa2e8b6a4d0fc0f",
+          "model": "test/video-model",
+          "status": "completed",
+          "reason": "remote_output_technical_invalid",
+          "superseded_at": "2026-07-28T13:07:05.780215+00:00"
+        }
+      ]
+    }
+  }
+}

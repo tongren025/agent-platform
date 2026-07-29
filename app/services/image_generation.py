@@ -10,6 +10,7 @@ from pathlib import Path
 import httpx
 
 from app.dependencies import ai_service
+from app.services import openrouter_media
 
 
 logger = logging.getLogger(__name__)
@@ -30,6 +31,34 @@ def generate_image_to_local(prompt: str, model: str, size: str = "1024x1536") ->
     clean_prompt = prompt.strip()
     if not clean_prompt:
         raise ValueError("提示词不能为空")
+
+    if model.startswith("openrouter:"):
+        model_id = model.removeprefix("openrouter:")
+        if not model_id:
+            raise ValueError("OpenRouter 图片模型不能为空")
+        width, _, height = size.partition("x")
+        try:
+            width_value, height_value = int(width), int(height)
+        except ValueError:
+            width_value, height_value = 1024, 1536
+        ratio = width_value / max(height_value, 1)
+        aspect_ratio = min(
+            ("1:1", "4:3", "3:4", "16:9", "9:16", "3:2", "2:3"),
+            key=lambda value: abs(
+                ratio - (
+                    int(value.split(":")[0]) / int(value.split(":")[1])
+                )
+            ),
+        )
+        resolution = "2K" if max(width_value, height_value) >= 1900 else "1K"
+        generated = openrouter_media.generate_image_bytes(
+            model=model_id,
+            prompt=clean_prompt,
+            resolution=resolution,
+            aspect_ratio=aspect_ratio,
+        )
+        url = _save_image_bytes(generated["content"], generated["suffix"])
+        return {"url": url, "model": model_id}
 
     client, model_id = ai_service.get_client(model)
     try:

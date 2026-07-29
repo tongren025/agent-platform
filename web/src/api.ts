@@ -568,6 +568,13 @@ export const api = {
     request<any>(`/canvas/canvases/${cid}/duplicate`, { method: 'POST' }),
   canvasRename: (cid: string, name: string) =>
     request<any>(`/canvas/canvases/${cid}`, { method: 'PATCH', body: JSON.stringify({ name }) }),
+  getCanvasEngine: (engine: string) =>
+    request<{ engine: string; content: Record<string, any>; updated_at: string }>(`/canvas/engines/${engine}`),
+  saveCanvasEngine: (engine: string, content: Record<string, any>) =>
+    request<{ engine: string; content: Record<string, any>; updated_at: string }>(
+      `/canvas/engines/${engine}`,
+      { method: 'PUT', body: JSON.stringify({ content }) },
+    ),
   uploadCanvasAsset: async (cid: string, file: File) => {
     const form = new FormData();
     form.append('file', file);

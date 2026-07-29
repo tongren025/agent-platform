@@ -31,6 +31,7 @@ from app.models.registry import (
     TeamDefinition,
     ToolDefinition,
 )
+from app.services.chat_response import extract_chat_content
 
 router = APIRouter(prefix="/api/v1/agentapp/registry")
 
@@ -325,7 +326,7 @@ role_request_json: {role_request_json}
             temperature=0.2,
             max_tokens=3000,
         )
-        generated = _extract_employee_draft(response.choices[0].message.content or "")
+        generated = _extract_employee_draft(extract_chat_content(response))
     except Exception:
         _logger.warning("智能员工草稿生成调用失败，使用本地可靠兜底", exc_info=True)
 

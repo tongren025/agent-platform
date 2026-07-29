@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Button, Drawer, Empty, Image, Input, Select, Space, Spin, Tag, Tooltip, Typography,
 } from 'antd';
@@ -6,6 +6,7 @@ import {
   CheckOutlined, CloseOutlined, EditOutlined, PictureOutlined, ReloadOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { message } from '../ui';
 import { useResponsive } from '../hooks/useResponsive';
 
@@ -13,19 +14,20 @@ const { Text, Title } = Typography;
 const { TextArea } = Input;
 
 const STAGE_LABELS: Record<string, string> = {
-  idea: '创意', script: '剧本', setting: '角色·场景', design: '视觉设计',
-  storyboard: '分镜', img_prompt: '图片提示词', vid_prompt: '视频提示词',
-  img_gen: '生图', vid_gen: '生视频', final: '成片',
+  idea: '原始故事', script: '故事稿', setting: '角色·场景', design: '视觉参考',
+  storyboard: '故事画面规划', img_prompt: '画面生成说明', vid_prompt: '视频动作说明',
+  img_gen: '生成画面', vid_gen: '生成视频', final: '剪辑与交付',
 };
 
-const IMAGE_EDITABLE_STAGES = new Set(['img_prompt', 'storyboard', 'setting', 'design']);
+// 导演生图最终只能安全回填到这两个阶段；设计/设定卡不可展示付费生成入口。
+const IMAGE_EDITABLE_STAGES = new Set(['img_prompt', 'storyboard']);
 
 const REVIEW_REASON_OPTIONS = [
-  { value: 'tone_drift', label: '基调偏差' },
+  { value: 'tone_off', label: '基调偏差' },
   { value: 'character_drift', label: '角色走形' },
-  { value: 'composition_mismatch', label: '构图不符' },
-  { value: 'lighting_error', label: '光影错误' },
-  { value: 'structure_collapse', label: '结构崩坏' },
+  { value: 'composition_mismatch', label: '构图不符分镜' },
+  { value: 'lighting_wrong', label: '光影错误' },
+  { value: 'anatomy_broken', label: '结构崩坏' },
   { value: 'other', label: '其他' },
 ];
 
@@ -50,7 +52,14 @@ type Props = {
   projectId: string;
   onClose: () => void;
   onCardUpdated: () => void;
-  mediaModels?: { id: string; name: string; pricing?: any }[];
+  mediaModels?: {
+    id: string;
+    name: string;
+    pricing?: any;
+    isFree?: boolean;
+    recommended?: boolean;
+    recommendationReason?: string;
+  }[];
 };
 
 export default function CardDetailDrawer({
@@ -62,12 +71,12 @@ export default function CardDetailDrawer({
   const [draft, setDraft] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const [genModel, setGenModel] = useState('');
+  const [genModel, setGenModel] = useInputHabit('director.card-image-model', '');
   const [generating, setGenerating] = useState(false);
 
   const [reviewBusy, setReviewBusy] = useState(false);
   const [rejectMode, setRejectMode] = useState(false);
-  const [rejectReason, setRejectReason] = useState('');
+  const [rejectReason, setRejectReason] = useInputHabit('director.review-reason', 'tone_off');
   const [rejectNote, setRejectNote] = useState('');
 
   const canEditPrompt = card ? IMAGE_EDITABLE_STAGES.has(card.stage) : false;
@@ -78,6 +87,13 @@ export default function CardDetailDrawer({
   );
   const latestReview = reviews.length ? reviews[reviews.length - 1] : null;
 
+  useEffect(() => {
+    if (!mediaModels?.length) return;
+    if (!mediaModels.some(model => model.id === genModel)) {
+      setGenModel((mediaModels.find(model => model.recommended) ?? mediaModels[0]).id);
+    }
+  }, [genModel, mediaModels, setGenModel]);
+
   const resetState = useCallback(() => {
     setEditing(false);
     setDraft('');
@@ -85,7 +101,7 @@ export default function CardDetailDrawer({
     setGenerating(false);
     setReviewBusy(false);
     setRejectMode(false);
-    setRejectReason('');
+    setRejectReason('tone_off');
     setRejectNote('');
   }, []);
 
@@ -150,7 +166,7 @@ export default function CardDetailDrawer({
       });
       message.success(verdict === 'pass' ? '已通过' : '已退回');
       setRejectMode(false);
-      setRejectReason('');
+      setRejectReason('tone_off');
       setRejectNote('');
       onCardUpdated();
     } catch (error: any) {
@@ -171,10 +187,10 @@ export default function CardDetailDrawer({
       onClose={handleClose}
       title={card.title || `${STAGE_LABELS[card.stage] || card.stage} 卡片`}
       width={isMobile ? '100%' : 520}
-      destroyOnClose
+      destroyOnHidden
       extra={
         <Tag color={card.status === 'done' ? 'success' : card.status === 'review' ? 'warning' : 'default'}>
-          {card.status === 'done' ? '完成' : card.status === 'review' ? '待返工' : card.status}
+          {card.status === 'done' ? '完成' : card.status === 'review' ? '待确认或返工' : card.status}
         </Tag>
       }
     >
@@ -303,7 +319,10 @@ export default function CardDetailDrawer({
                 placeholder="选择模型"
                 value={genModel || undefined}
                 onChange={setGenModel}
-                options={mediaModels?.map(m => ({ value: m.id, label: m.name })) || []}
+                options={mediaModels?.map(m => ({
+                  value: m.id,
+                  label: `${m.recommended ? '推荐 · ' : ''}${m.name} · ${m.isFree ? '免费' : '付费'}`,
+                })) || []}
                 loading={!mediaModels}
               />
               <Tooltip title={!genModel ? '请先选择模型' : editing && promptDirty ? '请先保存提示词' : ''}>

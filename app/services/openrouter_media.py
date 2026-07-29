@@ -19,6 +19,7 @@ from app.dependencies import ai_service
 UPLOAD_ROOT = BASE_DIR / "data" / "uploads"
 PRODUCTION_UPLOAD_ROOT = UPLOAD_ROOT / "production"
 _SAFE_ID_RE = re.compile(r"^[A-Za-z0-9._-]+$")
+RECOMMENDED_IMAGE_MODEL = "google/gemini-3.1-flash-lite-image"
 
 
 def _openrouter_config() -> tuple[str, str]:
@@ -72,12 +73,39 @@ def list_media_models(kind: str) -> list[dict]:
     response = httpx.get(f"{endpoint}{path}", headers=_headers(api_key), timeout=30)
     response.raise_for_status()
 
+    pricing_by_id: dict[str, dict] = {}
+    if kind == "image":
+        try:
+            catalog_response = httpx.get(
+                f"{endpoint}/models",
+                headers=_headers(api_key),
+                params={"output_modalities": "image"},
+                timeout=30,
+            )
+            catalog_response.raise_for_status()
+            pricing_by_id = {
+                str(item.get("id")): item.get("pricing") or {}
+                for item in catalog_response.json().get("data", [])
+                if isinstance(item, dict) and item.get("id")
+            }
+        except Exception:
+            # 专用图片目录仍是能力真源；价格补充失败不应让整个模型下拉框不可用。
+            pricing_by_id = {}
+
     models = []
     for item in response.json().get("data", []):
         model_id = str(item.get("id") or "")
         if not model_id:
             continue
         architecture = item.get("architecture") or {}
+        pricing = (
+            item.get("pricing")
+            or item.get("pricing_skus")
+            or pricing_by_id.get(model_id)
+            or {}
+        )
+        is_free = _is_free_media_model(model_id, pricing)
+        recommended = kind == "image" and model_id == RECOMMENDED_IMAGE_MODEL
         models.append({
             "id": model_id,
             "name": item.get("name") or model_id,
@@ -88,13 +116,36 @@ def list_media_models(kind: str) -> list[dict]:
             "supportedParameters": item.get("supported_parameters") or {},
             "supportedResolutions": item.get("supported_resolutions") or [],
             "supportedAspectRatios": item.get("supported_aspect_ratios") or [],
-            "pricing": item.get("pricing") or item.get("pricing_skus") or {},
+            "pricing": pricing,
+            "isFree": is_free,
+            "recommended": recommended,
+            "recommendationReason": (
+                "低成本、支持 9:16，并可使用最多 14 张角色参考图"
+                if recommended else ""
+            ),
         })
+    if kind == "image":
+        models.sort(key=lambda model: (
+            not model["recommended"],
+            not model["isFree"],
+        ))
     return models
 
 
-def generate_image(
-    project_id: str,
+def _is_free_media_model(model_id: str, pricing: dict) -> bool:
+    """媒体模型只有全部已声明计费项为 0 才算免费，不能只看文本 token 价格。"""
+    if model_id.endswith(":free"):
+        return True
+    numeric_prices: list[float] = []
+    for value in pricing.values() if isinstance(pricing, dict) else []:
+        try:
+            numeric_prices.append(float(value))
+        except (TypeError, ValueError):
+            continue
+    return bool(numeric_prices) and all(price == 0 for price in numeric_prices)
+
+
+def generate_image_bytes(
     *,
     model: str,
     prompt: str,
@@ -102,7 +153,7 @@ def generate_image(
     aspect_ratio: str = "9:16",
     reference_paths: list[Path] | None = None,
 ) -> dict:
-    """调用 OpenRouter 图片 API；可附带仓库内本地参考图并保存首张结果。"""
+    """调用 OpenRouter 图片 API，返回已下载的图片字节，供不同业务目录落盘。"""
     endpoint, api_key = _openrouter_config()
     payload = {
         "model": model,
@@ -133,24 +184,42 @@ def generate_image(
         raise RuntimeError("OpenRouter 未返回图片")
 
     if item.get("b64_json"):
+        content = base64.b64decode(item["b64_json"])
         media_type = item.get("media_type") or "image/png"
-        url = _save_bytes(
-            project_id,
-            base64.b64decode(item["b64_json"]),
-            _suffix_for_media_type(media_type),
-        )
     elif item.get("url"):
         remote = httpx.get(item["url"], timeout=90, follow_redirects=True)
         remote.raise_for_status()
-        url = _save_bytes(
-            project_id,
-            remote.content,
-            _suffix_for_media_type(remote.headers.get("content-type")),
-        )
+        content = remote.content
+        media_type = remote.headers.get("content-type") or "image/png"
     else:
         raise RuntimeError("OpenRouter 图片响应缺少 b64_json/url")
+    return {
+        "content": content,
+        "suffix": _suffix_for_media_type(media_type),
+        "model": model,
+        "usage": body.get("usage") or {},
+    }
 
-    return {"url": url, "model": model, "usage": body.get("usage") or {}}
+
+def generate_image(
+    project_id: str,
+    *,
+    model: str,
+    prompt: str,
+    resolution: str = "1K",
+    aspect_ratio: str = "9:16",
+    reference_paths: list[Path] | None = None,
+) -> dict:
+    """调用 OpenRouter 图片 API；可附带仓库内本地参考图并保存首张结果。"""
+    generated = generate_image_bytes(
+        model=model,
+        prompt=prompt,
+        resolution=resolution,
+        aspect_ratio=aspect_ratio,
+        reference_paths=reference_paths,
+    )
+    url = _save_bytes(project_id, generated["content"], generated["suffix"])
+    return {"url": url, "model": model, "usage": generated["usage"]}
 
 
 def _local_upload_path(url: str) -> Path | None:

@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "jobs": {
+    "EP01_G01_A": {
+      "remote_id": "",
+      "status": "submitting",
+      "model": "test/video-model",
+      "job_version_fingerprint": "09269b38f6530af6cc08e2e74f0ab95cc070a9208f350fb7711e9736188d3c0c",
+      "input_file_sha256": "9dff50df08c635815f4b19da10f756605a34a79a48d4ba48712782502975a70e",
+      "submission_intent": {
+        "attempt_id": "ambiguous-attempt",
+        "resolved_remote_id": ""
+      }
+    }
+  }
+}

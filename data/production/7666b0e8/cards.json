@@ -258,24 +258,24 @@
     "project_id": "7666b0e8",
     "stage": "vid_prompt",
     "title": "W01-W14 视频提示词包 · 单镜单事件",
-    "content": "统一约束：严格以各镜首帧和九大陆官方母版锁定地标、材质、主色与比例。每条视频只执行一个核心事件和一个运镜；巨物运动缓慢有惯性，环境出现对应延迟反应；画面稳定，无随机切镜。字幕、地名、片名全部后期添加。\n\n下面 prompts 数组按 W01-W14 顺序存放。",
+    "content": "统一约束：严格以各镜首帧、六张关键尾帧、苍霖锚点、成年巨龙锚点和九大陆官方母版锁定地标、材质、主色与比例。每条视频只执行一个核心事件和一个运镜；巨物运动缓慢有惯性，环境出现对应延迟反应；画面稳定，无随机切镜。W02、W03、W05、W08、W10、W12使用对应尾帧锁定运动终态和形状匹配转场。字幕、地名、片名全部后期添加。\n\n下面 prompts 数组按 W01-W14 顺序存放。",
     "episode": 1,
     "shot_number": 0,
     "prompts": [
       "以W01首帧为唯一构图与风格锚。九块大陆保持稳定，蜘蛛网式无形量子羁绊线起初不可见；随着镜头由宇宙远处缓慢推进，线只因观察角度变化产生一次轻微折光，空间涟漪沿交叉网格依次触发九个大陆节点。禁止出现实体树干、树冠、树根、藤蔓、粗发光线或中心放射网络。星尘和云层在巨大尺度下近乎静止。声音为低频量子脉冲与深空风；旁白后期加入：九陆之间，有一张看不见的网。时长2.4秒，竖屏9:16。",
-      "以W02首帧和烬龙陆母版锁定地貌。熔浆瀑布先向上喷发，前排巨龙借热流展开双翼升空，后方龙群按纵深分批破焰起飞，最近巨龙缓慢掠过镜头上方。镜头贴龙骨地表向前冲刺并顺势仰升。远处废墟只受一次冲击波扬尘。声音从单龙吼扩为千龙群吼。时长2秒。",
-      "以W03首帧和青霄陆母版锁定结构。机械穹顶由中心向外分三层开启，环城齿轮依次咬合，炮塔群在同一节拍抬头锁向天外。镜头从城市街谷垂直升起穿过穹顶开口。冷蓝数据流只沿既有管线奔涌，建筑不漂移。声音为巨型齿轮和低频机械钟。时长2秒。",
+      "以W02首帧、W02_end尾帧和烬龙陆母版锁定地貌。熔浆柱先向上喷发，五至七头远龙按纵深分批升空，最近成年巨龙缓慢掠过镜头上方，单片暗赤翼膜最终覆盖上半画面并形成三段宽弧。镜头贴龙骨地表向前冲刺并顺势仰升；禁止复制龙群、粒子烟尘和随机尖塔。声音从单龙吼扩为群吼。时长2秒。",
+      "以W03首帧、W03_end尾帧和青霄陆母版锁定结构。三层机械翼甲依次开启，镜头从城市街谷垂直升起穿过穹顶开口；中央城市级炮塔完成一次缓慢转向，单一圆形炮口在尾帧成为主形并承接碎星环。只允许两个辅助炮塔，不新增密集电路、管线或塔群。声音为巨型齿轮和低频机械钟。时长2秒。",
       "以W04首帧和星圣陆母版锁定浮空城。碎星从散乱轨道加速后重排成三重星环，城底法阵由内向外一层层点亮并延伸至星空。镜头绕浮空城稳定环行半圈。城体保持静止，只有星环与法阵运动。声音为晶体共鸣与空间折叠。时长2秒。",
-      "以W05首帧和潮生陆母版锁定海城。海面先出现巨大吸退，随后千米浪墙缓慢竖起遮住天空，浪内记忆微光沿水流向上游动，海城旗帜被压向同一方向。镜头贴浪面逆流前进并在浪墙压近时抬升。声音先瞬间抽空，再由海啸低频灌满。时长2.2秒。",
+      "以W05首帧、W05_end尾帧和潮生陆母版锁定海城。海面先巨大吸退，千米浪墙缓慢竖起后卷入成一个由透明水体与白色浪冠构成的椭圆浪眼；水体只保留四至六层宽色带与最多三处记忆微光，城市与三艘船始终保持极小尺度。禁止真实虹膜、怪物脸、密集水纹和泡沫颗粒。声音先抽空，再由海啸低频灌满。时长2.2秒。",
       "以W06首帧和巨神陆母版锁定山体。肩上城邦灯火依次亮起，山脉岩层随一次沉重呼吸抬升，大陆级巨眼以极慢速度睁开，碎石延迟坠落。镜头从肩上城市持续后拉，直到观众看清整片山脉是巨神身体。声音为岩层崩裂与一次次声心跳。时长2.2秒。",
       "以W07首帧和无昼陆母版锁定黑城。最后巨灯先亮出一粒火星，再膨胀成稳定琥珀火焰，单束灯光缓慢扫过，沿途才显露巨柱、无边城郭与朝灯人群。镜头绕灯柱向上升起。人群只同步抬头一次。声音先保持真空般寂静，再进入灯焰轰鸣与万人吸气。时长2秒。",
-      "以W08首帧和冰封陆母版锁定冰原。冰下虫母巢只完成一次巨大收缩与舒张，呼吸压力沿冰盖传开同心裂纹，中央冰面炸开后蚀虫潮以活雪崩形态倒卷上天。镜头垂直俯冲接近冰面并穿过透明冰层。虫体沿统一流场运动。声音为冰裂与亿万甲壳摩擦白噪。时长2.4秒。",
+      "以W08首帧、W08_end尾帧和冰封陆母版锁定冰原。冰下虫母巢只完成一次巨大收缩与舒张，冰面沿三条主裂缝打开；虫潮沿统一流场上卷为三条平滑白灰巨带，尾帧形成中央空心旋涡，画面只保留六只可辨大虫。禁止微小虫点、颗粒虫群、密集裂纹和雪尘喷溅。声音为冰裂与低频甲壳摩擦。时长2.4秒。",
       "以W09首帧和归墟陆母版锁定终坑。世界终坑从外环到内环依次启动旋转，山峰、河流与废墟被缓慢拔离地表后向坑心坠落，逆流瀑布形成清晰弧线。镜头沿坑壁螺旋下坠，坑心保持稳定。声音持续降调并在末尾被吸空。时长2秒。",
-      "以W10首帧和神国陆母版锁定天城。镜头穿出云层并连续翻转180度，倒悬白金天城显露全貌，九面审判镜从远到近依次打开，最后九束冷金光同时照向云下人间。城市结构保持庄严静止。声音为九声逐级加重的金属钟鸣。时长2.2秒。",
+      "以W10首帧、W10_end尾帧和神国陆母版锁定倒悬断冠。镜头穿出云层并连续翻转180度，恰好九面审判镜按远近依次打开，但不得各自发射光柱；只允许一片极淡宽阔冷金光面，尾帧逐渐收束成仅靠云边错位显形的近透明折射细缝，承接W11。城市巨板保持庄严静止。声音为九声逐级加重的金属钟鸣。时长2.2秒。",
       "以W11首帧锁定无形量子羁绊网。镜头贴着一根近乎透明的无痕细线持续高速前进，线只通过折光和空间涟漪显形；脉冲跨过蜘蛛网交叉点并依次触发九个大陆节点，每个节点只响应一次，并在节点内部短暂显出本大陆灾变剪影。禁止粗光管、树根、藤蔓和赛博电路。声音将九大陆声部逐层叠加。旁白后期加入：他们称它——世界树。时长2.8秒。",
-      "以W12首帧锁定九陆与无形羁绊网关系。镜头持续后拉，一根近乎透明的量子细线无声失相，断点周围空间像玻璃水面一样轻微分开，断裂沿蜘蛛网交叉点连锁传播；一块大陆失去牵引后沉入下方深空，碎片延迟脱落，其余八陆保持位置稳定。禁止实体树、树根、木裂和爆炸。声音瞬间抽掉高频，只留真空低频脉冲。时长2.8秒。",
-      "以W13首帧、苍霖后期与成年巨龙母版锁定角色。巨龙从下方碎片阴影中冲出并完成一次强力展翼，苍霖俯身抓紧龙背，身后九道大陆光色被速度拉成一条长路。镜头正后方稳定追随。声音为翼拍音爆与龙焰轰鸣；旁白后期加入：九陆将倾。时长1.6秒。",
-      "以W14首帧和苍霖后期母版锁定面部。苍霖只完成一次缓慢转眼，金色虹膜内九道同心环由外至内依次点亮，瞳孔倒映的蜘蛛网式无形量子羁绊线在最后一帧静默失相。镜头快速推进至虹膜占满画面，随空间失相低频切黑。禁止出现实体树木。旁白后期加入：谁有资格决定——哪一陆先死？时长1.4秒。"
+      "以W12首帧和W12_end尾帧锁定九陆身份与无形羁绊关系。镜头持续后拉，一条近透明概率路径在小范围空白中无声消失，周围空间只像玻璃水面般轻微错位；机械翼大陆倾斜下沉并分成三块巨大宽片，其余八陆只产生轻微不同方向的失衡。两块前景巨片最终形成缺口，缺口下方露出极小骑龙剪影。禁止实体树、中心节点、发光网络、爆炸和碎石雨。时长2.8秒。",
+      "以W13首帧、uploads/supplemental/CHAR_Canglin_anchor.png与uploads/supplemental/CRE_Dragon_anchor.png锁定角色。巨龙从下方碎片阴影中冲出并完成一次强力展翼，苍霖俯身抓紧龙背，身后九陆颜色被速度拉成一条长路。镜头正后方稳定追随，不得改变苍霖年龄、左脸伤疤、瘦长比例或巨龙六肢、炭黑/骨白/暗赤材质。声音为翼拍音爆与龙焰轰鸣；旁白后期加入：九陆将倾。时长1.6秒。",
+      "以W14首帧和uploads/supplemental/CHAR_Canglin_anchor.png锁定苍霖面部。苍霖只完成一次缓慢转眼，金色虹膜内九道同心环由外至内依次点亮，瞳孔倒映的无中心量子羁绊折射在最后一帧静默失相。镜头快速推进至虹膜占满画面；不得改变少年年龄、短碎黑发、左脸竖向旧伤和窄金瞳。随空间失相低频切黑。旁白后期加入：谁有资格决定——哪一陆先死？时长1.4秒。"
     ],
     "negative_prompts": [],
     "images": [
@@ -292,7 +292,15 @@
       "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W11.png",
       "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W12.png",
       "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W13.png",
-      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W14.png"
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W14.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/CHAR_Canglin_anchor.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/CRE_Dragon_anchor.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W02_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W03_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W05_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W08_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W10_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W12_end.png"
     ],
     "videos": [],
     "metadata": {
@@ -334,6 +342,21 @@
         "uploads/images/W13.png",
         "uploads/images/W14.png"
       ],
+      "continuity_anchor_assets": [
+        "uploads/supplemental/CHAR_Canglin_anchor.png",
+        "uploads/supplemental/CRE_Dragon_anchor.png"
+      ],
+      "end_frame_assets": {
+        "W02": "uploads/supplemental/W02_end.png",
+        "W03": "uploads/supplemental/W03_end.png",
+        "W05": "uploads/supplemental/W05_end.png",
+        "W08": "uploads/supplemental/W08_end.png",
+        "W10": "uploads/supplemental/W10_end.png",
+        "W12": "uploads/supplemental/W12_end.png"
+      },
+      "supplemental_prompt_source": "SUPPLEMENTAL_IMAGE_PROMPTS_V1.json",
+      "supplemental_contact_sheet": "SUPPLEMENTAL_IMAGES_V1_CONTACT_SHEET.jpg",
+      "asset_review_status": "22_of_22_production_images_ready",
       "video_generation_ready": true,
       "video_generation_locked_until_review": false
     },
@@ -347,7 +370,7 @@
     "project_id": "7666b0e8",
     "stage": "final",
     "title": "剪辑、字卡与声音执行单",
-    "content": "W01-W14九大陆世界观GC已完成：14镜分镜、14条正式图片提示词、14条视频运动提示词、14张正式首帧、剪辑字卡和声音执行单全部齐全。画风统一为明亮干净的二维东方幻想动画背景插图；世界树只表现为没有中心、近透明、无主干的量子蛛网羁绊场。2026-07-28已对W01、W02、W03、W04、W08、W10、W11、W12完成去AI感返修，删除复制式龙虫、密集尖塔碎片、镜像构图、九道同构光柱和放射节点。被替换稿已归档且不再引用；V2的72张AI游戏概念图仍完整归档；上一版GC a3ab9f6a保持只读未改。",
+    "content": "W01-W14九大陆世界观GC的图片生产包已补齐：14镜分镜、14张正式首帧、6张关键运动尾帧、苍霖与成年巨龙2张一致性锚点，共22张当前生产图片；14条正式图片提示词、补充提示词包、14条视频运动提示词、剪辑字卡和声音执行单均已接入。画风统一为明亮干净的二维东方幻想动画背景插图；世界树只表现为没有中心、近透明、无主干的量子蛛网羁绊场。2026-07-28完成8张首帧去AI感返修；2026-07-29补齐W02、W03、W05、W08、W10、W12尾帧，并删除水纹堆料、颗粒虫潮和激光式羁绊线。V2的72张AI游戏概念图仍只作归档；上一版GC a3ab9f6a保持只读未改。",
     "episode": 1,
     "shot_number": 0,
     "prompts": [],
@@ -366,7 +389,15 @@
       "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W11.png",
       "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W12.png",
       "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W13.png",
-      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W14.png"
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/images/W14.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/CHAR_Canglin_anchor.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/CRE_Dragon_anchor.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W02_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W03_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W05_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W08_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W10_end.png",
+      "/api/v1/agentapp/production/resource/production/7666b0e8/uploads/supplemental/W12_end.png"
     ],
     "videos": [],
     "metadata": {
@@ -379,10 +410,11 @@
       "title_card_post_only": true,
       "rejected_v2_archive": "archive/v2-ai-rejected-2026-07-28",
       "delivery_status": "complete",
-      "image_generation_status": "14_of_14_approved_after_style_rework",
+      "image_generation_status": "22_of_22_production_images_ready",
       "video_generation_status": "ready",
-      "approved_image_count": 14,
-      "required_image_count": 14,
+      "approved_image_count": 22,
+      "required_image_count": 22,
+      "formal_first_frame_count": 14,
       "formal_image_assets": [
         "uploads/images/W01.png",
         "uploads/images/W02.png",
@@ -400,6 +432,31 @@
         "uploads/images/W14.png"
       ],
       "contact_sheet": "KEYFRAMES_W01_W14_V3_REWORK_CONTACT_SHEET.jpg",
+      "supplemental_image_count": 8,
+      "supplemental_image_assets": [
+        "uploads/supplemental/CHAR_Canglin_anchor.png",
+        "uploads/supplemental/CRE_Dragon_anchor.png",
+        "uploads/supplemental/W02_end.png",
+        "uploads/supplemental/W03_end.png",
+        "uploads/supplemental/W05_end.png",
+        "uploads/supplemental/W08_end.png",
+        "uploads/supplemental/W10_end.png",
+        "uploads/supplemental/W12_end.png"
+      ],
+      "continuity_anchor_assets": [
+        "uploads/supplemental/CHAR_Canglin_anchor.png",
+        "uploads/supplemental/CRE_Dragon_anchor.png"
+      ],
+      "end_frame_assets": {
+        "W02": "uploads/supplemental/W02_end.png",
+        "W03": "uploads/supplemental/W03_end.png",
+        "W05": "uploads/supplemental/W05_end.png",
+        "W08": "uploads/supplemental/W08_end.png",
+        "W10": "uploads/supplemental/W10_end.png",
+        "W12": "uploads/supplemental/W12_end.png"
+      },
+      "supplemental_contact_sheet": "SUPPLEMENTAL_IMAGES_V1_CONTACT_SHEET.jpg",
+      "supplemental_prompt_source": "SUPPLEMENTAL_IMAGE_PROMPTS_V1.json",
       "reworked_shots": [
         "W01",
         "W02",
@@ -417,6 +474,6 @@
     "status": "done",
     "assignee": "",
     "created_at": "2026-07-20T18:27:23.3234686Z",
-    "updated_at": "2026-07-20T18:27:23.3234686Z"
+    "updated_at": "2026-07-29T10:15:00+08:00"
   }
 ]

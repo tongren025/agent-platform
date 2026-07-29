@@ -1,0 +1,99 @@
+{
+  "version": 2,
+  "jobs": {
+    "EP01_G01_A": {
+      "status": "generated",
+      "model": "test/video-model",
+      "job_version_fingerprint": "794468ea42e56afde4b2576fdb100bffb9982464dbc2814e71a10ebc49651531",
+      "output_file_sha256": "6ac101dd9cd076259d9aa1d6040b33a3d902de3d50dce7338333b8ff7820f25b",
+      "remote_id": "",
+      "source_url": "",
+      "technical_facts": {
+        "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\A.mp4",
+        "width": 720,
+        "height": 1280,
+        "duration_seconds": 5.0,
+        "has_audio": true
+      },
+      "technical_errors": [],
+      "error": "",
+      "updated_at": "2026-07-28T13:07:05.492932+00:00",
+      "candidate_temp_path": "",
+      "candidate_file_sha256": "",
+      "candidate_cleanup_warning": "",
+      "end_frame_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\video_ends\\EP01_G01_A_end.png"
+    },
+    "EP01_G01_B": {
+      "remote_id": "remote-B",
+      "status": "generated",
+      "model": "test/video-model",
+      "job_version_fingerprint": "f224574dac6655738f97f63b60ed08bfa2415486b9285fadd7bb36d57152159b",
+      "input_file_sha256": "a80766a9a3aeafc581931a728bf087376df4443bb606b3a7619b8090a200c58d",
+      "input_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\video_ends\\EP01_G01_A_end.png",
+      "output_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\B.mp4",
+      "submission_intent": {
+        "attempt_id": "9d0c8d2845184e10ac26ff220b502b8d",
+        "job_version_fingerprint": "f224574dac6655738f97f63b60ed08bfa2415486b9285fadd7bb36d57152159b",
+        "model": "test/video-model",
+        "input_file_sha256": "a80766a9a3aeafc581931a728bf087376df4443bb606b3a7619b8090a200c58d",
+        "started_at": "2026-07-28T13:07:05.505045+00:00",
+        "resolved_remote_id": "remote-B",
+        "resolved_at": "2026-07-28T13:07:05.508932+00:00"
+      },
+      "error": "",
+      "updated_at": "2026-07-28T13:07:05.533931+00:00",
+      "submitted_at": "2026-07-28T13:07:05.508932+00:00",
+      "usage": {},
+      "source_url": "local://remote-B",
+      "candidate_temp_path": "",
+      "candidate_file_sha256": "",
+      "technical_facts": {
+        "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\.B.aca2b43b6cf44cf98ec96e3f6f5cce43.download.mp4",
+        "width": 720,
+        "height": 1280,
+        "duration_seconds": 5.0,
+        "has_audio": true
+      },
+      "technical_errors": [],
+      "output_file_sha256": "ed8fe57f873a8104dcd6509c2326c81a6cef738417c291b916d0f68bc32c922b",
+      "candidate_cleanup_warning": "",
+      "end_frame_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\video_ends\\EP01_G01_B_end.png"
+    },
+    "EP01_G01_C": {
+      "remote_id": "remote-C",
+      "status": "generated",
+      "model": "test/video-model",
+      "job_version_fingerprint": "d46afcd17aafe1333d0673858230b992acb4bacf551c48895fddae84731b8fef",
+      "input_file_sha256": "b38de1b46de68b1bee430548cc6246cbe205c2c724f9941f5d8f9f08a9ba208f",
+      "input_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\video_ends\\EP01_G01_B_end.png",
+      "output_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\C.mp4",
+      "submission_intent": {
+        "attempt_id": "7c07eaeff8ce470ab38a55bd3aec2f79",
+        "job_version_fingerprint": "d46afcd17aafe1333d0673858230b992acb4bacf551c48895fddae84731b8fef",
+        "model": "test/video-model",
+        "input_file_sha256": "b38de1b46de68b1bee430548cc6246cbe205c2c724f9941f5d8f9f08a9ba208f",
+        "started_at": "2026-07-28T13:07:05.543933+00:00",
+        "resolved_remote_id": "remote-C",
+        "resolved_at": "2026-07-28T13:07:05.551053+00:00"
+      },
+      "error": "",
+      "updated_at": "2026-07-28T13:07:05.586933+00:00",
+      "submitted_at": "2026-07-28T13:07:05.551053+00:00",
+      "usage": {},
+      "source_url": "local://remote-C",
+      "candidate_temp_path": "",
+      "candidate_file_sha256": "",
+      "technical_facts": {
+        "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\.C.9e129b3285d84a4d97061cb2f5d89663.download.mp4",
+        "width": 720,
+        "height": 1280,
+        "duration_seconds": 5.0,
+        "has_audio": true
+      },
+      "technical_errors": [],
+      "output_file_sha256": "ed8fe57f873a8104dcd6509c2326c81a6cef738417c291b916d0f68bc32c922b",
+      "candidate_cleanup_warning": "",
+      "end_frame_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_partial_g_unit_submits_on0\\video_ends\\EP01_G01_C_end.png"
+    }
+  }
+}

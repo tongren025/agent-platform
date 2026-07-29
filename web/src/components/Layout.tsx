@@ -44,7 +44,7 @@ const navSections: NavSection[] = [
       { key: '/dashboard', icon: <DashboardOutlined />, label: '今日工作' },
       { key: '/studio', icon: <PlaySquareOutlined />, label: '快速制作', perm: 'production:manage' },
       { key: '/production', icon: <VideoCameraOutlined />, label: '我的项目', perm: 'production:manage' },
-      { key: '/canvas', icon: <ExpandOutlined />, label: '整理素材', perm: 'production:manage' },
+      { key: '/canvas', icon: <ExpandOutlined />, label: '画布中心', perm: 'production:manage' },
     ],
   },
   {

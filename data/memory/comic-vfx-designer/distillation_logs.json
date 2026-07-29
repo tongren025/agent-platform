@@ -1,144 +1,5 @@
 [
   {
-    "logId": "dist_8f645a5c0274",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-07-01T03:02:36.797527Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_03",
-        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_01",
-        "newContent": "色彩体系与核心特效元素：龙骨碎片=蓝白脉动光(苍霖核心符号)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。",
-        "newImportance": null,
-        "reason": "两条记忆均在定义特效元素的颜色绑定，内容高度重叠，合并后可提高检索效率。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_04",
-        "mergeIntoId": "seed_comic-vfx-designer_sem_02",
-        "newContent": "九陆纪元视觉核心/风格锚点句：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
-        "newImportance": null,
-        "reason": "风格锚点句与视觉核心定义完全一致，应合并为单一的风格基准。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_05",
-        "mergeIntoId": "seed_comic-vfx-designer_sem_01_quality_clean_negative",
-        "newContent": "正片级图片和视频必须使用正向约束词（⚠️ Seedance 2.0不读负向提示词）。正向表述：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移。特效要求干净通透，严禁死黑阴影、裂纹划痕或黑色粗描边。",
-        "newImportance": null,
-        "reason": "两者均在强调画面的“干净度”和禁止的视觉元素，合并后增强了质量约束的完整性。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_color_03",
-        "mergeIntoId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_02",
-        "newContent": "暖冷色心理是双面的：暖色既是温暖也是愤怒，冷色既是平静也是悲伤孤独——靠饱和度和明度+语境定具体含义。配色是情绪工具，需触发特定的心理联想。（来源:No Film School/维基百科）",
-        "newImportance": null,
-        "reason": "通用色彩理论与具体色彩心理学应用高度相似，合并为综合知识点。"
-      },
-      {
-        "action": "prune",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_vfx_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": null,
-        "reason": "该记忆为过于宽泛的通用定义（VFX是合成），对具体的AI生成工作流无实际指导价值，属于低价值冗余信息。"
-      },
-      {
-        "action": "prune",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_vfx_02",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": null,
-        "reason": "该记忆列举的传统VFX技术栈（运动追踪、抠像）与当前基于Seedance的AI生成链路不匹配，易造成干扰。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 24,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 19,
-      "episodic_count": 3,
-      "procedural_count": 5
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 18453,
-    "error": null
-  },
-  {
-    "logId": "dist_568ad171e374",
-    "employeeKey": "comic-vfx-designer",
-    "ranAt": "2026-07-01T03:05:22.071805Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-vfx-designer_sem_04",
-        "mergeIntoId": "seed_comic-vfx-designer_sem_02",
-        "newContent": "九陆纪元视觉核心（风格锚点句）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
-        "newImportance": null,
-        "reason": "两者内容几乎完全一致，前者为锚点句，后者为核心定义，合并可提高检索效率。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_lighting_02",
-        "mergeIntoId": "learn_consolidation_20260630_comic-vfx-designer_sem_02",
-        "newContent": "光影×情绪映射：伦勃朗光（暗侧脸颊下方三角光斑，宽不过眼长不过鼻）=压迫戏剧/逆光轮廓光=神秘孤独/底光=恐怖不安/顶光=审判神圣/双色温=冲突对峙/体积光=史诗希望/环境柔光=日常温柔。",
-        "newImportance": null,
-        "reason": "将具体的伦勃朗光判定标准合并至光影情绪映射表中，使理论与实践标准统一。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_lighting_01",
-        "mergeIntoId": "pro_craft_deep_20260630_comic-vfx-designer_lighting_03",
-        "newContent": "三点布光实操：提示词需包含'位置+高度+强度比'。主光在侧面30-45°且略高于眼平线，辅光在对侧（强度为主光的50-75%），轮廓光在后上方做边缘分离。光的方向决定脸的塑形和情绪。",
-        "newImportance": null,
-        "reason": "将布光参数与提示词撰写要求合并，形成完整的操作指南。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-vfx-designer_color_01",
-        "mergeIntoId": "pro_canon_wiki_20260630_comic-vfx-designer_color_02",
-        "newContent": "色彩理论基础：三属性（色相/明度/饱和度）是控制画面的基本维度。互补色（色轮相对）制造最大对比张力，类似色（色轮相邻）自然和谐——冲突场景用互补，统一氛围用类似。",
-        "newImportance": null,
-        "reason": "将基础色彩属性与色彩应用逻辑合并为统一的色彩理论知识点。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-vfx-designer_film_color_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "该记忆强调色彩作为叙事决策，与后续的视觉风格高度相关，重要性应高于基础理论。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 19,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 16,
-      "episodic_count": 3,
-      "procedural_count": 5
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 15343,
-    "error": null
-  },
-  {
     "logId": "dist_85014b94419c",
     "employeeKey": "comic-vfx-designer",
     "ranAt": "2026-07-01T03:07:22.626945Z",
@@ -1753,6 +1614,81 @@
     "afterCounts": {},
     "llmModel": "",
     "durationMs": 47,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_4e9e6033e708",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-24T19:00:27.382510Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 16,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_a98e91beea34",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-25T19:00:13.455803Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 47,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_a71e2e031336",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-26T19:00:26.950740Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 63,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_f610f7eea0df",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-28T13:53:36.747994Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 45,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_479a59d3f173",
+    "employeeKey": "comic-vfx-designer",
+    "ranAt": "2026-07-28T19:00:15.272396Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 30,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
   }
 ]

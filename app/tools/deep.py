@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 
 from app.config import settings
 from app.models.conversation import PendingApprovalDetail
+from app.services.chat_response import normalize_chat_completion
 from app.tools.base import ToolContext, register_handler
 
 logger = logging.getLogger(__name__)
@@ -378,6 +379,7 @@ class TaskHandler:
                     "error": f"Sub-agent LLM call failed: {exc}",
                 })
 
+            response = normalize_chat_completion(response)
             choice = response.choices[0]
             assistant_msg = choice.message
 

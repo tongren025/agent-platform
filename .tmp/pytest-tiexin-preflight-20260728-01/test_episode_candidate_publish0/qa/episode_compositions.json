@@ -1,0 +1,403 @@
+{
+  "version": 1,
+  "episodes": {
+    "EP01": {
+      "status": "composed",
+      "dependency_fingerprint": "360d4a0486a21b4ff8fedff3ec18ee1a60d052a70d82e8bc2bedd8ff1aeccebd",
+      "candidate_temp_path": "",
+      "candidate_file_sha256": "",
+      "output_file_sha256": "2dcbe711e64db506f5a47b556c4ef4ac6fcbf5911ef6f1ae8d7e41d415da183f",
+      "output_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\episodes\\EP01.mp4",
+      "candidate_cleanup_warning": "",
+      "segment_files": [
+        {
+          "job_id": "EP01_G01_A",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-00.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "1b0df538e72bcb5f9e75a2860fa21a53a39307e35f01dacd5781e63f99f17dc1",
+          "job_version_fingerprint": "b35b674ea9dc4ab014110c4463894ada74af0624fc8344a909c6ada20d4bce5a",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-00.mp4",
+            "file_sha256": "1b0df538e72bcb5f9e75a2860fa21a53a39307e35f01dacd5781e63f99f17dc1",
+            "job_version_fingerprint": "b35b674ea9dc4ab014110c4463894ada74af0624fc8344a909c6ada20d4bce5a"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-00.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G01_B",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-01.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "dc036958c70a72cf420903c9385c10518e663877808d523e93c44ca598a6da63",
+          "job_version_fingerprint": "d84af75a3a01832102765548eb3324706a0cfdc024180d985ec13b51e3f07a5d",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-01.mp4",
+            "file_sha256": "dc036958c70a72cf420903c9385c10518e663877808d523e93c44ca598a6da63",
+            "job_version_fingerprint": "d84af75a3a01832102765548eb3324706a0cfdc024180d985ec13b51e3f07a5d"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-01.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G01_C",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-02.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "5456742e692c0b6e5b9590fd8b321b5372129c24c2a8d05fc8f2dc693deab41f",
+          "job_version_fingerprint": "45ce64ffb093f46e9783da23339aacd9f64045dc6c85a1610229051f86943e6d",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-02.mp4",
+            "file_sha256": "5456742e692c0b6e5b9590fd8b321b5372129c24c2a8d05fc8f2dc693deab41f",
+            "job_version_fingerprint": "45ce64ffb093f46e9783da23339aacd9f64045dc6c85a1610229051f86943e6d"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-02.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G02_A",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-03.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "f004c0559e9761ed511e632521c7fa7c82fe0f3de0417d003cfc288641e99f9b",
+          "job_version_fingerprint": "e1289eae4c6a6032947a95624776b50ce707e5c4d14ea34faa81a7b58960c4ce",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-03.mp4",
+            "file_sha256": "f004c0559e9761ed511e632521c7fa7c82fe0f3de0417d003cfc288641e99f9b",
+            "job_version_fingerprint": "e1289eae4c6a6032947a95624776b50ce707e5c4d14ea34faa81a7b58960c4ce"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-03.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G02_B",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-04.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "120bb0cd05d440cdf7a8fdaa1f9675c7774158bd8727e38c02cce3bf37aa5f86",
+          "job_version_fingerprint": "2987c53bb4c4500ebd3b233bfbffdf3784122396c591dcc8fd162aae7f96a05d",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-04.mp4",
+            "file_sha256": "120bb0cd05d440cdf7a8fdaa1f9675c7774158bd8727e38c02cce3bf37aa5f86",
+            "job_version_fingerprint": "2987c53bb4c4500ebd3b233bfbffdf3784122396c591dcc8fd162aae7f96a05d"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-04.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G02_C",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-05.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "a8639869696e1abb8d4af8e7cac6f0e0a33e750787cb38213dd1c7b6d463cc5e",
+          "job_version_fingerprint": "da419bfb3f2679b0b31f0a661a51af044b617563bf7fd13d163b465af8f6f563",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-05.mp4",
+            "file_sha256": "a8639869696e1abb8d4af8e7cac6f0e0a33e750787cb38213dd1c7b6d463cc5e",
+            "job_version_fingerprint": "da419bfb3f2679b0b31f0a661a51af044b617563bf7fd13d163b465af8f6f563"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-05.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G03_A",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-06.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "9b5d77c2bd0ee9da3edce8d75bd99f45af379f66b29d18a4c36bc9925a32d3fe",
+          "job_version_fingerprint": "53bcf8f6fd264124bf1674b9f0534e193d9bb04305437d48ad1591d5cdd34dbb",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-06.mp4",
+            "file_sha256": "9b5d77c2bd0ee9da3edce8d75bd99f45af379f66b29d18a4c36bc9925a32d3fe",
+            "job_version_fingerprint": "53bcf8f6fd264124bf1674b9f0534e193d9bb04305437d48ad1591d5cdd34dbb"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-06.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G03_B",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-07.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "4d6e82f79f66eef1b6e44ff0f0f2ad6be51466fac8ba3218060c218e5b4e94ca",
+          "job_version_fingerprint": "5e8b369f5b103f51d83d9a594e990dd267c70a86c6f4a5d6271f6ca973d6ba89",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-07.mp4",
+            "file_sha256": "4d6e82f79f66eef1b6e44ff0f0f2ad6be51466fac8ba3218060c218e5b4e94ca",
+            "job_version_fingerprint": "5e8b369f5b103f51d83d9a594e990dd267c70a86c6f4a5d6271f6ca973d6ba89"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-07.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G03_C",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-08.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "1d194c2ce857d91455f64109b167741c976733ee0bb585f382299803a21d3a3e",
+          "job_version_fingerprint": "ff31cf536b258cf246c9a5191ac17d7fcb468da8a20016340b4300dc18709144",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-08.mp4",
+            "file_sha256": "1d194c2ce857d91455f64109b167741c976733ee0bb585f382299803a21d3a3e",
+            "job_version_fingerprint": "ff31cf536b258cf246c9a5191ac17d7fcb468da8a20016340b4300dc18709144"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-08.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G04_A",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-09.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "d01b60a0bbee94e468dd3a52b8e72e4c100ae46a65a9736e4dfcddf08d669d91",
+          "job_version_fingerprint": "724cbf7a81d7d613750497f7f1c64f6b97437f60a09df5638b2936fdbe26af3f",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-09.mp4",
+            "file_sha256": "d01b60a0bbee94e468dd3a52b8e72e4c100ae46a65a9736e4dfcddf08d669d91",
+            "job_version_fingerprint": "724cbf7a81d7d613750497f7f1c64f6b97437f60a09df5638b2936fdbe26af3f"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-09.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G04_B",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-10.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "df7b87636617abd0f74e2ffca695dc75f24cdb6de1539a8066f666b741302a96",
+          "job_version_fingerprint": "bc6a78f85fdf53613608343ae1423e6301a09f6e96a219fd6b85010f36696695",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-10.mp4",
+            "file_sha256": "df7b87636617abd0f74e2ffca695dc75f24cdb6de1539a8066f666b741302a96",
+            "job_version_fingerprint": "bc6a78f85fdf53613608343ae1423e6301a09f6e96a219fd6b85010f36696695"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-10.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G04_C",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-11.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "c7844910695143698587c908b6ac37f0c74ce7a8ec41f949742ce57aa1d75205",
+          "job_version_fingerprint": "81056eba2d130117b6da947192b86fa484e895be8312c69028760263d5180df3",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-11.mp4",
+            "file_sha256": "c7844910695143698587c908b6ac37f0c74ce7a8ec41f949742ce57aa1d75205",
+            "job_version_fingerprint": "81056eba2d130117b6da947192b86fa484e895be8312c69028760263d5180df3"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-11.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G05_A",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-12.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "a2b09203eb52a0641632e2f90a164e449ddd2b96e368ade4b3f32ed76dcb261c",
+          "job_version_fingerprint": "55938f0e0079643f9f265e4cf7cd3aa24036a4a9222327ba07319e2509d4c866",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-12.mp4",
+            "file_sha256": "a2b09203eb52a0641632e2f90a164e449ddd2b96e368ade4b3f32ed76dcb261c",
+            "job_version_fingerprint": "55938f0e0079643f9f265e4cf7cd3aa24036a4a9222327ba07319e2509d4c866"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-12.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G05_B",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-13.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "a8ed6ae5f7c4e6c9f45f3dcd01301e5f980e42fd41c395dd91858f4b1e930c78",
+          "job_version_fingerprint": "3e90ce0af9bcc4302c5cfe0812a5367a43e6644fafd21f494506908be4684552",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-13.mp4",
+            "file_sha256": "a8ed6ae5f7c4e6c9f45f3dcd01301e5f980e42fd41c395dd91858f4b1e930c78",
+            "job_version_fingerprint": "3e90ce0af9bcc4302c5cfe0812a5367a43e6644fafd21f494506908be4684552"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-13.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G05_C",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-14.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "ee79766f4a464e84a70d8c105b75017fd39f977f3009d2315976006085fc287e",
+          "job_version_fingerprint": "fb1df84abfc6fde746d42d8e2b99dee32b50cdaba84c0aad35d841a8e3b36930",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-14.mp4",
+            "file_sha256": "ee79766f4a464e84a70d8c105b75017fd39f977f3009d2315976006085fc287e",
+            "job_version_fingerprint": "fb1df84abfc6fde746d42d8e2b99dee32b50cdaba84c0aad35d841a8e3b36930"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-14.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G06_A",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-15.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "6b3221df0c1a672fbf67856f2b2f5824fca9fd897213b561dd6e247baa5dc6e7",
+          "job_version_fingerprint": "4a81174162e9b50bbb5c0e15606fc5612d69c74bbd1676f3084ddfb77af80d5b",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-15.mp4",
+            "file_sha256": "6b3221df0c1a672fbf67856f2b2f5824fca9fd897213b561dd6e247baa5dc6e7",
+            "job_version_fingerprint": "4a81174162e9b50bbb5c0e15606fc5612d69c74bbd1676f3084ddfb77af80d5b"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-15.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G06_B",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-16.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "261677fded75752eb024158095ce32ff7fff1228744a4acb7ac552d6331ba593",
+          "job_version_fingerprint": "9964786b734541af36fad342658ed04d3755167c67540e1496dd5ef94af1219f",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-16.mp4",
+            "file_sha256": "261677fded75752eb024158095ce32ff7fff1228744a4acb7ac552d6331ba593",
+            "job_version_fingerprint": "9964786b734541af36fad342658ed04d3755167c67540e1496dd5ef94af1219f"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-16.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        },
+        {
+          "job_id": "EP01_G06_C",
+          "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-17.mp4",
+          "input_file_sha256": "41cf6794ba4200b839c53531555f0f3998df4cbb01a4d5cb0b94e3ca5e23947d",
+          "file_sha256": "d3f3249a06bf6aa034db7d7b752230d9b9744e531c9d2af04bf128c3ceba0fe3",
+          "job_version_fingerprint": "fc1ebaca09a4d8a50ff6564b04294cf9529c4bb31e41d787a5a9a96a6dcd1878",
+          "model": "test/video-model",
+          "approval": {
+            "status": "approved",
+            "path": "segment-17.mp4",
+            "file_sha256": "d3f3249a06bf6aa034db7d7b752230d9b9744e531c9d2af04bf128c3ceba0fe3",
+            "job_version_fingerprint": "fc1ebaca09a4d8a50ff6564b04294cf9529c4bb31e41d787a5a9a96a6dcd1878"
+          },
+          "technical_facts": {
+            "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\segment-17.mp4",
+            "width": 720,
+            "height": 1280,
+            "duration_seconds": 5.0,
+            "has_audio": true
+          }
+        }
+      ],
+      "technical_facts": {
+        "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_episode_candidate_publish0\\episodes\\EP01.mp4",
+        "width": 720,
+        "height": 1280,
+        "duration_seconds": 5.0,
+        "has_audio": true
+      },
+      "recovered_at": "2026-07-28T13:07:06.047807+00:00",
+      "updated_at": "2026-07-28T13:07:06.048873+00:00"
+    }
+  }
+}

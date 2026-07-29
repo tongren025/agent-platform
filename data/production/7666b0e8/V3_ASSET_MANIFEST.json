@@ -6,6 +6,10 @@
   "contact_sheet": "KEYFRAMES_W01_W14_V3_REWORK_CONTACT_SHEET.jpg",
   "style_bible": "STYLE_BIBLE_V3.md",
   "prompt_source": "V3_IMAGE_PROMPTS.json",
+  "supplemental_manifest": "SUPPLEMENTAL_ASSET_MANIFEST_V1.json",
+  "supplemental_prompt_source": "SUPPLEMENTAL_IMAGE_PROMPTS_V1.json",
+  "supplemental_asset_count": 8,
+  "total_production_image_count": 22,
   "rejected_v2_archive": "archive/v2-ai-rejected-2026-07-28",
   "ai_style_rework": {
     "date": "2026-07-28",

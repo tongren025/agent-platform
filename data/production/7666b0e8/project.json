@@ -64,10 +64,29 @@
       "uploads/images/W13.png",
       "uploads/images/W14.png"
     ],
+    "supplemental_image_status": "8_of_8_approved",
+    "supplemental_image_count": 8,
+    "production_image_count": 22,
+    "continuity_anchor_count": 2,
+    "continuity_anchor_assets": [
+      "uploads/supplemental/CHAR_Canglin_anchor.png",
+      "uploads/supplemental/CRE_Dragon_anchor.png"
+    ],
+    "end_frame_count": 6,
+    "end_frame_assets": {
+      "W02": "uploads/supplemental/W02_end.png",
+      "W03": "uploads/supplemental/W03_end.png",
+      "W05": "uploads/supplemental/W05_end.png",
+      "W08": "uploads/supplemental/W08_end.png",
+      "W10": "uploads/supplemental/W10_end.png",
+      "W12": "uploads/supplemental/W12_end.png"
+    },
+    "supplemental_prompt_source": "SUPPLEMENTAL_IMAGE_PROMPTS_V1.json",
+    "supplemental_contact_sheet": "SUPPLEMENTAL_IMAGES_V1_CONTACT_SHEET.jpg",
     "keyframe_contact_sheet": "KEYFRAMES_W01_W14_V3_REWORK_CONTACT_SHEET.jpg",
     "video_generation_locked_until_review": false,
     "video_generation_ready": true
   },
   "created_at": "2026-07-20T18:27:23.3234686Z",
-  "updated_at": "2026-07-28T21:40:00+08:00"
+  "updated_at": "2026-07-29T10:15:00+08:00"
 }

@@ -1,150 +1,5 @@
 [
   {
-    "logId": "dist_505c49110b4d",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-07-01T03:02:17.573247Z",
-    "actions": [
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_3dbb51e63cbe",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.98,
-        "reason": "经验记忆 mem_f9c130a07c89 验证了该偏好在实际产品宣传场景中获得了高满意度，增强了该语义记忆的可靠性。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 1,
-      "episodic": 1,
-      "procedural": 1
-    },
-    "afterCounts": {
-      "semantic_count": 1,
-      "episodic_count": 1,
-      "procedural_count": 1
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 2358,
-    "error": null
-  },
-  {
-    "logId": "dist_e56e36d4f6fb",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-07-01T03:03:24.263156Z",
-    "actions": [
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_3dbb51e63cbe",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.99,
-        "reason": "经验记忆 mem_f9c130a07c89 验证了该偏好在实际应用中能获得高满意度，增强了语义记忆的权重。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 1,
-      "episodic": 1,
-      "procedural": 1
-    },
-    "afterCounts": {
-      "semantic_count": 1,
-      "episodic_count": 1,
-      "procedural_count": 1
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 2186,
-    "error": null
-  },
-  {
-    "logId": "dist_f1dabd0c4363",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-07-01T03:04:33.983298Z",
-    "actions": [
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_3dbb51e63cbe",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 1.0,
-        "reason": "经验记忆 mem_f9c130a07c89 验证了该偏好在实际应用中获得了极高满意度，应提升其权重。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 1,
-      "episodic": 1,
-      "procedural": 1
-    },
-    "afterCounts": {
-      "semantic_count": 1,
-      "episodic_count": 1,
-      "procedural_count": 1
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 2125,
-    "error": null
-  },
-  {
-    "logId": "dist_b8882f126596",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-07-01T03:06:36.497120Z",
-    "actions": [
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_3dbb51e63cbe",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 1.0,
-        "reason": "经验记忆 mem_f9c130a07c89 的高成功率验证了该语义偏好的准确性，维持最高权重。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 1,
-      "episodic": 1,
-      "procedural": 1
-    },
-    "afterCounts": {
-      "semantic_count": 1,
-      "episodic_count": 1,
-      "procedural_count": 1
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 2078,
-    "error": null
-  },
-  {
-    "logId": "dist_e265fa83be08",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-07-01T03:08:35.067113Z",
-    "actions": [
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_3dbb51e63cbe",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 1.0,
-        "reason": "经验记忆 mem_f9c130a07c89 的高成功率验证了该偏好的实际价值，维持最高权重。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 1,
-      "episodic": 1,
-      "procedural": 1
-    },
-    "afterCounts": {
-      "semantic_count": 1,
-      "episodic_count": 1,
-      "procedural_count": 1
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 1968,
-    "error": null
-  },
-  {
     "logId": "dist_8ad1770c6c2f",
     "employeeKey": "demo-assistant",
     "ranAt": "2026-07-01T03:09:12.012509Z",
@@ -1372,6 +1227,81 @@
     "afterCounts": {},
     "llmModel": "",
     "durationMs": 16,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_53613b5272fb",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-24T19:00:27.281104Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 14,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_0d2ab6159f84",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-25T19:00:13.262772Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 31,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_c4cd6cf816bc",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-26T19:00:26.673129Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 47,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_1afe1d0decbc",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-28T13:53:36.652990Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 15,
+    "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_69b23feb6b5c",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-28T19:00:15.164396Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {},
+    "llmModel": "",
+    "durationMs": 0,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
   }
 ]

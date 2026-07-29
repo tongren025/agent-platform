@@ -1,8 +1,8 @@
 {
   "project_id": "tiexin-s1",
   "characters": {
-    "expected": 9,
-    "generated": 9
+    "expected": 3,
+    "generated": 3
   },
   "character_turnarounds": {
     "expected": 6,

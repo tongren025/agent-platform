@@ -1,22 +1,23 @@
 # 《铁心恋人》第一季前期视觉资产审核单
 
-> 当前状态：4 套角色候选待审、2 套沈曜三视图返工中；8 个场景包候选待审。
+> 当前状态：6 套角色联合资产包均通过技术预检、待导演审核；8 个场景包候选待审。
 > 本文只用于导演审片，不代表任何资产已经批准。
 > 批准结果必须写入 `qa/preproduction_approvals.json`，并绑定所审文件的
 > SHA-256、资产包内容指纹和当前规格指纹；文件被替换后旧批准自动失效。
 > 独立逐图预检与退稿依据见
 > [preproduction_visual_preflight_2026-07-28.md](qa/preproduction_visual_preflight_2026-07-28.md)。
 
-## 一、角色标准三视图（4 项候选待审，2 项返工中）
+## 一、角色标准三视图（6/6 项候选待审）
 
 验收口径：同一角色的正面、严格 90° 侧面、背面必须是同一身份、同一发型、
-同一套服装和同一身体比例；中立站姿、全身完整、无遮挡。面部身份近照作为
-独立参考与三视图共同使用，不能拿普通全身照替代三视图。
+同一套服装和同一身体比例；中立站姿、全身完整、无遮挡。人物解剖学右侧面
+鼻尖朝画布左。面部身份细节锚只能补充核验微小固定标记，不能替代全身三视图；
+沈曜的主三视图与三张身份细节图必须作为一个联合包批准。
 
 | 审核 ID | 角色 / 服装 | 候选文件 | 状态 |
 |---|---|---|---|
-| `R1_daily` | 沈曜 / 日常行动装 | [当前三视图](assets/characters/turnarounds/R1_shenyao_daily_turnaround_candidate_v1.png) | rework：伤疤/右耳钉不可稳定核验 |
-| `R1_tactical` | 沈曜 / 战术装 | [当前三视图](assets/characters/turnarounds/R1_shenyao_tactical_turnaround_candidate_v1.png) | rework：伤疤/右耳钉不可稳定核验 |
+| `R1_daily` | 沈曜 / 日常行动装 | [全身三视图](assets/characters/turnarounds/R1_shenyao_daily_turnaround_candidate_v1.png) / [正面身份](assets/characters/details/R1_shenyao_face_front_candidate_v5.png) / [右侧标记](assets/characters/details/R1_shenyao_face_right_profile_candidate_v5.png) / [左侧反证](assets/characters/details/R1_shenyao_face_left_profile_negative_candidate_v5.png) | candidate：联合包技术预检通过 |
+| `R1_tactical` | 沈曜 / 战术装 | [全身三视图](assets/characters/turnarounds/R1_shenyao_tactical_turnaround_candidate_v1.png) / [正面身份](assets/characters/details/R1_shenyao_face_front_candidate_v5.png) / [右侧标记](assets/characters/details/R1_shenyao_face_right_profile_candidate_v5.png) / [左侧反证](assets/characters/details/R1_shenyao_face_left_profile_negative_candidate_v5.png) | candidate：联合包技术预检通过 |
 | `R2_suit` | 凌昊 / 西装 | [打开三视图](assets/characters/turnarounds/R2_linghao_suit_turnaround_candidate_v2.png) | candidate |
 | `R2_tactical` | 凌昊 / 战术装 | [打开三视图](assets/characters/turnarounds/R2_linghao_tactical_turnaround_candidate_v2.png) | candidate |
 | `R2_home` | 凌昊 / 居家白 T | [打开三视图](assets/characters/turnarounds/R2_linghao_home_turnaround_candidate_v5.png) | candidate |

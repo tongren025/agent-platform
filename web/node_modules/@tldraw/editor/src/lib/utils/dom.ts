@@ -1,0 +1,187 @@
+/*
+This is used to facilitate double clicking and pointer capture on elements.
+
+The events in this file are possibly set on individual SVG elements, 
+such as handles or corner handles, rather than on HTML elements or 
+SVGSVGElements. Raw SVG elements do not support pointerCapture in
+most cases, meaning that in order for pointer capture to work, we 
+need to crawl up the DOM tree to find the nearest HTML element. Then,
+in order for that element to also call the `onPointerUp` event from
+this file, we need to manually set that event on that element and
+later remove it when the pointerup occurs. This is a potential leak
+if the user clicks on a handle but the pointerup does not fire for
+whatever reason.
+*/
+
+import { debugFlags, pointerCaptureTrackingObject } from './debug-flags'
+
+/** @public */
+export function loopToHtmlElement(elm: Element): HTMLElement {
+	if (elm.nodeType === Node.ELEMENT_NODE) return elm as HTMLElement
+	if (elm.parentElement) return loopToHtmlElement(elm.parentElement)
+	else throw Error('Could not find a parent element of an HTML type!')
+}
+
+/**
+ * This function calls `event.preventDefault()` for you. Why is that useful?
+ *
+ * Because if you enable `window.preventDefaultLogging = true` it'll log out a message when it
+ * happens. Because we use console.warn rather than (log) you'll get a stack trace in the inspector
+ * telling you exactly where it happened. This is important because `e.preventDefault()` is the
+ * source of many bugs, but unfortunately it can't be avoided because it also stops a lot of default
+ * behaviour which doesn't make sense in our UI
+ *
+ * @param event - To prevent default on
+ * @public
+ */
+export function preventDefault(event: React.BaseSyntheticEvent | Event) {
+	if ('cancelable' in event && !event.cancelable) return
+	event.preventDefault()
+	if (debugFlags.logPreventDefaults.get()) {
+		console.warn('preventDefault called on event:', event)
+	}
+}
+
+/** @public */
+export function setPointerCapture(
+	element: Element,
+	event: React.PointerEvent<Element> | PointerEvent
+) {
+	element.setPointerCapture(event.pointerId)
+	if (debugFlags.logPointerCaptures.get()) {
+		const trackingObj = pointerCaptureTrackingObject.get()
+		trackingObj.set(element, (trackingObj.get(element) ?? 0) + 1)
+		console.warn('setPointerCapture called on element:', element, event)
+	}
+}
+
+/** @public */
+export function releasePointerCapture(
+	element: Element,
+	event: React.PointerEvent<Element> | PointerEvent
+) {
+	if (!element.hasPointerCapture(event.pointerId)) {
+		return
+	}
+
+	element.releasePointerCapture(event.pointerId)
+	if (debugFlags.logPointerCaptures.get()) {
+		const trackingObj = pointerCaptureTrackingObject.get()
+		if (trackingObj.get(element) === 1) {
+			trackingObj.delete(element)
+		} else if (trackingObj.has(element)) {
+			trackingObj.set(element, trackingObj.get(element)! - 1)
+		} else {
+			console.warn('Release without capture')
+		}
+		console.warn('releasePointerCapture called on element:', element, event)
+	}
+}
+
+/**
+ * Calls `event.stopPropagation()`.
+ *
+ * @deprecated Use {@link Editor.markEventAsHandled} instead, or manually call `event.stopPropagation()` if
+ * that's what you really want.
+ *
+ * @public
+ */
+export function stopEventPropagation(e: any) {
+	return e.stopPropagation()
+}
+
+/** @internal */
+export function setStyleProperty(
+	elm: HTMLElement | null,
+	property: string,
+	value: string | number
+) {
+	if (!elm) return
+	elm.style.setProperty(property, String(value))
+}
+
+/**
+ * Move an element into a new parent, preserving its state where the platform allows it.
+ *
+ * Uses `Node.moveBefore` (Chromium 133+, Firefox 144+) when both the element and parent are
+ * connected to the same document — this moves the element without resetting its state, so
+ * iframes don't reload and media keeps playing. Otherwise (older browsers, disconnected nodes,
+ * or a cross-document move) it falls back to `appendChild`, which moves the element but resets
+ * its state like an iframe reload.
+ *
+ * This is the primitive tldraw uses to adopt `ShapeUtil.getAppOwnedElement` elements, exposed so
+ * apps can perform symmetric state-preserving moves from `ShapeUtil.onReleaseAppOwnedElement` —
+ * for example moving an element to an off-canvas parking lot between editor sessions.
+ *
+ * @param parent - The element to move `element` into, as its last child.
+ * @param element - The element to move.
+ * @public
+ */
+export function moveElementInto(parent: HTMLElement, element: HTMLElement) {
+	if (
+		element.isConnected &&
+		parent.isConnected &&
+		typeof (parent as any).moveBefore === 'function' &&
+		element.ownerDocument === parent.ownerDocument
+	) {
+		try {
+			;(parent as any).moveBefore(element, null)
+			return
+		} catch {
+			// fall through to appendChild
+		}
+	}
+	parent.appendChild(element)
+}
+
+/** @internal */
+export function elementShouldCaptureKeys(el: Element | null, includeButtonsAndMenus = true) {
+	if (!el) return false
+
+	const tagName = el.tagName.toLowerCase()
+	return (
+		(el as HTMLElement).isContentEditable ||
+		tagName === 'input' ||
+		tagName === 'textarea' ||
+		(includeButtonsAndMenus && tagName === 'select') ||
+		(includeButtonsAndMenus && tagName === 'button') ||
+		el.classList.contains('tlui-slider__thumb')
+	)
+}
+
+/**
+ * Returns the global `document`. Use this instead of bare `document` to satisfy lint rules.
+ *
+ * When you have a DOM node or editor instance, prefer the scoped versions instead:
+ * - `getOwnerDocument(node)` – the document that owns a specific DOM node
+ * - `editor.getContainerDocument()` – the document where the editor is mounted
+ *
+ * @internal
+ */
+export function getGlobalDocument(): Document {
+	// eslint-disable-next-line no-restricted-globals
+	if (typeof document !== 'undefined') return document
+	return globalThis.document
+}
+
+/**
+ * Returns the global `window`. Use this instead of bare `window` to satisfy lint rules.
+ *
+ * When you have a DOM node or editor instance, prefer the scoped versions instead:
+ * - `getOwnerWindow(node)` – the window that owns a specific DOM node
+ * - `editor.getContainerWindow()` – the window where the editor is mounted
+ *
+ * @internal
+ */
+export function getGlobalWindow(): Window & typeof globalThis {
+	if (typeof window !== 'undefined') return window as Window & typeof globalThis
+	return globalThis as Window & typeof globalThis
+}
+
+/** @internal */
+export function activeElementShouldCaptureKeys(includeButtonsAndMenus = true, doc?: Document) {
+	return elementShouldCaptureKeys(
+		(doc ?? getGlobalDocument()).activeElement,
+		includeButtonsAndMenus
+	)
+}

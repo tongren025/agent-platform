@@ -13,12 +13,14 @@ from PIL import Image
 
 from prepare_tiexin_media import (
     CHARACTER_ASSETS,
+    CHARACTER_TURNAROUND_IDENTITY_DETAILS,
     CHARACTER_TURNAROUNDS,
     QA_DIR,
     SCENE_ASSETS,
     SCENE_REQUIRED_VIEWS,
     file_sha256,
     load_preproduction_approvals,
+    safe_character_identity_detail_paths,
     safe_scene_candidate_paths,
     write_manifest_and_status,
 )
@@ -295,6 +297,123 @@ def validate_scene_package_views(
     }
 
 
+def validate_character_identity_details(
+    approvals: dict[str, Any],
+) -> dict[str, Any]:
+    """逐角色服装包验证身份细节锚；跨服装包共享同一身份锚是合法的。"""
+    results: list[dict[str, Any]] = []
+    missing: list[str] = []
+    invalid: list[dict[str, Any]] = []
+    packages: dict[str, Any] = {}
+    expected_count = 0
+
+    turnaround_keys = [
+        f"{character_id}_{outfit_key}"
+        for character_id, outfits in CHARACTER_TURNAROUNDS.items()
+        for outfit_key in outfits
+    ]
+    for turnaround_key in turnaround_keys:
+        expected_details = CHARACTER_TURNAROUND_IDENTITY_DETAILS.get(
+            turnaround_key,
+            {},
+        )
+        expected_count += len(expected_details)
+        record = (
+            approvals.get("character_turnarounds", {})
+            .get(turnaround_key, {})
+        )
+        package_errors: list[str] = []
+        raw_details = record.get("identity_detail_paths", {})
+        if raw_details is None:
+            raw_details = {}
+        if not isinstance(raw_details, dict):
+            package_errors.append("identity_detail_paths 必须是角色到路径的映射")
+            raw_details = {}
+        if set(raw_details) != set(expected_details):
+            package_errors.append("身份细节角色集合与正式规格不一致")
+
+        safe_paths, path_issues = safe_character_identity_detail_paths(record)
+        package_errors.extend(path_issues)
+        file_hashes: dict[str, str] = {}
+        package_results: list[dict[str, Any]] = []
+
+        for role, expected_path in expected_details.items():
+            path = safe_paths.get(role)
+            if path is None:
+                missing.append(
+                    f"{turnaround_key}:{role}:path_missing"
+                )
+                continue
+            if path != expected_path.resolve():
+                package_errors.append(
+                    f"{role} 路径与正式规格不一致"
+                )
+            if not path.exists() or not path.is_file():
+                missing.append(str(path))
+                continue
+            try:
+                checked = {
+                    **check_image(path, require_portrait=True),
+                    "turnaround_key": turnaround_key,
+                    "role": role,
+                }
+            except Exception as exc:
+                checked = {
+                    "path": str(path),
+                    "turnaround_key": turnaround_key,
+                    "role": role,
+                    "valid": False,
+                    "errors": [str(exc)],
+                }
+            results.append(checked)
+            package_results.append(checked)
+            if not checked["valid"]:
+                invalid.append(checked)
+            file_hashes[role] = file_sha256(path)
+
+        roles_by_hash: dict[str, list[str]] = {}
+        for role, digest in file_hashes.items():
+            roles_by_hash.setdefault(digest, []).append(role)
+        duplicate_groups = [
+            roles
+            for roles in roles_by_hash.values()
+            if len(roles) > 1
+        ]
+        if duplicate_groups:
+            package_errors.extend(
+                "同一角色包的不同身份细节角色使用了同一文件内容："
+                + ", ".join(roles)
+                for roles in duplicate_groups
+            )
+
+        if package_errors:
+            invalid.append({
+                "path": turnaround_key,
+                "turnaround_key": turnaround_key,
+                "valid": False,
+                "errors": package_errors,
+            })
+        packages[turnaround_key] = {
+            "expected_roles": list(expected_details),
+            "present": len(package_results),
+            "valid_files": sum(
+                bool(item["valid"]) for item in package_results
+            ),
+            "duplicate_role_groups": duplicate_groups,
+            "errors": package_errors,
+        }
+
+    return {
+        "expected": expected_count,
+        "present": len(results),
+        "valid": sum(bool(item["valid"]) for item in results),
+        "missing": missing,
+        "invalid": invalid,
+        "files": results,
+        "packages": packages,
+    }
+
+
 def build_approval_gate_summary(
     manifest: dict[str, Any],
     media_status: dict[str, Any],
@@ -448,6 +567,9 @@ def main() -> None:
         "character_turnarounds": validate_group(
             turnaround_paths,
             check_turnaround_image,
+        ),
+        "character_identity_details": validate_character_identity_details(
+            preproduction_approvals
         ),
         "scenes": validate_group(
             scene_paths,

@@ -15,9 +15,11 @@ import {
 } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { thumbUrl, onImageError } from '../media';
 import { COLORS } from '../theme';
 import ProjectViewNav from '../components/ProjectViewNav';
+import { friendlyCopy, friendlyProjectName } from '../storyPresentation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -186,9 +188,9 @@ export default function Production() {
   const [employeesError, setEmployeesError] = useState('');
   const [activeEpisode, setActiveEpisode] = useState<string>('all');
   const [isNarrow, setIsNarrow] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [stageFilter, setStageFilter] = useState('');
-  const [assigneeFilter, setAssigneeFilter] = useState('');
+  const [searchQuery, setSearchQuery] = useInputHabit('production.search', '');
+  const [stageFilter, setStageFilter] = useInputHabit('production.stage-filter', '');
+  const [assigneeFilter, setAssigneeFilter] = useInputHabit('production.assignee-filter', '');
   const [searchResults, setSearchResults] = useState<CardItem[] | null>(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState('');
@@ -199,7 +201,7 @@ export default function Production() {
 
   const [newProjOpen, setNewProjOpen] = useState(false);
   const [newProjStep, setNewProjStep] = useState(0);
-  const [newProjForm, setNewProjForm] = useState({
+  const [newProjForm, setNewProjForm] = useInputHabit('production.create-project', {
     name: '', description: '', sourceType: 'idea', sourceContent: '', employeeKey: '',
     episodeCount: 24, episodeDurationSeconds: 90, aspectRatio: '9:16', visualStyle: '', budget: 0,
   });
@@ -210,7 +212,7 @@ export default function Production() {
   const [genExtra, setGenExtra] = useState('');
   const [genEmpKey, setGenEmpKey] = useState('');
   const [genEpisode, setGenEpisode] = useState<number | null>(null);
-  const [genMode, setGenMode] = useState<'append' | 'replace'>('append');
+  const [genMode, setGenMode] = useInputHabit<'append' | 'replace'>('production.generate-mode', 'append');
   const [addCardOpen, setAddCardOpen] = useState(false);
   const [addCardStage, setAddCardStage] = useState('idea');
   const [addCardForm, setAddCardForm] = useState({ title: '', content: '', episode: null as number | null, shot_number: 0 });
@@ -222,7 +224,7 @@ export default function Production() {
   const [editProjectForm, setEditProjectForm] = useState({ name: '', description: '' });
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [addMemberForm, setAddMemberForm] = useState({ name: '', role: 'editor' });
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useInputHabit<string>('production.status-filter', '');
   const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [commentCard, setCommentCard] = useState<CardItem | null>(null);
@@ -246,6 +248,12 @@ export default function Production() {
   }, [cards]);
 
   const globalCards = useMemo(() => cards.filter(c => c.episode == null), [cards]);
+  // 图片/视频生成结果实际回填在提示词卡上；没有独立卡片时隐藏历史空列，
+  // 避免“画面明明存在，但生图列为空”给用户造成未生成的错觉。
+  const displayedStages = useMemo(() => stages.filter(stage => (
+    !['img_gen', 'vid_gen'].includes(stage.key)
+    || cards.some(card => card.stage === stage.key)
+  )), [stages, cards]);
 
   const filteredCards = useMemo(() => {
     let result = searchResults ?? cards;
@@ -448,7 +456,12 @@ export default function Production() {
       message.success('项目已创建');
       setNewProjOpen(false);
       setNewProjStep(0);
-      setNewProjForm({ name: '', description: '', sourceType: 'idea', sourceContent: '', employeeKey: '', episodeCount: 24, episodeDurationSeconds: 90, aspectRatio: '9:16', visualStyle: '', budget: 0 });
+      setNewProjForm(current => ({
+        ...current,
+        name: '',
+        description: '',
+        sourceContent: '',
+      }));
       await loadProjects();
       setSelectedPid(data.project_id);
       navigate(`/production/${data.project_id}/pipeline`);
@@ -674,7 +687,6 @@ export default function Production() {
     setGenExtra('');
     // 默认跟随当前选中的集数 Tab；全部/全局视图默认落全局资产
     setGenEpisode(activeEpisode !== 'all' && activeEpisode !== 'global' ? parseInt(activeEpisode) : null);
-    setGenMode('append');
     setGenDialogOpen(true);
   };
 
@@ -809,6 +821,13 @@ export default function Production() {
     return Math.round((done / filteredCards.length) * 100);
   }, [activeEpisode, stats?.overall_progress, filteredCards]);
   const progressLabel = activeEpisode === 'all' ? '总进度' : '当前视图进度';
+  const mediaStoredOnSourceCards = (
+    !cards.some(card => ['img_gen', 'vid_gen'].includes(card.stage))
+    && cards.some(card => (
+      ['storyboard', 'img_prompt', 'vid_prompt'].includes(card.stage)
+      && (card.images.length > 0 || card.videos.length > 0)
+    ))
+  );
 
   return (
     <div style={{
@@ -834,7 +853,7 @@ export default function Production() {
               navigate(`/production/${v}/pipeline`);
             }}
             style={{ flex: 1 }} size="small" placeholder="选择项目"
-            options={projects.map(p => ({ value: p.project_id, label: `${p.name} (${p.cardCount ?? 0})` }))}
+            options={projects.map(p => ({ value: p.project_id, label: friendlyProjectName(p.name) }))}
           />
           {selectedPid && (
             <Button type="text" size="small" icon={<AppstoreOutlined />}
@@ -914,7 +933,7 @@ export default function Production() {
                 onMouseLeave={e => { if (selectedPid !== p.project_id) e.currentTarget.style.background = 'transparent'; }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Text strong style={{ fontSize: 13 }}>{p.name}</Text>
+                  <Text strong style={{ fontSize: 13 }}>{friendlyProjectName(p.name)}</Text>
                   <Space size={2}>
                     <Tooltip title="层级视图">
                       <Button type="text" size="small" icon={<AppstoreOutlined />}
@@ -927,9 +946,9 @@ export default function Production() {
                     </Popconfirm>
                   </Space>
                 </div>
-                {p.description && <Text type="secondary" style={{ fontSize: 11, display: 'block', marginTop: 2 }}>{p.description}</Text>}
+                {p.description && <Text type="secondary" style={{ fontSize: 11, display: 'block', marginTop: 2 }}>{friendlyCopy(p.description)}</Text>}
                 <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Tag style={{ fontSize: 10 }}>{p.cardCount ?? 0} 卡片</Tag>
+                  <Tag style={{ fontSize: 10 }}>{p.cardCount ?? 0} 项制作内容</Tag>
                   {pProgress > 0 && (
                     <Progress percent={pProgress} size="small" showInfo={false}
                       strokeColor={pProgress === 100 ? '#52c41a' : COLORS.iris}
@@ -990,7 +1009,7 @@ export default function Production() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-                  <Text strong style={{ fontSize: 16, whiteSpace: 'nowrap' }}>{project?.name}</Text>
+                  <Text strong style={{ fontSize: 16, whiteSpace: 'nowrap' }}>{friendlyProjectName(project?.name || '')}</Text>
                   <Tooltip title="编辑项目">
                     <Button type="text" size="small" icon={<EditOutlined />}
                       aria-label="编辑项目信息"
@@ -1006,7 +1025,7 @@ export default function Production() {
                 </div>
                 {project?.description && !isNarrow && (
                   <Text type="secondary" style={{ fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {project.description}
+                    {friendlyCopy(project.description)}
                   </Text>
                 )}
                 <ProjectViewNav projectId={selectedPid} current="pipeline" />
@@ -1028,6 +1047,15 @@ export default function Production() {
                 )}
               </div>
             </div>
+
+            {mediaStoredOnSourceCards && (
+              <Alert
+                type="info"
+                showIcon
+                message="已生成的画面会直接显示在“分镜 / 图片提示词”内容中，视频显示在“视频提示词”内容中；没有内容的独立生图、生视频列已自动隐藏。"
+                style={{ margin: isNarrow ? '8px 12px 0' : '10px 20px 0', flexShrink: 0 }}
+              />
+            )}
 
             {/* ── Search and filter toolbar ── */}
             <div
@@ -1062,7 +1090,7 @@ export default function Production() {
                 }}
                 placeholder="制作阶段"
                 allowClear
-                options={stages.map(stage => ({ value: stage.key, label: stage.name }))}
+                options={displayedStages.map(stage => ({ value: stage.key, label: stage.name }))}
                 style={{ width: '100%' }}
               />
               <Select
@@ -1196,7 +1224,7 @@ export default function Production() {
                     <Button onClick={clearSearchFilters}>清空筛选</Button>
                   </Empty>
                 </div>
-              ) : stages.filter(stage => !stageFilter || stage.key === stageFilter).map(stage => {
+              ) : displayedStages.filter(stage => !stageFilter || stage.key === stageFilter).map(stage => {
                 const sc = stageCards(stage.key);
                 // 「全部」概览每列封顶：只渲染前 ALL_VIEW_CAP 张，剩余用一行提示代替，
                 // 避免跨集合并后单列上百张卡片（含 antd Paragraph 省略号逐张 DOM 测量）把主线程铺死。
@@ -1492,7 +1520,7 @@ export default function Production() {
         ]}>
         <Steps size="small" current={newProjStep} items={[{ title: '项目目标' }, { title: '生产规格' }, { title: '素材与执行' }]} style={{ margin: '12px 0 24px' }} />
         {newProjStep === 0 && <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <label><Text type="secondary">项目类型</Text><Select value={newProjForm.sourceType} onChange={v => { const isGc = v === 'gc'; setNewProjForm(p => ({ ...p, sourceType: v, ...(isGc ? { episodeCount: 1, episodeDurationSeconds: 30 } : {}) })); }} style={{ width: '100%', marginTop: 5 }} options={[{ value: 'idea', label: '剧集 · 创意/想法' }, { value: 'novel', label: '剧集 · 小说/原著' }, { value: 'script', label: '剧集 · 已有剧本' }, { value: 'outline', label: '剧集 · 大纲' }, { value: 'gc', label: 'GC 概念宣传片' }]} /></label>
+          <label><Text type="secondary">项目类型</Text><Select value={newProjForm.sourceType} onChange={v => { const isGc = v === 'gc'; setNewProjForm(p => ({ ...p, sourceType: v, ...(isGc ? { episodeCount: 1, episodeDurationSeconds: 30 } : {}) })); }} style={{ width: '100%', marginTop: 5 }} options={[{ value: 'idea', label: '剧集 · 创意/想法' }, { value: 'novel', label: '剧集 · 小说/原著' }, { value: 'script', label: '剧集 · 已有剧本' }, { value: 'outline', label: '剧集 · 大纲' }, { value: 'gc', label: '概念预告片（约 30 秒看故事与画风）' }]} /></label>
           <label><Text type="secondary">项目名称</Text><Input value={newProjForm.name} onChange={e => setNewProjForm(p => ({ ...p, name: e.target.value }))} placeholder={newProjForm.sourceType === 'gc' ? '例：九陆纪元 · 概念预告' : '例：九陆纪元 · 第一季'} style={{ marginTop: 5 }} /></label>
           <label><Text type="secondary">项目简介</Text><Input value={newProjForm.description} onChange={e => setNewProjForm(p => ({ ...p, description: e.target.value }))} placeholder={newProjForm.sourceType === 'gc' ? '30秒抓住观众——核心卖点是什么' : '一句话说明这一季讲什么'} style={{ marginTop: 5 }} /></label>
         </div>}

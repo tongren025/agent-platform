@@ -1,0 +1,95 @@
+{
+  "version": 2,
+  "jobs": {
+    "EP01_G01_A": {
+      "job_version_fingerprint": "be2e25dd0b40ea0ae62fbf775aae36173326c5c3f24dcca27e6e5788507adc75",
+      "output_file_sha256": "1b0df538e72bcb5f9e75a2860fa21a53a39307e35f01dacd5781e63f99f17dc1",
+      "model": "test/video-model"
+    },
+    "EP01_G01_B": {
+      "job_version_fingerprint": "69ce9e97e362ad73ab66b9b61c98a9f4b350579cb78c46b22459f2eb4c70eb7d",
+      "output_file_sha256": "dc036958c70a72cf420903c9385c10518e663877808d523e93c44ca598a6da63",
+      "model": "test/video-model"
+    },
+    "EP01_G01_C": {
+      "job_version_fingerprint": "556656b6ceb1033641dedd6734f674102fe60957c044e87d053a379eff2daee3",
+      "output_file_sha256": "5456742e692c0b6e5b9590fd8b321b5372129c24c2a8d05fc8f2dc693deab41f",
+      "model": "test/video-model"
+    },
+    "EP01_G02_A": {
+      "job_version_fingerprint": "9d0bd5d6a5528675115470f0904a6e3df2ba397b3089fd3cdc709e0e3e7716f3",
+      "output_file_sha256": "f004c0559e9761ed511e632521c7fa7c82fe0f3de0417d003cfc288641e99f9b",
+      "model": "test/video-model"
+    },
+    "EP01_G02_B": {
+      "job_version_fingerprint": "fa0f29f25b14b9a2195b131f532ac3e0a21fe18eab2559a48216a51a37e98ce8",
+      "output_file_sha256": "120bb0cd05d440cdf7a8fdaa1f9675c7774158bd8727e38c02cce3bf37aa5f86",
+      "model": "test/video-model"
+    },
+    "EP01_G02_C": {
+      "job_version_fingerprint": "2dda415b224e1876d8f879dc429e1e5011f74698c9135a22f4511de130ff30a5",
+      "output_file_sha256": "a8639869696e1abb8d4af8e7cac6f0e0a33e750787cb38213dd1c7b6d463cc5e",
+      "model": "test/video-model"
+    },
+    "EP01_G03_A": {
+      "job_version_fingerprint": "ebb4f5809a9596f642ecdde24642baf2ca665ac08e2df61a5c54b038435781a2",
+      "output_file_sha256": "9b5d77c2bd0ee9da3edce8d75bd99f45af379f66b29d18a4c36bc9925a32d3fe",
+      "model": "test/video-model"
+    },
+    "EP01_G03_B": {
+      "job_version_fingerprint": "58979043affbf1e3fc07f35fca7a055531b997a15988bb33bdec1ebd723ce226",
+      "output_file_sha256": "4d6e82f79f66eef1b6e44ff0f0f2ad6be51466fac8ba3218060c218e5b4e94ca",
+      "model": "test/video-model"
+    },
+    "EP01_G03_C": {
+      "job_version_fingerprint": "df72713ddc5f200793bd42c908c862a9863d053b177976049bc1dfba1987bdc1",
+      "output_file_sha256": "1d194c2ce857d91455f64109b167741c976733ee0bb585f382299803a21d3a3e",
+      "model": "test/video-model"
+    },
+    "EP01_G04_A": {
+      "job_version_fingerprint": "b164e0db707342349d9679714d3ee141e28636efc6660ae47d19371192cb8afb",
+      "output_file_sha256": "d01b60a0bbee94e468dd3a52b8e72e4c100ae46a65a9736e4dfcddf08d669d91",
+      "model": "test/video-model"
+    },
+    "EP01_G04_B": {
+      "job_version_fingerprint": "59ed7d152422d491e54d2807cf9359cc91c014b4e3ba4d90868f961e0a36dbfa",
+      "output_file_sha256": "df7b87636617abd0f74e2ffca695dc75f24cdb6de1539a8066f666b741302a96",
+      "model": "test/video-model"
+    },
+    "EP01_G04_C": {
+      "job_version_fingerprint": "a427ff64db60522ec2297b5bfe8b16724fb3affb6ad2cd1ac2b666aaeeddeaea",
+      "output_file_sha256": "c7844910695143698587c908b6ac37f0c74ce7a8ec41f949742ce57aa1d75205",
+      "model": "test/video-model"
+    },
+    "EP01_G05_A": {
+      "job_version_fingerprint": "b96914fa9ed3cc7202d08c892eb859956dd225493f2c7db0bb2ed40f6f986543",
+      "output_file_sha256": "a2b09203eb52a0641632e2f90a164e449ddd2b96e368ade4b3f32ed76dcb261c",
+      "model": "test/video-model"
+    },
+    "EP01_G05_B": {
+      "job_version_fingerprint": "42bf782fea02e94e07f22e0f7961fcf3c9d40022e0557878daa16cec60006bee",
+      "output_file_sha256": "a8ed6ae5f7c4e6c9f45f3dcd01301e5f980e42fd41c395dd91858f4b1e930c78",
+      "model": "test/video-model"
+    },
+    "EP01_G05_C": {
+      "job_version_fingerprint": "a413f49d3d909e6a4a39010247bd5f09b7eeaa2e83487aac88850bf2875b75fe",
+      "output_file_sha256": "ee79766f4a464e84a70d8c105b75017fd39f977f3009d2315976006085fc287e",
+      "model": "test/video-model"
+    },
+    "EP01_G06_A": {
+      "job_version_fingerprint": "a58b052fab3062fad35813a3338343b1bd2aca31edec01560885927d61622187",
+      "output_file_sha256": "6b3221df0c1a672fbf67856f2b2f5824fca9fd897213b561dd6e247baa5dc6e7",
+      "model": "test/video-model"
+    },
+    "EP01_G06_B": {
+      "job_version_fingerprint": "f8ccc2ca46af21fadf286a13db1861b87fdaa61e1a540a895660b28e88e79852",
+      "output_file_sha256": "261677fded75752eb024158095ce32ff7fff1228744a4acb7ac552d6331ba593",
+      "model": "test/video-model"
+    },
+    "EP01_G06_C": {
+      "job_version_fingerprint": "2b96beeae871f06835c01dd856ad05fe076ae9997721f219b4a3e4ff557857f7",
+      "output_file_sha256": "d3f3249a06bf6aa034db7d7b752230d9b9744e531c9d2af04bf128c3ceba0fe3",
+      "model": "test/video-model"
+    }
+  }
+}

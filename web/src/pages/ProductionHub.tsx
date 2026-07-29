@@ -1,474 +1,605 @@
-// 制作项目层级总览：剧 → 集 → G 生成单元 → 资源逐级下钻的入口页。
-import { useEffect, useState, useCallback, useMemo } from 'react';
+// 项目故事总览：先用一句话和已生成画面讲清故事，再把制作数据收进次级区域。
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Alert, Breadcrumb, Button, Card, Col, Empty, Progress, Row, Select, Space, Spin, Tag, Tooltip, Typography, Badge } from 'antd';
 import {
-  AppstoreOutlined, PlayCircleOutlined, PictureOutlined,
-  VideoCameraOutlined, FileTextOutlined, UserOutlined, SettingOutlined,
-  HomeOutlined, StarOutlined, SkinOutlined,
-  EnvironmentOutlined, EditOutlined, BulbOutlined, CheckCircleOutlined,
+  Alert,
+  Breadcrumb,
+  Button,
+  Collapse,
+  Empty,
+  Image,
+  Progress,
+  Select,
+  Space,
+  Spin,
+  Tag,
+  Typography,
+} from 'antd';
+import {
+  CheckCircleOutlined,
+  EyeOutlined,
+  HomeOutlined,
+  InfoCircleOutlined,
+  PictureOutlined,
+  PlayCircleOutlined,
+  RightOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
-import { COLORS } from '../theme';
-import { useResponsive } from '../hooks/useResponsive';
+import { thumbUrl, onImageError } from '../media';
 import ProjectViewNav from '../components/ProjectViewNav';
-import CardDetailDrawer, { type CardItem as DrawerCardItem } from '../components/CardDetailDrawer';
+import {
+  extractOneLineStory,
+  extractStoryArc,
+  extractStoryBeats,
+  extractStoryTheme,
+  extractWorldAssets,
+  friendlyCopy,
+  friendlyProjectName,
+  protagonistAppearsAtEnding,
+  projectTypePresentation,
+  type StoryCardLike,
+} from '../storyPresentation';
+import './StoryProjects.css';
 
-const { Text, Title } = Typography;
+const { Text, Title, Paragraph } = Typography;
 
-/* ── 类型 ── */
-interface StageInfo { key: string; name: string; order: number; auto: boolean }
-interface CardItem {
-  card_id: string; project_id: string; stage: string; title: string;
-  content: string; episode: number | null; shot_number: number; prompts: string[];
-  images: string[]; videos: string[]; metadata: Record<string, any>;
-  status: string; assignee: string; created_at: string; updated_at: string;
+interface StageInfo {
+  key: string;
+  name: string;
+  order: number;
+  auto: boolean;
 }
+
+interface StoryPreview {
+  available_images: number;
+  approved_images?: number;
+  expected_images: number;
+  missing_images: number;
+  preview_images: string[];
+  video_count: number;
+  has_final_video: boolean;
+}
+
+interface Readiness {
+  units: number;
+  spec_rate: number;
+  image_rate: number;
+  video_rate: number;
+  delivery_rate: number;
+  overall_progress: number;
+  blockers: number;
+  next_action: string;
+}
+
 interface Project {
-  project_id: string; name: string; description: string;
-  source_type: string; source_content: string;
-  employee_key: string; team_code: string;
-  cards?: CardItem[]; stages?: StageInfo[]; stats?: any;
-  created_at: string; updated_at: string; cardCount?: number;
+  project_id: string;
+  name: string;
+  description: string;
+  source_type: string;
+  source_content: string;
+  settings?: Record<string, any>;
+  cards?: StoryCardLike[];
+  stages?: StageInfo[];
+  stats?: {
+    readiness?: Readiness;
+    story_preview?: StoryPreview;
+  };
+  updated_at: string;
 }
 
-/* ── 集信息 ── */
 interface EpisodeInfo {
   episode: number;
   title: string;
   unitCount: number;
-  stageProgress: Record<string, { total: number; done: number }>;
-  thumbnail: string | null;
-  totalCards: number;
-  doneCards: number;
-  readinessPercent: number;
-  nextAction: string;
+  imageCount: number;
+  imageRate: number;
+  thumbnail: string;
 }
 
-/* ── 全局资产分组 ── */
-interface AssetGroup {
+function extractEpisodeTitle(cards: StoryCardLike[], episode: number): string {
+  const episodeCards = cards.filter(card => card.episode === episode);
+  const brief = episodeCards.find(card => card.stage === 'idea');
+  const script = episodeCards.find(card => card.stage === 'script' && card.shot_number === 0)
+    || episodeCards.find(card => card.stage === 'script');
+  const raw = brief?.title || script?.title || '';
+  return friendlyCopy(raw)
+    .replace(/^导演Brief\s*/i, '')
+    .replace(/^EP\d+\s*/i, '')
+    .replace(/^(?:G|W)\d+(?:[-–][A-Za-z0-9]+)?\s*/i, '')
+    .trim();
+}
+
+function ProgressItem({
+  label,
+  percent,
+  detail,
+}: {
   label: string;
-  icon: React.ReactNode;
-  cards: CardItem[];
-}
-
-const STAGE_LABELS: Record<string, string> = {
-  idea: '创意', script: '剧本', setting: '设定', design: '设计',
-  storyboard: '分镜', img_prompt: '图片词', vid_prompt: '视频词',
-  img_gen: '生图', vid_gen: '生视频', final: '成片',
-};
-
-const STAGE_COLORS: Record<string, string> = {
-  idea: '#6366f1', script: '#6366f1', setting: '#8b5cf6', design: '#8b5cf6',
-  storyboard: '#6366f1', img_prompt: '#10b981', vid_prompt: '#10b981',
-  img_gen: '#f59e0b', vid_gen: '#f59e0b', final: '#ef4444',
-};
-
-function extractEpisodeTitle(cards: CardItem[], ep: number): string {
-  const brief = cards.find(c => c.episode === ep && c.stage === 'idea');
-  if (brief) {
-    const t = brief.title.replace(/^导演Brief\s*/i, '').replace(/^EP\d+\s*/, '').trim();
-    if (t) return t;
-  }
-  const script = cards.find(c => c.episode === ep && c.stage === 'script' && c.shot_number === 0);
-  if (script) {
-    const t = script.title.replace(/^EP\d+\s*/, '').trim();
-    if (t) return t;
-  }
-  return '';
-}
-
-function groupGlobalAssets(globals: CardItem[]): AssetGroup[] {
-  const story: CardItem[] = [];
-  const characters: CardItem[] = [];
-  const scenes: CardItem[] = [];
-  const design: CardItem[] = [];
-  const other: CardItem[] = [];
-
-  for (const c of globals) {
-    const id = c.card_id.toLowerCase();
-    const meta = c.metadata || {};
-    if (meta.type === 'character' || id.includes('char') || id.includes('-r1') || id.includes('-r2') || id.includes('-r3') || id.includes('set-r')) {
-      characters.push(c);
-    } else if (id.includes('scene') || id.includes('sc0') || id.includes('cloud') || id.includes('lands')) {
-      scenes.push(c);
-    } else if (id.includes('story') || id.includes('brief') || id.includes('emotion') || id.includes('sfx') || id.includes('delivery') || id.includes('director')) {
-      story.push(c);
-    } else if (c.stage === 'design' || id.includes('des-') || id.includes('art-bible') || id.includes('style')) {
-      design.push(c);
-    } else {
-      other.push(c);
-    }
-  }
-
-  const groups: AssetGroup[] = [];
-  if (story.length) groups.push({ label: '故事 & 规范', icon: <BulbOutlined />, cards: story });
-  if (characters.length) groups.push({ label: '角色', icon: <UserOutlined />, cards: characters });
-  if (scenes.length) groups.push({ label: '场景', icon: <EnvironmentOutlined />, cards: scenes });
-  if (design.length) groups.push({ label: '视觉设计', icon: <SkinOutlined />, cards: design });
-  if (other.length) groups.push({ label: '其他', icon: <FileTextOutlined />, cards: other });
-  return groups;
-}
-
-/* ── 迷你进度条 ── */
-function StageBar({ stages }: { stages: Record<string, { total: number; done: number }> }) {
-  const order = ['script', 'storyboard', 'img_prompt', 'vid_prompt', 'img_gen', 'vid_gen'];
+  percent: number;
+  detail: string;
+}) {
   return (
-    <div style={{ display: 'flex', gap: 3, marginTop: 8 }}>
-      {order.map(s => {
-        const info = stages[s];
-        if (!info || info.total === 0) return (
-          <Tooltip key={s} title={`${STAGE_LABELS[s] || s}: 无`}>
-            <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#f0f0f0' }} />
-          </Tooltip>
-        );
-        const pct = Math.round((info.done / info.total) * 100);
-        return (
-          <Tooltip key={s} title={`${STAGE_LABELS[s] || s}: ${info.done}/${info.total}`}>
-            <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#f0f0f0', overflow: 'hidden' }}>
-              <div style={{
-                width: `${pct}%`, height: '100%', borderRadius: 2,
-                background: pct === 100 ? '#52c41a' : STAGE_COLORS[s] || '#1890ff',
-                transition: 'width .3s',
-              }} />
-            </div>
-          </Tooltip>
-        );
-      })}
+    <div className="story-progress-item">
+      <div className="story-progress-item__label">
+        <span>{label}</span>
+        <strong>{percent}%</strong>
+      </div>
+      <Progress
+        percent={percent}
+        showInfo={false}
+        size="small"
+        strokeColor={percent === 100 ? '#10b981' : '#6366f1'}
+      />
+      <Text type="secondary" style={{ fontSize: 11 }}>{detail}</Text>
     </div>
   );
 }
 
-/* ── 主组件 ── */
 export default function ProductionHub() {
   const navigate = useNavigate();
-  const { pid } = useParams<{ pid: string }>();
-  const { isMobile } = useResponsive();
-
+  const { pid = '' } = useParams<{ pid: string }>();
   const [projects, setProjects] = useState<Project[]>([]);
-  const [selectedPid, setSelectedPid] = useState(pid || '');
   const [project, setProject] = useState<Project | null>(null);
-  const [cards, setCards] = useState<CardItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [projectsLoading, setProjectsLoading] = useState(true);
-  const [projectsError, setProjectsError] = useState('');
+  const [loading, setLoading] = useState(true);
   const [projectError, setProjectError] = useState('');
-  const [drawerCard, setDrawerCard] = useState<DrawerCardItem | null>(null);
-  const [mediaModels, setMediaModels] = useState<{ id: string; name: string; pricing?: any }[] | undefined>();
 
-  const loadProjects = useCallback(async () => {
-    setProjectsLoading(true);
-    setProjectsError('');
-    try {
-      setProjects(await api.listProjects());
-    } catch {
-      setProjectsError('暂时无法加载项目，请检查网络后重试。');
-    } finally {
-      setProjectsLoading(false);
-    }
+  useEffect(() => {
+    void api.listProjects().then(setProjects).catch(() => setProjects([]));
   }, []);
 
-  const loadProject = useCallback(async (id: string) => {
-    if (!id) return;
+  const loadProject = useCallback(async () => {
+    if (!pid) return;
     setLoading(true);
     setProjectError('');
-    setProject(null);
-    setCards([]);
     try {
-      const data = await api.getProject(id);
-      setProject(data);
-      setCards(data.cards || []);
+      setProject(await api.getProject(pid));
     } catch {
-      setProjectError('暂时无法打开这个项目，请稍后重试。');
+      setProject(null);
+      setProjectError('暂时无法打开这个故事，请稍后重试。');
+    } finally {
+      setLoading(false);
     }
-    finally { setLoading(false); }
-  }, []);
-
-  useEffect(() => { loadProjects(); }, [loadProjects]);
-  useEffect(() => {
-    if (!selectedPid && projects.length > 0) {
-      const first = projects[0].project_id;
-      setSelectedPid(first);
-      navigate(`/production/${first}`, { replace: true });
-    }
-  }, [projects, selectedPid, navigate]);
-  useEffect(() => {
-    if (pid && pid !== selectedPid) setSelectedPid(pid);
   }, [pid]);
-  useEffect(() => { if (selectedPid) loadProject(selectedPid); }, [selectedPid, loadProject]);
-  useEffect(() => {
-    if (!drawerCard || mediaModels) return;
-    api.listDirectorMediaModels('image').then(setMediaModels).catch(() => setMediaModels([]));
-  }, [drawerCard, mediaModels]);
 
-  /* ── 数据计算 ── */
-  const globalCards = useMemo(() => cards.filter(c => c.episode == null), [cards]);
-  const assetGroups = useMemo(() => groupGlobalAssets(globalCards), [globalCards]);
+  useEffect(() => { void loadProject(); }, [loadProject]);
 
-  const episodes: EpisodeInfo[] = useMemo(() => {
-    const epNums = new Set<number>();
-    cards.forEach(c => { if (c.episode != null) epNums.add(c.episode); });
+  const cards = project?.cards || [];
+  const storyBeats = useMemo(() => extractStoryBeats(cards), [cards]);
+  const generatedBeats = useMemo(
+    () => storyBeats.filter(beat => Boolean(beat.image)),
+    [storyBeats],
+  );
+  const storyArc = useMemo(
+    () => project ? extractStoryArc(project, cards, storyBeats) : [],
+    [project, cards, storyBeats],
+  );
+  const isWorldFirstPreview = project?.source_type === 'gc'
+    && protagonistAppearsAtEnding(storyBeats);
+  const visibleBeats = useMemo(() => (
+    project?.source_type === 'gc' ? generatedBeats.slice(0, 30) : generatedBeats.slice(0, 12)
+  ), [generatedBeats, project?.source_type]);
+  const worldAssets = useMemo(() => extractWorldAssets(cards), [cards]);
 
-    return Array.from(epNums).sort((a, b) => a - b).map(ep => {
-      const epCards = cards.filter(c => c.episode === ep);
-      const units = new Set(epCards.filter(c => c.shot_number > 0).map(c => c.shot_number));
-
-      const stageProgress: Record<string, { total: number; done: number }> = {};
-      for (const c of epCards) {
-        if (!stageProgress[c.stage]) stageProgress[c.stage] = { total: 0, done: 0 };
-        stageProgress[c.stage].total++;
-        if (c.status === 'done') stageProgress[c.stage].done++;
-      }
-
-      const firstImage = epCards.find(c => c.images.length > 0);
-      const unitCards = Array.from(units).map(unit => epCards.filter(c => c.shot_number === unit));
-      const specReady = unitCards.filter(list => ['script', 'storyboard', 'img_prompt', 'vid_prompt'].every(stage => list.some(c => c.stage === stage))).length;
-      const withImage = unitCards.filter(list => list.some(c => c.images.length > 0)).length;
-      const withVideo = unitCards.filter(list => list.some(c => c.videos.length > 0)).length;
-      const delivered = unitCards.filter(list => list.some(c => c.stage === 'final' && c.status === 'done')).length;
-      const unitTotal = Math.max(units.size, 1);
-      const readinessPercent = Math.round(
-        specReady / unitTotal * 40 + withImage / unitTotal * 30 + withVideo / unitTotal * 20 + delivered / unitTotal * 10,
+  const episodes = useMemo<EpisodeInfo[]>(() => {
+    if (project?.source_type === 'gc') return [];
+    const episodeNumbers = Array.from(new Set(
+      cards.map(card => card.episode).filter((episode): episode is number => episode != null),
+    )).sort((a, b) => a - b);
+    return episodeNumbers.map(episode => {
+      const episodeCards = cards.filter(card => card.episode === episode);
+      const episodeBeats = extractStoryBeats(episodeCards);
+      const units = new Set(
+        episodeCards.filter(card => card.shot_number > 0).map(card => card.shot_number),
       );
-      const nextAction = specReady < units.size ? `补齐 ${units.size - specReady} 个镜头的缺失步骤`
-        : withImage < units.size ? `待出图 ${units.size - withImage}`
-          : withVideo < units.size ? `待视频 ${units.size - withVideo}`
-            : delivered < units.size ? '待成片交付' : '已交付';
-
+      const imageCount = episodeBeats.filter(beat => beat.image).length;
+      const unitCount = units.size || episodeBeats.length;
       return {
-        episode: ep,
-        title: extractEpisodeTitle(cards, ep),
-        unitCount: units.size,
-        stageProgress,
-        thumbnail: firstImage?.images[0] || null,
-        totalCards: epCards.length,
-        doneCards: epCards.filter(c => c.status === 'done').length,
-        readinessPercent,
-        nextAction,
+        episode,
+        title: extractEpisodeTitle(cards, episode) || `第 ${episode} 集`,
+        unitCount,
+        imageCount,
+        imageRate: unitCount ? Math.min(100, Math.round(imageCount / unitCount * 100)) : 0,
+        thumbnail: episodeBeats.find(beat => beat.image)?.image || '',
       };
     });
-  }, [cards]);
+  }, [cards, project?.source_type]);
 
-  const readiness = project?.stats?.readiness;
-  const overallProgress = readiness?.overall_progress ?? 0;
-
-  if ((projectsLoading && !selectedPid) || (loading && !project)) {
+  if (loading) {
     return (
-      <div role="status" aria-live="polite" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', padding: 120 }}>
+      <div className="story-centered-state" role="status" aria-live="polite">
         <Spin size="large" />
-        <Text type="secondary" style={{ marginTop: 12 }}>正在加载项目…</Text>
+        <Text type="secondary">正在把故事和画面整理成阅读顺序…</Text>
       </div>
     );
   }
-  if (projectsError && !selectedPid) {
+
+  if (projectError || !project) {
     return (
-      <div role="alert" style={{ padding: isMobile ? 16 : 60, maxWidth: 640, margin: '0 auto' }}>
+      <main className="story-page">
         <Alert
           type="error"
           showIcon
-          message="项目加载失败"
-          description={projectsError}
-          action={<Button onClick={loadProjects}>重试</Button>}
+          message="故事打开失败"
+          description={projectError || '没有找到这个项目。'}
+          action={<Button onClick={() => void loadProject()}>重试</Button>}
         />
-      </div>
+      </main>
     );
   }
-  if (projectError) {
-    return (
-      <div role="alert" style={{ padding: isMobile ? 16 : 60, maxWidth: 640, margin: '0 auto' }}>
-        <Alert
-          type="error"
-          showIcon
-          message="项目打开失败"
-          description={projectError}
-          action={<Button onClick={() => loadProject(selectedPid)}>重试</Button>}
-        />
-      </div>
-    );
-  }
+
+  const type = projectTypePresentation(project.source_type);
+  const oneLineStory = extractOneLineStory(project, cards);
+  const theme = extractStoryTheme(project, cards);
+  const backendReadiness = project.stats?.readiness;
+  const preview = project.stats?.story_preview;
+  const availableImages = preview?.available_images ?? generatedBeats.length;
+  const approvedImages = preview?.approved_images
+    || Math.min(Number(project.settings?.approved_image_count) || 0, availableImages);
+  const expectedImages = preview?.expected_images || storyBeats.length;
+  const missingImages = preview?.missing_images ?? Math.max(expectedImages - availableImages, 0);
+  const localVideoCount = storyBeats.filter(beat => beat.video).length;
+  const videoCount = preview?.video_count ?? localVideoCount;
+  const shotUnitCount = new Set(
+    cards
+      .filter(card => card.shot_number > 0)
+      .map(card => `${card.episode ?? 'global'}-${card.shot_number}`),
+  ).size;
+  const expectedVideos = shotUnitCount || expectedImages;
+  const hasFinalVideo = preview?.has_final_video ?? cards.some(card => (
+    card.stage === 'final' && card.status === 'done' && card.videos.length > 0
+  ));
+  const hasAllSpecs = ['script', 'storyboard', 'img_prompt', 'vid_prompt']
+    .every(stage => cards.some(card => card.stage === stage));
+  const shouldDeriveReadiness = expectedImages > 0 && (!backendReadiness || backendReadiness.units === 0);
+  const derivedVideoRate = expectedVideos
+    ? Math.min(100, Math.round(videoCount / expectedVideos * 100))
+    : 0;
+  const derivedSpecRate = hasAllSpecs ? 100 : 0;
+  const derivedImageRate = expectedImages
+    ? Math.min(100, Math.round(availableImages / expectedImages * 100))
+    : 0;
+  const derivedDeliveryRate = hasFinalVideo ? 100 : 0;
+  const readiness: Readiness | undefined = shouldDeriveReadiness ? {
+    units: expectedVideos,
+    spec_rate: derivedSpecRate,
+    image_rate: derivedImageRate,
+    video_rate: derivedVideoRate,
+    delivery_rate: derivedDeliveryRate,
+    overall_progress: Math.round(
+      derivedSpecRate * 0.4
+      + derivedImageRate * 0.3
+      + derivedVideoRate * 0.2
+      + derivedDeliveryRate * 0.1,
+    ),
+    blockers: hasAllSpecs ? 0 : expectedVideos,
+    next_action: !hasAllSpecs
+      ? '先补齐故事与镜头说明'
+      : missingImages > 0
+        ? `还差 ${missingImages} 张剧情画面`
+        : videoCount < expectedVideos
+          ? `还差 ${expectedVideos - videoCount} 个镜头视频`
+          : hasFinalVideo ? '成片已经可以交付' : '完成剪辑并导出成片',
+  } : backendReadiness;
+  const heroImage = generatedBeats[0]?.image || preview?.preview_images?.[0] || '';
+  const hiddenGeneratedCount = Math.max(generatedBeats.length - visibleBeats.length, 0);
 
   return (
-    <div style={{ padding: isMobile ? '12px' : '20px 28px', maxWidth: 1400 }}>
-      {/* ── 顶栏 ── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: isMobile ? 12 : 0 }}>
-        <div>
-          <Breadcrumb items={[
-            { title: <><HomeOutlined /> 我的项目</> },
-            ...(project ? [{ title: project.name }] : []),
-          ]} />
-          {project && (
-            <Title level={4} style={{ margin: '8px 0 0' }}>{project.name}</Title>
-          )}
-          {project?.description && (
-            <Text type="secondary" style={{ fontSize: 13 }}>{project.description}</Text>
-          )}
+    <main className="story-page">
+      <header className="story-detail-header">
+        <div className="story-detail-heading">
+          <Breadcrumb
+            items={[
+              {
+                title: (
+                  <a onClick={event => { event.preventDefault(); navigate('/production'); }} href="/production">
+                    <HomeOutlined /> 我的项目
+                  </a>
+                ),
+              },
+              { title: friendlyProjectName(project.name) },
+            ]}
+          />
+          <Title level={3}>{friendlyProjectName(project.name)}</Title>
         </div>
-        <Space wrap>
+        <div className="story-detail-actions">
           {projects.length > 1 && (
             <Select
-              value={selectedPid}
-              onChange={v => { setSelectedPid(v); navigate(`/production/${v}`); }}
-              style={{ width: isMobile ? '100%' : 200 }}
-              options={projects.map(p => ({ value: p.project_id, label: p.name }))}
+              value={pid}
+              aria-label="切换故事项目"
+              onChange={projectId => navigate(`/production/${projectId}`)}
+              style={{ width: 220 }}
+              options={projects.map(item => ({
+                value: item.project_id,
+                label: friendlyProjectName(item.name),
+              }))}
             />
           )}
-          <ProjectViewNav projectId={selectedPid} current="overview" />
-        </Space>
-      </div>
+          <ProjectViewNav projectId={pid} current="overview" />
+        </div>
+      </header>
 
-      {!project ? (
-        <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="暂无项目" />
-      ) : (
-        <>
-          {/* ── 总览条 ── */}
-          <Card size="small" style={{ marginBottom: 20, borderRadius: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
-              <div>
-                <Text type="secondary" style={{ fontSize: 12 }}>交付就绪度</Text>
-                <Progress percent={overallProgress} size="small" style={{ width: 160, margin: 0 }} />
-              </div>
-              <div>
-                <Text type="secondary" style={{ fontSize: 12 }}>剧集</Text>
-                <div><Text strong>{episodes.length}</Text> 集</div>
-              </div>
-              <div>
-                <Text type="secondary" style={{ fontSize: 12 }}>卡片</Text>
-                <div><Text strong>{cards.length}</Text> 张</div>
-              </div>
-              <div>
-                <Text type="secondary" style={{ fontSize: 12 }}>全局资产</Text>
-                <div><Text strong>{globalCards.length}</Text> 项</div>
-              </div>
-              {readiness && <>
-                <div><Text type="secondary" style={{ fontSize: 12 }}>规格齐全</Text><div><Text strong>{readiness.spec_ready}/{readiness.units}</Text></div></div>
-                <div><Text type="secondary" style={{ fontSize: 12 }}>已出图</Text><div><Text strong>{readiness.with_image}/{readiness.units}</Text></div></div>
-                <div><Text type="secondary" style={{ fontSize: 12 }}>已成视频</Text><div><Text strong>{readiness.with_video}/{readiness.units}</Text></div></div>
-                <Tag color={readiness.blockers ? 'error' : 'processing'}>{readiness.next_action}</Tag>
-              </>}
-            </div>
-          </Card>
-
-          {/* ── 全局资产 ── */}
-          {assetGroups.length > 0 && (
-            <div style={{ marginBottom: 28 }}>
-              <Title level={5} style={{ marginBottom: 12 }}>
-                <StarOutlined style={{ marginRight: 6, color: COLORS.iris }} />
-                项目资产
-              </Title>
-              <Row gutter={[12, 12]}>
-                {assetGroups.map(g => (
-                  <Col key={g.label} xs={24} sm={12} lg={8} xl={6}>
-                    <Card size="small" hoverable
-                      style={{ borderRadius: 10, height: '100%' }}
-                      styles={{ body: { padding: '12px 14px' } }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                        <span style={{ color: COLORS.iris }}>{g.icon}</span>
-                        <Text strong style={{ fontSize: 13 }}>{g.label}</Text>
-                        <Badge count={g.cards.length} style={{ backgroundColor: COLORS.iris }} />
-                      </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                        {g.cards.slice(0, 6).map(c => (
-                          <Tag
-                            key={c.card_id}
-                            style={{ fontSize: 11, margin: 0, cursor: 'pointer' }}
-                            onClick={() => setDrawerCard(c as DrawerCardItem)}
-                          >
-                            {c.title.length > 12 ? c.title.slice(0, 12) + '…' : c.title}
-                          </Tag>
-                        ))}
-                        {g.cards.length > 6 && (
-                          <Tag style={{ fontSize: 11, margin: 0, color: COLORS.slate }}>
-                            +{g.cards.length - 6}
-                          </Tag>
-                        )}
-                      </div>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </div>
+      <section className="story-summary-card" aria-labelledby="story-summary-title">
+        <div className="story-summary-card__copy">
+          <Text className="story-eyebrow">这个故事讲什么？</Text>
+          <Title id="story-summary-title" level={2}>{oneLineStory}</Title>
+          {theme && theme !== oneLineStory && (
+            <Paragraph className="story-summary-card__theme">故事核心：{theme}</Paragraph>
           )}
+          <div className="story-type-explainer">
+            <Tag color={type.color}>{type.label}</Tag>
+            <span>{type.explanation}</span>
+          </div>
+        </div>
+        {heroImage ? (
+          <div className="story-summary-card__visual">
+            <img
+              src={thumbUrl(heroImage, 512)}
+              alt="故事第一幕预览"
+              onError={onImageError}
+            />
+          </div>
+        ) : (
+          <div className="story-summary-card__visual story-summary-card__visual--empty">
+            <PictureOutlined />
+            <span>故事文字已经有了，剧情画面还没生成</span>
+          </div>
+        )}
+      </section>
 
-          {/* ── 剧集网格 ── */}
-          <Title level={5} style={{ marginBottom: 12 }}>
-            <PlayCircleOutlined style={{ marginRight: 6, color: COLORS.iris }} />
-            剧集
-          </Title>
-          {episodes.length === 0 ? (
-            <Empty image={<img src="/empty-data.svg" alt="" width={160} />} description="暂无剧集数据" />
-          ) : (
-            <Row gutter={[14, 14]}>
-              {episodes.map(ep => {
-                const pct = ep.readinessPercent;
-                return (
-                  <Col key={ep.episode} xs={24} sm={12} md={8} lg={6}>
-                    <Card
-                      hoverable
-                      onClick={() => navigate(`/production/${selectedPid}/ep/${ep.episode}`)}
-                      style={{ borderRadius: 12, overflow: 'hidden', height: '100%' }}
-                      styles={{ body: { padding: 0 } }}
-                    >
-                      {/* 缩略图 */}
-                      <div style={{
-                        height: 100, background: '#f0f0f5',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        overflow: 'hidden', position: 'relative',
-                      }}>
-                        {ep.thumbnail ? (
-                          <img src={ep.thumbnail} alt="" style={{
-                            width: '100%', height: '100%', objectFit: 'cover',
-                          }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                        ) : (
-                          <PlayCircleOutlined style={{ fontSize: 32, color: '#d0d0d0' }} />
-                        )}
-                        <div style={{
-                          position: 'absolute', top: 8, left: 8,
-                          background: 'rgba(0,0,0,0.6)', color: '#fff',
-                          borderRadius: 6, padding: '2px 8px', fontSize: 13, fontWeight: 600,
-                        }}>
-                          EP{String(ep.episode).padStart(2, '0')}
-                        </div>
-                        {pct === 100 && (
-                          <div style={{
-                            position: 'absolute', top: 8, right: 8,
-                          }}>
-                            <CheckCircleOutlined style={{ fontSize: 18, color: '#52c41a', background: '#fff', borderRadius: '50%' }} />
-                          </div>
-                        )}
-                      </div>
-                      {/* 信息 */}
-                      <div style={{ padding: '10px 14px 14px' }}>
-                        <Text strong style={{ fontSize: 14, display: 'block' }}>
-                          {ep.title || `第${ep.episode}集`}
-                        </Text>
-                        <div style={{ display: 'flex', gap: 12, marginTop: 6, fontSize: 12, color: COLORS.slate }}>
-                          <span>{ep.unitCount} 个镜头</span>
-                          <span>{ep.totalCards} 卡片</span>
-                           <span>{pct}% 就绪</span>
-                        </div>
-                        <Text type="secondary" style={{ display: 'block', marginTop: 6, fontSize: 11 }}>{ep.nextAction}</Text>
-                        <StageBar stages={ep.stageProgress} />
-                      </div>
-                    </Card>
-                  </Col>
-                );
-              })}
-            </Row>
-          )}
-        </>
+      {project.source_type === 'gc' && (
+        <Alert
+          className="story-narrative-alert"
+          type="info"
+          showIcon
+          icon={<InfoCircleOutlined />}
+          message={isWorldFirstPreview ? '这版先讲世界，主角在最后两幕登场' : '这是高光概念预告，不是完整一集'}
+          description={isWorldFirstPreview
+            ? `前 ${Math.max(storyBeats.length - 2, 1)} 幕是在展示九大陆和灾变，最后两幕才由苍霖进入故事。所以前面的图更像世界奇观，这是这版预告的刻意安排，不是图片生成错了。`
+            : '概念预告会挑最能说明世界、人物和悬念的画面，不一定像完整剧集那样连续表演。'}
+        />
       )}
 
-      <CardDetailDrawer
-        open={Boolean(drawerCard)}
-        card={drawerCard}
-        projectId={selectedPid}
-        mediaModels={mediaModels}
-        onClose={() => setDrawerCard(null)}
-        onCardUpdated={() => {
-          loadProject(selectedPid);
-          setDrawerCard(null);
-        }}
-      />
-    </div>
+      {storyArc.length > 0 && (
+        <section className="story-arc-section" aria-labelledby="story-arc-title">
+          <div className="story-section-heading">
+            <div>
+              <Title id="story-arc-title" level={3}>先看懂故事怎么发展</Title>
+              <Text type="secondary">四步看懂整体，再往下逐张看画面。</Text>
+            </div>
+          </div>
+          <div className="story-arc-grid">
+            {storyArc.map((item, index) => (
+              <article className="story-arc-card" key={`${item.label}-${index}`}>
+                <span className="story-arc-card__number">{index + 1}</span>
+                <Text strong>{item.label}</Text>
+                <Paragraph>{item.text}</Paragraph>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section aria-labelledby="story-gallery-title">
+        <div className="story-section-heading">
+          <div>
+            <Title id="story-gallery-title" level={3}>按顺序看故事</Title>
+            <Text type="secondary">
+              这里只放已经生成的剧情画面，不用翻提示词，也不展示空白占位。
+            </Text>
+          </div>
+          {availableImages > 0 && (
+            <span className="story-reading-hint">
+              <CheckCircleOutlined />
+              {approvedImages === availableImages
+                ? `${availableImages} 张已经生成并通过`
+                : `${availableImages} 张已经生成，可以直接看`}
+            </span>
+          )}
+        </div>
+
+        {visibleBeats.length ? (
+          <div className="story-beat-grid">
+            {visibleBeats.map(beat => (
+              <article className="story-beat-card" key={beat.key}>
+                <div className="story-beat-image">
+                  <Image
+                    src={thumbUrl(beat.image || '', 512)}
+                    preview={{ src: beat.image, mask: '放大查看' }}
+                    alt={`${beat.label}：${beat.description}`}
+                    fallback=""
+                    onError={onImageError}
+                  />
+                  <span className="story-beat-image__order">{beat.label}</span>
+                </div>
+                <div className="story-beat-body">
+                  <div className="story-beat-meta">
+                    <span>{beat.timeRange || '剧情画面'}</span>
+                    {beat.video && <Tag color="green">可播放</Tag>}
+                  </div>
+                  <Title level={5}>{beat.title}</Title>
+                  <div className="story-beat-description">{beat.description}</div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="story-empty-card">
+            <Empty
+              image={<img src="/empty-data.svg" alt="" width={160} />}
+              description={(
+                <Space direction="vertical" size={4}>
+                  <Text strong>还没有能直接看的剧情图</Text>
+                  <Text type="secondary">
+                    文字、设定或提示词不会冒充成品画面；生成第一批图后会按故事顺序出现在这里。
+                  </Text>
+                </Space>
+              )}
+            >
+              <Button
+                type="primary"
+                icon={<PictureOutlined />}
+                onClick={() => navigate(`/production/${pid}/pipeline`)}
+              >
+                去生成剧情画面
+              </Button>
+            </Empty>
+          </div>
+        )}
+
+        <div className="story-generation-note">
+          <div className="story-generation-note__copy">
+            <EyeOutlined />
+            <div>
+              <Text strong>
+                {availableImages > 0
+                  ? `现在可以顺着看 ${availableImages} 张剧情画面`
+                  : '目前只能先读故事文字'}
+              </Text>
+              <br />
+              <Text type="secondary">
+                {missingImages > 0
+                  ? `另外 ${missingImages} 张还没生成，已收起，不会混在现有画面中。`
+                  : videoCount > 0
+                    ? `剧情画面已齐，已有 ${videoCount} 段动态视频。`
+                    : '剧情画面已经齐了；动态视频尚未生成。'}
+                {hiddenGeneratedCount > 0 && ` 其余 ${hiddenGeneratedCount} 张请按分集继续查看。`}
+              </Text>
+            </div>
+          </div>
+          <Button
+            icon={missingImages > 0 ? <PictureOutlined /> : <VideoCameraOutlined />}
+            onClick={() => navigate(`/production/${pid}/pipeline`)}
+          >
+            {missingImages > 0 ? '进入制作，补齐画面' : '进入制作'}
+          </Button>
+        </div>
+      </section>
+
+      {worldAssets.length > 0 && (
+        <section className="story-secondary-section" aria-labelledby="story-world-title">
+          <div className="story-section-heading">
+            <div>
+              <Title id="story-world-title" level={4}>人物与世界</Title>
+              <Text type="secondary">这些是角色、场景和画风参考，不会混进剧情顺序。</Text>
+            </div>
+          </div>
+          <div className="story-world-grid">
+            {worldAssets.map(asset => (
+              <article className="story-world-card" key={asset.key}>
+                <Image
+                  src={thumbUrl(asset.image, 512)}
+                  preview={{ src: asset.image, mask: '放大查看' }}
+                  alt={`${asset.kind}：${asset.title}`}
+                  fallback=""
+                  onError={onImageError}
+                />
+                <div className="story-world-card__copy">
+                  <Text type="secondary">{asset.kind}</Text>
+                  <Text strong ellipsis={{ tooltip: asset.title }}>{asset.title}</Text>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {episodes.length > 0 && (
+        <section className="story-secondary-section" aria-labelledby="story-episodes-title">
+          <div className="story-section-heading">
+            <div>
+              <Title id="story-episodes-title" level={4}>分集故事</Title>
+              <Text type="secondary">打开一集，继续按镜头查看剧情和画面。</Text>
+            </div>
+          </div>
+          <div className="story-episode-grid">
+            {episodes.map(episode => (
+              <article
+                className="story-episode-card"
+                key={episode.episode}
+                role="link"
+                tabIndex={0}
+                onClick={() => navigate(`/production/${pid}/ep/${episode.episode}`)}
+                onKeyDown={event => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    navigate(`/production/${pid}/ep/${episode.episode}`);
+                  }
+                }}
+              >
+                <div className="story-episode-card__image">
+                  {episode.thumbnail ? (
+                    <img
+                      src={thumbUrl(episode.thumbnail, 512)}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      onError={onImageError}
+                    />
+                  ) : <PlayCircleOutlined />}
+                </div>
+                <div className="story-episode-card__copy">
+                  <Text type="secondary">第 {episode.episode} 集</Text>
+                  <Title level={5} style={{ margin: '3px 0 0' }}>{episode.title}</Title>
+                  <div className="story-episode-card__stats">
+                    <span>{episode.unitCount} 个镜头</span>
+                    <span>{episode.imageCount} 张画面可看</span>
+                    <span>{episode.imageRate}% 已有画面</span>
+                  </div>
+                  <Progress
+                    percent={episode.imageRate}
+                    size="small"
+                    showInfo={false}
+                    strokeColor={episode.imageRate === 100 ? '#10b981' : '#6366f1'}
+                    style={{ marginTop: 7 }}
+                  />
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {readiness && (
+        <section className="story-secondary-section" aria-label="制作进度">
+          <Collapse
+            items={[{
+              key: 'production-progress',
+              label: (
+                <Space>
+                  <Text strong>制作进度（需要时再看）</Text>
+                  <Tag>{friendlyCopy(readiness.next_action)}</Tag>
+                </Space>
+              ),
+              extra: <RightOutlined style={{ color: '#98a1b3' }} />,
+              children: (
+                <div className="story-progress-panel">
+                  <ProgressItem
+                    label="故事与镜头说明"
+                    percent={readiness.spec_rate}
+                    detail="剧本、分镜和生成说明"
+                  />
+                  <ProgressItem
+                    label="剧情画面"
+                    percent={readiness.image_rate}
+                    detail={`${availableImages}/${expectedImages || readiness.units} 张可看`}
+                  />
+                  <ProgressItem
+                    label="动态视频"
+                    percent={readiness.video_rate}
+                    detail={videoCount ? `${videoCount} 段已生成` : '尚未生成'}
+                  />
+                  <ProgressItem
+                    label="最终成片"
+                    percent={readiness.delivery_rate}
+                    detail={hasFinalVideo ? '已经可以播放' : '尚未导出'}
+                  />
+                </div>
+              ),
+            }]}
+          />
+        </section>
+      )}
+    </main>
   );
 }

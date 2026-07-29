@@ -20,7 +20,8 @@ const Memory = lazy(() => import('./pages/Memory'));
 const Runs = lazy(() => import('./pages/Runs'));
 const Tasks = lazy(() => import('./pages/Tasks'));
 const Production = lazy(() => import('./pages/Production'));
-const Canvas = lazy(() => import('./pages/Canvas'));
+const ProjectsHome = lazy(() => import('./pages/ProjectsHome'));
+const Canvas = lazy(() => import('./pages/CanvasHub'));
 const ProductionHub = lazy(() => import('./pages/ProductionHub'));
 const ProductionMatrix = lazy(() => import('./pages/ProductionMatrix'));
 const EpisodeDetail = lazy(() => import('./pages/EpisodeDetail'));
@@ -62,7 +63,7 @@ export default function App() {
           <Route path="/memory" element={<Memory />} />
           <Route path="/runs" element={<Runs />} />
           <Route path="/tasks" element={<Tasks />} />
-          <Route path="/production" element={<Production />} />
+          <Route path="/production" element={<ProjectsHome />} />
           {/* 必须排在 /production/:pid 之前，否则 "matrix" 会被当成 pid 匹配掉 */}
           <Route path="/production/matrix" element={<ProductionMatrix />} />
           <Route path="/production/:pid/matrix" element={<ProductionMatrix />} />

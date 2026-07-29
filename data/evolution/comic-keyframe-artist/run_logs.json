@@ -98,5 +98,55 @@
     "llmModel": "",
     "durationMs": 0,
     "error": null
+  },
+  {
+    "logId": "evo_b1261410b054",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-24T20:00:30.052644Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_287f34fe22a6",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-25T20:00:16.653787Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 16,
+    "error": null
+  },
+  {
+    "logId": "evo_5d32faec7302",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-26T20:00:29.645197Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_02fbb18e79af",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-28T13:53:37.126866Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  },
+  {
+    "logId": "evo_0800d2ac349e",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-28T20:00:16.825534Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
   }
 ]

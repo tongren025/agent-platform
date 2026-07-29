@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/lib/config/defaultAssets.ts"],
+  "sourcesContent": ["import { TLAssetUtilConstructor } from '../editor/assets/AssetUtil'\n\n/** @public */\nexport type TLAnyAssetUtilConstructor = TLAssetUtilConstructor<any>\n\nexport function checkAssets(customAssets: readonly TLAnyAssetUtilConstructor[]) {\n\tconst assets = [] as TLAnyAssetUtilConstructor[]\n\n\tconst addedCustomAssetTypes = new Set<string>()\n\tfor (const customAsset of customAssets) {\n\t\tif (addedCustomAssetTypes.has(customAsset.type)) {\n\t\t\tthrow new Error(`Asset type \"${customAsset.type}\" is defined more than once`)\n\t\t}\n\t\tassets.push(customAsset)\n\t\taddedCustomAssetTypes.add(customAsset.type)\n\t}\n\n\treturn assets\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAKO,SAAS,YAAY,cAAoD;AAC/E,QAAM,SAAS,CAAC;AAEhB,QAAM,wBAAwB,oBAAI,IAAY;AAC9C,aAAW,eAAe,cAAc;AACvC,QAAI,sBAAsB,IAAI,YAAY,IAAI,GAAG;AAChD,YAAM,IAAI,MAAM,eAAe,YAAY,IAAI,6BAA6B;AAAA,IAC7E;AACA,WAAO,KAAK,WAAW;AACvB,0BAAsB,IAAI,YAAY,IAAI;AAAA,EAC3C;AAEA,SAAO;AACR;",
+  "names": []
+}

@@ -22,6 +22,7 @@ from urllib.parse import urlparse
 import httpx
 
 from app.models.scrape import CollectedPrompt
+from app.services.chat_response import extract_chat_content
 
 logger = logging.getLogger(__name__)
 
@@ -398,7 +399,7 @@ async def scrape_and_summarize(
         temperature=0.3,
         max_tokens=4000,
     )
-    raw = resp.choices[0].message.content or ""
+    raw = extract_chat_content(resp)
 
     import json as _json
     json_match = re.search(r"\{[\s\S]*\}", raw)

@@ -50,7 +50,7 @@
 | [knowledge_graph.py](../app/api/knowledge_graph.py) | 知识图谱 API —— 聚合所有实体及关系，供前端可视化。 |
 | [memory_api.py](../app/api/memory_api.py) | 长期记忆管理 API。 |
 | [pipeline.py](../app/api/pipeline.py) | CLI Pipeline REST API — 用本地 CLI 驱动漫剧创作流水线。 |
-| [production.py](../app/api/production.py) | Production pipeline API — project & card CRUD + AI generation. |
+| [production.py](../app/api/production.py) | 制作项目 API：项目/卡片 CRUD、AI 生成、真实交付就绪度，以及供“我的项目”故事页使用的去重剧情画面预览统计。 |
 | [registry.py](../app/api/registry.py) | 注册表 API：技能/MCP/工具/员工/团队/角色模板的 CRUD + 员工知识库管理。Prefix: /api/v1/agentapp/registry。 |
 | [runs.py](../app/api/runs.py) | agent 运行记录 API —— 事后审计每次 run 的成本与行为。 |
 | [scrape.py](../app/api/scrape.py) | 自动学习 / 提示词采集 API。 |
@@ -204,6 +204,7 @@
 | [App.tsx](../web/src/App.tsx) | 路由总表：用户端页面（登录墙内）+ 管理端 /admin 页面（独立鉴权）；页面按路由懒加载以缩短首屏时间。 |
 | [main.tsx](../web/src/main.tsx) | 前端入口：挂载 React 根组件，套 antd 中文语言包与主题配置。 |
 | [media.ts](../web/src/media.ts) | 素材媒体工具：缩略图 URL 拼接 + 加载失败的可见占位。 |
+| [storyPresentation.ts](../web/src/storyPresentation.ts) | 故事展示适配层：把 GC/G/阶段卡等制作数据翻译成一句话故事、四步脉络、逐幕剧情画面和普通话项目名称。 |
 | [theme.ts](../web/src/theme.ts) | 全局配色常量 COLORS + antd 主题定制（主色/圆角/组件级覆盖）。 |
 | [types.ts](../web/src/types.ts) | 前后端共享的 TypeScript 类型定义（与后端 Pydantic 模型的 camelCase 契约一一对应）。 |
 | [ui.tsx](../web/src/ui.tsx) | antd message 的上下文桥。 |
@@ -250,8 +251,9 @@
 | [KnowledgeGraph.tsx](../web/src/pages/KnowledgeGraph.tsx) | 知识图谱页：员工/工具/技能/团队/工作流的关系可视化。 |
 | [Memory.tsx](../web/src/pages/Memory.tsx) | 记忆管理页：查看/增删员工的语义、经验、行为三类长期记忆，触发提取与蒸馏。 |
 | [Pipeline.tsx](../web/src/pages/Pipeline.tsx) | CLI 流水线页：用本地 claude/gemini CLI 跑漫剧创作流水线（导演→编剧→美术…）。 |
+| [ProjectsHome.tsx](../web/src/pages/ProjectsHome.tsx) | “我的项目”故事库：先展示项目讲什么、是什么形式、封面和已有剧情画面数，再进入故事或专业制作。 |
 | [Production.tsx](../web/src/pages/Production.tsx) | 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。 |
-| [ProductionHub.tsx](../web/src/pages/ProductionHub.tsx) | 制作项目层级总览：剧 → 集 → G 生成单元 → 资源逐级下钻的入口页。 |
+| [ProductionHub.tsx](../web/src/pages/ProductionHub.tsx) | 故事优先的项目详情：一句话梗概、四步脉络、按时间排序的剧情画面、世界设定参考和收起的制作状态。 |
 | [ProductionMatrix.tsx](../web/src/pages/ProductionMatrix.tsx) | 全链路对照矩阵：季 → 集 → G 生成单元 → 剧本/分镜/首帧/末帧/视频提示词/图/视频，一屏铺开。 |
 | [Runs.tsx](../web/src/pages/Runs.tsx) | 运行记录页（可观测）：每次 agent 运行的 token/成本/轨迹审计 + 员工月度配额用量。 |
 | [Settings.tsx](../web/src/pages/Settings.tsx) | 设置页：AI 供应商配置（endpoint/key/模型列表）与系统信息。 |

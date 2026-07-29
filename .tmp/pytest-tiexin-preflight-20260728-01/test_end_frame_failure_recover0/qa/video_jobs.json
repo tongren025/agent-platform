@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "jobs": {
+    "EP01_G01_A": {
+      "remote_id": "completed-remote",
+      "status": "generated",
+      "model": "test/video-model",
+      "job_version_fingerprint": "0760f058a994671d3057c819b28b7b33ed258d334c7e1f26ad85ae6e59ed0fec",
+      "output_file_sha256": "aa45169992b3d8dd0c5ae520a6260072970731badda923c3ebe25fadf51e68e1",
+      "source_url": "",
+      "technical_facts": {
+        "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_end_frame_failure_recover0\\A.mp4",
+        "width": 720,
+        "height": 1280,
+        "duration_seconds": 5.0,
+        "has_audio": true
+      },
+      "technical_errors": [],
+      "error": "",
+      "updated_at": "2026-07-28T13:07:05.726299+00:00",
+      "candidate_temp_path": "",
+      "candidate_file_sha256": "",
+      "candidate_cleanup_warning": "",
+      "end_frame_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_end_frame_failure_recover0\\video_ends\\EP01_G01_A_end.png"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "jobs": {
+    "EP01_G01_A": {
+      "remote_id": "completed-remote",
+      "source_url": "local://completed",
+      "status": "generated",
+      "model": "test/video-model",
+      "job_version_fingerprint": "a26aa9ae3c43b9342ebc39d40bcd8c7252181c0794ad9bb8c1b0534294e6893f",
+      "candidate_temp_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_published_candidate_is_ad0\\.A.crashed.download.mp4",
+      "candidate_file_sha256": "8c511831ad576763be27bf04fa74c4b987b997ca49a298a05391868554b9e52d",
+      "output_file_sha256": "8c511831ad576763be27bf04fa74c4b987b997ca49a298a05391868554b9e52d",
+      "technical_facts": {
+        "path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_published_candidate_is_ad0\\A.mp4",
+        "width": 720,
+        "height": 1280,
+        "duration_seconds": 5.0,
+        "has_audio": true
+      },
+      "technical_errors": [],
+      "error": "",
+      "updated_at": "2026-07-28T13:07:05.670217+00:00",
+      "candidate_cleanup_warning": "临时候选仍被占用，稳定输出已安全发布",
+      "end_frame_path": "D:\\P\\agent\\.tmp\\pytest-tiexin-preflight-20260728-01\\test_published_candidate_is_ad0\\video_ends\\EP01_G01_A_end.png"
+    }
+  }
+}
