@@ -58,15 +58,21 @@ Configure any OpenAI-compatible LLM endpoint in `appsettings.Development.json` o
 
 ## Architecture
 
-### Optional Yuxi Agent Runtime (integration in progress)
+### Incremental capability backfill from Yuxi
 
-`modules/yuxi-runtime/` contains a pinned upstream Yuxi source snapshot for
-AgentRun, checkpoints, Skills/MCP, subagents, sandboxing, and artifact delivery.
+`modules/yuxi-runtime/` contains a pinned upstream Yuxi source snapshot used as
+a code source for the platform's existing DeepAgent, Skill, and MCP stack; it
+does not introduce a second agent kernel. The first integrated capability is
+the MCP execution bridge: an MCP server is connected and its tools are appended
+to the existing AgentLoop only after it is configured and bound to an employee.
+With no binding, the SDK is not imported, no subprocess is started, and the
+existing local-tool path remains unchanged.
+
 The default single-user mode continues to use JSON/Markdown, local files, and
 in-process execution; PostgreSQL, Redis, MinIO, Milvus, and Neo4j remain optional
 enhancements enabled only when configured in the admin UI. The module is not
-part of the default Compose stack yet and does not change the current startup
-path. See
+part of the default Compose stack and does not replace the current startup path.
+See
 [`modules/yuxi-runtime/UPSTREAM.md`](modules/yuxi-runtime/UPSTREAM.md) and
 [`modules/yuxi-runtime/INTEGRATION.md`](modules/yuxi-runtime/INTEGRATION.md).
 

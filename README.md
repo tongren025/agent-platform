@@ -161,14 +161,17 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ## 技术架构
 
-### 可选 Yuxi Agent Runtime（集成中）
+### Yuxi 能力补齐模块（渐进接入）
 
-`modules/yuxi-runtime/` 固定保存 Yuxi 上游源码，计划把 AgentRun、Checkpoint、
-Skills/MCP、子智能体、沙盒与 Artifact 能力接入现有数字员工节点。默认单人模式继续
-使用 JSON/Markdown、本地文件和进程内执行，不要求 PostgreSQL、Redis、MinIO、
-Milvus 或 Neo4j；在后台配置对应服务后再启用数据库仓储、持久队列和重型知识能力。
-当前模块尚未加入默认 Compose，也不会改变现有启动方式；
-来源、固定版本与职责边界见
+`modules/yuxi-runtime/` 固定保存 Yuxi 上游源码，作为现有 DeepAgent、Skill、MCP
+体系的代码来源库，不另起一套 Agent 内核。第一项已接入能力是 MCP 执行桥接：
+后台创建 MCP 服务并绑定员工后，运行器才按需连接服务、发现工具并追加到现有
+AgentLoop；未绑定时不导入 SDK、不启动子进程、不联网，原有本地工具路径不变。
+
+默认单人模式继续使用 JSON/Markdown、本地文件和进程内执行，不要求 PostgreSQL、
+Redis、MinIO、Milvus 或 Neo4j；在后台配置对应服务后再启用数据库仓储、持久队列
+和重型知识能力。Yuxi 模块没有加入默认 Compose，也不替换现有启动方式；来源、
+固定版本与逐项接入边界见
 [`modules/yuxi-runtime/UPSTREAM.md`](modules/yuxi-runtime/UPSTREAM.md) 和
 [`modules/yuxi-runtime/INTEGRATION.md`](modules/yuxi-runtime/INTEGRATION.md)。
 
@@ -411,6 +414,7 @@ agent-platform/
 │   │   ├── prompt.py             #   系统提示词编译
 │   │   ├── snapshot.py           #   员工运行时快照加载
 │   │   ├── scope.py              #   作用域构建（工具/技能/MCP 绑定）
+│   │   ├── mcp.py                #   MCP 服务按需连接、工具发现与故障隔离
 │   │   ├── template.py           #   {{变量}} 模板解析引擎
 │   │   └── infra_tools.py        #   平台基础设施工具注册
 │   ├── services/                 # 业务服务

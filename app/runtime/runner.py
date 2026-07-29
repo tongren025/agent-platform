@@ -22,6 +22,7 @@ from app.runtime.loop import (
     ToolHandler,
     run_agent_loop,
 )
+from app.runtime.mcp import mcp_tool_handlers
 
 logger = logging.getLogger(__name__)
 
@@ -190,13 +191,16 @@ async def run_agent(
     )
 
     try:
-        loop_result: AgentLoopResult = await run_agent_loop(
-            client=client,
-            options=options,
-            system_prompt=compiled_prompt.system_prompt,
-            user_message=user_message,
-            tools=tool_handlers,
-        )
+        # MCP 是可选增强：只在员工绑定了服务时建立会话并追加工具；
+        # 未配置或单个服务故障时，现有本地工具与 AgentLoop 原样继续。
+        async with mcp_tool_handlers(visible_mcp_servers) as mcp_handlers:
+            loop_result: AgentLoopResult = await run_agent_loop(
+                client=client,
+                options=options,
+                system_prompt=compiled_prompt.system_prompt,
+                user_message=user_message,
+                tools=[*tool_handlers, *mcp_handlers],
+            )
     except Exception as exc:
         logger.error("Agent loop failed for %s: %s", employee_key, exc)
         run_result.success = False
