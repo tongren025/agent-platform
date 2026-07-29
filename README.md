@@ -163,11 +163,13 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 ### Yuxi 能力补齐模块（渐进接入）
 
 `modules/yuxi-runtime/` 固定保存 Yuxi 上游源码，作为现有 DeepAgent、Skill、MCP
-体系的代码来源库，不另起一套 Agent 内核。当前已接入 MCP 执行桥接和 SKILL.md
+体系的代码来源库，不另起一套 Agent 内核。当前已接入 MCP 执行桥接、SKILL.md
 只读发现：`data/skills/` 中的目录型技能可以直接由现有注册表列出并绑定员工，
 完整正文仍通过 `get_skill_detail` 按需读取；同名 JSON 配置优先且不改写技能目录。
 Skill 声明的子 Skill、工具与 MCP 依赖会在员工运行时快照中自动展开，缺失或循环
 依赖只隔离问题边，不修改员工原有配置。
+DeepAgent 的待办与虚拟文件会作为版本化 checkpoint 随会话保存；继续同一个会话
+即可恢复上一轮工作区，默认直接使用现有 JSON 会话文件，不需要 Redis 或新数据库表。
 对于 MCP，
 后台创建 MCP 服务并绑定员工后，运行器才按需连接服务、发现工具并追加到现有
 AgentLoop；未绑定时不导入 SDK、不启动子进程、不联网，原有本地工具路径不变。

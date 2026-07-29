@@ -25,7 +25,11 @@ from app.core.rate_limit import record_token_usage
 from app.models.run_record import AgentRunRecord
 from app.services.run_store import estimate_cost
 from app.runtime.prompt import compile
-from app.runtime.runner import AgentRunResult, run_agent
+from app.runtime.runner import (
+    DEEP_AGENT_CHECKPOINT_KEY,
+    AgentRunResult,
+    run_agent,
+)
 from app.runtime.scope import build_scopes
 from app.runtime.snapshot import load_snapshot
 
@@ -78,7 +82,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     流程：
       1. 按员工 + 工作流构建可见范围(scopes)、加载员工快照；员工不存在直接返回失败。
       2. 编译系统提示词，拼接额外上下文与结构化输出指令。
-      3. 若带 session_id 则载入历史消息，作为多轮对话上下文。
+      3. 若带 session_id 则载入历史消息与 DeepAgent checkpoint，恢复多轮上下文。
       4. 审批场景：把 approval_decision 合并进 __approval_decision JSON 再传给 agent。
       5. 跑 agent 循环并记录耗时。
       6. 追加 user / assistant 两条消息、按需沉淀 artifact，保存会话。
@@ -122,14 +126,19 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     # 3. 载入历史会话（若指定了 session_id），把过往消息喂给 agent 作多轮上下文
     existing_messages: Optional[list[dict]] = None
     existing_session: Optional[ConversationSession] = None
+    existing_deep_state_checkpoint: Optional[dict] = None
 
     if request.session_id:
         existing_session = memory_store.load_session(request.session_id)
-        if existing_session is not None and existing_session.messages:
-            existing_messages = [
-                {"role": msg.role, "content": msg.content}
-                for msg in existing_session.messages
-            ]
+        if existing_session is not None:
+            if existing_session.messages:
+                existing_messages = [
+                    {"role": msg.role, "content": msg.content}
+                    for msg in existing_session.messages
+                ]
+            checkpoint = existing_session.metadata.get(DEEP_AGENT_CHECKPOINT_KEY)
+            if isinstance(checkpoint, dict):
+                existing_deep_state_checkpoint = checkpoint
 
     extra_context = request.extra_context
     if request.approval_decision and request.session_id:
@@ -157,6 +166,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         employee_key=request.employee_key,
         extra_context=extra_context,
         existing_messages=existing_messages,
+        existing_deep_state_checkpoint=existing_deep_state_checkpoint,
     )
     elapsed_ms = int((time.monotonic() - _t0) * 1000)
 
@@ -188,6 +198,8 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     session.last_active_at = now
     if not session.title:
         session.title = _session_title(request.user_input)
+    if result.deep_state_checkpoint is not None:
+        session.metadata[DEEP_AGENT_CHECKPOINT_KEY] = result.deep_state_checkpoint
     _maybe_add_artifact(session, result.assistant_message)
     memory_store.save_session(session)
     result.session_id = session.session_id

@@ -26,10 +26,12 @@ from app.runtime.mcp import mcp_tool_handlers
 
 logger = logging.getLogger(__name__)
 
+DEEP_AGENT_CHECKPOINT_KEY = "deepAgentCheckpoint"
+
 
 @dataclass
 class AgentRunResult:
-    """一次 agent 运行的完整结果（回复/token/轨迹/待审批），由 API 层转成响应。"""
+    """一次 agent 运行的完整结果；checkpoint 仅供会话编排层内部持久化。"""
     assistant_message: str = ""
     success: bool = True
     error_message: Optional[str] = None
@@ -40,6 +42,7 @@ class AgentRunResult:
     session_id: Optional[str] = None
     pending_approval: Optional[PendingApprovalDetail] = None
     delegation_stack: Optional[list[str]] = None
+    deep_state_checkpoint: Optional[dict] = None
 
 
 def _parse_schema(raw: Optional[str]) -> dict:
@@ -132,8 +135,9 @@ async def run_agent(
     employee_key: str,
     extra_context: Optional[str] = None,
     existing_messages: Optional[list[dict]] = None,
+    existing_deep_state_checkpoint: Optional[dict] = None,
 ) -> AgentRunResult:
-    """运行 agent：解析模型策略（含 fallback_models/重试参数）、构建工具 handler 列表，调 run_agent_loop 并汇总为 AgentRunResult。"""
+    """运行 agent，并在 DeepAgent 模式恢复/返回同一会话的 todos/files checkpoint。"""
     run_result = AgentRunResult(active_scopes=compiled_prompt.active_scopes)
 
     model_policy = snapshot.default_model_policy
@@ -159,7 +163,9 @@ async def run_agent(
     shared_deep_state = None
     if snapshot.deep_agent:
         from app.tools.deep import DeepAgentState
-        shared_deep_state = DeepAgentState()
+        shared_deep_state = DeepAgentState.from_checkpoint(
+            existing_deep_state_checkpoint
+        )
 
     tool_handlers: list[ToolHandler] = []
     for rt in visible_tools:
@@ -205,6 +211,8 @@ async def run_agent(
         logger.error("Agent loop failed for %s: %s", employee_key, exc)
         run_result.success = False
         run_result.error_message = f"代理循环执行失败: {exc}"
+        if shared_deep_state is not None:
+            run_result.deep_state_checkpoint = shared_deep_state.to_checkpoint()
         return run_result
 
     from app.utils import strip_latex_artifacts
@@ -224,5 +232,8 @@ async def run_agent(
             completion_tokens=loop_result.completion_tokens,
             total_tokens=loop_result.prompt_tokens + loop_result.completion_tokens,
         )
+
+    if shared_deep_state is not None:
+        run_result.deep_state_checkpoint = shared_deep_state.to_checkpoint()
 
     return run_result

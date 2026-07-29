@@ -5,6 +5,22 @@
 
 ---
 
+## [2026-07-29] feat: DeepAgent 工作状态随会话恢复
+
+- 迁入 Yuxi checkpoint 的状态提取思路，把 DeepAgent 的 `todos/files` 作为版本化
+  checkpoint 保存到现有会话 `metadata`；同一 `sessionId` 的下一轮运行会在工具
+  handler 装配前恢复状态。
+- 默认 JSON 会话仓储即可持久化；后台启用现有 PostgreSQL 会话仓储时复用同一
+  metadata 字段，不要求 Redis、LangGraph 或新数据表。
+- checkpoint 只保存可检查的工具状态，不保存隐藏推理；待审批信息继续使用原有
+  独立字段。未知版本、坏字段和非 DeepAgent 路径均安全降级，不影响普通员工。
+- 新增 4 个专项测试，覆盖序列化边界、坏数据隔离、运行器工具状态恢复和会话回写。
+
+**影响面**：调整 DeepAgent 状态、Agent 运行器与会话调用编排；无 API、数据库、
+Redis、环境变量、前端或 JSON 迁移，不删除和替换现有代码。
+
+---
+
 ## [2026-07-29] feat: 接通 Skill 的工具、MCP 与子 Skill 依赖
 
 - 从 Yuxi SkillsMiddleware 迁入确定性 DFS 依赖闭包，员工绑定根 Skill 后自动展开

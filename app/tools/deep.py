@@ -1,4 +1,8 @@
-"""DeepAgent 工具集：任务清单(write_todos)、虚拟文件系统(ls/read/write/edit)、人工审批(require_approval)、受限 shell(execute)、子代理(task)。状态都存在 DeepAgentState（单次运行内存内共享），模块加载时自动注册。"""
+"""DeepAgent 工具集：任务清单、虚拟文件、审批、受限 shell 与子代理。
+
+运行中的工具共享 ``DeepAgentState``；其中 todos/files 可序列化为会话 checkpoint，
+在同一会话的后续运行中恢复。待审批状态仍由会话原有审批字段单独管理。
+"""
 from __future__ import annotations
 
 import asyncio
@@ -16,6 +20,8 @@ logger = logging.getLogger(__name__)
 
 _PENDING_SIGNAL = "##PENDING_APPROVAL##"
 _VALID_STATUSES = {"pending", "in_progress", "completed"}
+_CHECKPOINT_VERSION = 1
+_MAX_CHECKPOINT_TODOS = 100
 _BLOCKED_KEYWORDS = frozenset([
     "rm", "del", "rmdir", "rd", "sudo", "su",
     "format", "mkfs", "fdisk",
@@ -32,10 +38,57 @@ def _now() -> datetime:
 
 @dataclass
 class DeepAgentState:
-    """一次深度运行的共享状态：todos 清单 + 虚拟文件系统 + 待审批信息。同一次 run 的所有工具共享此对象。"""
+    """DeepAgent 共享状态；todos/files 可跨同一会话恢复，审批状态不混入 checkpoint。"""
     todos: list[dict] = field(default_factory=list)
     files: dict[str, str] = field(default_factory=dict)
     pending_approval: PendingApprovalDetail | None = None
+
+    @classmethod
+    def from_checkpoint(cls, raw: object) -> DeepAgentState:
+        """从不可信会话 metadata 恢复状态；格式或版本不支持时安全回到空状态。"""
+        if not isinstance(raw, dict) or raw.get("version") != _CHECKPOINT_VERSION:
+            return cls()
+
+        todos: list[dict] = []
+        raw_todos = raw.get("todos")
+        if isinstance(raw_todos, list):
+            for item in raw_todos[:_MAX_CHECKPOINT_TODOS]:
+                if not isinstance(item, dict):
+                    continue
+                todos.append({
+                    "content": str(item.get("content", "")),
+                    "status": _normalise_status(str(item.get("status", "pending"))),
+                })
+
+        files: dict[str, str] = {}
+        raw_files = raw.get("files")
+        if isinstance(raw_files, dict):
+            for path, content in raw_files.items():
+                if isinstance(path, str) and isinstance(content, str):
+                    files[path] = content
+
+        return cls(todos=todos, files=files)
+
+    def to_checkpoint(self) -> dict:
+        """提取可恢复的公开工具状态；不保存隐藏推理或待审批对象。"""
+        todos = [
+            {
+                "content": str(item.get("content", "")),
+                "status": _normalise_status(str(item.get("status", "pending"))),
+            }
+            for item in self.todos[:_MAX_CHECKPOINT_TODOS]
+            if isinstance(item, dict)
+        ]
+        files = {
+            path: content
+            for path, content in sorted(self.files.items())
+            if isinstance(path, str) and isinstance(content, str)
+        }
+        return {
+            "version": _CHECKPOINT_VERSION,
+            "todos": todos,
+            "files": files,
+        }
 
 
 def _ensure_deep_state(ctx: ToolContext) -> DeepAgentState:

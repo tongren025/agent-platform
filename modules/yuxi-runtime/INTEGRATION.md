@@ -2,7 +2,8 @@
 
 ## 当前阶段
 
-已完成上游源码快照引入和两项增量接入：MCP 工具执行桥接、SKILL.md 技能包发现。
+已完成上游源码快照引入和四项增量接入：MCP 工具执行桥接、SKILL.md 技能包发现、
+Skill 依赖闭包和 DeepAgent 本地 checkpoint。
 没有替换 Agent Platform 的 DeepAgent、Skill/MCP 配置或本地工具，也没有把 Yuxi
 服务加入根目录 `docker-compose.yml`。
 
@@ -48,13 +49,27 @@ Yuxi 的 PostgreSQL Repository 或 LangChain 运行栈。
 实现来源：`backend/package/yuxi/agents/middlewares/skills.py` 中的
 `expand_skill_closure`、dependency map 与 fail-soft 设计。
 
+### DeepAgent 本地 checkpoint
+
+- 复用 Yuxi `extract_agent_state` 的显式状态边界，只持久化 `todos/files`，不保存
+  模型隐藏推理，也不把待审批信息混进工作区状态。
+- checkpoint 以版本化对象写入现有 `ConversationSession.metadata`；同一会话的
+  下一轮在工具 handler 装配前恢复，主代理和子代理继续共享同一状态对象。
+- 默认使用现有一会话一 JSON 文件；后台启用 PostgreSQL 会话仓储时，同一 metadata
+  字段自动落入 JSON 列，不新增表或迁移。
+- 未知版本或损坏字段安全降级为空状态；普通员工不创建 checkpoint，现有路径不变。
+
+实现来源：`backend/package/yuxi/services/chat_service.py` 中
+`extract_agent_state` / checkpoint state view 的数据边界。本地适配没有搬入
+LangGraph、`AsyncPostgresSaver` 或 Redis，而是接入平台已有会话仓储。
+
 ## 目标职责
 
 后续继续从 Yuxi 筛选可补齐的通用 Agent Harness 能力：
 
 - Agent Context 与中间件
 - 请求排队、AgentRun、Steer、取消和恢复
-- LangGraph checkpoint 与工具审批
+- 更完整的运行恢复、Steer 与工具审批
 - Skills、MCP、工具门控和子智能体生命周期
 - 工作区、沙盒文件系统和 Artifact 交付
 - 上下文压缩、运行事件和 Agent 评估
