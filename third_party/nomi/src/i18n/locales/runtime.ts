@@ -47,7 +47,7 @@ export const zhRuntime = {
     asset: { menu: '素材', title: '素材', placeholder: '描述素材内容...' },
   },
   browser: {
-    nomiWebsite: 'Nomi 官网',
+    nomiWebsite: '平台首页',
     newTab: '新建标签页',
     webImage: '网页图片',
     webVideo: '网页视频',
@@ -243,7 +243,7 @@ export const enRuntime = {
     asset: { menu: 'Asset', title: 'Asset', placeholder: 'Describe the asset...' },
   },
   browser: {
-    nomiWebsite: 'Nomi website',
+    nomiWebsite: 'Platform home',
     newTab: 'New tab',
     webImage: 'Web image',
     webVideo: 'Web video',

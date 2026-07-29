@@ -46,8 +46,12 @@ jobs:
         working-directory: web
         run: |
           npm ci
+          test -s public/agent-canvas/agent-canvas.js
+          test -s public/agent-canvas/agent-canvas.css
           npx tsc --noEmit
           npm run build
+          test -s ../wwwroot/agent-canvas/agent-canvas.js
+          test -s ../wwwroot/agent-canvas/agent-canvas.css
 
   deploy:
     needs: [backend, frontend]

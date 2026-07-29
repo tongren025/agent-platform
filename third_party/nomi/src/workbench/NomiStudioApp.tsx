@@ -55,9 +55,15 @@ type ProjectPersistenceModule = typeof import('./project/projectPersistenceServi
 // 懒加载点位全部走容错域（审计 A5）：chunk 失败只降级该区域，不再拖死整个 app。
 const WorkbenchShell = lazyWithChunkBoundary('工作台', () => import('./WorkbenchShell'))
 const OnboardingFloatingPanel = lazyWithChunkBoundary('模型设置面板', () =>
-  import('../ui/onboarding/OnboardingFloatingPanel').then((module) => ({
-    default: module.OnboardingFloatingPanel,
-  })),
+  (
+    getDesktopBridge()
+      ? import('../ui/onboarding/OnboardingFloatingPanel').then((module) => ({
+          default: module.OnboardingFloatingPanel,
+        }))
+      : import('../ui/onboarding/PlatformModelPanel').then((module) => ({
+          default: module.PlatformModelPanel,
+        }))
+  ),
 )
 const PromptLibraryPanel = lazyWithChunkBoundary('提示词库', () =>
   import('./promptLibrary/PromptLibraryPanel').then((module) => ({

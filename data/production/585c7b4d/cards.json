@@ -1,0 +1,20 @@
+[
+  {
+    "card_id": "1a86d904",
+    "project_id": "585c7b4d",
+    "stage": "idea",
+    "title": "原始素材",
+    "content": "15秒竖屏科幻短剧：维修机器人在断电空间站发现一株仍在发光的幼苗，最终用自己的备用电池救活它。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {},
+    "status": "done",
+    "assignee": "",
+    "created_at": "2026-07-29T14:01:30.544843+00:00",
+    "updated_at": "2026-07-29T14:01:30.544843+00:00"
+  }
+]

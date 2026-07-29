@@ -1,6 +1,7 @@
 """Production pipeline API — project & card CRUD + AI generation."""
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 import os
@@ -18,7 +19,7 @@ from fastapi.responses import FileResponse
 from pydantic import AliasChoices, BaseModel, Field
 from starlette.background import BackgroundTask
 
-from app.config import BASE_DIR
+from app.config import BASE_DIR, settings as app_settings
 from app.core.logging import get_logger
 from app.models.conversation import AgentRunRequest
 from app.models.production import (
@@ -36,6 +37,15 @@ logger = get_logger(__name__)
 
 INBOX_MAX_FILE_BYTES = 50 * 1024 * 1024  # 50 MB per file
 
+_STAGE_EMPLOYEE_CANDIDATES: dict[str, tuple[str, ...]] = {
+    "script": ("comic-screenwriter", "script-doctor"),
+    "setting": ("comic-character-designer", "comic-scene-designer"),
+    "design": ("comic-prompt-engineer", "comic-character-designer"),
+    "storyboard": ("comic-storyboard", "comic-director"),
+    "img_prompt": ("comic-prompt-engineer", "comic-keyframe-artist"),
+    "vid_prompt": ("comic-video-artist", "comic-prompt-engineer"),
+}
+
 DATA_DIR = BASE_DIR / "data" / "production"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 _PROJECT_LOCKS: dict[str, threading.RLock] = {}
@@ -50,6 +60,34 @@ def _project_lock(pid: str) -> threading.RLock:
             lock = threading.RLock()
             _PROJECT_LOCKS[pid] = lock
         return lock
+
+
+def _select_generation_employee(
+    target_stage: str,
+    requested_employee_key: str,
+    project_employee_key: str,
+) -> str:
+    """按“本次指定 → 项目默认 → 阶段专业员工”选择生成执行人。
+
+    旧逻辑在项目未指定员工时直接取注册表第一项，文件排序变化就可能把充值策略助手
+    拿去写漫剧。这里仅从目标阶段的专业候选中选择启用员工；一个都没有时明确报错。
+    """
+    if requested_employee_key.strip():
+        return requested_employee_key.strip()
+    if project_employee_key.strip():
+        return project_employee_key.strip()
+
+    from app.dependencies import employee_registry
+
+    enabled_keys = {
+        employee.employee_key
+        for employee in employee_registry.list_all()
+        if employee.enabled
+    }
+    for candidate in _STAGE_EMPLOYEE_CANDIDATES.get(target_stage, ()):
+        if candidate in enabled_keys:
+            return candidate
+    return ""
 
 
 def _proj_dir(pid: str) -> Path:
@@ -345,7 +383,10 @@ def _sections_from_reply(reply: str) -> list[dict]:
                 return drafts
 
     drafts = []
-    for section in [s.strip() for s in reply.split("---") if s.strip()]:
+    # 只有独占一行的 --- 才是卡片分隔符。Markdown 表格的 |---|---| 也含
+    # 连续连字符，旧版直接 str.split 会把一张表拆成十几张标题为 "|" 的脏卡。
+    sections = re.split(r"(?m)^\s*---\s*$", reply)
+    for section in [item.strip() for item in sections if item.strip()]:
         lines = section.strip().split("\n")
         title = lines[0].strip().lstrip("#").strip() if lines else "生成卡片"
         body = "\n".join(lines[1:]).strip() if len(lines) > 1 else section
@@ -1991,14 +2032,14 @@ async def generate_stage(pid: str, req: GenerateReq):
     if req.extra_instruction:
         instruction += f"\n\n额外要求：{req.extra_instruction}"
 
-    emp_key = req.employee_key or proj.employee_key
-    if not emp_key:
-        from app.dependencies import employee_registry
-        all_emps = employee_registry.list_all()
-        emp_key = all_emps[0].employee_key if all_emps else ""
+    emp_key = _select_generation_employee(
+        req.target_stage,
+        req.employee_key or "",
+        proj.employee_key or "",
+    )
 
     if not emp_key:
-        raise HTTPException(400, "需要指定一个数字员工来执行生成")
+        raise HTTPException(400, f"没有可执行“{target_name}”阶段的已启用数字员工")
 
     scope_label = f"EP{req.episode:02d}" if req.episode is not None else "全局资产"
     if req.shot_number is not None:
@@ -2013,10 +2054,19 @@ async def generate_stage(pid: str, req: GenerateReq):
     )
     prompt = f"你正在为项目「{proj.name}」（范围：{scope_label}）生成{target_name}。\n{project_constraints}\n\n{instruction}\n\n以下是已有的内容：\n\n{context}"
 
-    result = await run_invocation(AgentRunRequest(
-        employeeKey=emp_key,
-        userInput=prompt,
-    ))
+    try:
+        result = await asyncio.wait_for(
+            run_invocation(AgentRunRequest(
+                employeeKey=emp_key,
+                userInput=prompt,
+            )),
+            timeout=max(1, int(app_settings.agent.run_timeout_seconds)),
+        )
+    except TimeoutError as exc:
+        raise HTTPException(
+            504,
+            f"AI 生成超过 {app_settings.agent.run_timeout_seconds} 秒，任务已停止，请重试",
+        ) from exc
     if not result.success:
         raise HTTPException(500, result.error_message or "AI 生成失败")
     reply = result.assistant_message

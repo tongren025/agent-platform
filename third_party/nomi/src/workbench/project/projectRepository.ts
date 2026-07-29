@@ -36,6 +36,44 @@ import {
 } from './projectNormalize'
 import i18n, { getAppLocale } from '../../i18n'
 
+type PlatformEnvelope<T> = { code?: number; data?: T; message?: string }
+
+function isPlatformRuntime(): boolean {
+  return typeof window !== 'undefined' && !getDesktopBridge()
+}
+
+async function platformProjectRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = window.localStorage.getItem('user_token')
+  const response = await fetch(`/api/v1/agentapp/canvas/workbench/projects${path}`, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(init?.headers || {}),
+    },
+  })
+  const envelope = await response.json() as PlatformEnvelope<T>
+  if (!response.ok || envelope.code !== 200 || envelope.data === undefined) {
+    throw new Error(envelope.message || `工作台项目请求失败（${response.status}）`)
+  }
+  return envelope.data
+}
+
+export async function syncPlatformProjectIndex(): Promise<WorkbenchProjectSummary[]> {
+  if (!isPlatformRuntime()) return listLocalProjects()
+  const summaries = await platformProjectRequest<WorkbenchProjectSummary[]>('')
+  writeIndex(summaries)
+  return summaries
+}
+
+function mirrorProject(record: WorkbenchProjectRecordV1): void {
+  if (!isPlatformRuntime()) return
+  void platformProjectRequest(`/${encodeURIComponent(record.id)}`, {
+    method: 'PUT',
+    body: JSON.stringify(record),
+  }).catch((error) => console.error('平台画布项目保存失败', error))
+}
+
 // 重导出：实现已拆到 projectStorage（localStorage 原语 + 配额错误），
 // 但 projectRepository 对外公共导出面保持不变。
 export { ProjectStorageQuotaError } from './projectStorage'
@@ -148,6 +186,7 @@ export function createLocalProject(
   }
   writeJson(projectRecordKey(summary.id), record)
   writeIndex([summary, ...readMergedProjectSummaries().filter((item) => item.id !== summary.id)])
+  mirrorProject(record)
   return record
 }
 
@@ -175,6 +214,15 @@ export async function readLocalProjectAsync(projectId: string): Promise<Workbenc
   if (desktop?.projects.readAsync) {
     const record = await desktop.projects.readAsync(id)
     return record ? normalizeRecord(normalizeSummary(record) || (record as WorkbenchProjectSummary), record) : null
+  }
+  if (isPlatformRuntime()) {
+    try {
+      const record = await platformProjectRequest<WorkbenchProjectRecordV1>(`/${encodeURIComponent(id)}`)
+      writeJson(projectRecordKey(id), record)
+      return record
+    } catch {
+      // 服务端不存在时回退本地缓存，兼容首次迁移前的浏览器项目。
+    }
   }
   return readLocalProject(id)
 }
@@ -233,6 +281,7 @@ export function saveLocalProject(
   const nextIndex = [summary, ...readMergedProjectSummaries().filter((item) => item.id !== id)]
   writeJson(projectRecordKey(id), record)
   writeIndex(nextIndex)
+  mirrorProject(record)
   return record
 }
 
@@ -255,4 +304,8 @@ export function deleteLocalProject(projectId: string): void {
     }
   }
   writeIndex(readMergedProjectSummaries().filter((item) => item.id !== id))
+  if (isPlatformRuntime()) {
+    void platformProjectRequest(`/${encodeURIComponent(id)}`, { method: 'DELETE' })
+      .catch((error) => console.error('平台画布项目删除失败', error))
+  }
 }

@@ -113,31 +113,43 @@ export async function listWorkbenchModelCatalogVendors(): Promise<ModelCatalogVe
   if (desktop) return desktop.modelCatalog.listVendors() as ModelCatalogVendorDto[]
   if (!isPlatformWebRuntime()) throw new Error('model catalog requires the Electron desktop runtime')
   const now = new Date().toISOString()
-  return [{
-    key: 'openrouter',
-    name: '平台 OpenRouter',
-    enabled: true,
-    hasApiKey: true,
-    authType: 'bearer',
-    createdAt: now,
-    updatedAt: now,
-  }]
+  return [
+    {
+      key: 'platform-employee',
+      name: 'Agent Studio 数字员工',
+      enabled: true,
+      hasApiKey: true,
+      authType: 'none',
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      key: 'openrouter',
+      name: 'Agent Studio 媒体模型',
+      enabled: true,
+      hasApiKey: true,
+      authType: 'bearer',
+      createdAt: now,
+      updatedAt: now,
+    },
+  ]
 }
 
 export async function getWorkbenchModelCatalogHealth(): Promise<ModelCatalogHealthDto> {
   const desktop = getDesktopBridge()
   if (desktop) return desktop.modelCatalog.health() as ModelCatalogHealthDto
   if (!isPlatformWebRuntime()) throw new Error('model catalog requires the Electron desktop runtime')
-  const [images, videos] = await Promise.all([
+  const [texts, images, videos] = await Promise.all([
+    listWorkbenchModelCatalogModels({ kind: 'text', enabled: true }).catch(() => []),
     listWorkbenchModelCatalogModels({ kind: 'image', enabled: true }).catch(() => []),
     listWorkbenchModelCatalogModels({ kind: 'video', enabled: true }).catch(() => []),
   ])
-  const total = images.length + videos.length
+  const total = texts.length + images.length + videos.length
   return {
     ok: total > 0,
     counts: {
-      vendors: 1,
-      enabledVendors: 1,
+      vendors: 2,
+      enabledVendors: 2,
       models: total,
       enabledModels: total,
       mappings: total,
@@ -145,6 +157,7 @@ export async function getWorkbenchModelCatalogHealth(): Promise<ModelCatalogHeal
       enabledApiKeys: 1,
     },
     byKind: [
+      { kind: 'text', enabledModels: texts.length, executableModels: texts.length },
       { kind: 'image', enabledModels: images.length, executableModels: images.length },
       { kind: 'video', enabledModels: videos.length, executableModels: videos.length },
     ],
@@ -164,9 +177,42 @@ export async function listWorkbenchModelCatalogModels(params?: {
   const desktop = getDesktopBridge()
   if (desktop) return desktop.modelCatalog.listModels(params) as ModelCatalogModelDto[]
   if (!isPlatformWebRuntime()) throw new Error('model catalog requires the Electron desktop runtime')
-  if (params?.kind !== 'image' && params?.kind !== 'video') return []
-  const query = new URLSearchParams({ kind: params.kind })
-  return platformRequest<ModelCatalogModelDto[]>(`/canvas/nomi/models?${query.toString()}`)
+  const kinds: BillingModelKind[] = params?.kind ? [params.kind] : ['text', 'image', 'video']
+  const rows = (
+    await Promise.all(kinds.map(async (kind): Promise<ModelCatalogModelDto[]> => {
+      if (kind === 'text') {
+        const employees = await platformRequest<Array<Record<string, unknown>>>('/registry/employees')
+        const now = new Date().toISOString()
+        return employees.flatMap((employee): ModelCatalogModelDto[] => {
+          const modelKey = String(employee.employeeKey || employee.employee_key || '').trim()
+          if (!modelKey || employee.enabled === false) return []
+          return [{
+            modelKey,
+            vendorKey: 'platform-employee',
+            labelZh: String(employee.name || modelKey),
+            kind: 'text',
+            enabled: true,
+            meta: {
+              description: employee.computedDescription || employee.roleProfile || '',
+              employee,
+            },
+            createdAt: now,
+            updatedAt: now,
+          }]
+        })
+      }
+      if (kind === 'image' || kind === 'video') {
+        const query = new URLSearchParams({ kind })
+        return platformRequest<ModelCatalogModelDto[]>(`/canvas/workbench/models?${query.toString()}`)
+      }
+      return []
+    }))
+  ).flat()
+  return rows.filter((row) => {
+    if (params?.vendorKey && row.vendorKey !== params.vendorKey) return false
+    if (params?.enabled !== undefined && row.enabled !== params.enabled) return false
+    return true
+  })
 }
 
 /** 启用/更新一个已存在的目录模型（恢复卡「一键启用被禁用的文本大脑」用）。 */

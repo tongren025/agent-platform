@@ -45,6 +45,10 @@ _FATAL_ERRORS: tuple[type[BaseException], ...] = (
 )
 
 
+class EmptyModelResponseError(RuntimeError):
+    """供应商请求成功但没有返回可见正文或工具调用。"""
+
+
 @dataclass
 class ToolHandler:
     """循环可调用的一个工具：name/description/input_schema 报给 LLM，handler 收 JSON 参数串返回文本结果（由 runner 组装）。"""
@@ -159,9 +163,36 @@ async def _create_with_retry(
 
         for attempt in range(options.max_retries + 1):
             try:
-                return await _create_completion(a_client, create_kwargs, a_is_async)
+                response = await _create_completion(a_client, create_kwargs, a_is_async)
+                normalized = normalize_chat_completion(response)
+                if not normalized.choices:
+                    raise EmptyModelResponseError(f"模型 {model} 未返回 choices")
+                choice = normalized.choices[0]
+                content = str(choice.message.content or "").strip()
+                if content or choice.message.tool_calls:
+                    return response
+
+                finish_reason = str(choice.finish_reason or "unknown")
+                last_exc = EmptyModelResponseError(
+                    f"模型 {model} 返回空内容（finish_reason={finish_reason}）"
+                )
+                # length/max_tokens 通常表示输出预算全部消耗在推理或不可见内容，
+                # 原模型原参数重试只会重复耗时，直接进入降级模型。
+                if finish_reason in {"length", "max_tokens"}:
+                    logger.warning("%s，尝试降级", last_exc)
+                    break
+                # 其他空响应最多原模型重试一次，防止供应商偶发空包。
+                if attempt < min(options.max_retries, 1):
+                    logger.warning("%s，重试一次", last_exc)
+                    continue
+                logger.warning("%s，尝试降级", last_exc)
+                break
             except _FATAL_ERRORS:
                 raise
+            except EmptyModelResponseError as exc:
+                last_exc = exc
+                logger.warning("%s，尝试降级", exc)
+                break
             except openai.NotFoundError as exc:
                 # 模型不存在 / 不可用：不在本模型上重试，直接降级到下一个
                 last_exc = exc

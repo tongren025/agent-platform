@@ -342,6 +342,10 @@ class AIService:
 
     def _make_client(self, provider: AiModelConfig, *, async_client: bool) -> openai.OpenAI | openai.AsyncOpenAI:
         """按供应商的 endpoint / api_key 造一个同步或异步 OpenAI 客户端。"""
+        if not provider.endpoint.strip():
+            raise ValueError(f"AI provider {provider.name!r} missing endpoint")
+        if not provider.api_key.strip():
+            raise ValueError(f"AI provider {provider.name!r} missing API key")
         cls = openai.AsyncOpenAI if async_client else openai.OpenAI
         return cls(base_url=provider.endpoint, api_key=provider.api_key)
 
@@ -363,13 +367,19 @@ class AIService:
 
     def _resolve_any(self, model_name: str, *, async_client: bool = False) -> tuple[openai.OpenAI | openai.AsyncOpenAI, str]:
         """跨所有「已启用」供应商查找模型，命中第一个即返回；都没有则抛 ValueError。"""
+        unavailable_matches: list[str] = []
         for provider in self._providers:
             if not provider.enabled:
                 continue
             resolved = self._find_model_in_provider(provider, model_name)
             if resolved is not None:
-                return self._make_client(provider, async_client=async_client), resolved
+                try:
+                    return self._make_client(provider, async_client=async_client), resolved
+                except ValueError as exc:
+                    unavailable_matches.append(str(exc))
 
+        if unavailable_matches:
+            raise ValueError("; ".join(unavailable_matches))
         raise ValueError(f"Model {model_name!r} not found in any provider")
 
     def _find_provider(self, name: str) -> AiModelConfig | None:
@@ -383,13 +393,17 @@ class AIService:
     def get_default_client(self) -> tuple[openai.OpenAI, str]:
         """返回第一个可用 provider 的客户端和默认模型，用于后台任务。"""
         for provider in self._providers:
-            if not provider.enabled or not provider.models:
+            if (
+                not provider.enabled
+                or not provider.models
+                or not provider.endpoint.strip()
+                or not provider.api_key.strip()
+            ):
                 continue
             model_id = provider.models[0].get("modelId", provider.models[0].get("modelName", ""))
             if model_id:
-                client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
-                return client, model_id
-        raise ValueError("没有可用的 AI provider")
+                return self._make_client(provider, async_client=False), model_id
+        raise ValueError("没有已启用且凭据完整的 AI provider")
 
     @staticmethod
     def _find_model_in_provider(

@@ -11,7 +11,11 @@ import httpx
 import openai
 import pytest
 
-from app.runtime.loop import AgentLoopOptions, _create_with_retry
+from app.runtime.loop import (
+    AgentLoopOptions,
+    EmptyModelResponseError,
+    _create_with_retry,
+)
 
 _OK = object()  # 成功返回的哨兵；_create_with_retry 只透传不检查内容
 
@@ -84,6 +88,18 @@ def _opts(**kw) -> AgentLoopOptions:
     return AgentLoopOptions(**base)
 
 
+def _completion(content: str, finish_reason: str = "stop"):
+    return SimpleNamespace(
+        choices=[
+            SimpleNamespace(
+                message=SimpleNamespace(content=content, tool_calls=None),
+                finish_reason=finish_reason,
+            )
+        ],
+        usage=None,
+    )
+
+
 async def test_retries_transient_then_succeeds():
     client, create = _fake_client([_timeout_error(), _OK])
     result = await _create_with_retry(client, {}, True, _opts(), iteration=1)
@@ -122,3 +138,34 @@ async def test_falls_back_to_cross_provider_client():
     assert result is _OK
     assert p_create.models == ["primary", "primary"]      # 主 client 试满
     assert b_create.models == ["backup-model"]            # 降级到备用 client
+
+
+async def test_empty_length_response_skips_retry_and_falls_back():
+    """推理耗尽 token 但正文为空时，不在原模型重复等待，直接走降级模型。"""
+    client, create = _fake_client([
+        _completion("", finish_reason="length"),
+        _completion("备用模型正文"),
+    ])
+    opts = _opts(max_retries=2, fallback_models=["backup"])
+
+    result = await _create_with_retry(client, {}, True, opts, iteration=1)
+
+    assert result.choices[0].message.content == "备用模型正文"
+    assert create.models == ["primary", "backup"]
+
+
+async def test_empty_response_without_fallback_is_explicit_failure():
+    client, create = _fake_client([
+        _completion("", finish_reason="length"),
+    ])
+
+    with pytest.raises(EmptyModelResponseError, match="返回空内容"):
+        await _create_with_retry(
+            client,
+            {},
+            True,
+            _opts(max_retries=2),
+            iteration=1,
+        )
+
+    assert create.models == ["primary"]

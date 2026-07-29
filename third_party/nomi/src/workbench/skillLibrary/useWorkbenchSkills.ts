@@ -16,9 +16,9 @@ export type UseWorkbenchSkills = {
   items: SkillListItemDto[]
   available: ReadonlySet<SkillProviderKind>
   reload: () => void
-  remove: (dirName: string) => { ok: boolean; error?: string }
-  importPackage: (payload: unknown) => { ok: boolean; skillName?: string; error?: string }
-  exportPackage: (dirName: string) => unknown
+  remove: (dirName: string) => Promise<{ ok: boolean; error?: string }>
+  importPackage: (payload: unknown) => Promise<{ ok: boolean; skillName?: string; error?: string }>
+  exportPackage: (dirName: string) => Promise<unknown>
 }
 
 export function useWorkbenchSkills(opened: boolean): UseWorkbenchSkills {
@@ -26,11 +26,7 @@ export function useWorkbenchSkills(opened: boolean): UseWorkbenchSkills {
   const [available, setAvailable] = React.useState<ReadonlySet<SkillProviderKind>>(new Set())
 
   const reload = React.useCallback(() => {
-    try {
-      setItems(listWorkbenchSkills())
-    } catch {
-      setItems([])
-    }
+    void listWorkbenchSkills().then(setItems).catch(() => setItems([]))
     getAvailableSkillProviders()
       .then(setAvailable)
       .catch(() => setAvailable(new Set()))
@@ -49,19 +45,27 @@ export function useWorkbenchSkills(opened: boolean): UseWorkbenchSkills {
   }, [opened, reload])
 
   const remove = React.useCallback(
-    (dirName: string) => {
-      const res = deleteWorkbenchSkill(dirName)
-      if (res.ok) reload()
-      return { ok: res.ok, error: res.error }
+    async (dirName: string) => {
+      try {
+        const res = await deleteWorkbenchSkill(dirName)
+        if (res.ok) reload()
+        return { ok: res.ok, error: res.error }
+      } catch (error: unknown) {
+        return { ok: false, error: error instanceof Error ? error.message : String(error) }
+      }
     },
     [reload],
   )
 
   const importPackage = React.useCallback(
-    (payload: unknown) => {
-      const res = importWorkbenchSkill(payload)
-      if (res.ok) reload()
-      return { ok: res.ok, skillName: res.skillName, error: res.error }
+    async (payload: unknown) => {
+      try {
+        const res = await importWorkbenchSkill(payload)
+        if (res.ok) reload()
+        return { ok: res.ok, skillName: res.skillName, error: res.error }
+      } catch (error: unknown) {
+        return { ok: false, error: error instanceof Error ? error.message : String(error) }
+      }
     },
     [reload],
   )

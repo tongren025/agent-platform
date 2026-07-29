@@ -13,11 +13,6 @@
       "modelName": "OpenRouter Free",
       "modelId": "openrouter/free",
       "timeoutMinutes": 20
-    },
-    {
-      "modelName": "Test Free",
-      "modelId": "tencent/hy3:free",
-      "timeoutMinutes": 20
     }
   ]
 }

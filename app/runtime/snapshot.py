@@ -35,8 +35,8 @@ def load_snapshot(
 ) -> Optional[EmployeeRuntimeSnapshot]:
     """按员工 key 构建运行时快照：解析绑定的技能/工具/MCP（按 scope 分组）、模型策略与队友摘要；员工不存在返回 None。"""
     employee = employee_registry.get(employee_key)
-    if employee is None:
-        logger.warning("Employee not found: %s", employee_key)
+    if employee is None or not employee.enabled:
+        logger.warning("Employee not found or disabled: %s", employee_key)
         return None
 
     snapshot = EmployeeRuntimeSnapshot(

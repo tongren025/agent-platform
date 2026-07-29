@@ -112,22 +112,38 @@ export interface QuickPrompt {
   updated_at: string;
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+type RequestOptions = RequestInit & {
+  /** 仅给确实可能长时间运行的接口设置；普通请求继续使用浏览器默认行为。 */
+  timeoutMs?: number;
+};
+
+async function request<T>(path: string, init?: RequestOptions): Promise<T> {
   // 已经在跳登录页的路上就不再发请求：这些请求必然 401，
   // 只会在页面卸载前刷出一串无意义的失败日志。
   if (isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = userToken.get();
+  const { timeoutMs, ...fetchInit } = init || {};
+  const timeoutController = timeoutMs && !fetchInit.signal ? new AbortController() : null;
+  const timeoutId = timeoutController
+    ? window.setTimeout(() => timeoutController.abort(), timeoutMs)
+    : null;
   // FormData 的 Content-Type 必须由浏览器生成，才能带上正确的 multipart boundary。
-  const isFormData = typeof FormData !== 'undefined' && init?.body instanceof FormData;
-  const res = await friendlyFetch(`${BASE}${path}`, {
-    ...init,
-    headers: {
-      ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
-      'Accept': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...init?.headers,
-    },
-  });
+  const isFormData = typeof FormData !== 'undefined' && fetchInit.body instanceof FormData;
+  let res: Response;
+  try {
+    res = await friendlyFetch(`${BASE}${path}`, {
+      ...fetchInit,
+      signal: fetchInit.signal || timeoutController?.signal,
+      headers: {
+        ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
+        'Accept': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...fetchInit.headers,
+      },
+    });
+  } finally {
+    if (timeoutId !== null) window.clearTimeout(timeoutId);
+  }
   if (res.status === 401) {
     // 凭证失效:统一清 token 回登录页,免得每个页面各自处理
     userToken.clear();
@@ -478,7 +494,12 @@ export const api = {
   removeMember: (pid: string, userId: string) =>
     request<any>(`/production/projects/${pid}/members/${userId}`, { method: 'DELETE' }),
   generateStage: (pid: string, data: { target_stage: string; employee_key?: string; extra_instruction?: string; episode?: number | null; shot_number?: number; mode?: 'append' | 'replace' }) =>
-    request<any>(`/production/projects/${pid}/generate`, { method: 'POST', body: JSON.stringify(data) }),
+    request<any>(`/production/projects/${pid}/generate`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      // 后端整体上限 180 秒；多留 15 秒传输余量，确保断网/服务挂死时 finally 能收掉转圈状态。
+      timeoutMs: 195_000,
+    }),
   generateCardImage: (pid: string, cardId: string, data: { model: string; prompt?: string; size?: string }) =>
     request<{ url: string; model: string; card: any }>(`/production/projects/${pid}/cards/${cardId}/generate-image`, {
       method: 'POST', body: JSON.stringify(data),

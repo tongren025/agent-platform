@@ -1,0 +1,21 @@
+[
+  {
+    "logId": "dist_8cce9d0f5a30",
+    "employeeKey": "comic-video-artist",
+    "ranAt": "2026-07-29T13:35:04.783682Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 0,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "afterCounts": {
+      "semantic": 0,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
+  }
+]

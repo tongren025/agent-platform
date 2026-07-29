@@ -1,7 +1,8 @@
 // 渲染层取提示词库的唯一入口(镜像 skillApi 的 requireDesktopRuntime 范式)。
 // 主进程已聚合+缓存;这里取全量,搜索/分类过滤是平凡纯函数,放渲染层(不重复后端逻辑)。
-import { getDesktopBridge, type DesktopBridge } from '../../desktop/bridge'
+import { getDesktopBridge } from '../../desktop/bridge'
 import i18n from '../../i18n'
+import { listWorkbenchModelCatalogModels } from './modelCatalogApi'
 
 export type PromptMediaType = 'image' | 'video'
 
@@ -28,10 +29,28 @@ export type LibraryPrompt = {
   referenceImages?: PromptReferenceImage[]
 }
 
-function requireDesktopRuntime(feature: string): DesktopBridge {
-  const desktop = getDesktopBridge()
-  if (!desktop?.promptLibrary) throw new Error(`${feature} requires the Electron desktop runtime`)
-  return desktop
+type PlatformEnvelope<T> = { code?: number; data?: T; message?: string }
+
+function isPlatformWebRuntime(): boolean {
+  return typeof window !== 'undefined' && typeof document !== 'undefined'
+}
+
+async function platformPromptRequest<T>(path = '', init?: RequestInit): Promise<T> {
+  const token = window.localStorage.getItem('user_token')
+  const response = await fetch(`/api/v1/agentapp/quick-prompts${path}`, {
+    ...init,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(init?.headers || {}),
+    },
+  })
+  const envelope = await response.json() as PlatformEnvelope<T>
+  if (!response.ok || envelope.code !== 200 || envelope.data === undefined) {
+    throw new Error(envelope.message || `平台提示词请求失败（${response.status}）`)
+  }
+  return envelope.data
 }
 
 function toPrompt(raw: unknown): LibraryPrompt | null {
@@ -64,8 +83,13 @@ function toPrompt(raw: unknown): LibraryPrompt | null {
 }
 
 export async function fetchPromptLibrary(): Promise<LibraryPrompt[]> {
-  const desktop = requireDesktopRuntime('prompt library')
-  const res = await desktop.promptLibrary!.list()
+  const desktop = getDesktopBridge()
+  if (!desktop?.promptLibrary) {
+    if (!isPlatformWebRuntime()) throw new Error('prompt library requires a browser or Electron runtime')
+    // 平台没有伪造“官方精选”；个人库由 fetchUserPrompts 读取账号级常用指令。
+    return []
+  }
+  const res = await desktop.promptLibrary.list()
   if (!res?.ok || !Array.isArray(res.prompts)) return []
   return res.prompts.map(toPrompt).filter((p): p is LibraryPrompt => p !== null)
 }
@@ -78,8 +102,20 @@ function mapUserPrompts(res: { ok?: boolean; prompts?: unknown[] } | undefined):
 }
 
 export async function fetchUserPrompts(): Promise<LibraryPrompt[]> {
-  const desktop = requireDesktopRuntime('my prompt library')
-  return mapUserPrompts(await desktop.promptLibrary!.userList())
+  const desktop = getDesktopBridge()
+  if (desktop?.promptLibrary) return mapUserPrompts(await desktop.promptLibrary.userList())
+  if (!isPlatformWebRuntime()) throw new Error('prompt library requires a browser or Electron runtime')
+  const rows = await platformPromptRequest<Array<Record<string, unknown>>>()
+  return rows.map((row) => toPrompt({
+    id: row.id,
+    title: row.title,
+    prompt: row.content,
+    promptType: 'image',
+    mediaType: 'image',
+    origin: 'user',
+    source: 'Agent Studio',
+    updatedAt: row.updated_at,
+  })).filter((prompt): prompt is LibraryPrompt => prompt !== null)
 }
 
 export async function addUserPrompt(input: {
@@ -89,29 +125,64 @@ export async function addUserPrompt(input: {
   tags?: string[]
   referenceImages?: PromptReferenceImage[]
 }): Promise<LibraryPrompt[]> {
-  const desktop = requireDesktopRuntime('add prompt')
-  const res = await desktop.promptLibrary!.userAdd(input)
-  if (!res?.ok) throw new Error(res?.error || i18n.t('runtime.promptLibrary.saveFailed'))
-  return mapUserPrompts(res)
+  const desktop = getDesktopBridge()
+  if (desktop?.promptLibrary) {
+    const res = await desktop.promptLibrary.userAdd(input)
+    if (!res?.ok) throw new Error(res?.error || i18n.t('runtime.promptLibrary.saveFailed'))
+    return mapUserPrompts(res)
+  }
+  if (!isPlatformWebRuntime()) throw new Error('prompt library requires a browser or Electron runtime')
+  await platformPromptRequest('', {
+    method: 'POST',
+    body: JSON.stringify({
+      title: input.title || i18n.t('runtime.promptLibrary.untitled'),
+      content: input.prompt,
+      employee_key: window.localStorage.getItem('canvas.employee') || '',
+    }),
+  })
+  return fetchUserPrompts()
 }
 
 export async function updateUserPrompt(id: string, patch: { title?: string; prompt?: string; promptType?: PromptMediaType }): Promise<LibraryPrompt[]> {
-  const desktop = requireDesktopRuntime('edit prompt')
-  const res = await desktop.promptLibrary!.userUpdate(id, patch)
-  if (!res?.ok) throw new Error(res?.error || i18n.t('runtime.promptLibrary.updateFailed'))
-  return mapUserPrompts(res)
+  const desktop = getDesktopBridge()
+  if (desktop?.promptLibrary) {
+    const res = await desktop.promptLibrary.userUpdate(id, patch)
+    if (!res?.ok) throw new Error(res?.error || i18n.t('runtime.promptLibrary.updateFailed'))
+    return mapUserPrompts(res)
+  }
+  if (!isPlatformWebRuntime()) throw new Error('prompt library requires a browser or Electron runtime')
+  await platformPromptRequest(`/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      ...(patch.title !== undefined ? { title: patch.title } : {}),
+      ...(patch.prompt !== undefined ? { content: patch.prompt } : {}),
+    }),
+  })
+  return fetchUserPrompts()
 }
 
 export async function deleteUserPrompt(id: string): Promise<LibraryPrompt[]> {
-  const desktop = requireDesktopRuntime('delete prompt')
-  return mapUserPrompts(await desktop.promptLibrary!.userDelete(id))
+  const desktop = getDesktopBridge()
+  if (desktop?.promptLibrary) return mapUserPrompts(await desktop.promptLibrary.userDelete(id))
+  if (!isPlatformWebRuntime()) throw new Error('prompt library requires a browser or Electron runtime')
+  await platformPromptRequest(`/${encodeURIComponent(id)}`, { method: 'DELETE' })
+  return fetchUserPrompts()
 }
 
 /** 节点提示词优化用的文本大脑键(与创作助手同脑);未配文本模型返回 null。 */
 export async function getTextBrain(): Promise<{ vendor: string; modelKey: string } | null> {
-  const desktop = requireDesktopRuntime('prompt optimize')
-  const res = await desktop.promptLibrary!.textBrain()
-  return res?.ok && res.brain ? res.brain : null
+  const desktop = getDesktopBridge()
+  if (desktop?.promptLibrary) {
+    const res = await desktop.promptLibrary.textBrain()
+    return res?.ok && res.brain ? res.brain : null
+  }
+  if (!isPlatformWebRuntime()) throw new Error('prompt optimize requires a browser or Electron runtime')
+  const selected = window.localStorage.getItem('canvas.employee')
+  if (selected) return { vendor: 'platform-employee', modelKey: selected }
+  const employees = await listWorkbenchModelCatalogModels({ kind: 'text', enabled: true })
+  return employees[0]
+    ? { vendor: employees[0].vendorKey, modelKey: employees[0].modelKey }
+    : null
 }
 
 export type PromptCategory = 'all' | 'image' | 'video'

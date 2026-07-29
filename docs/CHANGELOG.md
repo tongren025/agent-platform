@@ -5,6 +5,30 @@
 
 ---
 
+## [2026-07-29] fix: 收敛制作看板 AI 生成卡死与模型路由失败
+
+- 制作项目未绑定员工时改为按目标阶段选择专业员工，不再取注册表第一项，
+  避免把充值策略助手等无关角色误用于剧本、设定或分镜生成。
+- AI 供应商客户端在发请求前校验 endpoint 与 API Key；后台默认模型会跳过
+  凭据不完整的供应商，禁用员工不再生成运行时快照。
+- 员工模型策略支持主模型解析失败时直接启用已声明的跨供应商降级模型；
+  漫剧员工为 AITAG 主模型补充 `openrouter/free` 降级，移除 OpenRouter 已下线的
+  `tencent/hy3:free` 配置。
+- 模型返回 HTTP 200 但正文和工具调用均为空时不再记为成功：输出预算耗尽直接
+  尝试降级，其他偶发空响应最多重试一次；最终错误会写入运行记录并原样返回制作接口。
+- Markdown 回退拆卡只识别独占一行的 `---`，不再把表格中的 `|---|` 分隔线误拆成
+  标题为 `|` 的大量脏卡。
+- `POST /production/projects/{pid}/generate` 增加 180 秒整体超时，前端生成请求增加
+  195 秒安全上限，断网、服务挂死或后端未收敛时都会结束加载状态并显示可读错误。
+- 新增供应商凭据、默认供应商跳过、空响应降级和阶段专业员工选择回归测试。
+
+**影响面**：`app/services/ai.py`、`app/runtime/loop.py`、`app/runtime/runner.py`、
+`app/runtime/snapshot.py`、`app/api/production.py`、`web/src/api.ts`、
+`data/ai-providers/openrouter.json`、漫剧员工模型策略及相关测试；无数据库迁移，
+不新增环境变量，已有 AITAG 凭据有效时仍优先使用原主模型。
+
+---
+
 ## [2026-07-29] feat: DeepAgent 会话工作区可视化
 
 - 复用 Yuxi Agent 状态观察边界，为现有会话增加稳定的工作区摘要：返回执行状态、
@@ -22,6 +46,36 @@
 `GET /api/v1/agentapp/agent/sessions/{session_id}/workspace` 和
 `GET /api/v1/agentapp/agent/sessions/{session_id}/workspace/file?path=...`；
 调整会话响应 metadata 的展示形态及工作台右侧面板。无数据库表、环境变量或数据迁移。
+
+---
+
+## [2026-07-29] feat: 源码级接入完整短剧画布工作台
+
+- 把 Apache-2.0 Nomi v0.17.0 的 React 工作台从独立页面改造成主站可挂载的
+  ES 模块；`/canvas` 在同一 DOM 和登录态中直接运行完整项目库、创作、无限生成
+  画布、素材/提示词/技能库、多轨时间线、预览导出和 3D 导演，不使用 iframe。
+- 新增 Web 平台适配层：文本目录读取现有数字员工，助手下拉选择直接成为
+  `/agent/run` 的 `employeeKey`；图片/视频目录和任务统一复用平台 OpenRouter
+  服务，不使用上游模型、密钥或独立后端。
+- 完整工作台项目通过 `/canvas/workbench/projects` 服务端保存，浏览器存储只作
+  同步缓存；媒体任务通过 `/canvas/workbench/models`、`/tasks` 统一提交和轮询。
+- 素材上传/登记接入 `/canvas/workbench/assets`，技能库接入 `/registry/skills`，
+  提示词库接入账号级 `/quick-prompts`；不再使用上游桌面文件系统或本地伪数据。
+- 模型设置入口替换为 Agent Studio 平台员工/媒体模型面板；可见字标、Logo、
+  项目名称和帮助文案均切换为 Agent Studio，同时保留上游内部符号名以减少 fork
+  合并风险。
+- 新增独立源码构建配置 `vite.agent-studio.config.ts`，产物发布到
+  `web/public/agent-canvas/` 并由主站构建复制到 `wwwroot/agent-canvas/`；CI 校验
+  模块入口与样式存在；补齐浏览器环境常量和 Tailwind/工作台双样式加载，避免生产
+  环境白屏或无样式渲染。
+- 保留上游 Apache-2.0 `LICENSE`、固定 commit 和作者归属，更新本项目修改声明；
+  原始上游作品的版权声明不移除，本项目新增适配和修改按根仓库许可证发布。
+- 新增工作台项目 CRUD、媒体目录、图片任务、视频提交/轮询测试，并补上媒体目录
+  项目 ID 的路径回退防护。
+
+**影响面**：新增画布源码挂载入口、平台模型面板、工作台项目/媒体/素材 API、静态
+构建产物和测试；更新 `/canvas` 主站路由、画布文案、README、CI 与许可证说明。
+无数据库表或环境变量迁移；新增服务端目录 `data/canvas/workbench/`。
 
 ---
 

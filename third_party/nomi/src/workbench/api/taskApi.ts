@@ -139,7 +139,39 @@ export async function runWorkbenchTaskByVendor(vendor: string, request: TaskRequ
   const desktop = getDesktopBridge()
   if (desktop) return desktop.tasks.run(payload) as Promise<TaskResultDto>
   if (!isPlatformWebRuntime()) throw new Error('task execution requires the Electron desktop runtime')
-  return platformTaskRequest<TaskResultDto>('/canvas/nomi/tasks', {
+  if (normalizedVendor === 'platform-employee' && (request.kind === 'chat' || request.kind === 'prompt_refine')) {
+    const employeeKey = String(request.extras?.modelKey || request.extras?.employeeKey || '').trim()
+    if (!employeeKey) throw new Error('请选择执行任务的数字员工')
+    const result = await platformTaskRequest<Record<string, unknown>>('/agent/run', {
+      method: 'POST',
+      body: JSON.stringify({
+        employeeKey,
+        userInput: request.prompt,
+        sessionId: String(request.extras?.sessionKey || `canvas-${projectId || 'default'}`),
+      }),
+    })
+    const text = String(
+      result.assistantMessage
+      || result.assistant_message
+      || result.output
+      || result.content
+      || '',
+    )
+    return {
+      id: String(result.runId || result.run_id || `employee-${crypto.randomUUID()}`),
+      kind: request.kind,
+      status: 'succeeded',
+      assets: [],
+      raw: { choices: [{ message: { content: text } }], platformResult: result },
+      provenance: {
+        provider: 'agent-studio',
+        modelKey: employeeKey,
+        prompt: request.prompt,
+        timestamp: Date.now(),
+      },
+    }
+  }
+  return platformTaskRequest<TaskResultDto>('/canvas/workbench/tasks', {
     method: 'POST',
     body: JSON.stringify({
       vendor: normalizedVendor,
@@ -164,10 +196,10 @@ export async function fetchWorkbenchTaskResultByVendor(
   if (!isPlatformWebRuntime()) throw new Error('task result polling requires the Electron desktop runtime')
   const params = new URLSearchParams({
     kind: payload.taskKind || 'text_to_video',
-    project_id: projectId || 'nomi-web',
+    project_id: projectId || 'agent-canvas',
   })
   return platformTaskRequest<FetchWorkbenchTaskResultResponseDto>(
-    `/canvas/nomi/tasks/${encodeURIComponent(payload.taskId)}?${params}`,
+    `/canvas/workbench/tasks/${encodeURIComponent(payload.taskId)}?${params}`,
   )
 }
 

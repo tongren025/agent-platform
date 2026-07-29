@@ -1,6 +1,6 @@
 export const zhOnboardingProviders = {
   splash: {
-    aria: 'Nomi 开屏介绍',
+    aria: 'Agent Studio 画布介绍',
     skip: '跳过 ›',
     captions: {
       write: '从你的一句话开始',
@@ -114,8 +114,8 @@ export const zhOnboardingProviders = {
     deleteFailed: '删除失败',
     operationFailed: '操作失败',
     loading: '加载中…',
-    bridgeMissingTitle: '暂时连不上 Nomi 后台',
-    bridgeMissingBody: '应用后台可能还在启动。点下面重试；若多次无效，请重启 Nomi。',
+    bridgeMissingTitle: '暂时连不上平台后台',
+    bridgeMissingBody: '应用后台可能还在启动。点下面重试；若多次无效，请重启 Agent Studio。',
   },
   knownVendors: {
     apimart: {
@@ -202,7 +202,7 @@ export const zhOnboardingProviders = {
     addressPlaceholder: 'https://…',
   },
   assistant: {
-    example: '在 Nomi 新建项目「咖啡广告」，拆 3 个镜头加到画布，用我的图模型把第一个生成出来。',
+    example: '在 Agent Studio 新建项目「咖啡广告」，拆 3 个镜头加到画布，用我的图模型把第一个生成出来。',
     connectedToast: '已接入 {{client}}，重启后生效',
     connectFailed: '接入失败：{{message}}',
     disconnectedToast: '已撤销接入',
@@ -215,14 +215,14 @@ export const zhOnboardingProviders = {
     },
     name: '接入 AI 编程助手',
     subtitle: '让 Claude Code / Codex / Cursor 帮你建项目、出图',
-    credentialPending: '凭证还没生成——重启 Nomi 一次即可（启动时自动生成）。',
+    credentialPending: '凭证还没生成——重启 Agent Studio 一次即可（启动时自动生成）。',
     configWritten: '已写入 {{client}} 配置',
     restartClient: '重启 {{client}} 后生效。',
     sayNow: '现在可以对它说：',
     codexImageReadyTitle: 'Codex 生图模型已可用',
     codexImageReadyBody: '图片节点里会显示「{{model}}」。',
     disconnect: '撤销接入',
-    description: '一键把 Nomi 接进 {{client}}——之后你一句话，它就能在 Nomi 里建项目、拆镜头、用你配好的模型真出图。',
+    description: '一键把 Agent Studio 接进 {{client}}——之后你一句话，它就能在平台里建项目、拆镜头、用你配好的模型真出图。',
     connect: '一键接入 {{client}}',
     copied: '已复制',
     copyConfig: '复制配置',
@@ -292,7 +292,7 @@ export const zhOnboardingProviders = {
     loggedOut: '已退出即梦登录',
     linkCopied: '授权链接已复制',
     loginTimeout: '登录超时，请重新发起。',
-    installDescription: '即梦用官方命令行工具接入。一键装好后，扫码登录就能用你的会员积分在 Nomi 里出视频。',
+    installDescription: '即梦用官方命令行工具接入。一键装好后，扫码登录就能用你的会员积分在 Agent Studio 里出视频。',
     installing: '安装中…',
     install: '一键安装即梦 CLI',
     officialSource: '官方源 jimeng.jianying.com，安装到 ~/.local/bin。',
@@ -314,7 +314,7 @@ export const zhOnboardingProviders = {
     loggedInAfterPremium:
       '——非会员会被拒（光登录、光充积分不够）；部分模型首次使用还需先在 jimeng.jianying.com 网页端授权一次。',
     logout: '退出登录',
-    loginBeforeRequirement: '扫码登录你的即梦账号，用会员积分在 Nomi 出视频。',
+    loginBeforeRequirement: '扫码登录你的即梦账号，用会员积分在 Agent Studio 出视频。',
     premiumRequirement: '生成需高级会员（maestro vip）',
     loginAfterRequirement: '这一档。',
     starting: '发起中…',
@@ -408,7 +408,7 @@ export const zhOnboardingProviders = {
     name: '本地 ComfyUI',
     subtitle: '用本机 GPU 出图 · 无需 key、不花额度、数据不出本地',
     setupBeforeAddress: '在本机把 ComfyUI 跑起来（默认',
-    setupAfterAddress: '），点下面启用即可。Nomi 已内置一个「文生图」工作流，启用后在生成画布直接选用。',
+    setupAfterAddress: '），点下面启用即可。平台已内置一个「文生图」工作流，启用后在生成画布直接选用。',
     checkingLocal: '正在检测本机 ComfyUI…',
     enable: '启用本地 ComfyUI',
     installOnGithub: '还没装？去 GitHub 装好并启动',
@@ -451,7 +451,7 @@ type TranslationShape<T> = {
 
 export const enOnboardingProviders = {
   splash: {
-    aria: 'Nomi introduction',
+    aria: 'Agent Studio canvas introduction',
     skip: 'Skip ›',
     captions: {
       write: 'Start with one sentence',
@@ -569,8 +569,8 @@ export const enOnboardingProviders = {
     deleteFailed: 'Delete failed',
     operationFailed: 'Operation failed',
     loading: 'Loading…',
-    bridgeMissingTitle: 'Cannot reach the Nomi backend yet',
-    bridgeMissingBody: 'The app backend may still be starting. Retry below; if it keeps failing, restart Nomi.',
+    bridgeMissingTitle: 'Cannot reach the platform backend yet',
+    bridgeMissingBody: 'The app backend may still be starting. Retry below; if it keeps failing, restart Agent Studio.',
   },
   knownVendors: {
     apimart: {
@@ -664,7 +664,7 @@ export const enOnboardingProviders = {
   },
   assistant: {
     example:
-      'Create a “Coffee Ad” project in Nomi, split it into three shots, add them to the canvas, and generate the first one with my image model.',
+      'Create a “Coffee Ad” project in Agent Studio, split it into three shots, add them to the canvas, and generate the first one with my image model.',
     connectedToast: 'Connected to {{client}}. Restart it to apply the change.',
     connectFailed: 'Connection failed: {{message}}',
     disconnectedToast: 'Connection removed',
@@ -677,7 +677,7 @@ export const enOnboardingProviders = {
     },
     name: 'Connect an AI coding assistant',
     subtitle: 'Let Claude Code, Codex, or Cursor create projects and generate images',
-    credentialPending: 'Credentials have not been created yet. Restart Nomi once to generate them automatically.',
+    credentialPending: 'Credentials have not been created yet. Restart Agent Studio once to generate them automatically.',
     configWritten: '{{client}} configuration updated',
     restartClient: 'Restart {{client}} to apply the change.',
     sayNow: 'Now you can say:',
@@ -685,7 +685,7 @@ export const enOnboardingProviders = {
     codexImageReadyBody: 'Image nodes will show “{{model}}”.',
     disconnect: 'Remove connection',
     description:
-      'Connect Nomi to {{client}} in one click. Then it can create projects, split shots, and generate images with your configured models.',
+      'Connect Agent Studio to {{client}} in one click. Then it can create projects, split shots, and generate images with your configured models.',
     connect: 'Connect to {{client}}',
     copied: 'Copied',
     copyConfig: 'Copy configuration',
@@ -757,7 +757,7 @@ export const enOnboardingProviders = {
     linkCopied: 'Authorization link copied',
     loginTimeout: 'Login timed out. Start again.',
     installDescription:
-      'Dreamina connects through its official command-line tool. Install it, then scan the code to use your membership credits in Nomi.',
+      'Dreamina connects through its official command-line tool. Install it, then scan the code to use your membership credits in Agent Studio.',
     installing: 'Installing…',
     install: 'Install Dreamina CLI',
     officialSource: 'Official source: jimeng.jianying.com. Installs to ~/.local/bin.',
@@ -769,7 +769,7 @@ export const enOnboardingProviders = {
     verificationCode: 'Verification code',
     copied: 'Copied',
     copyLink: 'Copy link',
-    waitingAuthorize: 'Waiting for authorization… Nomi will continue automatically.',
+    waitingAuthorize: 'Waiting for authorization… Agent Studio will continue automatically.',
     authorizePending: 'Authorization complete. Please wait.',
     cancel: 'Cancel',
     loggedInTitle: 'Logged in to Dreamina',
@@ -779,7 +779,7 @@ export const enOnboardingProviders = {
     loggedInAfterPremium:
       '. Login or purchased credits alone are not enough; some models also require one-time authorization at jimeng.jianying.com.',
     logout: 'Log out',
-    loginBeforeRequirement: 'Scan the code to log in to Dreamina and use membership credits in Nomi. ',
+    loginBeforeRequirement: 'Scan the code to log in to Dreamina and use membership credits in Agent Studio. ',
     premiumRequirement: 'Generation requires Premium membership (maestro vip)',
     loginAfterRequirement: '.',
     starting: 'Starting…',
@@ -874,7 +874,7 @@ export const enOnboardingProviders = {
     subtitle: 'Generate with your local GPU · No key, credits, or data uploads',
     setupBeforeAddress: 'Start ComfyUI on this computer (default:',
     setupAfterAddress:
-      '), then enable it below. Nomi includes a text-to-image workflow that you can select directly on the generation canvas.',
+      '), then enable it below. Agent Studio includes a text-to-image workflow that you can select directly on the generation canvas.',
     checkingLocal: 'Checking local ComfyUI…',
     enable: 'Enable local ComfyUI',
     installOnGithub: 'Not installed? Get it from GitHub and start it',
@@ -884,7 +884,7 @@ export const enOnboardingProviders = {
     enabledButDisconnected: 'Enabled, but local ComfyUI was not detected',
     reconnectBeforeAddress: 'Make sure ComfyUI is running at',
     reconnectAfterAddress:
-      ', then check again. If it is unavailable during generation, Nomi will stop with a connection error instead of wasting a run.',
+      ', then check again. If it is unavailable during generation, Agent Studio will stop with a connection error instead of wasting a run.',
     workflowKind: 'Image · ComfyUI workflow',
     modelEnabled: 'Enabled',
     recheck: 'Check again',

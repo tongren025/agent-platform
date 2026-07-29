@@ -112,7 +112,7 @@ export const enModelSetup = {
   noModelsFetchedHint:
     'Models could not be fetched automatically. Enter an ID manually in Choose models, or fetch again.',
   manualSelect: 'Choose manually →',
-  fetchHint: 'After you enter the Base URL and key, Nomi will fetch the models available from this upstream',
+  fetchHint: 'After you enter the Base URL and key, Agent Studio will fetch the models available from this upstream',
   fetchModels: 'Fetch models',
   advanced: 'Advanced settings (protocol / custom headers)',
   protocolSummary: 'Protocol: {{protocol}} ·',

@@ -41,11 +41,9 @@ export default function ActiveSkillChip({
   const [available, setAvailable] = React.useState<ReadonlySet<SkillProviderKind>>(new Set())
 
   const refresh = React.useCallback(() => {
-    try {
-      setSkills(listWorkbenchSkills().filter((s) => s.isPlaybook))
-    } catch {
-      setSkills([])
-    }
+    void listWorkbenchSkills()
+      .then((items) => setSkills(items.filter((skill) => skill.isPlaybook)))
+      .catch(() => setSkills([]))
     getAvailableSkillProviders()
       .then(setAvailable)
       .catch(() => setAvailable(new Set()))

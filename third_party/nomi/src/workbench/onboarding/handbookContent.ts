@@ -33,7 +33,7 @@ export const HANDBOOK_PIPELINE: HandbookPipelineStep[] = [
 
 /** 90 秒先尝甜头：不用读完手册，先看一条片自己跑出来。 */
 export const HANDBOOK_FIRST_WIN: HandbookFirstWinStep[] = [
-  { n: 1, title: '看回放', body: '首页点「60 秒看 Nomi 怎么出片」，零额度看整条流水线跑一遍。' },
+  { n: 1, title: '看回放', body: '首页点「60 秒看画布怎么出片」，零额度看整条流水线跑一遍。' },
   { n: 2, title: '接一个模型', body: '用自己的 Key，或接 Agnes 免费网关（文 / 图 / 视全解锁）。' },
   {
     n: 3,
@@ -48,7 +48,7 @@ export const HANDBOOK_INTENT_ROUTES: HandbookIntentRoute[] = [
   {
     iconKey: 'user-check',
     title: '让同一个人每个镜头长一样',
-    body: '用身份卡锁脸 → 连到每个镜头当参考。Nomi 的招牌能力。',
+    body: '用身份卡锁脸 → 连到每个镜头当参考，保持角色一致。',
   },
   {
     iconKey: 'box',
@@ -104,7 +104,7 @@ export const HANDBOOK_GOTCHAS: HandbookGotcha[] = [
   },
 ]
 
-export const HANDBOOK_TITLE = 'Nomi 一页上手'
+export const HANDBOOK_TITLE = 'Agent Studio 画布一页上手'
 export const HANDBOOK_SUBTITLE = '本地优先的 AI 视频创作台 · 从一句话到一条成片'
 
 const EN_HANDBOOK_PIPELINE: HandbookPipelineStep[] = [
@@ -120,7 +120,7 @@ const EN_HANDBOOK_FIRST_WIN: HandbookFirstWinStep[] = [
   {
     n: 1,
     title: 'Watch the replay',
-    body: 'From Home, open “See how Nomi makes a video in 60 seconds” to watch the whole workflow without spending credits.',
+    body: 'From Home, open “See how the canvas makes a video in 60 seconds” to watch the whole workflow without spending credits.',
   },
   {
     n: 2,
@@ -170,7 +170,7 @@ const EN_HANDBOOK_INTENT_ROUTES: HandbookIntentRoute[] = [
   {
     iconKey: 'alert-triangle',
     title: 'Need precise lip sync',
-    body: 'Not supported yet. Skip this step for now—Nomi will not pretend otherwise.',
+    body: 'Not supported yet. Skip this step for now—the platform will not pretend otherwise.',
     warn: true,
   },
 ]
@@ -210,7 +210,7 @@ export function handbookContentForLocale(locale: string) {
     }
   }
   return {
-    title: 'Nomi quick-start guide',
+    title: 'Agent Studio canvas quick-start guide',
     subtitle: 'A local-first AI video studio · From one sentence to a finished video',
     pipeline: EN_HANDBOOK_PIPELINE,
     firstWin: EN_HANDBOOK_FIRST_WIN,

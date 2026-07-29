@@ -359,20 +359,23 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
               dirName,
               files: { 'SKILL.md': skillMarkdown, 'skill.json': JSON.stringify(manifest ?? {}, null, 2) },
             }
-            const res = importWorkbenchSkill(pkg)
-            if (!res.ok) {
-              void event.confirm({ ok: false, message: res.error ?? t('creationAi.skillSaveFailed') })
-              return
-            }
             const needed = (manifest && typeof manifest === 'object' && Array.isArray((manifest as Record<string, unknown>).requiredProviders))
               ? (manifest as { requiredProviders: SkillProviderKind[] }).requiredProviders
               : []
-            void getAvailableSkillProviders()
-              .then((available) => {
+            void (async () => {
+              const res = await importWorkbenchSkill(pkg)
+              if (!res.ok) {
+                await event.confirm({ ok: false, message: res.error ?? t('creationAi.skillSaveFailed') })
+                return
+              }
+              try {
+                const available = await getAvailableSkillProviders()
                 const cap = skillCapabilityFor({ neededProviders: needed }, available)
-                void event.confirm({ ok: true, result: { saved: true, skillName: res.skillName, dirName: res.dirName, missingProviders: cap.missing, satisfied: cap.satisfied } })
-              })
-              .catch(() => void event.confirm({ ok: true, result: { saved: true, skillName: res.skillName, dirName: res.dirName } }))
+                await event.confirm({ ok: true, result: { saved: true, skillName: res.skillName, dirName: res.dirName, missingProviders: cap.missing, satisfied: cap.satisfied } })
+              } catch {
+                await event.confirm({ ok: true, result: { saved: true, skillName: res.skillName, dirName: res.dirName } })
+              }
+            })()
             return
           }
           // Write tools wait for explicit user approval through a card.

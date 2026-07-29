@@ -1,43 +1,43 @@
 {
-  "summary": "AI 行业正从通用 LLM 转向以 'Agent Skills' 为核心的工程化阶段。开发者不再仅关注模型本身，而是通过构建标准化的技能框架（Skills Framework）和 MCP 协议来增强 Agent 的专业能力，尤其是针对 Claude Code 等工具的生态构建呈现爆发式增长。",
+  "summary": "当前AI开源趋势全面转向Agent生态的模块化与效能优化。以Agent Skill、Harness系统及MCP协议为核心的项目爆发式增长；同时，AI Coding领域从单纯的代码生成转向极致Token压缩与代码库图谱化（Graph RAG）分析，效能与成本控制成为新的竞争焦点。",
   "hot_tracks": [
     {
-      "name": "Agentic Skills Framework",
-      "description": "将 AI 能力模块化为可复用的 'Skills'，通过定义标准化的技能集提升 Agent 在特定任务中的执行成功率。",
+      "name": "Agent Skill 与 Harness 优化框架",
+      "description": "提供标准化、模块化的 Skill 扩展与 Agent Harness 机制，通过规范（如 CLAUDE.md）和内存/本能优化增强 Agent 治理与执行效率。",
       "representative_repos": [
         "obra/superpowers",
         "affaan-m/ECC",
-        "anthropics/skills"
+        "mattpocock/skills"
       ],
       "heat_score": 10
     },
     {
-      "name": "Claude Ecosystem Optimization",
-      "description": "针对 Claude Code 等特定 AI 编程工具的指令优化、Token 压缩及行为引导文件（如 CLAUDE.md）的开发。",
+      "name": "代码库图谱化与上下文 Graph RAG",
+      "description": "将复杂代码库、文档及配置转化为可查询的知识图谱，解决大模型在大型项目中的上下文理解与长距离关联依赖。",
       "representative_repos": [
-        "multica-ai/andrej-karpathy-skills",
-        "JuliusBrussee/caveman",
-        "mattpocock/skills"
+        "Graphify-Labs/graphify",
+        "Panniantong/Agent-Reach",
+        "MemPalace/mempalace"
       ],
       "heat_score": 9
     },
     {
-      "name": "MCP (Model Context Protocol) & Connectivity",
-      "description": "通过标准化协议扩展 Agent 的上下文感知能力，实现与外部工具、数据库和内存系统的深度集成。",
+      "name": "AI Coding 的 Token 压缩与降本提效",
+      "description": "通过极简Prompt设计与上下文裁剪技术，大幅降低 Agent 执行过程中的 Token 消耗并提升响应速度。",
       "representative_repos": [
-        "affaan-m/ECC",
-        "n8n-io/n8n",
-        "DeusData/codebase-memory-mcp"
+        "JuliusBrussee/caveman",
+        "DietrichGebert/ponytail",
+        "multica-ai/andrej-karpathy-skills"
       ],
-      "heat_score": 8
+      "heat_score": 9
     },
     {
-      "name": "AI-Native Workflow Automation",
-      "description": "将传统的低代码工作流与 Agent 编排结合，实现生产级 AI 工作流的快速部署。",
+      "name": "MCP 协议与工作流自动化集成",
+      "description": "基于 Model Context Protocol 实现 Agent 与本地环境、API 及自动化工作流工具（如 n8n）的无缝连接。",
       "representative_repos": [
-        "langflow-ai/langflow",
-        "langgenius/dify",
-        "n8n-io/n8n"
+        "n8n-io/n8n",
+        "diegosouzapw/OmniRoute",
+        "langgenius/dify"
       ],
       "heat_score": 8
     }
@@ -45,49 +45,54 @@
   "rising_stars": [
     {
       "repo_name": "DietrichGebert/ponytail",
-      "reason": "在多个领域（Agent, Coding, LLM）同步出现极高日增星，显示出极强的跨领域通用吸引力。",
-      "growth_metric": "2467 stars/day"
+      "reason": "主打让 Agent 具备资深架构师的极简思考模式，以日均近 2000⭐ 的速度迅猛崛起。",
+      "growth_metric": "1932⭐/天，总量 91,047⭐"
+    },
+    {
+      "repo_name": "JuliusBrussee/caveman",
+      "reason": "针对 Claude Code 的 Skill 优化，可砍掉 65% 的 Token 消耗，精准击中开发者的成本痛点。",
+      "growth_metric": "812⭐/天，近期高位增长"
     },
     {
       "repo_name": "Graphify-Labs/graphify",
-      "reason": "专注于 AI Coding Assistant 的技能增强，近期涨星速度快，切中开发者对编程效率的刚需。",
-      "growth_metric": "+270 stars (recent)"
+      "reason": "将全栈代码库与配置文档图谱化，大幅提升 Agent 对大型代码库的检索与推理精度。",
+      "growth_metric": "840⭐/天，总量 97,880⭐"
     },
     {
-      "repo_name": "nexu-io/open-design",
-      "description": "作为 Claude Design 的开源替代方案，引领 Generative AI 向本地化、设计驱动方向演进。",
-      "growth_metric": "996 stars/day"
+      "repo_name": "mattpocock/skills",
+      "reason": "面向工程实战的 Agent 技能集，近期爆发式增长，反映出工程化 Skill 基础设施的强劲需求。",
+      "growth_metric": "+526⭐/天，日增率 1384.7/天"
     }
   ],
   "tech_shifts": [
     {
-      "title": "从 'Prompt Engineering' 转向 'Skill Engineering'",
-      "description": "开发者不再仅仅编写长 Prompt，而是构建结构化的技能库（Skills Library），将复杂任务分解为可维护的原子能力。"
+      "title": "从单纯提示词工程走向 Agent Skill/Harness 规范化",
+      "description": "开发者不再依赖单体长 Prompt，而是通过可重用的 Skill 模块和 Harness 运行框架（如 ECC、superpowers）约束和塑造 Agent 的行为模式与记忆体系。"
     },
     {
-      "title": "从 '通用 Agent' 转向 '工具增强型 Agent'",
-      "description": "重心从追求 Agent 的通用智能转向通过 MCP 等协议增强其对特定代码库、专业领域知识的精准访问。"
+      "title": "AI Coding 焦点由“能力补全”转向“Token 成本与长上下文管理”",
+      "description": "如 Caveman 等项目的火爆，表明开发者开始极度关注 Agent 运行成本，通过上下文裁剪、语义压缩以及图谱索引来控制 API 开销并防止长会话衰退。"
+    },
+    {
+      "title": "RAG 从文本向量检索演进为架构级 Graph RAG",
+      "description": "传统的向量相似度检索难以应对代码逻辑与系统配置的因果关联，图谱化（Knowledge Graph）成为代码与复杂系统分析的新标配。"
     }
   ],
   "language_insights": {
     "dominant": "Python",
-    "rising": "TypeScript/JavaScript",
-    "insight": "Python 依然主导模型底层，但 TypeScript/JS 在 Agent 编排层和前端集成层的占比迅速提升，反映了 AI 应用正加速向生产环境和端侧迁移。"
+    "rising": "JavaScript / TypeScript / Shell",
+    "insight": "Python 在大模型底座与 Agent 核心框架中维持主导，但因 Skill 脚本化、CLI 交互及客户端 Harness 的爆发，JS/TS 与 Shell 在 Agent 生态层表现出极高活跃度。"
   },
   "recommendations": [
     {
-      "title": "构建标准化的技能插件体系",
-      "content": "不要仅提供单一的 Agent 接口，应参考 obra/superpowers，建立一套可插拔、可定义的 Skills 框架，允许用户自定义 Agent 的‘专业技能’。"
+      "title": "原生集成 Agent Skill 与 MCP 开放标准",
+      "content": "平台应深度适配 CLAUDE.md、MCP 及通用 Skill 规范，允许用户以低门槛接入开源社区中海量的第三方技能与工具链。"
     },
     {
-      "title": "深度适配主流 AI 编程生态",
-      "content": "针对 Claude Code、Cursor 等高频工具开发配套的配置文件或优化插件，通过降低用户的配置成本来快速获取开发者流量。"
-    },
-    {
-      "title": "关注本地化与隐私优先的部署",
-      "content": "参考 open-design 的趋势，在 Agent 平台中引入 Local-first 架构，满足企业级用户对代码和数据隐私的极致要求。"
+      "title": "内置上下文压缩与长任务 Token 治理机制",
+      "content": "借鉴 Caveman 与 Ponytail 的优化逻辑，在平台层提供自动化的上下文裁剪、Token 洞察和图谱索引功能，帮助企业显著降低 Agent 运行成本。"
     }
   ],
-  "generatedAt": "2026-07-16T11:02:40.259811",
-  "model": "Gemma-4-31B-IT-NVFP4"
+  "generatedAt": "2026-07-29T21:57:33.237186",
+  "model": "openrouter/auto"
 }

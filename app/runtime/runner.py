@@ -6,6 +6,8 @@ import logging
 from dataclasses import dataclass, field
 from typing import Optional
 
+import openai
+
 from app.dependencies import ai_service
 from app.services.chat_response import is_chat_completion_model_id
 from app.tools.base import ToolContext, get_handler
@@ -153,13 +155,33 @@ async def run_agent(
     temperature: float = float(model_policy.get("temperature", 0.7))
     max_tokens: int = int(model_policy.get("max_tokens", 4096))
 
-    try:
-        client, resolved_model = ai_service.get_client(model_id, async_client=True)
-    except ValueError as exc:
-        logger.error("Failed to resolve AI model %s: %s", model_id, exc)
+    fallback_model_ids = [
+        str(item).strip()
+        for item in model_policy.get("fallback_models", [])
+        if str(item).strip() and str(item).strip() != model_id
+    ]
+    resolved_candidates: list[tuple[object, str, str]] = []
+    resolution_errors: list[str] = []
+    for candidate_id in [model_id, *fallback_model_ids]:
+        try:
+            candidate_client, candidate_model = ai_service.get_client(
+                candidate_id,
+                async_client=True,
+            )
+            resolved_candidates.append((candidate_client, candidate_model, candidate_id))
+        except (ValueError, openai.OpenAIError) as exc:
+            resolution_errors.append(f"{candidate_id}: {exc}")
+            logger.warning("模型 %s 不可用，检查下一降级模型: %s", candidate_id, exc)
+
+    if not resolved_candidates:
         run_result.success = False
-        run_result.error_message = f"无法解析模型: {model_id}"
+        detail = "；".join(resolution_errors) or model_id
+        run_result.error_message = f"没有可用的聊天模型：{detail}"
         return run_result
+
+    client, resolved_model, selected_model_id = resolved_candidates[0]
+    if selected_model_id != model_id:
+        logger.warning("主模型 %s 不可用，已降级到 %s", model_id, selected_model_id)
 
     shared_deep_state = None
     if snapshot.deep_agent:
@@ -178,13 +200,10 @@ async def run_agent(
 
     # 预解析跨 provider 降级模型：各自拿独立 client，主模型失败后依次尝试。
     # 解析失败的降级模型直接跳过——降级本身不该让主流程崩。
-    fallback_clients: list = []
-    for fb_model_id in model_policy.get("fallback_models", []):
-        try:
-            fb_client, fb_resolved = ai_service.get_client(fb_model_id, async_client=True)
-            fallback_clients.append((fb_client, fb_resolved))
-        except Exception as exc:
-            logger.warning("降级模型 %s 解析失败，跳过: %s", fb_model_id, exc)
+    fallback_clients = [
+        (fb_client, fb_resolved)
+        for fb_client, fb_resolved, _ in resolved_candidates[1:]
+    ]
 
     options = AgentLoopOptions(
         existing_messages=existing_messages,
@@ -234,6 +253,8 @@ async def run_agent(
         loop_result.traces,
     )
     run_result.success = loop_result.success
+    if not loop_result.success:
+        run_result.error_message = final_text or "AI 生成失败"
     run_result.traces = loop_result.traces
     run_result.auto_invoke_count = loop_result.iterations
     run_result.pending_approval = loop_result.pending_approval

@@ -134,7 +134,7 @@ export const zhBrowserAssets = {
   screenshotStyle: '网页截图风格',
   screenshotPromptTitle: '网页截图提示词',
   sites: {
-    nomiOfficial: 'Nomi 官网',
+    nomiOfficial: '平台首页',
     xiaohongshu: '小红书',
     pinterestHint: '视觉灵感',
     behanceHint: '设计作品集',
@@ -332,7 +332,7 @@ export const enBrowserAssets = {
   screenshotStyle: 'Web screenshot style',
   screenshotPromptTitle: 'Web screenshot prompt',
   sites: {
-    nomiOfficial: 'Nomi site',
+    nomiOfficial: 'Platform home',
     xiaohongshu: 'Xiaohongshu',
     pinterestHint: 'Visual inspiration',
     behanceHint: 'Design portfolios',

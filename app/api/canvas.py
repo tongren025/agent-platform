@@ -10,12 +10,13 @@
 """
 from __future__ import annotations
 
+import json
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field
 
 from app.api.common import ok, validate_key
@@ -35,10 +36,18 @@ DATA_DIR = BASE_DIR / "data" / "canvas"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 ENGINE_DIR = DATA_DIR / "engines"
 ENGINE_DIR.mkdir(parents=True, exist_ok=True)
+WORKBENCH_DIR = DATA_DIR / "workbench"
+WORKBENCH_DIR.mkdir(parents=True, exist_ok=True)
+WORKBENCH_ASSET_DIR = DATA_DIR / "workbench-assets"
+WORKBENCH_ASSET_DIR.mkdir(parents=True, exist_ok=True)
 UPLOAD_DIR = BASE_DIR / "data" / "uploads" / "canvas"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-_ALLOWED_UPLOAD_EXT = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".mp4", ".webm"}
+_ALLOWED_UPLOAD_EXT = {
+    ".png", ".jpg", ".jpeg", ".webp", ".gif",
+    ".mp4", ".webm", ".mov",
+    ".mp3", ".wav", ".m4a", ".aac", ".flac",
+}
 
 
 # ── 模型 ──────────────────────────────────────────────────────────
@@ -108,6 +117,37 @@ def _engine_path(engine: str) -> Path:
     """第三方引擎文档路径，只接受安全的单段 key。"""
     validate_key(engine, label="engine")
     return ENGINE_DIR / f"{engine}.json"
+
+
+def _workbench_path(project_id: str) -> Path:
+    validate_key(project_id, label="project_id")
+    return WORKBENCH_DIR / f"{project_id}.json"
+
+
+def _workbench_asset_path(project_id: str) -> Path:
+    validate_key(project_id, label="project_id")
+    return WORKBENCH_ASSET_DIR / f"{project_id}.json"
+
+
+def _load_workbench_assets(project_id: str) -> list[dict[str, Any]]:
+    path = _workbench_asset_path(project_id)
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text("utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(500, "画布素材索引损坏") from exc
+    return [item for item in payload if isinstance(item, dict)] if isinstance(payload, list) else []
+
+
+def _save_workbench_assets(project_id: str, items: list[dict[str, Any]]) -> None:
+    path = _workbench_asset_path(project_id)
+    temp_path = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        temp_path.write_text(json.dumps(items, ensure_ascii=False, indent=2), "utf-8")
+        temp_path.replace(path)
+    finally:
+        temp_path.unlink(missing_ok=True)
 
 
 # ── 画布 CRUD ─────────────────────────────────────────────────────
@@ -280,6 +320,300 @@ def list_image_models():
         }
         for model in models
     ])
+
+
+# ── 完整工作台媒体适配 ─────────────────────────────────────────
+
+
+@router.get("/workbench/projects")
+def list_workbench_projects():
+    """列出完整工作台项目摘要，数据由平台服务端统一保存。"""
+    projects = []
+    for path in WORKBENCH_DIR.glob("*.json"):
+        try:
+            record = json.loads(path.read_text("utf-8"))
+            projects.append({
+                key: record.get(key)
+                for key in (
+                    "id", "name", "createdAt", "updatedAt", "revision", "savedAt",
+                    "thumbStyle", "thumbnail", "thumbnailUrls", "seedKey", "source",
+                    "rootPath", "missing", "draft",
+                )
+                if key in record
+            })
+        except Exception:
+            logger.warning("工作台项目文件损坏，跳过: %s", path.name)
+    projects.sort(key=lambda item: int(item.get("updatedAt") or 0), reverse=True)
+    return ok(projects)
+
+
+@router.get("/workbench/projects/{project_id}")
+def get_workbench_project(project_id: str):
+    path = _workbench_path(project_id)
+    if not path.exists():
+        raise HTTPException(404, f"工作台项目 {project_id} 不存在")
+    return ok(json.loads(path.read_text("utf-8")))
+
+
+@router.put("/workbench/projects/{project_id}")
+def save_workbench_project(project_id: str, record: dict[str, Any]):
+    path = _workbench_path(project_id)
+    if str(record.get("id") or "") != project_id:
+        raise HTTPException(400, "项目 ID 与请求路径不一致")
+    path.write_text(
+        json.dumps(record, ensure_ascii=False, indent=2),
+        "utf-8",
+    )
+    return ok(record)
+
+
+@router.delete("/workbench/projects/{project_id}")
+def delete_workbench_project(project_id: str):
+    path = _workbench_path(project_id)
+    if path.exists():
+        path.unlink()
+    return ok(True)
+
+
+@router.get("/workbench/assets")
+def list_workbench_assets(project_id: str = Query(..., min_length=1)):
+    """列出一个完整工作台项目已上传或引用的素材。"""
+    items = _load_workbench_assets(project_id)
+    items.sort(key=lambda item: str(item.get("updatedAt") or ""), reverse=True)
+    return ok({"items": items, "cursor": None})
+
+
+@router.post("/workbench/assets/{project_id}/upload")
+async def upload_workbench_asset(project_id: str, file: UploadFile = File(...)):
+    """把工作台拖入的图片、视频或音频保存到平台上传目录并登记素材。"""
+    validate_key(project_id, label="project_id")
+    ext = Path(file.filename or "asset").suffix.lower() or ".bin"
+    if ext not in _ALLOWED_UPLOAD_EXT:
+        raise HTTPException(400, f"不支持的文件类型: {ext}")
+    content = await file.read()
+    if len(content) > 50 * 1024 * 1024:
+        raise HTTPException(400, "文件超过 50MB 上限")
+    asset_id = f"asset_{uuid.uuid4().hex[:16]}"
+    filename = f"{asset_id}{ext}"
+    (UPLOAD_DIR / filename).write_bytes(content)
+    now = _now()
+    item = {
+        "id": asset_id,
+        "name": (file.filename or filename).strip() or filename,
+        "data": {
+            "url": f"/uploads/canvas/{filename}",
+            "contentType": file.content_type or "application/octet-stream",
+            "size": len(content),
+            "kind": "upload",
+        },
+        "createdAt": now,
+        "updatedAt": now,
+        "userId": "agent-studio",
+        "projectId": project_id,
+    }
+    items = _load_workbench_assets(project_id)
+    items.insert(0, item)
+    _save_workbench_assets(project_id, items)
+    return ok(item)
+
+
+class WorkbenchRemoteAssetReq(BaseModel):
+    """登记一个远程素材引用；不由服务端抓取，避免把画布接口变成任意 URL 代理。"""
+
+    url: str
+    name: str = ""
+    owner_node_id: str | None = Field(None, alias="ownerNodeId")
+
+    model_config = {"populate_by_name": True}
+
+
+@router.post("/workbench/assets/{project_id}/remote")
+def import_workbench_remote_asset(project_id: str, req: WorkbenchRemoteAssetReq):
+    """登记浏览器粘贴的远程图片/视频 URL，随项目素材库恢复。"""
+    validate_key(project_id, label="project_id")
+    url = req.url.strip()
+    if not url.startswith(("https://", "http://", "/uploads/")):
+        raise HTTPException(400, "远程素材只接受 http(s) 或平台上传地址")
+    now = _now()
+    asset_id = f"asset_{uuid.uuid4().hex[:16]}"
+    item = {
+        "id": asset_id,
+        "name": req.name.strip() or Path(url.split("?", 1)[0]).name or "远程素材",
+        "data": {
+            "url": url,
+            "kind": "remote",
+            "ownerNodeId": req.owner_node_id,
+        },
+        "createdAt": now,
+        "updatedAt": now,
+        "userId": "agent-studio",
+        "projectId": project_id,
+    }
+    items = _load_workbench_assets(project_id)
+    items.insert(0, item)
+    _save_workbench_assets(project_id, items)
+    return ok(item)
+
+
+def _workbench_project_id(value: Any) -> str:
+    """把工作台项目 ID 收敛为平台媒体目录可接受的安全名称。"""
+    cleaned = "".join(
+        character
+        for character in str(value or "agent-canvas")
+        if character.isalnum() or character in "._-"
+    )
+    # 媒体服务会把它拼入目录；去掉路径回退片段和前导点，避免 `../` 清洗后仍留下 `..`。
+    while ".." in cleaned:
+        cleaned = cleaned.replace("..", "-")
+    return cleaned.strip(".-_")[:80] or "agent-canvas"
+
+
+@router.get("/workbench/models")
+def list_workbench_models(kind: str = Query("image", pattern="^(image|video)$")):
+    """把平台媒体模型目录映射为画布工作台可消费的 catalog。"""
+    try:
+        models = openrouter_media.list_media_models(kind)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(502, f"读取平台 {kind} 模型失败: {exc}") from exc
+    now = _now()
+    return ok([
+        {
+            "modelKey": model["id"],
+            "vendorKey": "openrouter",
+            "modelAlias": model["id"],
+            "labelZh": model["name"],
+            "kind": kind,
+            "enabled": True,
+            "meta": {
+                "description": model.get("description") or "",
+                "inputModalities": model.get("inputModalities") or ["text"],
+                "outputModalities": model.get("outputModalities") or [kind],
+                "supportedParameters": model.get("supportedParameters") or {},
+                "supportedResolutions": model.get("supportedResolutions") or [],
+                "supportedAspectRatios": model.get("supportedAspectRatios") or [],
+                "recommended": bool(model.get("recommended")),
+            },
+            "pricing": {"cost": 0, "enabled": True, "specCosts": []},
+            "createdAt": now,
+            "updatedAt": now,
+        }
+        for model in models
+    ])
+
+
+class WorkbenchTaskReq(BaseModel):
+    """完整工作台的通用媒体任务请求。"""
+
+    vendor: str = "openrouter"
+    kind: str
+    prompt: str
+    width: int | None = None
+    height: int | None = None
+    extras: dict[str, Any] = Field(default_factory=dict)
+
+
+@router.post("/workbench/tasks")
+def run_workbench_task(req: WorkbenchTaskReq):
+    """使用平台模型执行工作台图片任务或提交视频任务。"""
+    prompt = req.prompt.strip()
+    if not prompt:
+        raise HTTPException(400, "提示词不能为空")
+    if req.vendor != "openrouter":
+        raise HTTPException(400, f"平台暂不支持供应商: {req.vendor}")
+    model = str(req.extras.get("modelKey") or "").strip()
+    if not model:
+        raise HTTPException(400, "请选择模型")
+    project_id = _workbench_project_id(req.extras.get("projectId"))
+    task_id = f"canvas_{uuid.uuid4().hex[:16]}"
+    try:
+        if req.kind in ("text_to_image", "image_edit"):
+            width = max(256, min(int(req.width or 1024), 4096))
+            height = max(256, min(int(req.height or 1536), 4096))
+            generated = generate_image_to_local(
+                prompt,
+                f"openrouter:{model}",
+                f"{width}x{height}",
+            )
+            return ok({
+                "id": task_id,
+                "kind": req.kind,
+                "status": "succeeded",
+                "assets": [{"type": "image", "url": generated["url"]}],
+                "raw": generated,
+                "provenance": {
+                    "provider": "openrouter",
+                    "modelKey": model,
+                    "prompt": prompt,
+                    "timestamp": int(datetime.now(timezone.utc).timestamp() * 1000),
+                },
+            })
+        if req.kind in ("text_to_video", "image_to_video"):
+            references = req.extras.get("referenceImages") or []
+            first_frame = str(
+                req.extras.get("firstFrameUrl")
+                or (references[0] if isinstance(references, list) and references else "")
+            )
+            job = openrouter_media.submit_video(
+                project_id,
+                model=model,
+                prompt=prompt,
+                duration=int(req.extras.get("duration") or 5),
+                resolution=str(req.extras.get("resolution") or "720p"),
+                aspect_ratio=str(req.extras.get("aspectRatio") or "9:16"),
+                image_url=first_frame,
+                generate_audio=bool(req.extras.get("generateAudio", True)),
+            )
+            return ok({
+                "id": job["id"],
+                "kind": req.kind,
+                "status": "running",
+                "assets": [],
+                "raw": {**job, "projectId": project_id},
+            })
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        logger.warning("画布媒体任务失败 kind=%s model=%s: %s", req.kind, model, exc)
+        raise HTTPException(502, f"画布媒体任务失败: {exc}") from exc
+    raise HTTPException(400, f"平台暂不支持任务类型: {req.kind}")
+
+
+@router.get("/workbench/tasks/{task_id}")
+def get_workbench_task(
+    task_id: str,
+    kind: str = Query("text_to_video"),
+    project_id: str = Query("agent-canvas"),
+):
+    """轮询工作台视频任务，完成后返回已落地的平台 MP4 地址。"""
+    try:
+        result = openrouter_media.sync_video(_workbench_project_id(project_id), task_id)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(502, f"查询画布视频任务失败: {exc}") from exc
+    status = str(result.get("status") or "pending")
+    normalized_status = (
+        "succeeded" if status == "completed"
+        else "failed" if status in ("failed", "cancelled")
+        else "running"
+    )
+    assets = (
+        [{"type": "video", "url": result["url"]}]
+        if normalized_status == "succeeded" and result.get("url")
+        else []
+    )
+    return ok({
+        "vendor": "openrouter",
+        "result": {
+            "id": task_id,
+            "kind": kind,
+            "status": normalized_status,
+            "assets": assets,
+            "raw": result,
+        },
+    })
 
 
 class GenerateReq(BaseModel):

@@ -7,6 +7,7 @@ import {
   readLocalProject,
   readLocalProjectAsync,
   saveLocalProject as saveProjectRecord,
+  syncPlatformProjectIndex,
 } from '../project/projectRepository'
 import type {
   WorkbenchProjectRecordV1 as LocalProjectRecord,
@@ -77,7 +78,13 @@ export function useLocalProjects(): {
 } {
   const { data, mutate: mutateProjects } = useSWR<LocalProjectSummary[]>(
     LOCAL_PROJECTS_SWR_KEY,
-    () => listProjectRecords(),
+    async () => {
+      try {
+        return await syncPlatformProjectIndex()
+      } catch {
+        return listProjectRecords()
+      }
+    },
     {
       fallbackData: [],
       revalidateOnMount: true,

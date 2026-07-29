@@ -1,4 +1,5 @@
 import type { ProviderKind } from '../desktop/providerKind'
+import { getDesktopBridge } from '../desktop/bridge'
 import {
   requireDesktopRuntime,
   openDesktopAgentsChatStream,
@@ -209,6 +210,20 @@ export async function workbenchAgentsChatStream(
 
 /** Wipe the backend conversation memory for a sessionKey ("新对话"). */
 export async function clearWorkbenchAgentSession(sessionKey: string): Promise<void> {
+  if (!getDesktopBridge() && hasWebRuntime()) {
+    const token = window.localStorage.getItem('user_token')
+    const response = await fetch(
+      `/api/v1/agentapp/agent/sessions/${encodeURIComponent(sessionKey)}`,
+      {
+        method: 'DELETE',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      },
+    )
+    // 会话可能尚未写入；“新对话”在这种情况下已经达到目的。
+    if (response.status === 404) return
+    if (!response.ok) throw new Error(`清理平台会话失败（${response.status}）`)
+    return
+  }
   await requireDesktopRuntime('clear agent session').agents.clearChatV2Session(sessionKey)
 }
 
@@ -218,10 +233,38 @@ export async function seedWorkbenchAgentSession(
   messages: Array<{ role: string; content: string }>,
 ): Promise<void> {
   if (messages.length === 0) return
+  // 平台会话仓储由 /agent/run 按 sessionId 持久化；历史气泡仍由项目记录恢复，
+  // 当前没有“伪造历史消息”接口，Web 端不向服务端写入来源不明的会话。
+  if (!getDesktopBridge() && hasWebRuntime()) return
   await requireDesktopRuntime('seed agent session').agents.seedChatV2Session?.(sessionKey, messages)
 }
 
+type PlatformEnvelope<T> = { code?: number; data?: T; message?: string }
+
+function hasWebRuntime(): boolean {
+  return typeof window !== 'undefined' && typeof document !== 'undefined'
+}
+
+async function platformGet<T>(path: string): Promise<T> {
+  const token = window.localStorage.getItem('user_token')
+  const response = await fetch(`/api/v1/agentapp${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  })
+  const payload = await response.json() as PlatformEnvelope<T>
+  if (!response.ok || payload.code !== 200 || payload.data === undefined) {
+    throw new Error(payload.message || `平台请求失败（${response.status}）`)
+  }
+  return payload.data
+}
+
 export async function listModelCatalogVendors(): Promise<ModelCatalogVendorDto[]> {
+  if (!getDesktopBridge() && hasWebRuntime()) {
+    const now = new Date().toISOString()
+    return [
+      { key: 'platform-employee', name: 'Agent Studio 数字员工', enabled: true, hasApiKey: true, createdAt: now, updatedAt: now },
+      { key: 'openrouter', name: 'Agent Studio 媒体模型', enabled: true, hasApiKey: true, createdAt: now, updatedAt: now },
+    ]
+  }
   return requireDesktopRuntime('model catalog').modelCatalog.listVendors() as ModelCatalogVendorDto[]
 }
 
@@ -230,6 +273,27 @@ export async function listModelCatalogModels(params?: {
   kind?: BillingModelKind
   enabled?: boolean
 }): Promise<ModelCatalogModelDto[]> {
+  if (!getDesktopBridge() && hasWebRuntime()) {
+    if (params?.kind === 'text' || !params?.kind) {
+      const employees = await platformGet<Array<Record<string, unknown>>>('/registry/employees')
+      const now = new Date().toISOString()
+      const textModels = employees.map((employee) => ({
+        modelKey: String(employee.employeeKey || employee.employee_key || ''),
+        vendorKey: 'platform-employee',
+        labelZh: String(employee.name || employee.employeeName || employee.employeeKey || '数字员工'),
+        kind: 'text' as const,
+        enabled: employee.enabled !== false,
+        meta: { description: employee.description || '', employee },
+        createdAt: now,
+        updatedAt: now,
+      })).filter((model) => model.modelKey)
+      if (params?.kind === 'text') return textModels
+    }
+    if (params?.kind === 'image' || params?.kind === 'video') {
+      return platformGet<ModelCatalogModelDto[]>(`/canvas/workbench/models?kind=${params.kind}`)
+    }
+    return []
+  }
   return requireDesktopRuntime('model catalog').modelCatalog.listModels(params) as ModelCatalogModelDto[]
 }
 

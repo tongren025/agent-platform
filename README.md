@@ -122,12 +122,20 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **卡片系统** — 每张卡片支持内容、提示词、图片、视频、元数据，支持 Markdown 渲染
 
 ### 短剧无限画布（`/canvas`）
-- **主站原生集成** — `/canvas` 直接渲染 Agent Studio React 画布，不使用 iframe、独立 HTML、上游 Logo 或第三方项目库
-- **平台数字员工** — 顶栏直接选择系统内置员工；剧本、设定、分镜和提示词节点的 AI 派生统一经过员工角色、知识、工具与模型路由
-- **平台媒体模型** — 图片节点只读取后台配置并实时确认可用的平台图片模型，生成结果落入平台上传目录并随画布保存
-- **短剧节点生产** — 支持数据、分镜、图片、便签与分组节点，以及连线、复制粘贴、撤销重做、自动整理、缩放导航、素材拖入、看板导入与回写
-- **服务端持久化** — 画布项目和节点保存在平台 `data/canvas/`，不使用浏览器 localStorage 冒充账号级项目同步
-- **上游代码边界** — `third_party/nomi/` 仅作为 Apache-2.0 源码研究与迁移基线，保留许可证和归属；上游品牌、Logo、独立页面和模型配置不进入 Agent Studio 产品界面
+- **完整短剧工作台** — `/canvas` 直接挂载由 `third_party/nomi/` 源码编译出的 React 模块，包含项目库、创作助手、无限生成画布、素材/提示词/技能库、分镜计划、多轨时间线、预览导出与 3D 导演；不是 iframe、独立 HTML 或外链应用
+- **平台数字员工** — 画布助手的文本能力目录直接读取 `/registry/employees`；选择某个员工后，以该员工的 `employeeKey` 调用现有 `/agent/run`，继续使用平台角色、知识、Skill、工具、MCP 与模型路由
+- **平台媒体模型** — 图片/视频节点只读取平台 OpenRouter 媒体模型目录；图片走统一落图服务，视频走平台异步提交和轮询，画布不保存或使用上游供应商密钥
+- **平台项目持久化** — 完整工作台项目由 `/canvas/workbench/projects` 保存到 `data/canvas/workbench/`；浏览器 localStorage 只作同步缓存，服务端记录是重新登录和换浏览器后的恢复来源
+- **主站同源模块** — 源码入口为 `third_party/nomi/src/agentStudioMount.tsx`，产物为 `web/public/agent-canvas/agent-canvas.js`；主站 `CanvasHub` 在同一 DOM、同一登录态下加载并负责卸载
+- **品牌与许可证** — 产品界面使用 Agent Studio 品牌，不展示上游 Logo、官网、更新器或模型配置；`third_party/nomi/LICENSE` 和 `NOTICE.agent-platform.md` 保留 Apache-2.0 许可证、上游归属和本项目修改说明
+
+修改画布上游源码后，先在 `third_party/nomi/` 执行：
+
+```powershell
+.\node_modules\.bin\vite.cmd build --config vite.agent-studio.config.ts --mode production
+```
+
+再在 `web/` 执行 `npm run build`。第一步刷新可部署的源码模块，第二步把它和主站一起复制到 `wwwroot/agent-canvas/`。
 
 ### 对话工作台
 - **实时对话** — 选择员工直接开始 AI 对话
@@ -220,6 +228,7 @@ Redis、MinIO、Milvus 或 Neo4j；在后台配置对应服务后再启用数据
 - **React 18** + **TypeScript**
 - **Ant Design 5** — UI 组件库
 - **ReactFlow 11** — 工作流画布
+- **Nomi v0.17.0 / Mantine / React Flow** — Apache-2.0 短剧画布工作台源码，经平台适配层编译为主站同源模块
 - **React Router 6** — SPA 路由
 - **Vite 6** — 构建工具 + 开发服务器 + HMR
 

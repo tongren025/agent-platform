@@ -1,0 +1,18 @@
+{
+  "runId": "run_ab97637fa9dabecd",
+  "sessionId": "ses_cd300c087aba453d",
+  "employeeKey": "comic-screenwriter",
+  "workflowKey": null,
+  "model": "Gemma-4-31B-IT-NVFP4",
+  "success": true,
+  "iterations": 1,
+  "promptTokens": 10289,
+  "completionTokens": 2676,
+  "totalTokens": 12965,
+  "costUsd": null,
+  "elapsedMilliseconds": 45484,
+  "errorMessage": null,
+  "pendingApproval": false,
+  "traces": [],
+  "createdAt": "2026-07-29T13:58:53.687707Z"
+}

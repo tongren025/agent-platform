@@ -34,3 +34,49 @@ def test_provider_qualified_model_with_colon_keeps_full_model_id(tmp_path):
     )
 
     assert model_id == "tencent/hy3:free"
+
+
+def test_provider_without_api_key_is_rejected_before_network_call(tmp_path):
+    provider = AiModelConfig(
+        name="missing-key",
+        endpoint="https://example.invalid/v1",
+        api_key="",
+        enabled=True,
+        models=[{"modelName": "Model", "modelId": "model-1"}],
+    )
+    service = AIService(
+        [provider],
+        AiProviderStore(provider_dir=tmp_path / "providers"),
+    )
+
+    try:
+        service.get_client("model-1")
+    except ValueError as exc:
+        assert "missing API key" in str(exc)
+    else:
+        raise AssertionError("缺少 API key 的供应商不应创建客户端")
+
+
+def test_default_client_skips_enabled_provider_without_credentials(tmp_path):
+    missing = AiModelConfig(
+        name="missing-key",
+        endpoint="https://missing.invalid/v1",
+        api_key="",
+        enabled=True,
+        models=[{"modelName": "Missing", "modelId": "missing-model"}],
+    )
+    ready = AiModelConfig(
+        name="ready",
+        endpoint="https://ready.invalid/v1",
+        api_key="test-key",
+        enabled=True,
+        models=[{"modelName": "Ready", "modelId": "ready-model"}],
+    )
+    service = AIService(
+        [missing, ready],
+        AiProviderStore(provider_dir=tmp_path / "providers"),
+    )
+
+    _, model_id = service.get_default_client()
+
+    assert model_id == "ready-model"

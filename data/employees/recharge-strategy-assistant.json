@@ -6,7 +6,8 @@
   "DefaultModelPolicy": {
     "model_id": "Gemma-4-31B-IT-NVFP4",
     "temperature": 0.5,
-    "max_tokens": 8192
+    "max_tokens": 8192,
+    "fallback_models": ["openrouter/free"]
   },
   "Enabled": true,
   "Tags": [],

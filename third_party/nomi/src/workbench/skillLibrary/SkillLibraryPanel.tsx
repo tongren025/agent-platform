@@ -92,8 +92,8 @@ export function SkillLibraryContent({
 
   // 导出：技能包对象 → JSON Blob → 浏览器下载，不弹系统对话框。
   const handleExport = React.useCallback(
-    (skill: SkillListItemDto) => {
-      const pkg = exportPackage(skill.directoryName)
+    async (skill: SkillListItemDto) => {
+      const pkg = await exportPackage(skill.directoryName)
       if (!pkg) {
         showInfoToast(t('libraries.skill.exportNotFound'))
         return
@@ -111,9 +111,9 @@ export function SkillLibraryContent({
 
   // 删除可撤销：删前先把包抓在手里，撤销 = 重新导入（落回用户目录，目录名冲突会自动避让）。
   const handleDelete = React.useCallback(
-    (skill: SkillListItemDto) => {
-      const snapshot = exportPackage(skill.directoryName)
-      const res = remove(skill.directoryName)
+    async (skill: SkillListItemDto) => {
+      const snapshot = await exportPackage(skill.directoryName)
+      const res = await remove(skill.directoryName)
       if (!res.ok) {
         showInfoToast(res.error ?? t('libraries.skill.deleteFailed'))
         return
@@ -121,7 +121,7 @@ export function SkillLibraryContent({
       showUndoToast({
         message: t('libraries.skill.deleted', { name: skill.label }),
         onUndo: () => {
-          if (snapshot) importPackage(snapshot)
+          if (snapshot) void importPackage(snapshot)
         },
       })
     },
@@ -132,7 +132,7 @@ export function SkillLibraryContent({
   const handleImportFile = React.useCallback(
     (file: File) => {
       const reader = new FileReader()
-      reader.onload = () => {
+      reader.onload = async () => {
         let parsed: unknown
         try {
           parsed = JSON.parse(String(reader.result || ''))
@@ -140,7 +140,7 @@ export function SkillLibraryContent({
           showInfoToast(t('libraries.skill.invalidPackage'))
           return
         }
-        const res = importPackage(parsed)
+        const res = await importPackage(parsed)
         showInfoToast(res.ok
           ? t('libraries.skill.imported', { name: res.skillName ?? t('libraries.skill.newSkill') })
           : t('libraries.skill.importFailed', { message: res.error ?? t('libraries.skill.unknownError') }))

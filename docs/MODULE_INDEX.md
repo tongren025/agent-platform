@@ -279,7 +279,7 @@
 | [ArticleLearn.tsx](../web/src/pages/ArticleLearn.tsx) | 文章学习页：学习源 CRUD、手动触发、学习历史（网页→LLM 总结→知识库+记忆）。 |
 | [AutoLearn.tsx](../web/src/pages/AutoLearn.tsx) | 提示词采集页：采集源 CRUD、手动触发、已采提示词与历史查看。 |
 | [Canvas.tsx](../web/src/pages/Canvas.tsx) | 自由画布 —— 数据的可视化生成台。 |
-| [CanvasHub.tsx](../web/src/pages/CanvasHub.tsx) | 统一画布中心：按任务选择专用引擎，并把现有生产画布作为默认入口。 |
+| [CanvasHub.tsx](../web/src/pages/CanvasHub.tsx) | 主站短剧画布宿主：动态挂载源码编译的 Agent Studio 完整画布工作台并管理加载、失败重试和卸载。 |
 | [Dashboard.tsx](../web/src/pages/Dashboard.tsx) | 总览页：以“继续制作、当前阻塞、下一步行动”为核心，而非罗列系统资源数量。 |
 | [DirectorStudio.tsx](../web/src/pages/DirectorStudio.tsx) | 快速制作：用户先选交付目标，再沿一条主线完成创意、剧本、分镜、图片、视频与成片。 |
 | [Employees.tsx](../web/src/pages/Employees.tsx) | 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、参考资料上传。 |

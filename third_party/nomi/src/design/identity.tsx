@@ -43,34 +43,28 @@ type NomiWordmarkProps = {
  * 任何要显示「Nomi」字标的地方都用它，别再手写 `No<span>m</span>i`。
  */
 export function NomiWordmark({ fontSize, className, ...rest }: NomiWordmarkProps): JSX.Element {
-  const { t } = useTranslation()
   return (
     <span
       className={cn('nomi-wordmark', 'font-nomi-display font-normal tracking-[-0.02em] leading-none', className)}
       style={fontSize ? { fontSize } : undefined}
       {...rest}
     >
-      {t('brand.wordStart')}
-      <span className={cn('nomi-wordmark__accent', 'text-nomi-accent')}>{t('brand.wordAccent')}</span>
-      {t('brand.wordEnd')}
+      Agent Studio
     </span>
   )
 }
 
 export function NomiBrand({ markSize = 26, wordSize = 17, className }: NomiBrandProps): JSX.Element {
-  const { t } = useTranslation()
   const rx = Math.round((markSize / 28) * 7)
 
   return (
     <div
       className={cn('nomi-brand', 'inline-flex items-center gap-2 shrink-0', className)}
-      aria-label={t('brand.name')}
+      aria-label="Agent Studio"
     >
       <svg width={markSize} height={markSize} viewBox="0 0 28 28" fill="none" aria-hidden="true" className="shrink-0">
-        <rect width="28" height="28" rx={rx} fill="var(--nomi-logo-ground)" />
-        <rect x="5.5" y="5.5" width="4" height="17" rx="1.2" fill="white" />
-        <rect x="18.5" y="5.5" width="4" height="17" rx="1.2" fill="white" />
-        <polygon points="9.5,5.5 13.5,5.5 18.5,22.5 14.5,22.5" fill="white" />
+        <rect width="28" height="28" rx={rx} fill="#635bff" />
+        <path d="M7 21 12.4 6h3.2L21 21h-3.2l-1.1-3.2H11L9.9 21H7Zm5-6h3.8L14 9.6 12 15Z" fill="white" />
       </svg>
       <NomiWordmark fontSize={wordSize} className="nomi-brand__word text-nomi-ink" aria-hidden="true" />
     </div>
@@ -87,10 +81,8 @@ export function NomiLogoMark({ size = 24, className }: NomiLogoMarkProps): JSX.E
       aria-hidden="true"
       className={cn('nomi-logo-mark', 'block shrink-0', className)}
     >
-      <rect width="28" height="28" rx="7" fill="var(--nomi-logo-ground)" />
-      <rect x="5.5" y="5.5" width="4" height="17" rx="1.2" fill="white" />
-      <rect x="18.5" y="5.5" width="4" height="17" rx="1.2" fill="white" />
-      <polygon points="9.5,5.5 13.5,5.5 18.5,22.5 14.5,22.5" fill="white" />
+      <rect width="28" height="28" rx="7" fill="#635bff" />
+      <path d="M7 21 12.4 6h3.2L21 21h-3.2l-1.1-3.2H11L9.9 21H7Zm5-6h3.8L14 9.6 12 15Z" fill="white" />
     </svg>
   )
 }

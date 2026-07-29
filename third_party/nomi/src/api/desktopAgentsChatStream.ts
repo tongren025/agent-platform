@@ -113,7 +113,78 @@ export async function openDesktopAgentsChatStream(
     onSession?: (session: AgentChatV2Session) => void
   },
 ): Promise<() => void> {
-  const desktop = requireDesktopRuntime('agents chat')
+  const desktop = getDesktopBridge()
+  if (!desktop && typeof window !== 'undefined') {
+    let stopped = false
+    const stop = async () => { stopped = true }
+    handlers.onOpen?.()
+    handlers.onSession?.({
+      sessionId: payload.sessionKey || `canvas-${Date.now()}`,
+      confirmTool: async () => {},
+      cancel: stop,
+    })
+    try {
+      const token = window.localStorage.getItem('user_token')
+      const platformPayload = payload as AgentsChatRequestDto & {
+        agentModelKey?: string
+        projectId?: string
+      }
+      // 上游把“文本模型”放在 agentModelKey；在 Agent Studio Web 里它就是数字员工 key。
+      // 这样两个助手面板中的员工下拉选择会直接决定 /agent/run 的 employeeKey。
+      let employeeKey = platformPayload.agentModelKey
+        || window.localStorage.getItem('canvas.employee')
+        || ''
+      if (employeeKey) window.localStorage.setItem('canvas.employee', employeeKey)
+      if (!employeeKey) {
+        const employeesResponse = await fetch('/api/v1/agentapp/registry/employees', {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
+        const employeesPayload = await employeesResponse.json() as { data?: Array<Record<string, unknown>> }
+        const first = employeesPayload.data?.[0]
+        employeeKey = String(first?.employeeKey || first?.employee_key || '')
+      }
+      if (!employeeKey) throw new Error('请先在数字员工页面创建员工')
+      const response = await fetch('/api/v1/agentapp/agent/run', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          employeeKey,
+          userInput: [payload.systemPrompt, payload.prompt].filter(Boolean).join('\n\n'),
+          sessionId: payload.sessionKey || `canvas-${platformPayload.projectId || payload.canvasProjectId || 'default'}`,
+        }),
+      })
+      const envelope = await response.json() as { code?: number; data?: Record<string, unknown>; message?: string }
+      if (!response.ok || envelope.code !== 200 || !envelope.data) {
+        throw new Error(envelope.message || `数字员工请求失败（${response.status}）`)
+      }
+      if (stopped) return stop
+      const text = String(
+        envelope.data.assistantMessage
+        || envelope.data.assistant_message
+        || envelope.data.output
+        || envelope.data.content
+        || '',
+      )
+      const requestId = `platform-${Date.now()}`
+      handlers.onEvent({ event: 'initial', data: { requestId } })
+      handlers.onEvent({ event: 'content', data: { delta: text, text } })
+      handlers.onEvent({
+        event: 'result',
+        data: { response: { id: requestId, text, raw: envelope.data, toolCalls: [], artifacts: [] } },
+      })
+      handlers.onEvent({ event: 'done', data: { reason: 'finished' } })
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error(String(error))
+      handlers.onError?.(err)
+      handlers.onEvent({ event: 'error', data: { message: err.message } })
+      handlers.onEvent({ event: 'done', data: { reason: 'error' } })
+    }
+    return stop
+  }
+  if (!desktop) throw new Error('agents chat requires the Electron desktop runtime')
 
   let aborted = false
   let streamedText = ''

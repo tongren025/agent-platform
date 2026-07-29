@@ -19,10 +19,11 @@ def prod_env(tmp_path, monkeypatch, app_client):
 
     monkeypatch.setattr(prod, "DATA_DIR", tmp_path)
 
-    captured: dict = {"prompts": []}
+    captured: dict = {"prompts": [], "employee_keys": []}
 
     async def fake_invocation(req):
         captured["prompts"].append(req.user_input)
+        captured["employee_keys"].append(req.employee_key)
         return SimpleNamespace(
             success=True,
             assistant_message="镜头01: 新卡A\n内容A\n---\n镜头02: 新卡B\n内容B",
@@ -165,6 +166,53 @@ def test_generation_preserves_g_unit_metadata(prod_env, monkeypatch):
     assert cards[2]["metadata"]["production_grain"] == "episode_overview"
 
 
+def test_markdown_table_separator_is_not_treated_as_card_boundary(prod_env, monkeypatch):
+    """表格里的 |---| 不是卡片分隔符，只允许独占一行的 --- 分卡。"""
+    client, _ = prod_env
+    pid = _create_project_with_cards(client)
+
+    import app.api.production as prod
+
+    async def fake_invocation(req):
+        return SimpleNamespace(
+            success=True,
+            assistant_message=(
+                "镜头拆分表 成片级\n"
+                "| G | 时间 | 动作 |\n"
+                "|---|---|---|\n"
+                "| G1 | 00:00-00:05 | 抬头 |\n"
+                "---\n"
+                "G1 第一段 剧本 [00:00-00:05]\n"
+                "| 时间 | 画面 |\n"
+                "|---|---|\n"
+                "| 00:00 | 机器人抬头 |\n"
+                "---\n"
+                "G2 第二段 剧本 [00:05-00:10]\n正文\n"
+                "---\n"
+                "G3 第三段 剧本 [00:10-00:15]\n正文"
+            ),
+            error_message=None,
+        )
+
+    monkeypatch.setattr(prod, "run_invocation", fake_invocation)
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "script", "episode": 1, "mode": "replace",
+              "employee_key": "e1"},
+    )
+
+    assert response.status_code == 200
+    cards = response.json()["data"]["cards"]
+    assert len(cards) == 4
+    assert [card["title"] for card in cards] == [
+        "镜头拆分表 成片级",
+        "G1 第一段 剧本 [00:00-00:05]",
+        "G2 第二段 剧本 [00:05-00:10]",
+        "G3 第三段 剧本 [00:10-00:15]",
+    ]
+    assert "|---|---|" in cards[1]["content"]
+
+
 def test_invalid_mode_rejected(prod_env):
     """mode 不在 append/replace 内返回 400。"""
     client, _ = prod_env
@@ -205,6 +253,20 @@ def test_project_runtime_constraints_are_injected_into_generation_prompt(prod_en
     prompt = captured["prompts"][-1]
     assert "单集目标时长 42 秒" in prompt
     assert "画幅 16:9" in prompt
+
+
+def test_project_without_employee_uses_stage_specialist(prod_env):
+    """未绑定项目员工时按目标阶段选专业员工，不能再拿注册表第一项碰运气。"""
+    client, captured = prod_env
+    pid = _create_project_with_cards(client)
+
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "script", "episode": 1},
+    )
+
+    assert response.status_code == 200
+    assert captured["employee_keys"][-1] == "comic-screenwriter"
 
 
 def test_gc_generation_inherits_locked_art_bible(prod_env):
