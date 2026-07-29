@@ -502,11 +502,19 @@ def _compute_story_preview(cards: list[ProductionCard]) -> dict:
 
 def _compute_readiness(cards: list[ProductionCard]) -> dict:
     """按镜头计算真实生产就绪度，并兼容把整支预告聚合在一张卡里的项目。"""
-    units = sorted({
-        (c.episode, c.shot_number)
-        for c in cards
-        if c.shot_number > 0
-    })
+    units = sorted(
+        {
+            (c.episode, c.shot_number)
+            for c in cards
+            if c.shot_number > 0
+        },
+        # 旧 GC 的镜头允许 episode=None；Python 3 不能直接比较 None 与 int。
+        # 把全局镜头稳定排在分集镜头之前，同时保留二者为不同生产单元。
+        key=lambda item: (
+            -1 if item[0] is None else item[0],
+            item[1],
+        ),
+    )
     if not units:
         story_preview = _compute_story_preview(cards)
         total = story_preview["expected_images"]

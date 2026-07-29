@@ -57,6 +57,31 @@ def test_gc_units_without_episode_are_still_counted():
     assert readiness["next_action"] == "还差 1 个镜头视频"
 
 
+def test_global_and_episode_units_can_be_sorted_together():
+    """全局 GC 单元与分集单元混用时不得因 None/int 排序崩溃。"""
+    cards = [
+        ProductionCard(
+            project_id="mixed-demo",
+            stage="script",
+            episode=None,
+            shot_number=1,
+            status="done",
+        ),
+        ProductionCard(
+            project_id="mixed-demo",
+            stage="script",
+            episode=1,
+            shot_number=1,
+            status="done",
+        ),
+    ]
+
+    readiness = _compute_readiness(cards)
+
+    assert readiness["units"] == 2
+    assert readiness["blockers"] == 2
+
+
 def test_story_preview_expands_multi_panel_storyboards():
     """同一剧情镜头的 A/B 两张制片故事板都要展示，不能只取第一张。"""
     cards = [

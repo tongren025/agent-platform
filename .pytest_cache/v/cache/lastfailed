@@ -1,6 +1,1 @@
-{
-  "tests/test_production_generate.py::test_replace_only_touches_same_episode": true,
-  "tests/test_production_generate.py::test_append_keeps_old_cards_and_continues_shot_number": true,
-  "tests/test_production_generate.py::test_shot_scoped_replace_only_touches_current_unit": true,
-  "tests/test_production_generate.py::test_split_legacy_storyboard_into_one_card_per_subshot": true
-}
+{}
