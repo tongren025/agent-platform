@@ -8,7 +8,7 @@ import {
   SendOutlined, TeamOutlined, UserOutlined, PaperClipOutlined,
   PictureOutlined, CloseCircleFilled, FileOutlined,
   ExpandOutlined, CompressOutlined, BugOutlined,
-  ReloadOutlined, StopOutlined,
+  ReloadOutlined, StopOutlined, FolderOpenOutlined,
   EditOutlined, PlusOutlined, BookOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -18,7 +18,17 @@ import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import { api } from '../api';
 import { COLORS } from '../theme';
-import type { ConversationArtifact, Employee, SessionItem, AgentRunResponse, Team } from '../types';
+import DeepAgentWorkspacePanel from '../components/DeepAgentWorkspacePanel';
+import type {
+  AgentRunResponse,
+  ConversationArtifact,
+  DeepAgentWorkspace,
+  DeepAgentWorkspaceFile,
+  DeepAgentWorkspaceFileView,
+  Employee,
+  SessionItem,
+  Team,
+} from '../types';
 
 const { TextArea } = Input;
 const { Text, Paragraph } = Typography;
@@ -156,6 +166,13 @@ export default function Workbench() {
   const [artifacts, setArtifacts] = useState<ConversationArtifact[]>([]);
   const [artifactOpen, setArtifactOpen] = useState(false);
   const [activeArtifact, setActiveArtifact] = useState<ConversationArtifact | null>(null);
+  const [workspace, setWorkspace] = useState<DeepAgentWorkspace | null>(null);
+  const [workspaceLoading, setWorkspaceLoading] = useState(false);
+  const [workspaceError, setWorkspaceError] = useState('');
+  const [workspaceDrawerOpen, setWorkspaceDrawerOpen] = useState(false);
+  const [workspaceFileOpen, setWorkspaceFileOpen] = useState(false);
+  const [workspaceFileLoading, setWorkspaceFileLoading] = useState(false);
+  const [activeWorkspaceFile, setActiveWorkspaceFile] = useState<DeepAgentWorkspaceFileView | null>(null);
   const [inputValue, setInputValue] = useInputHabit('workbench.message-draft', '');
   const [loading, setLoading] = useState(false);
   const [sessionsLoading, setSessionsLoading] = useState(false);
@@ -179,6 +196,7 @@ export default function Workbench() {
   const msgEndRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<any>(null);
   const quickPromptRequestRef = useRef(0);
+  const workspaceRequestRef = useRef(0);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { isMobile } = useResponsive();
@@ -275,26 +293,55 @@ export default function Workbench() {
   useEffect(() => { refreshSessions(); }, [mode, selectedKey]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { msgEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
+  const clearWorkspace = () => {
+    workspaceRequestRef.current += 1;
+    setWorkspace(null);
+    setWorkspaceLoading(false);
+    setWorkspaceError('');
+    setWorkspaceDrawerOpen(false);
+    setWorkspaceFileOpen(false);
+    setActiveWorkspaceFile(null);
+  };
+
+  const loadWorkspace = async (sid: string) => {
+    const requestId = ++workspaceRequestRef.current;
+    setWorkspaceLoading(true);
+    setWorkspaceError('');
+    try {
+      const data = await api.getSessionWorkspace(sid);
+      if (requestId === workspaceRequestRef.current) setWorkspace(data);
+    } catch {
+      if (requestId === workspaceRequestRef.current) {
+        setWorkspace(null);
+        setWorkspaceError('暂时无法读取这个会话的工作区，请稍后重试。');
+      }
+    } finally {
+      if (requestId === workspaceRequestRef.current) setWorkspaceLoading(false);
+    }
+  };
+
   const updateRoute = (m: TargetMode, k: string) => {
     if (!k) { setSearchParams({}, { replace: true }); return; }
     setSearchParams(m === 'team' ? { team: k } : { employee: k }, { replace: true });
   };
-  const handleModeChange = (m: TargetMode) => { setMode(m); setSelectedKey(''); setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); updateRoute(m, ''); };
-  const handleSelectTarget = (k: string) => { setSelectedKey(k); setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); updateRoute(mode, k); };
-  const handleNewChat = () => { setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); };
+  const handleModeChange = (m: TargetMode) => { setMode(m); setSelectedKey(''); setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace(); updateRoute(m, ''); };
+  const handleSelectTarget = (k: string) => { setSelectedKey(k); setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace(); updateRoute(mode, k); };
+  const handleNewChat = () => { setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace(); };
 
   const handleLoadSession = (s: SessionItem) => {
     setSessionId(s.sessionId);
     setMessages((s.messages || []).map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content, timestamp: m.timestamp })));
     setArtifacts(s.artifacts || []);
     setPendingFiles([]);
+    clearWorkspace();
+    void loadWorkspace(s.sessionId);
   };
 
   const handleArchiveSession = async (sid: string, archived: boolean) => {
     try {
       const updated = await api.archiveSession(sid, archived);
       setSessions((prev) => prev.map((s) => s.sessionId === sid ? updated : s));
-      if (sessionId === sid && archived) { setSessionId(null); setMessages([]); setArtifacts([]); }
+      if (sessionId === sid && archived) { setSessionId(null); setMessages([]); setArtifacts([]); clearWorkspace(); }
       message.success(archived ? '已归档' : '已恢复');
     } catch (e: any) { message.error(e.message); }
   };
@@ -303,7 +350,7 @@ export default function Workbench() {
     try {
       await api.deleteSession(sid);
       setSessions((prev) => prev.filter((s) => s.sessionId !== sid));
-      if (sessionId === sid) { setSessionId(null); setMessages([]); setArtifacts([]); }
+      if (sessionId === sid) { setSessionId(null); setMessages([]); setArtifacts([]); clearWorkspace(); }
       message.success('已删除');
     } catch (e: any) { message.error(e.message); }
   };
@@ -312,12 +359,29 @@ export default function Workbench() {
     try {
       const detail = await api.getSession(sid);
       setArtifacts(detail.artifacts || []);
+      void loadWorkspace(sid);
       setSessions((prev) => {
         const exists = prev.some((s) => s.sessionId === sid);
         if (exists) return prev.map((s) => s.sessionId === sid ? detail : s);
         return [detail, ...prev];
       });
     } catch { refreshSessions(); }
+  };
+
+  const openWorkspaceFile = async (file: DeepAgentWorkspaceFile) => {
+    if (!sessionId) return;
+    setActiveWorkspaceFile(null);
+    setWorkspaceFileOpen(true);
+    setWorkspaceFileLoading(true);
+    try {
+      const detail = await api.getSessionWorkspaceFile(sessionId, file.path);
+      setActiveWorkspaceFile(detail);
+    } catch {
+      setWorkspaceFileOpen(false);
+      message.error('文件暂时无法读取，请刷新工作区后重试。');
+    } finally {
+      setWorkspaceFileLoading(false);
+    }
   };
 
   const handleUpload = async (file: File) => {
@@ -471,6 +535,12 @@ export default function Workbench() {
   );
 
   const rightWidth = rightCollapsed ? 0 : 320;
+  const hasWorkspacePanel = !!sessionId && (
+    workspaceLoading
+    || !!workspaceError
+    || workspace?.checkpointVersion != null
+    || workspace?.status === 'warning'
+  );
 
   return (
     <div style={{
@@ -631,6 +701,15 @@ export default function Workbench() {
           </Space>
           <Space size={8}>
             {sessionId && <Tag style={{ fontSize: 11, borderRadius: 6 }}>{sessionId.slice(0, 8)}</Tag>}
+            {isMobile && hasWorkspacePanel && (
+              <Button
+                type="text"
+                size="small"
+                icon={<FolderOpenOutlined />}
+                aria-label="查看 DeepAgent 工作区"
+                onClick={() => setWorkspaceDrawerOpen(true)}
+              />
+            )}
             {!isMobile && <Tooltip title={rightCollapsed ? '展开面板' : '收起面板'}>
               <Button type="text" size="small" icon={rightCollapsed ? <ExpandOutlined /> : <CompressOutlined />} aria-label={rightCollapsed ? '展开辅助面板' : '收起辅助面板'} onClick={() => setRightCollapsed(!rightCollapsed)} />
             </Tooltip>}
@@ -866,6 +945,16 @@ export default function Workbench() {
           )}
         </div>
 
+        {hasWorkspacePanel && (
+          <DeepAgentWorkspacePanel
+            workspace={workspace}
+            loading={workspaceLoading}
+            error={workspaceError}
+            onRetry={() => sessionId && void loadWorkspace(sessionId)}
+            onOpenFile={openWorkspaceFile}
+          />
+        )}
+
         {/* Artifacts */}
         <div style={{ padding: '14px 16px' }}>
           <Text strong style={{ fontSize: 13, color: COLORS.slate, marginBottom: 8, display: 'block' }}>
@@ -1023,6 +1112,47 @@ export default function Workbench() {
         <div className="wb-markdown" style={{ background: '#f8fafc', border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 20 }}>
           <ReactMarkdown components={mdComponents}>{cleanLatex(activeArtifact?.content || '')}</ReactMarkdown>
         </div>
+      </Drawer>
+
+      <Drawer
+        title="DeepAgent 工作区"
+        open={workspaceDrawerOpen}
+        onClose={() => setWorkspaceDrawerOpen(false)}
+        width={isMobile ? '100%' : 420}
+      >
+        <DeepAgentWorkspacePanel
+          workspace={workspace}
+          loading={workspaceLoading}
+          error={workspaceError}
+          onRetry={() => sessionId && void loadWorkspace(sessionId)}
+          onOpenFile={openWorkspaceFile}
+        />
+      </Drawer>
+
+      <Drawer
+        title={activeWorkspaceFile?.path || '工作区文件'}
+        open={workspaceFileOpen}
+        onClose={() => setWorkspaceFileOpen(false)}
+        width={isMobile ? '100%' : 720}
+        extra={activeWorkspaceFile ? <CopyBtn text={activeWorkspaceFile.content} /> : null}
+      >
+        {workspaceFileLoading ? (
+          <div role="status" aria-live="polite" style={{ textAlign: 'center', padding: 40 }}>
+            <Spin />
+            <Text type="secondary" style={{ display: 'block', marginTop: 8 }}>正在读取文件…</Text>
+          </div>
+        ) : activeWorkspaceFile ? (
+          <>
+            <Text type="secondary" style={{ display: 'block', marginBottom: 10 }}>
+              {activeWorkspaceFile.summary}
+            </Text>
+            <pre style={{ background: '#1e293b', color: '#e2e8f0', padding: 16, borderRadius: 10, fontSize: 12, lineHeight: 1.6, overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+              {activeWorkspaceFile.content}
+            </pre>
+          </>
+        ) : (
+          <Empty description="没有可显示的文件内容" />
+        )}
       </Drawer>
 
       {/* Trace debug drawer */}

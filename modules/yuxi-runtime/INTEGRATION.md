@@ -2,8 +2,8 @@
 
 ## 当前阶段
 
-已完成上游源码快照引入和四项增量接入：MCP 工具执行桥接、SKILL.md 技能包发现、
-Skill 依赖闭包和 DeepAgent 本地 checkpoint。
+已完成上游源码快照引入和六项增量接入：MCP 工具执行桥接、SKILL.md 技能包发现、
+Skill 依赖闭包、DeepAgent 本地 checkpoint、大型工具结果精简和工作区只读视图。
 没有替换 Agent Platform 的 DeepAgent、Skill/MCP 配置或本地工具，也没有把 Yuxi
 服务加入根目录 `docker-compose.yml`。
 
@@ -78,6 +78,21 @@ LangGraph、`AsyncPostgresSaver` 或 Redis，而是接入平台已有会话仓�
 实现来源：`backend/package/yuxi/agents/middlewares/summary.py` 中
 `_estimated_content_tokens`、`_tool_result_path`、`_preview_tool_result` 与
 tool result replacement 逻辑。本地适配保持算法边界，存储改接现有虚拟工作区。
+
+### 会话工作区只读视图
+
+- 复用 Yuxi `get_agent_state_view` / `extract_agent_state` 的显式观察边界，把
+  DeepAgent 待办、完成进度和虚拟文件索引接入现有会话工作台。
+- 会话列表与详情不再内联完整 `deepAgentCheckpoint`，只返回版本和待办/文件数量；
+  底层会话 metadata 原样保留，不删除用户数据，不改变 JSON 或 PostgreSQL 存储。
+- 文件正文通过独立只读接口按精确虚拟路径读取；大型工具结果也只在用户点击时加载，
+  避免列表响应和前端状态再次携带完整内容。
+- 桌面端显示在工作台右侧，移动端使用抽屉；旧会话、普通员工和没有 checkpoint 的
+  会话保持原行为。
+
+实现来源：`backend/package/yuxi/services/chat_service.py` 中的
+`get_agent_state_view` / `extract_agent_state` 状态观察形态。本地适配继续复用现有
+FastAPI 会话接口和 React 工作台，不引入 Yuxi Vue 页面、数据库或 Redis。
 
 ## 目标职责
 

@@ -362,6 +362,14 @@ export const api = {
   listTeamSessions: (teamCode: string, limit = 20, includeArchived = false) =>
     request<any[]>(`/agent/sessions?teamCode=${encodeURIComponent(teamCode)}&targetType=team&includeArchived=${includeArchived}&limit=${limit}`),
   getSession: (sessionId: string) => request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}`),
+  getSessionWorkspace: (sessionId: string) =>
+    request<import('./types').DeepAgentWorkspace>(
+      `/agent/sessions/${encodeURIComponent(sessionId)}/workspace`,
+    ),
+  getSessionWorkspaceFile: (sessionId: string, path: string) =>
+    request<import('./types').DeepAgentWorkspaceFileView>(
+      `/agent/sessions/${encodeURIComponent(sessionId)}/workspace/file?path=${encodeURIComponent(path)}`,
+    ),
   archiveSession: (sessionId: string, archived = true) =>
     request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}/archive`, { method: 'POST', body: JSON.stringify({ archived }) }),
   deleteSession: (sessionId: string) => request<any>(`/agent/sessions/${sessionId}`, { method: 'DELETE' }),

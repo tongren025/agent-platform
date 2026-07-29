@@ -95,6 +95,45 @@ class ConversationArtifact(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class DeepAgentWorkspaceTodo(BaseModel):
+    """DeepAgent 工作区中的一条可见待办。"""
+    content: str = ""
+    status: str = "pending"
+
+
+class DeepAgentWorkspaceFile(BaseModel):
+    """DeepAgent 虚拟文件的只读摘要；正文通过独立文件接口按需读取。"""
+    path: str
+    size: int = 0
+    kind: str = "workspace"
+
+
+class DeepAgentWorkspaceView(BaseModel):
+    """面向工作台的稳定状态观察：进度、文件索引与安全恢复建议。"""
+    status: str = "success"
+    summary: str = ""
+    next_actions: list[str] = Field(default_factory=list, alias="nextActions")
+    artifacts: list[str] = Field(default_factory=list)
+    checkpoint_version: Optional[int] = Field(None, alias="checkpointVersion")
+    todos: list[DeepAgentWorkspaceTodo] = Field(default_factory=list)
+    files: list[DeepAgentWorkspaceFile] = Field(default_factory=list)
+
+    model_config = {"populate_by_name": True}
+
+
+class DeepAgentWorkspaceFileView(BaseModel):
+    """工作区单文件正文响应，附带可恢复观察字段。"""
+    status: str = "success"
+    summary: str = ""
+    next_actions: list[str] = Field(default_factory=list, alias="nextActions")
+    artifacts: list[str] = Field(default_factory=list)
+    path: str
+    size: int = 0
+    content: str = ""
+
+    model_config = {"populate_by_name": True}
+
+
 class PendingApprovalInfo(BaseModel):
     """存进会话的待审批完整信息（含原始参数 JSON），恢复运行时由 RequireApprovalHandler 消费。"""
     description: str = ""

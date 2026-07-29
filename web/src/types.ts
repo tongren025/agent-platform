@@ -107,6 +107,37 @@ export interface ConversationArtifact {
   createdAt: string;
 }
 
+export interface DeepAgentWorkspaceTodo {
+  content: string;
+  status: 'pending' | 'in_progress' | 'completed';
+}
+
+export interface DeepAgentWorkspaceFile {
+  path: string;
+  size: number;
+  kind: 'workspace' | 'large_tool_result';
+}
+
+export interface DeepAgentWorkspace {
+  status: 'success' | 'warning' | 'error';
+  summary: string;
+  nextActions: string[];
+  artifacts: string[];
+  checkpointVersion: number | null;
+  todos: DeepAgentWorkspaceTodo[];
+  files: DeepAgentWorkspaceFile[];
+}
+
+export interface DeepAgentWorkspaceFileView {
+  status: 'success' | 'warning' | 'error';
+  summary: string;
+  nextActions: string[];
+  artifacts: string[];
+  path: string;
+  size: number;
+  content: string;
+}
+
 export interface AgentRunResponse {
   assistantMessage: string;
   tokenUsage: { promptTokens: number; completionTokens: number; totalTokens: number } | null;

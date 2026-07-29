@@ -5,6 +5,26 @@
 
 ---
 
+## [2026-07-29] feat: DeepAgent 会话工作区可视化
+
+- 复用 Yuxi Agent 状态观察边界，为现有会话增加稳定的工作区摘要：返回执行状态、
+  进度说明、下一步建议、待办和虚拟文件索引，但不在列表中内联文件正文。
+- 新增工作区索引与单文件只读接口；大型工具结果和普通工作文件均按精确虚拟路径
+  按需读取，文件不存在时返回可恢复的刷新、重试和停止建议。
+- 会话列表、详情和归档响应不再返回完整 `deepAgentCheckpoint`，只暴露版本及
+  待办/文件数量；持久化 metadata 保持原样，不删除或迁移用户数据。
+- 工作台桌面端右侧新增工作进度面板，移动端提供抽屉入口，可查看待办状态、文件
+  类型和正文，并处理加载失败与重试。
+- 新增专项接口与数据边界测试；默认继续使用 JSON/Markdown/本地会话，不要求
+  PostgreSQL 或 Redis。
+
+**影响面**：新增
+`GET /api/v1/agentapp/agent/sessions/{session_id}/workspace` 和
+`GET /api/v1/agentapp/agent/sessions/{session_id}/workspace/file?path=...`；
+调整会话响应 metadata 的展示形态及工作台右侧面板。无数据库表、环境变量或数据迁移。
+
+---
+
 ## [2026-07-29] fix: 修复 vendored Nomi Git 门岗入口
 
 - 根仓库的 `pre-commit` / `commit-msg` 钩子由 Nomi 安装器生成，但默认引用根
