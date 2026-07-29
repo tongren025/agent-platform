@@ -5,6 +5,18 @@
 
 ---
 
+## [2026-07-29] fix: 修复 vendored Nomi Git 门岗入口
+
+- 根仓库的 `pre-commit` / `commit-msg` 钩子由 Nomi 安装器生成，但默认引用根
+  `scripts/`，实际扫描器随 vendored 源码位于 `third_party/nomi/scripts/`，导致
+  正常提交在安全检查前因模块不存在而失败。
+- 新增两个极薄转发入口，继续执行原有敏感信息扫描与进度更新检查；不跳过、不复制
+  或修改上游检查逻辑。
+
+**影响面**：仅修复本地 Git 提交门岗的脚本入口；无运行时、API、数据库或前端变化。
+
+---
+
 ## [2026-07-29] feat: DeepAgent 大型工具结果自动卸载
 
 - 直接迁入 Yuxi SummaryMiddleware 的 L1 工具结果精简算法：按近似 token 阈值
