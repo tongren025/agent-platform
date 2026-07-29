@@ -5,6 +5,20 @@
 
 ---
 
+## [2026-07-29] fix: 修复生产环境 Nomi 画布返回主站 404
+
+- Docker 运行时镜像显式复制并校验 `web/public/nomi/`，避免独立画布静态包缺失时
+  `/nomi/index.html` 被主站 SPA fallback 吞掉。
+- 后端将 `/nomi` 作为独立静态应用挂载，Nomi 的入口、资源和 hash 路由不再经过
+  主站页面回退。
+- 前端构建门禁与部署后公网健康检查同时验证 Nomi HTML 标题；以后主站正常但画布
+  丢失时 CI/CD 会明确失败，不再产生“部署成功”的假绿。
+
+**影响面**：调整 Docker 镜像、FastAPI 静态路由、CI/CD 发布验收和部署说明；
+无 API、数据库或环境变量迁移。
+
+---
+
 ## [2026-07-29] chore: 固定引入 Yuxi Agent Runtime 源码模块
 
 - 从 `xerrors/Yuxi` 的 `main` 分支固定提交
@@ -15,7 +29,10 @@
 - 新增 `UPSTREAM.md` 与 `INTEGRATION.md`，明确来源、同步规则、独立运行边界
   以及与现有漫剧生产系统的职责划分。
 - 当前尚未把 Yuxi 接入根 Compose，也未替换现有 Agent 运行链；后续先以
-  LITE 独立服务验证，再增加最薄的 API/Artifact 映射层。
+  本地单人模式验证，再增加最薄的 API/Artifact 映射层。
+- 明确基础设施降级策略：默认不要求 PostgreSQL、Redis、MinIO、Milvus 或 Neo4j，
+  会话、记忆、配置与产物使用 JSON/Markdown/本地文件，任务进程内执行；后台配置
+  对应服务后再启用数据库仓储、持久任务队列和重型知识能力。
 
 **影响面**：新增独立源码模块和文档，不改变现有 API、数据库、配置、前端与部署行为。
 

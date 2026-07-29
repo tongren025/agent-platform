@@ -44,6 +44,10 @@ COPY data/ ./data/
 # 注意:vite 的 outDir 是 ../wwwroot(web/vite.config.ts),stage1 WORKDIR=/web,
 # 产物实际落在 /wwwroot 而不是 /web/dist——COPY 源写错会直接构建失败。
 COPY --from=web-build /wwwroot/ ./wwwroot/
+# Nomi 是主站 public 下的独立静态应用。显式再复制一次并在镜像构建期校验，
+# 避免 Vite public 复制或 Docker 缓存异常时静默退回主站 SPA 404。
+COPY web/public/nomi/ ./wwwroot/nomi/
+RUN test -f ./wwwroot/nomi/index.html
 
 EXPOSE 8000 8001
 

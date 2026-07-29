@@ -163,9 +163,11 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ### 可选 Yuxi Agent Runtime（集成中）
 
-`modules/yuxi-runtime/` 固定保存 Yuxi 上游源码，计划先以独立 LITE 服务验证
-AgentRun、Checkpoint、Skills/MCP、子智能体、沙盒与 Artifact 能力，再通过薄适配层
-接入现有数字员工节点。当前模块尚未加入默认 Compose，也不会改变现有启动方式；
+`modules/yuxi-runtime/` 固定保存 Yuxi 上游源码，计划把 AgentRun、Checkpoint、
+Skills/MCP、子智能体、沙盒与 Artifact 能力接入现有数字员工节点。默认单人模式继续
+使用 JSON/Markdown、本地文件和进程内执行，不要求 PostgreSQL、Redis、MinIO、
+Milvus 或 Neo4j；在后台配置对应服务后再启用数据库仓储、持久队列和重型知识能力。
+当前模块尚未加入默认 Compose，也不会改变现有启动方式；
 来源、固定版本与职责边界见
 [`modules/yuxi-runtime/UPSTREAM.md`](modules/yuxi-runtime/UPSTREAM.md) 和
 [`modules/yuxi-runtime/INTEGRATION.md`](modules/yuxi-runtime/INTEGRATION.md)。
@@ -248,6 +250,10 @@ docker compose up -d --build
 ```
 
 前端 http://localhost:8000 · 管理端 http://localhost:8001（默认 `admin/admin123`，生产请改）· Grafana http://localhost:3000
+
+短剧无限画布入口为 http://localhost:8000/canvas，独立 Nomi 子应用位于
+http://localhost:8000/nomi/index.html#/studio。Docker 镜像构建和生产健康检查都会校验
+`wwwroot/nomi/index.html`，缺少画布静态包时发布会直接失败，不再静默显示主站 404。
 
 画布中心零配置即可使用 React Flow、Excalidraw、Fabric.js 和 Rete.js。两个外部模式按需配置：
 
