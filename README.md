@@ -122,13 +122,12 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **卡片系统** — 每张卡片支持内容、提示词、图片、视频、元数据，支持 Markdown 渲染
 
 ### 短剧无限画布（`/canvas`）
-- **完整搬入 Nomi 工作台** — `/canvas` 默认加载 Nomi v0.17.0 的完整 Web 工作台，不再用多个通用画图库拼装演示页；保留上游画布交互、设计系统和项目工作流
-- **短剧节点生产** — 剧本/提示词可生成图片与视频节点，节点支持连线、分组、复制粘贴、撤销重做、自动整理、缩放导航、素材拖入和跨节点参考
-- **时间线与预览** — 画布下方可展开多轨时间线，图片、视频、字幕和音频片段支持拖放、裁切、吸附、播放头定位，并可进入预览工作区
-- **素材与导演能力** — 保留项目素材库、角色/场景定妆卡、分镜计划、批量生成、3D 站位与运镜相关界面；Web 环境使用 Nomi 自带的 localStorage 项目降级
-- **复用平台模型与任务** — 网页版模型选择器直接读取平台 OpenRouter 图片/视频模型，图片节点走平台落图服务，视频节点走平台异步生成与轮询，不需要单独配置 Nomi Electron
-- **兼容旧画布** — 原 React Flow 生产画布仍可从右上角“旧版画布”进入，已有画布数据不会删除；它不再作为 `/canvas` 默认界面
-- **源码与许可证** — 完整上游源码固定在 `third_party/nomi/`（commit `4afb0645`，Apache-2.0），构建产物放在 `web/public/nomi/`，随主站静态资源发布
+- **主站原生集成** — `/canvas` 直接渲染 Agent Studio React 画布，不使用 iframe、独立 HTML、上游 Logo 或第三方项目库
+- **平台数字员工** — 顶栏直接选择系统内置员工；剧本、设定、分镜和提示词节点的 AI 派生统一经过员工角色、知识、工具与模型路由
+- **平台媒体模型** — 图片节点只读取后台配置并实时确认可用的平台图片模型，生成结果落入平台上传目录并随画布保存
+- **短剧节点生产** — 支持数据、分镜、图片、便签与分组节点，以及连线、复制粘贴、撤销重做、自动整理、缩放导航、素材拖入、看板导入与回写
+- **服务端持久化** — 画布项目和节点保存在平台 `data/canvas/`，不使用浏览器 localStorage 冒充账号级项目同步
+- **上游代码边界** — `third_party/nomi/` 仅作为 Apache-2.0 源码研究与迁移基线，保留许可证和归属；上游品牌、Logo、独立页面和模型配置不进入 Agent Studio 产品界面
 
 ### 对话工作台
 - **实时对话** — 选择员工直接开始 AI 对话
@@ -254,9 +253,8 @@ docker compose up -d --build
 
 前端 http://localhost:8000 · 管理端 http://localhost:8001（默认 `admin/admin123`，生产请改）· Grafana http://localhost:3000
 
-短剧无限画布入口为 http://localhost:8000/canvas，独立 Nomi 子应用位于
-http://localhost:8000/nomi/index.html#/studio。Docker 镜像构建和生产健康检查都会校验
-`wwwroot/nomi/index.html`，缺少画布静态包时发布会直接失败，不再静默显示主站 404。
+短剧无限画布入口为 http://localhost:8000/canvas。它是主站原生页面，直接使用平台
+登录态、数字员工、模型目录、项目数据和任务 API，不加载任何第三方 HTML。
 
 画布中心零配置即可使用 React Flow、Excalidraw、Fabric.js 和 Rete.js。两个外部模式按需配置：
 

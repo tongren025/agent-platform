@@ -159,12 +159,6 @@ if wwwroot.exists():
     if (wwwroot / "assets").exists():
         app.mount("/assets", StaticFiles(directory=str(wwwroot / "assets")), name="assets")
 
-    # Nomi 是有自己 index.html、hash 路由和 assets 的独立 SPA。单独挂载可避免
-    # 子应用文件缺失或路由解析异常时被主站 fallback 吞掉，最终只显示主站 404。
-    nomi_root = wwwroot / "nomi"
-    if nomi_root.exists():
-        app.mount("/nomi", StaticFiles(directory=str(nomi_root), html=True), name="nomi")
-
     # index.html 里引用的是带内容 hash 的 bundle(assets/index-<hash>.js)。
     # 一旦浏览器把 index.html 缓存住，就会一直去取旧 hash 的 bundle——
     # 而重新 build 后旧 bundle 已被 emptyOutDir 删掉，于是 /assets 直接 404、页面白屏，

@@ -132,9 +132,47 @@ class FileJsonRegistry(Generic[T]):
 # ── 以下为各实体的具体注册表：只把泛型基类绑定到对应实体类型与存储目录 ──
 
 class SkillRegistryService(FileJsonRegistry[SkillDefinition]):
-    """技能定义注册表。"""
-    def __init__(self) -> None:
-        super().__init__(SkillDefinition, settings.agent.skill_dir)
+    """技能注册表：JSON 为可编辑覆盖层，同时只读发现一级 SKILL.md 技能包。"""
+
+    def __init__(self, data_dir: str | None = None) -> None:
+        super().__init__(
+            SkillDefinition,
+            data_dir if data_dir is not None else settings.agent.skill_dir,
+        )
+
+    def list_all(self) -> list[SkillDefinition]:
+        """合并 JSON 与 SKILL.md 包；同 code 时 JSON 优先且不修改技能目录。"""
+        items = super().list_all()
+        seen_codes = {item.code for item in items}
+
+        from app.services.skill_packages import discover_skill_packages
+
+        for package in discover_skill_packages(self._dir):
+            if package.code not in seen_codes:
+                items.append(package)
+                seen_codes.add(package.code)
+        items.sort(key=lambda item: (item.sort_order, item.name))
+        return items
+
+    def get(self, key: str) -> SkillDefinition | None:
+        """优先读取 JSON 覆盖；不存在时按目录名读取 SKILL.md 包。"""
+        json_item = super().get(key)
+        if json_item is not None:
+            return json_item
+
+        safe_key = self._sanitize_key(key)
+        package_dir = self._dir / safe_key
+        if not package_dir.is_dir():
+            return None
+
+        from app.services.skill_packages import load_skill_package
+
+        try:
+            package = load_skill_package(package_dir)
+        except Exception:
+            logger.warning("SKILL.md 技能包加载失败: %s", package_dir, exc_info=True)
+            return None
+        return package if package.code == safe_key else None
 
 
 class McpServerRegistryService(FileJsonRegistry[McpServerDefinition]):

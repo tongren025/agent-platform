@@ -48,8 +48,6 @@ jobs:
           npm ci
           npx tsc --noEmit
           npm run build
-          test -f ../wwwroot/nomi/index.html
-          grep -q '<title>Nomi</title>' ../wwwroot/nomi/index.html
 
   deploy:
     needs: [backend, frontend]
@@ -91,10 +89,9 @@ jobs:
             "${DEPLOY_USER}@${DEPLOY_HOST}" \
             "deploy ${GITHUB_SHA}"
 
-      - name: Verify public health and Nomi canvas
+      - name: Verify public health check
         shell: bash
         run: |
-          set -euo pipefail
           curl \
             --fail \
             --silent \
@@ -103,13 +100,3 @@ jobs:
             --retry-delay 5 \
             --retry-all-errors \
             https://aikirito.cloud/healthcheck
-
-          curl \
-            --fail \
-            --silent \
-            --show-error \
-            --retry 10 \
-            --retry-delay 5 \
-            --retry-all-errors \
-            https://aikirito.cloud/nomi/index.html \
-            | grep -q '<title>Nomi</title>'

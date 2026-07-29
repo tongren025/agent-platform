@@ -21,6 +21,7 @@ import {
   DownloadOutlined, ExpandOutlined, EditOutlined, HighlightOutlined,
   QuestionCircleOutlined, SendOutlined, SortAscendingOutlined,
   CameraOutlined, ZoomInOutlined, ZoomOutOutlined, MoreOutlined,
+  RobotOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
 import { useInputHabit } from '../hooks/useInputHabit';
@@ -30,6 +31,7 @@ import { CanvasCtx, DataNode, GroupNode, GROUP_COLORS, ImageNode, StoryboardNode
 import { LabeledEdge } from '../components/canvas/LabeledEdge';
 import { SelectionToolbar, type AlignAction } from '../components/canvas/SelectionToolbar';
 import { CanvasSidebar } from '../components/canvas/CanvasSidebar';
+import { resolveInsertionPosition } from '../components/canvas/resolveInsertionPosition';
 import { thumbUrl } from '../media';
 
 const { Text, Title } = Typography;
@@ -596,42 +598,56 @@ export default function Canvas({ embedded = false }: { embedded?: boolean }) {
   // ── 工具栏操作 ──
   const addDataNode = useCallback((pos?: { x: number; y: number }) => {
     takeSnapshot();
-    setNodes((ns) => [...ns, {
-      id: genId('d'), type: 'data',
-      position: pos || { x: 120 + Math.random() * 120, y: 120 + Math.random() * 120 },
-      data: { stage: '', title: '', content: '' },
-    }]);
+    setNodes((ns) => {
+      const position = pos || resolveInsertionPosition('data', { x: 120, y: 120 }, ns);
+      return [...ns, {
+        id: genId('d'), type: 'data',
+        position,
+        data: { stage: '', title: '', content: '' },
+      }];
+    });
   }, [setNodes, takeSnapshot]);
 
   const addStickyNote = useCallback((pos?: { x: number; y: number }) => {
     takeSnapshot();
-    setNodes((ns) => [...ns, {
-      id: genId('st'), type: 'sticky',
-      position: pos || { x: 140 + Math.random() * 100, y: 140 + Math.random() * 100 },
-      data: { content: '', color: 'yellow' },
-    }]);
+    setNodes((ns) => {
+      const position = pos || resolveInsertionPosition('sticky', { x: 140, y: 140 }, ns);
+      return [...ns, {
+        id: genId('st'), type: 'sticky',
+        position,
+        data: { content: '', color: 'yellow' },
+      }];
+    });
   }, [setNodes, takeSnapshot]);
 
   const addStoryboardNode = useCallback((pos?: { x: number; y: number }) => {
     takeSnapshot();
-    setNodes((ns) => [...ns, {
-      id: genId('sb'), type: 'storyboard',
-      position: pos || { x: 120 + Math.random() * 120, y: 120 + Math.random() * 120 },
-      data: {
-        shotNumber: '', duration: '', cameraType: '', cameraMove: '',
-        description: '', stage: 'storyboard', title: '',
-      },
-    }]);
+    setNodes((ns) => {
+      const position = pos || resolveInsertionPosition('storyboard', { x: 120, y: 120 }, ns);
+      return [...ns, {
+        id: genId('sb'), type: 'storyboard',
+        position,
+        data: {
+          shotNumber: '', duration: '', cameraType: '', cameraMove: '',
+          description: '', stage: 'storyboard', title: '',
+        },
+      }];
+    });
   }, [setNodes, takeSnapshot]);
 
   const addGroupNode = useCallback((x?: number, y?: number, w?: number, h?: number, label?: string) => {
     takeSnapshot();
-    setNodes((ns) => [...ns, {
-      id: genId('grp'), type: 'group',
-      position: { x: x ?? 60, y: y ?? 60 },
-      style: { width: w ?? 600, height: h ?? 400, zIndex: -1 },
-      data: { label: label || '' },
-    }]);
+    setNodes((ns) => {
+      const position = x != null && y != null
+        ? { x, y }
+        : resolveInsertionPosition('group', { x: 60, y: 60 }, ns);
+      return [...ns, {
+        id: genId('grp'), type: 'group',
+        position,
+        style: { width: w ?? 600, height: h ?? 400, zIndex: -1 },
+        data: { label: label || '' },
+      }];
+    });
   }, [setNodes, takeSnapshot]);
 
   const handleUpload = async (files: FileList | null) => {
@@ -1271,7 +1287,7 @@ export default function Canvas({ embedded = false }: { embedded?: boolean }) {
   if (isMobile) {
     return (
       <main aria-labelledby="canvas-mobile-title" style={{ maxWidth: 640, margin: '0 auto' }}>
-        <Title id="canvas-mobile-title" level={1} style={{ marginTop: 0, fontSize: 24 }}>整理素材</Title>
+        <Title id="canvas-mobile-title" level={1} style={{ marginTop: 0, fontSize: 24 }}>短剧无限画布</Title>
         <Alert
           showIcon
           type="info"
@@ -1354,7 +1370,7 @@ export default function Canvas({ embedded = false }: { embedded?: boolean }) {
       {/* ── 顶栏 ── */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
         <Space>
-          <Title id="canvas-title" level={1} style={{ fontSize: 20, margin: 0 }}>整理素材</Title>
+          <Title id="canvas-title" level={1} style={{ fontSize: 20, margin: 0 }}>短剧无限画布</Title>
           <Select
             value={currentId || undefined} onChange={setCurrentId}
             placeholder="选择画布" style={{ width: 180 }}
@@ -1407,8 +1423,21 @@ export default function Canvas({ embedded = false }: { embedded?: boolean }) {
 
           <Divider type="vertical" style={{ margin: '0 2px', height: 20 }} />
 
-          {/* ── 生图参数 ── */}
-          <Select value={model || undefined} onChange={setModel} placeholder="生图模型" style={{ width: 160 }}
+          {/* ── 平台员工与模型：画布不维护第三方账号或模型配置 ── */}
+          <Select
+            value={deriveEmp || undefined}
+            onChange={setDeriveEmp}
+            placeholder="执行员工"
+            aria-label="选择画布数字员工"
+            prefix={<RobotOutlined />}
+            style={{ width: 150 }}
+            options={empOptions}
+            showSearch
+            optionFilterProp="label"
+            allowClear
+            size="small"
+          />
+          <Select value={model || undefined} onChange={setModel} placeholder="平台生图模型" aria-label="选择平台生图模型" style={{ width: 180 }}
             options={modelOptions} showSearch optionFilterProp="label" allowClear size="small" />
           <Select value={size} onChange={setSize} style={{ width: 100 }} options={SIZES} size="small" />
 

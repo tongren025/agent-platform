@@ -24,7 +24,7 @@ class RegistryEntity(BaseModel):
 
 
 class SkillDefinition(RegistryEntity):
-    """技能定义：注入提示词的能力描述，支持树形子技能（children）。"""
+    """技能定义：支持 JSON 技能与只读 SKILL.md 包，并可声明工具/MCP/技能依赖。"""
     code: str = ""
     name: str = ""
     binding_code: Optional[str] = Field(None, alias="bindingCode")
@@ -33,6 +33,20 @@ class SkillDefinition(RegistryEntity):
     required: bool = False
     is_tree: bool = Field(False, alias="isTree")
     children: Optional[list[dict]] = None
+    source_type: str = Field("json", alias="sourceType")
+    skill_path: Optional[str] = Field(None, alias="skillPath")
+    tool_dependencies: list[str] = Field(
+        default_factory=list,
+        alias="toolDependencies",
+    )
+    mcp_dependencies: list[str] = Field(
+        default_factory=list,
+        alias="mcpDependencies",
+    )
+    skill_dependencies: list[str] = Field(
+        default_factory=list,
+        alias="skillDependencies",
+    )
 
     def get_key(self) -> str:
         """注册表主键：code。"""

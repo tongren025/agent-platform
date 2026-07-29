@@ -1,1 +1,0 @@
-import{a9 as o}from"./index-DIF2b1P9.js";const t=[["path",{d:"M5 12l14 0",key:"svg-0"}],["path",{d:"M13 18l6 -6",key:"svg-1"}],["path",{d:"M13 6l6 6",key:"svg-2"}]],e=o("outline","arrow-right","ArrowRight",t);export{e as I};
