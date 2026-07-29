@@ -7,6 +7,7 @@ Prefix: /api/v1/agentapp/agent  （保持前端路由不变）
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterable
 
 import openai
 import httpx
@@ -19,6 +20,26 @@ from app.dependencies import ai_service
 
 router = APIRouter(prefix="/api/v1/agentapp/agent")
 logger = logging.getLogger(__name__)
+
+_GPT_MODEL_DISPLAY_NAMES = {
+    "gpt-5.6-terra": "GPT-5.6 Terra（中档·视觉）",
+    "gpt-5.6-sol": "GPT-5.6 Sol（高档·视觉）",
+    "gpt-5.6-luna": "GPT-5.6 Luna（经济档·视觉）",
+}
+_GPT_MODEL_PRIORITY = {
+    "gpt-5.6-terra": 0,
+    "gpt-5.6-sol": 1,
+    "gpt-5.6-luna": 2,
+}
+_SPECIALIZED_GPT_MARKERS = (
+    "audio",
+    "codex",
+    "image",
+    "realtime",
+    "search-preview",
+    "transcribe",
+    "tts",
+)
 
 
 def _mask_key(key: str) -> str:
@@ -85,6 +106,30 @@ def _is_free_openrouter_model(item: dict) -> bool:
     prompt = float(pricing.get("prompt") or 0)
     completion = float(pricing.get("completion") or 0)
     return prompt == 0 and completion == 0
+
+
+def _is_general_gpt_model(model_id: str) -> bool:
+    """只保留适合普通文字/视觉对话的 GPT 模型，排除需专用 API 的模型。"""
+    normalized = model_id.strip().lower()
+    return normalized.startswith("gpt-") and not any(
+        marker in normalized for marker in _SPECIALIZED_GPT_MARKERS
+    )
+
+
+def _sorted_general_gpt_ids(model_ids: Iterable[str]) -> list[str]:
+    """去重并排序 GPT 模型；5.6 主力档位置顶，其余按模型 ID 排序。"""
+    unique = {
+        model_id.strip()
+        for model_id in model_ids
+        if isinstance(model_id, str) and _is_general_gpt_model(model_id)
+    }
+    return sorted(
+        unique,
+        key=lambda model_id: (
+            _GPT_MODEL_PRIORITY.get(model_id.lower(), 100),
+            model_id.lower(),
+        ),
+    )
 
 
 @router.get("/openrouter/models")
@@ -214,6 +259,81 @@ def add_ai_provider_model(name: str, body: ProviderModelBody):
     data["models"] = models
     saved = ai_service.store.save(data)
     return _ok(_safe_provider_data(saved, managed=True))
+
+
+@router.post("/ai-providers/{name}/models/sync-gpt")
+def sync_ai_provider_gpt_models(name: str):
+    """从供应商 /models 同步当前 Key 可用的通用 GPT 文字/视觉模型。"""
+    if BAD_KEY_RE.search(name):
+        raise HTTPException(status_code=400, detail="Invalid provider name")
+
+    provider = next(
+        (item for item in ai_service.list_all_providers() if item.name.lower() == name.lower()),
+        None,
+    )
+    if provider is None:
+        raise HTTPException(status_code=404, detail=f"Provider not found: {name}")
+    if not provider.api_key:
+        raise HTTPException(status_code=400, detail="API Key is required before syncing models")
+
+    try:
+        client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
+        catalog = client.models.list()
+        model_ids = [str(item.id) for item in catalog.data if getattr(item, "id", None)]
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"GPT models fetch failed: {exc}") from exc
+
+    synced_ids = _sorted_general_gpt_ids(model_ids)
+    if not synced_ids:
+        raise HTTPException(
+            status_code=502,
+            detail="Provider returned no general-purpose GPT models",
+        )
+
+    existing = ai_service.store.get(provider.name)
+    data = existing or {
+        "name": provider.name,
+        "endpoint": provider.endpoint,
+        "apiKey": provider.api_key,
+        "enabled": provider.enabled,
+        "models": list(provider.models),
+    }
+    previous_by_id = {
+        str(model.get("modelId") or model.get("modelName")): model
+        for model in data.get("models") or []
+        if model.get("modelId") or model.get("modelName")
+    }
+    previous_gpt_ids = {
+        model_id for model_id in previous_by_id if _is_general_gpt_model(model_id)
+    }
+    preserved_models = [
+        model
+        for model_id, model in previous_by_id.items()
+        if not _is_general_gpt_model(model_id)
+    ]
+    models = []
+    for model_id in synced_ids:
+        previous = previous_by_id.get(model_id, {})
+        models.append({
+            "modelName": _GPT_MODEL_DISPLAY_NAMES.get(
+                model_id.lower(),
+                previous.get("modelName") or model_id,
+            ),
+            "modelId": model_id,
+            "timeoutMinutes": previous.get("timeoutMinutes") or 10,
+        })
+    models.extend(preserved_models)
+
+    data["models"] = models
+    saved = ai_service.store.save(data)
+    synced_id_set = set(synced_ids)
+    return _ok({
+        "provider": _safe_provider_data(saved, managed=True),
+        "syncedCount": len(models),
+        "gptCount": len(synced_ids),
+        "addedCount": len(synced_id_set - previous_gpt_ids),
+        "removedCount": len(previous_gpt_ids - synced_id_set),
+    })
 
 
 @router.get("/ai-providers/{name}")

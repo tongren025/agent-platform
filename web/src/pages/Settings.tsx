@@ -55,6 +55,7 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
 
   const [testingName, setTestingName] = useState<string | null>(null);
+  const [syncingName, setSyncingName] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<{ name: string; success: boolean; reply?: string; error?: string } | null>(null);
 
   const fetchAll = async () => {
@@ -162,6 +163,22 @@ export default function Settings() {
     }
   };
 
+  const handleSyncGptModels = async (name: string) => {
+    setSyncingName(name);
+    try {
+      const result = await api.syncAiProviderGptModels(name);
+      message.success(
+        `已同步 ${result.gptCount} 个 GPT 文字/视觉模型`
+        + (result.addedCount ? `，新增 ${result.addedCount} 个` : ''),
+      );
+      await fetchAll();
+    } catch (e: any) {
+      message.error(`模型同步失败: ${e.message}`);
+    } finally {
+      setSyncingName(null);
+    }
+  };
+
   if (loading) return <Spin size="large" style={{ display: 'block', marginTop: 120, textAlign: 'center' }} />;
 
   return (
@@ -195,6 +212,14 @@ export default function Settings() {
               }
               extra={
                 <Space>
+                  <Button
+                    size="small"
+                    icon={<CloudServerOutlined />}
+                    loading={syncingName === p.name}
+                    onClick={() => handleSyncGptModels(p.name)}
+                  >
+                    同步 GPT 模型
+                  </Button>
                   <Button
                     size="small"
                     icon={<ExperimentOutlined />}
@@ -251,7 +276,7 @@ export default function Settings() {
                   size="small"
                   rowKey={(r) => r.modelId || r.modelName}
                   dataSource={p.models}
-                  pagination={false}
+                  pagination={p.models.length > 20 ? { pageSize: 20, showSizeChanger: false } : false}
                   style={{ marginTop: 8 }}
                   columns={[
                     { title: '模型名称', dataIndex: 'modelName', render: (v: string) => <Text strong>{v}</Text> },

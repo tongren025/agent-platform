@@ -273,6 +273,11 @@ export const api = {
     request<any>(`/agent/ai-providers/${encodeURIComponent(name)}`, { method: 'DELETE' }),
   testAiProvider: (name: string) =>
     request<any>(`/agent/ai-providers/${encodeURIComponent(name)}/test`, { method: 'POST' }),
+  syncAiProviderGptModels: (name: string) =>
+    request<{ provider: any; syncedCount: number; gptCount: number; addedCount: number; removedCount: number }>(
+      `/agent/ai-providers/${encodeURIComponent(name)}/models/sync-gpt`,
+      { method: 'POST' },
+    ),
   listOpenRouterModels: () => request<any[]>('/agent/openrouter/models'),
   addAiProviderModel: (name: string, data: { modelName: string; modelId: string; timeoutMinutes?: number }) =>
     request<any>(`/agent/ai-providers/${encodeURIComponent(name)}/models`, { method: 'POST', body: JSON.stringify(data) }),

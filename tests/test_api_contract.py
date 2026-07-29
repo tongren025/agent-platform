@@ -178,3 +178,118 @@ def test_openrouter_models_empty_catalog_does_not_prune(app_client, monkeypatch)
     resp = app_client.get("/api/v1/agentapp/agent/openrouter/models")
     assert resp.status_code == 502
     assert save_called is False
+
+
+def test_sync_gpt_models_keeps_general_chat_models(app_client, monkeypatch):
+    """同步目录应保留通用 GPT 文字/视觉模型，并排除需专用接口的模型。"""
+    provider = SimpleNamespace(
+        name="openai",
+        endpoint="https://api.openai.com/v1",
+        api_key="sk-test",
+        enabled=True,
+        models=[
+            {
+                "modelName": "旧名称",
+                "modelId": "gpt-5.6-terra",
+                "timeoutMinutes": 30,
+            },
+            {"modelName": "已下线", "modelId": "gpt-old"},
+            {"modelName": "自定义模型", "modelId": "vendor-chat"},
+        ],
+    )
+    managed = {
+        "name": provider.name,
+        "endpoint": provider.endpoint,
+        "apiKey": provider.api_key,
+        "enabled": True,
+        "models": list(provider.models),
+    }
+    saved = []
+
+    class FakeModels:
+        def list(self):
+            return SimpleNamespace(data=[
+                SimpleNamespace(id="gpt-5.6-sol"),
+                SimpleNamespace(id="gpt-5.6-terra"),
+                SimpleNamespace(id="gpt-image-2"),
+                SimpleNamespace(id="gpt-realtime-2"),
+                SimpleNamespace(id="text-embedding-3-small"),
+            ])
+
+    class FakeClient:
+        def __init__(self, **_kwargs):
+            self.models = FakeModels()
+
+    monkeypatch.setattr("app.api.ai_providers.openai.OpenAI", FakeClient)
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.list_all_providers",
+        lambda: [provider],
+    )
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.store.get",
+        lambda _name: dict(managed),
+    )
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.store.save",
+        lambda data: saved.append(data) or data,
+    )
+
+    resp = app_client.post(
+        "/api/v1/agentapp/agent/ai-providers/openai/models/sync-gpt"
+    )
+    assert resp.status_code == 200
+    body = resp.json()["data"]
+    assert body["syncedCount"] == 3
+    assert body["gptCount"] == 2
+    assert body["addedCount"] == 1
+    assert body["removedCount"] == 1
+    assert [model["modelId"] for model in saved[0]["models"]] == [
+        "gpt-5.6-terra",
+        "gpt-5.6-sol",
+        "vendor-chat",
+    ]
+    assert saved[0]["models"][0] == {
+        "modelName": "GPT-5.6 Terra（中档·视觉）",
+        "modelId": "gpt-5.6-terra",
+        "timeoutMinutes": 30,
+    }
+
+
+def test_sync_gpt_models_empty_result_does_not_overwrite(app_client, monkeypatch):
+    """上游没有通用 GPT 模型时应报错，不能清空现有配置。"""
+    provider = SimpleNamespace(
+        name="openai",
+        endpoint="https://api.openai.com/v1",
+        api_key="sk-test",
+        enabled=True,
+        models=[{"modelName": "GPT", "modelId": "gpt-5.6-terra"}],
+    )
+    save_called = False
+
+    class FakeModels:
+        def list(self):
+            return SimpleNamespace(data=[SimpleNamespace(id="gpt-image-2")])
+
+    class FakeClient:
+        def __init__(self, **_kwargs):
+            self.models = FakeModels()
+
+    def fail_if_saved(_data):
+        nonlocal save_called
+        save_called = True
+
+    monkeypatch.setattr("app.api.ai_providers.openai.OpenAI", FakeClient)
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.list_all_providers",
+        lambda: [provider],
+    )
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.store.save",
+        fail_if_saved,
+    )
+
+    resp = app_client.post(
+        "/api/v1/agentapp/agent/ai-providers/openai/models/sync-gpt"
+    )
+    assert resp.status_code == 502
+    assert save_called is False
