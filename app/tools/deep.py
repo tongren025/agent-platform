@@ -9,7 +9,12 @@ from datetime import datetime, timezone
 
 from app.config import settings
 from app.models.conversation import PendingApprovalDetail
-from app.services.chat_response import normalize_chat_completion
+from app.runtime.loop import (
+    AgentLoopOptions,
+    ToolHandler,
+    run_responses_agent_loop,
+)
+from app.services.chat_response import select_text_generation_model
 from app.tools.base import ToolContext, register_handler
 
 logger = logging.getLogger(__name__)
@@ -331,102 +336,78 @@ class TaskHandler:
             client, model_name = ai_service.get_client(model_id)
         except ValueError:
             providers = ai_service.list_providers()
-            if not providers or not providers[0].models:
-                return json.dumps({"error": "No AI provider available for sub-task."})
-            first_model = providers[0].models[0]
-            client, model_name = ai_service.get_client(
-                first_model.get("modelId", first_model.get("modelName", ""))
+            fallback_model = next(
+                (
+                    select_text_generation_model(provider.models)
+                    for provider in providers
+                    if provider.models
+                    and select_text_generation_model(provider.models)
+                ),
+                "",
             )
+            if not fallback_model:
+                return json.dumps({"error": "No AI provider available for sub-task."})
+            client, model_name = ai_service.get_client(fallback_model)
 
         max_iterations = 8
-        messages: list[dict] = [
-            {
-                "role": "system",
-                "content": (
-                    f"You are a {subagent_type} sub-agent. "
-                    "Complete the given task using the available virtual filesystem tools. "
-                    "When done, reply with your final answer as plain text."
-                ),
-            },
-            {"role": "user", "content": instruction},
-        ]
-
-        openai_tools = []
+        responses_tools: list[ToolHandler] = []
         for code in _SUBTASK_ALLOWED_TOOLS:
-            openai_tools.append({
-                "type": "function",
-                "function": {
-                    "name": code,
-                    "description": f"Virtual filesystem tool: {code}",
-                    "parameters": {"type": "object", "properties": {}},
-                },
-            })
+            handler = get_handler(code)
+            if handler is None:
+                continue
 
-        final_text = ""
-
-        for iteration in range(max_iterations):
-            try:
-                response = client.chat.completions.create(
-                    model=model_name,
-                    messages=messages,
-                    tools=openai_tools if openai_tools else None,
-                    temperature=0.3,
-                    max_tokens=2048,
+            async def call_tool(
+                arguments_json: str,
+                *,
+                tool_code: str = code,
+                tool_handler=handler,
+            ) -> str:
+                sub_ctx = ToolContext(
+                    tool_code=tool_code,
+                    arguments_json=arguments_json or "{}",
+                    employee_key=ctx.employee_key,
+                    deep_state=state,
                 )
-            except Exception as exc:
-                logger.exception("Sub-agent LLM call failed at iteration %d", iteration)
-                return json.dumps({
-                    "error": f"Sub-agent LLM call failed: {exc}",
-                })
+                try:
+                    return await tool_handler.handle(sub_ctx)
+                except Exception as exc:
+                    return json.dumps({"error": str(exc)})
 
-            response = normalize_chat_completion(response)
-            choice = response.choices[0]
-            assistant_msg = choice.message
+            responses_tools.append(ToolHandler(
+                name=code,
+                description=f"Virtual filesystem tool: {code}",
+                input_schema={"type": "object", "properties": {}},
+                handler=call_tool,
+            ))
 
-            if not assistant_msg.tool_calls:
-                final_text = assistant_msg.content or ""
-                break
-
-            messages.append(assistant_msg.model_dump())
-
-            for tc in assistant_msg.tool_calls:
-                fn_name = tc.function.name
-
-                if fn_name not in _SUBTASK_ALLOWED_TOOLS:
-                    tool_result = json.dumps({
-                        "error": f"Tool {fn_name!r} is not available to sub-agents.",
-                    })
-                else:
-                    handler = get_handler(fn_name)
-                    if handler is None:
-                        tool_result = json.dumps({"error": f"Tool {fn_name!r} not found."})
-                    else:
-                        sub_ctx = ToolContext(
-                            tool_code=fn_name,
-                            arguments_json=tc.function.arguments or "{}",
-                            employee_key=ctx.employee_key,
-                            deep_state=state,
-                        )
-                        try:
-                            tool_result = await handler.handle(sub_ctx)
-                        except Exception as exc:
-                            tool_result = json.dumps({"error": str(exc)})
-
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": tc.id,
-                    "content": tool_result,
-                })
-        else:
-            final_text = (
-                "[Sub-agent reached maximum iterations without a final answer. "
-                "Last tool results were returned above.]"
-            )
+        options = AgentLoopOptions(
+            max_iterations=max_iterations,
+            temperature=0.3,
+            max_tokens=2048,
+            model=model_name,
+            reasoning_effort="medium" if "gpt-5" in model_name.lower() else None,
+            api_surface="responses",
+        )
+        loop_result = await run_responses_agent_loop(
+            client=client,
+            options=options,
+            system_prompt=(
+                f"You are a {subagent_type} sub-agent. "
+                "Complete the given task using the available virtual filesystem tools. "
+                "When done, reply with your final answer as plain text."
+            ),
+            user_message=instruction,
+            tools=responses_tools,
+        )
+        if not loop_result.success:
+            return json.dumps({
+                "error": loop_result.final_text or "Sub-agent Responses call failed",
+            })
 
         return json.dumps({
             "status": "ok",
             "subagent_type": subagent_type,
-            "result": final_text,
+            "result": loop_result.final_text,
         }, ensure_ascii=False)
 
 

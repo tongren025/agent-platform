@@ -62,7 +62,7 @@ def provider_store(tmp_path, monkeypatch):
 
 
 # ── 土台：LLM 桩 ───────────────────────────────────────────────────
-# 真实调用路径统一是 `client.chat.completions.create(...)`，同步与异步两种客户端都用。
+# 真实调用路径统一是 `client.responses.create(...)`；Chat 桩只保留给显式旧代理兼容测试。
 # 这里给出与 openai SDK 同构的假客户端，通过替换单例 ai_service 的取客户端方法注入。
 
 class _FakeMessage:
@@ -102,8 +102,29 @@ class _FakeChat:
         self.completions = _FakeCompletions(content, is_async)
 
 
+class _FakeResponse:
+    def __init__(self, content: str) -> None:
+        self.output_text = content
+        self.output = []
+        self.usage = None
+
+
+class _FakeResponses:
+    def __init__(self, content: str, is_async: bool) -> None:
+        self._content = content
+        self._is_async = is_async
+
+    def create(self, **kwargs):
+        if self._is_async:
+            async def _coro():
+                return _FakeResponse(self._content)
+            return _coro()
+        return _FakeResponse(self._content)
+
+
 class _FakeClient:
     def __init__(self, content: str = "stubbed", is_async: bool = False) -> None:
+        self.responses = _FakeResponses(content, is_async)
         self.chat = _FakeChat(content, is_async)
 
 

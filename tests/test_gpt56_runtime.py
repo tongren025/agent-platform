@@ -3,6 +3,8 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from types import SimpleNamespace
 
+import httpx
+import openai
 import pytest
 
 from app.models.runtime import (
@@ -15,6 +17,7 @@ from app.runtime.loop import (
     AgentLoopResult,
     AgentLoopOptions,
     ToolHandler,
+    _create_response_with_retry,
     _create_with_retry,
     run_agent_loop,
     run_responses_agent_loop,
@@ -121,6 +124,45 @@ class _ResponsesClient:
 
 
 @pytest.mark.asyncio
+async def test_responses_fallback_only_sends_reasoning_to_gpt56():
+    calls = []
+
+    class FallbackResponses:
+        def create(self, **kwargs):
+            calls.append(kwargs)
+            if kwargs["model"] == "gpt-5.6-sol":
+                request = httpx.Request(
+                    "POST",
+                    "https://api.openai.com/v1/responses",
+                )
+                response = httpx.Response(404, request=request)
+                raise openai.NotFoundError(
+                    "not found",
+                    response=response,
+                    body=None,
+                )
+            return SimpleNamespace(output_text="备用成功", output=[])
+
+    client = SimpleNamespace(responses=FallbackResponses())
+    result = await _create_response_with_retry(
+        client,
+        {"input": "hi"},
+        False,
+        AgentLoopOptions(
+            model="gpt-5.6-sol",
+            fallback_models=["gpt-4o"],
+            reasoning_effort="high",
+            max_retries=0,
+        ),
+        1,
+    )
+
+    assert result.output_text == "备用成功"
+    assert calls[0]["reasoning"] == {"effort": "high"}
+    assert "reasoning" not in calls[1]
+
+
+@pytest.mark.asyncio
 async def test_responses_loop_replays_tool_output_and_preserves_reasoning():
     client = _ResponsesClient()
     received = []
@@ -161,7 +203,7 @@ async def test_responses_loop_replays_tool_output_and_preserves_reasoning():
 
 
 @pytest.mark.asyncio
-async def test_runner_safely_falls_back_when_proxy_lacks_responses(
+async def test_runner_only_falls_back_when_proxy_compatibility_is_explicit(
     monkeypatch,
 ):
     calls = []
@@ -201,6 +243,7 @@ async def test_runner_safely_falls_back_when_proxy_lacks_responses(
             default_model_policy={
                 "model_id": "gpt-5.6-sol",
                 "reasoning_effort": "high",
+                "allow_chat_fallback": True,
             },
         ),
         compiled_prompt=PromptCompileResult(system_prompt="qa"),
@@ -219,6 +262,53 @@ async def test_runner_safely_falls_back_when_proxy_lacks_responses(
     assert result.success is True
     assert result.assistant_message == "已完成"
     assert calls == ["responses", "chat"]
+
+
+@pytest.mark.asyncio
+async def test_runner_does_not_silently_fallback_to_chat(monkeypatch):
+    calls = []
+
+    async def responses_loop(**_kwargs):
+        calls.append("responses")
+        return AgentLoopResult(
+            success=False,
+            final_text="404 /responses endpoint not found",
+        )
+
+    async def chat_loop(**_kwargs):
+        calls.append("chat")
+        return AgentLoopResult(success=True, final_text="不应执行")
+
+    @asynccontextmanager
+    async def no_mcp(_servers):
+        yield []
+
+    monkeypatch.setattr(
+        runner.ai_service,
+        "get_client",
+        lambda *_args, **_kwargs: (SimpleNamespace(), "gpt-5.6-sol"),
+    )
+    monkeypatch.setattr(runner, "run_responses_agent_loop", responses_loop)
+    monkeypatch.setattr(runner, "run_agent_loop", chat_loop)
+    monkeypatch.setattr(runner, "mcp_tool_handlers", no_mcp)
+
+    result = await runner.run_agent(
+        snapshot=EmployeeRuntimeSnapshot(
+            employee_key="qa",
+            default_model_policy={
+                "model_id": "gpt-5.6-sol",
+                "reasoning_effort": "high",
+            },
+        ),
+        compiled_prompt=PromptCompileResult(system_prompt="qa"),
+        user_message="检查图片",
+        visible_tools=[],
+        visible_mcp_servers=[],
+        employee_key="qa",
+    )
+
+    assert result.success is False
+    assert calls == ["responses"]
 
 
 @pytest.mark.asyncio

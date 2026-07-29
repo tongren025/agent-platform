@@ -19,7 +19,7 @@ from pydantic import BaseModel
 
 from app.api.common import ok as _ok
 from app.config import BASE_DIR
-from app.services.chat_response import extract_chat_content
+from app.services.model_generation import generate_response_text
 
 router = APIRouter(prefix="/api/v1/agentapp/trend-sources", tags=["trend-sources"])
 
@@ -375,15 +375,16 @@ async def translate_titles(req: TranslateRequest):
         f"{titles_text}"
     )
     try:
-        resp = await asyncio.to_thread(
-            lambda: client.chat.completions.create(
+        text = await asyncio.to_thread(
+            lambda: generate_response_text(
+                client=client,
                 model=model,
-                messages=[{"role": "user", "content": prompt}],
+                input_data=prompt,
                 temperature=0.1,
-                max_tokens=4000,
+                max_output_tokens=4000,
             )
         )
-        text = extract_chat_content(resp).strip()
+        text = text.strip()
         # 提取 JSON 数组
         start = text.find("[")
         end = text.rfind("]") + 1

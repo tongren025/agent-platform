@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from app.config import BASE_DIR
-from app.services.chat_response import extract_chat_content
+from app.services.model_generation import generate_response_text
 
 logger = logging.getLogger(__name__)
 
@@ -254,18 +254,17 @@ async def generate_digest(force: bool = False) -> dict:
 
     from app.dependencies import ai_service
     client, model = ai_service.get_default_client()
-    resp = await asyncio.to_thread(
-        lambda: client.chat.completions.create(
+    raw = await asyncio.to_thread(
+        lambda: generate_response_text(
+            client=client,
             model=model,
-            messages=[
-                {"role": "system", "content": "你是情报筛选助手。只返回 JSON 数组，不要解释。宁缺毋滥。"},
-                {"role": "user", "content": prompt},
-            ],
+            instructions="你是情报筛选助手。只返回 JSON 数组，不要解释。宁缺毋滥。",
+            input_data=prompt,
             temperature=0.2,
-            max_tokens=2000,
+            max_output_tokens=2000,
         )
     )
-    raw = extract_chat_content(resp) or "[]"
+    raw = raw or "[]"
     start, end = raw.find("["), raw.rfind("]") + 1
     if start < 0 or end <= start:
         raise ValueError("LLM 未返回 JSON 数组")

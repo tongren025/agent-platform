@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 from app.dependencies import ai_service
 from app.services import openrouter_media
-from app.services.chat_response import extract_chat_content
+from app.services.model_generation import generate_response_text
 
 
 _MAX_VISUAL_INPUTS = 12
@@ -127,42 +127,6 @@ def _parse_report(text: str) -> dict | str:
     return parsed if isinstance(parsed, dict) else text
 
 
-def _extract_responses_text(response: object) -> str:
-    """提取 Responses API 文本，兼容 SDK 对象和 OpenAI 兼容字典。"""
-    output_text = getattr(response, "output_text", None)
-    if isinstance(output_text, str):
-        return output_text
-    if isinstance(response, dict):
-        direct_text = response.get("output_text")
-        if isinstance(direct_text, str):
-            return direct_text
-        output = response.get("output", [])
-    else:
-        output = getattr(response, "output", [])
-
-    text_parts: list[str] = []
-    for item in output or []:
-        content = (
-            item.get("content", [])
-            if isinstance(item, dict)
-            else getattr(item, "content", [])
-        )
-        for part in content or []:
-            part_type = (
-                part.get("type")
-                if isinstance(part, dict)
-                else getattr(part, "type", None)
-            )
-            text = (
-                part.get("text")
-                if isinstance(part, dict)
-                else getattr(part, "text", None)
-            )
-            if part_type in {"output_text", "text"} and isinstance(text, str):
-                text_parts.append(text)
-    return "\n".join(text_parts)
-
-
 def inspect_media(
     *,
     model: str,
@@ -226,62 +190,35 @@ def inspect_media(
         '"expected":"","rework":""}],"summary":""}}。'
         "有 critical/major 问题必须 fail；证据无法支持结论必须 blocked。"
     )
-    if _is_gpt_56_model(resolved_model):
-        response = client.responses.create(
-            model=resolved_model,
-            input=[
-                {
-                    "role": "system",
-                    "content": [
-                        {
-                            "type": "input_text",
-                            "text": "严谨审片，报告必须可追溯到实际视觉证据。",
-                        }
-                    ],
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "input_text", "text": inspection_prompt},
-                        *[
-                            {
-                                "type": "input_image",
-                                "image_url": image_url,
-                                "detail": "high",
-                            }
-                            for image_url in visual_inputs
-                        ],
-                    ],
-                },
-            ],
-            reasoning={"effort": reasoning_effort or "high"},
-            max_output_tokens=4096,
-            timeout=120,
-        )
-        report_text = _extract_responses_text(response)
-    else:
-        content: list[dict] = [{"type": "text", "text": inspection_prompt}]
-        content.extend(
+    report_text = generate_response_text(
+        client=client,
+        model=resolved_model,
+        instructions="严谨审片，报告必须可追溯到实际视觉证据。",
+        input_data=[
             {
-                "type": "image_url",
-                "image_url": {"url": image_url, "detail": "high"},
+                "role": "user",
+                "content": [
+                    {"type": "input_text", "text": inspection_prompt},
+                    *[
+                        {
+                            "type": "input_image",
+                            "image_url": image_url,
+                            "detail": "high",
+                        }
+                        for image_url in visual_inputs
+                    ],
+                ],
             }
-            for image_url in visual_inputs
-        )
-        response = client.chat.completions.create(
-            model=resolved_model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "严谨审片，报告必须可追溯到实际视觉证据。",
-                },
-                {"role": "user", "content": content},
-            ],
-            max_tokens=4096,
-            temperature=0.1,
-            timeout=120,
-        )
-        report_text = extract_chat_content(response)
+        ],
+        reasoning_effort=(
+            reasoning_effort or "high"
+            if _is_gpt_56_model(resolved_model)
+            else None
+        ),
+        temperature=0.1,
+        max_output_tokens=4096,
+        timeout=120,
+    )
     if not report_text.strip():
         raise RuntimeError("视觉质检模型未返回报告")
     return {

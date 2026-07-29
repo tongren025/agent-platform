@@ -22,7 +22,7 @@ from urllib.parse import urlparse
 import httpx
 
 from app.models.scrape import CollectedPrompt
-from app.services.chat_response import extract_chat_content
+from app.services.model_generation import generate_response_text
 
 logger = logging.getLogger(__name__)
 
@@ -393,13 +393,13 @@ async def scrape_and_summarize(
 {truncated}"""
 
     client, model_id = ai_service.get_default_client()
-    resp = client.chat.completions.create(
+    raw = generate_response_text(
+        client=client,
         model=model_id,
-        messages=[{"role": "user", "content": prompt}],
+        input_data=prompt,
         temperature=0.3,
-        max_tokens=4000,
+        max_output_tokens=4000,
     )
-    raw = extract_chat_content(resp)
 
     import json as _json
     json_match = re.search(r"\{[\s\S]*\}", raw)

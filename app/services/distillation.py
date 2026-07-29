@@ -17,7 +17,7 @@ from pathlib import Path
 
 from app.config import BASE_DIR
 from app.models.distillation import DistillationAction, DistillationLog
-from app.services.chat_response import extract_chat_content
+from app.services.model_generation import generate_response_text
 
 logger = logging.getLogger(__name__)
 
@@ -186,18 +186,17 @@ async def run_distillation(employee_key: str) -> DistillationLog:
 
     try:
         import asyncio
-        resp = await asyncio.to_thread(
-            lambda: client.chat.completions.create(
+        raw = await asyncio.to_thread(
+            lambda: generate_response_text(
+                client=client,
                 model=model,
-                messages=[
-                    {"role": "system", "content": "你是记忆蒸馏引擎。只返回 JSON 数组，不要解释。"},
-                    {"role": "user", "content": prompt},
-                ],
+                instructions="你是记忆蒸馏引擎。只返回 JSON 数组，不要解释。",
+                input_data=prompt,
                 temperature=0.2,
-                max_tokens=3000,
+                max_output_tokens=3000,
             )
         )
-        raw = extract_chat_content(resp) or "[]"
+        raw = raw or "[]"
     except Exception as exc:
         log.error = f"LLM 调用失败: {exc}"
         log.duration_ms = int((time.monotonic() - t0) * 1000)

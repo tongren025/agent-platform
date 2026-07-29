@@ -9,9 +9,9 @@ from app.api.common import ok, validate_key
 from app.config import resolve_secret
 from app.dependencies import ai_service
 from app.services.chat_response import (
-    extract_chat_content,
-    select_chat_completion_model,
+    select_text_generation_model,
 )
+from app.services.model_generation import generate_response_text
 from admin.auth import require_admin
 
 router = APIRouter(prefix="/api/admin/providers", tags=["admin-providers"])
@@ -126,24 +126,25 @@ def test_provider(name: str, _: dict = Depends(require_admin)):
         raise HTTPException(status_code=404, detail=f"Provider not found: {name}")
     if not provider.models:
         return ok({"success": False, "error": "No models configured"})
-    model_id = select_chat_completion_model(provider.models)
+    model_id = select_text_generation_model(provider.models)
     if not model_id:
         return ok({
             "success": False,
-            "error": "No chat-compatible models configured; image models require the Images or Responses API",
+            "error": "No text-generation models configured; image/video models require dedicated media APIs",
         })
     try:
         client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
-        resp = client.chat.completions.create(
+        reply = generate_response_text(
+            client=client,
             model=model_id,
-            messages=[{"role": "user", "content": "hi"}],
-            max_tokens=5,
+            input_data="Reply with OK.",
+            max_output_tokens=16,
             timeout=15,
         )
         return ok({
             "success": True,
             "model": model_id,
-            "reply": extract_chat_content(resp),
+            "reply": reply,
         })
     except Exception as exc:
         return ok({"success": False, "model": model_id, "error": str(exc)})

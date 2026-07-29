@@ -19,7 +19,7 @@ from pathlib import Path
 
 from app.config import BASE_DIR
 from app.models.evolution import EvolutionInsight, EvolutionRunLog
-from app.services.chat_response import extract_chat_content
+from app.services.model_generation import generate_response_text
 
 logger = logging.getLogger(__name__)
 
@@ -242,16 +242,15 @@ async def run_evolution_analysis(employee_key: str) -> EvolutionRunLog:
         return run_log
 
     try:
-        resp = client.chat.completions.create(
+        raw = generate_response_text(
+            client=client,
             model=model,
-            messages=[
-                {"role": "system", "content": "你是自我进化分析引擎。只返回 JSON 数组。"},
-                {"role": "user", "content": prompt},
-            ],
+            instructions="你是自我进化分析引擎。只返回 JSON 数组。",
+            input_data=prompt,
             temperature=0.3,
-            max_tokens=3000,
+            max_output_tokens=3000,
         )
-        raw = extract_chat_content(resp) or "[]"
+        raw = raw or "[]"
     except Exception as exc:
         run_log.error = f"LLM 调用失败: {exc}"
         run_log.duration_ms = int((time.monotonic() - t0) * 1000)

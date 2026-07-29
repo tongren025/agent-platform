@@ -34,7 +34,7 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **能力驱动模型路由** — 员工的 `model_id` 只负责理解需求、文字规划和工具编排；最终生图、视频分别由 `image_model_id`、`video_model_id` 通过专用 API 完成，避免把 `gpt-image-2` 错发到 Chat Completions
 - **三类输出能力** — 员工可声明 `text` / `image` / `video`；选择图片或视频能力后，管理页显示独立媒体模型选择器并自动绑定对应工具
 - **漫剧岗位模型分层** — 导演、分镜和质检使用 GPT-5.6 Sol；编剧、媒体提示词与动作特效使用 Terra high；人物/场景设计使用 Terra medium；角色图、场景图、关键帧和视频执行使用 Luna none 编排专用媒体工具。最终图片固定走 `image_model_id`（内置为 `gpt-image-2`），视频固定走 `video_model_id`（内置为 OpenRouter Seedance 2.0）
-- **GPT-5.6 工具兼容** — 高推理与函数工具自动走 Responses API；兼容代理没有 `/responses` 时，只在还没有执行工具的情况下安全降级到 Chat Completions `none`，不会重复提交付费媒体任务
+- **Responses-first 运行时** — 员工对话、函数工具、视觉质检、记忆提取、趋势分析和供应商连通测试统一走 Responses API；没有工具或推理为 `none` 也不会自动改走 Chat。旧代理只有显式配置 `api_surface=chat_completions`，或同时开启 `allow_chat_fallback=true` 时才进入兼容通道
 - **角色模板库** — 内置 12 种预设角色（数据分析师、文案写手、代码审查员、SEO 分析师等），一键创建员工
 - **独立知识库** — 每个员工可上传专属文档（`.txt` / `.md`），对话时自动检索相关片段注入上下文
 - **长期记忆** — 对话结束后自动提取关键信息存入员工长期记忆，下次对话可回忆历史
@@ -331,7 +331,7 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 }
 ```
 
-> 支持任何兼容 OpenAI Chat Completions API 的服务（OpenAI、Azure OpenAI、各类国产大模型网关等）。
+> 默认要求供应商兼容 OpenAI Responses API。只提供旧 Chat Completions 的代理必须在员工策略中显式配置 `api_surface: "chat_completions"`；系统不会再静默回退。
 > `apiKey` 也可以写成环境变量占位符（如 `"${OPENROUTER_API_KEY}"`），真实密钥放 `.env` 或系统环境变量。
 
 OpenRouter 示例：

@@ -40,7 +40,7 @@ GPT-5.6 档位说明以 [OpenAI 模型指南](https://developers.openai.com/api/
 }
 ```
 
-- `model_id`：唯一可以进入 Chat Completions 的思考模型。
+- `model_id`：进入 Responses API 的文字思考与工具编排模型。
 - `image_model_id`：仅在声明 `image` 能力时必填，通过图片专用接口调用。
 - `video_model_id`：仅在声明 `video` 能力时必填，通过异步视频接口调用。
 - `outputModalities`：必须包含 `text`；媒体能力只是员工可调用的工具，不替代思考模型。
@@ -48,8 +48,9 @@ GPT-5.6 档位说明以 [OpenAI 模型指南](https://developers.openai.com/api/
 - 管理页保存 `供应商名:模型 ID`，避免多个供应商有同名模型时调用错地址；历史裸模型
   ID 继续兼容。
 - GPT-5.6 的 `reasoning_effort` 可用 `none / low / medium / high / xhigh / max`。
-  带函数工具且推理不为 `none` 时运行器使用 Responses API；兼容代理没有该端点时，
-  只会在尚未执行任何工具时安全降级到 Chat Completions `none`。
+  运行器默认始终使用 Responses API，不因无工具或 `none` 而改走 Chat。仅旧代理可
+  显式配置 `api_surface: "chat_completions"`；`allow_chat_fallback: true` 也必须
+  明确开启，且只允许在尚未执行任何工具时回退。
 
 ## 三、执行与故障边界
 

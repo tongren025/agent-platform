@@ -13,10 +13,11 @@
 - 模型按任务成本与难度分层：导演/分镜/质检使用 GPT-5.6 Sol，编剧、媒体提示词
   和动作特效使用 Terra high，人物/场景设计使用 Terra medium，媒体执行使用
   Luna none；最终图片固定走 `image_model_id`，视频固定走 `video_model_id`。
-- GPT-5.6 高推理与函数工具自动使用 Responses API；兼容代理未实现 `/responses`
-  时，仅在尚未执行任何工具的情况下安全降级到 Chat Completions `none`，避免
-  重复生图/视频。主模型和所有 `fallback_models` 均强制为聊天模型，旧配置中的
-  图片/视频降级模型会在运行前明确阻断。兼容接口返回字符串时继续归一化为标准响应。
+- 全部文字与多模态推理链路改为 Responses-first：员工对话无论是否使用工具，连同
+  深度子任务、视觉质检、记忆/进化/蒸馏、技能与趋势分析、员工草稿和供应商连通测试，
+  默认统一调用 `/responses` 并读取 typed output。Chat 仅保留为显式
+  `api_surface=chat_completions` 的旧代理兼容层；`allow_chat_fallback` 默认关闭。
+  主模型和所有 `fallback_models` 均强制为文字模型，图片/视频模型会在调用前阻断。
 - 图片工具支持角色/场景/风格参考图；视频工具支持互斥的首末帧模式或参考图模式。
   新增 `inspect_media`：图片读取真实像素，视频用 FFmpeg 抽取前/中/后段画面，
   证据不可访问时质检必须 `blocked`，不能凭提示词放行。

@@ -233,14 +233,15 @@ async def run_agent(
             configured_surface = str(
                 model_policy.get("api_surface") or "auto"
             ).strip().lower()
-            use_responses = configured_surface == "responses" or (
-                configured_surface == "auto"
-                and _is_gpt_56_model(resolved_model)
-                and bool(all_tools)
-                and reasoning_effort != "none"
-            )
-            if configured_surface == "chat_completions":
-                use_responses = False
+            if configured_surface not in {
+                "auto",
+                "responses",
+                "chat_completions",
+            }:
+                configured_surface = "auto"
+            # Responses 是统一默认接口，不再因“没有工具”或“低推理”退回 Chat。
+            # Chat 只服务于员工策略显式标记的旧代理兼容配置。
+            use_responses = configured_surface != "chat_completions"
             loop_runner = (
                 run_responses_agent_loop if use_responses else run_agent_loop
             )
@@ -259,10 +260,10 @@ async def run_agent(
                 and not loop_result.success
                 and not loop_result.traces
                 and loop_result.pending_approval is None
-                and bool(model_policy.get("allow_chat_fallback", True))
+                and bool(model_policy.get("allow_chat_fallback", False))
             ):
-                # 部分 OpenAI 兼容代理尚未实现 /responses。只有确认尚未执行
-                # 任何工具时才安全降级，避免重复生图/视频等付费副作用。
+                # 兼容回退必须由员工策略显式开启；且只有确认尚未执行任何工具
+                # 时才允许，避免重复生图/视频等付费副作用。
                 logger.warning(
                     "Responses API 不可用，安全降级到 Chat Completions "
                     "reasoning_effort=none (employee=%s): %s",

@@ -65,7 +65,7 @@ class AgentLoopOptions:
     max_tokens: int = 4096
     model: str = "gpt-4o"
     reasoning_effort: Optional[str] = None
-    api_surface: str = "chat_completions"
+    api_surface: str = "responses"
     # —— 可靠性（默认值即生效，调用方无需改动）——
     max_retries: int = 2            # 瞬时错误的重试次数（不含首次调用）
     retry_base_delay: float = 1.0   # 指数退避基准秒数
@@ -248,7 +248,7 @@ async def _create_response_with_retry(
 
     for candidate, candidate_is_async, model in attempts:
         create_kwargs = dict(base_kwargs, model=model)
-        if options.reasoning_effort:
+        if options.reasoning_effort and _is_gpt_56_model(model):
             create_kwargs["reasoning"] = {"effort": options.reasoning_effort}
         if options.request_timeout:
             create_kwargs["timeout"] = options.request_timeout

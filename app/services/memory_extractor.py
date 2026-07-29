@@ -17,7 +17,7 @@ from app.models.memory_types import (
     ProceduralMemory,
     SemanticMemory,
 )
-from app.services.chat_response import extract_chat_content
+from app.services.model_generation import generate_response_text
 
 logger = logging.getLogger(__name__)
 
@@ -100,16 +100,14 @@ async def extract_memories(
         return None
 
     try:
-        resp = client.chat.completions.create(
+        raw = generate_response_text(
+            client=client,
             model=model,
-            messages=[
-                {"role": "system", "content": _EXTRACTION_PROMPT},
-                {"role": "user", "content": f"以下是对话历史：\n\n{conversation_text}"},
-            ],
+            instructions=_EXTRACTION_PROMPT,
+            input_data=f"以下是对话历史：\n\n{conversation_text}",
             temperature=0.3,
-            max_tokens=2000,
+            max_output_tokens=2000,
         )
-        raw = extract_chat_content(resp)
     except Exception as exc:
         logger.warning("记忆提取 LLM 调用失败: %s", exc)
         return None

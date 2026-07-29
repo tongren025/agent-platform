@@ -48,7 +48,7 @@ def test_image_inspection_embeds_platform_asset_and_keeps_reasoning(
         criteria="角色脸型与服装必须匹配 C001",
     )
 
-    visual_content = captured["input"][1]["content"][1]
+    visual_content = captured["input"][0]["content"][1]
     assert visual_content["image_url"].startswith(
         "data:image/png;base64,"
     )
