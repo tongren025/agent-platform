@@ -9,6 +9,7 @@ import pytest
 from app.runtime.loop import AgentLoopOptions, run_agent_loop
 from app.services.chat_response import (
     extract_chat_content,
+    is_chat_completion_model_id,
     normalize_chat_completion,
     select_chat_completion_model,
 )
@@ -29,6 +30,21 @@ def test_chat_model_selection_rejects_image_only_configuration():
         {"modelId": "gpt-image-2"},
         {"modelName": "chatgpt-image-latest"},
     ]) == ""
+
+
+@pytest.mark.parametrize("model_id", [
+    "openai代理:gpt-image-2",
+    "openrouter:bytedance/seedance-2.0",
+    "gpt-4o-realtime-preview",
+    "text-embedding-3-large",
+    "gpt-5.3-codex",
+])
+def test_specialized_models_are_rejected_from_chat(model_id):
+    assert is_chat_completion_model_id(model_id) is False
+
+
+def test_provider_qualified_chat_model_is_allowed():
+    assert is_chat_completion_model_id("openai代理:gpt-5.6-terra") is True
 
 
 def test_standard_completion_is_preserved():

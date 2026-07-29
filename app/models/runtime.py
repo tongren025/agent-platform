@@ -65,6 +65,10 @@ class EmployeeRuntimeSnapshot(BaseModel):
     tools_by_scope: dict[str, list[RuntimeTool]] = Field(default_factory=dict)
     mcp_by_scope: dict[str, list[RuntimeMcpServer]] = Field(default_factory=dict)
     default_model_policy: dict = Field(default_factory=dict)
+    output_modalities: list[str] = Field(
+        default_factory=lambda: ["text"],
+        alias="outputModalities",
+    )
     deep_agent: bool = False
     team_code: Optional[str] = None
     team_members: list[TeamMemberSummary] = Field(default_factory=list)

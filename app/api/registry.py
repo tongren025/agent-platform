@@ -31,6 +31,13 @@ from app.models.registry import (
     TeamDefinition,
     ToolDefinition,
 )
+from app.core.model_capabilities import (
+    is_chat_completion_model_id,
+    is_image_generation_model_id,
+    is_video_generation_model_id,
+    unqualified_model_id,
+    validate_employee_model_routes,
+)
 from app.services.chat_response import extract_chat_content
 
 router = APIRouter(prefix="/api/v1/agentapp/registry")
@@ -259,6 +266,65 @@ def _extract_employee_draft(text: str) -> dict:
     return payload if isinstance(payload, dict) else {}
 
 
+def _qualified_model_ref(provider_name: str, model_id: str) -> str:
+    """构造保留供应商身份的模型引用。"""
+    return f"{provider_name}:{model_id}"
+
+
+def _resolve_draft_chat_model(
+    preferred_model: str | None,
+) -> tuple[object, str, str] | None:
+    """为草稿设计选择已启用的聊天模型，绝不把媒体专用模型送入聊天端点。"""
+    preferred = str(preferred_model or "").strip()
+    if preferred and is_chat_completion_model_id(preferred):
+        try:
+            client, resolved = ai_service.get_client(preferred)
+            return client, resolved, preferred
+        except Exception:
+            pass
+
+    for provider in ai_service.list_providers():
+        for model in provider.models:
+            model_id = str(
+                model.get("modelId")
+                or model.get("actualModelId")
+                or model.get("modelName")
+                or ""
+            ).strip()
+            if not is_chat_completion_model_id(model_id):
+                continue
+            model_ref = _qualified_model_ref(provider.name, model_id)
+            try:
+                client, resolved = ai_service.get_client(model_ref)
+            except Exception:
+                continue
+            return client, resolved, model_ref
+    return None
+
+
+def _default_configured_image_model() -> str:
+    """选择已启用供应商中的图片模型，优先 GPT Image 2，并保留供应商身份。"""
+    candidates: list[tuple[int, str]] = []
+    for provider in ai_service.list_providers():
+        if not provider.api_key:
+            continue
+        for model in provider.models:
+            model_id = str(
+                model.get("modelId")
+                or model.get("actualModelId")
+                or model.get("modelName")
+                or ""
+            ).strip()
+            if not is_image_generation_model_id(model_id):
+                continue
+            priority = 0 if unqualified_model_id(model_id).lower() == "gpt-image-2" else 1
+            candidates.append((
+                priority,
+                _qualified_model_ref(provider.name, model_id),
+            ))
+    return min(candidates, default=(99, ""))[1]
+
+
 @router.post("/employees/generate-draft")
 def generate_employee_draft(body: EmployeeDraftBody):
     """根据一句岗位描述自动设计完整员工；模型异常时返回高质量通用草稿。"""
@@ -270,7 +336,8 @@ def generate_employee_draft(body: EmployeeDraftBody):
     tool_codes = [item.tool_code for item in tools]
     mcp_codes = [item.server_code for item in mcp_servers]
     generated: dict = {}
-    resolved_model = body.model_id or ""
+    resolved_model = ""
+    selected_model_ref = ""
     inferred_role_name = _infer_role_name(role_request)
 
     role_request_json = _json.dumps(role_request, ensure_ascii=False)
@@ -288,35 +355,17 @@ role_request_json: {role_request_json}
 - name：简洁中文岗位名
 - roleProfile：完整中文系统提示词，至少包含角色定位、核心职责、输入、工作流程、输出契约、质量标准、边界；要具体可执行
 - deepAgent：复杂岗位需要多步研究/工具调用时为 true
+- outputModalities：从 text/image/video 中选择；始终包含 text，只有需要最终生图/视频时才增加 image/video
 - tags：2–6 个中文标签
 - skillRefs/toolRefs/mcpServerRefs：只能从上面的现有代码选择，不确定就空数组
 - temperature：0 到 2；分析岗位通常 0.2–0.5，创意岗位通常 0.6–0.9
 - maxTokens：2048 到 16384
-"""
+    """
     try:
-        if body.model_id:
-            try:
-                client, resolved_model = ai_service.get_client(body.model_id)
-            except ValueError:
-                # OpenRouter 模型常含 ":free"；裸 modelId 会被通用解析器误当成
-                # "provider:model"。从真实供应商目录反查后显式加供应商前缀。
-                provider = next(
-                    (
-                        item for item in ai_service.list_all_providers()
-                        if any(
-                            body.model_id in {model.get("modelId"), model.get("modelName")}
-                            for model in item.models
-                        )
-                    ),
-                    None,
-                )
-                if provider is None:
-                    raise
-                client, resolved_model = ai_service.get_client(
-                    f"{provider.name}:{body.model_id}"
-                )
-        else:
-            client, resolved_model = ai_service.get_default_client()
+        resolved_chat = _resolve_draft_chat_model(body.model_id)
+        if resolved_chat is None:
+            raise ValueError("没有已启用的聊天模型")
+        client, resolved_model, selected_model_ref = resolved_chat
         response = client.chat.completions.create(
             model=resolved_model,
             messages=[
@@ -354,6 +403,46 @@ role_request_json: {role_request_json}
 
     name = str(generated.get("name") or inferred_role_name).strip()[:60] or "数字员工"
     tags = generated.get("tags") if isinstance(generated.get("tags"), list) else []
+    requested_modalities = generated.get("outputModalities")
+    output_modalities = [
+        value
+        for value in ("text", "image", "video")
+        if isinstance(requested_modalities, list) and value in requested_modalities
+    ]
+    if not output_modalities:
+        output_modalities = ["text"]
+        normalized_request = role_request.lower()
+        if any(marker in normalized_request for marker in (
+            "生图", "生成图片", "图片生成", "原画", "关键帧生成",
+        )):
+            output_modalities.append("image")
+        if any(marker in normalized_request for marker in (
+            "生视频", "生成视频", "视频生成",
+        )):
+            output_modalities.append("video")
+
+    selected_tools = valid_refs("toolRefs", set(tool_codes))
+    if "image" in output_modalities and "generate_image" in tool_codes:
+        selected_tools.append("generate_image")
+    if "video" in output_modalities:
+        for tool_code in ("generate_video", "check_video_generation"):
+            if tool_code in tool_codes:
+                selected_tools.append(tool_code)
+    selected_tools = list(dict.fromkeys(selected_tools))
+
+    image_model_ref = (
+        _default_configured_image_model()
+        if "image" in output_modalities
+        else ""
+    )
+    missing_routes = []
+    if not selected_model_ref:
+        missing_routes.append("model_id")
+    if "image" in output_modalities and not image_model_ref:
+        missing_routes.append("image_model_id")
+    if "video" in output_modalities:
+        missing_routes.append("video_model_id")
+
     result = {
         "employeeKey": _unique_employee_key(
             str(generated.get("employeeKey") or ""),
@@ -362,16 +451,20 @@ role_request_json: {role_request_json}
         "name": name,
         "roleProfile": role_profile,
         "deepAgent": bool(generated.get("deepAgent", True)),
+        "outputModalities": output_modalities,
         "tags": [str(tag).strip() for tag in tags if str(tag).strip()][:6],
         "skillRefs": valid_refs("skillRefs", set(skill_codes)),
-        "toolRefs": valid_refs("toolRefs", set(tool_codes)),
+        "toolRefs": selected_tools,
         "mcpServerRefs": valid_refs("mcpServerRefs", set(mcp_codes)),
         "defaultModelPolicy": {
-            "model_id": body.model_id or resolved_model,
+            **({"model_id": selected_model_ref} if selected_model_ref else {}),
+            **({"image_model_id": image_model_ref} if image_model_ref else {}),
             "temperature": temperature,
             "max_tokens": max_tokens,
         },
         "generatedBy": generated_by,
+        "needsConfiguration": bool(missing_routes),
+        "missingRoutes": missing_routes,
     }
     return _ok(result)
 
@@ -393,9 +486,74 @@ def get_employee(key: str):
     return _ok(item.model_dump(by_alias=True, mode="json"))
 
 
+def _validate_employee_model_routes(employee: EmployeeDefinition) -> None:
+    """校验员工引用的模型已配置，并把视频限定到当前已实现的供应商。"""
+    policy = employee.default_model_policy or {}
+    try:
+        validate_employee_model_routes(employee.output_modalities, policy)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    chat_model = str(policy.get("model_id") or "").strip()
+    try:
+        ai_service.get_client(chat_model)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=f"思考模型未在已启用供应商中配置: {chat_model}",
+        ) from exc
+
+    enabled_providers = {
+        provider.name.lower(): provider
+        for provider in ai_service.list_providers()
+    }
+    modalities = set(employee.output_modalities or ["text"])
+    image_model = str(policy.get("image_model_id") or "").strip()
+    if "image" in modalities:
+        if image_model.lower().startswith("openrouter:"):
+            if (
+                "openrouter" not in enabled_providers
+                or not enabled_providers["openrouter"].api_key
+            ):
+                raise HTTPException(
+                    status_code=400,
+                    detail="OpenRouter 图片模型需要先启用 OpenRouter 供应商",
+                )
+        else:
+            try:
+                ai_service.get_client(image_model)
+            except Exception as exc:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"图片模型未在已启用供应商中配置: {image_model}",
+                ) from exc
+
+    video_model = str(policy.get("video_model_id") or "").strip()
+    if "video" in modalities:
+        if not video_model.lower().startswith("openrouter:"):
+            raise HTTPException(
+                status_code=400,
+                detail="当前视频工具只支持 openrouter: 前缀的视频模型",
+            )
+        if (
+            "openrouter" not in enabled_providers
+            or not enabled_providers["openrouter"].api_key
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="视频员工需要先启用 OpenRouter 供应商",
+            )
+        if not is_video_generation_model_id(video_model):
+            raise HTTPException(
+                status_code=400,
+                detail=f"无法识别为视频生成模型: {video_model}",
+            )
+
+
 @router.post("/employees")
 def create_employee(body: EmployeeDefinition):
     """POST /employees：创建员工，key 已存在返 409。"""
+    _validate_employee_model_routes(body)
     if employee_registry.exists(body.employee_key):
         raise HTTPException(
             status_code=409,
@@ -409,6 +567,7 @@ def create_employee(body: EmployeeDefinition):
 def update_employee(key: str, body: EmployeeDefinition):
     """PUT /employees/{key}：整体更新员工定义，不存在返 404。"""
     _validate_key(key)
+    _validate_employee_model_routes(body)
     existing = employee_registry.get(key)
     if existing is None:
         raise HTTPException(status_code=404, detail=f"Employee not found: {key}")
@@ -453,6 +612,7 @@ def clone_employee(key: str, body: dict):
     cloned.created_at = now
     cloned.updated_at = now
 
+    _validate_employee_model_routes(cloned)
     saved = employee_registry.save(cloned)
     return _ok(saved.model_dump(by_alias=True, mode="json"))
 
@@ -520,6 +680,13 @@ def get_role_template(code: str):
 @router.post("/role-templates")
 def save_role_template(body: RoleTemplateDefinition):
     """POST /role-templates：新建或整体覆盖一个角色模板。"""
+    try:
+        validate_employee_model_routes(
+            body.output_modalities,
+            body.default_model_policy,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     existing = role_template_registry.get(body.template_code)
     if existing is not None and existing.source == "system":
         raise HTTPException(
@@ -560,10 +727,17 @@ def apply_role_template(code: str, body: ApplyTemplateBody):
             status_code=409,
             detail=f"Employee already exists: {emp_key}",
         )
-    emp = role_template_registry.apply_to_new_employee(code, emp_key, emp_name)
+    emp = role_template_registry.apply_to_new_employee(
+        code,
+        emp_key,
+        emp_name,
+        persist=False,
+    )
     if emp is None:
         raise HTTPException(status_code=404, detail=f"Role template not found: {code}")
-    return _ok(emp.model_dump(by_alias=True, mode="json"))
+    _validate_employee_model_routes(emp)
+    saved = employee_registry.save(emp)
+    return _ok(saved.model_dump(by_alias=True, mode="json"))
 
 
 # ── Teams ───────────────────────────────────────────────────────────

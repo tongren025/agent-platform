@@ -31,6 +31,9 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ### 数字员工管理
 - **员工注册表** — 每个员工有独立身份（`employeeKey`）、角色提示词（`roleProfile`）、绑定的工具和技能
+- **能力驱动模型路由** — 员工的 `model_id` 只负责理解需求、文字规划和工具编排；最终生图、视频分别由 `image_model_id`、`video_model_id` 通过专用 API 完成，避免把 `gpt-image-2` 错发到 Chat Completions
+- **三类输出能力** — 员工可声明 `text` / `image` / `video`；选择图片或视频能力后，管理页显示独立媒体模型选择器并自动绑定对应工具
+- **漫剧岗位推荐档位** — 导演、分镜师和质检员推荐 GPT-5.6 Sol；编剧、设定设计与提示词岗位推荐 GPT-5.6 Terra；角色原画、场景原画和关键帧原画额外使用 GPT Image 2 生图，专职视频生成师额外走 OpenRouter 视频模型。系统只展示已启用供应商的模型，不会用未配置的推荐模型覆盖现有员工
 - **角色模板库** — 内置 12 种预设角色（数据分析师、文案写手、代码审查员、SEO 分析师等），一键创建员工
 - **独立知识库** — 每个员工可上传专属文档（`.txt` / `.md`），对话时自动检索相关片段注入上下文
 - **长期记忆** — 对话结束后自动提取关键信息存入员工长期记忆，下次对话可回忆历史
@@ -154,7 +157,8 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 | [docs/RUNBOOK.md](docs/RUNBOOK.md) | **怎么把项目跑起来**:零配置最短路径、端口坑、配置双轨制、常见报错解法、data/ 目录地图、根目录文件辨析 |
 | [scripts/README.md](scripts/README.md) | 全部 31 个脚本的清单:用途/跑法/一次性还是可复用/是否破坏性 |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | **未来一年目标与方向**:KPI、季度计划、优化项、欠账、机会与不做清单 |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统怎么运转的（分层 + 5 条核心数据流）、**想改 X 去哪个文件**速查表 |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统怎么运转的（分层 + 6 条核心数据流）、**想改 X 去哪个文件**速查表 |
+| [docs/MULTIMODAL_EMPLOYEES.md](docs/MULTIMODAL_EMPLOYEES.md) | 数字员工该选哪个思考/图片/视频模型，三类模型如何路由，以及当前能力边界 |
 | [docs/MODULE_INDEX.md](docs/MODULE_INDEX.md) | 全部 160+ 模块的一句话职责索引（自动生成：`python -m scripts.gen_module_index`） |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | 每次改动的动机 / 变更点 / 影响面 |
 | 代码内 docstring | 每个类/函数的意图与约束（全中文，AST 扫描保证零缺失） |

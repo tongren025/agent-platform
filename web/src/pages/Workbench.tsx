@@ -101,6 +101,21 @@ const mdComponents: Components = {
     return <code style={{ background: 'rgba(99,102,241,.08)', padding: '1px 5px', borderRadius: 4, fontSize: 13, fontFamily: "'Cascadia Code','Fira Code',Consolas,monospace" }} {...props}>{children}</code>;
   },
   pre({ children }) { return <>{children}</>; },
+  a({ href, children, ...props }) {
+    if (href && /\.(mp4|webm)(?:[?#].*)?$/i.test(href)) {
+      return (
+        <video
+          controls
+          preload="metadata"
+          src={href}
+          style={{ display: 'block', width: '100%', maxWidth: 560, borderRadius: 10, margin: '10px 0' }}
+        >
+          {children}
+        </video>
+      );
+    }
+    return <a href={href} target="_blank" rel="noreferrer" {...props}>{children}</a>;
+  },
 };
 
 const _LATEX_MAP: Record<string, string> = {

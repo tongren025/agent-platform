@@ -313,12 +313,18 @@ class AIService:
     def get_client(self, model_id: str, *, async_client: bool = False) -> tuple[openai.OpenAI | openai.AsyncOpenAI, str]:
         """解析 model_id 并返回可直接调用的客户端 + 真实模型 id。
 
-        model_id 带冒号（provider:model）时锁定供应商查找；否则跨所有启用供应商找第一个匹配。
+        model_id 以已配置供应商名开头（provider:model）时锁定该供应商；否则把
+        完整字符串当模型 ID 跨供应商查找，兼容 ``vendor/model:free``。
         async_client=True 时返回 AsyncOpenAI（供异步任务/队列使用）。
         """
         if ":" in model_id:
             provider_name, model_name = model_id.split(":", 1)
-            return self._resolve_with_provider(provider_name, model_name, async_client=async_client)
+            if self._find_provider(provider_name) is not None:
+                return self._resolve_with_provider(
+                    provider_name,
+                    model_name,
+                    async_client=async_client,
+                )
         return self._resolve_any(model_id, async_client=async_client)
 
     def list_providers(self) -> list[AiModelConfig]:

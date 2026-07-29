@@ -177,8 +177,10 @@ class RoleTemplateRegistryService(FileJsonRegistry[RoleTemplateDefinition]):
         template_code: str,
         new_key: str,
         new_name: str,
+        *,
+        persist: bool = True,
     ) -> EmployeeDefinition | None:
-        """以角色模板为蓝本创建并保存一个新员工；模板不存在返回 None。
+        """以角色模板为蓝本构造新员工；默认保存，persist=False 时交由 API 校验后保存。
 
         复制模板的角色画像/模型策略/建议的技能·工具·MCP 绑定，标记 source=template。
         """
@@ -192,6 +194,7 @@ class RoleTemplateRegistryService(FileJsonRegistry[RoleTemplateDefinition]):
             role_profile=tpl.role_profile,
             deep_agent=tpl.deep_agent,
             default_model_policy=dict(tpl.default_model_policy),
+            output_modalities=list(tpl.output_modalities or ["text"]),
             skill_refs=list(tpl.suggested_skill_codes) if tpl.suggested_skill_codes else None,
             tool_refs=list(tpl.suggested_tool_codes) if tpl.suggested_tool_codes else None,
             mcp_server_refs=(
@@ -201,6 +204,9 @@ class RoleTemplateRegistryService(FileJsonRegistry[RoleTemplateDefinition]):
             tags=list(tpl.tags),
             source="template",
         )
+
+        if not persist:
+            return emp
 
         from app.dependencies import employee_registry
         return employee_registry.save(emp)

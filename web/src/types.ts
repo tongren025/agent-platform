@@ -5,6 +5,7 @@ export interface Employee {
   roleProfile: string;
   deepAgent: boolean;
   defaultModelPolicy: Record<string, unknown>;
+  outputModalities: Array<'text' | 'image' | 'video'>;
   skillRefs: string[] | null;
   toolRefs: string[] | null;
   mcpServerRefs: string[] | null;
@@ -28,6 +29,7 @@ export interface RoleTemplate {
   roleProfile: string;
   deepAgent: boolean;
   defaultModelPolicy: Record<string, unknown>;
+  outputModalities: Array<'text' | 'image' | 'video'>;
   suggestedSkillCodes: string[];
   suggestedToolCodes: string[];
   suggestedMcpServerCodes: string[];

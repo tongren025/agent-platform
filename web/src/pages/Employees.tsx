@@ -1,5 +1,5 @@
 // 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、参考资料上传。
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Button, Card, Col, Descriptions, Divider, Empty, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Slider, Space, Spin, Switch, Table, Tag, Typography, Upload } from 'antd';
 import { message } from '../ui';
 import { DeleteOutlined, PlusOutlined, RobotOutlined, UploadOutlined } from '@ant-design/icons';
@@ -13,6 +13,48 @@ import type { Employee } from '../types';
 const { TextArea } = Input;
 const { Text } = Typography;
 
+const MEDIA_TOOL_CODES = new Set([
+  'generate_image',
+  'generate_video',
+  'check_video_generation',
+]);
+
+function modelIdOf(model: any): string {
+  return String(model?.modelId || model?.actualModelId || model?.modelName || model?.id || '');
+}
+
+function unqualifiedModelId(modelRef: string): string {
+  const separator = modelRef.indexOf(':');
+  if (separator < 0) return modelRef;
+  const prefix = modelRef.slice(0, separator);
+  return prefix.includes('/') ? modelRef : modelRef.slice(separator + 1);
+}
+
+function isImageGenerationModel(modelRef: string): boolean {
+  const modelId = unqualifiedModelId(modelRef);
+  return /^(gpt-image-|chatgpt-image-|dall-e-)/i.test(modelId)
+    || /(flux|ideogram|imagen|imagegen|recraft|seedream|stable-diffusion)/i.test(modelId)
+    || (/image/i.test(modelId) && !/vision/i.test(modelId));
+}
+
+function isVideoGenerationModel(modelRef: string): boolean {
+  return /(grok-imagine-video|hailuo|happyhorse|kling|seedance|sora|veo|video-generation|wan-|wan-video)/i.test(
+    unqualifiedModelId(modelRef),
+  );
+}
+
+function isChatModel(modelRef: string): boolean {
+  const modelId = unqualifiedModelId(modelRef);
+  return !!modelId
+    && !isImageGenerationModel(modelId)
+    && !isVideoGenerationModel(modelId)
+    && !/(audio|codex|embedding|moderation|realtime|search-preview|transcribe|tts)/i.test(modelId);
+}
+
+function providerModelRef(provider: any, model: any): string {
+  return `${provider.name}:${modelIdOf(model)}`;
+}
+
 export default function Employees() {
   const [list, setList] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
@@ -21,12 +63,15 @@ export default function Employees() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Employee | null>(null);
   const [form] = Form.useForm();
+  const outputModalities = Form.useWatch('outputModalities', form) as string[] | undefined;
 
   const [tools, setTools] = useState<any[]>([]);
   const [skills, setSkills] = useState<any[]>([]);
   const [mcpServers, setMcpServers] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
   const [aiProviders, setAiProviders] = useState<any[]>([]);
+  const [imageModels, setImageModels] = useState<any[]>([]);
+  const [videoModels, setVideoModels] = useState<any[]>([]);
   const [templates, setTemplates] = useState<any[]>([]);
   const [roleRequest, setRoleRequest] = useInputHabit('employees.role-request', '');
   const [draftGenerating, setDraftGenerating] = useState(false);
@@ -50,8 +95,24 @@ export default function Employees() {
     try {
       const emp = await api.listEmployees();
       setList(emp);
-      const [toolsResult, skillsResult, mcpResult, teamsResult, providersResult, templatesResult] = await Promise.allSettled([
-        api.listTools(), api.listSkills(), api.listMcpServers(), api.listTeams(), api.listAiProviders(), api.listTemplates(),
+      const [
+        toolsResult,
+        skillsResult,
+        mcpResult,
+        teamsResult,
+        providersResult,
+        templatesResult,
+        imageModelsResult,
+        videoModelsResult,
+      ] = await Promise.allSettled([
+        api.listTools(),
+        api.listSkills(),
+        api.listMcpServers(),
+        api.listTeams(),
+        api.listAiProviders(),
+        api.listTemplates(),
+        api.listDirectorMediaModels('image'),
+        api.listDirectorMediaModels('video'),
       ]);
       setTools(toolsResult.status === 'fulfilled' ? toolsResult.value : []);
       setSkills(skillsResult.status === 'fulfilled' ? skillsResult.value : []);
@@ -59,6 +120,8 @@ export default function Employees() {
       setTeams(teamsResult.status === 'fulfilled' ? teamsResult.value : []);
       setAiProviders(providersResult.status === 'fulfilled' ? providersResult.value : []);
       setTemplates(templatesResult.status === 'fulfilled' ? templatesResult.value : []);
+      setImageModels(imageModelsResult.status === 'fulfilled' ? imageModelsResult.value : []);
+      setVideoModels(videoModelsResult.status === 'fulfilled' ? videoModelsResult.value : []);
       const unavailable = [
         toolsResult.status === 'rejected' && '工具',
         skillsResult.status === 'rejected' && '技能',
@@ -66,6 +129,8 @@ export default function Employees() {
         teamsResult.status === 'rejected' && '团队',
         providersResult.status === 'rejected' && '模型',
         templatesResult.status === 'rejected' && '岗位模板',
+        imageModelsResult.status === 'rejected' && 'OpenRouter 图片模型',
+        videoModelsResult.status === 'rejected' && 'OpenRouter 视频模型',
       ].filter(Boolean);
       if (unavailable.length) setSupportError(`${unavailable.join('、')}配置暂时无法加载；员工列表仍可正常查看。`);
     } catch (e: any) {
@@ -77,12 +142,46 @@ export default function Employees() {
 
   useEffect(() => { fetchAll(); }, []);
 
+  const chatModelOptions = useMemo(() => aiProviders
+    .filter(provider => provider.enabled !== false)
+    .flatMap(provider => (
+      (provider.models ?? [])
+        .map((model: any) => ({
+          label: `${model.modelName || model.modelId}  (${provider.name})`,
+          value: providerModelRef(provider, model),
+        }))
+        .filter((option: any) => isChatModel(option.value))
+    )), [aiProviders]);
+
+  const imageModelOptions = useMemo(() => {
+    const options = aiProviders
+      .filter(provider => provider.enabled !== false)
+      .flatMap(provider => (
+        (provider.models ?? [])
+          .map((model: any) => ({
+            label: `${model.modelName || model.modelId}  (${provider.name})`,
+            value: providerModelRef(provider, model),
+          }))
+          .filter((option: any) => isImageGenerationModel(option.value))
+      ));
+    imageModels.forEach(model => options.push({
+      label: `${model.name || model.id}  (OpenRouter 图片)`,
+      value: `openrouter:${model.id}`,
+    }));
+    return Array.from(new Map(options.map(option => [option.value, option])).values());
+  }, [aiProviders, imageModels]);
+
+  const videoModelOptions = useMemo(() => (
+    videoModels.map(model => ({
+      label: `${model.name || model.id}  (OpenRouter 视频)`,
+      value: `openrouter:${model.id}`,
+    }))
+  ), [videoModels]);
+
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
-    const availableModelIds = aiProviders.flatMap(provider => (
-      (provider.models ?? []).map((model: any) => model.modelId || model.modelName).filter(Boolean)
-    ));
+    const availableModelIds = chatModelOptions.map(option => option.value);
     const remembered = readInputHabit<Record<string, any>>('employees.create-preferences', {});
     const rememberedModel = availableModelIds.includes(remembered.modelId)
       ? remembered.modelId
@@ -94,6 +193,7 @@ export default function Employees() {
       skillRefs: [],
       toolRefs: [],
       mcpServerRefs: [],
+      outputModalities: ['text'],
       temperature: 0.7,
       maxTokens: 4096,
       ...remembered,
@@ -110,6 +210,9 @@ export default function Employees() {
       enabled: record.enabled, skillRefs: record.skillRefs ?? [], toolRefs: record.toolRefs ?? [],
       mcpServerRefs: record.mcpServerRefs ?? [],
       modelId: record.defaultModelPolicy?.model_id ?? record.defaultModelPolicy?.modelId ?? 'gpt-4o',
+      imageModelId: record.defaultModelPolicy?.image_model_id ?? record.defaultModelPolicy?.imageModelId,
+      videoModelId: record.defaultModelPolicy?.video_model_id ?? record.defaultModelPolicy?.videoModelId,
+      outputModalities: record.outputModalities?.length ? record.outputModalities : ['text'],
       temperature: record.defaultModelPolicy?.temperature ?? 0.7,
       maxTokens: record.defaultModelPolicy?.max_tokens ?? record.defaultModelPolicy?.maxTokens ?? 4096,
     });
@@ -119,6 +222,9 @@ export default function Employees() {
   const applyDraft = (draft: any) => {
     const policy = draft.defaultModelPolicy ?? {};
     const currentModel = form.getFieldValue('modelId');
+    const safeCurrentModel = isChatModel(String(currentModel || ''))
+      ? currentModel
+      : undefined;
     form.setFieldsValue({
       employeeKey: draft.employeeKey,
       name: draft.name,
@@ -128,7 +234,10 @@ export default function Employees() {
       skillRefs: draft.skillRefs ?? [],
       toolRefs: draft.toolRefs ?? [],
       mcpServerRefs: draft.mcpServerRefs ?? [],
-      modelId: policy.model_id || policy.modelId || currentModel,
+      modelId: policy.model_id || policy.modelId || safeCurrentModel,
+      imageModelId: policy.image_model_id || policy.imageModelId,
+      videoModelId: policy.video_model_id || policy.videoModelId,
+      outputModalities: draft.outputModalities?.length ? draft.outputModalities : ['text'],
       temperature: policy.temperature ?? 0.35,
       maxTokens: policy.max_tokens ?? policy.maxTokens ?? 8192,
     });
@@ -144,9 +253,21 @@ export default function Employees() {
     try {
       const draft = await api.generateEmployeeDraft(request, form.getFieldValue('modelId'));
       applyDraft(draft);
-      message.success(draft.generatedBy === 'ai'
-        ? '员工已经设计好了，你可以直接创建'
-        : '已生成可用草稿；当前设计模型不可用，使用了本地专业模板');
+      if (draft.needsConfiguration) {
+        const labels: Record<string, string> = {
+          model_id: '思考模型',
+          image_model_id: '图片模型',
+          video_model_id: '视频模型',
+        };
+        const missing = (draft.missingRoutes ?? [])
+          .map((item: string) => labels[item] || item)
+          .join('、');
+        message.warning(`员工草稿已生成，还需要选择：${missing}`);
+      } else {
+        message.success(draft.generatedBy === 'ai'
+          ? '员工已经设计好了，可以创建'
+          : '已生成可用草稿；设计调用失败，使用了本地专业模板');
+      }
     } catch (e: any) {
       message.error(e.message || '员工草稿生成失败');
     } finally {
@@ -169,6 +290,7 @@ export default function Employees() {
       roleProfile: template.roleProfile,
       deepAgent: template.deepAgent,
       tags: template.tags,
+      outputModalities: template.outputModalities,
       skillRefs: template.suggestedSkillCodes,
       toolRefs: template.suggestedToolCodes,
       mcpServerRefs: template.suggestedMcpServerCodes,
@@ -205,18 +327,59 @@ export default function Employees() {
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
-      const { modelId, temperature, maxTokens, ...rest } = values;
+      const {
+        modelId,
+        imageModelId,
+        videoModelId,
+        temperature,
+        maxTokens,
+        ...rest
+      } = values;
       const parsedTemperature = Number(temperature);
       const parsedMaxTokens = Number(maxTokens);
+      const modalities = Array.from(new Set<string>([
+        'text',
+        ...((values.outputModalities ?? []) as string[]),
+      ]));
+      const selectedTools = new Set<string>(
+        ((values.toolRefs ?? []) as string[]).filter(
+          code => !MEDIA_TOOL_CODES.has(code),
+        ),
+      );
+      if (modalities.includes('image')) selectedTools.add('generate_image');
+      if (modalities.includes('video')) {
+        selectedTools.add('generate_video');
+        selectedTools.add('check_video_generation');
+      }
+      const defaultModelPolicy: Record<string, any> = {
+        ...(editing?.defaultModelPolicy ?? {}),
+        model_id: modelId || 'gpt-4o',
+        temperature: Number.isFinite(parsedTemperature) ? parsedTemperature : 0.7,
+        max_tokens: Number.isFinite(parsedMaxTokens) && parsedMaxTokens > 0 ? Math.trunc(parsedMaxTokens) : 4096,
+      };
+      delete defaultModelPolicy.modelId;
+      delete defaultModelPolicy.imageModelId;
+      delete defaultModelPolicy.videoModelId;
+      if (modalities.includes('image') && imageModelId) {
+        defaultModelPolicy.image_model_id = imageModelId;
+      } else {
+        delete defaultModelPolicy.image_model_id;
+      }
+      if (modalities.includes('video') && videoModelId) {
+        defaultModelPolicy.video_model_id = videoModelId;
+      } else {
+        delete defaultModelPolicy.video_model_id;
+      }
+
       const payload = {
+        ...(editing ?? {}),
         ...rest,
+        outputModalities: modalities,
         teamCode: values.teamCode || null,
-        skillRefs: values.skillRefs ?? [], toolRefs: values.toolRefs ?? [], mcpServerRefs: values.mcpServerRefs ?? [],
-        defaultModelPolicy: {
-          model_id: modelId || 'gpt-4o',
-          temperature: Number.isFinite(parsedTemperature) ? parsedTemperature : 0.7,
-          max_tokens: Number.isFinite(parsedMaxTokens) && parsedMaxTokens > 0 ? Math.trunc(parsedMaxTokens) : 4096,
-        },
+        skillRefs: values.skillRefs ?? [],
+        toolRefs: Array.from(selectedTools),
+        mcpServerRefs: values.mcpServerRefs ?? [],
+        defaultModelPolicy,
       };
       if (editing) { await api.updateEmployee(editing.employeeKey, payload); message.success('更新成功'); }
       else {
@@ -228,9 +391,12 @@ export default function Employees() {
         deepAgent: !!values.deepAgent,
         teamCode: values.teamCode || undefined,
         skillRefs: values.skillRefs ?? [],
-        toolRefs: values.toolRefs ?? [],
+        toolRefs: Array.from(selectedTools),
         mcpServerRefs: values.mcpServerRefs ?? [],
         modelId: modelId || 'gpt-4o',
+        outputModalities: modalities,
+        imageModelId: modalities.includes('image') ? imageModelId : undefined,
+        videoModelId: modalities.includes('video') ? videoModelId : undefined,
         temperature: Number.isFinite(parsedTemperature) ? parsedTemperature : 0.7,
         maxTokens: Number.isFinite(parsedMaxTokens) && parsedMaxTokens > 0 ? Math.trunc(parsedMaxTokens) : 4096,
         tags: values.tags ?? [],
@@ -483,6 +649,20 @@ export default function Employees() {
           <Form.Item label="团队" name="teamCode">
             <Select allowClear placeholder="选择所属团队" options={teams.map(t => ({ label: t.name, value: t.teamCode }))} />
           </Form.Item>
+          <Form.Item
+            label="员工输出能力"
+            name="outputModalities"
+            extra="思考模型始终负责文字规划；勾选图片或视频后，系统会绑定对应媒体工具并使用独立模型。"
+          >
+            <Select
+              mode="multiple"
+              options={[
+                { label: '文字 / 推理', value: 'text', disabled: true },
+                { label: '生成图片', value: 'image' },
+                { label: '生成视频', value: 'video' },
+              ]}
+            />
+          </Form.Item>
           <Form.Item label="绑定工具" name="toolRefs">
             <Select mode="multiple" placeholder="选择该员工可使用的工具" options={tools.map(t => ({ label: `${t.name} (${t.toolCode})`, value: t.toolCode }))} />
           </Form.Item>
@@ -501,7 +681,7 @@ export default function Employees() {
                 extra="这里只负责分析、写作和生成提示词，不是最终出图模型；生图时会单独选择真正支持图片输出的模型。"
               >
                 <Select showSearch placeholder="选择文字/推理模型"
-                  options={aiProviders.flatMap(p => (p.models ?? []).map((m: any) => ({ label: `${m.modelName || m.modelId}  (${p.name})`, value: m.modelId || m.modelName })))}
+                  options={chatModelOptions}
                 />
               </Form.Item>
             </Col>
@@ -512,6 +692,52 @@ export default function Employees() {
               <Form.Item label="最大 Token" name="maxTokens"><InputNumber min={256} max={128000} step={256} style={{ width: '100%' }} /></Form.Item>
             </Col>
           </Row>
+          {(outputModalities ?? []).some(value => value === 'image' || value === 'video') && (
+            <>
+              <Divider orientation="left" plain style={{ fontSize: 13 }}>媒体生成模型</Divider>
+              <Alert
+                showIcon
+                type="info"
+                message="媒体模型不会进入 Chat Completions"
+                description="员工先用上面的思考模型整理提示词，再通过专用图片或视频接口生成最终素材。"
+                style={{ marginBottom: 16 }}
+              />
+              <Row gutter={16}>
+                {(outputModalities ?? []).includes('image') && (
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="图片生成模型"
+                      name="imageModelId"
+                      rules={[{ required: true, message: '请选择图片生成模型' }]}
+                      extra="OpenAI 推荐 gpt-image-2；图片模型只走 Images API。"
+                    >
+                      <Select
+                        showSearch
+                        placeholder="选择 gpt-image-2 或 OpenRouter 图片模型"
+                        options={imageModelOptions}
+                      />
+                    </Form.Item>
+                  </Col>
+                )}
+                {(outputModalities ?? []).includes('video') && (
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="视频生成模型"
+                      name="videoModelId"
+                      rules={[{ required: true, message: '请选择视频生成模型' }]}
+                      extra="视频采用异步任务；生成后由员工查询状态并回传播放器。"
+                    >
+                      <Select
+                        showSearch
+                        placeholder="选择 Seedance 等视频模型"
+                        options={videoModelOptions}
+                      />
+                    </Form.Item>
+                  </Col>
+                )}
+              </Row>
+            </>
+          )}
           <Divider orientation="left" plain style={{ fontSize: 13 }}>其他</Divider>
           <Form.Item label="标签" name="tags"><Select mode="tags" placeholder="输入后回车添加标签" /></Form.Item>
           <Form.Item label="启用" name="enabled" valuePropName="checked"><Switch /></Form.Item>
@@ -525,6 +751,22 @@ export default function Employees() {
             <Descriptions.Item label="名称">{detailEmp.name}</Descriptions.Item>
             <Descriptions.Item label="状态"><Tag color={detailEmp.enabled ? 'green' : 'default'}>{detailEmp.enabled ? '启用' : '禁用'}</Tag></Descriptions.Item>
             <Descriptions.Item label="深度代理">{detailEmp.deepAgent ? '是' : '否'}</Descriptions.Item>
+            <Descriptions.Item label="输出能力">
+              {(detailEmp.outputModalities?.length ? detailEmp.outputModalities : ['text']).join(' / ')}
+            </Descriptions.Item>
+            <Descriptions.Item label="思考模型">
+              {String(detailEmp.defaultModelPolicy?.model_id ?? detailEmp.defaultModelPolicy?.modelId ?? '-')}
+            </Descriptions.Item>
+            {(detailEmp.outputModalities ?? []).includes('image') && (
+              <Descriptions.Item label="图片模型">
+                {String(detailEmp.defaultModelPolicy?.image_model_id ?? detailEmp.defaultModelPolicy?.imageModelId ?? '-')}
+              </Descriptions.Item>
+            )}
+            {(detailEmp.outputModalities ?? []).includes('video') && (
+              <Descriptions.Item label="视频模型">
+                {String(detailEmp.defaultModelPolicy?.video_model_id ?? detailEmp.defaultModelPolicy?.videoModelId ?? '-')}
+              </Descriptions.Item>
+            )}
             <Descriptions.Item label="团队">{teams.find(t => t.teamCode === detailEmp.teamCode)?.name ?? detailEmp.teamCode ?? '-'}</Descriptions.Item>
             <Descriptions.Item label="角色描述"><div style={{ whiteSpace: 'pre-wrap', maxHeight: 200, overflow: 'auto' }}>{detailEmp.roleProfile || '-'}</div></Descriptions.Item>
             <Descriptions.Item label="绑定工具">{getRefNames(detailEmp.toolRefs, tools, 'toolCode', 'name')}</Descriptions.Item>

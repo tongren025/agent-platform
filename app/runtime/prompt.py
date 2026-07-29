@@ -80,6 +80,32 @@ def compile(
     if snapshot.system_prompt_block:
         parts.append(f"<role_profile>\n{snapshot.system_prompt_block}\n</role_profile>")
 
+    modalities = [
+        value for value in ("text", "image", "video")
+        if value in set(snapshot.output_modalities or ["text"])
+    ]
+    if modalities:
+        media_rules = [
+            "文字分析、规划和工具编排始终由员工思考模型完成。",
+        ]
+        if "image" in modalities:
+            media_rules.append(
+                "用户明确要求最终图片时，必须调用 generate_image；"
+                "不得声称仅靠文字模型已经生成图片。"
+            )
+        if "video" in modalities:
+            media_rules.append(
+                "用户明确要求最终视频时，必须调用 generate_video；"
+                "任务完成查询使用 check_video_generation。"
+            )
+        parts.append(
+            "<output_modalities values=\""
+            + ",".join(modalities)
+            + "\">\n"
+            + "\n".join(f"- {rule}" for rule in media_rules)
+            + "\n</output_modalities>"
+        )
+
     if snapshot.deep_agent:
         parts.append(f"<deep_agent_workflow>\n{_DEEP_AGENT_WORKFLOW}\n</deep_agent_workflow>")
 

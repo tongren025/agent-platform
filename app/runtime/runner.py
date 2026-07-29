@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from app.dependencies import ai_service
+from app.services.chat_response import is_chat_completion_model_id
 from app.tools.base import ToolContext, get_handler
 from app.models.conversation import AgentInvocationTrace, AgentTokenUsage, PendingApprovalDetail
 from app.models.runtime import (
@@ -48,6 +49,42 @@ def _parse_schema(raw: Optional[str]) -> dict:
         return json.loads(raw)
     except (json.JSONDecodeError, TypeError):
         return {"type": "object", "properties": {}}
+
+
+def _append_generated_media(text: str, traces: list[AgentInvocationTrace]) -> str:
+    """把媒体工具产出或异步任务号兜底附到回复，避免模型遗漏可恢复信息。"""
+    media_tool_names = {
+        "generate_image",
+        "generate_video",
+        "check_video_generation",
+    }
+    reply_items: list[str] = []
+    for trace in traces:
+        if (
+            trace.tool_name not in media_tool_names
+            or not trace.success
+            or not trace.result
+        ):
+            continue
+        try:
+            payload = json.loads(trace.result)
+        except (json.JSONDecodeError, TypeError):
+            continue
+        if not isinstance(payload, dict) or not payload.get("success"):
+            continue
+        markdown = str(payload.get("markdown") or "").strip()
+        if markdown and markdown not in text and markdown not in reply_items:
+            reply_items.append(markdown)
+            continue
+        if payload.get("mediaType") == "video_job":
+            job_id = str(payload.get("jobId") or "").strip()
+            status = str(payload.get("status") or "pending").strip()
+            pending_text = f"视频任务 `{job_id}` 当前状态：{status}。"
+            if job_id and pending_text not in text and pending_text not in reply_items:
+                reply_items.append(pending_text)
+    if not reply_items:
+        return text
+    return (text.rstrip() + "\n\n" + "\n\n".join(reply_items)).strip()
 
 
 def _build_tool_handler(
@@ -100,6 +137,13 @@ async def run_agent(
 
     model_policy = snapshot.default_model_policy
     model_id: str = model_policy.get("model_id", "gpt-4o")
+    if not is_chat_completion_model_id(model_id):
+        run_result.success = False
+        run_result.error_message = (
+            f"{model_id} 是图片生成模型，不能作为员工思考模型；"
+            "请把它配置到 image_model_id，并选择 GPT-5.6 等聊天模型作为 model_id"
+        )
+        return run_result
     temperature: float = float(model_policy.get("temperature", 0.7))
     max_tokens: int = int(model_policy.get("max_tokens", 4096))
 
@@ -160,7 +204,11 @@ async def run_agent(
         return run_result
 
     from app.utils import strip_latex_artifacts
-    run_result.assistant_message = strip_latex_artifacts(loop_result.final_text)
+    final_text = strip_latex_artifacts(loop_result.final_text)
+    run_result.assistant_message = _append_generated_media(
+        final_text,
+        loop_result.traces,
+    )
     run_result.success = loop_result.success
     run_result.traces = loop_result.traces
     run_result.auto_invoke_count = loop_result.iterations

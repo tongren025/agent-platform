@@ -9,12 +9,7 @@ import json
 from types import SimpleNamespace
 from typing import Any
 
-
-_IMAGE_ONLY_MODEL_PREFIXES = (
-    "chatgpt-image-",
-    "dall-e-",
-    "gpt-image-",
-)
+from app.core.model_capabilities import is_chat_completion_model_id
 
 
 def select_chat_completion_model(models: list[dict]) -> str:
@@ -28,8 +23,7 @@ def select_chat_completion_model(models: list[dict]) -> str:
         ).strip()
         if not model_id:
             continue
-        normalized = model_id.lower()
-        if normalized.startswith(_IMAGE_ONLY_MODEL_PREFIXES):
+        if not is_chat_completion_model_id(model_id):
             continue
         return model_id
     return ""

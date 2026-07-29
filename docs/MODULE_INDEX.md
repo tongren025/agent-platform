@@ -50,7 +50,8 @@
 | [knowledge_graph.py](../app/api/knowledge_graph.py) | 知识图谱 API —— 聚合所有实体及关系，供前端可视化。 |
 | [memory_api.py](../app/api/memory_api.py) | 长期记忆管理 API。 |
 | [pipeline.py](../app/api/pipeline.py) | CLI Pipeline REST API — 用本地 CLI 驱动漫剧创作流水线。 |
-| [production.py](../app/api/production.py) | 制作项目 API：项目/卡片 CRUD、AI 生成、真实交付就绪度，以及供“我的项目”故事页使用的去重剧情画面预览统计。 |
+| [production.py](../app/api/production.py) | Production pipeline API — project & card CRUD + AI generation. |
+| [quick_prompts.py](../app/api/quick_prompts.py) | 常用指令 API：按当前登录账号隔离保存工作台快捷短语。 |
 | [registry.py](../app/api/registry.py) | 注册表 API：技能/MCP/工具/员工/团队/角色模板的 CRUD + 员工知识库管理。Prefix: /api/v1/agentapp/registry。 |
 | [runs.py](../app/api/runs.py) | agent 运行记录 API —— 事后审计每次 run 的成本与行为。 |
 | [scrape.py](../app/api/scrape.py) | 自动学习 / 提示词采集 API。 |
@@ -74,6 +75,7 @@
 | [logging.py](../app/core/logging.py) | 结构化日志 —— structlog,支持 JSON(生产)与彩色控制台(开发)。 |
 | [metrics.py](../app/core/metrics.py) | LLM 运行的自定义 Prometheus 指标 —— M6 在 HTTP 指标之外补 LLM 维度。 |
 | [middleware.py](../app/core/middleware.py) | 请求中间件 —— 为每个请求生成 request_id 并记录访问日志。 |
+| [model_capabilities.py](../app/core/model_capabilities.py) | 模型引用与端点能力判定：统一隔离聊天、图片、视频及其他专用模型。 |
 | [observability.py](../app/core/observability.py) | 可观测性 —— 挂载 Prometheus /metrics 端点。 |
 | [queue.py](../app/core/queue.py) | M4 异步任务队列 —— arq 连接池 + 入队辅助。 |
 | [rate_limit.py](../app/core/rate_limit.py) | M5 限流 —— slowapi 全局限速 + 员工级 token 配额。 |
@@ -129,9 +131,12 @@
 | 文件 | 干什么 |
 |------|--------|
 | [__init__.py](../app/services/__init__.py) | 业务服务层：注册表、会话/记忆/运行记录存储、AI 调用、采集/学习、工作流引擎等。 |
-| [ai.py](../app/services/ai.py) | AI 供应商配置加密存储、旧明文自动迁移 + LLM 客户端解析。 |
+| [ai.py](../app/services/ai.py) | AI 供应商（provider）配置存储 + LLM 客户端解析。 |
+| [chat_response.py](../app/services/chat_response.py) | OpenAI 兼容接口响应归一化。 |
 | [distillation.py](../app/services/distillation.py) | Deep Dream 记忆蒸馏 —— 模拟人类睡眠时的记忆整合。 |
 | [evolution.py](../app/services/evolution.py) | 自我进化引擎 —— 审视对话历史，生成改进建议。 |
+| [image_generation.py](../app/services/image_generation.py) | OpenAI 兼容文生图公共服务：调用指定模型并把结果持久化到本地画布上传目录。 |
+| [inbox_ingest.py](../app/services/inbox_ingest.py) | 回填收件箱：按文件名规则把外部生成的图/视频批量分拣到生产卡。 |
 | [invocation.py](../app/services/invocation.py) | Agent 调用编排层。 |
 | [knowledge.py](../app/services/knowledge.py) | 员工知识库：文件存储 + 关键词检索。 |
 | [learn_runner.py](../app/services/learn_runner.py) | 定时文章学习运行编排：逐个 URL 抓取 → LLM 总结 → 写入目标员工知识库+长期记忆 → 记录历史。 |
@@ -175,6 +180,7 @@
 | [builtin.py](../app/tools/builtin.py) | 内置工具：技能详情查询 + 知识库检索。模块加载时自动注册到全局工具 registry（main.py 顶部 import 触发）。 |
 | [deep.py](../app/tools/deep.py) | DeepAgent 工具集：任务清单(write_todos)、虚拟文件系统(ls/read/write/edit)、人工审批(require_approval)、受限 shell(execute)、子代理(task)。状态都存在 DeepAgentState（单次运行内存内共享），模块加载时自动注册。 |
 | [delegate.py](../app/tools/delegate.py) | 员工间委派工具（delegate_to_employee）：把消息转给另一个数字员工执行并取回结果。带总开关、深度上限与环路检测（__delegation_stack）。 |
+| [media.py](../app/tools/media.py) | 数字员工媒体工具：由聊天模型编排，分别调用图片与视频专用 API。 |
 
 ### `app/tools/strategy/`
 
@@ -200,11 +206,14 @@
 | 文件 | 干什么 |
 |------|--------|
 | [adminApi.ts](../web/src/adminApi.ts) | 管理端 API 封装：走 /api/admin/*（代理到 :8001），带管理端独立 token。 |
+| [advancedNavigation.tsx](../web/src/advancedNavigation.tsx) | 高级能力统一注册表：中心卡片、侧栏归属和子页面面包屑共同消费，避免任务名称漂移。 |
 | [api.ts](../web/src/api.ts) | 用户端 API 封装：统一 BASE 前缀、Bearer 凭证、错误信封解包；401 自动清 token 回登录页。 |
 | [App.tsx](../web/src/App.tsx) | 路由总表：用户端页面（登录墙内）+ 管理端 /admin 页面（独立鉴权）；页面按路由懒加载以缩短首屏时间。 |
+| [httpErrors.ts](../web/src/httpErrors.ts) | — |
 | [main.tsx](../web/src/main.tsx) | 前端入口：挂载 React 根组件，套 antd 中文语言包与主题配置。 |
 | [media.ts](../web/src/media.ts) | 素材媒体工具：缩略图 URL 拼接 + 加载失败的可见占位。 |
-| [storyPresentation.ts](../web/src/storyPresentation.ts) | 故事展示适配层：把 GC/G/阶段卡等制作数据翻译成一句话故事、四步脉络、逐幕剧情画面和普通话项目名称。 |
+| [sessionGuard.ts](../web/src/sessionGuard.ts) | — |
+| [storyPresentation.ts](../web/src/storyPresentation.ts) | 面向非制作人员的故事展示层：把 GC、G 单元、聚合卡等内部结构翻译成可顺序阅读的剧情画面。 |
 | [theme.ts](../web/src/theme.ts) | 全局配色常量 COLORS + antd 主题定制（主色/圆角/组件级覆盖）。 |
 | [types.ts](../web/src/types.ts) | 前后端共享的 TypeScript 类型定义（与后端 Pydantic 模型的 camelCase 契约一一对应）。 |
 | [ui.tsx](../web/src/ui.tsx) | antd message 的上下文桥。 |
@@ -217,7 +226,10 @@
 |------|--------|
 | [AdminLayout.tsx](../web/src/components/AdminLayout.tsx) | 管理端布局：独立导航与鉴权守卫，与用户端完全隔离。 |
 | [AppErrorBoundary.tsx](../web/src/components/AppErrorBoundary.tsx) | 全局错误边界：避免单个页面渲染异常导致整站白屏，给用户明确恢复入口。 |
+| [CardDetailDrawer.tsx](../web/src/components/CardDetailDrawer.tsx) | — |
 | [Layout.tsx](../web/src/components/Layout.tsx) | 用户端主布局：左侧导航（按权限显隐）+ 内容区；含折叠与窄屏适配。 |
+| [ProjectViewNav.tsx](../web/src/components/ProjectViewNav.tsx) | 项目内视图切换：把总览、制作流水线和完整性检查收进同一个项目上下文。 |
+| [TaskCompletionNotifier.tsx](../web/src/components/TaskCompletionNotifier.tsx) | 全局后台任务完成提醒：只做轻量轮询，不渲染 DOM，也不打扰首次进入时的历史任务。 |
 | [TraceList.tsx](../web/src/components/TraceList.tsx) | 工具调用轨迹展示组件：逐轮显示工具名/参数/结果/成败。 |
 | [UserAuthGuard.tsx](../web/src/components/UserAuthGuard.tsx) | 用户端路由守卫：校验 token 有效性，未登录跳 /login。 |
 
@@ -226,6 +238,20 @@
 | 文件 | 干什么 |
 |------|--------|
 | [CanvasNodes.tsx](../web/src/components/canvas/CanvasNodes.tsx) | 自由画布节点组件:数据节点(DataNode,主角)与图片节点(ImageNode)。 |
+| [CanvasSidebar.tsx](../web/src/components/canvas/CanvasSidebar.tsx) | — |
+| [LabeledEdge.tsx](../web/src/components/canvas/LabeledEdge.tsx) | — |
+| [SelectionToolbar.tsx](../web/src/components/canvas/SelectionToolbar.tsx) | — |
+
+### `web/src/components/canvas-engines/`
+
+| 文件 | 干什么 |
+|------|--------|
+| [AffineCanvas.tsx](../web/src/components/canvas-engines/AffineCanvas.tsx) | AFFiNE 是完整应用而不是嵌入式组件，通过自托管地址接入统一画布中心。 |
+| [EngineState.tsx](../web/src/components/canvas-engines/EngineState.tsx) | — |
+| [ExcalidrawCanvas.tsx](../web/src/components/canvas-engines/ExcalidrawCanvas.tsx) | Excalidraw 自由白板：保留原生交互，文档通过平台画布 API 自动保存。 |
+| [FabricCanvas.tsx](../web/src/components/canvas-engines/FabricCanvas.tsx) | Fabric.js 视觉排版画布：适合图片、字幕、形状和分镜卡片的精细布局。 |
+| [ReteCanvas.tsx](../web/src/components/canvas-engines/ReteCanvas.tsx) | Rete.js 可执行节点编辑器：面向数据流、AI 工具链和低代码编排实验。 |
+| [TldrawCanvas.tsx](../web/src/components/canvas-engines/TldrawCanvas.tsx) | tldraw SDK 画布：通过 persistenceKey 使用本地 IndexedDB；生产环境需许可证密钥。 |
 
 ### `web/src/components/workflow/`
 
@@ -236,25 +262,39 @@
 | [RunPanel.tsx](../web/src/components/workflow/RunPanel.tsx) | 工作流运行面板：填输入 → 触发运行 → 逐节点结果实时展示。 |
 | [WorkflowNodeCard.tsx](../web/src/components/workflow/WorkflowNodeCard.tsx) | 画布上的工作流节点卡片：按类型着色，显示节点名与摘要。 |
 
+### `web/src/hooks/`
+
+| 文件 | 干什么 |
+|------|--------|
+| [useCanvasEngineDocument.ts](../web/src/hooks/useCanvasEngineDocument.ts) | 第三方画布引擎的统一持久化：首次从服务端加载，后续变更防抖保存。 |
+| [useCanvasHistory.ts](../web/src/hooks/useCanvasHistory.ts) | — |
+| [useInputHabit.ts](../web/src/hooks/useInputHabit.ts) | — |
+| [useResponsive.ts](../web/src/hooks/useResponsive.ts) | — |
+
 ### `web/src/pages/`
 
 | 文件 | 干什么 |
 |------|--------|
+| [AdvancedCenter.tsx](../web/src/pages/AdvancedCenter.tsx) | 高级能力中心：以用户任务聚合低频工具，保留原功能页作为可直达的下一层。 |
 | [ArticleLearn.tsx](../web/src/pages/ArticleLearn.tsx) | 文章学习页：学习源 CRUD、手动触发、学习历史（网页→LLM 总结→知识库+记忆）。 |
 | [AutoLearn.tsx](../web/src/pages/AutoLearn.tsx) | 提示词采集页：采集源 CRUD、手动触发、已采提示词与历史查看。 |
 | [Canvas.tsx](../web/src/pages/Canvas.tsx) | 自由画布 —— 数据的可视化生成台。 |
+| [CanvasHub.tsx](../web/src/pages/CanvasHub.tsx) | 统一画布中心：按任务选择专用引擎，并把现有生产画布作为默认入口。 |
 | [Dashboard.tsx](../web/src/pages/Dashboard.tsx) | 总览页：以“继续制作、当前阻塞、下一步行动”为核心，而非罗列系统资源数量。 |
-| [DirectorStudio.tsx](../web/src/pages/DirectorStudio.tsx) | 导演 Agent 主页面：创意建项、七步进度、OpenRouter 媒体生成、镜头审片与成片预览。 |
-| [Employees.tsx](../web/src/pages/Employees.tsx) | 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、知识库上传。 |
+| [DirectorStudio.tsx](../web/src/pages/DirectorStudio.tsx) | 快速制作：用户先选交付目标，再沿一条主线完成创意、剧本、分镜、图片、视频与成片。 |
+| [Employees.tsx](../web/src/pages/Employees.tsx) | 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、参考资料上传。 |
 | [EpisodeDetail.tsx](../web/src/pages/EpisodeDetail.tsx) | 单集详情页：该集全部 G 生成单元卡片，按阶段 Tab 查看剧本/分镜/提示词/图/视频。 |
 | [Evolution.tsx](../web/src/pages/Evolution.tsx) | 自我进化页：查看/采纳/拒绝 LLM 分析会话后产出的改进洞察。 |
 | [KnowledgeGraph.tsx](../web/src/pages/KnowledgeGraph.tsx) | 知识图谱页：员工/工具/技能/团队/工作流的关系可视化。 |
+| [LearningCenter.tsx](../web/src/pages/LearningCenter.tsx) | 参考资料统一入口：按资料类型聚合优秀提示词与专业文章，旧功能仍按需懒加载。 |
 | [Memory.tsx](../web/src/pages/Memory.tsx) | 记忆管理页：查看/增删员工的语义、经验、行为三类长期记忆，触发提取与蒸馏。 |
+| [NotFound.tsx](../web/src/pages/NotFound.tsx) | — |
+| [OpenRouterModels.tsx](../web/src/pages/OpenRouterModels.tsx) | OpenRouter 模型市场：实时读取模型目录，筛选免费模型，并一键加入本地 openrouter 供应商。 |
 | [Pipeline.tsx](../web/src/pages/Pipeline.tsx) | CLI 流水线页：用本地 claude/gemini CLI 跑漫剧创作流水线（导演→编剧→美术…）。 |
-| [ProjectsHome.tsx](../web/src/pages/ProjectsHome.tsx) | “我的项目”故事库：先展示项目讲什么、是什么形式、封面和已有剧情画面数，再进入故事或专业制作。 |
 | [Production.tsx](../web/src/pages/Production.tsx) | 制作看板页：漫剧十阶段卡片式流水线（创意→剧本→分镜→生图→成片）。 |
-| [ProductionHub.tsx](../web/src/pages/ProductionHub.tsx) | 故事优先的项目详情：一句话梗概、四步脉络、按时间排序的剧情画面、世界设定参考和收起的制作状态。 |
+| [ProductionHub.tsx](../web/src/pages/ProductionHub.tsx) | 项目故事总览：先用一句话和已生成画面讲清故事，再把制作数据收进次级区域。 |
 | [ProductionMatrix.tsx](../web/src/pages/ProductionMatrix.tsx) | 全链路对照矩阵：季 → 集 → G 生成单元 → 剧本/分镜/首帧/末帧/视频提示词/图/视频，一屏铺开。 |
+| [ProjectsHome.tsx](../web/src/pages/ProjectsHome.tsx) | “我的项目”入口：先帮助用户选故事、看已有剧情画面，再进入专业制作工具。 |
 | [Runs.tsx](../web/src/pages/Runs.tsx) | 运行记录页（可观测）：每次 agent 运行的 token/成本/轨迹审计 + 员工月度配额用量。 |
 | [Settings.tsx](../web/src/pages/Settings.tsx) | 设置页：AI 供应商配置（endpoint/key/模型列表）与系统信息。 |
 | [SkillTracker.tsx](../web/src/pages/SkillTracker.tsx) | AI 趋势雷达页：GitHub 趋势仓库追踪与 LLM 分析。 |

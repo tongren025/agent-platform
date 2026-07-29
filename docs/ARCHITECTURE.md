@@ -74,11 +74,29 @@ agent 内 → query_knowledge_base 工具（app/tools/builtin.py）
 | 长期记忆（语义/经验/行为三类） | data/memory 或 PG | memory_extractor 后台提取 | prompt 编译时注入 |
 | 蒸馏/进化 | distillation/evolution logs | 定时或手动触发 | 人工审阅采纳 |
 
+### 6. 多模态员工路由
+
+```
+用户选择员工
+  └► model_id（GPT-5.6）理解需求、写提示词、决定是否调用工具
+       ├► 纯文字结果 ───────────────────────────────► 回复
+       ├► generate_image → image_model_id → Images API → 本地图片 URL
+       └► generate_video → video_model_id → 异步 jobId
+                              └► check_video_generation → 本地 MP4 URL
+```
+
+`outputModalities` 是员工能力声明，当前支持 `text`、`image`、`video`。`text`
+始终保留；图片/视频模型不进入 `app/runtime/loop.py` 的 Chat Completions 调用。
+媒体工具在 `app/tools/media.py`，员工模型与能力的详细约定见
+[MULTIMODAL_EMPLOYEES.md](MULTIMODAL_EMPLOYEES.md)。
+
 ## 三、"我想改 X" 速查表
 
 | 想干什么 | 去哪 |
 |---|---|
 | 改 LLM 重试/超时/降级策略 | `app/runtime/loop.py`（`_create_with_retry`），参数在员工的 `defaultModelPolicy` |
+| 改员工文字/图片/视频模型路由 | `app/models/registry.py` + `app/runtime/snapshot.py` + `app/tools/media.py`；界面在 `web/src/pages/Employees.tsx` |
+| 接入新的图片或视频供应商 | 在 `app/services/` 实现专用媒体服务，再由 `app/tools/media.py` 调用；不要塞进 Chat Completions |
 | 加一个 agent 工具 | `app/tools/` 写 Handler + `register_handler`，再到工具注册表建定义并绑给员工 |
 | 加一个 API 端点 | `app/api/` 对应文件加路由；新文件要在 `app/main.py` include_router |
 | 加一张数据库表 | `app/models/db/` 建 ORM → `core/db.py init_db` 注册 → `alembic revision --autogenerate` |

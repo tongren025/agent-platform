@@ -1,1 +1,0 @@
-import{c as s,j as t,l as a,B as i}from"./index-jeUxIGHq.js";function n(){const e=s();return t.jsx(a,{icon:t.jsx("img",{src:"/empty-404.svg",alt:"",width:220,style:{margin:"0 auto"}}),title:"页面不存在",subTitle:"你访问的路径无效，可能是链接已失效或输入有误。",extra:t.jsx(i,{type:"primary",onClick:()=>e("/",{replace:!0}),children:"返回首页"})})}export{n as default};

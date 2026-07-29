@@ -47,6 +47,7 @@ def load_snapshot(
             if employee.default_model_policy
             else dict(_DEFAULT_MODEL_POLICY)
         ),
+        output_modalities=employee.output_modalities or ["text"],
         has_knowledge_base=employee.has_knowledge_base,
         team_code=employee.team_code,
     )
@@ -77,9 +78,17 @@ def load_snapshot(
         if tree_skills:
             snapshot.skill_trees_by_scope["global"] = tree_skills
 
-    if employee.tool_refs:
+    tool_refs = list(employee.tool_refs or [])
+    if "image" in employee.output_modalities and "generate_image" not in tool_refs:
+        tool_refs.append("generate_image")
+    if "video" in employee.output_modalities:
+        for media_tool in ("generate_video", "check_video_generation"):
+            if media_tool not in tool_refs:
+                tool_refs.append(media_tool)
+
+    if tool_refs:
         tools: list[RuntimeTool] = []
-        for ref in employee.tool_refs:
+        for ref in tool_refs:
             defn = tool_registry.get(ref)
             if defn is None:
                 logger.warning("Tool ref not found: %s (employee=%s)", ref, employee_key)

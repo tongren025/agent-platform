@@ -12,12 +12,16 @@
     "comic-vfx-designer",
     "comic-trajectory-artist",
     "comic-prompt-engineer",
+    "comic-character-artist",
+    "comic-scene-artist",
+    "comic-keyframe-artist",
+    "comic-video-artist",
     "comic-qa-inspector"
   ],
   "defaultEmployeeKey": "comic-director",
   "ownerUserId": null,
   "leaderEmployeeKey": "comic-director",
-  "description": "一人漫剧创作团队：用户说一句「做 EP01 第1段 10秒」，8 个 AI 角色自动流转，产出完整制作包。\n\n流程：总导演统筹 → 编剧分镜拆镜头 → 并行（人物设定 + 场景美术 + 特效设计 + 动作轨迹）→ AI视频提示词整合 → 质检交付",
+  "description": "一人漫剧创作团队：12 个 AI 角色覆盖统筹、创作、设计、提示词、图片/视频生成与质检。\n\n默认工作流：总导演统筹 → 编剧分镜拆镜头 → 并行（人物设定 + 场景美术 + 特效设计 + 动作轨迹）→ AI 视频提示词整合 → 质检交付；用户明确要求最终媒体时，再由角色/场景/关键帧原画师或视频生成师调用付费生成工具。",
   "roles": [
     {
       "employeeKey": "comic-director",
@@ -53,6 +57,26 @@
       "employeeKey": "comic-prompt-engineer",
       "stage": "整合",
       "order": 0
+    },
+    {
+      "employeeKey": "comic-character-artist",
+      "stage": "生成",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-scene-artist",
+      "stage": "生成",
+      "order": 1
+    },
+    {
+      "employeeKey": "comic-keyframe-artist",
+      "stage": "生成",
+      "order": 2
+    },
+    {
+      "employeeKey": "comic-video-artist",
+      "stage": "生成",
+      "order": 3
     },
     {
       "employeeKey": "comic-qa-inspector",

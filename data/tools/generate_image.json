@@ -1,0 +1,7 @@
+{
+  "toolCode": "generate_image",
+  "name": "生成图片",
+  "description": "仅在用户明确要求最终图片时调用。使用员工配置的 image_model_id 通过图片专用 API 生成并返回可展示的图片 URL；不要用思考模型冒充生图模型。",
+  "inputSchema": "{\"type\":\"object\",\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"完整、可直接生图的正向提示词\"},\"size\":{\"type\":\"string\",\"enum\":[\"1024x1024\",\"1024x1536\",\"1536x1024\"],\"default\":\"1024x1536\"},\"quality\":{\"type\":\"string\",\"enum\":[\"low\",\"medium\",\"high\",\"auto\"],\"default\":\"medium\"}},\"required\":[\"prompt\"]}",
+  "sortOrder": 30
+}

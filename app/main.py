@@ -27,6 +27,7 @@ from app.api import agent, ai_providers, canvas, director, evolution, knowledge_
 import app.tools.builtin  # noqa: F401
 import app.tools.delegate  # noqa: F401
 import app.tools.deep  # noqa: F401
+import app.tools.media  # noqa: F401
 import app.tools.strategy.handlers  # noqa: F401
 
 configure_logging()
@@ -36,7 +37,7 @@ logger = get_logger(__name__)
 
 
 def _migrate_employees() -> None:
-    """启动时兜底迁移：给历史员工记录补齐 tags / source / created_at 缺省字段。"""
+    """启动时兜底迁移：只补无争议的基础字段，不覆盖用户模型与能力选择。"""
     from app.dependencies import employee_registry
 
     migrated = 0

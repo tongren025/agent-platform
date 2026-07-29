@@ -8,13 +8,20 @@
   "deepAgent": false,
   "defaultModelPolicy": {
     "model_id": "Gemma-4-31B-IT-NVFP4",
+    "image_model_id": "gpt-image-2",
     "temperature": 0.7,
     "max_tokens": 4096
   },
+  "outputModalities": [
+    "text",
+    "image"
+  ],
   "skillRefs": null,
-  "toolRefs": null,
+  "toolRefs": [
+    "generate_image"
+  ],
   "mcpServerRefs": null,
-  "teamCode": null,
+  "teamCode": "comic-drama-team",
   "templateCode": null,
   "hasKnowledgeBase": true,
   "avatarUrl": null,

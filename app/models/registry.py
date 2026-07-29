@@ -75,6 +75,10 @@ class EmployeeDefinition(RegistryEntity):
     role_profile: str = Field("", alias="roleProfile")
     deep_agent: bool = Field(False, alias="deepAgent")
     default_model_policy: dict = Field(default_factory=dict, alias="defaultModelPolicy")
+    output_modalities: list[str] = Field(
+        default_factory=lambda: ["text"],
+        alias="outputModalities",
+    )
     skill_refs: Optional[list[str]] = Field(None, alias="skillRefs")
     tool_refs: Optional[list[str]] = Field(None, alias="toolRefs")
     mcp_server_refs: Optional[list[str]] = Field(None, alias="mcpServerRefs")
@@ -130,6 +134,10 @@ class RoleTemplateDefinition(RegistryEntity):
     role_profile: str = Field("", alias="roleProfile")
     deep_agent: bool = Field(False, alias="deepAgent")
     default_model_policy: dict = Field(default_factory=dict, alias="defaultModelPolicy")
+    output_modalities: list[str] = Field(
+        default_factory=lambda: ["text"],
+        alias="outputModalities",
+    )
     suggested_skill_codes: list[str] = Field(default_factory=list, alias="suggestedSkillCodes")
     suggested_tool_codes: list[str] = Field(default_factory=list, alias="suggestedToolCodes")
     suggested_mcp_server_codes: list[str] = Field(default_factory=list, alias="suggestedMcpServerCodes")

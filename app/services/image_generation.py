@@ -26,14 +26,19 @@ def _save_image_bytes(content: bytes, ext: str = ".png") -> str:
     return f"/uploads/canvas/{filename}"
 
 
-def generate_image_to_local(prompt: str, model: str, size: str = "1024x1536") -> dict[str, str]:
+def generate_image_to_local(
+    prompt: str,
+    model: str,
+    size: str = "1024x1536",
+    quality: str = "medium",
+) -> dict[str, str]:
     """调用指定 images 模型生成一张图，下载远端结果并返回永久本地 URL。"""
     clean_prompt = prompt.strip()
     if not clean_prompt:
         raise ValueError("提示词不能为空")
 
-    if model.startswith("openrouter:"):
-        model_id = model.removeprefix("openrouter:")
+    if model.lower().startswith("openrouter:"):
+        model_id = model.split(":", 1)[1]
         if not model_id:
             raise ValueError("OpenRouter 图片模型不能为空")
         width, _, height = size.partition("x")
@@ -66,6 +71,7 @@ def generate_image_to_local(prompt: str, model: str, size: str = "1024x1536") ->
             model=model_id,
             prompt=clean_prompt,
             size=size,
+            quality=quality,
             n=1,
             timeout=120,
         )

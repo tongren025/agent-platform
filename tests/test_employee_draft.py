@@ -46,12 +46,10 @@ def test_generate_employee_draft_with_llm(app_client, stub_llm):
 
 def test_generate_employee_draft_falls_back_without_model(app_client, monkeypatch):
     """模型不可用也不能把空白提示词表单重新丢给用户。"""
-    from app.dependencies import ai_service
-
-    def unavailable():
-        raise ValueError("没有可用模型")
-
-    monkeypatch.setattr(ai_service, "get_default_client", unavailable)
+    monkeypatch.setattr(
+        "app.api.registry._resolve_draft_chat_model",
+        lambda _preferred: None,
+    )
 
     response = app_client.post(
         "/api/v1/agentapp/registry/employees/generate-draft",
