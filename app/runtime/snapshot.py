@@ -18,6 +18,7 @@ from app.models.runtime import (
     RuntimeTool,
     TeamMemberSummary,
 )
+from app.runtime.skills import resolve_skill_bindings
 
 logger = logging.getLogger(__name__)
 
@@ -52,14 +53,24 @@ def load_snapshot(
         team_code=employee.team_code,
     )
 
+    resolved_skill_tool_refs: list[str] = []
+    resolved_skill_mcp_refs: list[str] = []
     if employee.skill_refs:
         skills: list[RuntimeSkill] = []
         tree_skills: list[RuntimeSkill] = []
-        for ref in employee.skill_refs:
-            defn = skill_registry.get(ref)
-            if defn is None:
-                logger.warning("Skill ref not found: %s (employee=%s)", ref, employee_key)
-                continue
+        available_skills = {
+            definition.code: definition
+            for definition in skill_registry.list_all()
+            if definition.code
+        }
+        resolved_bindings = resolve_skill_bindings(
+            employee.skill_refs,
+            available_skills,
+        )
+        resolved_skill_tool_refs = resolved_bindings.tool_codes
+        resolved_skill_mcp_refs = resolved_bindings.mcp_server_codes
+        for ref in resolved_bindings.skill_codes:
+            defn = available_skills[ref]
             rt = RuntimeSkill(
                 code=defn.code,
                 binding_code=defn.binding_code or "",
@@ -79,6 +90,9 @@ def load_snapshot(
             snapshot.skill_trees_by_scope["global"] = tree_skills
 
     tool_refs = list(employee.tool_refs or [])
+    for dependency_tool in resolved_skill_tool_refs:
+        if dependency_tool not in tool_refs:
+            tool_refs.append(dependency_tool)
     if "image" in employee.output_modalities and "generate_image" not in tool_refs:
         tool_refs.append("generate_image")
     if "video" in employee.output_modalities:
@@ -104,9 +118,14 @@ def load_snapshot(
         if tools:
             snapshot.tools_by_scope["global"] = tools
 
-    if employee.mcp_server_refs:
+    mcp_server_refs = list(employee.mcp_server_refs or [])
+    for dependency_server in resolved_skill_mcp_refs:
+        if dependency_server not in mcp_server_refs:
+            mcp_server_refs.append(dependency_server)
+
+    if mcp_server_refs:
         servers: list[RuntimeMcpServer] = []
-        for ref in employee.mcp_server_refs:
+        for ref in mcp_server_refs:
             defn = mcp_server_registry.get(ref)
             if defn is None:
                 logger.warning("MCP server ref not found: %s (employee=%s)", ref, employee_key)

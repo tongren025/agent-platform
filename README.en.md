@@ -67,7 +67,10 @@ the MCP execution bridge and read-only SKILL.md discovery. Directory-based
 skills under `data/skills/` are visible to the existing registry and can be
 bound to employees; their full instructions are still loaded on demand through
 `get_skill_detail`, while a same-code JSON definition takes precedence without
-modifying the skill directory. An MCP server is connected and its tools are appended
+modifying the skill directory. Child Skill, tool, and MCP dependencies declared
+by a bound Skill are expanded into the employee's in-memory runtime snapshot;
+missing or cyclic edges are isolated without rewriting employee configuration.
+An MCP server is connected and its tools are appended
 to the existing AgentLoop only after it is configured and bound to an employee.
 With no binding, the SDK is not imported, no subprocess is started, and the
 existing local-tool path remains unchanged.

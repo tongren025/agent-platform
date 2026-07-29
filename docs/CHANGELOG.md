@@ -5,6 +5,21 @@
 
 ---
 
+## [2026-07-29] feat: 接通 Skill 的工具、MCP 与子 Skill 依赖
+
+- 从 Yuxi SkillsMiddleware 迁入确定性 DFS 依赖闭包，员工绑定根 Skill 后自动展开
+  `skillDependencies`，并汇总闭包内的 `toolDependencies` 与 `mcpDependencies`。
+- 依赖能力直接追加到现有员工运行时快照，不新建 Agent 内核；员工原有显式
+  `toolRefs`、`mcpServerRefs` 保持优先顺序并去重，注册表配置本身不会被改写。
+- 缺失 Skill 与循环依赖采用 fail-soft：记录告警并只跳过问题节点/边，其余
+  Skill、工具和 MCP 继续装配。
+- 新增 3 个专项测试，覆盖多层共享依赖去重、缺失/循环隔离和员工快照集成。
+
+**影响面**：新增 `app/runtime/skills.py` 并调整快照装配；无 API、数据库、Redis、
+环境变量、前端或 JSON 数据迁移，不改变未绑定 Skill 员工的运行路径。
+
+---
+
 ## [2026-07-29] feat: 让现有 Skill 注册表识别 SKILL.md 技能包
 
 - 从 Yuxi Skills Service 迁入 `SKILL.md` frontmatter 解析、slug 校验、依赖元数据

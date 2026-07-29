@@ -37,6 +37,17 @@ Yuxi 的 PostgreSQL Repository 或 LangChain 运行栈。
 `backend/package/yuxi/agents/middlewares/skills.py`。本地适配不包含 Yuxi 的
 数据库权限、远程安装器或 LangGraph Middleware。
 
+### Skill 依赖闭包
+
+- 员工绑定根 Skill 后，运行时按配置顺序展开其 `skillDependencies`。
+- 闭包内的 `toolDependencies` 与 `mcpDependencies` 追加到员工现有显式绑定，
+  显式绑定优先并保持去重。
+- 缺失依赖和循环依赖只告警并跳过问题边，不让整个员工快照失败。
+- 解析只发生在内存快照中，不反写员工、Skill、工具或 MCP 的 JSON 配置。
+
+实现来源：`backend/package/yuxi/agents/middlewares/skills.py` 中的
+`expand_skill_closure`、dependency map 与 fail-soft 设计。
+
 ## 目标职责
 
 后续继续从 Yuxi 筛选可补齐的通用 Agent Harness 能力：
