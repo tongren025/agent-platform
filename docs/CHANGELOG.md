@@ -5,6 +5,22 @@
 
 ---
 
+## [2026-07-29] chore: 固定引入 Yuxi Agent Runtime 源码模块
+
+- 从 `xerrors/Yuxi` 的 `main` 分支固定提交
+  `2f8fa7fdc8d641ccc1b158ad7022a26087b6c99a` 引入上游源码快照，
+  存放在 `modules/yuxi-runtime/`。
+- 保留上游 MIT 许可证、后端、Worker、沙盒、Skills/MCP、知识模块、CLI、
+  前端和测试源码；初始引入不重写上游内核。
+- 新增 `UPSTREAM.md` 与 `INTEGRATION.md`，明确来源、同步规则、独立运行边界
+  以及与现有漫剧生产系统的职责划分。
+- 当前尚未把 Yuxi 接入根 Compose，也未替换现有 Agent 运行链；后续先以
+  LITE 独立服务验证，再增加最薄的 API/Artifact 映射层。
+
+**影响面**：新增独立源码模块和文档，不改变现有 API、数据库、配置、前端与部署行为。
+
+---
+
 ## [2026-07-29] fix: 兼容全局与分集生产单元混合统计
 
 - 生产就绪度统计为 `(episode, shot_number)` 增加显式排序规则，旧 GC 全局单元的

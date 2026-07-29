@@ -58,6 +58,16 @@ Configure any OpenAI-compatible LLM endpoint in `appsettings.Development.json` o
 
 ## Architecture
 
+### Optional Yuxi Agent Runtime (integration in progress)
+
+`modules/yuxi-runtime/` contains a pinned upstream Yuxi source snapshot. It will
+first be validated as an isolated LITE service for AgentRun, checkpoints,
+Skills/MCP, subagents, sandboxing, and artifact delivery, then connected to the
+existing employee nodes through a thin adapter. It is not part of the default
+Compose stack yet and does not change the current startup path. See
+[`modules/yuxi-runtime/UPSTREAM.md`](modules/yuxi-runtime/UPSTREAM.md) and
+[`modules/yuxi-runtime/INTEGRATION.md`](modules/yuxi-runtime/INTEGRATION.md).
+
 | Component | Port | Role |
 |-----------|------|------|
 | app (FastAPI) | 8000 | business API + SPA |

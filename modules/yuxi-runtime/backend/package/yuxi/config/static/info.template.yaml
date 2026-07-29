@@ -1,0 +1,27 @@
+# 单位信息配置文件
+# 用于配置网站的基本信息、品牌信息等
+
+# 组织信息
+organization:
+  name: "语析"               # 完整组织名称
+  logo: "/favicon.svg"       # Logo文件路径（放在 web/public 目录下）
+  avatar: "/avatar.jpg"      # 头像文件路径（放在 web/public 目录下）
+  login_bg: "/login-bg.jpg"  # 登录背景图片路径（放在 web/public 目录下）
+
+# 项目信息
+branding:
+  name: "Yuxi"
+  title: "让智能体可构建、可编排、可落地"     # 系统标题
+  subtitle: "开源智能体平台套件，融合 RAG 与知识图谱"          # 副标题（subtitles 为空时使用）
+  subtitles:
+    - "开源智能体平台套件，融合 RAG 与知识图谱"
+    - "统一编排 Agent、知识库、图谱与工具链"
+    - "让智能体可构建，让知识可连接，让决策可验证"
+    - "让智能体可落地，让流程可编排，让协作可扩展"
+    - "让数据可沉淀，让能力可复用，让系统可进化"
+
+# 页脚信息
+footer:
+  copyright: "© 语析 2026 v{{YUXI_VERSION}}"
+  user_agreement_url: "/protocols/user-agreement.template.html"
+  privacy_policy_url: "/protocols/privacy-policy.template.html"

@@ -161,6 +161,15 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ## 技术架构
 
+### 可选 Yuxi Agent Runtime（集成中）
+
+`modules/yuxi-runtime/` 固定保存 Yuxi 上游源码，计划先以独立 LITE 服务验证
+AgentRun、Checkpoint、Skills/MCP、子智能体、沙盒与 Artifact 能力，再通过薄适配层
+接入现有数字员工节点。当前模块尚未加入默认 Compose，也不会改变现有启动方式；
+来源、固定版本与职责边界见
+[`modules/yuxi-runtime/UPSTREAM.md`](modules/yuxi-runtime/UPSTREAM.md) 和
+[`modules/yuxi-runtime/INTEGRATION.md`](modules/yuxi-runtime/INTEGRATION.md)。
+
 ```
 ┌───────────────────────────────────────────────┐
 │                 React 前端                      │
