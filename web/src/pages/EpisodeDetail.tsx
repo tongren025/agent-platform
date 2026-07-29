@@ -11,6 +11,7 @@ import {
   CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, DownloadOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { readInputHabit, writeInputHabit } from '../hooks/useInputHabit';
 import { thumbUrl, onImageError } from '../media';
 import { COLORS } from '../theme';
 import ReactMarkdown from 'react-markdown';
@@ -213,7 +214,10 @@ export default function EpisodeDetail() {
     try {
       const models = await api.listImageModels();
       setImageModels(models);
-      setImageModel(models[0]?.modelId || '');
+      const remembered = readInputHabit('images.model', '');
+      setImageModel(models.some(model => model.modelId === remembered)
+        ? remembered
+        : (models[0]?.modelId || ''));
       if (!models.length) message.warning('没有已启用的生图模型，请先到设置中配置');
     } catch (e: any) { message.error(e.message); }
   };
@@ -805,7 +809,10 @@ export default function EpisodeDetail() {
         okButtonProps={{ disabled: !imageModel || !imagePrompt.trim() }} okText="生成新版本">
         <Space direction="vertical" style={{ width: '100%' }} size={12}>
           <div><Text type="secondary">生图模型</Text><Select style={{ width: '100%' }} value={imageModel || undefined}
-            placeholder="请选择已启用的生图模型" onChange={setImageModel}
+          placeholder="请选择已启用的生图模型" onChange={value => {
+            setImageModel(value);
+            writeInputHabit('images.model', value);
+          }}
             options={imageModels.map(m => ({ value: m.modelId, label: `${m.provider} / ${m.modelName}` }))} /></div>
           <div><Text type="secondary">本次使用的提示词</Text><TextArea rows={12} value={imagePrompt} onChange={e => setImagePrompt(e.target.value)} /></div>
           <Text type="secondary">不会覆盖旧图片；生成后可在版本列表中切换当前图。</Text>

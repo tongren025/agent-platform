@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { api } from '../api';
+import { readInputHabit, writeInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 
 const { Text, Paragraph } = Typography;
@@ -82,12 +83,15 @@ export default function AutoLearn({ embedded = false }: { embedded?: boolean }) 
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
+    const remembered = readInputHabit<Record<string, any>>('learning.prompt-source-preferences', {});
+    const platform = remembered.platform || 'jimeng';
     form.setFieldsValue({
-      platform: 'jimeng',
-      url: PLATFORMS[0].defaultUrl,
-      scheduleTime: dayjs('09:00', 'HH:mm'),
-      maxItems: 40,
-      enabled: true,
+      platform,
+      url: PLATFORMS.find(item => item.value === platform)?.defaultUrl || PLATFORMS[0].defaultUrl,
+      targetEmployeeKey: remembered.targetEmployeeKey,
+      scheduleTime: dayjs(remembered.scheduleTime || '09:00', 'HH:mm'),
+      maxItems: remembered.maxItems ?? 40,
+      enabled: remembered.enabled !== false,
     });
     setModalOpen(true);
   };
@@ -127,6 +131,13 @@ export default function AutoLearn({ embedded = false }: { embedded?: boolean }) 
         message.success('已更新');
       } else {
         await api.saveScrapeSource(payload);
+        writeInputHabit('learning.prompt-source-preferences', {
+          platform: v.platform || 'jimeng',
+          targetEmployeeKey: v.targetEmployeeKey || undefined,
+          scheduleTime: payload.scheduleTime,
+          maxItems: payload.maxItems,
+          enabled: v.enabled !== false,
+        });
         message.success('参考来源已添加');
       }
       setModalOpen(false);

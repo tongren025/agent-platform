@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Button, Input, Table, Tag, Space, Spin, Typography, Collapse, Select, Modal, Alert } from 'antd';
 import { useResponsive } from '../hooks/useResponsive';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { message } from '../ui';
 import {
   PlayCircleOutlined, CheckCircleOutlined, CloseCircleOutlined,
@@ -71,14 +72,14 @@ const CLI_COLORS: Record<string, string> = {
 
 export default function Pipeline() {
   const { isMobile } = useResponsive();
-  const [theme, setTheme] = useState('');
+  const [theme, setTheme] = useInputHabit('pipeline.theme', '');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RunResult | null>(null);
   const [cliStatus, setCliStatus] = useState<{
     available: Record<string, boolean>;
     stages: StageInfo[];
   } | null>(null);
-  const [cliOverrides, setCliOverrides] = useState<Record<string, string>>({});
+  const [cliOverrides, setCliOverrides] = useInputHabit<Record<string, string>>('pipeline.cli-overrides', {});
   const [runs, setRuns] = useState<RunRecord[]>([]);
   const [finalDoc, setFinalDoc] = useState('');
   const [finalModalOpen, setFinalModalOpen] = useState(false);

@@ -218,6 +218,11 @@ export const api = {
     request<any[]>(`/registry/employees/${encodeURIComponent(key)}/knowledge/search?q=${encodeURIComponent(q)}&topK=${topK}`),
   listEmployees: () => request<any[]>('/registry/employees'),
   getEmployee: (key: string) => request<any>(`/registry/employees/${key}`),
+  generateEmployeeDraft: (roleRequest: string, modelId?: string) =>
+    request<any>('/registry/employees/generate-draft', {
+      method: 'POST',
+      body: JSON.stringify({ roleRequest, ...(modelId ? { modelId } : {}) }),
+    }),
   saveEmployee: (data: any) => request<any>('/registry/employees', { method: 'POST', body: JSON.stringify(data) }),
   updateEmployee: (key: string, data: any) => request<any>(`/registry/employees/${key}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteEmployee: (key: string) => request<any>(`/registry/employees/${key}`, { method: 'DELETE' }),

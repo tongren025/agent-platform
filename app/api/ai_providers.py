@@ -6,6 +6,8 @@ Prefix: /api/v1/agentapp/agent  （保持前端路由不变）
 """
 from __future__ import annotations
 
+import logging
+
 import openai
 import httpx
 from fastapi import APIRouter, HTTPException
@@ -16,6 +18,7 @@ from app.config import resolve_secret, settings
 from app.dependencies import ai_service
 
 router = APIRouter(prefix="/api/v1/agentapp/agent")
+logger = logging.getLogger(__name__)
 
 
 def _mask_key(key: str) -> str:
@@ -86,18 +89,61 @@ def _is_free_openrouter_model(item: dict) -> bool:
 
 @router.get("/openrouter/models")
 def list_openrouter_models():
-    """GET /openrouter/models：从 OpenRouter 实时拉取模型目录，并标记免费模型。"""
+    """实时拉取完整模型目录，并清理本地已加入但已从 OpenRouter 下线的模型。"""
     try:
-        resp = httpx.get("https://openrouter.ai/api/v1/models", timeout=20)
+        resp = httpx.get(
+            "https://openrouter.ai/api/v1/models",
+            params={"output_modalities": "all"},
+            timeout=20,
+        )
         resp.raise_for_status()
         raw = resp.json().get("data", [])
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"OpenRouter models fetch failed: {exc}") from exc
 
+    # 清理只能基于一次成功且非空的完整目录；上游异常返回空数组时宁可报错，
+    # 也不能把本地模型配置误判为全部下线。
+    if not isinstance(raw, list) or not raw:
+        raise HTTPException(status_code=502, detail="OpenRouter models fetch returned an empty catalog")
+    raw = [
+        item
+        for item in raw
+        if isinstance(item, dict) and item.get("id")
+    ]
+    if not raw:
+        raise HTTPException(status_code=502, detail="OpenRouter models fetch returned no valid model IDs")
+    catalog_ids = {str(item["id"]) for item in raw}
+
     configured = set()
     for p in ai_service.list_all_providers():
         if p.name.lower() == "openrouter":
-            configured = {m.get("modelId") or m.get("modelName") for m in p.models}
+            managed = ai_service.store.get(p.name)
+            if managed is None:
+                configured = {
+                    m.get("modelId") or m.get("modelName")
+                    for m in p.models
+                    if (m.get("modelId") or m.get("modelName")) in catalog_ids
+                }
+                break
+
+            previous_models = list(managed.get("models") or [])
+            active_models = [
+                model
+                for model in previous_models
+                if (model.get("modelId") or model.get("modelName")) in catalog_ids
+            ]
+            if len(active_models) != len(previous_models):
+                updated = dict(managed)
+                updated["models"] = active_models
+                ai_service.store.save(updated)
+                logger.info(
+                    "OpenRouter 模型目录刷新：清理 %d 个已下线模型",
+                    len(previous_models) - len(active_models),
+                )
+            configured = {
+                model.get("modelId") or model.get("modelName")
+                for model in active_models
+            }
             break
 
     models = []

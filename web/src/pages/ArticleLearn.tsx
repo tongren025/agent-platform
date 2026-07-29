@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { api } from '../api';
+import { readInputHabit, writeInputHabit } from '../hooks/useInputHabit';
 import { COLORS } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 
@@ -61,7 +62,14 @@ export default function ArticleLearn({ embedded = false }: { embedded?: boolean 
 
   const openCreate = () => {
     setEditing(null); form.resetFields();
-    form.setFieldsValue({ scheduleTime: dayjs('02:00', 'HH:mm'), maxArticles: 10, enabled: true });
+    const remembered = readInputHabit<Record<string, any>>('learning.article-source-preferences', {});
+    form.setFieldsValue({
+      targetEmployeeKey: remembered.targetEmployeeKey,
+      roleHint: remembered.roleHint || '',
+      scheduleTime: dayjs(remembered.scheduleTime || '02:00', 'HH:mm'),
+      maxArticles: remembered.maxArticles ?? 10,
+      enabled: remembered.enabled !== false,
+    });
     setModalOpen(true);
   };
   const openEdit = (r: any) => {
@@ -85,7 +93,17 @@ export default function ArticleLearn({ embedded = false }: { embedded?: boolean 
         maxArticles: v.maxArticles ?? 10,
       };
       if (editing) { await api.updateLearnSource(editing.sourceCode, payload); message.success('已更新'); }
-      else { await api.saveLearnSource(payload); message.success('文章来源已添加'); }
+      else {
+        await api.saveLearnSource(payload);
+        writeInputHabit('learning.article-source-preferences', {
+          targetEmployeeKey: v.targetEmployeeKey || undefined,
+          roleHint: v.roleHint || '',
+          scheduleTime: payload.scheduleTime,
+          maxArticles: payload.maxArticles,
+          enabled: v.enabled !== false,
+        });
+        message.success('文章来源已添加');
+      }
       setModalOpen(false); fetchAll();
     } catch (e: any) { if (e.message) message.error(e.message); }
     finally { setSaving(false); }

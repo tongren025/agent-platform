@@ -4,6 +4,7 @@ import { Card, Select, Table, Button, Tag, Space, Progress, Statistic, Row, Col,
 import { message } from '../ui';
 import { ReloadOutlined, HistoryOutlined } from '@ant-design/icons';
 import { api } from '../api';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 import type { AgentRunRecord } from '../types';
 
@@ -22,8 +23,8 @@ export default function Runs() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [runs, setRuns] = useState<AgentRunRecord[]>([]);
   const [loading, setLoading] = useState(false);
-  const [empFilter, setEmpFilter] = useState<string>('');
-  const [successFilter, setSuccessFilter] = useState<string>('');   // '' | 'true' | 'false'
+  const [empFilter, setEmpFilter] = useInputHabit<string>('runs.employee-filter', '');
+  const [successFilter, setSuccessFilter] = useInputHabit<string>('runs.success-filter', '');   // '' | 'true' | 'false'
   const [detail, setDetail] = useState<AgentRunRecord | null>(null);
   const [quota, setQuota] = useState<QuotaInfo | null>(null);
 

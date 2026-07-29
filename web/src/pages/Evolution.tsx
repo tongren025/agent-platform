@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { api } from '../api';
 import { COLORS } from '../theme';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 
 const { Text, Paragraph, Title } = Typography;
@@ -31,7 +32,7 @@ interface Employee { employeeKey: string; name: string }
 export default function Evolution() {
   const { isMobile } = useResponsive();
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [empKey, setEmpKey] = useState('');
+  const [empKey, setEmpKey] = useInputHabit('evolution.employee', '');
   const [insights, setInsights] = useState<any[]>([]);
   const [runLogs, setRunLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -50,13 +51,19 @@ export default function Evolution() {
       const list = await api.listEmployees();
       const emps = list.map((e: any) => ({ employeeKey: e.employeeKey, name: e.name || e.employeeKey }));
       setEmployees(emps);
-      if (emps.length > 0) setEmpKey(emps[0].employeeKey);
+      if (emps.length > 0) {
+        setEmpKey(current => (
+          emps.some(employee => employee.employeeKey === current)
+            ? current
+            : emps[0].employeeKey
+        ));
+      }
     } catch (e: any) {
       setEmployeesError(e.message || '数字员工列表暂时无法加载');
     } finally {
       setEmployeesLoading(false);
     }
-  }, []);
+  }, [setEmpKey]);
 
   useEffect(() => { loadEmployees(); }, [loadEmployees]);
 

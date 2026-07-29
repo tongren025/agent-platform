@@ -94,7 +94,12 @@ export default function Tools() {
           children: (
             <>
               <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => { setToolEditing(null); toolForm.resetFields(); setToolOpen(true); }}>添加工具</Button>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => {
+                  setToolEditing(null);
+                  toolForm.resetFields();
+                  toolForm.setFieldsValue({ inputSchema: '{\n  "type": "object",\n  "properties": {}\n}' });
+                  setToolOpen(true);
+                }}>添加工具</Button>
               </div>
               <Table rowKey="toolCode" dataSource={tools} pagination={false} scroll={isMobile ? { x: 'max-content' } : undefined} columns={[
                 { title: '工具编码', dataIndex: 'toolCode', key: 'toolCode' },
@@ -157,7 +162,12 @@ export default function Tools() {
           children: (
             <>
               <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => { setMcpEditing(null); mcpForm.resetFields(); setMcpOpen(true); }}>添加 MCP 服务器</Button>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => {
+                  setMcpEditing(null);
+                  mcpForm.resetFields();
+                  mcpForm.setFieldsValue({ transportType: 'stdio', env: '{}' });
+                  setMcpOpen(true);
+                }}>添加 MCP 服务器</Button>
               </div>
               <Table rowKey="serverCode" dataSource={mcpServers} pagination={false} scroll={isMobile ? { x: 'max-content' } : undefined} columns={[
                 { title: '编码', dataIndex: 'serverCode', key: 'serverCode' },

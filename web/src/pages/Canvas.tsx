@@ -23,6 +23,7 @@ import {
   CameraOutlined, ZoomInOutlined, ZoomOutOutlined, MoreOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 import { useCanvasHistory } from '../hooks/useCanvasHistory';
 import { CanvasCtx, DataNode, GroupNode, GROUP_COLORS, ImageNode, StoryboardNode, StickyNote, STAGE_META, type CanvasActions } from '../components/canvas/CanvasNodes';
@@ -181,44 +182,44 @@ export default function Canvas() {
 
   const [employees, setEmployees] = useState<any[]>([]);
   const [models, setModels] = useState<ImageModel[]>([]);
-  const [model, setModel] = useState(() => localStorage.getItem('canvas.model') || '');
-  const [size, setSize] = useState(() => localStorage.getItem('canvas.size') || '720x1280');
+  const [model, setModel] = useInputHabit('canvas.model', localStorage.getItem('canvas.model') || '');
+  const [size, setSize] = useInputHabit('canvas.size', localStorage.getItem('canvas.size') || '720x1280');
 
   const [newOpen, setNewOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const [newTemplate, setNewTemplate] = useState('blank');
 
   const [deriveNodeId, setDeriveNodeId] = useState<string | null>(null);
-  const [deriveEmp, setDeriveEmp] = useState(() => localStorage.getItem('canvas.emp') || '');
+  const [deriveEmp, setDeriveEmp] = useInputHabit('canvas.employee', localStorage.getItem('canvas.emp') || '');
   const [deriveStage, setDeriveStage] = useState('');
   const [deriveInstr, setDeriveInstr] = useState('');
 
   const [importOpen, setImportOpen] = useState(false);
-  const [importProject, setImportProject] = useState('');
+  const [importProject, setImportProject] = useInputHabit('canvas.import-project', '');
   const [importCards, setImportCards] = useState<any[]>([]);
-  const [importEpisode, setImportEpisode] = useState<string>('all');
-  const [importStage, setImportStage] = useState<string>('');
+  const [importEpisode, setImportEpisode] = useInputHabit<string>('canvas.import-episode', 'all');
+  const [importStage, setImportStage] = useInputHabit<string>('canvas.import-stage', '');
   const [importLoading, setImportLoading] = useState(false);
 
   const [boardNodeId, setBoardNodeId] = useState<string | null>(null);
-  const [boardProject, setBoardProject] = useState('');
-  const [boardStage, setBoardStage] = useState('');
-  const [boardEpisode, setBoardEpisode] = useState<string>('');
+  const [boardProject, setBoardProject] = useInputHabit('canvas.board-project', '');
+  const [boardStage, setBoardStage] = useInputHabit('canvas.board-stage', 'idea');
+  const [boardEpisode, setBoardEpisode] = useInputHabit<string>('canvas.board-episode', '');
   const [sendingBoard, setSendingBoard] = useState(false);
 
   const [projects, setProjects] = useState<any[]>([]);
 
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useInputHabit('canvas.search', '');
 
   // 新增:重命名
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameDraft, setRenameDraft] = useState('');
 
   // 新增:对齐网格
-  const [snapGrid, setSnapGrid] = useState(false);
+  const [snapGrid, setSnapGrid] = useInputHabit('canvas.snap-grid', false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
-  const [edgePathType, setEdgePathType] = useState<'bezier' | 'straight' | 'step'>('bezier');
+  const [edgePathType, setEdgePathType] = useInputHabit<'bezier' | 'straight' | 'step'>('canvas.edge-path', 'bezier');
   // fromHandle 记录用户是从出口(source)还是入口(target)拖出来的,决定新建边的方向
   const [connectMenu, setConnectMenu] = useState<
     { x: number; y: number; sourceId: string; fromHandle: 'source' | 'target' } | null
@@ -358,10 +359,6 @@ export default function Canvas() {
   }, [loadCanvases]);
 
   useEffect(() => { if (currentId) loadCanvas(currentId); }, [currentId, loadCanvas]);
-  useEffect(() => { if (model) localStorage.setItem('canvas.model', model); }, [model]);
-  useEffect(() => { localStorage.setItem('canvas.size', size); }, [size]);
-  useEffect(() => { if (deriveEmp) localStorage.setItem('canvas.emp', deriveEmp); }, [deriveEmp]);
-
   // ── 保存(1.2s 防抖 + 手动) ──
   const doSave = useCallback(async (silent = true) => {
     const cid = currentIdRef.current;
@@ -522,10 +519,6 @@ export default function Canvas() {
   // ── 看板导入 ──
   const openImport = () => {
     setImportOpen(true);
-    setImportCards([]);
-    setImportProject('');
-    setImportEpisode('all');
-    setImportStage('');
     loadProjects();
   };
 

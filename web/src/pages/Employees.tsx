@@ -1,9 +1,10 @@
 // 数字员工管理页：员工 CRUD、启停、克隆、绑定技能/工具/MCP、参考资料上传。
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Button, Col, Descriptions, Divider, Empty, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Slider, Space, Spin, Switch, Table, Tag, Typography, Upload } from 'antd';
+import { Alert, Button, Card, Col, Descriptions, Divider, Empty, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Slider, Space, Spin, Switch, Table, Tag, Typography, Upload } from 'antd';
 import { message } from '../ui';
-import { PlusOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, RobotOutlined, UploadOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
+import { readInputHabit, useInputHabit, writeInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 import { api } from '../api';
 import { COLORS } from '../theme';
@@ -26,6 +27,9 @@ export default function Employees() {
   const [mcpServers, setMcpServers] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
   const [aiProviders, setAiProviders] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [roleRequest, setRoleRequest] = useInputHabit('employees.role-request', '');
+  const [draftGenerating, setDraftGenerating] = useState(false);
 
   const [knowledgeOpen, setKnowledgeOpen] = useState(false);
   const [knowledgeEmp, setKnowledgeEmp] = useState<Employee | null>(null);
@@ -46,20 +50,22 @@ export default function Employees() {
     try {
       const emp = await api.listEmployees();
       setList(emp);
-      const [toolsResult, skillsResult, mcpResult, teamsResult, providersResult] = await Promise.allSettled([
-        api.listTools(), api.listSkills(), api.listMcpServers(), api.listTeams(), api.listAiProviders(),
+      const [toolsResult, skillsResult, mcpResult, teamsResult, providersResult, templatesResult] = await Promise.allSettled([
+        api.listTools(), api.listSkills(), api.listMcpServers(), api.listTeams(), api.listAiProviders(), api.listTemplates(),
       ]);
       setTools(toolsResult.status === 'fulfilled' ? toolsResult.value : []);
       setSkills(skillsResult.status === 'fulfilled' ? skillsResult.value : []);
       setMcpServers(mcpResult.status === 'fulfilled' ? mcpResult.value : []);
       setTeams(teamsResult.status === 'fulfilled' ? teamsResult.value : []);
       setAiProviders(providersResult.status === 'fulfilled' ? providersResult.value : []);
+      setTemplates(templatesResult.status === 'fulfilled' ? templatesResult.value : []);
       const unavailable = [
         toolsResult.status === 'rejected' && '工具',
         skillsResult.status === 'rejected' && '技能',
         mcpResult.status === 'rejected' && '连接',
         teamsResult.status === 'rejected' && '团队',
         providersResult.status === 'rejected' && '模型',
+        templatesResult.status === 'rejected' && '岗位模板',
       ].filter(Boolean);
       if (unavailable.length) setSupportError(`${unavailable.join('、')}配置暂时无法加载；员工列表仍可正常查看。`);
     } catch (e: any) {
@@ -74,7 +80,25 @@ export default function Employees() {
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
-    form.setFieldsValue({ enabled: true, deepAgent: false, tags: [], skillRefs: [], toolRefs: [], mcpServerRefs: [], modelId: 'gpt-4o', temperature: 0.7, maxTokens: 4096 });
+    const availableModelIds = aiProviders.flatMap(provider => (
+      (provider.models ?? []).map((model: any) => model.modelId || model.modelName).filter(Boolean)
+    ));
+    const remembered = readInputHabit<Record<string, any>>('employees.create-preferences', {});
+    const rememberedModel = availableModelIds.includes(remembered.modelId)
+      ? remembered.modelId
+      : (availableModelIds[0] || 'gpt-4o');
+    form.setFieldsValue({
+      enabled: true,
+      deepAgent: false,
+      tags: [],
+      skillRefs: [],
+      toolRefs: [],
+      mcpServerRefs: [],
+      temperature: 0.7,
+      maxTokens: 4096,
+      ...remembered,
+      modelId: rememberedModel,
+    });
     setOpen(true);
   };
 
@@ -90,6 +114,70 @@ export default function Employees() {
       maxTokens: record.defaultModelPolicy?.max_tokens ?? record.defaultModelPolicy?.maxTokens ?? 4096,
     });
     setOpen(true);
+  };
+
+  const applyDraft = (draft: any) => {
+    const policy = draft.defaultModelPolicy ?? {};
+    const currentModel = form.getFieldValue('modelId');
+    form.setFieldsValue({
+      employeeKey: draft.employeeKey,
+      name: draft.name,
+      roleProfile: draft.roleProfile,
+      deepAgent: draft.deepAgent ?? false,
+      tags: draft.tags ?? [],
+      skillRefs: draft.skillRefs ?? [],
+      toolRefs: draft.toolRefs ?? [],
+      mcpServerRefs: draft.mcpServerRefs ?? [],
+      modelId: policy.model_id || policy.modelId || currentModel,
+      temperature: policy.temperature ?? 0.35,
+      maxTokens: policy.max_tokens ?? policy.maxTokens ?? 8192,
+    });
+  };
+
+  const generateDraft = async () => {
+    const request = roleRequest.trim();
+    if (request.length < 2) {
+      message.warning('直接说你想要什么员工，例如：我要一个软件架构师');
+      return;
+    }
+    setDraftGenerating(true);
+    try {
+      const draft = await api.generateEmployeeDraft(request, form.getFieldValue('modelId'));
+      applyDraft(draft);
+      message.success(draft.generatedBy === 'ai'
+        ? '员工已经设计好了，你可以直接创建'
+        : '已生成可用草稿；当前设计模型不可用，使用了本地专业模板');
+    } catch (e: any) {
+      message.error(e.message || '员工草稿生成失败');
+    } finally {
+      setDraftGenerating(false);
+    }
+  };
+
+  const applyTemplateDraft = (templateCode: string) => {
+    const template = templates.find(item => item.templateCode === templateCode);
+    if (!template) return;
+    const baseKey = String(template.templateCode || 'digital-employee').replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+    let employeeKey = baseKey;
+    let suffix = 2;
+    while (list.some(item => item.employeeKey === employeeKey)) employeeKey = `${baseKey}-${suffix++}`;
+    const policy = template.defaultModelPolicy ?? {};
+    setRoleRequest(template.name || '');
+    applyDraft({
+      employeeKey,
+      name: template.name,
+      roleProfile: template.roleProfile,
+      deepAgent: template.deepAgent,
+      tags: template.tags,
+      skillRefs: template.suggestedSkillCodes,
+      toolRefs: template.suggestedToolCodes,
+      mcpServerRefs: template.suggestedMcpServerCodes,
+      defaultModelPolicy: {
+        ...policy,
+        model_id: policy.model_id || policy.modelId || form.getFieldValue('modelId'),
+      },
+    });
+    message.success('岗位模板已填好，可直接创建');
   };
 
   useEffect(() => {
@@ -131,7 +219,23 @@ export default function Employees() {
         },
       };
       if (editing) { await api.updateEmployee(editing.employeeKey, payload); message.success('更新成功'); }
-      else { await api.saveEmployee(payload); message.success('创建成功'); }
+      else {
+        await api.saveEmployee(payload);
+        setRoleRequest('');
+        message.success('创建成功');
+      }
+      writeInputHabit('employees.create-preferences', {
+        deepAgent: !!values.deepAgent,
+        teamCode: values.teamCode || undefined,
+        skillRefs: values.skillRefs ?? [],
+        toolRefs: values.toolRefs ?? [],
+        mcpServerRefs: values.mcpServerRefs ?? [],
+        modelId: modelId || 'gpt-4o',
+        temperature: Number.isFinite(parsedTemperature) ? parsedTemperature : 0.7,
+        maxTokens: Number.isFinite(parsedMaxTokens) && parsedMaxTokens > 0 ? Math.trunc(parsedMaxTokens) : 4096,
+        tags: values.tags ?? [],
+        enabled: values.enabled !== false,
+      });
       closeEditor(); fetchAll();
     } catch (e: any) { if (e.message) message.error(e.message); }
   };
@@ -294,16 +398,84 @@ export default function Employees() {
       />}
       <Table rowKey="employeeKey" columns={columns} dataSource={list} loading={loading} pagination={{ pageSize: 20 }} scroll={{ x: 'max-content' }} />
 
-      <Modal title={editing ? '编辑员工' : '新建员工'} open={open} onOk={handleSave} onCancel={closeEditor} destroyOnHidden width={isMobile ? '100%' : 720}>
+      <Modal
+        title={editing ? '编辑员工' : '创建数字员工'}
+        open={open}
+        onOk={handleSave}
+        okText={editing ? '保存修改' : '创建员工'}
+        onCancel={closeEditor}
+        destroyOnHidden
+        width={isMobile ? '100%' : 820}
+      >
+        {!editing && (
+          <Card
+            size="small"
+            title={<Space><RobotOutlined />告诉我你要什么员工</Space>}
+            style={{ marginBottom: 20, background: '#f8f7ff', borderColor: '#e8e5ff' }}
+          >
+            <Text type="secondary">
+              不需要你写提示词。说清岗位和主要任务，系统会自动设计名称、工作提示词、模型参数，并从现有技能和工具中选择合适的绑定。
+            </Text>
+            <TextArea
+              value={roleRequest}
+              onChange={event => setRoleRequest(event.target.value)}
+              rows={3}
+              maxLength={1000}
+              showCount
+              placeholder="例如：我要一个软件架构师，负责系统架构设计、技术选型、方案评审和风险把关"
+              style={{ marginTop: 12, background: '#fff' }}
+              onPressEnter={event => {
+                if (!event.shiftKey) {
+                  event.preventDefault();
+                  generateDraft();
+                }
+              }}
+            />
+            <Space wrap style={{ marginTop: 10 }}>
+              <Text type="secondary">试试：</Text>
+              {[
+                '我要一个软件架构师，负责技术选型、系统设计和方案评审',
+                '我要一个产品经理，能把模糊需求拆成可验收的产品方案',
+                '我要一个代码审查员，重点检查安全、性能和可维护性',
+                '我要一个短剧编剧，擅长强冲突、快节奏和章节钩子',
+              ].map(example => (
+                <Button key={example} size="small" onClick={() => setRoleRequest(example)}>
+                  {example.match(/一个(.+?)[，,]/)?.[1] ?? example}
+                </Button>
+              ))}
+            </Space>
+            <Row gutter={12} style={{ marginTop: 14 }}>
+              <Col xs={24} sm={15}>
+                <Button type="primary" block icon={<RobotOutlined />} loading={draftGenerating} onClick={generateDraft}>
+                  自动设计员工
+                </Button>
+              </Col>
+              <Col xs={24} sm={9} style={{ marginTop: isMobile ? 8 : 0 }}>
+                <Select
+                  allowClear
+                  style={{ width: '100%' }}
+                  placeholder="或选择现成岗位模板"
+                  value={undefined}
+                  onChange={applyTemplateDraft}
+                  options={templates.map(item => ({
+                    label: `${item.name}${item.category ? ` · ${item.category}` : ''}`,
+                    value: item.templateCode,
+                  }))}
+                />
+              </Col>
+            </Row>
+          </Card>
+        )}
         <Form form={form} layout="vertical">
+          {!editing && <Divider orientation="left" plain>生成结果（可修改）</Divider>}
           <Form.Item label="员工标识" name="employeeKey" rules={[{ required: true, message: '请输入员工标识' }]}>
-            <Input disabled={!!editing} placeholder="唯一标识，创建后不可修改" />
+            <Input disabled={!!editing} placeholder="系统会自动生成唯一标识" />
           </Form.Item>
           <Form.Item label="名称" name="name" rules={[{ required: true, message: '请输入名称' }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="角色描述" name="roleProfile">
-            <TextArea rows={4} placeholder="描述该员工的角色与职责" />
+          <Form.Item label="员工工作提示词" name="roleProfile" rules={[{ required: true, message: '请先让系统自动设计员工，或选择岗位模板' }]}>
+            <TextArea rows={10} placeholder="系统会根据岗位需求自动生成；你也可以在这里微调" />
           </Form.Item>
           <Form.Item label="深度代理" name="deepAgent" valuePropName="checked">
             <Switch />

@@ -5,6 +5,7 @@ import { message } from '../../ui';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { adminApi, type PlatformUser, type PlatformRole } from '../../adminApi';
 import { COLORS } from '../../theme';
+import { readInputHabit, useInputHabit, writeInputHabit } from '../../hooks/useInputHabit';
 import { useResponsive } from '../../hooks/useResponsive';
 
 export default function AdminUsers() {
@@ -12,7 +13,7 @@ export default function AdminUsers() {
   const [list, setList] = useState<PlatformUser[]>([]);
   const [roles, setRoles] = useState<PlatformRole[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useInputHabit('admin.users-search', '');
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<PlatformUser | null>(null);
   const [form] = Form.useForm();
@@ -30,7 +31,10 @@ export default function AdminUsers() {
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
-    form.setFieldsValue({ role: 'viewer', enabled: true });
+    form.setFieldsValue(readInputHabit('admin.user-create-preferences', {
+      role: 'viewer',
+      enabled: true,
+    }));
     setOpen(true);
   };
 
@@ -61,6 +65,10 @@ export default function AdminUsers() {
           displayName: values.displayName || values.username,
           role: values.role,
           enabled: values.enabled,
+        });
+        writeInputHabit('admin.user-create-preferences', {
+          role: values.role,
+          enabled: values.enabled !== false,
         });
         message.success('创建成功');
       }

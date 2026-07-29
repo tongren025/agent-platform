@@ -12,6 +12,7 @@ import {
   GlobalOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 import { COLORS } from '../theme';
 
@@ -514,7 +515,7 @@ function SourcePanel({ sourceLabel, color, queries, activeKey, onSelect, loading
 
 export default function SkillTracker() {
   const [queries, setQueries] = useState<QueryInfo[]>([]);
-  const [activeQuery, setActiveQuery] = useState('');
+  const [activeQuery, setActiveQuery] = useInputHabit('trends.active-query', '');
   const [trendData, setTrendData] = useState<TrendData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -534,16 +535,16 @@ export default function SkillTracker() {
 
   // 多源数据
   const [hnData, setHnData] = useState<any>(null);
-  const [hnQuery, setHnQuery] = useState('AI agent');
+  const [hnQuery, setHnQuery] = useInputHabit('trends.hn-query', 'AI agent');
   const [hnLoading, setHnLoading] = useState(false);
   const [arxivData, setArxivData] = useState<any>(null);
-  const [arxivCat, setArxivCat] = useState('cs.AI');
+  const [arxivCat, setArxivCat] = useInputHabit('trends.arxiv-category', 'cs.AI');
   const [arxivLoading, setArxivLoading] = useState(false);
   const [newsData, setNewsData] = useState<any>(null);
-  const [newsQuery, setNewsQuery] = useState('artificial intelligence');
+  const [newsQuery, setNewsQuery] = useInputHabit('trends.news-query', 'artificial intelligence');
   const [newsLoading, setNewsLoading] = useState(false);
   const [redditData, setRedditData] = useState<any>(null);
-  const [redditSub, setRedditSub] = useState('MachineLearning');
+  const [redditSub, setRedditSub] = useInputHabit('trends.reddit-community', 'MachineLearning');
   const [redditLoading, setRedditLoading] = useState(false);
   const { isMobile } = useResponsive();
 
@@ -579,7 +580,9 @@ export default function SkillTracker() {
     try {
       const list: QueryInfo[] = await api.listTrendQueries();
       setQueries(list);
-      if (list.length > 0 && !activeQuery) setActiveQuery(list[0].query);
+      if (list.length > 0 && !list.some(item => item.query === activeQuery)) {
+        setActiveQuery(list[0].query);
+      }
     } catch (e: any) {
       message.error('加载 query 列表失败: ' + e.message);
     }

@@ -15,6 +15,7 @@ import {
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api, type ProductionGoal } from '../api';
 import { message } from '../ui';
+import { readInputHabit, useInputHabit, writeInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 import './DirectorStudio.css';
 
@@ -261,7 +262,7 @@ export default function DirectorStudio() {
   const [loadError, setLoadError] = useState('');
   const [busy, setBusy] = useState('');
   const [createOpen, setCreateOpen] = useState(false);
-  const [createForm, setCreateForm] = useState({
+  const [createForm, setCreateForm] = useInputHabit('director.create-project', {
     name: '', source: '', format: 'gc', aspectRatio: '9:16', goal: 'images' as ProductionGoal,
   });
   const [productionGoal, setProductionGoal] = useState<ProductionGoal>('final');
@@ -784,7 +785,8 @@ export default function DirectorStudio() {
     setMediaTargetCardId(shot ? (kind === 'image' ? shot.imageCardId : shot.videoCardId) : '');
     setModelLoading(true);
     setMediaModels([]);
-    setMediaModel('');
+    const rememberedModel = readInputHabit(`director.media-model.${kind}`, '');
+    setMediaModel(rememberedModel);
     const requestId = ++mediaModelRequestRef.current;
     const mediaProjectId = projectId;
     try {
@@ -794,6 +796,9 @@ export default function DirectorStudio() {
         && currentProjectRef.current === mediaProjectId
       ) {
         setMediaModels(models);
+        setMediaModel(models.some(model => model.id === rememberedModel)
+          ? rememberedModel
+          : (models[0]?.id || ''));
       }
     } catch (error: any) {
       if (
@@ -951,7 +956,7 @@ export default function DirectorStudio() {
         productionGoal: createForm.goal,
       });
       setCreateOpen(false);
-      setCreateForm({ name: '', source: '', format: 'gc', aspectRatio: '9:16', goal: 'images' });
+      setCreateForm(current => ({ ...current, name: '', source: '' }));
       await loadProjects();
       setProjectId(project.project_id);
       if (project.production_goal === requestedGoal) {
@@ -1826,7 +1831,10 @@ export default function DirectorStudio() {
             showSearch
             loading={modelLoading}
             value={mediaModel || undefined}
-            onChange={setMediaModel}
+            onChange={value => {
+              setMediaModel(value);
+              if (mediaKind) writeInputHabit(`director.media-model.${mediaKind}`, value);
+            }}
             placeholder="选择模型"
             optionFilterProp="label"
             options={mediaModels.map(model => ({

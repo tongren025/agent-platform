@@ -4,6 +4,7 @@ import { Button, Card, Input, Segmented, Space, Table, Tag, Typography, Tooltip 
 import type { ColumnsType } from 'antd/es/table';
 import { CheckOutlined, CloudDownloadOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { api } from '../api';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { message } from '../ui';
 import { useResponsive } from '../hooks/useResponsive';
 
@@ -38,8 +39,8 @@ export default function OpenRouterModels() {
   const { isMobile } = useResponsive();
   const [models, setModels] = useState<OpenRouterModel[]>([]);
   const [loading, setLoading] = useState(true);
-  const [mode, setMode] = useState<'all' | 'free' | 'configured'>('free');
-  const [query, setQuery] = useState('');
+  const [mode, setMode] = useInputHabit<'all' | 'free' | 'configured'>('openrouter.market-mode', 'free');
+  const [query, setQuery] = useInputHabit('openrouter.market-query', '');
   const [adding, setAdding] = useState<Record<string, boolean>>({});
 
   const fetchModels = async () => {

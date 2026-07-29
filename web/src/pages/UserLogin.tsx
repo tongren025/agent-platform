@@ -6,12 +6,13 @@ import { message } from '../ui';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { COLORS } from '../theme';
 import { userAuth } from '../userAuth';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 
 export default function UserLogin() {
   const navigate = useNavigate();
   const { isMobile } = useResponsive();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useInputHabit('login.username', '');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

@@ -6,12 +6,13 @@ import { message } from '../../ui';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { adminApi, adminToken } from '../../adminApi';
 import { COLORS } from '../../theme';
+import { useInputHabit } from '../../hooks/useInputHabit';
 import { useResponsive } from '../../hooks/useResponsive';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
   const { isMobile } = useResponsive();
-  const [username, setUsername] = useState('admin');
+  const [username, setUsername] = useInputHabit('admin.login.username', 'admin');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 

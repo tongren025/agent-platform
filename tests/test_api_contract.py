@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import pytest
+from types import SimpleNamespace
 
 
 # 每个都返回统一信封 _ok(...) → {"code": 200, "data": <list|dict>}，且不触网、不调模型。
@@ -77,7 +78,9 @@ def test_login_missing_body_returns_422(app_client):
 
 
 def test_openrouter_models_endpoint_marks_free_models(app_client, monkeypatch):
-    """OpenRouter 模型目录接口应返回 JSON 信封，而不是被 SPA 兜底成 HTML。"""
+    """目录刷新应标记免费模型，并删除本地已加入但已从完整目录下线的模型。"""
+    requested_params = {}
+
     class FakeResponse:
         def raise_for_status(self):
             return None
@@ -104,7 +107,36 @@ def test_openrouter_models_endpoint_marks_free_models(app_client, monkeypatch):
                 ]
             }
 
-    monkeypatch.setattr("app.api.ai_providers.httpx.get", lambda *args, **kwargs: FakeResponse())
+    def fake_get(*args, **kwargs):
+        requested_params.update(kwargs.get("params") or {})
+        return FakeResponse()
+
+    managed = {
+        "name": "openrouter",
+        "endpoint": "https://openrouter.ai/api/v1",
+        "apiKey": "${OPENROUTER_API_KEY}",
+        "enabled": True,
+        "models": [
+            {"modelName": "Free Model", "modelId": "vendor/free-model:free"},
+            {"modelName": "Removed Model", "modelId": "vendor/removed-model"},
+        ],
+    }
+    saved = []
+    provider = SimpleNamespace(name="openrouter", models=list(managed["models"]))
+
+    monkeypatch.setattr("app.api.ai_providers.httpx.get", fake_get)
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.list_all_providers",
+        lambda: [provider],
+    )
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.store.get",
+        lambda _name: dict(managed),
+    )
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.store.save",
+        lambda data: saved.append(data) or data,
+    )
 
     resp = app_client.get("/api/v1/agentapp/agent/openrouter/models")
     assert resp.status_code == 200
@@ -113,3 +145,36 @@ def test_openrouter_models_endpoint_marks_free_models(app_client, monkeypatch):
     assert body["data"][0]["id"] == "vendor/free-model:free"
     assert body["data"][0]["isFree"] is True
     assert body["data"][1]["isFree"] is False
+    assert requested_params == {"output_modalities": "all"}
+    assert [model["modelId"] for model in saved[0]["models"]] == [
+        "vendor/free-model:free"
+    ]
+
+
+def test_openrouter_models_empty_catalog_does_not_prune(app_client, monkeypatch):
+    """上游异常空目录必须报错，不能据此清空本地供应商模型。"""
+    class EmptyResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {"data": []}
+
+    save_called = False
+
+    def fail_if_saved(_data):
+        nonlocal save_called
+        save_called = True
+
+    monkeypatch.setattr(
+        "app.api.ai_providers.httpx.get",
+        lambda *args, **kwargs: EmptyResponse(),
+    )
+    monkeypatch.setattr(
+        "app.api.ai_providers.ai_service.store.save",
+        fail_if_saved,
+    )
+
+    resp = app_client.get("/api/v1/agentapp/agent/openrouter/models")
+    assert resp.status_code == 502
+    assert save_called is False

@@ -12,6 +12,7 @@ import {
   EditOutlined, PlusOutlined, BookOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
@@ -132,24 +133,24 @@ function cleanLatex(text: string): string {
 export default function Workbench() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
-  const [mode, setMode] = useState<TargetMode>('employee');
-  const [selectedKey, setSelectedKey] = useState('');
+  const [mode, setMode] = useInputHabit<TargetMode>('workbench.target-mode', 'employee');
+  const [selectedKey, setSelectedKey] = useInputHabit('workbench.target', '');
   const [sessions, setSessions] = useState<SessionItem[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [artifacts, setArtifacts] = useState<ConversationArtifact[]>([]);
   const [artifactOpen, setArtifactOpen] = useState(false);
   const [activeArtifact, setActiveArtifact] = useState<ConversationArtifact | null>(null);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useInputHabit('workbench.message-draft', '');
   const [loading, setLoading] = useState(false);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [sessionsError, setSessionsError] = useState('');
   const [targetsLoading, setTargetsLoading] = useState(true);
   const [targetsError, setTargetsError] = useState('');
-  const [showArchived, setShowArchived] = useState(false);
+  const [showArchived, setShowArchived] = useInputHabit('workbench.show-archived', false);
   const [pendingFiles, setPendingFiles] = useState<ChatAttachment[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [rightCollapsed, setRightCollapsed] = useState(false);
+  const [rightCollapsed, setRightCollapsed] = useInputHabit('workbench.right-collapsed', false);
   const [traceDrawerOpen, setTraceDrawerOpen] = useState(false);
   const [activeTraces, setActiveTraces] = useState<ChatMessage['traces']>([]);
   const [quickPrompts, setQuickPrompts] = useState<QuickPrompt[]>([]);
@@ -219,6 +220,16 @@ export default function Workbench() {
     if (team && teams.some((t) => t.teamCode === team)) { setMode('team'); setSelectedKey(team); return; }
     if (employee && employees.some((e) => e.employeeKey === employee)) { setMode('employee'); setSelectedKey(employee); }
   }, [employees, teams, searchParams]);
+
+  useEffect(() => {
+    if (targetsLoading) return;
+    const available = mode === 'team'
+      ? teams.map(team => team.teamCode)
+      : employees.map(employee => employee.employeeKey);
+    if (available.length && !available.includes(selectedKey)) {
+      setSelectedKey(available[0]);
+    }
+  }, [employees, mode, selectedKey, setSelectedKey, targetsLoading, teams]);
 
   const selectedEmployee = employees.find((e) => e.employeeKey === selectedKey);
   const selectedTeam = teams.find((t) => t.teamCode === selectedKey);

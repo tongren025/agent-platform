@@ -8,6 +8,7 @@ import {
   CoffeeOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { useInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 
 const { TextArea } = Input;
@@ -23,7 +24,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export default function Memory() {
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [selectedEmp, setSelectedEmp] = useState<string>('');
+  const [selectedEmp, setSelectedEmp] = useInputHabit<string>('memory.employee', '');
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState<any>(null);
 
@@ -39,7 +40,16 @@ export default function Memory() {
   const { isMobile } = useResponsive();
 
   useEffect(() => {
-    api.listEmployees().then(setEmployees).catch(() => {});
+    api.listEmployees().then(items => {
+      setEmployees(items);
+      if (items.length) {
+        setSelectedEmp(current => (
+          items.some(item => item.employeeKey === current)
+            ? current
+            : items[0].employeeKey
+        ));
+      }
+    }).catch(() => {});
   }, []);
 
   const refresh = useCallback(async (empKey: string) => {
