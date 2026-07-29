@@ -63,6 +63,22 @@ Yuxi 的 PostgreSQL Repository 或 LangChain 运行栈。
 `extract_agent_state` / checkpoint state view 的数据边界。本地适配没有搬入
 LangGraph、`AsyncPostgresSaver` 或 Redis，而是接入平台已有会话仓储。
 
+### 大型工具结果 L1 精简
+
+- 直接迁入 Yuxi SummaryMiddleware 的近似 token 估算、工具名清洗、内容哈希路径、
+  结果预览和截断提示算法。
+- 仅 DeepAgent 启用。超过 300 个近似 token 的工具结果完整写入
+  `/outputs/large_tool_results/`，模型上下文改用预览与 `read_file` 路径。
+- 原始结果仍进入现有 trace 摘要；精简文件由 DeepAgent checkpoint 持久化，
+  JSON 和 PostgreSQL 会话仓储使用同一数据形态。
+- 精简器异常时 fail-open 返回原结果，不让上下文优化阻断工具调用。
+- 暂不迁入 Yuxi L2 模型摘要：该层依赖 LangGraph/DeepAgents 中间件并增加一次
+  LLM 调用；待现有 `compressedSummary` 形成明确产品入口后再按需接入。
+
+实现来源：`backend/package/yuxi/agents/middlewares/summary.py` 中
+`_estimated_content_tokens`、`_tool_result_path`、`_preview_tool_result` 与
+tool result replacement 逻辑。本地适配保持算法边界，存储改接现有虚拟工作区。
+
 ## 目标职责
 
 后续继续从 Yuxi 筛选可补齐的通用 Agent Harness 能力：

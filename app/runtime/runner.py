@@ -22,6 +22,7 @@ from app.runtime.loop import (
     ToolHandler,
     run_agent_loop,
 )
+from app.runtime.context_compaction import compact_tool_result
 from app.runtime.mcp import mcp_tool_handlers
 
 logger = logging.getLogger(__name__)
@@ -194,6 +195,17 @@ async def run_agent(
         max_retries=int(model_policy.get("max_retries", 2)),
         request_timeout=float(model_policy.get("request_timeout", 60.0)),
         fallback_clients=fallback_clients,
+        tool_result_transform=(
+            lambda tool_name, content: compact_tool_result(
+                tool_name,
+                content,
+                files=shared_deep_state.files,
+            )
+            if shared_deep_state is not None
+            else content
+        )
+        if shared_deep_state is not None
+        else None,
     )
 
     try:

@@ -72,6 +72,8 @@ class AgentLoopOptions:
     # 跨 provider 降级：(client, model_id) 预解析对，由 runner 用 ai_service 解析后传入。
     # 顺序：主模型 → fallback_models → fallback_clients。
     fallback_clients: list = field(default_factory=list)
+    # DeepAgent 可注入大型工具结果精简器；完整结果由调用方存入可恢复工作区。
+    tool_result_transform: Optional[Callable[[str, str], str]] = None
 
 
 @dataclass
@@ -327,10 +329,25 @@ async def run_agent_loop(
                 should_break = True
                 break
 
+            context_tool_result = tool_result or ""
+            if success and options.tool_result_transform is not None:
+                try:
+                    context_tool_result = options.tool_result_transform(
+                        fn_name,
+                        context_tool_result,
+                    )
+                except Exception:
+                    # 精简失败必须 fail-open，模型仍拿到原始工具结果。
+                    logger.warning(
+                        "Tool result compaction failed (%s), using original result",
+                        fn_name,
+                        exc_info=True,
+                    )
+
             messages.append({
                 "role": "tool",
                 "tool_call_id": tc.id,
-                "content": tool_result or "",
+                "content": context_tool_result,
             })
 
         if should_break:

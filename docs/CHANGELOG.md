@@ -5,6 +5,24 @@
 
 ---
 
+## [2026-07-29] feat: DeepAgent 大型工具结果自动卸载
+
+- 直接迁入 Yuxi SummaryMiddleware 的 L1 工具结果精简算法：按近似 token 阈值
+  识别大型结果，用安全工具名和内容哈希生成稳定虚拟路径。
+- 完整结果写入 DeepAgent 会话工作区的 `/outputs/large_tool_results/`，模型后续
+  上下文只保留结果大小、读取路径和有限预览；需要细节时可用现有 `read_file` 获取。
+- 精简只改变送入下一轮模型的上下文，运行 trace 仍保留原始结果摘要；卸载文件通过
+  已有 checkpoint 随会话恢复。失败时 fail-open，自动回退原始结果。
+- 仅 DeepAgent 启用；普通员工路径不变，不增加摘要模型调用，也不依赖 LangGraph、
+  LangChain、数据库或 Redis。
+- 新增 3 个专项测试，并扩展 checkpoint 集成测试，覆盖小结果直传、稳定内容寻址、
+  AgentLoop 上下文替换和跨会话保存。
+
+**影响面**：新增 `app/runtime/context_compaction.py`，扩展 AgentLoop 可选结果转换钩子
+和 DeepAgent 运行器装配；无 API、数据库、环境变量、前端或数据迁移。
+
+---
+
 ## [2026-07-29] feat: DeepAgent 工作状态随会话恢复
 
 - 迁入 Yuxi checkpoint 的状态提取思路，把 DeepAgent 的 `todos/files` 作为版本化

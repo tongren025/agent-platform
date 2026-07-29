@@ -80,11 +80,16 @@ async def test_runner_restores_and_returns_deep_checkpoint(monkeypatch):
     """运行器把恢复状态注入真实工具 handler，并返回本轮更新后的 checkpoint。"""
     observed: dict = {}
 
-    async def fake_run_agent_loop(*, tools, **_kwargs):
+    async def fake_run_agent_loop(*, tools, options, **_kwargs):
         handlers = {tool.name: tool for tool in tools}
         observed["read"] = json.loads(await handlers["read_file"].handler(
             json.dumps({"path": "draft.md"})
         ))
+        observed["large_result"] = "工具结果-" * 400
+        observed["compacted"] = options.tool_result_transform(
+            "mcp__search",
+            observed["large_result"],
+        )
         await handlers["write_todos"].handler(json.dumps({
             "todos": [{"content": "继续润色", "status": "completed"}],
         }, ensure_ascii=False))
@@ -129,14 +134,20 @@ async def test_runner_restores_and_returns_deep_checkpoint(monkeypatch):
     )
 
     assert observed["read"]["content"] == "上一轮草稿"
-    assert result.deep_state_checkpoint == {
-        "version": 1,
-        "todos": [{"content": "继续润色", "status": "completed"}],
-        "files": {
-            "draft.md": "上一轮草稿",
-            "final.md": "完成稿",
-        },
-    }
+    assert result.deep_state_checkpoint["version"] == 1
+    assert result.deep_state_checkpoint["todos"] == [
+        {"content": "继续润色", "status": "completed"},
+    ]
+    files = result.deep_state_checkpoint["files"]
+    assert files["draft.md"] == "上一轮草稿"
+    assert files["final.md"] == "完成稿"
+    offload_paths = [
+        path for path in files
+        if path.startswith("/outputs/large_tool_results/mcp__search-")
+    ]
+    assert len(offload_paths) == 1
+    assert files[offload_paths[0]] == observed["large_result"]
+    assert f"Full output path: {offload_paths[0]}" in observed["compacted"]
 
 
 @pytest.mark.asyncio
