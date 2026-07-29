@@ -7,7 +7,28 @@ from types import SimpleNamespace
 import pytest
 
 from app.runtime.loop import AgentLoopOptions, run_agent_loop
-from app.services.chat_response import extract_chat_content, normalize_chat_completion
+from app.services.chat_response import (
+    extract_chat_content,
+    normalize_chat_completion,
+    select_chat_completion_model,
+)
+
+
+def test_chat_model_selection_skips_image_generation_models():
+    models = [
+        {"modelId": "gpt-image-2"},
+        {"modelId": "dall-e-3"},
+        {"modelId": "gpt-5.6-terra"},
+    ]
+
+    assert select_chat_completion_model(models) == "gpt-5.6-terra"
+
+
+def test_chat_model_selection_rejects_image_only_configuration():
+    assert select_chat_completion_model([
+        {"modelId": "gpt-image-2"},
+        {"modelName": "chatgpt-image-latest"},
+    ]) == ""
 
 
 def test_standard_completion_is_preserved():

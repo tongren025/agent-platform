@@ -8,7 +8,10 @@ from pydantic import BaseModel
 from app.api.common import ok, validate_key
 from app.config import resolve_secret
 from app.dependencies import ai_service
-from app.services.chat_response import extract_chat_content
+from app.services.chat_response import (
+    extract_chat_content,
+    select_chat_completion_model,
+)
 from admin.auth import require_admin
 
 router = APIRouter(prefix="/api/admin/providers", tags=["admin-providers"])
@@ -123,7 +126,12 @@ def test_provider(name: str, _: dict = Depends(require_admin)):
         raise HTTPException(status_code=404, detail=f"Provider not found: {name}")
     if not provider.models:
         return ok({"success": False, "error": "No models configured"})
-    model_id = provider.models[0].get("modelId", provider.models[0].get("modelName", ""))
+    model_id = select_chat_completion_model(provider.models)
+    if not model_id:
+        return ok({
+            "success": False,
+            "error": "No chat-compatible models configured; image models require the Images or Responses API",
+        })
     try:
         client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
         resp = client.chat.completions.create(

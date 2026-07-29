@@ -10,6 +10,31 @@ from types import SimpleNamespace
 from typing import Any
 
 
+_IMAGE_ONLY_MODEL_PREFIXES = (
+    "chatgpt-image-",
+    "dall-e-",
+    "gpt-image-",
+)
+
+
+def select_chat_completion_model(models: list[dict]) -> str:
+    """选择可用于 Chat Completions 连通测试的模型，跳过纯生图模型。"""
+    for model in models:
+        model_id = str(
+            model.get("modelId")
+            or model.get("actualModelId")
+            or model.get("modelName")
+            or ""
+        ).strip()
+        if not model_id:
+            continue
+        normalized = model_id.lower()
+        if normalized.startswith(_IMAGE_ONLY_MODEL_PREFIXES):
+            continue
+        return model_id
+    return ""
+
+
 def _to_namespace(value: Any) -> Any:
     """递归把字典转换为属性可访问对象，列表保持列表语义。"""
     if isinstance(value, dict):
