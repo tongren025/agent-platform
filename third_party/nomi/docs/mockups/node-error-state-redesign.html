@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>生成失败态 · 评审样张（Before / After）</title>
+<style>
+  :root{
+    --nomi-paper: oklch(1 0 0);
+    --nomi-ink: oklch(0.22 0.01 80);
+    --nomi-ink-80: oklch(0.32 0.01 80);
+    --nomi-ink-60: oklch(0.50 0.01 80);
+    --nomi-ink-40: oklch(0.68 0.01 80);
+    --nomi-ink-20: oklch(0.88 0.005 80);
+    --nomi-ink-10: oklch(0.94 0.003 80);
+    --nomi-ink-05: oklch(0.97 0.003 80);
+    --nomi-line: oklch(0.91 0.004 80);
+    --nomi-line-soft: oklch(0.95 0.003 80);
+    --nomi-accent: oklch(0.55 0.13 250);
+    --danger: #ff3b30;
+    --danger-soft: rgba(255,59,48,0.10);
+    --danger-tint: rgba(255,59,48,0.05);
+    --r-sm:6px; --r:10px; --r-lg:16px;
+    --shadow-md: 0 6px 20px rgba(18,24,38,0.10);
+    --shadow-lg: 0 14px 40px rgba(18,24,38,0.16);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:40px 32px 80px;
+    font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;
+    color:var(--nomi-ink);
+    background:
+      radial-gradient(circle, rgba(60,60,67,0.18) 1px, transparent 1px) 0 0/22px 22px,
+      #fafafa;
+  }
+  h1{font-size:20px;margin:0 0 6px}
+  .sub{color:var(--nomi-ink-60);margin:0 0 28px;max-width:760px}
+  .cols{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+  .col{flex:1;min-width:340px}
+  .col h2{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--nomi-ink-40);margin:0 0 16px;font-weight:600}
+  .stage{position:relative;padding:24px;background:
+      radial-gradient(circle, rgba(60,60,67,0.16) 1px, transparent 1px) 0 0/22px 22px,
+      #fff;
+    border:1px solid var(--nomi-line);border-radius:var(--r-lg);min-height:520px}
+
+  /* ── node shell ── */
+  .node{position:relative;width:300px;background:var(--nomi-paper);border-radius:var(--r);box-shadow:var(--shadow-md)}
+  .handle{position:absolute;top:118px;width:14px;height:14px;border-radius:50%;background:#fff;border:1px solid var(--nomi-line);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .handle.l{left:-7px}.handle.r{right:-7px}
+  .stripes{height:240px;border-radius:var(--r) var(--r) 0 0;background:repeating-linear-gradient(45deg,var(--nomi-ink-05) 0 10px,var(--nomi-ink-10) 10px 20px)}
+
+  /* ── badges ── */
+  .badge{position:absolute;top:10px;left:10px;z-index:2;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:var(--danger-soft);color:var(--danger);backdrop-filter:blur(8px)}
+  .badge-icon{position:absolute;top:10px;left:10px;z-index:2;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--danger-soft);color:var(--danger);backdrop-filter:blur(8px)}
+
+  /* ── BEFORE: orange strip + popover ── */
+  .strip{display:flex;align-items:center;gap:6px;margin:10px;padding:7px 10px;border:1.5px solid var(--danger);border-radius:var(--r-sm);background:var(--danger-soft);color:var(--danger);font-weight:600;font-size:12px}
+  .strip .chev{margin-left:auto;opacity:.7}
+  .popover{width:300px;margin:6px 0 0 10px;background:#fff;border:1px solid var(--nomi-line);border-radius:var(--r);box-shadow:var(--shadow-lg);padding:12px}
+  .po-title{display:flex;align-items:center;gap:6px;color:var(--danger);font-weight:700;font-size:13px}
+  .po-fold{display:flex;align-items:center;gap:4px;color:var(--nomi-ink-60);font-size:12px;margin-top:10px}
+  .po-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+
+  /* ── composer ── */
+  .composer{width:300px;margin-top:14px;background:#fff;border:1px solid var(--nomi-line-soft);border-radius:var(--r);box-shadow:var(--shadow-md);padding:10px;display:flex;gap:6px;align-items:center}
+  .composer.dim{opacity:.45}
+  .sel{flex:1;min-width:0;display:flex;align-items:center;gap:4px;font-size:11px;color:var(--nomi-ink-80);border:1px solid var(--nomi-line);border-radius:999px;padding:5px 9px;white-space:nowrap;overflow:hidden}
+  .sel .cv{margin-left:auto;color:var(--nomi-ink-40)}
+
+  /* ── buttons ── */
+  .btn{height:28px;display:inline-flex;align-items:center;gap:5px;padding:0 12px;border-radius:var(--r-sm);font-size:12px;cursor:pointer;border:1px solid transparent;font-family:inherit}
+  .btn-primary{background:var(--nomi-ink);color:#fff}
+  .btn-primary.danger{background:var(--danger);color:#fff}
+  .btn-ghost{background:transparent;border-color:var(--nomi-line);color:var(--nomi-ink)}
+  .btn-link{background:transparent;color:var(--nomi-ink-40);padding:0 4px;height:auto}
+  .btn-gen{height:30px;border-radius:999px;background:var(--nomi-ink);color:#fff;padding:0 14px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
+
+  /* ── AFTER: inline error body ── */
+  .err-body{height:240px;border-radius:var(--r) var(--r) 0 0;background:
+      repeating-linear-gradient(45deg,var(--nomi-ink-05) 0 10px,var(--nomi-ink-10) 10px 20px);
+    position:relative;overflow:hidden}
+  .err-inner{position:absolute;inset:0;background:var(--danger-tint);display:flex;flex-direction:column;padding:18px 18px 14px}
+  .err-top{display:flex;gap:8px;align-items:flex-start}
+  .err-reason{font-size:14px;font-weight:700;color:var(--nomi-ink);line-height:1.3}
+  .err-hint{font-size:12.5px;color:var(--nomi-ink-60);line-height:1.55;margin-top:8px}
+  .err-spacer{flex:1}
+  .err-tech{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--nomi-ink-40);cursor:pointer;margin-top:6px}
+  .err-actions{display:flex;align-items:center;gap:8px;margin-top:12px}
+  .tri{width:0;height:0;color:var(--danger)}
+  .wedge{color:var(--danger);font-size:15px;line-height:1}
+  .note{margin-top:14px;font-size:12px;color:var(--nomi-ink-60);background:var(--nomi-ink-05);border-radius:var(--r-sm);padding:10px 12px;line-height:1.6}
+  .tag{display:inline-block;font-size:11px;color:var(--nomi-ink-40);border:1px solid var(--nomi-line);border-radius:999px;padding:1px 8px;margin-bottom:10px}
+  .x{color:var(--danger);font-weight:700}
+</style>
+</head>
+<body>
+  <h1>生成失败态 · 评审样张</h1>
+  <p class="sub">左＝现状（截图复刻）：「生成失败」出现三次、真正报错被折叠两层、弹层盖住 composer。
+  右＝建议方案 B（内联重构）：删掉橙条＋弹层，失败信息直接进节点正文——一眼看到<b>原因＋建议＋重试</b>，
+  composer 不再被遮挡，「复制详情 / 技术详情」降为次要。</p>
+
+  <div class="cols">
+    <!-- ───────────── BEFORE ───────────── -->
+    <div class="col">
+      <h2>Before · 现状</h2>
+      <div class="stage">
+        <div class="node">
+          <span class="badge">⚠ 生成失败</span>
+          <div class="handle l"></div><div class="handle r"></div>
+          <div class="stripes"></div>
+          <!-- 重复①徽标 ②橙条 -->
+          <div class="strip"><span class="wedge">⚠</span> 生成失败 <span class="chev">›</span></div>
+        </div>
+        <!-- ③弹层标题又一次「生成失败」，且盖住 composer -->
+        <div class="popover">
+          <div class="po-title"><span class="wedge">⚠</span> 生成失败</div>
+          <div class="po-fold">› 原始错误</div>
+          <div class="po-actions">
+            <button class="btn btn-ghost">复制详情</button>
+            <button class="btn btn-primary">重试</button>
+          </div>
+        </div>
+        <div class="composer dim">
+          <div class="sel">GPT Ima…<span class="cv">⌄</span></div>
+          <div class="sel">auto<span class="cv">⌄</span></div>
+          <div class="sel">1K<span class="cv">⌄</span></div>
+          <div class="btn-gen">生成 →</div>
+        </div>
+        <p class="note"><span class="x">问题：</span>「生成失败」<b>×3</b>（徽标／橙条／弹层标题）；
+        真正报错藏在「橙条→弹层→点原始错误」<b>三层手势</b>之后；弹层向下弹<b>盖住模型选择＋生成</b>，
+        而失败常见解法恰是换模型重试。</p>
+      </div>
+    </div>
+
+    <!-- ───────────── AFTER ───────────── -->
+    <div class="col">
+      <h2>After · 方案 B（推荐）</h2>
+      <div class="stage">
+        <div class="tag">情形一 · 已识别错误（带建议）</div>
+        <div class="node">
+          <span class="badge-icon" title="生成失败">⚠</span>
+          <div class="handle l"></div><div class="handle r"></div>
+          <div class="err-body">
+            <div class="err-inner">
+              <div class="err-top">
+                <span class="wedge">⚠</span>
+                <span class="err-reason">API Key 无效</span>
+              </div>
+              <div class="err-hint">请在「模型接入」页检查这个模型的 API Key。</div>
+              <div class="err-spacer"></div>
+              <div class="err-actions">
+                <button class="btn btn-primary danger">↻ 重试</button>
+                <button class="btn btn-link">复制详情</button>
+                <span class="err-spacer"></span>
+                <span class="err-tech">技术详情 ›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="composer">
+          <div class="sel">GPT Ima…<span class="cv">⌄</span></div>
+          <div class="sel">auto<span class="cv">⌄</span></div>
+          <div class="sel">1K<span class="cv">⌄</span></div>
+          <div class="btn-gen">生成 →</div>
+        </div>
+
+        <div class="tag" style="margin-top:22px">情形二 · 未识别错误（截图这种）</div>
+        <div class="node">
+          <span class="badge-icon" title="生成失败">⚠</span>
+          <div class="handle l"></div><div class="handle r"></div>
+          <div class="err-body">
+            <div class="err-inner">
+              <div class="err-top">
+                <span class="wedge">⚠</span>
+                <span class="err-reason">服务商返回错误：model is overloaded</span>
+              </div>
+              <div class="err-hint">可能是服务商临时故障或额度问题，建议稍等重试，或换一个模型。</div>
+              <div class="err-spacer"></div>
+              <div class="err-actions">
+                <button class="btn btn-primary danger">↻ 重试</button>
+                <button class="btn btn-link">复制详情</button>
+                <span class="err-spacer"></span>
+                <span class="err-tech">技术详情 ›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="note"><span style="color:var(--nomi-accent);font-weight:700">改进：</span>
+        顶部只留一个 ⚠ 图标角标（缩放时仍能一眼看出失败，不再复读文字）；
+        正文直接给<b>原因＋人话建议＋重试</b>；未识别错误从 raw 提取<b>可读首行</b>当原因、并兜底一句建议；
+        「复制详情/技术详情」降为次要；<b>composer 全程可见</b>，删掉浮层＝顺手清掉手搓定位/z-index 工程债。</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

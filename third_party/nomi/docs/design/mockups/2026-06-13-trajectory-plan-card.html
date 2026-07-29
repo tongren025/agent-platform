@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nomi · 轨迹计划卡 + 边语义（T3 样张）</title>
+  <style>
+    /* nomi-tokens.css 内嵌副本（与 src/theme/nomi-tokens.css 同源，仅为样张可独立打开） */
+    :root {
+      --nomi-bg: oklch(0.985 0.003 90);
+      --nomi-paper: oklch(1 0 0);
+      --nomi-ink: oklch(0.22 0.01 80);
+      --nomi-ink-80: oklch(0.32 0.01 80);
+      --nomi-ink-60: oklch(0.50 0.01 80);
+      --nomi-ink-40: oklch(0.68 0.01 80);
+      --nomi-ink-30: oklch(0.78 0.01 80);
+      --nomi-ink-20: oklch(0.88 0.005 80);
+      --nomi-ink-10: oklch(0.94 0.003 80);
+      --nomi-ink-05: oklch(0.97 0.003 80);
+      --nomi-line: oklch(0.91 0.004 80);
+      --nomi-line-soft: oklch(0.95 0.003 80);
+      --nomi-accent: oklch(0.55 0.13 250);
+      --nomi-accent-soft: color-mix(in oklch, var(--nomi-accent) 12%, var(--nomi-paper));
+      --nomi-track-image: oklch(0.7 0.13 200);
+      --nomi-track-video: oklch(0.65 0.13 150);
+      --nomi-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.04), 0 1px 1px oklch(0 0 0 / 0.03);
+      --nomi-shadow-md: 0 2px 4px oklch(0 0 0 / 0.04), 0 8px 24px oklch(0 0 0 / 0.06);
+      --nomi-shadow-lg: 0 4px 8px oklch(0 0 0 / 0.05), 0 20px 50px oklch(0 0 0 / 0.08);
+      --nomi-radius-sm: 6px;
+      --nomi-radius: 10px;
+      --nomi-radius-lg: 16px;
+      --nomi-font-sans: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh; margin: 0; padding: 40px 56px 72px;
+      background: var(--nomi-bg); color: var(--nomi-ink);
+      font-family: var(--nomi-font-sans); font-size: 13px; line-height: 1.45;
+    }
+    button { font: inherit; cursor: pointer; }
+
+    .switcher {
+      position: sticky; top: 0; z-index: 20;
+      display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 24px;
+      border: 1px solid var(--nomi-line); border-radius: 999px;
+      background: var(--nomi-paper); box-shadow: var(--nomi-shadow-sm);
+    }
+    .switcher button {
+      height: 28px; border: 0; border-radius: 999px; background: transparent;
+      color: var(--nomi-ink-60); padding: 0 12px; font-size: 12px; font-weight: 650;
+    }
+    .switcher button[aria-selected="true"] { background: var(--nomi-ink); color: var(--nomi-paper); }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .note { max-width: 920px; margin-top: 18px; color: var(--nomi-ink-60); font-size: 12px; }
+
+    /* ===== A：助手面板里的轨迹计划卡 ===== */
+    .assistant-col {
+      width: 360px; padding: 14px;
+      border: 1px solid var(--nomi-line); border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper); box-shadow: var(--nomi-shadow-sm);
+    }
+    .plan-card {
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 10px; border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius); background: var(--nomi-bg);
+    }
+    .plan-kicker { color: var(--nomi-accent); font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+    .plan-summary { color: var(--nomi-ink); font-size: 14px; font-weight: 500; line-height: 1.35; }
+    .plan-counts { color: var(--nomi-ink-60); font-size: 12px; }
+
+    .layer { display: flex; flex-direction: column; gap: 6px; }
+    .layer-head {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--nomi-ink-60); font-size: 11px; font-weight: 650;
+    }
+    .layer-head .count { color: var(--nomi-ink-40); font-weight: 500; }
+
+    .node-row {
+      display: flex; flex-direction: column; gap: 6px;
+      padding: 8px; border: 1px solid var(--nomi-line-soft);
+      border-radius: var(--nomi-radius-sm); background: var(--nomi-paper);
+    }
+    .node-row .head { display: flex; align-items: center; gap: 6px; }
+    .node-row .title { color: var(--nomi-ink); font-size: 13px; font-weight: 600; }
+    .node-row .refs { margin-left: auto; display: inline-flex; gap: 4px; }
+    .ref-chip {
+      display: inline-flex; align-items: center; height: 18px;
+      border-radius: 999px; background: var(--nomi-ink-05); color: var(--nomi-ink-60);
+      padding: 0 7px; font-size: 10px; font-weight: 600;
+    }
+    .node-row .prompt {
+      color: var(--nomi-ink-60); font-size: 12px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .node-row .chips { display: flex; gap: 4px; flex-wrap: wrap; }
+    .model-chip {
+      display: inline-flex; align-items: center; gap: 3px; height: 20px;
+      border: 1px solid color-mix(in oklch, var(--nomi-accent) 24%, var(--nomi-line));
+      border-radius: 999px; background: var(--nomi-accent-soft); color: var(--nomi-accent);
+      padding: 0 8px; font-size: 11px; font-weight: 600;
+    }
+    .model-chip .v { color: var(--nomi-accent); opacity: 0.7; font-size: 9px; }
+
+    /* 接力边勾选行 */
+    .relay-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 8px; border: 1px solid var(--nomi-line-soft);
+      border-radius: var(--nomi-radius-sm); background: var(--nomi-paper);
+    }
+    .relay-row input { margin-top: 2px; accent-color: var(--nomi-accent); }
+    .relay-row .t { color: var(--nomi-ink); font-size: 12px; font-weight: 600; }
+    .relay-row .d { margin-top: 2px; color: var(--nomi-ink-40); font-size: 11px; }
+    .relay-row[data-off="true"] .t { color: var(--nomi-ink-40); text-decoration: line-through; }
+
+    .plan-footer { display: flex; gap: 8px; }
+    .btn {
+      flex: 1; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--nomi-line); border-radius: 999px;
+      background: var(--nomi-paper); color: var(--nomi-ink-80); font-size: 13px; font-weight: 650;
+    }
+    .btn.primary { border-color: var(--nomi-ink); background: var(--nomi-ink); color: var(--nomi-paper); }
+
+    /* ===== B：画布轨迹布局 ===== */
+    .canvas-stage {
+      position: relative; height: 560px; overflow: hidden;
+      border: 1px solid var(--nomi-line); border-radius: var(--nomi-radius-lg);
+      background: radial-gradient(circle, var(--nomi-ink-20) 1px, transparent 1.2px), var(--nomi-bg);
+      background-size: 24px 24px;
+    }
+    .col-label {
+      position: absolute; top: 14px; color: var(--nomi-ink-40);
+      font-size: 11px; font-weight: 650; letter-spacing: 0.04em;
+    }
+    .cnode {
+      position: absolute; width: 168px; height: 120px;
+      border: 1px solid var(--nomi-line); border-radius: var(--nomi-radius);
+      background: var(--nomi-paper); box-shadow: var(--nomi-shadow-sm); padding: 8px;
+    }
+    .cnode .pill {
+      display: inline-flex; align-items: center; height: 20px;
+      border-radius: 6px; background: var(--nomi-ink); color: var(--nomi-paper);
+      padding: 0 7px; font-size: 11px; font-weight: 500;
+    }
+    .cnode .body {
+      margin-top: 6px; height: 64px; border-radius: var(--nomi-radius-sm);
+      background: repeating-linear-gradient(45deg, var(--nomi-ink-05) 0 10px, var(--nomi-ink-10) 10px 20px);
+      display: grid; place-items: center; color: var(--nomi-ink-40); font-size: 11px;
+    }
+    svg.edges { position: absolute; inset: 0; pointer-events: none; }
+    .edge-label {
+      position: absolute; display: inline-flex; align-items: center; height: 18px;
+      border-radius: 999px; border: 1px solid var(--nomi-line);
+      background: var(--nomi-paper); color: var(--nomi-ink-60);
+      padding: 0 7px; font-size: 10px; font-weight: 600; box-shadow: var(--nomi-shadow-sm);
+    }
+    .edge-label.relay {
+      border-color: color-mix(in oklch, var(--nomi-accent) 30%, var(--nomi-line));
+      background: var(--nomi-accent-soft); color: var(--nomi-accent);
+    }
+
+    /* ===== C：接力边选中浮条 ===== */
+    .edge-popover {
+      position: absolute; display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius); background: var(--nomi-paper); box-shadow: var(--nomi-shadow-lg);
+    }
+    .edge-popover .t { font-size: 12px; font-weight: 650; color: var(--nomi-ink); }
+    .edge-popover .d { font-size: 11px; color: var(--nomi-ink-60); }
+    .edge-popover .del {
+      height: 26px; border: 1px solid var(--nomi-line); border-radius: 999px;
+      background: var(--nomi-paper); color: var(--nomi-ink-60); padding: 0 10px; font-size: 11px; font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <nav class="switcher">
+    <button data-target="a" aria-selected="true">A 轨迹计划卡</button>
+    <button data-target="b" aria-selected="false">B 画布轨迹布局</button>
+    <button data-target="c" aria-selected="false">C 接力边交互</button>
+  </nav>
+
+  <!-- ===== A ===== -->
+  <main id="screen-a" class="screen active">
+    <div class="assistant-col">
+      <div class="plan-card">
+        <div class="plan-summary">2 个角色 + 1 个场景定妆，3 镜头连续动作</div>
+
+        <section class="layer">
+          <div class="layer-head">参考 <span class="count">×2</span></div>
+          <div class="node-row">
+            <div class="head"><span class="title">角色：男主</span></div>
+            <div class="prompt">三十岁男性，灰色家居服，短发微乱，晨光柔和质感…</div>
+            <div class="chips"><span class="model-chip">Seedream 4.5 <span class="v">▾</span></span><span class="model-chip">1:1 <span class="v">▾</span></span></div>
+          </div>
+          <div class="node-row">
+            <div class="head"><span class="title">场景：清晨厨房</span></div>
+            <div class="prompt">现代极简厨房，晨光斜照料理台，金属咖啡机靠窗…</div>
+            <div class="chips"><span class="model-chip">Seedream 4.5 <span class="v">▾</span></span><span class="model-chip">16:9 <span class="v">▾</span></span></div>
+          </div>
+        </section>
+
+        <section class="layer">
+          <div class="layer-head">关键帧 <span class="count">×3</span></div>
+          <div class="node-row">
+            <div class="head"><span class="title">镜头 1 · 咖啡机特写</span><span class="refs"><span class="ref-chip">场景</span></span></div>
+            <div class="prompt">咖啡机研磨特写，咖啡粉如细沙落下，微距质感…</div>
+            <div class="chips"><span class="model-chip">Seedream 4.5 <span class="v">▾</span></span><span class="model-chip">16:9 <span class="v">▾</span></span><span class="model-chip">2K <span class="v">▾</span></span></div>
+          </div>
+          <div class="node-row">
+            <div class="head"><span class="title">镜头 2 · 萃取入杯</span><span class="refs"><span class="ref-chip">场景</span></span></div>
+            <div class="prompt">琥珀色咖啡注入玻璃杯，蒸汽升腾，油脂金环…</div>
+            <div class="chips"><span class="model-chip">Seedream 4.5 <span class="v">▾</span></span><span class="model-chip">16:9 <span class="v">▾</span></span><span class="model-chip">2K <span class="v">▾</span></span></div>
+          </div>
+          <div class="node-row">
+            <div class="head"><span class="title">镜头 3 · 阳台晨光</span><span class="refs"><span class="ref-chip">男主</span><span class="ref-chip">场景</span></span></div>
+            <div class="prompt">男主端杯走向阳台，城市晨光，背影中景…</div>
+            <div class="chips"><span class="model-chip">Seedream 4.5 <span class="v">▾</span></span><span class="model-chip">16:9 <span class="v">▾</span></span><span class="model-chip">2K <span class="v">▾</span></span></div>
+          </div>
+        </section>
+
+        <section class="layer">
+          <div class="layer-head">视频 <span class="count">×3</span></div>
+          <div class="node-row">
+            <div class="head"><span class="title">镜头 1 视频 · 5s</span></div>
+            <div class="prompt">缓慢推近，研磨声渐强，咖啡粉落下的微距动态…</div>
+            <div class="chips"><span class="model-chip">Seedance 2.0 <span class="v">▾</span></span><span class="model-chip">16:9 <span class="v">▾</span></span></div>
+          </div>
+          <div class="node-row">
+            <div class="head"><span class="title">镜头 2 视频 · 5s</span></div>
+            <div class="prompt">固定机位，蒸汽与液体流动，光影缓变…</div>
+            <div class="chips"><span class="model-chip">Seedance 2.0 <span class="v">▾</span></span><span class="model-chip">16:9 <span class="v">▾</span></span></div>
+          </div>
+          <div class="node-row">
+            <div class="head"><span class="title">镜头 3 视频 · 6s</span></div>
+            <div class="prompt">跟随男主走向阳台，镜头缓摇至城市天际线…</div>
+            <div class="chips"><span class="model-chip">Seedance 2.0 <span class="v">▾</span></span><span class="model-chip">16:9 <span class="v">▾</span></span></div>
+          </div>
+        </section>
+
+        <section class="layer">
+          <div class="layer-head">尾帧接力 <span class="count">可选</span></div>
+          <div class="relay-row">
+            <input type="checkbox" checked aria-label="启用 镜头1→镜头2 尾帧接力" />
+            <div>
+              <div class="t">镜头 1 → 镜头 2</div>
+              <div class="d">尾帧接首帧，动作顺接</div>
+            </div>
+          </div>
+          <div class="relay-row" data-off="true">
+            <input type="checkbox" aria-label="启用 镜头2→镜头3 尾帧接力" />
+            <div>
+              <div class="t">镜头 2 → 镜头 3</div>
+              <div class="d">机位变化大，独立生成</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="plan-footer">
+          <button class="btn">全部拒绝</button>
+          <button class="btn primary">确认全部</button>
+        </div>
+      </div>
+    </div>
+    <p class="note">A（定稿方向）：头部一行计划摘要（kicker/计数行/解释文案删）；组头纯文字「参考 ×2」——不配图标（用户反馈图标隐喻不清，看不懂的图标是负资产）；模型/参数 chip 保持在每行原位（上提组头被否：感觉乱）；视频行「首帧=关键帧N」同构 chip 删；接力行动宾短语；确认按钮纯「确认全部」。点击节点行展开 prompt 编辑（现有能力）。</p>
+  </main>
+
+  <!-- ===== B ===== -->
+  <main id="screen-b" class="screen">
+    <div class="canvas-stage">
+      <span class="col-label" style="left:48px">参考</span>
+      <span class="col-label" style="left:300px">关键帧</span>
+      <span class="col-label" style="left:560px">视频</span>
+
+      <svg class="edges" width="100%" height="100%">
+        <!-- character_ref / style_ref：中性虚线 -->
+        <path d="M 216 110 C 250 110, 260 90, 292 90" stroke="oklch(0.78 0.01 80)" stroke-width="1.5" stroke-dasharray="4 3" fill="none"/>
+        <path d="M 216 110 C 250 110, 260 230, 292 230" stroke="oklch(0.78 0.01 80)" stroke-width="1.5" stroke-dasharray="4 3" fill="none"/>
+        <path d="M 216 110 C 250 110, 260 370, 292 370" stroke="oklch(0.78 0.01 80)" stroke-width="1.5" stroke-dasharray="4 3" fill="none"/>
+        <path d="M 216 250 C 250 250, 260 380, 292 380" stroke="oklch(0.78 0.01 80)" stroke-width="1.5" stroke-dasharray="4 3" fill="none"/>
+        <!-- first_frame：中性实线 -->
+        <path d="M 476 90 C 510 90, 520 90, 552 90" stroke="oklch(0.68 0.01 80)" stroke-width="1.5" fill="none"/>
+        <path d="M 476 230 C 510 230, 520 230, 552 230" stroke="oklch(0.68 0.01 80)" stroke-width="1.5" fill="none"/>
+        <path d="M 476 370 C 510 370, 520 370, 552 370" stroke="oklch(0.68 0.01 80)" stroke-width="1.5" fill="none"/>
+        <!-- 尾帧接力：accent 实线（用户批准过的付费语义,常显标签） -->
+        <path d="M 636 152 C 660 180, 660 180, 636 208" stroke="oklch(0.55 0.13 250)" stroke-width="1.5" fill="none"/>
+      </svg>
+
+      <div class="cnode" style="left:48px; top:50px"><span class="pill">角色 · 男主</span><div class="body">等待生成</div></div>
+      <div class="cnode" style="left:48px; top:190px"><span class="pill">场景 · 厨房</span><div class="body">等待生成</div></div>
+
+      <div class="cnode" style="left:308px; top:30px"><span class="pill">镜头 1 关键帧</span><div class="body">等待生成</div></div>
+      <div class="cnode" style="left:308px; top:170px"><span class="pill">镜头 2 关键帧</span><div class="body">等待生成</div></div>
+      <div class="cnode" style="left:308px; top:310px"><span class="pill">镜头 3 关键帧</span><div class="body">等待生成</div></div>
+
+      <div class="cnode" style="left:568px; top:30px"><span class="pill">镜头 1 视频</span><div class="body">等待生成</div></div>
+      <div class="cnode" style="left:568px; top:170px"><span class="pill">镜头 2 视频</span><div class="body">等待生成</div></div>
+      <div class="cnode" style="left:568px; top:310px"><span class="pill">镜头 3 视频</span><div class="body">等待生成</div></div>
+
+      <!-- hover 中的一条 character_ref 边显示标签 -->
+      <span class="edge-label" style="left:236px; top:96px">角色参考</span>
+      <!-- 接力边常显标签 -->
+      <span class="edge-label relay" style="left:652px; top:172px">尾帧接力</span>
+    </div>
+    <p class="note">B：批准后的轨迹布局——三列分层（参考 → 关键帧 → 视频），与画布已有节点避让（T4）。边保持中性灰不上彩虹（密度优先）：参考类边虚线、首帧边实线；标签默认隐藏、hover/选中才显（图示「角色参考」为 hover 态）。唯一例外是「尾帧接力」边：accent 色 + 常显标签——它是用户单独勾选过的付费行为语义，必须一眼可辨、可点开管理（见 C）。</p>
+  </main>
+
+  <!-- ===== C ===== -->
+  <main id="screen-c" class="screen">
+    <div class="canvas-stage" style="height:360px">
+      <svg class="edges" width="100%" height="100%">
+        <path d="M 248 152 C 290 200, 290 200, 248 248" stroke="oklch(0.55 0.13 250)" stroke-width="2" fill="none"/>
+      </svg>
+      <div class="cnode" style="left:80px; top:50px"><span class="pill">镜头 1 视频</span><div class="body">00:05 已生成</div></div>
+      <div class="cnode" style="left:80px; top:210px"><span class="pill">镜头 2 视频</span><div class="body">等待生成</div></div>
+      <span class="edge-label relay" style="left:268px; top:188px">尾帧接力</span>
+
+      <div class="edge-popover" style="left:330px; top:160px">
+        <div>
+          <div class="t">尾帧接力</div>
+          <div class="d">生成镜头 2 时，自动用镜头 1 的最后一帧作为首帧</div>
+        </div>
+        <button class="del">删除此边</button>
+      </div>
+    </div>
+    <p class="note">C：接力边选中态——点边弹小浮条（BodyPortal 不裁剪层 + 视口 clamp，按 R13 交互态纪律）：一句话讲清这条边会发生什么 + 「删除此边」。删除 = 两镜头回到独立生成，无其它副作用。手动连 video→video 边时同样得到此语义（边标签即时出现），能力对手动用户与 Agent 一致（P4 通用第一）。</p>
+  </main>
+
+  <script>
+    const buttons = Array.from(document.querySelectorAll('.switcher button'));
+    const screens = Array.from(document.querySelectorAll('.screen'));
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((item) => item.setAttribute('aria-selected', item === button ? 'true' : 'false'));
+        screens.forEach((screen) => screen.classList.toggle('active', screen.id === `screen-${button.dataset.target}`));
+      });
+    });
+  </script>
+</body>
+</html>

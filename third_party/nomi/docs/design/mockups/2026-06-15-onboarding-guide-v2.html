@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>上手引导 v2 — 步骤指到对应的地方</title>
+<style>
+  :root{
+    --bg:oklch(0.985 0.003 90); --paper:oklch(1 0 0); --ink:oklch(0.22 0.01 80);
+    --ink80:oklch(0.32 0.01 80); --ink60:oklch(0.50 0.01 80); --ink40:oklch(0.68 0.01 80);
+    --ink30:oklch(0.78 0.005 80); --ink20:oklch(0.88 0.005 80); --ink10:oklch(0.94 0.003 80); --ink05:oklch(0.97 0.003 80);
+    --line:oklch(0.91 0.004 80); --lineSoft:oklch(0.95 0.003 80);
+    --accent:oklch(0.55 0.13 250); --accentSoft:color-mix(in oklch,var(--accent) 12%,var(--paper));
+    --r:10px; --rs:6px; --rl:14px;
+    --shadowSm:0 1px 2px oklch(0 0 0/.04),0 4px 12px oklch(0 0 0/.05);
+    --shadowMd:0 2px 4px oklch(0 0 0/.05),0 10px 28px oklch(0 0 0/.08);
+    --shadowLg:0 8px 32px oklch(0 0 0/.12);
+    --font:Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+    --serif:"Fraunces",Georgia,serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:13px;padding:24px 24px 64px;}
+  h1{font-size:19px;margin:0 0 4px;font-weight:600;}
+  .lead{color:var(--ink60);font-size:12.5px;margin:0 0 8px;max-width:880px;line-height:1.6;}
+  .lead b{color:var(--ink);}
+  .caps{font-size:11px;font-weight:600;color:var(--ink60);text-transform:uppercase;letter-spacing:.04em;margin:20px 0 8px;}
+
+  /* faux 工作区 */
+  .frame{position:relative;width:100%;max-width:1080px;height:560px;border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;background:var(--bg);box-shadow:var(--shadowSm);}
+  .bar{height:52px;display:flex;align-items:center;gap:14px;padding:0 16px;border-bottom:1px solid var(--line);background:var(--paper);position:relative;z-index:5;}
+  .logo{display:flex;align-items:center;gap:7px;font-family:var(--serif);font-size:16px;}
+  .logo .m{width:22px;height:22px;border-radius:6px;background:var(--ink);display:grid;place-items:center;}
+  .logo .m span{width:3px;height:10px;background:var(--paper);box-shadow:4px 0 var(--paper);border-radius:2px;}
+  .crumb{color:var(--ink40);font-size:12px;}
+  .tabs{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:2px;background:var(--ink05);border-radius:999px;padding:3px;}
+  .tab{font-size:12.5px;padding:5px 14px;border-radius:999px;color:var(--ink60);cursor:pointer;}
+  .tab.on{background:var(--paper);color:var(--ink);box-shadow:var(--shadowSm);font-weight:500;}
+  .barR{margin-left:auto;display:flex;align-items:center;gap:10px;}
+  .ghost{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink60);padding:5px 8px;border-radius:999px;cursor:pointer;}
+  .primary{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--paper);background:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;}
+  .rail{position:absolute;left:0;top:52px;bottom:0;width:46px;border-right:1px solid var(--line);background:var(--paper);display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:16px;}
+  .rail i{width:18px;height:18px;border-radius:4px;background:var(--ink10);}
+  .canvas{position:absolute;left:46px;right:0;top:52px;bottom:0;background-image:radial-gradient(var(--ink10) 1px,transparent 1px);background-size:22px 22px;}
+
+  /* 节点卡(示意，含生成按钮) */
+  .node{position:absolute;left:230px;top:150px;width:230px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadowSm);overflow:hidden;}
+  .node__thumb{height:118px;background:var(--ink05);display:grid;place-items:center;}
+  .node__thumb i{width:30px;height:30px;border-radius:6px;background:var(--ink10);}
+  .node__ft{padding:8px 10px;border-top:1px solid var(--lineSoft);display:flex;align-items:center;gap:8px;}
+  .node__model{flex:1;font-size:11px;color:var(--ink60);height:26px;border:1px solid var(--line);border-radius:var(--rs);display:flex;align-items:center;padding:0 8px;}
+  .gen{font-size:11.5px;font-weight:600;color:var(--paper);background:var(--ink);height:26px;padding:0 12px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
+
+  /* ── 上手引导卡(top-right under appbar) ── */
+  .guide{position:absolute;top:64px;right:16px;width:248px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadowMd);z-index:10;overflow:hidden;}
+  .guide__hd{display:flex;align-items:center;gap:8px;padding:11px 12px 8px;}
+  .guide__hd .t{font-size:13.5px;font-weight:600;}
+  .guide__hd .pg{font-size:12px;color:var(--ink40);font-weight:500;}
+  .guide__hd .min{margin-left:auto;color:var(--ink40);cursor:pointer;font-size:14px;line-height:1;}
+  .guide__bar{height:3px;margin:0 12px 8px;background:var(--ink10);border-radius:999px;overflow:hidden;}
+  .guide__bar i{display:block;height:100%;width:50%;background:var(--accent);border-radius:999px;}
+  .row{display:flex;align-items:flex-start;gap:9px;padding:7px 8px;border-radius:var(--rs);margin:0 4px;}
+  .row .ind{flex-shrink:0;width:18px;height:18px;border-radius:999px;display:grid;place-items:center;margin-top:1px;font-size:10px;}
+  .row.done .ind{background:var(--accent);color:#fff;}
+  .row.todo .ind{border:2px solid var(--ink20);color:var(--ink30);font-weight:600;}
+  .row.cur .ind{border:2px solid var(--accent);color:var(--accent);font-weight:600;}
+  .row .lb{font-size:13px;font-weight:500;line-height:1.3;}
+  .row.done .lb{color:var(--ink40);}
+  .row.cur{background:var(--accentSoft);flex-direction:column;gap:6px;}
+  .row.cur .top{display:flex;align-items:flex-start;gap:9px;width:100%;}
+  .row.cur .lb{color:var(--accent);}
+  .row .hint{font-size:11.5px;color:var(--ink40);line-height:1.4;margin-top:1px;}
+  .takeMe{align-self:flex-start;margin-left:27px;font-size:11.5px;font-weight:600;color:var(--paper);background:var(--accent);border-radius:999px;padding:4px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;}
+  .guide__list{padding-bottom:8px;}
+
+  /* ── spotlight ring + callout(指到对应控件) ── */
+  .ring{position:absolute;border:2px solid var(--accent);border-radius:999px;box-shadow:0 0 0 4px var(--accentSoft);pointer-events:none;z-index:8;animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 4px var(--accentSoft);}50%{box-shadow:0 0 0 7px var(--accentSoft);}}
+  .callout{position:absolute;width:210px;background:var(--paper);border:1px solid var(--line);border-radius:var(--rl);box-shadow:var(--shadowLg);padding:11px 13px;z-index:9;}
+  .callout .k{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:3px;}
+  .callout .ct{font-size:12.5px;color:var(--ink80);line-height:1.5;}
+  .callout::after{content:"";position:absolute;width:10px;height:10px;background:var(--paper);border-right:1px solid var(--line);border-bottom:1px solid var(--line);}
+
+  .twocol{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;}
+  .note{font-size:12px;color:var(--ink60);line-height:1.7;max-width:300px;}
+  .note b{color:var(--ink);}
+  .pill{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 11px;background:var(--paper);border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadowSm);font-size:12.5px;color:var(--ink80);}
+  .pill .b{font-size:11px;font-weight:600;color:var(--accent);background:var(--accentSoft);border-radius:999px;padding:1px 7px;}
+</style>
+</head>
+<body>
+  <h1>上手引导 v2 · 步骤指到对应的地方</h1>
+  <p class="lead">问题：之前的清单只说「做什么」、不说「在哪做」，且埋在右下角。<b>新版</b>：进度卡移到右上（贴近它引用的模型接入/导出），当前步给一个<b>「带我去」</b>——点了直接切到对应模式 + 在真实控件上打一圈高亮(<b>不压暗内容</b>) + 一句话气泡指明「在这里」。完成一步自动跳到下一步，可随时收起/重看。</p>
+
+  <p class="caps">场景：第 ③ 步「生成一张」当前态 — 点「带我去」后切到生成区并指到节点的「生成」按钮</p>
+  <div class="frame">
+    <div class="bar">
+      <div class="logo"><span class="m"><span></span></span>Nomi</div>
+      <span class="crumb">› 示例：30 秒产品介绍</span>
+      <div class="tabs"><span class="tab">创作</span><span class="tab on">生成</span><span class="tab">预览</span></div>
+      <div class="barR"><span class="ghost">◷ 模型接入</span><span class="primary">↧ 导出</span></div>
+    </div>
+    <div class="rail"><i></i><i></i><i></i><i></i></div>
+    <div class="canvas"></div>
+
+    <!-- 节点 + 生成按钮(被指到) -->
+    <div class="node">
+      <div class="node__thumb"><i></i></div>
+      <div class="node__ft"><span class="node__model">Seedance 2.0</span><span class="gen">▶ 生成</span></div>
+    </div>
+    <!-- spotlight ring 套在「生成」按钮上 -->
+    <div class="ring" style="left:386px;top:280px;width:66px;height:34px;border-radius:999px;"></div>
+    <!-- callout 指向生成按钮(在其上方) -->
+    <div class="callout" style="left:330px;top:200px;">
+      <div class="k">③ 生成一张</div>
+      <div class="ct">在镜头卡里选好模型，点「生成」开始出图。</div>
+      <span style="left:60px;bottom:-6px;transform:rotate(45deg);"></span>
+    </div>
+
+    <!-- 上手引导卡 top-right -->
+    <div class="guide">
+      <div class="guide__hd"><span class="t">上手 4 步</span><span class="pg">2 / 4</span><span class="min">▾</span></div>
+      <div class="guide__bar"><i></i></div>
+      <div class="guide__list">
+        <div class="row done"><span class="ind">✓</span><span class="lb">接入模型</span></div>
+        <div class="row done"><span class="ind">✓</span><span class="lb">拆一个镜头</span></div>
+        <div class="row cur">
+          <div class="top"><span class="ind">3</span><span><span class="lb">生成一张</span><span class="hint">选模型，点「生成」出图。</span></span></div>
+          <span class="takeMe">带我去 →</span>
+        </div>
+        <div class="row todo"><span class="ind">4</span><span class="lb">导出成片</span></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="caps" style="margin-top:24px;">其它态</p>
+  <div class="twocol">
+    <div>
+      <div style="font-size:12px;color:var(--ink60);margin-bottom:8px;">收起 → 小 pill（右上，点开重看）</div>
+      <span class="pill">☰ 上手 4 步 <span class="b">2/4</span></span>
+    </div>
+    <div class="note">
+      <b>交互要点</b><br>
+      · 当前步自动高亮 + 「带我去」；完成（真实行为打勾）自动跳下一步。<br>
+      · 「带我去」= 切到该步所在模式 + 真实控件打高亮圈 + 气泡指明，<b>不压暗</b>主内容。<br>
+      · 气泡/高亮点一下别处或开始操作就消失；卡片可收起成 pill、4/4 后整卡消失。<br>
+      · ①接入模型 / ④导出 在顶栏常驻，指它们不用切模式；②拆镜→创作区输入框；③生成→画布节点。
+    </div>
+  </div>
+</body>
+</html>

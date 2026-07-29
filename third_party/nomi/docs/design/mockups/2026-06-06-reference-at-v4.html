@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nomi · 参考 tile + @引用 样张 v4（最少文字 / 自明）</title>
+<style>
+  :root{
+    --nomi-bg:oklch(.985 .003 90);--nomi-paper:oklch(1 0 0);--nomi-ink:oklch(.22 .01 80);
+    --nomi-ink-80:oklch(.32 .01 80);--nomi-ink-60:oklch(.50 .01 80);--nomi-ink-40:oklch(.68 .01 80);
+    --nomi-ink-20:oklch(.88 .005 80);--nomi-ink-10:oklch(.94 .003 80);--nomi-ink-05:oklch(.97 .003 80);
+    --nomi-line:oklch(.91 .004 80);--nomi-line-soft:oklch(.95 .003 80);
+    --nomi-accent:oklch(.55 .13 250);--nomi-accent-soft:color-mix(in oklch,var(--nomi-accent) 12%,var(--nomi-paper));
+    --r-sm:6px;--r:10px;--sh:0 2px 4px oklch(0 0 0/.04),0 8px 24px oklch(0 0 0/.06);
+    --sh-sm:0 1px 2px oklch(0 0 0/.05);
+    --font:Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--nomi-bg);color:var(--nomi-ink);font-family:var(--font);font-size:13px;
+    padding:28px;display:flex;flex-direction:column;align-items:center;gap:18px}
+  .note{max-width:560px;color:var(--nomi-ink-60);font-size:12px;line-height:1.6}
+  .note b{color:var(--nomi-ink)}
+  .cap{font-size:11px;color:var(--nomi-ink-40);margin-top:-8px}
+
+  .node{width:460px;background:var(--nomi-paper);border:1px solid var(--nomi-line);border-radius:var(--r);
+    box-shadow:var(--sh);position:relative}
+  .body{padding:12px;display:flex;flex-direction:column;gap:11px}
+
+  /* 生成方式 */
+  .k{font-size:11px;color:var(--nomi-ink-40)}
+  .seg{display:inline-flex;padding:2px;gap:2px;background:var(--nomi-ink-05);border-radius:var(--r-sm);align-self:flex-start}
+  .seg button{border:0;background:transparent;padding:5px 12px;border-radius:var(--r-sm);cursor:pointer;font-size:11px;color:var(--nomi-ink-60);font:inherit}
+  .seg button[aria-selected=true]{background:var(--nomi-paper);color:var(--nomi-ink);box-shadow:var(--sh-sm);font-weight:600}
+  .modeHint{font-size:11px;color:var(--nomi-ink-40)}
+
+  /* 参考 tile 一排：统一正方形，无组标签/说明。图片/视频/音频靠角标区分 */
+  .refRow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .tile{position:relative;width:56px;height:56px;border-radius:var(--r-sm);border:1px solid var(--nomi-line);
+    background:var(--nomi-ink-05);overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .tile img{width:100%;height:100%;object-fit:cover}
+  .tile .num{position:absolute;top:-5px;left:-5px;min-width:16px;height:16px;padding:0 4px;background:var(--nomi-accent);
+    color:#fff;font-size:11px;font-weight:600;border-radius:999px;display:flex;align-items:center;justify-content:center}
+  .tile .x{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:999px;background:var(--nomi-paper);
+    border:1px solid var(--nomi-line);color:var(--nomi-ink-60);font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  /* 视频：缩略图上叠暗蒙层 + 居中播放三角（扫一眼就分得清，不靠小角标） */
+  .tile.video::after{content:"";position:absolute;inset:0;background:oklch(.2 .01 80/.28)}
+  .tile.video .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1}
+  .tile.video .play svg{width:22px;height:22px;color:#fff;filter:drop-shadow(0 1px 2px oklch(0 0 0/.5))}
+  /* 音频：整块波形占满（音频无缩略图，波形本身就是它的形态语言） */
+  .tile.audio{background:var(--nomi-ink-05)}
+  .tile.audio .wave{display:flex;align-items:center;gap:2px;height:22px}
+  .tile.audio .wave i{width:2px;background:var(--nomi-ink-40);border-radius:1px}
+  .tile.add{border-style:dashed;border-color:var(--nomi-ink-20);color:var(--nomi-ink-40);cursor:pointer}
+  .tile.add:hover{border-color:var(--nomi-accent);color:var(--nomi-accent)}
+  .tile.add svg{width:18px;height:18px}
+  .tile.click{cursor:pointer}
+  .tile.click:hover{outline:2px solid var(--nomi-accent);outline-offset:1px}
+
+  .divider{height:1px;background:var(--nomi-line-soft)}
+
+  /* 描述：内联 @ 缩略图 chip —— 句子里直接看到图，不出现 character1 */
+  .prompt{font-size:13px;line-height:1.7;color:var(--nomi-ink);min-height:22px}
+  .prompt .ph{color:var(--nomi-ink-40)}
+  /* 内联引用 chip：≈1 字高、和字基线齐、细描边、只缩略图无数字（tile 区已编号），不打断行内韵律 */
+  .atChip{display:inline-flex;align-items:center;vertical-align:-3px;width:18px;height:18px;margin:0 2px;
+    border-radius:var(--r-sm);border:1px solid var(--nomi-line);overflow:hidden;cursor:pointer}
+  .atChip:hover{outline:2px solid var(--nomi-accent);outline-offset:1px}
+  .atChip img{width:100%;height:100%;object-fit:cover}
+
+  /* @ 选择器：打 @ 弹出已加的 tile 缩略图，选一个塞进句子 */
+  .atPicker{display:flex;gap:6px;padding:6px;border:1px solid var(--nomi-line);border-radius:var(--r-sm);
+    background:var(--nomi-paper);box-shadow:var(--sh-sm);align-self:flex-start;align-items:center}
+  .atPicker .lbl{font-size:11px;color:var(--nomi-ink-40);padding:0 2px}
+  .atPicker .opt{position:relative;width:34px;height:34px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--nomi-line);cursor:pointer}
+  .atPicker .opt img{width:100%;height:100%;object-fit:cover}
+  .atPicker .opt .n{position:absolute;top:-4px;left:-4px;width:15px;height:15px;background:var(--nomi-accent);color:#fff;
+    font-size:10px;font-weight:600;border-radius:999px;display:flex;align-items:center;justify-content:center}
+
+  /* 底栏 */
+  .bar{display:flex;align-items:center;gap:8px}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;border:1px solid var(--nomi-line);
+    background:var(--nomi-paper);color:var(--nomi-ink-80);font-size:12px;cursor:pointer}
+  .badge{font-size:11px;padding:0 6px;border-radius:999px;background:var(--nomi-accent-soft);color:var(--nomi-accent)}
+  .spacer{flex:1}
+  .send{width:30px;height:30px;border-radius:999px;background:var(--nomi-ink);color:#fff;border:0;cursor:pointer;font-size:14px}
+
+  .label{display:flex;align-items:center;gap:8px}
+  .swatch{font-size:11px;color:var(--nomi-ink-40)}
+
+  /* 统一选择器：画布 / 项目素材 / 上传 三来源一套 */
+  .picker{margin-top:6px;border:1px solid var(--nomi-line);border-radius:var(--r);background:var(--nomi-paper);
+    box-shadow:var(--sh);padding:10px;display:flex;flex-direction:column;gap:10px;max-width:300px}
+  .pkSec{display:flex;flex-direction:column;gap:6px}
+  .pkLbl{font-size:11px;color:var(--nomi-ink-40)}
+  .pkRow{display:flex;gap:6px}
+  .pkItem{position:relative;width:48px;height:48px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--nomi-line);
+    background:var(--nomi-ink-05);cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .pkItem:hover{outline:2px solid var(--nomi-accent);outline-offset:1px}
+  .pkItem img{width:100%;height:100%;object-fit:cover}
+  .pkItem.video::after{content:"";position:absolute;inset:0;background:oklch(.2 .01 80/.28)}
+  .pkType{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1}
+  .pkType svg{width:18px;height:18px;color:#fff;filter:drop-shadow(0 1px 2px oklch(0 0 0/.5))}
+  .pkItem.audio .wave{display:flex;align-items:center;gap:2px;height:18px}
+  .pkItem.audio .wave i{width:2px;background:var(--nomi-ink-40);border-radius:1px}
+  .pkUpload{display:flex;align-items:center;justify-content:center;gap:6px;height:34px;border:1px dashed var(--nomi-ink-20);
+    border-radius:var(--r-sm);background:var(--nomi-paper);color:var(--nomi-ink-60);font:inherit;font-size:12px;cursor:pointer}
+  .pkUpload:hover{border-color:var(--nomi-accent);color:var(--nomi-accent)}
+  .pkUpload svg{width:15px;height:15px}
+  .pkFoot{font-size:11px;color:var(--nomi-ink-40);text-align:center}
+  /* 搜索框：素材一多，搜名字 2 个键定位 */
+  .pkSearch{display:flex;align-items:center;gap:6px;height:30px;padding:0 8px;border:1px solid var(--nomi-line);
+    border-radius:var(--r-sm);background:var(--nomi-ink-05);color:var(--nomi-ink-40);font-size:12px}
+  .pkSearch svg{width:13px;height:13px}
+  .pkHead{display:flex;align-items:baseline;justify-content:space-between}
+  .pkMore{font-size:11px;color:var(--nomi-accent);cursor:pointer}
+  /* 「最近」用可滚动网格，多了也不撑爆；想翻全部去素材面板 */
+  .pkGrid{display:grid;grid-template-columns:repeat(5,48px);gap:6px;max-height:108px;overflow:auto;padding-bottom:2px}
+</style>
+</head>
+<body>
+  <div class="note">
+    <b>样张 v4 — 把「角色参考/参考视频/参考音频」三组带说明，收成一排正方形 tile + @ 引用</b>
+    <ul style="margin:6px 0 0;padding-left:18px">
+      <li><b>不叫角色</b>：本质是参考图（任何图都行），统一正方形 tile 一排；视频/音频靠右下角小角标区分，不再分三组、不写三行标签。</li>
+      <li><b>@ 引用</b>：描述里打 <code>@</code> → 弹出已加的图 → 选中后<b>那张图的小缩略图直接进句子</b>（下图）。发给模型前才转成 character1，<b>用户永远看不到 character1</b>。</li>
+      <li><b>最少文字</b>：tile 自带编号 + 缩略图就说明了一切，删掉所有 caption / 「顺序对应…」说明。空态只一个虚线「+」。</li>
+    </ul>
+  </div>
+
+  <div class="swatch">① 有参考图 + 描述里 @ 引用（主态）</div>
+  <div class="node">
+    <div class="body">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span class="k">生成方式</span>
+        <div class="seg"><button>首帧</button><button>首尾帧</button><button aria-selected="true">全能参考</button></div>
+      </div>
+
+      <div class="refRow">
+        <div class="tile click"><span class="num">1</span><span class="x">×</span><img src="https://picsum.photos/seed/g1/100"/></div>
+        <div class="tile click"><span class="num">2</span><span class="x">×</span><img src="https://picsum.photos/seed/c2/100"/></div>
+        <div class="tile video click"><span class="x">×</span><img src="https://picsum.photos/seed/v3/100"/>
+          <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></div>
+        <div class="tile audio"><span class="x">×</span><span class="wave"><i style="height:8px"></i><i style="height:16px"></i><i style="height:22px"></i><i style="height:12px"></i><i style="height:18px"></i><i style="height:9px"></i></span></div>
+        <div class="tile add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="prompt">
+        <span class="atChip"><img src="https://picsum.photos/seed/g1/40"/></span> 牵着
+        <span class="atChip"><img src="https://picsum.photos/seed/c2/40"/></span> 走过草地，电影感运镜，配上
+        <span class="atChip"><img src="https://picsum.photos/seed/v3/40"/></span> 的运动。
+      </div>
+
+      <div class="bar">
+        <button class="chip">◴ Seedance 2.0 <span class="badge">模板</span> ▾</button>
+        <button class="chip">16:9 · 720p · 5s · 有声 ▾</button>
+        <div class="spacer"></div>
+        <button class="send">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="swatch">② 两条路把图放进句子：直接<b>点上面的方块</b>（主路径），或打 <b>@</b>（快捷键）—— 都弹出缩略图选</div>
+  <div class="node">
+    <div class="body">
+      <div class="refRow">
+        <div class="tile click"><span class="num">1</span><span class="x">×</span><img src="https://picsum.photos/seed/g1/100"/></div>
+        <div class="tile click"><span class="num">2</span><span class="x">×</span><img src="https://picsum.photos/seed/c2/100"/></div>
+        <div class="tile add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+      <div class="divider"></div>
+      <div class="prompt">阳光下，<span style="color:var(--nomi-accent)">@</span><span class="ph">|</span></div>
+      <div class="atPicker">
+        <span class="lbl">放入哪张</span>
+        <div class="opt"><img src="https://picsum.photos/seed/g1/60"/></div>
+        <div class="opt"><img src="https://picsum.photos/seed/c2/60"/></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swatch">④ 点「+」= 统一选择器：画布 / 项目素材 / 上传 三来源一套；另支持拖入 + 卡片连线两条捷径</div>
+  <div class="node">
+    <div class="body">
+      <div class="refRow">
+        <div class="tile click"><span class="num">1</span><img src="https://picsum.photos/seed/g1/100"/></div>
+        <div class="tile add" style="outline:2px solid var(--nomi-accent);outline-offset:1px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+      <!-- 选择器：紧贴「+」弹出。定位 = 快速取（搜索 + 最近），不是全量浏览器 -->
+      <div class="picker">
+        <div class="pkSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg> 搜索素材名…</div>
+        <div class="pkSec">
+          <span class="pkLbl">画布</span>
+          <div class="pkRow">
+            <div class="pkItem"><img src="https://picsum.photos/seed/n1/80"/></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/n2/80"/></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/n3/80"/></div>
+          </div>
+        </div>
+        <div class="pkSec">
+          <div class="pkHead"><span class="pkLbl">项目素材 · 最近</span><span class="pkMore">浏览全部 →</span></div>
+          <!-- 可滚动网格：素材几百张也只占这块、能滚；想翻全部点「浏览全部」去素材面板 -->
+          <div class="pkGrid">
+            <div class="pkItem"><img src="https://picsum.photos/seed/a1/80"/></div>
+            <div class="pkItem video"><img src="https://picsum.photos/seed/a2/80"/><span class="pkType"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></div>
+            <div class="pkItem audio"><span class="wave"><i style="height:6px"></i><i style="height:12px"></i><i style="height:16px"></i><i style="height:8px"></i></span></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/a4/80"/></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/a5/80"/></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/a6/80"/></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/a7/80"/></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/a8/80"/></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/a9/80"/></div>
+            <div class="pkItem"><img src="https://picsum.photos/seed/a10/80"/></div>
+          </div>
+        </div>
+        <button class="pkUpload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg> 上传本地文件</button>
+        <div class="pkFoot">或把文件拖进来 · 从卡片拉条线 · 从素材面板拖到节点</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swatch">③ 空态：一个「+」+ 一句可操作引导（把"加图→放进句子"主链路点破，不靠常驻说明）</div>
+  <div class="node">
+    <div class="body">
+      <div class="refRow">
+        <div class="tile add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div>
+        <span style="font-size:12px;color:var(--nomi-ink-40)">加参考图（可选）</span>
+      </div>
+      <div class="divider"></div>
+      <div class="prompt"><span class="ph">描述你想生成的画面…</span></div>
+    </div>
+  </div>
+</body>
+</html>

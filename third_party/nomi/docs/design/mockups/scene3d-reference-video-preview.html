@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Nomi · 3D 参考视频卡面样张</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #151412;
+        --paper: #242320;
+        --ink: #f6f4ef;
+        --muted: #aaa69e;
+        --line: #4a4842;
+        --accent: #6ea8ff;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background-color: var(--bg);
+        background-image: radial-gradient(circle, #55514a 1.5px, transparent 1.5px);
+        background-size: 48px 48px;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+      }
+      main { display: grid; grid-template-columns: repeat(2, 420px); gap: 48px; padding: 48px; }
+      figure { margin: 0; }
+      figcaption { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+      .card {
+        position: relative;
+        width: 420px;
+        height: 280px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--paper);
+        box-shadow: 0 18px 44px rgb(0 0 0 / 35%);
+      }
+      .placeholder {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+        background: repeating-linear-gradient(45deg, #242320 0 16px, #302f2c 16px 17px);
+      }
+      .empty { text-align: center; }
+      .cube { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 auto 14px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 25px; }
+      .empty strong { display: block; font-size: 14px; }
+      .empty span { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; }
+      .done { position: absolute; inset: auto 0 0; padding: 8px; text-align: center; background: var(--accent); color: #111; font-size: 12px; font-weight: 650; }
+      video { width: 100%; height: 100%; object-fit: contain; background: #181816; }
+      .open {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgb(36 35 32 / 88%);
+        color: var(--ink);
+        font-size: 17px;
+      }
+      .note { grid-column: 1 / -1; max-width: 888px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+      .note b { color: var(--ink); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <figure>
+        <figcaption>当前：状态知道出片完成，但卡面仍是空态</figcaption>
+        <div class="card">
+          <div class="placeholder">
+            <div class="empty"><div class="cube">◇</div><strong>点击进入 3D 编辑器</strong><span>摆放模型、相机并输出截图</span></div>
+          </div>
+          <button class="open" aria-label="打开 3D 编辑器">⛶</button>
+          <div class="done">▣　参考视频已生成 ✓</div>
+        </div>
+      </figure>
+      <figure>
+        <figcaption>修复：结果本身取代成功横条，卡内直接播放</figcaption>
+        <div class="card">
+          <video controls muted playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='840' height='560' viewBox='0 0 840 560'%3E%3Crect width='840' height='560' fill='%23181715'/%3E%3Cpath d='M370 210l150 70-150 70z' fill='%23f6f4ef' opacity='.9'/%3E%3Ctext x='420' y='410' text-anchor='middle' fill='%23aaa69e' font-family='sans-serif' font-size='25'%3E录制走位参考 · 00:01%3C/text%3E%3C/svg%3E"></video>
+          <button class="open" aria-label="打开 3D 编辑器">⛶</button>
+        </div>
+      </figure>
+      <p class="note"><b>交互合同：</b>生成中仍显示底部状态；出片后只显示视频与原生控制条，不叠加“已生成”横条。右上角 3D 编辑器入口保留。若节点同时有旧截图与新视频，视频优先；没有视频时继续回退到截图/空态。</p>
+    </main>
+  </body>
+</html>

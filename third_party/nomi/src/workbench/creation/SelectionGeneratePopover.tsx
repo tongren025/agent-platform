@@ -1,0 +1,230 @@
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import type { Editor } from '@tiptap/react'
+import { IconBold, IconH1, IconH2, IconItalic, IconPhoto, IconVideo } from '@tabler/icons-react'
+import { WorkbenchIconButton } from '../../design/workbenchActions'
+import { cn } from '../../utils/cn'
+import { createNodeFromSelection, type SelectionGenerationKind } from './createNodeFromSelection'
+import { useGenerationCanvasStore } from '../generationCanvas/store/generationCanvasStore'
+import { useWorkbenchStore } from '../workbenchStore'
+
+type SelectionGeneratePopoverProps = {
+  editor: Editor | null
+  selectedText: string
+  selectionVersion: number
+  onCreated?: () => void
+}
+
+type SelectionPopoverPosition = {
+  left: number
+  top: number
+  placement: 'top' | 'bottom'
+}
+
+type SelectionFormatAction = {
+  id: string
+  label: string
+  active?: boolean
+  icon: JSX.Element
+  onClick: () => void
+}
+
+const POPOVER_WIDTH = 210
+const POPOVER_HEIGHT = 40
+const POPOVER_OFFSET = 10
+
+function resolveSelectionPosition(editor: Editor, root: HTMLElement | null): SelectionPopoverPosition | null {
+  if (!root) return null
+  const { from, to, empty } = editor.state.selection
+  if (empty || from === to) return null
+  const start = editor.view.coordsAtPos(from)
+  const end = editor.view.coordsAtPos(to)
+  const rootRect = root.getBoundingClientRect()
+  const selectionLeft = Math.min(start.left, end.left)
+  const selectionRight = Math.max(start.right, end.right)
+  const selectionTop = Math.min(start.top, end.top)
+  const selectionBottom = Math.max(start.bottom, end.bottom)
+  const preferredLeft = selectionLeft + (selectionRight - selectionLeft) / 2 - rootRect.left - POPOVER_WIDTH / 2
+  const left = Math.max(12, Math.min(preferredLeft, Math.max(12, rootRect.width - POPOVER_WIDTH - 12)))
+  const topPlacementTop = selectionTop - rootRect.top - POPOVER_HEIGHT - POPOVER_OFFSET
+  if (topPlacementTop >= 8) {
+    return { left, top: topPlacementTop, placement: 'top' }
+  }
+  return {
+    left,
+    top: Math.min(selectionBottom - rootRect.top + POPOVER_OFFSET, Math.max(8, rootRect.height - POPOVER_HEIGHT - 8)),
+    placement: 'bottom',
+  }
+}
+
+export default function SelectionGeneratePopover({
+  editor,
+  selectedText,
+  selectionVersion,
+  onCreated,
+}: SelectionGeneratePopoverProps): JSX.Element | null {
+  const { t } = useTranslation()
+  const normalizedText = selectedText.trim()
+  const rootRef = React.useRef<HTMLDivElement | null>(null)
+  const [position, setPosition] = React.useState<SelectionPopoverPosition | null>(null)
+  const addGenerationNode = useGenerationCanvasStore((state) => state.addNode)
+  const setWorkspaceMode = useWorkbenchStore((state) => state.setWorkspaceMode)
+
+  const updatePosition = React.useCallback(() => {
+    if (!editor || !normalizedText) {
+      setPosition(null)
+      return
+    }
+    const root = (rootRef.current?.closest('.workbench-editor') ??
+      editor.view.dom.closest('.workbench-editor')) as HTMLElement | null
+    setPosition(resolveSelectionPosition(editor, root))
+  }, [editor, normalizedText])
+
+  React.useLayoutEffect(() => {
+    updatePosition()
+  }, [selectionVersion, updatePosition])
+
+  React.useEffect(() => {
+    if (!editor || !normalizedText) return
+    const root = (rootRef.current?.closest('.workbench-editor') ??
+      editor.view.dom.closest('.workbench-editor')) as HTMLElement | null
+    const scrollRoot = root?.querySelector('.workbench-editor__scroll')
+    const frame = () => window.requestAnimationFrame(updatePosition)
+    const onScroll = () => {
+      frame()
+    }
+    const onResize = () => {
+      frame()
+    }
+    scrollRoot?.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
+    return () => {
+      scrollRoot?.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [editor, normalizedText, updatePosition])
+
+  if (!normalizedText || !editor || !position) return null
+
+  const handleCreate = (kind: SelectionGenerationKind) => {
+    if (createNodeFromSelection({ selectedText: normalizedText, kind, addGenerationNode, setWorkspaceMode })) {
+      onCreated?.()
+    }
+  }
+
+  const formatActions: SelectionFormatAction[] = [
+    {
+      id: 'bold',
+      label: t('creationAi.selection.bold'),
+      icon: <IconBold size={14} />,
+      active: editor.isActive('bold'),
+      onClick: () => editor.chain().focus().toggleBold().run(),
+    },
+    {
+      id: 'italic',
+      label: t('creationAi.selection.italic'),
+      icon: <IconItalic size={14} />,
+      active: editor.isActive('italic'),
+      onClick: () => editor.chain().focus().toggleItalic().run(),
+    },
+    {
+      id: 'h1',
+      label: t('creationAi.selection.heading1'),
+      icon: <IconH1 size={15} />,
+      active: editor.isActive('heading', { level: 1 }),
+      onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+    },
+    {
+      id: 'h2',
+      label: t('creationAi.selection.heading2'),
+      icon: <IconH2 size={15} />,
+      active: editor.isActive('heading', { level: 2 }),
+      onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+    },
+  ]
+
+  return (
+    <div
+      ref={rootRef}
+      className={cn(
+        'workbench-selection-popover',
+        'absolute z-20 inline-flex items-center',
+        'w-[210px] h-[40px] gap-[5px] p-1 pr-[5px]',
+        'border border-workbench-border rounded-nomi-lg',
+        'bg-workbench-overlay shadow-workbench-pop',
+        'backdrop-blur-[18px] backdrop-saturate-[1.06]',
+        'origin-[50%_100%]',
+      )}
+      role="toolbar"
+      aria-label={t('creationAi.selection.toolbar')}
+      data-placement={position.placement}
+      style={{ left: position.left, top: position.top }}
+    >
+      <div
+        className={cn('workbench-selection-popover__format-group', 'inline-flex items-center gap-[3px] shrink-0')}
+        aria-label={t('creationAi.selection.formatting')}
+      >
+        {formatActions.map((action) => (
+          <WorkbenchIconButton
+            key={action.id}
+            className={cn(
+              'workbench-selection-popover__tool',
+              'h-[30px] w-[28px] inline-flex items-center justify-center',
+              'border border-transparent rounded-workbench-control',
+              'bg-transparent text-workbench-muted',
+              'cursor-pointer',
+              'hover:border-[color-mix(in_srgb,var(--workbench-accent)_14%,transparent)]',
+              'hover:bg-workbench-accent-soft hover:text-workbench-accent',
+            )}
+            label={action.label}
+            data-active={action.active ? 'true' : 'false'}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={action.onClick}
+            icon={action.icon}
+          />
+        ))}
+      </div>
+      <div
+        className={cn(
+          'workbench-selection-popover__divider',
+          'self-stretch w-px mx-[2px] my-[3px] bg-workbench-border-soft',
+        )}
+      />
+      <div
+        className={cn('workbench-selection-popover__generate-group', 'inline-flex items-center gap-[3px] shrink-0')}
+        aria-label={t('creationAi.selection.generate')}
+      >
+        <WorkbenchIconButton
+          className={cn(
+            'workbench-selection-popover__tool workbench-selection-popover__tool--generate',
+            'h-[30px] w-[30px] inline-flex items-center justify-center',
+            'border border-workbench-border-soft rounded-workbench-control',
+            'bg-workbench-surface text-workbench-ink',
+            'cursor-pointer',
+            'hover:border-[color-mix(in_srgb,var(--workbench-accent)_18%,transparent)]',
+            'hover:bg-workbench-accent-soft hover:text-workbench-accent',
+          )}
+          label={t('creationAi.selection.image')}
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => handleCreate('image')}
+          icon={<IconPhoto size={14} />}
+        />
+        <WorkbenchIconButton
+          className={cn(
+            'workbench-selection-popover__tool workbench-selection-popover__tool--generate',
+            'h-[30px] w-[30px] inline-flex items-center justify-center',
+            'border border-workbench-border-soft rounded-workbench-control',
+            'bg-workbench-surface text-workbench-ink',
+            'cursor-pointer',
+            'hover:border-[color-mix(in_srgb,var(--workbench-accent)_18%,transparent)]',
+            'hover:bg-workbench-accent-soft hover:text-workbench-accent',
+          )}
+          label={t('creationAi.selection.video')}
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => handleCreate('video')}
+          icon={<IconVideo size={14} />}
+        />
+      </div>
+    </div>
+  )
+}

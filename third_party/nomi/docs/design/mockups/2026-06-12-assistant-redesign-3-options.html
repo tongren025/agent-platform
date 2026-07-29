@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>助手面板重设计 · 三方案对比(真实工作台比例)</title>
+<style>
+  :root{
+    --ink:oklch(0.22 0.01 80);--ink80:oklch(0.32 0.01 80);--ink60:oklch(0.50 0.01 80);
+    --ink40:oklch(0.68 0.01 80);--ink30:oklch(0.78 0.01 80);--ink20:oklch(0.88 0.005 80);
+    --ink10:oklch(0.94 0.003 80);--ink05:oklch(0.97 0.003 80);
+    --paper:#fff;--bg:oklch(0.985 0.003 90);--line:oklch(0.91 0.004 80);--line-soft:oklch(0.95 0.003 80);
+    --accent:oklch(0.55 0.13 250);--accent-soft:color-mix(in oklch,oklch(0.55 0.13 250) 12%,#fff);
+    --warn:oklch(0.45 0.18 30);--warn-soft:color-mix(in oklch,oklch(0.45 0.18 30) 10%,#fff);
+    --ok:oklch(0.55 0.12 150);
+    --font:Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);font-family:var(--font);color:var(--ink);padding:40px;display:flex;flex-direction:column;gap:48px;align-items:center}
+  h1{font-size:18px;margin:0}
+  .intro{max-width:1100px;font-size:13px;color:var(--ink60);line-height:1.8}
+  .intro table{border-collapse:collapse;width:100%;font-size:12px;margin-top:8px}
+  .intro th,.intro td{border:1px solid var(--line);padding:6px 10px;text-align:left}
+  .intro th{background:var(--ink05);font-weight:600}
+  section{display:flex;flex-direction:column;gap:10px}
+  .label{font-size:14px;font-weight:700}
+  .label small{font-weight:400;color:var(--ink60);margin-left:8px}
+  /* 工作台框架(真实比例 1100×620,面板 340) */
+  .app{width:1100px;height:620px;background:var(--bg);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 2px 4px oklch(0 0 0/.04),0 12px 32px oklch(0 0 0/.07)}
+  .topbar{height:40px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--line-soft);background:var(--paper);font-size:12px;color:var(--ink60)}
+  .topbar .logo{width:18px;height:18px;border-radius:5px;background:var(--ink);color:#fff;font-size:10px;display:grid;place-items:center;font-weight:700}
+  .topbar .tabs{margin:0 auto;display:flex;gap:4px}
+  .topbar .tab{padding:4px 12px;border-radius:8px;font-size:12px}
+  .topbar .tab.on{background:var(--ink05);color:var(--ink);font-weight:600}
+  .main{flex:1;display:flex;min-height:0}
+  .canvas{flex:1;position:relative;background:radial-gradient(oklch(0.9 0.004 80) 1px,transparent 1px);background-size:18px 18px;margin:10px;border-radius:10px}
+  .gnode{position:absolute;width:150px;height:96px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px;font-size:10.5px;box-shadow:0 1px 2px oklch(0 0 0/.04)}
+  .gnode b{display:block;font-size:11px;margin-bottom:4px}
+  .gnode span{color:var(--ink40);display:block;line-height:1.5;overflow:hidden}
+  /* 面板通用 */
+  .panel{width:340px;background:var(--paper);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .phd{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line-soft);flex-shrink:0}
+  .phd .t{font-size:13px;font-weight:600}
+  .phd .sp{flex:1}
+  .pill{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--ink60);background:var(--paper);position:relative}
+  .pill .dot{position:absolute;top:-2px;right:-2px;width:6px;height:6px;border-radius:50%;background:var(--accent);border:1.5px solid #fff}
+  .ib{width:22px;height:22px;border:0;background:transparent;color:var(--ink40);display:grid;place-items:center;font-size:13px}
+  .thread{flex:1;overflow:hidden;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:0}
+  .u{align-self:flex-end;max-width:85%;background:var(--ink05);border-radius:12px 12px 4px 12px;padding:7px 10px;font-size:12px;line-height:1.6}
+  .a{align-self:flex-start;max-width:94%;font-size:12px;line-height:1.7;color:var(--ink80)}
+  .composer{border-top:1px solid var(--line-soft);padding:8px 10px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+  .ta{border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:12px;color:var(--ink40)}
+  .cbar{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink60)}
+  .send{margin-left:auto;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;border:0;font-size:11px}
+  /* 提议卡(共用) */
+  .card{border:1px solid var(--line);border-radius:10px;overflow:hidden;flex-shrink:0}
+  .card .cap{display:flex;align-items:center;gap:6px;padding:7px 10px;font-size:12px;font-weight:600;border-left:3px solid var(--accent)}
+  .card .cap .n{color:var(--ink40);font-weight:400;font-size:10.5px;margin-left:auto}
+  .crow{display:flex;align-items:center;gap:6px;padding:5px 10px;border-top:1px solid var(--line-soft);font-size:11.5px}
+  .crow .ix{width:15px;height:15px;border-radius:50%;background:var(--ink);color:#fff;font-size:9px;display:grid;place-items:center;flex-shrink:0}
+  .crow .tt{font-weight:500;white-space:nowrap}
+  .crow .pp{color:var(--ink60);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+  .chip{font-size:9.5px;padding:1px 6px;border-radius:999px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+  .cft{display:flex;justify-content:flex-end;gap:6px;padding:7px 10px;border-top:1px solid var(--line-soft)}
+  .b{height:24px;padding:0 11px;border-radius:6px;font-size:11.5px;border:1px solid var(--line);background:var(--paper);color:var(--ink80)}
+  .b.p{background:var(--ink);color:#fff;border:0}
+  /* 回执行 */
+  .rc{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--ink60)}
+  .rc .ok{color:var(--ok);font-weight:600}
+  .rc a{color:var(--ink40)}
+  .rc.warn{color:var(--warn);background:var(--warn-soft);border-radius:6px;padding:5px 8px}
+  .sep{display:flex;align-items:center;gap:8px;color:var(--ink30);font-size:10px}
+  .sep::before,.sep::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 方案二 任务台 */
+  .tray{border-top:1px solid var(--line);background:var(--ink05);padding:8px 10px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+  .tray .th2{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink40);font-weight:600}
+  /* 方案三 时间线 */
+  .step{display:flex;gap:8px;font-size:11.5px}
+  .step .rail{display:flex;flex-direction:column;align-items:center;width:14px;flex-shrink:0}
+  .step .nd{width:8px;height:8px;border-radius:50%;background:var(--ink30);margin-top:4px}
+  .step .nd.ok{background:var(--ok)}
+  .step .nd.run{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .step .ln{flex:1;width:1.5px;background:var(--line)}
+  .step .bd{flex:1;padding-bottom:10px;min-width:0}
+  .step .bd .h{font-weight:600;color:var(--ink)}
+  .step .bd .d{color:var(--ink60);line-height:1.6;margin-top:1px}
+</style>
+</head>
+<body>
+
+<h1>助手面板整体重设计 · 三方案(1100×620 真实工作台比例,面板 340px)</h1>
+<div class="intro">
+  共同点(三案都做):杀 raw JSON 与 <code>connect_canvas_edges</code> 内部词汇 → 统一人话提议卡;删正文拼接的「已执行 N 个工具调用」;token 数降级到详情层;「6 个工具」「AI 记得 N 条」两条常驻 fold 收进 header「项目脑」入口(有新记忆亮蓝点)。差异在<b>对话流的组织方式</b>:
+  <table>
+    <tr><th></th><th>方案一 · 三层收纳</th><th>方案二 · 任务台</th><th>方案三 · 时间线</th></tr>
+    <tr><th>隐喻</th><td>聊天,偶尔递来一张待签单</td><td>聊天归聊天,待办钉在手边</td><td>看 AI 干活的工作日志</td></tr>
+    <tr><th>提议卡位置</th><td>在对话流里,随其滚动</td><td><b>固定在输入框上方,永不滚走</b></td><td>是时间线的一个节点</td></tr>
+    <tr><th>适合</th><td>轻量对话为主</td><td>多提议并行、怕确认卡滚丢</td><td>重 agent、想看过程</td></tr>
+    <tr><th>风险</th><td>长对话里卡会滚出视野</td><td>任务区占高度,空闲时浪费</td><td>气泡感弱,闲聊体验差</td></tr>
+  </table>
+</div>
+
+<!-- ============ 方案一 ============ -->
+<section>
+  <div class="label">方案一 · 三层收纳<small>对话流只有:气泡 / 提议卡 / 一行回执;其余进「项目脑」与「详情」</small></div>
+  <div class="app">
+    <div class="topbar"><div class="logo">N</div>示例：京都一日 vlog<div class="tabs"><div class="tab">创作</div><div class="tab on">生成</div><div class="tab">预览</div></div><span>导出</span></div>
+    <div class="main">
+      <div class="canvas">
+        <div class="gnode" style="left:60px;top:60px"><b>镜头 1｜清晨京都小巷</b><span>清晨的京都小巷,石板路狭长延伸…</span></div>
+        <div class="gnode" style="left:280px;top:140px"><b>镜头 2｜骑车穿过鸟居</b><span>同一位主角骑车穿过朱红鸟居…</span></div>
+        <div class="gnode" style="left:500px;top:60px"><b>镜头 3｜天台看日落</b><span>傍晚天台,主角看日落…</span></div>
+      </div>
+      <div class="panel">
+        <div class="phd"><div class="t">助手</div><div class="sp"></div><div class="pill">◉ 项目脑<span class="dot"></span></div><button class="ib">＋</button><button class="ib">›</button></div>
+        <div class="thread">
+          <div class="u">把这个故事拆成 3 个镜头铺到画布并按顺序连线</div>
+          <div class="a">我会创建 3 个按故事顺序排列的镜头节点,统一 Seedream 4.5、16:9。</div>
+          <div class="card">
+            <div class="cap">创建 3 个镜头节点<span class="n">等你确认</span></div>
+            <div class="crow"><span class="ix">1</span><span class="tt">清晨京都小巷</span><span class="pp">清晨的京都小巷,石板路狭长延伸…</span><span class="chip">Seedream·16:9</span></div>
+            <div class="crow"><span class="ix">2</span><span class="tt">骑车穿过鸟居</span><span class="pp">同一位主角骑自行车穿过朱红鸟居…</span><span class="chip">Seedream·16:9</span></div>
+            <div class="crow"><span class="ix">3</span><span class="tt">天台看日落</span><span class="pp">傍晚京都城市天台,主角看日落…</span><span class="chip">Seedream·16:9</span></div>
+            <div class="cft"><button class="b">全部拒绝</button><button class="b p">确认全部</button></div>
+          </div>
+          <div class="rc"><span class="ok">✓ 已应用</span>连接 2 条引用线<a>撤销</a><a>▸ 详情</a></div>
+          <div class="sep">以上对话 AI 已不再记得</div>
+          <div class="rc warn">⚠ 有 1 处与批准不符:「镜头 2」的模型被换成自动推荐 <a>详情</a> <a>整笔撤销</a></div>
+        </div>
+        <div class="composer"><div class="ta">告诉我画布上想怎么搭…</div><div class="cbar"><span>📎</span><span>Agent ▾</span><span>GPT-5.5 ▾</span><button class="send">↑</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 方案二 ============ -->
+<section>
+  <div class="label">方案二 · 任务台<small>对话纯聊天;一切「等确认/已应用/有出入」固定在输入框上方的任务区,永不滚走</small></div>
+  <div class="app">
+    <div class="topbar"><div class="logo">N</div>示例：京都一日 vlog<div class="tabs"><div class="tab">创作</div><div class="tab on">生成</div><div class="tab">预览</div></div><span>导出</span></div>
+    <div class="main">
+      <div class="canvas">
+        <div class="gnode" style="left:60px;top:60px"><b>镜头 1｜清晨京都小巷</b><span>清晨的京都小巷,石板路狭长延伸…</span></div>
+        <div class="gnode" style="left:280px;top:140px"><b>镜头 2｜骑车穿过鸟居</b><span>同一位主角骑车穿过朱红鸟居…</span></div>
+      </div>
+      <div class="panel">
+        <div class="phd"><div class="t">助手</div><div class="sp"></div><div class="pill">◉ 项目脑</div><button class="ib">＋</button><button class="ib">›</button></div>
+        <div class="thread">
+          <div class="u">把这个故事拆成 3 个镜头铺到画布并按顺序连线</div>
+          <div class="a">我会创建 3 个按故事顺序排列的镜头节点,统一 Seedream 4.5、16:9。节点和连线放在下面的任务区,确认后立即落画布。</div>
+          <div class="a" style="color:var(--ink40)">(对话区永远只有说话——所有待办看下面 ↓)</div>
+        </div>
+        <div class="tray">
+          <div class="th2">待你确认 · 2</div>
+          <div class="card" style="background:var(--paper)">
+            <div class="cap">创建 3 个镜头节点<span class="n">+ 连接 2 条线</span></div>
+            <div class="crow"><span class="ix">1</span><span class="tt">清晨京都小巷</span><span class="pp">清晨的京都小巷…</span><span class="chip">Seedream·16:9</span></div>
+            <div class="crow"><span class="pp" style="color:var(--ink40)">…另 2 个节点 · 2 条连线</span></div>
+            <div class="cft"><button class="b">拒绝</button><button class="b p">确认全部</button></div>
+          </div>
+          <div class="rc"><span class="ok">✓ 已应用</span>改写「镜头 1」提示词<a>撤销</a><a>▸ 详情</a></div>
+        </div>
+        <div class="composer"><div class="ta">告诉我画布上想怎么搭…</div><div class="cbar"><span>📎</span><span>Agent ▾</span><span>GPT-5.5 ▾</span><button class="send">↑</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 方案三 ============ -->
+<section>
+  <div class="label">方案三 · 时间线<small>每轮是一个步骤组:计划→步骤(✓/进行中/⚠)→结果;看 AI 干活的过程本身就是界面</small></div>
+  <div class="app">
+    <div class="topbar"><div class="logo">N</div>示例：京都一日 vlog<div class="tabs"><div class="tab">创作</div><div class="tab on">生成</div><div class="tab">预览</div></div><span>导出</span></div>
+    <div class="main">
+      <div class="canvas">
+        <div class="gnode" style="left:60px;top:60px"><b>镜头 1｜清晨京都小巷</b><span>清晨的京都小巷,石板路狭长延伸…</span></div>
+        <div class="gnode" style="left:280px;top:140px"><b>镜头 2｜骑车穿过鸟居</b><span>同一位主角骑车穿过朱红鸟居…</span></div>
+      </div>
+      <div class="panel">
+        <div class="phd"><div class="t">助手</div><div class="sp"></div><div class="pill">◉ 项目脑</div><button class="ib">＋</button><button class="ib">›</button></div>
+        <div class="thread">
+          <div class="u">把这个故事拆成 3 个镜头铺到画布并按顺序连线</div>
+          <div class="step"><div class="rail"><div class="nd ok"></div><div class="ln"></div></div><div class="bd"><div class="h">理解请求</div><div class="d">3 个镜头 · 按时序连线 · 统一 16:9</div></div></div>
+          <div class="step"><div class="rail"><div class="nd ok"></div><div class="ln"></div></div><div class="bd">
+            <div class="h">创建 3 个镜头节点 <span style="color:var(--ok)">已确认 ✓</span></div>
+            <div class="d">清晨京都小巷 / 骑车穿过鸟居 / 天台看日落 · Seedream·16:9</div>
+          </div></div>
+          <div class="step"><div class="rail"><div class="nd run"></div><div class="ln"></div></div><div class="bd">
+            <div class="h">连接 2 条引用线 <span style="color:var(--accent)">等你确认</span></div>
+            <div class="d">清晨小巷 → 骑车鸟居 → 天台日落</div>
+            <div class="cft" style="border:0;padding:6px 0 0"><button class="b">拒绝</button><button class="b p">确认</button></div>
+          </div></div>
+          <div class="step"><div class="rail"><div class="nd"></div></div><div class="bd"><div class="d" style="color:var(--ink40)">完成后:✓ 已应用 · 撤销 · ▸ 详情(步骤/对账/用量)</div></div></div>
+        </div>
+        <div class="composer"><div class="ta">告诉我画布上想怎么搭…</div><div class="cbar"><span>📎</span><span>Agent ▾</span><span>GPT-5.5 ▾</span><button class="send">↑</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nomi · 模型 composer 样张 v3（合一框 + 紧凑弹层）</title>
+<style>
+  :root {
+    --nomi-bg: oklch(0.985 0.003 90);
+    --nomi-paper: oklch(1 0 0);
+    --nomi-ink: oklch(0.22 0.01 80);
+    --nomi-ink-80: oklch(0.32 0.01 80);
+    --nomi-ink-60: oklch(0.50 0.01 80);
+    --nomi-ink-40: oklch(0.68 0.01 80);
+    --nomi-ink-20: oklch(0.88 0.005 80);
+    --nomi-ink-10: oklch(0.94 0.003 80);
+    --nomi-ink-05: oklch(0.97 0.003 80);
+    --nomi-line: oklch(0.91 0.004 80);
+    --nomi-line-soft: oklch(0.95 0.003 80);
+    --nomi-accent: oklch(0.55 0.13 250);
+    --nomi-accent-soft: color-mix(in oklch, var(--nomi-accent) 12%, var(--nomi-paper));
+    --nomi-radius-sm: 6px;
+    --nomi-radius: 10px;
+    --nomi-radius-lg: 16px;
+    --nomi-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.04), 0 1px 1px oklch(0 0 0 / 0.03);
+    --nomi-shadow-md: 0 2px 4px oklch(0 0 0 / 0.04), 0 8px 24px oklch(0 0 0 / 0.06);
+    --nomi-shadow-lg: 0 4px 8px oklch(0 0 0 / 0.05), 0 20px 50px oklch(0 0 0 / 0.08);
+    --nomi-font-sans: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--nomi-bg); color: var(--nomi-ink);
+    font-family: var(--nomi-font-sans); font-size: 13px; line-height: 1.5;
+    padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  .note { max-width: 680px; color: var(--nomi-ink-60); font-size: 12px; }
+  .note b { color: var(--nomi-ink); }
+  .note ul { margin: 6px 0 0; padding-left: 18px; }
+  .note li { margin: 2px 0; }
+
+  .demoRow { display: flex; gap: 8px; align-items: center; }
+  .demoRow .lbl { font-size: 12px; color: var(--nomi-ink-40); }
+  .demoTab {
+    padding: 6px 12px; border: 1px solid var(--nomi-line); border-radius: 999px;
+    background: var(--nomi-paper); cursor: pointer; font-size: 12px; color: var(--nomi-ink-60);
+  }
+  .demoTab[aria-selected="true"] { background: var(--nomi-ink); color: var(--nomi-paper); border-color: var(--nomi-ink); }
+
+  /* ── 输出节点：独立的一块（要被生成的图片/视频），与下面的参数框分离 ── */
+  .outNode {
+    width: 260px; aspect-ratio: 16/9;
+    border: 1px solid var(--nomi-line); border-radius: var(--nomi-radius);
+    box-shadow: var(--nomi-shadow-sm);
+    display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; color: var(--nomi-ink-40);
+    background: repeating-linear-gradient(45deg, var(--nomi-ink-05), var(--nomi-ink-05) 10px, var(--nomi-ink-10) 10px, var(--nomi-ink-10) 20px);
+  }
+  .outNode svg { width: 22px; height: 22px; }
+  .outNode .st { font-size: 11px; color: var(--nomi-ink-40); }
+  .outCap { font-size: 11px; color: var(--nomi-ink-40); margin-top: -8px; }
+
+  /* ── 参数框：参考 + 描述 + 设置，合在这一张卡里（这才是要合一的部分） ── */
+  .node {
+    width: 460px; background: var(--nomi-paper); border: 1px solid var(--nomi-line);
+    border-radius: var(--nomi-radius); box-shadow: var(--nomi-shadow-md);
+    overflow: hidden; position: relative;
+  }
+  .body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+  /* 参考区（合并进卡片，随模式变） */
+  .refZone { display: flex; flex-direction: column; gap: 8px; }
+  .refGroup { display: flex; flex-direction: column; gap: 4px; }
+  .refHead { display: flex; align-items: baseline; gap: 8px; }
+  .refLabel { font-size: 12px; color: var(--nomi-ink-60); }
+  .refCap { font-size: 11px; color: var(--nomi-ink-40); }
+  .refRow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .chip {
+    position: relative; width: 48px; height: 48px; border-radius: var(--nomi-radius-sm);
+    border: 1px solid var(--nomi-line); background: var(--nomi-ink-05);
+    display: flex; align-items: center; justify-content: center; color: var(--nomi-ink-40); font-size: 15px;
+  }
+  .chip .num {
+    position: absolute; top: -5px; left: -5px; min-width: 15px; height: 15px; padding: 0 4px;
+    background: var(--nomi-accent); color: var(--nomi-paper); font-size: 11px; font-weight: 600;
+    border-radius: 999px; display: flex; align-items: center; justify-content: center;
+  }
+  .chip .x {
+    position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; border-radius: 999px;
+    background: var(--nomi-paper); border: 1px solid var(--nomi-line); color: var(--nomi-ink-60);
+    font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .addBtn {
+    height: 28px; padding: 0 10px; border-radius: 999px; border: 1px dashed var(--nomi-ink-20);
+    background: var(--nomi-paper); color: var(--nomi-ink-60); cursor: pointer; font-size: 12px;
+    display: inline-flex; align-items: center; gap: 4px; font-family: inherit;
+  }
+  .addBtn:hover { border-color: var(--nomi-accent); color: var(--nomi-accent); }
+
+  .divider { height: 1px; background: var(--nomi-line-soft); }
+
+  /* 描述 */
+  .prompt { color: var(--nomi-ink-40); font-size: 13px; min-height: 20px; }
+  .promptCue { font-size: 12px; color: var(--nomi-ink-60); margin-top: 2px; }
+
+  /* 底部条 */
+  .bar { display: flex; align-items: center; gap: 8px; }
+  .modelChip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px;
+    border: 1px solid var(--nomi-line); background: var(--nomi-paper); color: var(--nomi-ink-80); font-size: 12px; cursor: pointer;
+  }
+  .badgeRec { font-size: 11px; padding: 0 6px; border-radius: 999px; background: var(--nomi-accent-soft); color: var(--nomi-accent); }
+  .badgeGen { font-size: 11px; padding: 0 6px; border-radius: 999px; background: var(--nomi-ink-10); color: var(--nomi-ink-60); }
+  .settingsChip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px;
+    border: 1px solid var(--nomi-line); background: var(--nomi-paper); color: var(--nomi-ink-80);
+    font-size: 12px; cursor: pointer;
+  }
+  .settingsChip:hover { border-color: var(--nomi-ink-20); }
+  .settingsChip[aria-expanded="true"] { border-color: var(--nomi-accent); color: var(--nomi-accent); background: var(--nomi-accent-soft); }
+  .settingsChip .chev { color: var(--nomi-ink-40); font-size: 11px; }
+  .spacer { flex: 1; }
+  .send { width: 30px; height: 30px; border-radius: 999px; background: var(--nomi-ink); color: var(--nomi-paper); border: 0; cursor: pointer; font-size: 14px; }
+
+  /* 生成方式：常驻在卡片上，作参考区的头（切它能亲眼看到下方参考槽变化，不被遮挡） */
+  .modeBar { display: flex; flex-direction: column; gap: 4px; }
+
+  /* 紧凑设置弹层 —— 只剩标量参数；往下弹，不盖卡片内容 */
+  .pop {
+    position: absolute; left: 12px; right: 12px; top: calc(100% + 6px); bottom: auto;
+    background: var(--nomi-paper); border: 1px solid var(--nomi-line); border-radius: var(--nomi-radius);
+    box-shadow: var(--nomi-shadow-md); padding: 12px; display: none; flex-direction: column; gap: 12px;
+    max-height: 260px; overflow: auto;
+  }
+  .pop.open { display: flex; }
+  .k { font-size: 11px; color: var(--nomi-ink-40); }
+  /* 生成方式 / 音频：统一一种 segmented */
+  .seg { display: inline-flex; padding: 2px; gap: 2px; background: var(--nomi-ink-05); border-radius: var(--nomi-radius-sm); flex-wrap: wrap; }
+  .seg button {
+    border: 0; background: transparent; padding: 5px 12px; border-radius: 4px; cursor: pointer;
+    font-size: 12px; color: var(--nomi-ink-60); font-family: inherit;
+  }
+  .seg button[aria-selected="true"] { background: var(--nomi-paper); color: var(--nomi-ink); box-shadow: var(--nomi-shadow-sm); font-weight: 600; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .modeHint { font-size: 11px; color: var(--nomi-ink-40); }
+  /* 比例/清晰度/时长：一行 N 个紧凑下拉，按内容收宽，不占满留白 */
+  .selectRow { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+  .selectRow .field { flex: 0 0 auto; }
+  select {
+    appearance: none; -webkit-appearance: none; font-family: inherit; font-size: 12px; color: var(--nomi-ink);
+    background-color: var(--nomi-paper); border: 1px solid var(--nomi-line); border-radius: var(--nomi-radius-sm);
+    padding: 6px 24px 6px 8px; cursor: pointer; min-width: 72px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat: no-repeat; background-position: right 8px center;
+  }
+  .audioInline { display: flex; align-items: center; gap: 10px; }
+  .audioInline .k { margin: 0; }
+  .genericNote { font-size: 11px; color: var(--nomi-ink-40); background: var(--nomi-ink-05); border-radius: var(--nomi-radius-sm); padding: 8px 10px; }
+  .genericNote b { color: var(--nomi-ink-60); }
+  .genInput { font-family: inherit; font-size: 12px; padding: 6px 8px; border: 1px solid var(--nomi-line); border-radius: var(--nomi-radius-sm); color: var(--nomi-ink); }
+</style>
+</head>
+<body>
+  <div class="note">
+    <b>样张 v3 — 按你的两点改</b>
+    <ul>
+      <li>① <b>输出与参数框分离</b>：上面「要被生成的图片/视频」是<b>独立节点</b>；下面「参数框」把<b>参考 + 描述 + 设置合一</b>（参考是参数框里随模式变的一段，不再单独漂一个框）。</li>
+      <li>② <b>防遮挡</b>：「生成方式」常驻卡片上(作参考区的头)——切它能<b>亲眼看到下方参考槽变化</b>,不再被弹层盖住；弹层只剩 比例/清晰度/时长/音频 这些标量,且<b>往下弹</b>,不盖卡片内容。</li>
+      <li>③ <b>统一词汇 + 切模型不丢图</b>：生成方式按钮用<b>统一意图词</b>(角色参考/单图首帧/首尾帧…)，各模型自己的叫法做<b>小副标签</b>(「该模型称『全能参考』」)；<b>切模型时保留已放的角色图、自动落到能放图的模式</b>——切 Seedance↔HappyHorse 试试，①②照片不消失。</li>
+      <li>识别/回退仍在：认得 → <span class="badgeRec">模板</span>（标在模型芯片上）；自接入认不出 → <span class="badgeGen">通用</span>，按你文档原样展示、不替你合并。</li>
+    </ul>
+  </div>
+
+  <div class="demoRow">
+    <span class="lbl">演示模型：</span>
+    <button class="demoTab" data-m="seedance" aria-selected="true">Seedance 2.0</button>
+    <button class="demoTab" data-m="happyhorse" aria-selected="false">HappyHorse</button>
+    <button class="demoTab" data-m="generic" aria-selected="false">自接入·未识别</button>
+  </div>
+
+  <!-- 输出节点：独立，要被生成的图片/视频 -->
+  <div class="outNode">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="9 7 17 12 9 17 9 7"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg>
+    <div class="st">等待生成</div>
+  </div>
+  <div class="outCap">输出 · 生成的图片/视频（独立节点）</div>
+
+  <!-- 参数框：参考 + 描述 + 设置，合一 -->
+  <div class="node">
+    <div class="body">
+      <div class="modeBar" id="modeBar"></div>
+      <div class="refZone" id="refZone"></div>
+      <div class="divider" id="divTop"></div>
+      <div>
+        <div class="prompt">描述你想生成的内容…</div>
+        <div class="promptCue" id="promptCue"></div>
+      </div>
+      <div class="bar">
+        <button class="modelChip" id="modelChip"></button>
+        <button class="settingsChip" id="settingsChip" aria-expanded="false">
+          <span id="settingsSummary">全能参考 · 16:9 · 720p · 5s · 🔊</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="spacer"></div>
+        <button class="send">↑</button>
+      </div>
+    </div>
+    <div class="pop" id="pop"></div>
+  </div>
+
+<script>
+// 统一的「意图词」——跨模型一致，做主标签；各模型自己的叫法(vendor)做小副标签
+const INTENT_LABEL = { text:"文生视频", single:"单图首帧", firstlast:"首尾帧", character:"角色参考", edit:"视频编辑" };
+const MODELS = {
+  seedance: {
+    label: "Seedance 2.0", recognized: true,
+    modes: [
+      { id:"first", intent:"single", vendor:"首帧", hint:"单张首帧图驱动生成", refs:[{kind:"frame",key:"first",name:"首帧"}] },
+      { id:"firstlast", intent:"firstlast", vendor:"首尾帧", hint:"首帧 + 尾帧，过渡更可控", refs:[{kind:"frame",key:"first",name:"首帧"},{kind:"frame",key:"last",name:"尾帧"}] },
+      { id:"omni", intent:"character", vendor:"全能参考", hint:"多模态参考；最多 9 角色 / 3 视频 / 3 音频", refs:[
+        {kind:"multi",key:"char",name:"角色参考",max:9,cap:"按顺序对应 prompt 里的 character1…9"},
+        {kind:"multi",key:"video",name:"参考视频",max:3},
+        {kind:"multi",key:"audio",name:"参考音频",max:3},
+      ] },
+    ],
+    ratio:["16:9","9:16","1:1","4:3","3:4","21:9","adaptive"], res:["480p","720p","1080p"], dur:[4,15], audio:true,
+  },
+  happyhorse: {
+    label: "HappyHorse 1.0", recognized: true,
+    modes: [
+      { id:"t2v", intent:"text", vendor:"text-to-video", hint:"纯文本生成", refs:[], ratio:true },
+      { id:"i2v", intent:"single", vendor:"image-to-video", hint:"单张首帧图（无尾帧、无比例）", refs:[{kind:"frame",key:"first",name:"首帧"}], ratio:false },
+      { id:"ref", intent:"character", vendor:"reference-to-video", hint:"1–9 张角色图 → prompt 里 character1…9", refs:[{kind:"multi",key:"char",name:"角色参考",max:9,cap:"按顺序对应 prompt 里的 character1…9"}], ratio:true },
+      { id:"edit", intent:"edit", vendor:"video-edit", hint:"源视频 + 0–5 张参考图", refs:[{kind:"frame",key:"src",name:"源视频"},{kind:"multi",key:"char",name:"参考图",max:5}], ratio:false },
+    ],
+    ratio:["16:9","9:16","1:1","4:3","3:4"], res:["720p","1080p"], dur:[3,15], audio:false,
+  },
+  generic: {
+    label: "我接入的某视频模型", recognized: false,
+    genericParams: [
+      { k:"参考图 URL", t:"input" },
+      { k:"aspect_ratio", opts:["16:9","9:16","1:1"] },
+      { k:"duration", opts:["5","10"] },
+    ],
+  },
+};
+
+let curModel = "seedance";
+let curMode = 2;
+let popOpen = false;
+let refs = { char:[{},{}], video:[], audio:[], first:null, last:null, src:null };
+const $ = id => document.getElementById(id);
+const curModeObj = () => MODELS[curModel].recognized ? MODELS[curModel].modes[Math.min(curMode, MODELS[curModel].modes.length-1)] : null;
+
+function renderRefZone(){
+  const z=$("refZone"); z.innerHTML=""; const m=MODELS[curModel];
+  if(!m.recognized){
+    const g=document.createElement("div"); g.className="refGroup";
+    g.innerHTML=`<div class="refHead"><span class="refLabel">参考图 URL</span><span class="refCap">通用 · 来自你的接入文档</span></div>`;
+    const row=document.createElement("div"); row.className="refRow";
+    const b=document.createElement("button"); b.className="addBtn"; b.textContent="＋ 添加参考图"; row.appendChild(b);
+    g.appendChild(row); z.appendChild(g); z.style.display="flex"; $("divTop").style.display="block"; return;
+  }
+  const mode=curModeObj();
+  if(!mode.refs.length){ z.style.display="none"; $("divTop").style.display="none"; return; }
+  z.style.display="flex"; $("divTop").style.display="block";
+  mode.refs.forEach(r=>{
+    const g=document.createElement("div"); g.className="refGroup";
+    const head=document.createElement("div"); head.className="refHead";
+    head.innerHTML=`<span class="refLabel">${r.name}</span>`+(r.cap?`<span class="refCap">${r.cap}</span>`:"");
+    g.appendChild(head);
+    const row=document.createElement("div"); row.className="refRow";
+    if(r.kind==="frame"){
+      if(refs[r.key]) row.appendChild(chip(null,()=>{refs[r.key]=null;renderRefZone();}));
+      else { const b=document.createElement("button"); b.className="addBtn"; b.innerHTML=`＋ ${r.name}`; b.onclick=()=>{refs[r.key]={};renderRefZone();}; row.appendChild(b); }
+    } else {
+      const arr=refs[r.key]||[];
+      arr.forEach((_,i)=>row.appendChild(chip(r.key==="char"?(i+1):null,()=>{arr.splice(i,1);renderRefZone();})));
+      if(arr.length<r.max){ const b=document.createElement("button"); b.className="addBtn"; b.innerHTML=`＋ ${r.name}`; b.onclick=()=>{(refs[r.key]=refs[r.key]||[]).push({});renderRefZone();}; row.appendChild(b); }
+    }
+    g.appendChild(row); z.appendChild(g);
+  });
+}
+function chip(num,onX){
+  const c=document.createElement("div"); c.className="chip"; c.textContent="🖼";
+  if(num){const n=document.createElement("span");n.className="num";n.textContent=num;c.appendChild(n);}
+  const x=document.createElement("span"); x.className="x"; x.textContent="×"; x.onclick=onX; c.appendChild(x); return c;
+}
+
+// 生成方式：常驻卡片（参考区的头），不进弹层 —— 切它能直接看到下方参考槽变化
+function renderModeBar(){
+  const mb=$("modeBar"); mb.innerHTML=""; const m=MODELS[curModel];
+  if(!m.recognized){ mb.style.display="none"; return; }
+  mb.style.display="flex";
+  const lbl=document.createElement("span"); lbl.className="k"; lbl.textContent="生成方式"; mb.appendChild(lbl);
+  const seg=document.createElement("div"); seg.className="seg";
+  // 按钮用统一意图词（跨模型一致）
+  m.modes.forEach((md,i)=>{const b=document.createElement("button");b.textContent=INTENT_LABEL[md.intent];b.setAttribute("aria-selected",i===curMode);b.onclick=()=>{curMode=i;syncAll();};seg.appendChild(b);});
+  mb.appendChild(seg);
+  // 提示行：该模型自己的叫法(vendor 副标签) + 说明
+  const cur=curModeObj();
+  const hint=document.createElement("div"); hint.className="modeHint";
+  hint.textContent=`该模型称「${cur.vendor}」 · ${cur.hint}`; mb.appendChild(hint);
+}
+
+function renderPop(){
+  const p=$("pop"); p.innerHTML=""; p.classList.toggle("open",popOpen); const m=MODELS[curModel];
+  if(!m.recognized){
+    const note=document.createElement("div"); note.className="genericNote";
+    note.innerHTML=`<b>未识别模型 · 通用</b> 没套模板；下面是从你接入文档抓到的参数，原样给你，不替你合并、不藏能力。`;
+    p.appendChild(note);
+    const row=document.createElement("div"); row.className="selectRow";
+    m.genericParams.forEach(gp=>{
+      const f=document.createElement("div"); f.className="field"; f.innerHTML=`<span class="k">${gp.k}</span>`;
+      if(gp.opts){const s=document.createElement("select");gp.opts.forEach(o=>{const op=document.createElement("option");op.textContent=o;s.appendChild(op);});f.appendChild(s);}
+      else{const i=document.createElement("input");i.className="genInput";i.placeholder="粘贴 URL…";f.appendChild(i);}
+      row.appendChild(f);
+    });
+    p.appendChild(row); return;
+  }
+  // 弹层只剩标量参数：比例 / 清晰度 / 时长（一行紧凑下拉）
+  const row=document.createElement("div"); row.className="selectRow";
+  const showRatio=curModeObj().ratio===undefined?true:curModeObj().ratio;
+  if(showRatio) row.appendChild(mkSelect("比例",m.ratio));
+  row.appendChild(mkSelect("清晰度",m.res));
+  const durVals=[]; for(let d=m.dur[0];d<=m.dur[1];d++) durVals.push(d+"s");
+  row.appendChild(mkSelect("时长",durVals));
+  p.appendChild(row);
+  // 生成音频：同一行内联开关，不占大框
+  if(m.audio){
+    const a=document.createElement("div"); a.className="audioInline";
+    a.innerHTML=`<span class="k">生成音频</span>`;
+    const t=document.createElement("div"); t.className="seg";
+    ["开","关"].forEach((x,i)=>{const b=document.createElement("button");b.textContent=x;b.setAttribute("aria-selected",i===0);b.onclick=()=>{[...t.children].forEach(c=>c.setAttribute("aria-selected","false"));b.setAttribute("aria-selected","true");};t.appendChild(b);});
+    a.appendChild(t); p.appendChild(a);
+  }
+}
+function mkSelect(label,vals){
+  const f=document.createElement("div"); f.className="field"; f.innerHTML=`<span class="k">${label}</span>`;
+  const s=document.createElement("select"); vals.forEach(v=>{const o=document.createElement("option");o.textContent=v;s.appendChild(o);});
+  if(label==="清晰度"&&vals.includes("720p")) s.value="720p";
+  s.onchange=syncSummary; f.appendChild(s); return f;
+}
+function syncSummary(){
+  const m=MODELS[curModel];
+  const badge = m.recognized?`<span class="badgeRec">模板</span>`:`<span class="badgeGen">通用</span>`;
+  $("modelChip").innerHTML=`◴ ${m.label} ${badge} <span style="color:var(--nomi-ink-40);font-size:11px">▾</span>`;
+  if(!m.recognized){ $("settingsSummary").textContent="通用参数"; return; }
+  // 摘要只放标量参数——模式已常驻在卡片上，不再重复显示
+  const vals=[...$("pop").querySelectorAll("select")].map(s=>s.value);
+  const parts=[...vals]; if(m.audio) parts.push("🔊");
+  $("settingsSummary").textContent=parts.join(" · ");
+}
+function syncCue(){
+  const mode=MODELS[curModel].recognized?curModeObj():null;
+  const hasChar=mode&&mode.refs.some(r=>r.key==="char")&&(refs.char||[]).length>0;
+  $("promptCue").textContent=hasChar?"提示：在描述里用 character1、character2… 指代上面的角色图":"";
+}
+function syncAll(){ renderModeBar(); renderRefZone(); renderPop(); syncSummary(); syncCue(); }
+
+$("settingsChip").onclick=()=>{ popOpen=!popOpen; $("settingsChip").setAttribute("aria-expanded",popOpen); renderPop(); };
+document.querySelectorAll(".demoTab").forEach(t=>{ t.onclick=()=>{
+  // 切模型：保留参考图，并落到「同一意图」的模式（找不到就落到能放角色图的模式）——不让照片消失
+  const prevIntent = MODELS[curModel].recognized ? curModeObj().intent : "character";
+  document.querySelectorAll(".demoTab").forEach(x=>x.setAttribute("aria-selected","false"));
+  t.setAttribute("aria-selected","true"); curModel=t.dataset.m;
+  if (MODELS[curModel].recognized){
+    let idx = MODELS[curModel].modes.findIndex(mm=>mm.intent===prevIntent);
+    if (idx<0) idx = MODELS[curModel].modes.findIndex(mm=>mm.intent==="character");
+    curMode = idx<0 ? 0 : idx;
+  } else curMode = 0;
+  // 注意：不重置 refs —— 用户已放的角色图跨模型保留
+  syncAll();
+};});
+syncAll();
+popOpen=true; $("settingsChip").setAttribute("aria-expanded",true); renderPop(); // 默认展开让你一眼看到弹层
+</script>
+</body>
+</html>

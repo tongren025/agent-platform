@@ -1,0 +1,227 @@
+{
+  "vendor": {
+    "key": "kie",
+    "name": "Kie.ai",
+    "baseUrl": "https://api.kie.ai",
+    "auth": {
+      "type": "bearer"
+    }
+  },
+  "model": {
+    "key": "kling-3.0/video",
+    "displayName": "Kling 3.0",
+    "kind": "video",
+    "fields": [
+      {
+        "key": "prompt",
+        "displayName": "Prompt",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "prompt",
+          "evidence": "Video generation prompt. Takes effect when multi_shots is false.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.prompt",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "image_urls",
+        "displayName": "Image URLs",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "image_urls",
+          "evidence": "First and last frame image URLs. Required when elements are referenced in the prompt (using @element_name syntax).",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.image_urls",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "sound",
+        "displayName": "Sound Effects",
+        "type": "boolean",
+        "options": [],
+        "default": "false",
+        "evidence": {
+          "field": "sound",
+          "evidence": "Whether to enable sound effects. true enables sound effects, false disables them. When multi_shots is true, this field defaults to true.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.sound",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "duration",
+        "displayName": "Duration",
+        "type": "select",
+        "options": [
+          {
+            "value": "3",
+            "label": "3 seconds"
+          },
+          {
+            "value": "4",
+            "label": "4 seconds"
+          },
+          {
+            "value": "5",
+            "label": "5 seconds"
+          },
+          {
+            "value": "6",
+            "label": "6 seconds"
+          },
+          {
+            "value": "7",
+            "label": "7 seconds"
+          },
+          {
+            "value": "8",
+            "label": "8 seconds"
+          },
+          {
+            "value": "9",
+            "label": "9 seconds"
+          },
+          {
+            "value": "10",
+            "label": "10 seconds"
+          },
+          {
+            "value": "11",
+            "label": "11 seconds"
+          },
+          {
+            "value": "12",
+            "label": "12 seconds"
+          },
+          {
+            "value": "13",
+            "label": "13 seconds"
+          },
+          {
+            "value": "14",
+            "label": "14 seconds"
+          },
+          {
+            "value": "15",
+            "label": "15 seconds"
+          }
+        ],
+        "default": "5",
+        "evidence": {
+          "field": "duration",
+          "evidence": "Total video duration in seconds. Integer value, range: 3 to 15.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.duration",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "aspect_ratio",
+        "displayName": "Aspect Ratio",
+        "type": "select",
+        "options": [
+          {
+            "value": "16:9",
+            "label": "16:9"
+          },
+          {
+            "value": "9:16",
+            "label": "9:16"
+          },
+          {
+            "value": "1:1",
+            "label": "1:1"
+          }
+        ],
+        "default": "16:9",
+        "evidence": {
+          "field": "aspect_ratio",
+          "evidence": "Video aspect ratio. Options: 16:9, 9:16, 1:1. When image_urls(first and last frame images) is provided, this parameter is optional",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.aspect_ratio",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "mode",
+        "displayName": "Mode",
+        "type": "select",
+        "options": [
+          {
+            "value": "std",
+            "label": "Standard"
+          },
+          {
+            "value": "pro",
+            "label": "Pro"
+          },
+          {
+            "value": "4K",
+            "label": "4K"
+          }
+        ],
+        "default": "pro",
+        "evidence": {
+          "field": "mode",
+          "evidence": "Generation mode. std has standard resolution, pro has higher resolution, 4K has 4K resolution.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.mode",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "multi_shots",
+        "displayName": "Multi-Shot",
+        "type": "boolean",
+        "options": [],
+        "default": "false",
+        "evidence": {
+          "field": "multi_shots",
+          "evidence": "Whether to use multi-shot mode. true enables multi-shot mode, false enables single-shot mode.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.multi_shots",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "multi_prompt",
+        "displayName": "Multi-Shot Prompts JSON",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "multi_prompt",
+          "evidence": "Shot prompts. Takes effect when multi_shots is true. Used to describe the text and duration of each shot. Supports up to 5 shots.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.multi_prompt",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "kling_elements",
+        "displayName": "Kling Elements JSON",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "kling_elements",
+          "evidence": "Referenced elements. Detailed information about elements referenced in the prompt. A single task can reference a maximum of three elements.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.kling_elements",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "callBackUrl",
+        "displayName": "Callback URL",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "callBackUrl",
+          "evidence": "The URL to receive generation task completion updates. Optional but recommended for production use.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody callBackUrl",
+          "confidence": "high"
+        }
+      }
+    ]
+  },
+  "mapping": {}
+}

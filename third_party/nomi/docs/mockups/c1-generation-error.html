@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>C1 · 生成失败提示 — 样张</title>
+<style>
+  :root{
+    --nomi-bg: oklch(0.985 0.003 90);
+    --nomi-paper: oklch(1 0 0);
+    --nomi-ink: oklch(0.22 0.01 80);
+    --nomi-ink-60: oklch(0.50 0.01 80);
+    --nomi-ink-40: oklch(0.68 0.01 80);
+    --nomi-ink-05: oklch(0.97 0.003 80);
+    --nomi-line: oklch(0.91 0.004 80);
+    --nomi-accent: oklch(0.55 0.13 250);
+    --danger: #ff3b30;
+    --danger-soft: rgba(255,59,48,.10);
+    --radius: 10px; --radius-sm: 6px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: Inter, -apple-system, "PingFang SC", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--nomi-bg);font-family:var(--sans);color:var(--nomi-ink);padding:32px;font-size:14px;}
+  h1{font-size:18px;margin:0 0 4px}
+  .sub{color:var(--nomi-ink-60);font-size:13px;margin:0 0 28px}
+  .row{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+  .col{flex:1;min-width:280px}
+  .tag{font-size:12px;color:var(--nomi-ink-60);margin:0 0 8px;font-weight:600}
+  /* 一个生成节点卡片（仿真） */
+  .node{width:300px;background:var(--nomi-paper);border:1px solid var(--nomi-line);border-radius:var(--radius);box-shadow:0 1px 2px rgba(0,0,0,.04);overflow:hidden}
+  .node__head{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--nomi-line)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--danger)}
+  .node__title{font-size:13px;font-weight:600;flex:1}
+  .node__canvas{height:150px;background:repeating-linear-gradient(45deg,var(--nomi-ink-05),var(--nomi-ink-05) 10px,transparent 10px,transparent 20px);display:flex;align-items:center;justify-content:center;color:var(--nomi-ink-40);font-size:12px}
+  .node__foot{padding:8px 10px}
+
+  /* 现在：小红感叹号 */
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--danger-soft);color:var(--danger);font-weight:700;font-size:11px;cursor:pointer}
+
+  /* 改后 收起态：一行可读的错误条 */
+  .err-strip{display:flex;align-items:center;gap:7px;background:var(--danger-soft);border-radius:var(--radius-sm);padding:6px 8px;cursor:pointer}
+  .err-strip svg{flex:0 0 auto;color:var(--danger)}
+  .err-strip__reason{font-size:12.5px;font-weight:600;color:var(--danger);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .err-strip__chev{color:var(--danger);opacity:.7}
+
+  /* 改后 展开态：错误详情 */
+  .err-panel{background:var(--nomi-paper);border:1px solid var(--nomi-line);border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.10);padding:12px;width:320px}
+  .err-panel__top{display:flex;align-items:center;gap:7px;margin-bottom:2px}
+  .err-panel__reason{font-size:13px;font-weight:700;color:var(--danger)}
+  .err-panel__hint{font-size:12.5px;color:var(--nomi-ink);line-height:1.5;margin:4px 0 10px}
+  .err-panel__detail-toggle{font-size:12px;color:var(--nomi-ink-60);cursor:pointer;user-select:none}
+  .err-panel__raw{margin-top:6px;background:var(--nomi-ink-05);border-radius:var(--radius-sm);padding:8px;font-family:var(--mono);font-size:11.5px;color:var(--nomi-ink-60);max-height:90px;overflow:auto;white-space:pre-wrap;word-break:break-all}
+  .err-panel__actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+  .btn{height:30px;padding:0 12px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:1px solid var(--nomi-line);background:var(--nomi-paper);color:var(--nomi-ink);cursor:pointer}
+  .btn--primary{background:var(--nomi-ink);color:var(--nomi-paper);border-color:var(--nomi-ink)}
+  .note{font-size:12.5px;color:var(--nomi-ink-60);line-height:1.6;margin-top:10px}
+  .x{color:var(--danger)}
+</style>
+</head>
+<body>
+  <h1>C1 · 生成失败提示 — 设计样张</h1>
+  <p class="sub">现状：节点上一个小红「!」徽章，hover 看原生 tooltip / 点一下复制错误，要粘到别处才看得懂。<br/>改后：失败原因一行直接可读；点开看建议 + 原始详情 + 一键重试。错因映射复用已有的 <code>enrichGenerationError</code>。</p>
+
+  <div class="row">
+    <!-- 现在 -->
+    <div class="col" style="flex:0 0 auto">
+      <p class="tag">现在 ❌ 不可读</p>
+      <div class="node">
+        <div class="node__head"><span class="dot"></span><span class="node__title">角色 · 图片</span><span class="badge" title="（hover 才显示完整错误；点击复制）">!</span></div>
+        <div class="node__canvas">生成失败</div>
+      </div>
+      <p class="note">问题：「!」看不出错因；hover tooltip 易被画布裁切；点击只是复制，还得粘到输入框才读得到。</p>
+    </div>
+
+    <!-- 改后 收起 -->
+    <div class="col" style="flex:0 0 auto">
+      <p class="tag">改后 · 收起态 ✅ 一眼可读</p>
+      <div class="node">
+        <div class="node__head"><span class="dot"></span><span class="node__title">角色 · 图片</span></div>
+        <div class="node__canvas">生成失败</div>
+        <div class="node__foot">
+          <div class="err-strip" title="点击查看详情">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+            <span class="err-strip__reason">配额或限流</span>
+            <span class="err-strip__chev">›</span>
+          </div>
+        </div>
+      </div>
+      <p class="note">失败原因一行直显（配额或限流 / 网络超时 / API Key 无效 / 提示词被拦截 / 模型未配置…）。点这条 → 展开右边。</p>
+    </div>
+
+    <!-- 改后 展开 -->
+    <div class="col" style="flex:0 0 auto">
+      <p class="tag">改后 · 展开态 ✅ 建议 + 详情 + 重试</p>
+      <div class="err-panel">
+        <div class="err-panel__top">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+          <span class="err-panel__reason">配额或限流</span>
+        </div>
+        <div class="err-panel__hint">服务商配额已用尽或触发限流。请稍后重试，或在「模型接入」换一个模型。</div>
+        <div class="err-panel__detail-toggle">▾ 原始错误</div>
+        <div class="err-panel__raw">HTTP 429 Too Many Requests: rate limit exceeded for model gpt-image-1, please retry after 12s (request-id: a1b2c3...)</div>
+        <div class="err-panel__actions">
+          <button class="btn">复制详情</button>
+          <button class="btn btn--primary">重试</button>
+        </div>
+      </div>
+      <p class="note">人话原因（粗体）+ 可行动建议 + 折叠的原始错误（等宽，可复制）+「重试」主按钮。再也不用复制到别处读。</p>
+    </div>
+  </div>
+</body>
+</html>

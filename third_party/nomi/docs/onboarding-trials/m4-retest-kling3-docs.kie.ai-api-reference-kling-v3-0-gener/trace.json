@@ -1,0 +1,762 @@
+[
+  {
+    "type": "trial-start",
+    "trialId": "m4-retest-kling3",
+    "docsUrl": "https://docs.kie.ai/api-reference/kling/v3-0/generate-video",
+    "targetKind": "video",
+    "agentModel": "gpt-5.5"
+  },
+  {
+    "type": "tool-call",
+    "toolName": "fetch_raw_docs",
+    "args": {
+      "url": "https://docs.kie.ai/api-reference/kling/v3-0/generate-video"
+    },
+    "toolCallId": "call-1"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "fetch_raw_docs",
+    "result": {
+      "ok": false,
+      "error": "Fetch failed: HTTP 404"
+    },
+    "toolCallId": "call-1"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 1,
+    "text": "I’ll read the Kie Kling v3 video endpoint docs first and use the tables/examples as the source of truth for the catalog entry."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "fetch_raw_docs",
+    "args": {
+      "url": "https://docs.kie.ai/api-reference/kling/v3-0"
+    },
+    "toolCallId": "call-2"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "fetch_raw_docs",
+    "result": {
+      "ok": false,
+      "error": "Fetch failed: HTTP 404"
+    },
+    "toolCallId": "call-2"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 2,
+    "text": "The provided page returned a 404 from the docs fetcher, so I’m going to look at the nearest likely Kie Kling v3 docs path rather than inventing the endpoint shape."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "fetch_raw_docs",
+    "args": {
+      "url": "https://docs.kie.ai/api-reference/kling/generate-video"
+    },
+    "toolCallId": "call-3"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "fetch_raw_docs",
+    "result": {
+      "ok": false,
+      "error": "Fetch failed: HTTP 404"
+    },
+    "toolCallId": "call-3"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 3,
+    "text": "That nearby index is also missing. I’m checking the current Kling docs namespace now; the target URL may have moved while the API endpoint stayed available."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "fetch_raw_docs",
+    "args": {
+      "url": "https://docs.kie.ai/api-reference"
+    },
+    "toolCallId": "call-4"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "fetch_raw_docs",
+    "result": {
+      "ok": false,
+      "error": "Fetch failed: HTTP 404"
+    },
+    "toolCallId": "call-4"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 4,
+    "text": "The renamed path didn’t resolve either. One more pass at the Kie API reference root should tell me the live URL layout so I can anchor the mapping to real docs."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "set_vendor_info",
+    "args": {
+      "baseUrl": "https://api.kie.ai",
+      "vendorKey": "kie",
+      "vendorName": "Kie.ai",
+      "modelKey": "kling-v3",
+      "modelDisplayName": "Kling 3.0",
+      "auth": {
+        "type": "bearer"
+      }
+    },
+    "toolCallId": "call-5"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "set_vendor_info",
+    "result": {
+      "ok": true,
+      "value": {
+        "baseUrl": "https://api.kie.ai",
+        "vendorKey": "kie",
+        "modelKey": "kling-v3",
+        "auth": {
+          "type": "bearer"
+        }
+      }
+    },
+    "toolCallId": "call-5"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 5,
+    "text": "The docs fetcher is consistently getting 404s from the documentation site. I’m going to proceed carefully from the live API shape used by Kie’s Kling endpoints and validate against the server before committing; the test step will keep this honest."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "fetch_raw_docs",
+    "args": {
+      "url": "https://docs.kie.ai/llms.txt"
+    },
+    "toolCallId": "call-6"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "fetch_raw_docs",
+    "result": {
+      "url": "https://docs.kie.ai/llms.txt",
+      "contentType": "text/plain; charset=utf-8",
+      "tables": [],
+      "curl_examples": [],
+      "code_blocks": [],
+      "markdown_excerpt": "# docs.kie.ai\n\n## Docs\n- [Getting Started with KIE API (Important)](https://docs.kie.ai/1973359m0.md): \n- [Market](https://docs.kie.ai/market/quickstart.md): \n- Image Models > 4o Image API [4o Image API Quickstart](https://docs.kie.ai/4o-image-api/quickstart.md): \n- Image Models > 4o Image API [4o Image Generation Callbacks](https://docs.kie.ai/4o-image-api/generate-4-o-image-callbacks.md): \n- Image Models > Flux Kontext API [Flux Kontext API Quickstart](https://docs.kie.ai/flux-kontext-api/quickstart.md): \n- Image Models > Flux Kontext API [Image Generation or Editing Callbacks](https://docs.kie.ai/flux-kontext-api/generate-or-edit-image-callbacks.md): \n- Video Models > Runway API [Runway API Quickstart](https://docs.kie.ai/runway-api/quickstart.md): \n- Video Models > Runway API [AI Video Generation Callbacks](https://docs.kie.ai/runway-api/generate-ai-video-callbacks.md): \n- Video Models > Runway API [AI Video Extension Callbacks](https://docs.kie.ai/runway-api/extend-ai-video-callbacks.md): \n- Video Models > Runway API > Aleph [Aleph Video Generation Callbacks](https://docs.kie.ai/runway-api/generate-aleph-video-callbacks.md): \n- Chat Models > Claude [Claude Code + kie.ai Integration Guide](https://docs.kie.ai/2152008m0.md): \n- Suno API [Suno API Quickstart](https://docs.kie.ai/suno-api/quickstart.md): \n- Suno API > Music Generation [Music Generation Callbacks](https://docs.kie.ai/suno-api/generate-music-callbacks.md): \n- Suno API > Music Generation [Music Extension Callbacks](https://docs.kie.ai/suno-api/extend-music-callbacks.md): \n- Suno API > Music Generation [Audio Upload and Cover Callbacks](https://docs.kie.ai/suno-api/upload-and-cover-audio-callbacks.md): \n- Suno API > Music Generation [Audio Upload and Extension Callbacks](https://docs.kie.ai/suno-api/upload-and-extend-audio-callbacks.md): \n- Suno API > Music Generation [Add Instrumental Callbacks](https://docs.kie.ai/suno-api/add-instrumental-callbacks.md): \n- Suno API > Music Generation [Add Vocals Callbacks](https://docs.kie.ai/suno-api/add-vocals-callbacks.md): \n- Suno API > Music Generation [Music Cover Generation Callbacks](https://docs.kie.ai/suno-api/cover-suno-callbacks.md): \n- Suno API > Music Generation [Replace Music Section Callbacks](https://docs.kie.ai/suno-api/replace-section-callbacks.md): \n- Suno API > Lyrics Generation [Lyrics Generation Callbacks](https://docs.kie.ai/suno-api/generate-lyrics-callbacks.md): \n- Suno API > WAV Conversion [Convert to WAV Callbacks](https://docs.kie.ai/suno-api/convert-to-wav-callbacks.md): \n- Suno API > Vocal Removal [Audio Separation Callbacks](https://docs.kie.ai/suno-api/separate-vocals-callbacks.md): \n- Suno API > Vocal Removal [MIDI Generation Callbacks](https://docs.kie.ai/suno-api/generate-midi-callbacks.md): \n- Suno API > Music Video Generation [Music Video Generation Callbacks](https://docs.kie.ai/suno-api/create-music-video-callbacks.md): \n- Suno API > voice [Suno Voice Generation Callback](https://docs.kie.ai/suno-api/suno-voice-generate-callback.md): \n- Suno API > voice [Suno Voice Validation Phrase Callback](https://docs.kie.ai/suno-api/suno-voice-validate-callback.md): \n- Veo3.1 API [Get 4K Video Callbacks](https://docs.kie.ai/veo3-api/get-veo-3-4k-video-callbacks.md): \n- Veo3.1 API [Veo3.1 API Quickstart](https://docs.kie.ai/veo3-api/quickstart.md): \n- Veo3.1 API [Veo3.1 Video Generation Callbacks](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks.md): \n- [File Upload API Quickstart](https://docs.kie.ai/file-upload-api/quickstart.md): \n- [Common API Quickstart](https://docs.kie.ai/common-api/quickstart.md): \n- [Webhook Security Verification](https://docs.kie.ai/common-api/webhook-verification.md): \n- [KIE A​​PI 入门指南（重要）](https://docs.kie.ai/cn.md): \n- [Market](https://docs.kie.ai/cn/market/quickstart.md): \n- Image Models > 4o Image API [4o Image API 快速开始](https://docs.kie.ai/cn/4o-image-api/quickstart.md): \n- Image Models > 4o Image API [4o 图片生成回调](https://docs.kie.ai/cn/4o-image-api/generate-4-o-image-callbacks.md): \n- Image Models > Flux Kontext API [Flux Kontext API 快速开始](https://docs.kie.ai/cn/flux-kontext-api/quickstart.md): \n- Image Models > Flux Kontext API [图像生成或编辑回调](https://docs.kie.ai/cn/flux-kontext-api/generate-or-edit-image-callbacks.md): \n- Video Models > Runway API [Runway API 快速开始](https://docs.kie.ai/cn/runway-api/quickstart.md): \n- Video Models > Runway API [AI 视频生成回调](https://docs.kie.ai/cn/runway-api/generate-ai-video-callbacks.md): \n- Video Models > Runway API [AI 视频扩展回调](https://docs.kie.ai/cn/runway-api/extend-ai-video-callbacks.md): \n- Video Models > Runway API > Aleph [Aleph 视频生成回调](https://docs.kie.ai/cn/runway-api/generate-aleph-video-callbacks.md): \n- Chat Models > Claude [Claude Code 对接 kie.ai 使用指南](https://docs.kie.ai/2151374m0.md): \n- Veo3.1 API [Veo3.1 API 快速开始](https://docs.kie.ai/cn/veo3-api/quickstart.md): \n- Veo3.1 API [Veo3.1 视频生成回调](https://docs.kie.ai/cn/veo3-api/generate-veo-3-video-callbacks.md): \n- Veo3.1 API [获取 4K 视频回调](https://docs.kie.ai/cn/veo3-api/get-veo-3-4k-video-callbacks.md): \n- Suno API [Suno API 快速开始](https://docs.kie.ai/cn/suno-api/quickstart.md): \n- Suno API > Music Generation [生成音乐回调](https://docs.kie.ai/cn/suno-api/generate-music-callbacks.md): \n- Suno API > Music Generation [音乐扩展回调](https://docs.kie.ai/cn/suno-api/extend-music-callbacks.md): \n- Suno API > Music Generation [音频上传和翻唱回调](https://docs.kie.ai/cn/suno-api/upload-and-cover-audio-callbacks.md): \n- Suno API > Music Generation [音频上传和扩展回调](https://docs.kie.ai/cn/suno-api/upload-and-extend-audio-callbacks.md): \n- Suno API > Music Generation [添加伴奏回调](https://docs.kie.ai/cn/suno-api/add-instrumental-callbacks.md): \n- Suno API > Music Generation [添加人声回调](https://docs.kie.ai/cn/suno-api/add-vocals-callbacks.md): \n- Suno API > Music Generation [音乐封面生成回调](https://docs.kie.ai/cn/suno-api/cover-suno-callbacks.md): \n- Suno API > Music Generation [替换音乐分区回调](https://docs.kie.ai/cn/suno-api/replace-section-callbacks.md): \n- Suno API > Lyrics Generation [生成歌词回调](https://docs.kie.ai/cn/suno-api/generate-lyrics-callbacks.md): \n- Suno API > WAV Conversion [转换为WAV格式回调](https://docs.kie.ai/cn/suno-api/convert-to-wav-callbacks.md): \n- Suno API > Vocal Removal [音频分离回调](https://docs.kie.ai/cn/suno-api/separate-vocals-callbacks.md): \n- Suno API > Vocal Removal [MIDI 生成回调](https://docs.kie.ai/cn/suno-api/generate-midi-callbacks.md): \n- Suno API > Music Video Generation [MP4生成完成回调](https://docs.kie.ai/cn/suno-api/create-music-video-callbacks.md): \n- Suno API > voice [Suno Voice 生成回调](https://docs.kie.ai/cn/suno-api/suno-voice-generate-callback.md): \n- Suno API > voice [Suno Voice 验证短句回调](https://docs.kie.ai/cn/suno-api/suno-voice-validate-callback.md): \n- [文件上传 API 快速开始](https://docs.kie.ai/cn/file-upload-api/quickstart.md): \n- [通用 API 快速入门](https://docs.kie.ai/cn/common-api/quickstart.md): \n- [Webhook 安全校验](https://docs.kie.ai/cn/common-api/webhook-verification.md): \n\n## API Docs\n- Image Models > Seedream [Seedream3.0 - Text to Image](https://docs.kie.ai/market/seedream/seedream.md): Image generation by Seedream3.0\n- Image Models > Seedream [Seedream4.0 - Text to Image](https://docs.kie.ai/market/seedream/seedream-v4-text-to-image.md): High-quality photorealistic image generation powered by Seedream4.0's advanced AI model\n- Image Models > Seedream [Seedream4.0 - Edit](https://docs.kie.ai/market/seedream/seedream-v4-edit.md): Image editing by Seedream4.0\n- Image Models > Seedream [Seedream4.5 - Text to Image](https://docs.kie.ai/market/seedream/4-5-text-to-image.md): High-quality photorealistic image generation powered by Seedream's advanced AI model\n- Image Models > Seedream [Seedream4.5 - Edit](https://docs.kie.ai/market/seedream/4-5-edit.md): Image editing by Seedream4.5\n- Image Models > Seedream [Seedream5.0 Lite - Text to Image](https://docs.kie.ai/market/seedream/5-lite-text-to-image.md): High-quality photorealistic image generation powered by Seedream's advanced AI model\n- Image Models > Seedream [Seedream5.0 Lite - Image to Image](https://docs.kie.ai/market/seedream-5-lite-image-to-image.md): High-quality photorealistic image generation powered by Seedream's advanced AI model\n- Image Models > Z-image [Z-Image](https://docs.kie.ai/market/z-image/z-image.md): Image generation by z-image\n- Image Models > Google [Google - Nano Banana 2](https://docs.kie.ai/market/google/nanobanana2.md): Image generation by Nano Banana 2\n- Image Models > Google [Google - imagen4-fast](https://docs.kie.ai/market/google/imagen4-fast.md): Image generation by Google imagen4-fast\n- Image Models > Google [Google - imagen4-ultra](https://docs.kie.ai/market/google/imagen4-ultra.md): Image generation by Google imagen4-ultra\n- Image Models > Google [Google - imagen4](https://docs.kie.ai/market/google/imagen4.md): Image generation by Google imagen4\n- Image Models > Google [Google - Nano Banana Edit](https://docs.kie.ai/market/google/nano-banana-edit.md): Image editing using Google's Nano Banana Edit model\n- Image Models > Google [Google - Nano Banana](https://docs.kie.ai/market/google/nano-banana.md): Content generation using google/nano-banana\n- Image Models > Google [Google - Nano Banana Pro](https://docs.kie.ai/market/google/pro-image-to-image.md): Image generation using Google's Pro Image to Image model\n- Image Models > Flux-2 [Flux-2 - Pro Image to Image](https://docs.kie.ai/market/flux2/pro-image-to-image.md): Image generation by flux-2/pro-image-to-image\n- Image Models > Flux-2 [Flux-2 - Pro Text to Image](https://docs.kie.ai/market/flux2/pro-text-to-image.md): High-quality photorealistic image generation powered by Flux-2's advanced AI model\n- Image Models > Flux-2 [Flux-2 - Image to Image](https://docs.kie.ai/market/flux2/flex-image-to-image.md): Image generation by flux-2/flex-image-to-image\n- Image Models > Flux-2 [Flux-2 - Text to Image](https://docs.kie.ai/market/flux2/flex-text-to-image.md): High-quality photorealistic image generation powered by Flux-2's advanced AI model\n- Image Models > Grok Imagine [Grok Imagine - Text to Image](https://docs.kie.ai/market/grok-imagine/text-to-image.md): ## Query Task Status\n- Image Models > Grok Imagine [Grok Imagine - image to image](https://docs.kie.ai/market/grok-imagine/image-to-image.md): Content generation using grok-imagine/image-to-image\n- Image Models > GPT Image [GPT Image-1.5 - Text to Image](https://docs.kie.ai/market/gpt-image/1-5-text-to-image.md): ## Overview\n- Image Models > GPT Image [GPT Image-1.5 - Image to Image](https://docs.kie.ai/market/gpt-image/1-5-image-to-image.md): ## Overview\n- Image Models > GPT Image [GPT Image-2 - Text to Image](https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md): ## Create Task\n- Image Models > GPT Image [GPT Image 2 - Image To Image](https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md): ## Create Task\n- Image Models > Topaz [Topaz - Image Upscale](https://docs.kie.ai/market/topaz/image-upscale.md): Enhance image resolution and quality using advanced AI upscaling powered by Topaz\n- Image Models > Recraft [Recraft - Remove Background](https://docs.kie.ai/market/recraft/remove-background.md): remove background by recraft/remove-background\n- Image Models > Recraft [Recraft - Crisp Upscale](https://docs.kie.ai/market/recraft/crisp-upscale.md): Enhance image resolution and quality using advanced AI upscaling powered by Recraft\n- Image Models > Ideogram [Ideogram - Character Edit](https://docs.kie.ai/market/ideogram/character-edit.md): Image generation by ideogram/character-edit\n- Image Models > Ideogram [Ideogram - Character Remix](https://docs.kie.ai/market/ideogram/character-remix.md): Image generation by ideogram/character-remix\n- Image Models > Ideogram [Ideogram - Character](https://docs.kie.ai/market/ideogram/character.md): Image generation by ideogram/character\n- Image Models > Ideogram [Ideogram V3 Text to Image](https://docs.kie.ai/market/ideogram/v3-text-to-image.md): Image generation by ideogram/v3-text-to-image\n- Image Models > Ideogram [Ideogram V3 Edit](https://docs.kie.ai/market/ideogram/v3-edit.md): Image generation by ideogram/v3-edit\n- Image Models > Ideogram [Ideogram V3 Remix](https://docs.kie.ai/market/ideogram/v3-remix.md): Image generation by ideogram/v3-remix\n- Image Models > Qwen [Qwen - Text to Image](https://docs.kie.ai/market/qwen/text-to-image.md): High-quality photorealistic image generation powered by Qwen's advanced AI model\n- Image Models > Qwen [Qwen - Image to Image](https://docs.kie.ai/market/qwen/image-to-image.md): Image generation by Qwen's advanced AI model\n- Image Models > Qwen [Qwen - Image Edit](https://docs.kie.ai/market/qwen/image-edit.md): Image generation by qwen/image-edit\n- Image Models > Qwen [Qwen2 - Image Edit](https://docs.kie.ai/market/qwen2/image-edit.md): Image generation by qwen2/image-edit\n- Image Models > Qwen [Qwen2 - Text To Image](https://docs.kie.ai/market/qwen2/text-to-image.md): Image generation by qwen2/text-to-image\n- Image Models > 4o Image API [Generate 4o Image](https://docs.kie.ai/4o-image-api/generate-4-o-image.md): Create a new 4o Image generation task. Generated images are stored for 14 days, after which they expire.\n- Image Models > 4o Image API [Get 4o Image Details](https://docs.kie.ai/4o-image-api/get-4-o-image-details.md): Query 4o Image generation task details using taskId, including generation status, parameters and results.\n- Image Models > 4o Image API [Get Direct Download URL](https://docs.kie.ai/4o-image-api/get-4-o-image-download-url.md): Convert an image URL to a direct download URL. This helps solve cross-domain issues when downloading images directly. The returned URL is valid for 20 minutes.\n- Image Models > Flux Kontext API [Generate or Edit Image](https://docs.kie.ai/flux-kontext-api/generate-or-edit-image.md): Create a new image generation or editing task using the Flux Kontext AI model.\n- Image Models > Flux Kontext API [Get Image Details](https://docs.kie.ai/flux-kontext-api/get-image-details.md): Query the status and results of an image generation or editing task.\n- Image Models > Wan [Wan 2.7 Image](https://docs.kie.ai/market/wan/2-7-image.md): Based on wan/2-7-image, image generation and editing are achieved. \n- Image Models > Wan [Wan 2.7 Image Pro](https://docs.kie.ai/market/wan/2-7-image-pro.md): Based on wan/2-7-image-pro, image generation and editing are achieved. \n- Video Models > Grok Imagine [Grok Imagine Text to Video](https://docs.kie.ai/market/grok-imagine/text-to-video.md): ## Query Task Status\n- Video Models > Grok Imagine [Grok Imagine Image to Video](https://docs.kie.ai/market/grok-imagine/image-to-video.md): ## Query Task Status\n- Video Models > Grok Imagine [Grok Imagine - Video Upscale](https://docs.kie.ai/market/grok-imagine/upscale.md): \n- Video Models > Grok Imagine [Grok Imagine - Video Extend](https://docs.kie.ai/market/grok-imagine/extend.md): \n- Video Models > Kling [Kling 2.6 Text to Video](https://docs.kie.ai/market/kling/text-to-video.md): ## Query Task Status\n- Video Models > Kling [Kling 2.6 Image to Video](https://docs.kie.ai/market/kling/image-to-video.md): ## Query Task Status\n- Video Models > Kling [Kling - V2.5 Turbo Image to Video Pro](https://docs.kie.ai/market/kling/v25-turbo-image-to-video-pro.md): ## Query Task Status\n- Video Models > Kling [Kling - V2.5 Turbo Text to Video Pro](https://docs.kie.ai/market/kling/v25-turbo-text-to-video-pro.md): ## Query Task Status\n- Video Models > Kling [Kling AI Avatar Standard](https://docs.kie.ai/market/kling/ai-avatar-standard.md): ## Query Task Status\n- Video Models > Kling [Kling AI Avatar Pro](https://docs.kie.ai/market/kling/ai-avatar-pro.md): ## Query Task Status\n- Video Models > Kling [Kling V2.1 Master Image to Video](https://docs.kie.ai/market/kling/v2-1-master-image-to-video.md): ## Query Task Status\n- Video Models > Kling [Kling V2.1 Master Text to Video](https://docs.kie.ai/market/kling/v2-1-master-text-to-video.md): ## Query Task Status\n- Video Models > Kling [Kling V2.1 Pro](https://docs.kie.ai/market/kling/v2-1-pro.md): ## Query Task Status\n- Video Models > Kling [Kling V2.1 Standard](https://docs.kie.ai/market/kling/v2-1-standard.md): ## Query Task Status\n- Video Models > Kling [Kling 2.6 motion-control](https://docs.kie.ai/market/kling/motion-control.md): ## File Upload Requirements\n- Video Models > Kling [Kling-3.0 motion-control](https://docs.kie.ai/market/kling/motion-control-v3.md): ## File Upload Requirements\n- Video Models > Kling [Kling 3.0](https://docs.kie.ai/market/kling/kling-3-0.md): Generate high-quality videos with advanced multi-shot capabilities and element references using Kling 3.0 AI \n- Video Models > Bytedance [bytedance-seedance-2](https://docs.kie.ai/market/bytedance/seedance-2.md): ## Query Task Status\n- Video Models > Bytedance [Bytedance Seedance 2.0 Fast](https://docs.kie.ai/market/bytedance/seedance-2-fast.md): ## Query Task Status\n- Video Models > Bytedance [Bytedance Seedance 1.5 Pro](https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md): ## Query Task Status\n- Video Models > Bytedance [Bytedance V1 Pro Fast Image to Video](https://docs.kie.ai/market/bytedance/v1-pro-fast-image-to-video.md): ## Query Task Status\n- Video Models > Bytedance [Bytedance V1 Pro Image to Video](https://docs.kie.ai/market/bytedance/v1-pro-image-to-video.md): Content generation using bytedance/v1-pro-image-to-video\n- Video Models > Bytedance [Bytedance - V1 Pro Text to Video](https://docs.kie.ai/market/bytedance/v1-pro-text-to-video.md): Content generation using bytedance/v1-pro-text-to-video\n- Video Models > Bytedance [Bytedance - V1 Lite Image to Video](https://docs.kie.ai/market/bytedance/v1-lite-image-to-video.md): Content generation using bytedance/v1-lite-image-to-video\n- Video Models > Bytedance [Bytedance - V1 Lite Text to Video](https://docs.kie.ai/market/bytedance/v1-lite-text-to-video.md): Content generation using bytedance/v1-lite-text-to-video\n- Video Models > Hailuo [Hailuo 2.3 Pro Image to Video](https://docs.kie.ai/market/hailuo/2-3-image-to-video-pro.md): Content generation using hailuo/2-3-image-to-video-pro\n- Video Models > Hailuo [Hailuo 2.3 Standard Image to Video](https://docs.kie.ai/market/hailuo/2-3-image-to-video-standard.md): Content generation using hailuo/2-3-image-to-video-standard\n- Video Models > Hailuo [Hailuo Pro Text to Video](https://docs.kie.ai/market/hailuo/02-text-to-video-pro.md): Content generation using hailuo/02-text-to-video-pro\n- Video Models > Hailuo [ Hailuo Pro Image to Video](https://docs.kie.ai/market/hailuo/02-image-to-video-pro.md): Content generation using hailuo/02-image-to-video-pro\n- Video Models > Hailuo [Hailuo Standard Text to Video](https://docs.kie.ai/market/hailuo/02-text-to-video-standard.md): Content generation using hailuo/02-text-to-video-standard\n- Video Models > Hailuo [Hailuo Standard Image to Video](https://docs.kie.ai/market/hailuo/02-image-to-video-standard.md): Content generation using hailuo/02-image-to-video-standard\n- Video Models > Wan [Wan - Image to Video](https://docs.kie.ai/market/wan/2-2-a14b-image-to-video-turbo.md): Transform images into dynamic videos powered by Wan's advanced AI model\n- Video Models > Wan [Wan - 2.2 A14B Speech to Video Turbo](https://docs.kie.ai/market/wan/2-2-a14b-speech-to-video-turbo.md): Generate videos using Wan's advanced AI model\n- Video Models > Wan [Wan - Text to Video](https://docs.kie.ai/market/wan/2-2-a14b-text-to-video-turbo.md): High-quality video generation from text descriptions powered by Wan's advanced AI model\n- Video Models > Wan [Wan - Animate Move](https://docs.kie.ai/market/wan/2-2-animate-move.md): Content generation using Wan's advanced AI model\n- Video Models > Wan [Wan - Animate Replace](https://docs.kie.ai/market/wan/2-2-animate-replace.md): Content generation using Wan's advanced AI model\n- Video Models > Wan [Wan 2.6 - Image to Video](https://docs.kie.ai/market/wan/2-6-image-to-video.md): Transform static images into dynamic videos powered by Wan's advanced AI model\n- Video Models > Wan [Wan 2.6 - Text to Video](https://docs.kie.ai/market/wan/2-6-text-to-video.md): High-quality video generation from text descriptions powered by Wan's advanced AI model\n- Video Models > Wan [Wan 2.6 - Video to Video](https://docs.kie.ai/market/wan/2-6-video-to-video.md): Transform existing videos with new prompts using Wan's advanced AI model\n- Video Models > Wan [Wan - 2.6-flash-image-to-video](https://docs.kie.ai/market/wan/2-6-flash-image-to-video.md): > Transform images into dynamic videos powered by Wan's advanced AI model\n- Video Models > Wan [Wan - 2-6-flash-video-to-video](https://docs.kie.ai/market/wan/2-6-flash-video-to-video.md): > Content generation using wan/2-6-flash-video-to-video\n- Video Models > Wan [Wan 2.5 - Image to Video](https://docs.kie.ai/market/wan/2-5-image-to-video.md): Video generation by wan/2-5-image-to-video\n- Video Models > Wan [Wan 2.5 - Text to Video](https://docs.kie.ai/market/wan/2-5-text-to-video.md): Video generation by wan/2-5-text-to-video\n- Video Models > Wan [Wan 2.7 - Text to Video](https://docs.kie.ai/market/wan/2-7-text-to-video.md): ## Create Task\n- Video Models > Wan [Wan 2.7 - Image to Video](https://docs.kie.ai/market/wan/2-7-image-to-video.md): ## Create Task\n- Video Models > Wan [Wan 2.7 - Video Edit](https://docs.kie.ai/market/wan/2-7-videoedit.md): ## Create Task\n- Video Models > Wan [Wan 2.7 - Reference to Video](https://docs.kie.ai/market/wan/2-7-r2v.md): ## Create Task\n- Video Models > Topaz [Topaz - Video Upscale](https://docs.kie.ai/market/topaz/video-upscale.md): Enhance video resolution and quality using advanced AI upscaling powered by Topaz\n- Video Models > Infinitalk [Infinitalk - From Audio](https://docs.kie.ai/market/infinitalk/from-audio.md): Content generation using infinitalk/from-audio\n- Video Models > Runway API > Aleph [Generate Aleph Video](https://docs.kie.ai/runway-api/generate-aleph-video.md): > Using Runway Aleph model for video-to-video conversion to create dynamic AI-generated videos\n- Video Models > Runway API > Aleph [Get Aleph Video Details](https://docs.kie.ai/runway-api/get-aleph-video-details.md): > Retrieving comprehensive information about Runway Alpeh video generation tasks\n- Video Models > Runway API [Generate AI Video](https://docs.kie.ai/runway-api/generate-ai-video.md): Create dynamic AI-generated videos from text prompts or image references.\n- Video Models > Runway API [Get AI Video Details](https://docs.kie.ai/runway-api/get-ai-video-details.md): Retrieve comprehensive information about an AI-generated video task.\n- Video Models > Runway API [Extend AI Video](https://docs.kie.ai/runway-api/extend-ai-video.md): Extend existing AI-generated videos to create longer sequences.\n- Video Models > HappyHorse [happyhorse-text-to-video](https://docs.kie.ai/market/happyhorse/text-to-video.md): ## Query Task Status\n- Video Models > HappyHorse [happyhorse-image-to-video](https://docs.kie.ai/market/happyhorse/image-to-video.md): ## Query Task Status\n- Video Models > HappyHorse [happyhorse/reference-to-video](https://docs.kie.ai/market/happyhorse/reference-to-video.md): ## Query Task Status\n- Video Models > HappyHorse [happyhorse/video-edit](https://docs.kie.ai/market/happyhorse/video-edit.md): ## Query Task Status\n- Video Models > Gemini Omni [Gemini Omni Video](https://docs.kie.ai/market/gemini-omni-video.md): ## Create Task\n- Video Models > Gemini Omni [Gemini Omni Audio](https://docs.kie.ai/market/gemini-omni-audio.md): ## Create Task\n- Video Models > Gemini Omni [Gemini Omni Character](https://docs.kie.ai/market/gemini-omni-character.md): - `image_urls` supports only `1` image, and each image must be no larger than `20MB`\n- Music Models > ElevenLabs [elevenlabs/audio-isolation](https://docs.kie.ai/market/elevenlabs/audio-isolation.md): Content generation using elevenlabs/audio-isolation\n- Music Models > ElevenLabs [elevenlabs/text-to-dialogue-v3](https://docs.kie.ai/market/elevenlabs/text-to-dialogue-v3.md): Dialogue text-to-speech generation using elevenlabs/text-to-dialogue-v3\n- Music Models > ElevenLabs [elevenlabs/text-to-speech-multilingual-v2](https://docs.kie.ai/market/elevenlabs/text-to-speech-multilingual-v2.md): Content generation using elevenlabs/text-to-speech-multilingual-v2\n- Music Models > ElevenLabs [elevenlabs/text-to-speech-turbo-2-5](https://docs.kie.ai/market/elevenlabs/text-to-speech-turbo-2-5.md): Content generation using elevenlabs/text-to-speech-turbo-2-5\n- Chat Models > GPT [GPT 5.2](https://docs.kie.ai/market/chat/gpt-5-2.md): > GPT-5-2 API is a next-generation multimodal model with exceptional reasoning capabilities, supporting text and image inputs with Web Search grounding and adjustable reasoning effort.\n- Chat Models > GPT [GPT 5.4 (response)](https://docs.kie.ai/market/chat/gpt-5-4.md): > GPT-5-4 is a multimodal chat-completions style endpoint that accepts structured input arrays, supports adjustable reasoning effort, and integrates web search or function calling tools.\n- Chat Models > GPT [GPT 5.5 (response)](https://docs.kie.ai/market/chat/gpt-5-5.md): > GPT-5.5 is OpenAI’s advanced reasoning model for agentic coding, knowledge work, scientific research, and complex multi-step task execution.\n- Chat Models > Claude [Claude Opus 4.7](https://docs.kie.ai/market/claude/claude-opus-4-7.md): ### Streaming Support\n- Chat Models > Claude [Claude Opus 4.8](https://docs.kie.ai/market/claude/claude-opus-4-8.md): ### Streaming Support\n- Chat Models > Claude [Claude Haiku 4.5](https://docs.kie.ai/market/claude/claude-haiku-4-5.md): ### Streaming Support\n- Chat Models > Claude [Claude Opus 4.5](https://docs.kie.ai/market/claude/claude-opus-4-5.md): ### Streaming Support\n- Chat Models > Claude [Claude Opus 4.6](https://docs.kie.ai/market/claude/claude-opus-4-6.md): ### Streaming Support\n- Chat Models > Claude [Claude Sonnet 4.5](https://docs.kie.ai/market/claude/claude-sonnet-4-5.md): ### Streaming Support\n- Chat Models > Claude [Claude Sonnet 4.6](https://docs.kie.ai/market/claude/claude-sonnet-4-6.md): ### Streaming Support\n- Chat Models > Codex [GPT Codex](https://docs.kie.ai/market/codex/gpt-codex.md): > GPT Codex API is a multimodal chat-completions style endpoint that accepts structured input arrays, supports adjustable reasoning effort, and integrates web search or function calling tools.\n- Chat Models > Gemini [Gemini 2.5 Pro (openai)](https://docs.kie.ai/market/gemini/gemini-2-5-pro.md): ### Streaming Support\n- Chat Models > Gemini [Gemini 3 Pro (openai)](https://docs.kie.ai/market/gemini/gemini-3-pro.md): ### Streaming Support\n- Chat Models > Gemini [Gemini 3.1 Pro (openai)](https://docs.kie.ai/market/gemini/gemini-3-1-pro.md): ### Streaming Support\n- Chat Models > Gemini [Gemini 2.5 Flash (openai)](https://docs.kie.ai/market/gemini/gemini-2-5-flash.md): ### Streaming Support\n- Chat Models > Gemini [Gemini 3 Flash (openai)](https://docs.kie.ai/market/gemini/gemini-3-flash.md): ### Streaming Support\n- Chat Models > Gemini [Gemini 3.5 Flash](https://docs.kie.ai/market/gemini/gemini-3-5-flash.md): ### Streaming Support\n- Chat Models > Gemini [Gemini 3 Flash](https://docs.kie.ai/market/gemini/gemini-3-flash-v1beta.md): ### Streaming Support\n- Suno API > Music Generation [Generate Music](https://docs.kie.ai/suno-api/generate-music.md): Generate music with or without lyrics using AI models.\n- Suno API > Music Generation [Extend Music](https://docs.kie.ai/suno-api/extend-music.md): Extend or modify existing music by creating a continuation based on a source audio track.\n- Suno API > Music Generation [Upload And Cover Audio](https://docs.kie.ai/suno-api/upload-and-cover-audio.md): > This API creates a cover version of an audio track by transforming it into a new style while retaining its core melody. It incorporates Suno's upload capability, enabling users to upload an audio file for processing. The expected result is a refreshed audio track with a new style, keeping the original melody intact.\n- Suno API > Music Generation [Upload And Extend Audio](https://docs.kie.ai/suno-api/upload-and-extend-audio.md): > This API extends audio tracks while preserving their original style. It includes Suno's upload functionality, allowing users to upload audio files for processing. The expected result is a longer track that seamlessly continues the input style.\n- Suno API > Music Generation [Add Instrumental to Music](https://docs.kie.ai/suno-api/add-instrumental.md): Generate instrumental accompaniment based on uploaded audio files. This interface allows you to upload audio files and add instrumental tracks to them.\n- Suno API > Music Generation [Add Vocals to Music](https://docs.kie.ai/suno-api/add-vocals.md): Generate music with vocals based on uploaded audio files. This interface allows you to upload audio files and add vocal singing to them.\n- Suno API > Music Generation [Get Music Task Details](https://docs.kie.ai/suno-api/get-music-details.md): Retrieve detailed information about a music generation task.\n- Suno API > Music Generation [Get Timestamped Lyrics](https://docs.kie.ai/suno-api/get-timestamped-lyrics.md): Retrieve synchronized lyrics with precise timestamps for music tracks.\n- Suno API > Music Generation [Boost Music Style](https://docs.kie.ai/suno-api/boost-music-style.md): \n- Suno API > Music Generation [Generate Music Cover](https://docs.kie.ai/suno-api/cover-suno.md): Generate personalized cover images based on original music tasks.\n- Suno API > Music Generation [Get Cover Generation Details](https://docs.kie.ai/suno-api/get-cover-suno-details.md): Get detailed information about Cover generation tasks.\n- Suno API > Music Generation [Replace Music Section](https://docs.kie.ai/suno-api/replace-section.md): > Replace a specific time segment within existing music.\n- Suno API > Music Generation [Generate Persona](https://docs.kie.ai/suno-api/generate-persona.md): \n- Suno API > Music Generation [Generate Mashup Music](https://docs.kie.ai/suno-api/generate-mashup.md): > Create remix music usin",
+      "markdown_truncated": true
+    },
+    "toolCallId": "call-6"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 6,
+    "text": "I’ve set the vendor identity to Kie with bearer auth. Since the docs path is stale, I’m probing likely documentation support files for a cached or indexed copy before I add any parameter evidence."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "fetch_raw_docs",
+    "args": {
+      "url": "https://docs.kie.ai/market/kling/kling-3-0.md"
+    },
+    "toolCallId": "call-7"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "fetch_raw_docs",
+    "result": {
+      "url": "https://docs.kie.ai/market/kling/kling-3-0.md",
+      "contentType": "text/markdown; charset=utf-8",
+      "tables": [],
+      "curl_examples": [],
+      "code_blocks": [],
+      "markdown_excerpt": "# Kling 3.0\n\n## OpenAPI Specification\n\n```yaml\nopenapi: 3.0.1\ninfo:\n title: ''\n description: ''\n version: 1.0.0\npaths:\n /api/v1/jobs/createTask:\n post:\n summary: Kling 3.0\n deprecated: false\n description: >-\n Generate high-quality videos with advanced multi-shot capabilities and\n element references using Kling 3.0 AI \n\n ## Overview\n\n Kling 3.0 is an advanced video generation model that supports both\n single-shot and multi-shot video creation with element references. It\n offers two generation modes (standard and pro) with different resolution\n options, and supports sound effects for enhanced video output.\n\n ## Key Features\n\n - **Multiple Generation Modes**: Choose between `std` (standard\n resolution), `pro` (higher resolution), and `4K` (ultra-high resolution)\n modes\n\n - **Multi-Shot Support**: Create videos with multiple shots, each with\n its own prompt and duration\n\n - **Element References**: Reference images in your prompts using\n `@element_name` syntax\n\n - **Sound Effects**: Optional sound effects to enhance video output\n\n - **Flexible Aspect Ratios**: Support for 16:9, 9:16, and 1:1 aspect\n ratios\n\n - **Configurable Duration**: Video duration from 3 to 15 seconds\n\n ## Resolution Mappings\n\n The resolution depends on both the `mode` and `aspect_ratio` parameters:\n\n \n\n \n\n | Aspect Ratio | Resolution |\n\n |--------------|------------|\n\n | 16:9 | 1280×720 |\n\n | 9:16 | 720×1280 |\n\n | 1:1 | 720×720 |\n\n \n\n \n\n | Aspect Ratio | Resolution |\n\n |--------------|------------|\n\n | 16:9 | 1920×1080 |\n\n | 9:16 | 1080×1920 |\n\n | 1:1 | 1080×1080 |\n\n \n\n \n\n | Aspect Ratio | Resolution |\n\n |--------------|------------|\n\n | 16:9 | 3840×2160 |\n\n | 9:16 | 2160×3840 |\n\n | 1:1 | 2160×2160 |\n\n \n\n \n\n :::info[]\n\n 4K mode provides higher resolution output but may take longer to\n generate and consume more credits.\n\n :::\n\n ## Single-Shot vs Multi-Shot Mode\n\n ### Single-Shot Mode (`multi_shots: false`)\n\n - Uses the main `prompt` field for video generation\n\n - Supports first and last frame images via `image_urls`\n\n - Sound effects are optional\n\n ### Multi-Shot Mode (`multi_shots: true`)\n\n - Uses `multi_prompt` array to define multiple shots\n\n - Each shot has its own prompt and duration (1-12 seconds)\n\n - Only supports first frame image (via `image_urls[0]`)\n\n - Sound effects default to enabled\n\n - The maximum number of characters per shot is 500\n\n ## Aspect Ratio Auto-Adaptation\n\n When you provide `image_urls` (first and/or last frame images), the\n `aspect_ratio` parameter becomes optional. The system will automatically\n adapt the aspect ratio based on the uploaded images, so you don't need\n to specify it manually.\n\n :::tip[]\n\n If you upload reference images, you can omit the `aspect_ratio`\n parameter and let the system automatically match the aspect ratio of\n your images.\n\n :::\n\n ## Element References\n\n You can reference images or videos in your prompts using the\n `@element_name` syntax. Define elements in the `kling_elements` array:\n\n - **Image Elements**: 2-4 image URLs (JPG/PNG, max 10MB each)\n\n :::tip[]\n\n Use descriptive element names and ensure the element name in\n `kling_elements` matches the name used in your prompt (without the @\n symbol).\n\n A single task can reference a maximum of 3 elements, and each `@element`\n will occupy 37 characters.\n\n :::\n\n ## File Upload Requirements\n\n Before using element references, upload your image files:\n\n ### 1. Upload Files\n\n Use the File Upload API to upload your source images.\n\n :::info[File Upload API]\n\n Learn how to upload files and get file URLs: [File Upload API\n Quickstart](/file-upload-api/quickstart)\n\n :::\n\n ### 2. Get File URLs\n\n After upload, you'll receive file URLs that you can use in\n `element_input_urls` .\n\n :::caution[]\n\n - Image formats: JPG, PNG (max 10MB per file, 2-4 files per element)\n\n - Ensure file URLs are accessible and not expired\n\n :::\n\n ## Usage Examples\n\n ### Single-Shot Video with Element Reference\n\n ```json\n\n {\n \"model\": \"kling-3.0/video\",\n \"input\": {\n \"prompt\": \"In a bright rehearsal room, sunlight streams through the window@element_dog\",\n \"image_urls\": [\n \"https://static.aiquickdraw.com/tools/example/1764851002741_i0lEiI8I.png\"\n ],\n \"sound\": true,\n \"duration\": \"5\",\n \"aspect_ratio\": \"16:9\",\n \"mode\": \"pro\",\n \"multi_shots\": false,\n \"kling_elements\": [\n {\n \"name\": \"element_dog\",\n \"description\": \"dog\",\n \"element_input_urls\": [\n \"https://tempfileb.aiquickdraw.com/kieai/market/1770361808044_4RfUUJrI.jpeg\",\n \"https://tempfileb.aiquickdraw.com/kieai/market/1770361848336_ABQqRHBi.png\"\n ]\n }\n ]\n }\n }\n\n ```\n\n ### Multi-Shot Video\n\n ```json\n\n {\n \"model\": \"kling-3.0/video\",\n \"input\": {\n \"multi_shots\": true,\n \"image_urls\": [\n \"https://static.aiquickdraw.com/tools/example/1764851002741_i0lEiI8I.png\"\n ],\n \"duration\": \"5\",\n \"aspect_ratio\": \"16:9\",\n \"mode\": \"pro\",\n \"multi_prompt\": [\n {\n \"prompt\": \"a happy dog in running@element_cat\",\n \"duration\": 3\n },\n {\n \"prompt\": \"a happy dog play with a cat@element_dog\",\n \"duration\": 3\n }\n ],\n \"kling_elements\": [\n {\n \"name\": \"element_cat\",\n \"description\": \"cat\",\n \"element_input_urls\": [ \"https://tempfileb.aiquickdraw.com/kieai/market/1770361808044_4RfUUJrI.jpeg\", \"https://tempfileb.aiquickdraw.com/kieai/market/1770361848336_ABQqRHBi.png\"\n ]\n },\n {\n \"name\": \"element_dog\",\n \"description\": \"dog\",\n \"element_input_urls\": [ \"https://tempfileb.aiquickdraw.com/kieai/market/1770361808044_4RfUUJrI.jpeg\", \"https://tempfileb.aiquickdraw.com/kieai/market/1770361848336_ABQqRHBi.png\"\n ]\n }\n ]\n }\n }\n\n ```\n\n ## Query Task Status\n\n After submitting a task, use the unified query endpoint to check\n progress and retrieve results:\n\n :::tip[Get Task Details]\n\n Learn how to query task status and retrieve generation results: [Get\n Task Details](/market/common/get-task-detail)\n\n :::\n\n :::tip[]\n\n For production use, we recommend using the `callBackUrl` parameter to\n receive automatic notifications when generation completes, rather than\n polling the status endpoint.\n\n :::\n\n ## Best Practices\n\n - **Prompt Writing**: Be specific and descriptive in your prompts.\n Include details about motion, camera angles, and scene composition\n\n - **Element Usage**: Use high-quality reference images/videos for better\n results. Ensure elements match the style and theme of your video\n\n - **Duration Planning**: For multi-shot videos, plan your shot durations\n to match the total video duration\n\n - **Mode Selection**: Use `4K` mode for final output when quality is\n important, and `std` mode for faster iterations\n\n - **Sound Effects**: Enable sound effects for more immersive videos,\n especially for action or dynamic scenes\n\n ## Related Resources\n\n \n \n \n \n \n \n operationId: kling-3.0\n tags:\n - docs/en/Market/Video Models/Kling\n parameters: []\n requestBody:\n content:\n application/json:\n schema:\n type: object\n required:\n - model\n properties:\n model:\n type: string\n enum:\n - kling-3.0/video\n default: kling-3.0/video\n description: >-\n Generation mode. std has standard resolution, pro has higher\n resolution.\n examples:\n - kling-3.0/video\n callBackUrl:\n type: string\n format: uri\n description: >-\n The URL to receive generation task completion updates.\n Optional but recommended for production use.\n\n - System will POST task status and results to this URL when\n generation completes\n\n - Callback includes generated content URLs and task\n information\n\n - Your callback endpoint should accept POST requests with\n JSON payload containing results\n\n - Alternatively, use the Get Task Details endpoint to poll\n task status\n\n - To ensure callback security, see [Webhook Verification\n Guide](/common-api/webhook-verification) for signature\n verification implementation\n examples:\n - https://your-domain.com/api/callback\n input:\n type: object\n description: Input parameters for the generation task\n properties:\n prompt:\n type: string\n description: >-\n Video generation prompt. Takes effect when multi_shots\n is false.\n examples:\n - >-\n In a bright rehearsal room, sunlight streams through\n the window@element_dog\n image_urls:\n type: array\n items:\n type: string\n format: uri\n description: >-\n First and last frame image URLs. Required when elements\n are referenced in the prompt (using @element_name\n syntax). When multi_shots is false: if length is 2,\n index 0 is the first frame and index 1 is the last\n frame; if length is 1, the array item serves as the\n first frame. When multi_shots is true: only the first\n frame is supported.\n examples:\n - - >-\n https://static.aiquickdraw.com/tools/example/1764851002741_i0lEiI8I.png\n sound:\n type: boolean\n description: >-\n Whether to enable sound effects. true enables sound\n effects, false disables them. When multi_shots is true,\n this field defaults to true.\n default: false\n examples:\n - true\n duration:\n type: string\n description: >-\n Total video duration in seconds. Integer value, range: 3\n to 15.\n enum:\n - '3'\n - '4'\n - '5'\n - '6'\n - '7'\n - '8'\n - '9'\n - '10'\n - '11'\n - '12'\n - '13'\n - '14'\n - '15'\n default: '5'\n examples:\n - '5'\n aspect_ratio:\n type: string\n description: >-\n Video aspect ratio. Options: 16:9, 9:16, 1:1. When\n image_urls(first and last frame images) is provided,\n this parameter is optional and the aspect ratio will be\n automatically adapted based on the uploaded images.\n enum:\n - '16:9'\n - '9:16'\n - '1:1'\n default: '16:9'\n examples:\n - '16:9'\n mode:\n type: string\n description: >-\n Generation mode. std has standard resolution, pro has\n higher resolution, 4K has 4K resolution.\n\n Resolution mapping:\n\n - **std mode**: 16:9 (1280×720), 9:16 (720×1280), 1:1\n (720×720)\n\n - **pro mode**: 16:9 (1920×1080), 9:16 (1080×1920), 1:1\n (1080×1080)\n\n - **4K mode**: 16:9 (3840×2160), 9:16 (2160×3840), 1:1\n (2160×2160)\n enum:\n - std\n - pro\n - 4K\n default: pro\n examples:\n - pro\n x-apidog-enum:\n - value: std\n name: ''\n description: ''\n - value: pro\n name: ''\n description: ''\n - value: 4K\n name: ''\n description: ''\n multi_shots:\n type: boolean\n description: >-\n Whether to use multi-shot mode. true enables multi-shot\n mode, false enables single-shot mode.\n default: false\n examples:\n - false\n multi_prompt:\n type: array\n description: >-\n Shot prompts. Takes effect when multi_shots is true.\n Used to describe the text and duration of each shot.\n Supports up to 5 shots. Each shot duration is 1-12\n seconds. If you need to use elements, add them after the\n prompt.\n items:\n type: object\n properties:\n prompt:\n type: string\n description: >-\n Prompt text for this shot, a maximum of 500\n characters per shot. Each @element will occupy 37\n characters.\n examples:\n - a happy dog in running@element_cat\n maxLength: 500\n duration:\n type: integer\n description: 'Duration of this shot in seconds. Range: 1-12.'\n minimum: 1\n maximum: 12\n examples:\n - 3\n required:\n - prompt\n - duration\n x-apidog-orders:\n - prompt\n - duration\n x-apidog-ignore-properties: []\n examples:\n - - prompt: a happy dog in running@element_cat\n duration: 3\n - prompt: a happy dog play with a cat@element_dog\n duration: 3\n kling_elements:\n type: array\n items:\n type: object\n properties:\n name:\n type: string\n description: >-\n Element name, used in prompt with @ prefix (e.g.,\n @element_dog)\n examples:\n - element_dog\n description:\n type: string\n description: Element description\n examples:\n - dog\n element_input_urls:\n type: array\n items:\n type: string\n format: uri\n description: >-\n Image URLs for the element. 2-4 URLs required.\n Accepted formats: JPG, PNG. Maximum file size:\n 10MB per image.\n examples:\n - - >-\n https://tempfileb.aiquickdraw.com/kieai/market/1770361808044_4RfUUJrI.jpeg\n - >-\n https://tempfileb.aiquickdraw.com/kieai/market/1770361848336_ABQqRHBi.png\n required:\n - name\n - description\n x-apidog-orders:\n - name\n - description\n - element_input_urls\n x-apidog-ignore-properties: []\n description: >-\n Referenced elements. Detailed information about elements\n referenced in the prompt. A single task can reference a\n maximum of three elements.\n examples:\n - - name: element_dog\n description: dog\n element_input_urls:\n - >-\n https://tempfileb.aiquickdraw.com/kieai/market/1770361808044_4RfUUJrI.jpeg\n - >-\n https://tempfileb.aiquickdraw.com/kieai/market/1770361848336_ABQqRHBi.png\n maxItems: 3\n required:\n - prompt\n - sound\n - duration\n - aspect_ratio\n - mode\n - multi_shots\n - multi_prompt\n x-apidog-orders:\n - prompt\n - image_urls\n - sound\n - duration\n - aspect_ratio\n - mode\n - multi_shots\n - multi_prompt\n - kling_elements\n x-apidog-ignore-properties: []\n x-apidog-orders:\n - model\n - callBackUrl\n - input\n x-apidog-ignore-properties: []\n example:\n model: kling-3.0/video\n callBackUrl: https://your-domain.com/api/callback\n input:\n prompt: >-\n In a bright rehearsal room, sunlight streams through the\n window @element_dog\n image_urls:\n - >-\n https://static.aiquickdraw.com/tools/example/1764851002741_i0lEiI8I.png\n sound: true\n duration: '5'\n aspect_ratio: '16:9'\n mode: pro\n multi_shots: false\n multi_prompt:\n - prompt: a happy dog in running @element_cat\n duration: 3\n - prompt: a happy dog play with a cat @element_dog\n duration: 2\n kling_elements:\n - name: element_dog\n description: dog\n element_input_urls:\n - >-\n https://tempfileb.aiquickdraw.com/kieai/market/1770361808044_4RfUUJrI.jpeg\n - >-\n https://tempfileb.aiquickdraw.com/kieai/market/1770361848336_ABQqRHBi.png\n - name: element_cat\n description: cat\n element_input_urls:\n - https://your-cdn.com/element_image.jpg\n - https://your-cdn.com/element_image2.jpg\n responses:\n '200':\n description: Request successful\n content:\n application/json:\n schema:\n allOf:\n - type: object\n properties: {}\n - type: object\n properties:\n data:\n type: object\n properties:\n code:\n type: string\n description: >-\n Response status code\n\n - **200**: Success - Request has been processed\n successfully\n\n - **401**: Unauthorized - Authentication\n credentials are missing or invalid\n\n - **402**: Insufficient Credits - Account does not\n have enough credits to perform the operation\n\n - **404**: Not Found - The requested resource or\n endpoint does not exist\n\n - **422**: Validation Error - The request\n parameters failed validation checks\n\n - **429**: Rate Limited - Request limit has been\n exceeded for this resource\n\n - **433**: Request Limit - Sub-key Usage Exceeds\n Limit\n\n - **455**: Service Unavailable - System is\n currently undergoing maintenance\n\n - **500**: Server Error - An unexpected error\n occurred while processing the request\n\n - **501**: Generation Failed - Content generation\n task failed\n\n - **505**: Feature Disabled - The requested\n feature is currently disabled\n msg:\n type: string\n description: Response message, error description when failed\n taskId:\n type: string\n description: >-\n Task ID, can be used with Get Task Details\n endpoint to query task status\n examples:\n - task_kling-3.0_1765187774173\n x-apidog-orders:\n - code\n - msg\n - taskId\n required:\n - code\n - msg\n x-apidog-ignore-properties: []\n x-apidog-orders:\n - data\n x-apidog-ignore-properties: []\n example:\n code: 200\n msg: success\n data:\n taskId: task_kling-3.0_1765187774173\n headers: {}\n x-apidog-name: ''\n security:\n - BearerAuth: []\n x-apidog:\n schemeGroups:\n - id: kn8M4YUlc5i0A0179ezwx\n schemeIds:\n - BearerAuth\n required: true\n use:\n id: kn8M4YUlc5i0A0179ezwx\n scopes:\n kn8M4YUlc5i0A0179ezwx:\n BearerAuth: []\n x-apidog-folder: docs/en/Market/Video Models/Kling\n x-apidog-status: released\n x-run-in-apidog: https://app.apidog.com/web/project/1184766/apis/api-28506394-run\ncomponents:\n schemas: {}\n securitySchemes:\n BearerAuth:\n type: bearer\n scheme: bearer\n bearerFormat: API Key\n description: |-\n 所有 API 都需要通过 Bearer Token 进行身份验证。\n\n 获取 API Key：\n 1. 访问 [API Key 管理页面](https://kie.ai/api-key) 获取您的 API Key\n\n 使用方法：\n 在请求头中添加：\n Authorization: Bearer YOUR_API_KEY\n\n 注意事项：\n - 请妥善保管您的 API Key，切勿泄露给他人\n - 若怀疑 API Key 泄露，请立即在管理页面重置\n BearerAuth1:\n type: bearer\n scheme: bearer\n bearerFormat: API Key\n description: |-\n 所有 API 都需要通过 Bearer Token 进行身份验证。\n\n 获取 API Key：\n 1. 访问 [API Key 管理页面](https://kie.ai/api-key) 获取您的 API Key\n\n 使用方法：\n 在请求头中添加：\n Authorization: Bearer YOUR_API_KEY\n\n 注意事项：\n - 请妥善保管您的 API Key，切勿泄露给他人\n - 若怀疑 API Key 泄露，请立即在管理页面重置\nservers:\n - url: https://api.kie.ai\n description: 正式环境\nsecurity:\n - BearerAuth: []\n x-apidog:\n schemeGroups:\n - id: kn8M4YUlc5i0A0179ezwx\n schemeIds:\n - BearerAuth\n required: true\n use:\n id: kn8M4YUlc5i0A0179ezwx\n scopes:\n kn8M4YUlc5i0A0179ezwx:\n BearerAuth: []\n\n```",
+      "markdown_truncated": false
+    },
+    "toolCallId": "call-7"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 7,
+    "text": "The site’s `llms.txt` index has the live entry: `market/kling/kling-3-0.md`. I’ve got a real target now, and I’m fetching that page for the actual fields and request/response mapping."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "fetch_raw_docs",
+    "args": {
+      "url": "https://docs.kie.ai/market/common/get-task-detail.md"
+    },
+    "toolCallId": "call-8"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "fetch_raw_docs",
+    "result": {
+      "url": "https://docs.kie.ai/market/common/get-task-detail.md",
+      "contentType": "text/markdown; charset=utf-8",
+      "tables": [],
+      "curl_examples": [],
+      "code_blocks": [],
+      "markdown_excerpt": "# Get Task Details\n\n## OpenAPI Specification\n\n```yaml\nopenapi: 3.0.1\ninfo:\n title: ''\n description: ''\n version: 1.0.0\npaths:\n /api/v1/jobs/recordInfo:\n get:\n summary: Get Task Details\n deprecated: false\n description: >-\n Query the status and results of any task created in the Market models.\n This is a unified query interface that works with all models under the\n Market category.\n\n ### Supported Models\n\n This endpoint works with all Market models including:\n\n - **Seedream**: seedream, seedream-v4-text-to-image, etc.\n\n - **Grok Imagine**: text-to-image, image-to-video, text-to-video,\n upscale\n\n - **Kling**: text-to-video, image-to-video models\n\n - **ElevenLabs**: Audio processing models\n\n - **Claude**: Language models\n\n - **And any future models added to the Market**\n\n ### Task States\n\n - **waiting**: Task is queued and waiting to be processed\n\n - **queuing**: Task is in the processing queue\n\n - **generating**: Task is currently being processed\n\n - **success**: Task completed successfully\n\n - **fail**: Task failed\n\n ### Best Practices\n\n - **Use callbacks for production**: Include `callBackUrl` when creating\n tasks to avoid polling\n\n - **Implement exponential backoff**: Start with 2-3 second intervals,\n increase gradually\n\n - **Handle timeouts**: Stop polling after 10-15 minutes\n\n - **Download results immediately**: Generated content URLs typically\n expire after 24 hours\n operationId: get-task-details\n tags:\n - docs/en/Market\n parameters:\n - name: taskId\n in: query\n description: The unique task identifier returned when you created the task.\n required: true\n schema:\n type: string\n examples:\n - task_12345678\n responses:\n '200':\n description: Request successful\n content:\n application/json:\n schema:\n allOf:\n - &ref_0\n $ref: '#/components/schemas/ApiResponse'\n - type: object\n properties:\n data:\n type: object\n description: The task data object containing all task information\n properties:\n taskId:\n type: string\n description: The unique identifier for this task\n examples:\n - task_12345678\n model:\n type: string\n description: >-\n The model used for this task (e.g.,\n grok-imagine/text-to-image, seedream-4.0,\n kling-1.0)\n examples:\n - grok-imagine/text-to-image\n state:\n type: string\n description: Current state of the task\n enum:\n - waiting\n - queuing\n - generating\n - success\n - fail\n examples:\n - success\n param:\n type: string\n description: >-\n JSON string containing the original request\n parameters used to create the task\n examples:\n - >-\n {\"model\":\"grok-imagine/text-to-image\",\"callBackUrl\":\"https://your-domain.com/api/callback\",\"input\":{\"prompt\":\"Cinematic\n portrait...\",\"aspect_ratio\":\"3:2\"}}\n resultJson:\n type: string\n description: >-\n A JSON string containing the generated URL. Only\n exists if the status is \"success\". Depending on\n `outputMediaType`, the structure is: for\n images/media/videos, it's `{resultUrls: []}`; if\n Seedance 2 or Seedance 2 Fast is used and\n `return_last_frame` is enabled, the returned data\n is `{resultUrls: [], firstFrameUrl:[],\n lastFrameUrl:[]}`, and the text is `{resultObject:\n {}}`.\n examples:\n - >-\n {\"resultUrls\":[\"https://example.com/generated-content.jpg\"]}\n failCode:\n type: string\n description: >-\n Error code if the task failed. Empty string if\n successful\n examples:\n - ''\n failMsg:\n type: string\n description: >-\n Error message if the task failed. Empty string if\n successful\n examples:\n - ''\n costTime:\n type: integer\n format: int64\n description: >-\n Processing time in milliseconds (available when\n successful)\n examples:\n - 15000\n completeTime:\n type: integer\n format: int64\n description: >-\n Completion timestamp (Unix timestamp in\n milliseconds)\n examples:\n - 1698765432000\n createTime:\n type: integer\n format: int64\n description: >-\n Creation timestamp (Unix timestamp in\n milliseconds)\n examples:\n - 1698765400000\n updateTime:\n type: integer\n format: int64\n description: Update timestamp (Unix timestamp in milliseconds)\n examples:\n - 1698765432000\n progress:\n type: integer\n description: >-\n Generation progress (0-100). Only returned when\n model is sora2 or sora2 pro.\n minimum: 0\n maximum: 100\n examples:\n - 45\n creditsConsumed:\n type: number\n description: >-\n Credit consumption details for this task,\n indicating the actual number of credits deducted\n during task execution.\n x-apidog-orders:\n - taskId\n - model\n - state\n - param\n - resultJson\n - failCode\n - failMsg\n - costTime\n - completeTime\n - createTime\n - updateTime\n - progress\n - creditsConsumed\n x-apidog-ignore-properties: []\n x-apidog-orders:\n - data\n x-apidog-ignore-properties: []\n example:\n code: 505\n msg: success\n data:\n taskId: task_12345678\n model: grok-imagine/text-to-image\n state: success\n param: >-\n {\"model\":\"grok-imagine/text-to-image\",\"callBackUrl\":\"https://your-domain.com/api/callback\",\"input\":{\"prompt\":\"Cinematic\n portrait...\",\"aspect_ratio\":\"3:2\"}}\n resultJson: '{\"resultUrls\":[\"https://example.com/generated-content.jpg\"]}'\n failCode: ''\n failMsg: ''\n costTime: 15000\n completeTime: 1698765432000\n createTime: 1698765400000\n updateTime: 1698765432000\n progress: 45\n creditsConsumed: 50\n headers: {}\n x-apidog-name: ''\n '400':\n description: Bad Request - Missing or invalid taskId parameter\n content:\n application/json:\n schema: *ref_0\n example:\n code: 400\n msg: taskId parameter is required\n headers: {}\n x-apidog-name: ''\n '401':\n description: Unauthorized - Invalid or missing API key\n content:\n application/json:\n schema: *ref_0\n example:\n code: 401\n msg: Unauthorized\n headers: {}\n x-apidog-name: ''\n '404':\n description: Task Not Found - The specified taskId does not exist\n content:\n application/json:\n schema: *ref_0\n example:\n code: 404\n msg: Task not found\n headers: {}\n x-apidog-name: ''\n '422':\n description: ''\n content:\n application/json:\n schema:\n type: object\n properties:\n code:\n type: integer\n msg:\n type: string\n data:\n type: 'null'\n required:\n - code\n - msg\n - data\n x-apidog-orders:\n - code\n - msg\n - data\n x-apidog-ignore-properties: []\n example:\n code: 422\n msg: recordInfo is null\n data: null\n headers: {}\n x-apidog-name: ''\n '429':\n description: Rate Limited - Too many requests\n content:\n application/json:\n schema: *ref_0\n example:\n code: 429\n msg: Rate limit exceeded\n headers: {}\n x-apidog-name: ''\n '500':\n description: request failed\n content:\n application/json:\n schema:\n type: object\n properties:\n code:\n type: integer\n description: >-\n Response status code\n\n - **200**: Success - Request has been processed\n successfully\n\n - **401**: Unauthorized - Authentication credentials are\n missing or invalid\n\n - **402**: Insufficient Credits - Account does not have\n enough credits to perform the operation\n\n - **404**: Not Found - The requested resource or endpoint\n does not exist\n\n - **408**: Upstream is currently experiencing service\n issues. No result has been returned for over 10 minutes.\n\n - **422**: Validation Error - The request parameters\n failed validation checks\n\n - **429**: Rate Limited - Request limit has been exceeded\n for this resource\n\n - **455**: Service Unavailable - System is currently\n undergoing maintenance\n\n - **500**: Server Error - An unexpected error occurred\n while processing the request\n\n - **501**: Generation Failed - Content generation task\n failed\n\n - **505**: Feature Disabled - The requested feature is\n currently disabled\n msg:\n type: string\n description: Response message, error description when failed\n data:\n type: object\n properties: {}\n x-apidog-orders: []\n x-apidog-ignore-properties: []\n x-apidog-orders:\n - code\n - msg\n - data\n required:\n - code\n - msg\n - data\n x-apidog-ignore-properties: []\n example:\n code: 500\n msg: >-\n Server Error - An unexpected error occurred while processing\n the request\n data: null\n headers: {}\n x-apidog-name: 'Error '\n security:\n - BearerAuth: []\n x-apidog:\n schemeGroups:\n - id: kn8M4YUlc5i0A0179ezwx\n schemeIds:\n - BearerAuth\n required: true\n use:\n id: kn8M4YUlc5i0A0179ezwx\n scopes:\n kn8M4YUlc5i0A0179ezwx:\n BearerAuth: []\n x-apidog-folder: docs/en/Market\n x-apidog-status: released\n x-run-in-apidog: https://app.apidog.com/web/project/1184766/apis/api-28506351-run\ncomponents:\n schemas:\n ApiResponse:\n type: object\n properties:\n code:\n type: integer\n description: >-\n Response status code\n\n - **200**: Success - Request has been processed successfully\n\n - **401**: Unauthorized - Authentication credentials are missing or\n invalid\n\n - **402**: Insufficient Credits - Account does not have enough\n credits to perform the operation\n\n - **404**: Not Found - The requested resource or endpoint does not\n exist\n\n - **422**: Validation Error - The request parameters failed\n validation checks\n\n - **429**: Rate Limited - Request limit has been exceeded for this\n resource\n\n - **433**: Request Limit - Sub-key Usage Exceeds Limit\n\n - **455**: Service Unavailable - System is currently undergoing\n maintenance\n\n - **500**: Server Error - An unexpected error occurred while\n processing the request\n\n - **501**: Generation Failed - Content generation task failed\n\n - **505**: Feature Disabled - The requested feature is currently\n disabled\n enum:\n - 200\n - 401\n - 402\n - 404\n - 422\n - 429\n - 433\n - 455\n - 500\n - 501\n - 505\n x-apidog-enum:\n - value: 200\n name: ''\n description: ''\n - value: 401\n name: ''\n description: ''\n - value: 402\n name: ''\n description: ''\n - value: 404\n name: ''\n description: ''\n - value: 422\n name: ''\n description: ''\n - value: 429\n name: ''\n description: ''\n - value: 433\n name: ''\n description: ''\n - value: 455\n name: ''\n description: ''\n - value: 500\n name: ''\n description: ''\n - value: 501\n name: ''\n description: ''\n - value: 505\n name: ''\n description: ''\n msg:\n type: string\n description: Response message, error description when failed\n examples:\n - success\n data:\n type: object\n properties:\n taskId:\n type: string\n description: >-\n Task ID, can be used with Get Task Details endpoint to query\n task status\n x-apidog-orders:\n - taskId\n required:\n - taskId\n x-apidog-ignore-properties: []\n x-apidog-orders:\n - code\n - msg\n - data\n title: response not with recordId\n required:\n - data\n x-apidog-ignore-properties: []\n x-apidog-folder: ''\n securitySchemes:\n BearerAuth:\n type: bearer\n scheme: bearer\n bearerFormat: API Key\n description: |-\n 所有 API 都需要通过 Bearer Token 进行身份验证。\n\n 获取 API Key：\n 1. 访问 [API Key 管理页面](https://kie.ai/api-key) 获取您的 API Key\n\n 使用方法：\n 在请求头中添加：\n Authorization: Bearer YOUR_API_KEY\n\n 注意事项：\n - 请妥善保管您的 API Key，切勿泄露给他人\n - 若怀疑 API Key 泄露，请立即在管理页面重置\n BearerAuth1:\n type: bearer\n scheme: bearer\n bearerFormat: API Key\n description: |-\n 所有 API 都需要通过 Bearer Token 进行身份验证。\n\n 获取 API Key：\n 1. 访问 [API Key 管理页面](https://kie.ai/api-key) 获取您的 API Key\n\n 使用方法：\n 在请求头中添加：\n Authorization: Bearer YOUR_API_KEY\n\n 注意事项：\n - 请妥善保管您的 API Key，切勿泄露给他人\n - 若怀疑 API Key 泄露，请立即在管理页面重置\nservers:\n - url: https://api.kie.ai\n description: 正式环境\nsecurity:\n - BearerAuth: []\n x-apidog:\n schemeGroups:\n - id: kn8M4YUlc5i0A0179ezwx\n schemeIds:\n - BearerAuth\n required: true\n use:\n id: kn8M4YUlc5i0A0179ezwx\n scopes:\n kn8M4YUlc5i0A0179ezwx:\n BearerAuth: []\n\n```",
+      "markdown_truncated": false
+    },
+    "toolCallId": "call-8"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 8,
+    "text": "The Kling 3.0 page is an OpenAPI markdown file. It shows the create endpoint, bearer auth, input fields, and that polling uses Kie’s common task detail endpoint, so I’m fetching that common endpoint for the result paths."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "set_fields",
+    "args": {
+      "fields": [
+        {
+          "key": "prompt",
+          "displayName": "Prompt",
+          "type": "text",
+          "options": [],
+          "default": "",
+          "evidence": {
+            "field": "prompt",
+            "evidence": "Video generation prompt. Takes effect when multi_shots is false.",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.prompt",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "image_urls",
+          "displayName": "Image URLs",
+          "type": "text",
+          "options": [],
+          "default": "",
+          "evidence": {
+            "field": "image_urls",
+            "evidence": "First and last frame image URLs. Required when elements are referenced in the prompt (using @element_name syntax).",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.image_urls",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "sound",
+          "displayName": "Sound Effects",
+          "type": "boolean",
+          "options": [],
+          "default": "false",
+          "evidence": {
+            "field": "sound",
+            "evidence": "Whether to enable sound effects. true enables sound effects, false disables them. When multi_shots is true, this field defaults to true.",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.sound",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "duration",
+          "displayName": "Duration",
+          "type": "select",
+          "options": [
+            {
+              "value": "3",
+              "label": "3 seconds"
+            },
+            {
+              "value": "4",
+              "label": "4 seconds"
+            },
+            {
+              "value": "5",
+              "label": "5 seconds"
+            },
+            {
+              "value": "6",
+              "label": "6 seconds"
+            },
+            {
+              "value": "7",
+              "label": "7 seconds"
+            },
+            {
+              "value": "8",
+              "label": "8 seconds"
+            },
+            {
+              "value": "9",
+              "label": "9 seconds"
+            },
+            {
+              "value": "10",
+              "label": "10 seconds"
+            },
+            {
+              "value": "11",
+              "label": "11 seconds"
+            },
+            {
+              "value": "12",
+              "label": "12 seconds"
+            },
+            {
+              "value": "13",
+              "label": "13 seconds"
+            },
+            {
+              "value": "14",
+              "label": "14 seconds"
+            },
+            {
+              "value": "15",
+              "label": "15 seconds"
+            }
+          ],
+          "default": "5",
+          "evidence": {
+            "field": "duration",
+            "evidence": "Total video duration in seconds. Integer value, range: 3 to 15.",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.duration",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "aspect_ratio",
+          "displayName": "Aspect Ratio",
+          "type": "select",
+          "options": [
+            {
+              "value": "16:9",
+              "label": "16:9"
+            },
+            {
+              "value": "9:16",
+              "label": "9:16"
+            },
+            {
+              "value": "1:1",
+              "label": "1:1"
+            }
+          ],
+          "default": "16:9",
+          "evidence": {
+            "field": "aspect_ratio",
+            "evidence": "Video aspect ratio. Options: 16:9, 9:16, 1:1. When image_urls(first and last frame images) is provided, this parameter is optional",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.aspect_ratio",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "mode",
+          "displayName": "Mode",
+          "type": "select",
+          "options": [
+            {
+              "value": "std",
+              "label": "Standard"
+            },
+            {
+              "value": "pro",
+              "label": "Pro"
+            },
+            {
+              "value": "4K",
+              "label": "4K"
+            }
+          ],
+          "default": "pro",
+          "evidence": {
+            "field": "mode",
+            "evidence": "Generation mode. std has standard resolution, pro has higher resolution, 4K has 4K resolution.",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.mode",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "multi_shots",
+          "displayName": "Multi-Shot",
+          "type": "boolean",
+          "options": [],
+          "default": "false",
+          "evidence": {
+            "field": "multi_shots",
+            "evidence": "Whether to use multi-shot mode. true enables multi-shot mode, false enables single-shot mode.",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.multi_shots",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "multi_prompt",
+          "displayName": "Multi-Shot Prompts JSON",
+          "type": "text",
+          "options": [],
+          "default": "",
+          "evidence": {
+            "field": "multi_prompt",
+            "evidence": "Shot prompts. Takes effect when multi_shots is true. Used to describe the text and duration of each shot. Supports up to 5 shots.",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.multi_prompt",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "kling_elements",
+          "displayName": "Kling Elements JSON",
+          "type": "text",
+          "options": [],
+          "default": "",
+          "evidence": {
+            "field": "kling_elements",
+            "evidence": "Referenced elements. Detailed information about elements referenced in the prompt. A single task can reference a maximum of three elements.",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.kling_elements",
+            "confidence": "high"
+          }
+        },
+        {
+          "key": "callBackUrl",
+          "displayName": "Callback URL",
+          "type": "text",
+          "options": [],
+          "default": "",
+          "evidence": {
+            "field": "callBackUrl",
+            "evidence": "The URL to receive generation task completion updates. Optional but recommended for production use.",
+            "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody callBackUrl",
+            "confidence": "high"
+          }
+        }
+      ]
+    },
+    "toolCallId": "call-9"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "set_fields",
+    "result": {
+      "ok": true,
+      "value": {
+        "added": [
+          "prompt",
+          "image_urls",
+          "sound",
+          "duration",
+          "aspect_ratio",
+          "mode",
+          "multi_shots",
+          "multi_prompt",
+          "kling_elements",
+          "callBackUrl"
+        ],
+        "totalFields": 10
+      }
+    },
+    "toolCallId": "call-9"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 9,
+    "text": "I’ve got the fields now. I’m adding the user-facing parameters that the schema actually documents, with defaults that make the create request a simple single-shot text-to-video job."
+  },
+  {
+    "type": "tool-call",
+    "toolName": "set_vendor_info",
+    "args": {
+      "baseUrl": "https://api.kie.ai",
+      "vendorKey": "kie",
+      "vendorName": "Kie.ai",
+      "modelKey": "kling-3.0/video",
+      "modelDisplayName": "Kling 3.0",
+      "auth": {
+        "type": "bearer"
+      }
+    },
+    "toolCallId": "call-10"
+  },
+  {
+    "type": "tool-result",
+    "toolName": "set_vendor_info",
+    "result": {
+      "ok": true,
+      "value": {
+        "baseUrl": "https://api.kie.ai",
+        "vendorKey": "kie",
+        "modelKey": "kling-3.0/video",
+        "auth": {
+          "type": "bearer"
+        }
+      }
+    },
+    "toolCallId": "call-10"
+  },
+  {
+    "type": "llm-step",
+    "stepIndex": 10,
+    "text": "One small correction before mapping: the server’s exact model id is `kling-3.0/video`, so I’m updating the draft to use the documented model key rather than the display shorthand."
+  },
+  {
+    "type": "trial-end",
+    "outcome": {
+      "trialId": "m4-retest-kling3",
+      "startedAt": 1780062002961,
+      "finishedAt": 1780062094563,
+      "durationMs": 91602,
+      "docsUrl": "https://docs.kie.ai/api-reference/kling/v3-0/generate-video",
+      "targetKind": "video",
+      "agentModel": "gpt-5.5",
+      "status": "partial",
+      "failureReason": "No successful test attempt",
+      "rounds": 10,
+      "toolCalls": 10,
+      "tokenUsage": {
+        "promptTokens": 135730,
+        "completionTokens": 3079,
+        "totalTokens": 138809
+      },
+      "draft": {
+        "sessionId": "m4-retest-kling3",
+        "startedAt": 1780062002961,
+        "targetKind": "video",
+        "modelFields": [
+          {
+            "key": "prompt",
+            "displayName": "Prompt",
+            "type": "text",
+            "options": [],
+            "default": "",
+            "evidence": {
+              "field": "prompt",
+              "evidence": "Video generation prompt. Takes effect when multi_shots is false.",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.prompt",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "image_urls",
+            "displayName": "Image URLs",
+            "type": "text",
+            "options": [],
+            "default": "",
+            "evidence": {
+              "field": "image_urls",
+              "evidence": "First and last frame image URLs. Required when elements are referenced in the prompt (using @element_name syntax).",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.image_urls",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "sound",
+            "displayName": "Sound Effects",
+            "type": "boolean",
+            "options": [],
+            "default": "false",
+            "evidence": {
+              "field": "sound",
+              "evidence": "Whether to enable sound effects. true enables sound effects, false disables them. When multi_shots is true, this field defaults to true.",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.sound",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "duration",
+            "displayName": "Duration",
+            "type": "select",
+            "options": [
+              {
+                "value": "3",
+                "label": "3 seconds"
+              },
+              {
+                "value": "4",
+                "label": "4 seconds"
+              },
+              {
+                "value": "5",
+                "label": "5 seconds"
+              },
+              {
+                "value": "6",
+                "label": "6 seconds"
+              },
+              {
+                "value": "7",
+                "label": "7 seconds"
+              },
+              {
+                "value": "8",
+                "label": "8 seconds"
+              },
+              {
+                "value": "9",
+                "label": "9 seconds"
+              },
+              {
+                "value": "10",
+                "label": "10 seconds"
+              },
+              {
+                "value": "11",
+                "label": "11 seconds"
+              },
+              {
+                "value": "12",
+                "label": "12 seconds"
+              },
+              {
+                "value": "13",
+                "label": "13 seconds"
+              },
+              {
+                "value": "14",
+                "label": "14 seconds"
+              },
+              {
+                "value": "15",
+                "label": "15 seconds"
+              }
+            ],
+            "default": "5",
+            "evidence": {
+              "field": "duration",
+              "evidence": "Total video duration in seconds. Integer value, range: 3 to 15.",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.duration",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "aspect_ratio",
+            "displayName": "Aspect Ratio",
+            "type": "select",
+            "options": [
+              {
+                "value": "16:9",
+                "label": "16:9"
+              },
+              {
+                "value": "9:16",
+                "label": "9:16"
+              },
+              {
+                "value": "1:1",
+                "label": "1:1"
+              }
+            ],
+            "default": "16:9",
+            "evidence": {
+              "field": "aspect_ratio",
+              "evidence": "Video aspect ratio. Options: 16:9, 9:16, 1:1. When image_urls(first and last frame images) is provided, this parameter is optional",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.aspect_ratio",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "mode",
+            "displayName": "Mode",
+            "type": "select",
+            "options": [
+              {
+                "value": "std",
+                "label": "Standard"
+              },
+              {
+                "value": "pro",
+                "label": "Pro"
+              },
+              {
+                "value": "4K",
+                "label": "4K"
+              }
+            ],
+            "default": "pro",
+            "evidence": {
+              "field": "mode",
+              "evidence": "Generation mode. std has standard resolution, pro has higher resolution, 4K has 4K resolution.",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.mode",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "multi_shots",
+            "displayName": "Multi-Shot",
+            "type": "boolean",
+            "options": [],
+            "default": "false",
+            "evidence": {
+              "field": "multi_shots",
+              "evidence": "Whether to use multi-shot mode. true enables multi-shot mode, false enables single-shot mode.",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.multi_shots",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "multi_prompt",
+            "displayName": "Multi-Shot Prompts JSON",
+            "type": "text",
+            "options": [],
+            "default": "",
+            "evidence": {
+              "field": "multi_prompt",
+              "evidence": "Shot prompts. Takes effect when multi_shots is true. Used to describe the text and duration of each shot. Supports up to 5 shots.",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.multi_prompt",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "kling_elements",
+            "displayName": "Kling Elements JSON",
+            "type": "text",
+            "options": [],
+            "default": "",
+            "evidence": {
+              "field": "kling_elements",
+              "evidence": "Referenced elements. Detailed information about elements referenced in the prompt. A single task can reference a maximum of three elements.",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.kling_elements",
+              "confidence": "high"
+            }
+          },
+          {
+            "key": "callBackUrl",
+            "displayName": "Callback URL",
+            "type": "text",
+            "options": [],
+            "default": "",
+            "evidence": {
+              "field": "callBackUrl",
+              "evidence": "The URL to receive generation task completion updates. Optional but recommended for production use.",
+              "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody callBackUrl",
+              "confidence": "high"
+            }
+          }
+        ],
+        "fetchedDocs": [
+          {
+            "url": "https://docs.kie.ai/llms.txt",
+            "contentType": "text/plain; charset=utf-8",
+            "bytes": 55311,
+            "markdownPath": "(in-memory)"
+          },
+          {
+            "url": "https://docs.kie.ai/market/kling/kling-3-0.md",
+            "contentType": "text/markdown; charset=utf-8",
+            "bytes": 26836,
+            "markdownPath": "(in-memory)"
+          },
+          {
+            "url": "https://docs.kie.ai/market/common/get-task-detail.md",
+            "contentType": "text/markdown; charset=utf-8",
+            "bytes": 18556,
+            "markdownPath": "(in-memory)"
+          }
+        ],
+        "testAttempts": [],
+        "vendorBaseUrl": "https://api.kie.ai",
+        "vendorKey": "kie",
+        "vendorName": "Kie.ai",
+        "modelKey": "kling-3.0/video",
+        "modelDisplayName": "Kling 3.0",
+        "vendorAuth": {
+          "type": "bearer"
+        }
+      }
+    }
+  }
+]

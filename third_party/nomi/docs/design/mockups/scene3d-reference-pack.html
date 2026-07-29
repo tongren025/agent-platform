@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scene3D Reference Pack Mockup</title>
+  <style>
+    :root {
+      --nomi-font-sans: "Inter Variable", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --nomi-font-mono: "SF Mono", "Cascadia Code", "Roboto Mono", monospace;
+      --nomi-bg: oklch(0.985 0.003 90);
+      --nomi-paper: oklch(1 0 0);
+      --nomi-ink: oklch(0.22 0.01 80);
+      --nomi-ink-80: oklch(0.32 0.01 80);
+      --nomi-ink-60: oklch(0.50 0.01 80);
+      --nomi-ink-40: oklch(0.68 0.01 80);
+      --nomi-ink-30: oklch(0.78 0.008 80);
+      --nomi-ink-20: oklch(0.88 0.005 80);
+      --nomi-ink-10: oklch(0.94 0.003 80);
+      --nomi-ink-05: oklch(0.97 0.003 80);
+      --nomi-line: oklch(0.91 0.004 80);
+      --nomi-line-soft: oklch(0.95 0.003 80);
+      --nomi-accent: oklch(0.55 0.13 250);
+      --nomi-accent-soft: color-mix(in oklch, var(--nomi-accent) 12%, var(--nomi-paper));
+      --nomi-radius-sm: 6px;
+      --nomi-radius: 10px;
+      --nomi-radius-pill: 999px;
+      --nomi-shadow-md: 0 14px 32px color-mix(in oklch, var(--nomi-ink) 16%, transparent);
+      --nomi-space-1: 4px;
+      --nomi-space-1-5: 6px;
+      --nomi-space-2: 8px;
+      --nomi-space-2-5: 10px;
+      --nomi-space-3: 12px;
+      --nomi-space-4: 16px;
+      --nomi-space-5: 20px;
+      --nomi-space-6: 24px;
+      --nomi-text-micro: 11px;
+      --nomi-text-caption: 12px;
+      --nomi-text-body-sm: 13px;
+      --nomi-text-body: 14px;
+      --nomi-text-title: 16px;
+      --nomi-weight-title: 650;
+    }
+    :root[data-mantine-color-scheme="dark"] {
+      --nomi-bg: oklch(0.18 0.01 80);
+      --nomi-paper: oklch(0.22 0.012 80);
+      --nomi-ink: oklch(0.96 0.003 90);
+      --nomi-ink-80: oklch(0.88 0.005 90);
+      --nomi-ink-60: oklch(0.72 0.006 90);
+      --nomi-ink-40: oklch(0.58 0.006 90);
+      --nomi-ink-30: oklch(0.46 0.007 85);
+      --nomi-ink-20: oklch(0.38 0.008 80);
+      --nomi-ink-10: oklch(0.30 0.008 80);
+      --nomi-ink-05: oklch(0.26 0.008 80);
+      --nomi-line: oklch(0.34 0.008 80);
+      --nomi-line-soft: oklch(0.30 0.008 80);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--nomi-bg);
+      color: var(--nomi-ink);
+      font-family: var(--nomi-font-sans);
+      font-size: var(--nomi-text-body-sm);
+    }
+    .shell {
+      display: grid;
+      grid-template-rows: 52px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: var(--nomi-space-3);
+      border-bottom: 1px solid var(--nomi-line);
+      background: var(--nomi-paper);
+      padding: 0 var(--nomi-space-4);
+    }
+    .title { font-weight: var(--nomi-weight-title); }
+    .spacer { flex: 1; }
+    .toolset {
+      display: flex;
+      gap: var(--nomi-space-1);
+      border: 1px solid var(--nomi-line-soft);
+      background: var(--nomi-paper);
+      border-radius: var(--nomi-radius);
+      padding: 2px;
+    }
+    .icon-btn {
+      height: 28px;
+      min-width: 28px;
+      border: 0;
+      border-radius: var(--nomi-radius-sm);
+      background: transparent;
+      color: var(--nomi-ink-60);
+      font: inherit;
+    }
+    .icon-btn.active {
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+    }
+    .main {
+      display: grid;
+      grid-template-columns: 260px minmax(360px, 1fr) 300px;
+      min-height: 0;
+    }
+    .side {
+      min-height: 0;
+      overflow: auto;
+      border-right: 1px solid var(--nomi-line);
+      background: var(--nomi-paper);
+      padding: var(--nomi-space-3);
+    }
+    .right {
+      border-left: 1px solid var(--nomi-line);
+      border-right: 0;
+    }
+    .side h2 {
+      margin: 0 0 var(--nomi-space-2-5);
+      font-size: var(--nomi-text-caption);
+      font-weight: var(--nomi-weight-title);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr) 26px;
+      align-items: center;
+      gap: var(--nomi-space-1-5);
+      min-height: 32px;
+      border-radius: var(--nomi-radius-sm);
+      padding: var(--nomi-space-1);
+      color: var(--nomi-ink-60);
+    }
+    .row.active { background: var(--nomi-ink-05); color: var(--nomi-ink); }
+    .viewport {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(transparent 23px, var(--nomi-line-soft) 24px),
+        linear-gradient(90deg, transparent 23px, var(--nomi-line-soft) 24px),
+        var(--nomi-ink-05);
+      background-size: 24px 24px;
+    }
+    .stage {
+      position: absolute;
+      inset: 44px 48px 96px;
+      border-radius: var(--nomi-radius);
+      border: 1px solid var(--nomi-line);
+      background: color-mix(in oklch, var(--nomi-paper) 82%, transparent);
+      box-shadow: var(--nomi-shadow-md);
+    }
+    .camera-card {
+      position: absolute;
+      right: var(--nomi-space-6);
+      top: var(--nomi-space-5);
+      width: 260px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-paper);
+      padding: 10px;
+      box-shadow: var(--nomi-shadow-md);
+    }
+    .preview {
+      aspect-ratio: 2.39 / 1;
+      border-radius: var(--nomi-radius-sm);
+      background:
+        linear-gradient(90deg, var(--nomi-ink-20), transparent 42%),
+        linear-gradient(var(--nomi-ink-10), var(--nomi-ink-05));
+      border: 1px solid var(--nomi-line-soft);
+      margin-bottom: var(--nomi-space-2);
+    }
+    .bottom {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: var(--nomi-space-2);
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-paper);
+      padding: var(--nomi-space-2);
+      box-shadow: var(--nomi-shadow-md);
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--nomi-space-1-5);
+      height: 26px;
+      border-radius: var(--nomi-radius-pill);
+      background: var(--nomi-ink-05);
+      color: var(--nomi-ink-60);
+      padding: 0 var(--nomi-space-2-5);
+      font-size: var(--nomi-text-micro);
+      white-space: nowrap;
+    }
+    .section {
+      display: grid;
+      gap: var(--nomi-space-2);
+      border: 1px solid var(--nomi-line-soft);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-paper);
+      padding: var(--nomi-space-2);
+      margin-bottom: var(--nomi-space-2-5);
+    }
+    .section.soft { background: var(--nomi-ink-05); }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: var(--nomi-space-1-5);
+      font-size: var(--nomi-text-caption);
+      font-weight: var(--nomi-weight-title);
+    }
+    .muted { color: var(--nomi-ink-60); font-size: var(--nomi-text-micro); }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--nomi-space-2); }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--nomi-space-1-5); }
+    .field {
+      display: grid;
+      gap: var(--nomi-space-1);
+      font-size: var(--nomi-text-micro);
+      color: var(--nomi-ink-60);
+    }
+    .input {
+      height: 32px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-paper);
+      color: var(--nomi-ink);
+      padding: 0 var(--nomi-space-2);
+    }
+    .move {
+      height: 32px;
+      border: 1px solid var(--nomi-line-soft);
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-ink-05);
+      color: var(--nomi-ink-60);
+      font: inherit;
+      font-size: var(--nomi-text-caption);
+    }
+    .move.zoom {
+      border-style: dashed;
+      border-color: var(--nomi-ink-30, var(--nomi-ink-40));
+      color: var(--nomi-ink-80);
+      background: color-mix(in oklch, var(--nomi-accent) 7%, var(--nomi-paper));
+    }
+    .primary {
+      border: 1px solid var(--nomi-ink);
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+    }
+    .reference {
+      border-color: color-mix(in oklch, var(--nomi-accent) 38%, var(--nomi-line));
+      background: var(--nomi-accent-soft);
+    }
+    .reference .chipline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .refchip {
+      display: flex;
+      align-items: center;
+      gap: var(--nomi-space-1-5);
+      min-width: 0;
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-paper);
+      color: var(--nomi-ink-60);
+      padding: var(--nomi-space-1-5);
+      font-size: var(--nomi-text-micro);
+    }
+    .refchip strong {
+      color: var(--nomi-ink);
+      font-weight: var(--nomi-weight-title);
+    }
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      .side { display: none; }
+      .right { display: block; border-left: 0; border-top: 1px solid var(--nomi-line); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <span class="title">3D 场景 · 广告镜头 01</span>
+      <span class="spacer"></span>
+      <div class="toolset">
+        <button class="icon-btn active" aria-label="平移视图">↕</button>
+        <button class="icon-btn" aria-label="旋转视图">↻</button>
+      </div>
+      <div class="toolset">
+        <button class="icon-btn" aria-label="适配视图">□</button>
+        <button class="icon-btn" aria-label="播放预览">▶</button>
+      </div>
+      <button class="icon-btn" aria-label="关闭">×</button>
+    </header>
+    <main class="main">
+      <aside class="side">
+        <h2>场景节点</h2>
+        <div class="row active"><span>◉</span><span>主相机</span><span>⌖</span></div>
+        <div class="row"><span>▧</span><span>城市街道模板</span><span>⌖</span></div>
+        <div class="row"><span>◆</span><span>道具 · 路灯</span><span>⌖</span></div>
+        <div class="row"><span>●</span><span>角色 A</span><span>⌖</span></div>
+        <div class="row"><span>●</span><span>角色 B</span><span>⌖</span></div>
+      </aside>
+      <section class="viewport">
+        <div class="stage"></div>
+        <div class="camera-card">
+          <div class="preview"></div>
+          <div class="grid2">
+            <span class="pill">2.39:1</span>
+            <span class="pill">50mm</span>
+          </div>
+        </div>
+        <div class="bottom">
+          <span class="pill">添加 ▾</span>
+          <span class="pill">操控角色</span>
+          <span class="pill primary">录 take</span>
+          <span class="spacer"></span>
+          <span class="pill">时间轴 5s</span>
+        </div>
+      </section>
+      <aside class="side right">
+        <h2>属性</h2>
+        <div class="section">
+          <div class="field"><span>名称</span><div class="input">主相机</div></div>
+          <div class="grid2">
+            <div class="field"><span>画幅</span><div class="input">2.39:1</div></div>
+            <div class="field"><span>焦段</span><div class="input">50mm</div></div>
+          </div>
+        </div>
+        <div class="section reference">
+          <div class="section-title">⌁ 参考输出</div>
+          <div class="muted">video_ref · 镜头 01 / Seedance 全能参考</div>
+          <div class="chipline">
+            <div class="refchip"><span>▸</span><strong>录 take</strong><span>video_ref</span></div>
+            <div class="refchip"><span>□</span><strong>首/尾帧</strong><span>first/last</span></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">运镜预设</div>
+          <div class="grid2">
+            <label class="field"><span>时长</span><input class="input" value="5s"></label>
+            <label class="field"><span>幅度</span><input class="input" value="60%"></label>
+          </div>
+          <div class="grid3">
+            <button class="move">推近</button>
+            <button class="move">拉远</button>
+            <button class="move">环绕</button>
+            <button class="move">摇左</button>
+            <button class="move">横移</button>
+            <button class="move">升降</button>
+            <button class="move zoom">变焦推</button>
+            <button class="move zoom">变焦拉</button>
+            <button class="move zoom">希区柯克</button>
+          </div>
+          <button class="move">导出运镜首尾帧</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分镜方案编辑器 重设计 · 样张 2026-06-15</title>
+<style>
+  :root{
+    --paper:#ffffff; --bg:#f6f4ef; --ink:#22201b; --ink80:#46433c; --ink60:#6f6b62;
+    --ink40:#9b968b; --ink30:#bdb9ae; --ink20:#d3d0c7; --ink10:#e8e5dd; --ink05:#f3f1ea;
+    --line:#e3e0d7; --line-soft:#eeebe3;
+    --accent:#3a53c4; --accent-soft:#e8ecfb; --ok:#2c6e49; --danger:#b3402e;
+    --r:10px; --rs:6px; --shadow-sm:0 1px 2px rgba(34,32,27,.06); --shadow-md:0 2px 8px rgba(34,32,27,.08);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);padding:24px 20px 80px}
+  h1{font-size:18px;font-weight:600;margin:0 0 4px}
+  .sub{font-size:13px;color:var(--ink60);margin:0 0 20px;max-width:760px;line-height:1.7}
+  .editor{width:720px;max-width:100%;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-md);overflow:hidden}
+  /* header */
+  .hd{display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border-bottom:1px solid var(--line)}
+  .hd .ic{color:var(--ink60)}
+  .hd .title{font-size:16px;font-weight:500;color:var(--ink);border:0;background:transparent;outline:none;border-radius:var(--rs);padding:2px 4px}
+  .hd .title:hover{background:var(--ink05)}
+  .hd .nbadge{font-size:11px;color:var(--ink60);background:var(--ink05);padding:1px 8px;border-radius:999px}
+  .hd .sp{flex:1}
+  .hd .gbtn{height:28px;padding:0 10px;border:1px solid var(--line);background:var(--paper);border-radius:999px;font-size:12px;color:var(--ink60);cursor:pointer}
+  .hd .gbtn:hover{color:var(--ink80);border-color:var(--ink20)}
+  /* quiet free hint (替代大蓝 banner) */
+  .freehint{display:flex;align-items:center;gap:6px;padding:7px 16px;font-size:11px;color:var(--ink40);border-bottom:1px solid var(--line-soft)}
+  .freehint b{color:var(--ink60);font-weight:500}
+  /* body */
+  .body{padding:16px;display:flex;flex-direction:column;gap:18px;max-height:560px;overflow:auto}
+  .sec-h{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+  .sec-h .t{font-size:13px;font-weight:500;color:var(--ink80)}
+  .sec-h .d{font-size:11px;color:var(--ink40)}
+  /* 锚 = 设定区:一个分组面,行用细分隔线,不是一堆灰块 */
+  .anchors{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .arow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-top:1px solid var(--line-soft)}
+  .arow:first-child{border-top:0}
+  .arow .kind{width:22px;height:22px;border-radius:var(--rs);background:var(--ink05);display:flex;align-items:center;justify-content:center;color:var(--ink60);flex:none;font-size:12px}
+  .arow .nm{font-size:13px;font-weight:500;color:var(--ink);min-width:96px}
+  .arow .desc{flex:1;min-width:0;font-size:12px;color:var(--ink40);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .arow .car{width:24px;height:24px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer;font-size:12px}
+  .car.vis{background:var(--accent-soft);color:var(--accent)}
+  .car.txt{border:1px solid var(--line);color:var(--ink40)}
+  .arow .del{width:24px;height:24px;border:0;background:transparent;color:var(--ink30);cursor:pointer;flex:none}
+  .addrow{display:flex;align-items:center;gap:6px;padding:8px 10px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--ink40);cursor:pointer;background:var(--ink05)}
+  /* 镜 = 主轴:白卡 + 轻阴影 + 清晰编号 */
+  .shot{border:1px solid var(--line);border-radius:var(--r);background:var(--paper);box-shadow:var(--shadow-sm);padding:12px;margin-bottom:10px}
+  .shot-h{display:flex;align-items:center;gap:10px}
+  .grip{color:var(--ink20);cursor:grab;flex:none}
+  .snum{font-size:14px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+  .dur{height:24px;padding:0 8px;border:1px solid var(--line);border-radius:var(--rs);font-size:11px;color:var(--ink60);display:inline-flex;align-items:center;gap:4px}
+  .shot-h .sp{flex:1}
+  .refs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .refs .lb{font-size:11px;color:var(--ink40);margin-right:2px}
+  .chip{height:24px;padding:0 9px;border-radius:999px;font-size:11px;display:inline-flex;align-items:center;gap:5px;background:var(--ink05);color:var(--ink80)}
+  .chip .ci{color:var(--ink40);font-size:11px}
+  .chip-add{height:24px;padding:0 10px;border-radius:999px;border:1px dashed var(--ink20);color:var(--ink40);font-size:11px;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+  .prompt{margin-top:10px;border:1px solid var(--line);border-radius:var(--rs);padding:8px 10px;font-size:13px;color:var(--ink80);line-height:1.6;background:var(--paper)}
+  /* footer */
+  .ft{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-top:1px solid var(--line);background:var(--paper)}
+  .ft .ok{font-size:12px;color:var(--ok);display:inline-flex;align-items:center;gap:5px}
+  .confirm{height:32px;padding:0 16px;border-radius:999px;background:var(--ink);color:var(--paper);font-size:13px;font-weight:500;border:0;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+  .confirm:hover{background:var(--accent)}
+  .lbl{font-size:12px;color:var(--ink60);font-weight:600;margin:0 0 10px}
+</style>
+</head>
+<body>
+  <h1>分镜方案编辑器 · 重设计样张</h1>
+  <p class="sub">同样的数据，更安静的视觉：镜头当主轴（白卡+轻阴影+大编号），锚收敛成「设定行」（一个分组面+细分隔线，不再是一堆灰块），大蓝 banner 缩成一行小字，长胶囊改小图标 toggle，参考 chip 改中性色——蓝色只留给真正的激活态。密度更高、层级更清楚。</p>
+
+  <div class="lbl">重设计后（主列里的编辑器）</div>
+  <div class="editor">
+    <div class="hd">
+      <span class="ic">🎬</span>
+      <input class="title" value="街角咖啡馆午后 · 6镜">
+      <span class="nbadge">6 镜</span>
+      <span class="sp"></span>
+      <button class="gbtn">收起</button>
+      <button class="gbtn">丢弃</button>
+    </div>
+
+    <div class="freehint"><span>🔓</span> <b>AI 草拟，随便改</b> · 确认前不生成、不花钱</div>
+
+    <div class="body">
+      <section>
+        <div class="sec-h"><span class="t">跨镜头要一致的</span><span class="d">📷 锁长相 · Aa 写进 prompt</span></div>
+        <div class="anchors">
+          <div class="arow"><span class="kind">🧑</span><span class="nm">女孩</span><span class="desc">二十岁出头，齐肩黑发，米色风衣，自然光柔和——主角，全片一致</span><span class="car vis" title="生成参考图">📷</span><button class="del">🗑</button></div>
+          <div class="arow"><span class="kind">🏞</span><span class="nm">街角咖啡馆</span><span class="desc">暖木与落地窗，午后逆光斜射进店内</span><span class="car vis" title="生成参考图">📷</span><button class="del">🗑</button></div>
+          <div class="arow"><span class="kind">📦</span><span class="nm">咖啡杯</span><span class="desc">奶白陶瓷杯，杯口微冒热气</span><span class="car txt" title="仅提示词">Aa</span><button class="del">🗑</button></div>
+          <div class="arow"><span class="kind">🎨</span><span class="nm">全片风格</span><span class="desc">暖色、轻颗粒、节奏舒缓</span><span class="car txt" title="仅提示词">Aa</span><button class="del">🗑</button></div>
+          <div class="addrow">＋ 添加锚（角色 / 场景 / 道具 / 风格）</div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-h"><span class="t">分镜 · 6 镜</span></div>
+
+        <div class="shot">
+          <div class="shot-h"><span class="grip">⠿</span><span class="snum">镜 1</span><span class="dur">5 秒 ▾</span><span class="sp"></span><button class="del">🗑</button></div>
+          <div class="refs"><span class="lb">参考</span><span class="chip"><span class="ci">🧑</span>女孩</span><span class="chip"><span class="ci">🏞</span>街角咖啡馆</span><span class="chip"><span class="ci">🎨</span>全片风格</span><span class="chip-add">＋ 参考</span></div>
+          <div class="prompt">固定广角开场 → 阳光洒在街角与玻璃窗上，女孩从画面外走近咖啡馆门口，短暂停留再推门，节奏轻缓。</div>
+        </div>
+
+        <div class="shot">
+          <div class="shot-h"><span class="grip">⠿</span><span class="snum">镜 2</span><span class="dur">4 秒 ▾</span><span class="sp"></span><button class="del">🗑</button></div>
+          <div class="refs"><span class="lb">参考</span><span class="chip"><span class="ci">🧑</span>女孩</span><span class="chip"><span class="ci">📦</span>咖啡杯</span><span class="chip-add">＋ 参考</span></div>
+          <div class="prompt">中景跟拍，女孩走向吧台点单，手指轻点菜单；镜头随她平移。</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="ft">
+      <span class="ok">✓ 全部就绪 · 4 锚 · 6 镜</span>
+      <button class="confirm">✓ 确认落画布</button>
+    </div>
+  </div>
+</body>
+</html>

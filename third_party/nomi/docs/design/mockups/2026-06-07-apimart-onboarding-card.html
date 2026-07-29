@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>apimart 一个 key 全通 — 接入卡片样张</title>
+<style>
+  :root{
+    --bg:oklch(0.985 0.003 90); --paper:oklch(1 0 0); --ink:oklch(0.22 0.01 80);
+    --ink80:oklch(0.32 0.01 80); --ink60:oklch(0.50 0.01 80); --ink40:oklch(0.68 0.01 80);
+    --ink30:oklch(0.78 0.005 80); --ink20:oklch(0.88 0.005 80); --ink10:oklch(0.94 0.003 80); --ink05:oklch(0.97 0.003 80);
+    --line:oklch(0.91 0.004 80); --lineSoft:oklch(0.95 0.003 80);
+    --accent:oklch(0.55 0.13 250); --accentSoft:color-mix(in oklch,var(--accent) 12%,var(--paper));
+    --ok:oklch(0.55 0.13 150); --okSoft:color-mix(in oklch,var(--ok) 14%,var(--paper));
+    --warn:oklch(0.62 0.14 70); --warnSoft:color-mix(in oklch,var(--warn) 16%,var(--paper));
+    --r:10px; --rs:6px; --rl:14px;
+    --shadow:0 2px 4px oklch(0 0 0/.04),0 8px 24px oklch(0 0 0/.06);
+    --pop:0 8px 32px oklch(0 0 0/.12);
+    --font:Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:13px;padding:28px 24px 80px;}
+  h1{font-size:19px;margin:0 0 6px;} .lead{color:var(--ink60);font-size:12.5px;margin:0 0 22px;max-width:920px;line-height:1.6;}
+  .row{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap;}
+  .col{flex:1;min-width:360px;max-width:440px;}
+  .tag{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;margin-bottom:10px;}
+  .bad{background:oklch(.95 .04 30);color:oklch(.5 .16 30);} .rec{background:var(--accentSoft);color:var(--accent);} .neu{background:var(--ink10);color:var(--ink60);}
+
+  /* 抽屉外框（模型设置） */
+  .drawer{background:var(--bg);border:1px solid var(--line);border-radius:var(--rl);box-shadow:var(--shadow);overflow:hidden;}
+  .drawer__hd{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line);background:var(--paper);}
+  .drawer__hd b{font-size:14px;font-weight:600;} .drawer__hd .x{margin-left:auto;color:var(--ink40);font-size:15px;}
+  .drawer__bd{padding:14px;display:flex;flex-direction:column;gap:14px;max-height:560px;overflow:auto;}
+
+  /* apimart 接入卡片 */
+  .card{border:1px solid var(--line);border-radius:var(--r);background:var(--paper);box-shadow:var(--shadow);overflow:hidden;}
+  .card--locked{border-color:var(--ink20);}
+  .card__hd{display:flex;align-items:center;gap:10px;padding:13px 14px 11px;}
+  .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),oklch(.6 .14 290));display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0;}
+  .card__hd .nm{font-size:14px;font-weight:700;line-height:1.2;}
+  .card__hd .nm small{display:block;font-weight:400;color:var(--ink40);font-size:11px;margin-top:1px;}
+  .pill-state{margin-left:auto;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;}
+  .pill-state.off{background:var(--ink10);color:var(--ink60);} .pill-state.on{background:var(--okSoft);color:var(--ok);}
+  .card__bd{padding:0 14px 14px;display:flex;flex-direction:column;gap:11px;}
+
+  .field label{display:block;font-size:11.5px;color:var(--ink60);margin-bottom:5px;}
+  .keyrow{display:flex;gap:8px;}
+  .inp{flex:1;height:32px;border:1px solid var(--line);border-radius:var(--rs);background:var(--paper);padding:0 11px;font-size:13px;color:var(--ink);display:flex;align-items:center;font-family:ui-monospace,monospace;}
+  .inp.ph{color:var(--ink30);font-family:var(--font);}
+  .inp.bound{color:var(--ink40);background:var(--ink05);font-family:ui-monospace,monospace;}
+  .btnP{height:32px;padding:0 16px;border-radius:999px;background:var(--ink);color:var(--paper);font-weight:600;font-size:12.5px;border:0;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+  .btnP:hover{background:var(--accent);}
+  .btnG{height:30px;padding:0 13px;border-radius:999px;background:var(--paper);color:var(--ink80);border:1px solid var(--line);font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .btnGx{height:26px;padding:0 10px;font-size:11.5px;}
+  .helper{font-size:11px;color:var(--ink40);line-height:1.5;}
+
+  /* 解锁的模型组 */
+  .mgroup{margin-top:2px;}
+  .mgroup__t{font-size:11px;font-weight:600;color:var(--ink60);margin:0 0 7px;display:flex;align-items:center;gap:6px;}
+  .mgroup__t .cnt{color:var(--ink40);font-weight:400;}
+  .mlist{display:flex;flex-direction:column;gap:1px;background:var(--lineSoft);border:1px solid var(--line);border-radius:var(--rs);overflow:hidden;}
+  .mrow{display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--paper);}
+  .mrow .dot{width:7px;height:7px;border-radius:999px;flex-shrink:0;}
+  .dot.on{background:var(--ok);} .dot.off{background:var(--ink20);}
+  .mrow .mn{font-size:12.5px;color:var(--ink);font-weight:500;}
+  .mrow .mk{font-size:11px;color:var(--ink40);margin-left:auto;}
+  .mrow.locked .mn{color:var(--ink40);}
+
+  /* 推广位 */
+  .promo{margin-top:3px;border-top:1px dashed var(--line);padding:11px 14px 13px;display:flex;align-items:center;gap:10px;background:color-mix(in oklch,var(--accent) 4%,var(--paper));}
+  .promo .gift{font-size:16px;} .promo .pt{font-size:11.5px;color:var(--ink80);line-height:1.45;}
+  .promo .pt b{color:var(--accent);}
+  .promo a{margin-left:auto;font-size:11.5px;color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap;border:1px solid color-mix(in oklch,var(--accent) 30%,var(--paper));border-radius:999px;padding:5px 11px;}
+
+  /* 注解 */
+  .note{color:var(--ink60);font-size:11.5px;margin:12px 2px 0;line-height:1.6;} .note b{color:var(--ink);} .con{color:oklch(.5 .16 30);} .pro{color:var(--ok);}
+  .flow{counter-reset:s;display:flex;flex-direction:column;gap:6px;margin:10px 0 0;padding:0;list-style:none;}
+  .flow li{position:relative;padding-left:24px;font-size:11.5px;color:var(--ink80);line-height:1.5;}
+  .flow li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:16px;height:16px;border-radius:999px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;}
+  .sec-h{font-size:13px;font-weight:700;margin:34px 0 4px;color:var(--ink);}
+  .sec-s{font-size:11.5px;color:var(--ink60);margin:0 0 14px;}
+  .divider{height:1px;background:var(--line);margin:30px 0;}
+</style></head>
+<body>
+  <h1>apimart「一个 key 全通」接入卡片</h1>
+  <p class="lead">
+    后端已策展好 12 个 apimart 模型（6 图 + 6 视频，已用真 key 端到端验证）。但前端没有给用户"填一个 apimart key → 全部解锁"的通道。
+    本样张补这条通道：在「模型设置」里新增一张 <b>apimart 卡片</b>，统一身份展示（P4：用户看到的是 Sora 2 / 可灵 v3，不是 sora-2 内部名），并把推广位（10% 返现）放在卡片底部、不打扰。
+  </p>
+
+  <div class="row">
+
+    <!-- A 现状 -->
+    <div class="col">
+      <span class="tag bad">现状 · 12 个模型可见但锁着</span>
+      <div class="drawer">
+        <div class="drawer__hd"><b>模型设置</b><span class="x">✕</span></div>
+        <div class="drawer__bd">
+          <div class="card card--locked">
+            <div class="card__hd">
+              <div class="logo">A</div>
+              <div class="nm">APIMart<small>未连通 · 缺 API Key</small></div>
+              <span class="pill-state off">○ 未连通</span>
+            </div>
+            <div class="card__bd">
+              <div class="mgroup">
+                <div class="mgroup__t">图片 <span class="cnt">6 个</span></div>
+                <div class="mlist">
+                  <div class="mrow locked"><span class="dot off"></span><span class="mn">Seedream 4.5</span><span class="mk">未连通</span></div>
+                  <div class="mrow locked"><span class="dot off"></span><span class="mn">Nano Banana</span><span class="mk">未连通</span></div>
+                  <div class="mrow locked"><span class="dot off"></span><span class="mn">GPT Image 2</span><span class="mk">未连通</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note"><b>问题：</b><span class="con">模型在后端备好了、列表里看得见，但没地方填 apimart 的 key</span>，全部停在"未连通"。用户唯一能做的还是去走老的"贴文档 URL + key 一个个加"。一个 key 全通对用户来说<span class="con">不存在</span>。</p>
+    </div>
+
+    <!-- B 接入卡片（待填） -->
+    <div class="col">
+      <span class="tag rec">方案 · 一张卡片，填一次 key（推荐）</span>
+      <div class="drawer">
+        <div class="drawer__hd"><b>模型设置</b><span class="x">✕</span></div>
+        <div class="drawer__bd">
+          <div class="card">
+            <div class="card__hd">
+              <div class="logo">A</div>
+              <div class="nm">APIMart<small>一个 key，解锁 12 个预置模型</small></div>
+              <span class="pill-state off">○ 待接入</span>
+            </div>
+            <div class="card__bd">
+              <div class="field">
+                <label>你的 apimart API Key</label>
+                <div class="keyrow">
+                  <div class="inp ph">sk-····························</div>
+                  <button class="btnP">⚡ 解锁</button>
+                </div>
+                <div class="helper" style="margin-top:6px;">填一次即可，密钥本地加密存储、只在调用时使用，界面只显示掩码。</div>
+              </div>
+              <div class="field">
+                <label>接入地址（高级 · 默认即可）</label>
+                <div class="inp bound">https://api.apimart.ai</div>
+                <div class="helper" style="margin-top:5px;">用官方镜像或自建网关时再改；普通用户不用动。</div>
+              </div>
+            </div>
+            <div class="promo">
+              <span class="gift">🎁</span>
+              <span class="pt">还没有 apimart 账号？通过我们的链接注册，享 <b>前 3 次充值 10% 返现</b>。</span>
+              <a href="#">注册 →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ol class="flow">
+        <li>用户粘贴 apimart key，点「解锁」。</li>
+        <li>后端把 key 绑到已预置的 apimart 供应商（复用 vendor key 存储，不重建模型）。</li>
+        <li>12 个模型瞬间变"已连通"，直接出现在生成画布的模型选项里。</li>
+      </ol>
+    </div>
+
+    <!-- C 解锁后 -->
+    <div class="col">
+      <span class="tag pro" style="background:var(--okSoft);color:var(--ok);">解锁后 · 12 个全部可用</span>
+      <div class="drawer">
+        <div class="drawer__hd"><b>模型设置</b><span class="x">✕</span></div>
+        <div class="drawer__bd">
+          <div class="card">
+            <div class="card__hd">
+              <div class="logo">A</div>
+              <div class="nm">APIMart<small>已连通 · 12 个模型可用</small></div>
+              <span class="pill-state on">● 已连通</span>
+            </div>
+            <div class="card__bd">
+              <div class="field">
+                <div class="keyrow">
+                  <div class="inp bound">sk-DLty··········wBuTc</div>
+                  <button class="btnG btnGx">测试</button>
+                  <button class="btnG btnGx">更换</button>
+                </div>
+              </div>
+              <div class="mgroup">
+                <div class="mgroup__t">图片 <span class="cnt">6 个</span></div>
+                <div class="mlist">
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Seedream 4.5</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Nano Banana</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">GPT Image 2</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Qwen Image 2.0</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Imagen 4</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Z-Image Turbo</span><span class="mk">已连通</span></div>
+                </div>
+              </div>
+              <div class="mgroup">
+                <div class="mgroup__t">视频 <span class="cnt">6 个</span></div>
+                <div class="mlist">
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Sora 2</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Veo 3.1 Fast</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">可灵 v3</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Seedance 2.0</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Wan 2.7</span><span class="mk">已连通</span></div>
+                  <div class="mrow"><span class="dot on"></span><span class="mn">Hailuo 2.3</span><span class="mk">已连通</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note"><span class="pro"><b>一次解锁，全部点亮。</b></span> 删除/更换在次级操作，主行动是"解锁"。重复模型（两家都有可灵/Seedance）UI 只显示一个身份，按已配 key 自动路由（下一轮"三招"做拉列表 + 偏好路由）。</p>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sec-h">同一张卡片如何复用到 kie（P4 通用第一）</div>
+  <p class="sec-s">这张卡片是"供应商接入卡"的通用形态，不是 apimart 专属。kie 也是 async create→poll 同构家族，套同一张卡片：换 logo / 名字 / 预置模型清单 / 推广链接即可。两家并列，互不写两套 UI。</p>
+  <div class="row">
+    <div class="col" style="max-width:440px;">
+      <div class="card">
+        <div class="card__hd">
+          <div class="logo" style="background:linear-gradient(135deg,oklch(.6 .13 160),oklch(.6 .12 200));">K</div>
+          <div class="nm">kie.ai<small>一个 key，解锁内置模型</small></div>
+          <span class="pill-state off">○ 待接入</span>
+        </div>
+        <div class="card__bd">
+          <div class="field">
+            <label>你的 kie API Key</label>
+            <div class="keyrow"><div class="inp ph">sk-····························</div><button class="btnP">⚡ 解锁</button></div>
+          </div>
+        </div>
+        <div class="promo">
+          <span class="gift">🎁</span>
+          <span class="pt">通过我们的链接注册 kie，享专属优惠（链接待补）。</span>
+          <a href="#">注册 →</a>
+        </div>
+      </div>
+      <p class="note">两家共用一个 <b>VendorOnboardCard</b> 组件 + 一份"已知供应商目录"（key / 名字 / logo / baseUrl / 推广链接）。新增第三家只加一条目录数据，不写新 UI。</p>
+    </div>
+    <div class="col" style="min-width:380px;max-width:480px;">
+      <span class="tag neu">仍保留 · 长尾逃生口</span>
+      <p class="note" style="margin-top:0;">已知供应商走上面的卡片（30 秒可用）。<b>未知供应商/长尾模型</b>仍保留现有"自定义：填 BaseURL + key + 拉列表"和"贴文档 URL"两条老路（不删，作为逃生口）。这样：列表内 = 一键全通；列表外 = 明说"自定义接入"，边界清晰。</p>
+      <p class="note"><b>推广话术（写进卡片底部，文案占位，等你拿回链接/优惠码替换）：</b></p>
+      <ul style="font-size:11.5px;color:var(--ink80);line-height:1.7;padding-left:18px;margin:6px 0 0;">
+        <li>主文案："通过我们的链接注册，享前 3 次充值 <b>10% 返现</b>。"</li>
+        <li>无独立 affiliate 链接系统时：先用官网 + 邀请奖励话术，<b>?ref= 参数你后补</b>我替换。</li>
+        <li>CTA 按钮：「注册 →」跳转你的专属链接（拿到前先指官网）。</li>
+      </ul>
+    </div>
+  </div>
+
+</body></html>

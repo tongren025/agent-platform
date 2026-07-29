@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>C5 · 文本节点 — 样张 v2</title>
+<style>
+:root{
+  --bg:oklch(0.985 0.003 90);--paper:oklch(1 0 0);--ink:oklch(0.22 0.01 80);--ink80:oklch(0.32 0.01 80);
+  --ink60:oklch(0.50 0.01 80);--ink40:oklch(0.68 0.01 80);--ink20:oklch(0.88 0.005 80);--ink05:oklch(0.97 0.003 80);
+  --line:oklch(0.91 0.004 80);--accent:oklch(0.55 0.13 250);--accent-soft:color-mix(in oklch,var(--accent) 12%,var(--paper));
+  --radius:10px;--radius-sm:6px;--sans:Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:var(--sans);color:var(--ink);padding:32px;font-size:14px}
+h1{font-size:18px;margin:0 0 4px}.sub{color:var(--ink60);font-size:13px;margin:0 0 28px;line-height:1.6}
+.row{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+.tag{font-size:12px;color:var(--ink60);font-weight:600;margin:0 0 8px}
+.note{font-size:12.5px;color:var(--ink60);line-height:1.6;margin-top:10px;max-width:380px}
+.node{width:380px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 1px 2px rgba(0,0,0,.05);position:relative}
+.node--editing{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.node__head{display:flex;align-items:center;gap:6px;padding:7px 10px;border-bottom:1px solid var(--line)}
+.node__head svg{color:var(--ink60)}.node__title{font-size:12px;font-weight:600;color:var(--ink60);flex:1}
+.img-preview{height:160px;background:repeating-linear-gradient(45deg,var(--ink05),var(--ink05) 10px,transparent 10px,transparent 20px);display:flex;align-items:center;justify-content:center;color:var(--ink40);font-size:12px;border-bottom:1px solid var(--line)}
+.doc{padding:12px 14px;max-height:240px;overflow:auto;outline:none}
+.doc h2{font-size:16px;font-weight:600;margin:0 0 8px}.doc h3{font-size:14px;font-weight:600;margin:14px 0 6px}
+.doc p{font-size:13px;line-height:1.65;color:var(--ink80);margin:0 0 8px}.doc .muted{color:var(--ink60);font-size:12.5px}
+.caret{display:inline-block;width:1.5px;height:15px;background:var(--accent);vertical-align:-3px;animation:b 1s steps(1) infinite}@keyframes b{50%{opacity:0}}
+/* 浮动格式条（编辑时出现在节点上方）*/
+.fmt{position:absolute;top:-44px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:2px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 10px;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:13px;color:var(--ink60);white-space:nowrap}
+.fmt b{color:var(--ink);font-weight:700}.fmt span{padding:2px 5px;cursor:pointer;border-radius:5px}.fmt span:hover{background:var(--ink05)}.fmt .on{background:var(--accent-soft);color:var(--accent)}.fmt .sep{width:1px;height:16px;background:var(--line);padding:0;margin:0 2px}
+/* 底部模型框（与其它卡片一致，只是文本模型）*/
+.composer{border-top:1px solid var(--line);padding:8px 10px}
+.composer__row{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;border:1px solid var(--line);border-radius:var(--radius-sm);padding:7px 9px;font-size:13px;font-family:inherit;color:var(--ink);resize:none;height:38px;line-height:1.4}
+.gen{height:38px;padding:0 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;white-space:nowrap}
+.model{display:flex;align-items:center;gap:5px;margin-top:7px;font-size:12px;color:var(--ink60)}
+.model__chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--ink);cursor:pointer}
+/* 缩放手柄 */
+.resize{position:absolute;right:3px;bottom:3px;color:var(--ink40);cursor:nwse-resize}
+.tiny{height:30px;padding:0 12px;border-radius:var(--radius-sm);font-size:13px;border:1px solid var(--ink);background:var(--ink);color:var(--paper)}
+.tiny-input{flex:1;border:1px solid var(--line);border-radius:var(--radius-sm);padding:6px 8px;font-size:12.5px;color:var(--ink)}
+</style></head><body>
+<h1>C5 · 文本节点 — 设计样张 v2</h1>
+<p class="sub">采纳你的反馈：① 格式条<b>浮在节点上方</b>（编辑时才出现，不占节点高度）；② 底部用<b>和其它卡片一致的"模型框"</b>（提示词 + 文本模型选择 + 生成），不是小条；③ <b>没有"展开"</b>——节点自己<b>可拖拽缩放</b>，看和编都在原地；④ 节点内<b>可直接编辑</b>。整体走 token，跟其它节点一致。</p>
+
+<div class="row">
+  <!-- 现在 -->
+  <div>
+    <p class="tag">现在 ❌ 像空图卡片 + 生成小条</p>
+    <div class="node">
+      <div class="node__head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/></svg><span class="node__title">Text</span></div>
+      <div class="img-preview">（图片预览区 — 文本根本用不上）</div>
+      <div class="composer"><div class="composer__row"><input class="tiny-input" placeholder="提示词…"/><button class="tiny">生成</button></div></div>
+    </div>
+    <p class="note">问题：套了图片节点的预览区 + 一个细小的生成条，文本完全没处放。</p>
+  </div>
+
+  <!-- 改后 -->
+  <div>
+    <p class="tag">改后 ✅ 文档卡片（编辑中）</p>
+    <div class="node node--editing">
+      <div class="fmt"><b>H1</b><span>H2</span><span class="on">H3</span><span class="sep"></span><span><b>B</b></span><span><i>I</i></span><span class="sep"></span><span>•</span><span>1.</span><span class="sep"></span><span>—</span></div>
+      <div class="node__head"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/></svg><span class="node__title">Text</span></div>
+      <div class="doc" contenteditable="false">
+        <h2>故事：《冥婚契》</h2>
+        <p>十八岁的少女林浅，自幼被家族定下了一门"阴亲"。订婚信物是一枚刻着诡异铭文的枯骨戒指，自戴上起，林浅每晚都梦到被一身玄色古袍的男人拥抱<span class="caret"></span></p>
+        <h3>分镜表</h3>
+        <p class="muted">1 · 特写 — 林浅纤细的脖颈，那道青紫的指印在灯光下格外刺眼。<br/>Image: Extreme close-up of a young woman's pale neck…<br/>Video: Slow motion, the bruise pulses with a faint dark aura.</p>
+      </div>
+      <div class="composer">
+        <div class="composer__row">
+          <textarea placeholder="写故事 / 续写 / 改写…"></textarea>
+          <button class="gen">生成</button>
+        </div>
+        <div class="model">模型 <span class="model__chip">✦ Gemini 3.1 Flash ▾</span></div>
+      </div>
+      <svg class="resize" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v6h-6M9 3H3v6M21 9V3h-6M3 15v6h6"/></svg>
+    </div>
+    <p class="note">正文可直接编辑（光标在内）；选中文字 → 上方浮出格式条；底部是完整模型框（提示词 + 文本模型 chip + 生成），跟图片/视频卡片同构；右下角拖拽缩放，拖大就能看/编更多——所见即所得，无需另开页面。</p>
+  </div>
+</div>
+</body></html>

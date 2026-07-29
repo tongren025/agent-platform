@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>创作区双工作面样张</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; width: 1440px; height: 900px; overflow: hidden; background: #171614; color: #eeeae3; font: 14px/1.5 Inter, system-ui, sans-serif; }
+    .app { display: grid; grid-template-columns: 64px 1fr; height: 100%; }
+    .rail { border-right: 1px solid #35322e; display: flex; flex-direction: column; align-items: center; gap: 24px; padding-top: 28px; color: #8e8981; }
+    .rail b { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: #24221f; color: #d8a46f; }
+    .main { display: grid; grid-template-rows: 58px 1fr; min-width: 0; }
+    .top { border-bottom: 1px solid #35322e; display: flex; align-items: center; padding: 0 28px; gap: 24px; color: #8e8981; }
+    .top strong { color: #eeeae3; }
+    .top .active { color: #d8a46f; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 900px) 344px; justify-content: center; gap: 20px; min-height: 0; padding: 22px 24px 24px; }
+    .column { display: grid; grid-template-rows: 36px minmax(0,1fr); gap: 8px; min-height: 0; }
+    .switcher { display: flex; align-items: center; justify-content: space-between; padding: 3px 5px; border: 1px solid #3b3833; border-radius: 10px; background: #201f1c; }
+    .tabs { display: flex; gap: 3px; }
+    .tab { height: 28px; padding: 0 14px; border: 0; border-radius: 7px; color: #979188; background: transparent; }
+    .tab.active { color: #f2eee8; background: #34312c; box-shadow: 0 1px 4px #0007; }
+    .state { margin-right: 7px; color: #d8a46f; font-size: 12px; }
+    .editor, .assistant { min-height: 0; border: 1px solid #3b3833; border-radius: 12px; background: #201f1c; box-shadow: 0 12px 40px #0005; overflow: hidden; }
+    .editor-head, .assistant-head { height: 48px; display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid #35322e; }
+    .editor-head input { flex: 1; border: 0; color: #eeeae3; background: transparent; font-weight: 650; font-size: 15px; }
+    .count { border-radius: 999px; background: #2d2a26; color: #aaa39a; padding: 2px 9px; font-size: 11px; }
+    .hint { height: 34px; display: flex; align-items: center; padding: 0 16px; border-bottom: 1px solid #302e2a; color: #817c74; font-size: 12px; }
+    .content { padding: 18px; display: grid; gap: 15px; }
+    .label { color: #bcb6ad; font-size: 13px; font-weight: 600; }
+    .card { border: 1px solid #3b3833; border-radius: 9px; padding: 12px; color: #aaa39a; background: #25231f; }
+    .shot { display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center; }
+    .shot strong { color: #e4dfd7; }
+    .assistant { display: grid; grid-template-rows: 48px 1fr 94px; }
+    .assistant-body { padding: 14px; color: #9a948c; }
+    .bubble { padding: 12px; border-radius: 10px; border: 1px solid #3b3833; }
+    .input { margin: 10px; border: 1px solid #46413b; border-radius: 10px; padding: 12px; color: #77716a; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail"><b>N</b><span>⌂</span><span>◇</span><span>▣</span><span>⚙</span></aside>
+    <main class="main">
+      <header class="top"><strong>Nomi</strong><span class="active">创作</span><span>生成</span><span>预览</span><span>导出</span></header>
+      <section class="workspace">
+        <div class="column">
+          <nav class="switcher" aria-label="创作工作面"><div class="tabs"><button class="tab">原稿</button><button class="tab active">分镜方案</button></div><span class="state">草稿 · 尚未落画布</span></nav>
+          <section class="editor">
+            <header class="editor-head"><span>▣</span><input value="咖啡馆的清晨 · 分镜方案" readonly /><span class="count">3 镜</span></header>
+            <div class="hint">AI 草拟，随便改 · 确认前不生成、不花钱</div>
+            <div class="content">
+              <div><div class="label">跨镜头要一致的</div><div class="card">林夏 · 金丝眼镜、米色衬衫　　咖啡馆 · 清晨暖光</div></div>
+              <div class="label">分镜 · 3 镜</div>
+              <div class="card shot"><span>01</span><strong>林夏打开店门，晨光穿过玻璃</strong><span>5 秒</span></div>
+              <div class="card shot"><span>02</span><strong>陈默推门而入，两人相视一笑</strong><span>5 秒</span></div>
+              <div class="card shot"><span>03</span><strong>窗外梧桐叶随风落下</strong><span>5 秒</span></div>
+            </div>
+          </section>
+        </div>
+        <aside class="assistant"><header class="assistant-head"><strong>Nomi 创作</strong></header><div class="assistant-body"><div class="bubble">分镜方案已经生成。你可以在左侧修改，也可以随时切回“原稿”。</div></div><div class="input">继续调整这份方案…</div></aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

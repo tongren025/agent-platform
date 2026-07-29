@@ -1,0 +1,155 @@
+{
+  "vendor": {
+    "key": "happyface",
+    "name": "HappyFace AI",
+    "baseUrl": "http://127.0.0.1:62515/v1",
+    "auth": {
+      "type": "bearer"
+    }
+  },
+  "model": {
+    "key": "happyface-image-generation",
+    "displayName": "HappyFace AI Image Generation",
+    "kind": "image",
+    "fields": [
+      {
+        "key": "prompt",
+        "displayName": "Prompt",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "prompt",
+          "evidence": "prompt string yes Text describing the image",
+          "evidence_location": "tables[0] row prompt",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "size",
+        "displayName": "Size",
+        "type": "select",
+        "options": [
+          {
+            "value": "512x512",
+            "label": "512x512"
+          },
+          {
+            "value": "1024x1024",
+            "label": "1024x1024"
+          },
+          {
+            "value": "2048x2048",
+            "label": "2048x2048"
+          }
+        ],
+        "default": "1024x1024",
+        "evidence": {
+          "field": "size",
+          "evidence": "size string no One of 512x512, 1024x1024, 2048x2048",
+          "evidence_location": "tables[0] row size",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "n",
+        "displayName": "Number of Images",
+        "type": "number",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          }
+        ],
+        "default": "1",
+        "evidence": {
+          "field": "n",
+          "evidence": "n integer no Number of images (default 1, max 4)",
+          "evidence_location": "tables[0] row n",
+          "confidence": "high"
+        }
+      }
+    ]
+  },
+  "mapping": {
+    "create": {
+      "method": "POST",
+      "path": "/images/generate",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "prompt": "{{request.prompt}}",
+        "size": "{{request.params.size}}",
+        "n": "{{request.params.n}}"
+      }
+    }
+  },
+  "completenessCheck": {
+    "kind": "image",
+    "items": [
+      {
+        "field": "prompt",
+        "status": "has",
+        "reasoning": "has: docs table says \"prompt string yes Text describing the image\"."
+      },
+      {
+        "field": "negative_prompt",
+        "status": "no",
+        "reasoning": "no: parameter table lists only prompt, size, and n; curl body includes only prompt, size, and n."
+      },
+      {
+        "field": "size",
+        "status": "has",
+        "reasoning": "has: docs table says \"size string no One of 512x512, 1024x1024, 2048x2048\"."
+      },
+      {
+        "field": "aspect_ratio",
+        "status": "no",
+        "reasoning": "no: parameter table lists size but no aspect_ratio or ratio; curl body has no ratio field."
+      },
+      {
+        "field": "n",
+        "status": "has",
+        "reasoning": "has: docs table says \"n integer no Number of images (default 1, max 4)\"."
+      },
+      {
+        "field": "seed",
+        "status": "no",
+        "reasoning": "no: parameter table lists only prompt, size, and n; no seed appears in the curl example."
+      },
+      {
+        "field": "cfg_scale",
+        "status": "no",
+        "reasoning": "no: parameter table lists only prompt, size, and n; no cfg/guidance field appears in curl."
+      },
+      {
+        "field": "image_url",
+        "status": "no",
+        "reasoning": "no: docs describe text-to-image generation and the parameter table/curl do not include an input image URL."
+      },
+      {
+        "field": "strength",
+        "status": "no",
+        "reasoning": "no: no img2img/edit parameters are documented; table and curl include only prompt, size, and n."
+      },
+      {
+        "field": "style",
+        "status": "no",
+        "reasoning": "no: style/style_preset is absent from the parameter table and curl example."
+      }
+    ]
+  }
+}

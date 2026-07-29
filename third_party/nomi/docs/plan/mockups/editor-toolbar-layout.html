@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<title>文本编辑器工具栏布局 — 样张对比</title>
+<style>
+  :root{
+    --nomi-bg: oklch(0.985 0.003 90);
+    --nomi-paper: oklch(1 0 0);
+    --nomi-ink: oklch(0.22 0.01 80);
+    --nomi-ink-60: oklch(0.50 0.01 80);
+    --nomi-ink-40: oklch(0.68 0.01 80);
+    --nomi-ink-20: oklch(0.88 0.005 80);
+    --nomi-line: oklch(0.91 0.004 80);
+    --nomi-line-soft: oklch(0.95 0.003 80);
+    --nomi-accent: oklch(0.55 0.13 250);
+    --hover: rgba(60,60,67,0.06);
+    --shadow-md: 0 2px 4px oklch(0 0 0 / 0.04), 0 8px 24px oklch(0 0 0 / 0.06);
+    --font: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:40px;background:var(--nomi-bg);font-family:var(--font);color:var(--nomi-ink)}
+  h1{font-size:20px;margin:0 0 4px}
+  .sub{color:var(--nomi-ink-60);font-size:13px;margin:0 0 28px}
+  .case{margin:0 0 34px}
+  .case > .label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin:0 0 10px}
+  .case > .desc{color:var(--nomi-ink-60);font-size:12px;margin:0 0 12px;line-height:1.6}
+  .tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+  .tag-bad{background:rgba(255,59,48,0.1);color:#c0392b}
+  .tag-rec{background:color-mix(in oklch,var(--nomi-accent) 14%, white);color:var(--nomi-accent)}
+  .tag-alt{background:var(--nomi-line-soft);color:var(--nomi-ink-60)}
+
+  /* 模拟 900px 宽的编辑器外框 */
+  .editor{width:900px;max-width:100%;border:1px solid var(--nomi-line);border-radius:10px;background:var(--nomi-paper);box-shadow:var(--shadow-md);overflow:hidden}
+  .toolbar{height:44px;display:flex;align-items:center;gap:4px;padding:0 12px;border-bottom:1px solid var(--nomi-line-soft);background:var(--nomi-paper)}
+  .btn{width:30px;height:30px;display:inline-grid;place-items:center;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--nomi-ink-60);cursor:pointer;font-size:14px;line-height:1}
+  .btn:hover{background:var(--hover)}
+  .btn[data-active="true"]{background:color-mix(in oklch,var(--nomi-accent) 12%, white);color:var(--nomi-accent)}
+  .btn[disabled]{opacity:.38;cursor:not-allowed}
+  .sep{width:1px;height:18px;background:var(--nomi-line);margin:0 4px}
+  .spacer{flex:1}
+  .body{height:120px;padding:18px 24px;color:var(--nomi-ink-40);font-size:14px}
+  .waste{position:relative}
+  .waste::after{content:"← 这一大片全空（约 570px 浪费）";position:absolute;right:16px;top:13px;font-size:11px;color:#c0392b;opacity:.8}
+
+  /* 方案 C：收窄正文列 */
+  .editor-c{width:900px;max-width:100%;border:1px solid var(--nomi-line);border-radius:10px;background:var(--nomi-paper);box-shadow:var(--shadow-md);overflow:hidden}
+  .col-c{max-width:720px;margin:0 auto}
+  .toolbar-c{height:44px;display:flex;align-items:center;gap:4px;padding:0 0;border-bottom:1px solid var(--nomi-line-soft)}
+</style>
+</head>
+<body>
+  <h1>文本编辑器工具栏布局 · 样张对比</h1>
+  <p class="sub">9 个格式按钮：加粗 / 斜体 / H1 / H2 / 项目符号 / 编号 / 引用 / 撤销 / 重做。编辑器列宽 900px。</p>
+
+  <!-- 当前态 -->
+  <div class="case">
+    <div class="label"><span class="tag tag-bad">当前</span>按钮全挤左，右侧大片浪费</div>
+    <div class="desc">根因：工具栏末尾一个 <code>flex-1</code> spacer 把所有按钮顶到左边。</div>
+    <div class="editor">
+      <div class="toolbar waste">
+        <button class="btn"><b>B</b></button>
+        <button class="btn"><i>I</i></button>
+        <button class="btn">H1</button>
+        <button class="btn">H2</button>
+        <button class="btn">≔</button>
+        <button class="btn">№</button>
+        <button class="btn">❝</button>
+        <button class="btn">↶</button>
+        <button class="btn" disabled>↷</button>
+        <div class="spacer"></div>
+      </div>
+      <div class="body">从这里开始写你的故事、脚本或文案……</div>
+    </div>
+  </div>
+
+  <!-- 方案 A -->
+  <div class="case">
+    <div class="label"><span class="tag tag-rec">方案 A · 推荐</span>分组锚定：格式靠左 + 撤销/重做靠右</div>
+    <div class="desc">格式按钮按语义分 3 簇（强调 · 标题 · 列表/引用）用细分隔线隔开，撤销/重做推到右端。两端用满，中段留白变成「呼吸位」而非「废墟」——这是 Word / Google Docs / 飞书的通用做法。</div>
+    <div class="editor">
+      <div class="toolbar">
+        <button class="btn" data-active="true"><b>B</b></button>
+        <button class="btn"><i>I</i></button>
+        <div class="sep"></div>
+        <button class="btn">H1</button>
+        <button class="btn">H2</button>
+        <div class="sep"></div>
+        <button class="btn">≔</button>
+        <button class="btn">№</button>
+        <button class="btn">❝</button>
+        <div class="spacer"></div>
+        <button class="btn">↶</button>
+        <button class="btn" disabled>↷</button>
+      </div>
+      <div class="body">从这里开始写你的故事、脚本或文案……</div>
+    </div>
+  </div>
+
+  <!-- 方案 B -->
+  <div class="case">
+    <div class="label"><span class="tag tag-alt">方案 B</span>整组居中</div>
+    <div class="desc">所有按钮作为一组水平居中，左右留白对称，视觉不偏。改动最小（去掉 spacer + justify-center + 加分隔线），但中间没有功能分布的「两端锚」感。</div>
+    <div class="editor">
+      <div class="toolbar" style="justify-content:center;gap:4px">
+        <button class="btn"><b>B</b></button>
+        <button class="btn"><i>I</i></button>
+        <div class="sep"></div>
+        <button class="btn">H1</button>
+        <button class="btn">H2</button>
+        <div class="sep"></div>
+        <button class="btn">≔</button>
+        <button class="btn">№</button>
+        <button class="btn">❝</button>
+        <div class="sep"></div>
+        <button class="btn">↶</button>
+        <button class="btn" disabled>↷</button>
+      </div>
+      <div class="body">从这里开始写你的故事、脚本或文案……</div>
+    </div>
+  </div>
+
+  <!-- 方案 C -->
+  <div class="case">
+    <div class="label"><span class="tag tag-alt">方案 C</span>收窄并居中正文列（工具栏跟随）</div>
+    <div class="desc">工具栏 + 正文一起收窄到 ~720px 居中（仿 Notion / Medium 长文排版），「900px 宽工具栏」这个浪费的源头直接消失，长文阅读也更舒服。改动最大：动到编辑器列宽，需连带正文一起调。</div>
+    <div class="editor-c">
+      <div class="col-c">
+        <div class="toolbar-c">
+          <button class="btn"><b>B</b></button>
+          <button class="btn"><i>I</i></button>
+          <div class="sep"></div>
+          <button class="btn">H1</button>
+          <button class="btn">H2</button>
+          <div class="sep"></div>
+          <button class="btn">≔</button>
+          <button class="btn">№</button>
+          <button class="btn">❝</button>
+          <div class="spacer"></div>
+          <button class="btn">↶</button>
+          <button class="btn" disabled>↷</button>
+        </div>
+        <div class="body" style="padding-left:0;padding-right:0">从这里开始写你的故事、脚本或文案……</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

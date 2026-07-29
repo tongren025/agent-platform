@@ -1,0 +1,98 @@
+{
+  "vendor": {
+    "key": "kie",
+    "name": "Kie AI",
+    "baseUrl": "https://api.kie.ai",
+    "auth": {
+      "type": "bearer"
+    },
+    "providerKind": "openai-compatible"
+  },
+  "model": {
+    "key": "gpt-image-2-text-to-image",
+    "displayName": "GPT Image-2 Text to Image",
+    "kind": "image",
+    "fields": [
+      {
+        "key": "aspect_ratio",
+        "displayName": "Aspect Ratio",
+        "type": "select",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          }
+        ],
+        "default": "auto",
+        "evidence": {
+          "field": "aspect_ratio",
+          "evidence": "\"input\": {\n        \"prompt\": \"A cinematic night city poster with neon reflections on a rainy street.\",\n        \"aspect_ratio\": \"auto\"\n    }",
+          "evidence_location": "curl example in docs",
+          "confidence": "high"
+        }
+      }
+    ]
+  },
+  "mapping": {
+    "create": {
+      "method": "POST",
+      "path": "/api/v1/jobs/createTask",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "model": "{{model.modelKey}}",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "{{request.prompt}}",
+          "aspect_ratio": "{{request.params.aspect_ratio}}"
+        }
+      }
+    }
+  },
+  "completenessCheck": {
+    "kind": "image",
+    "items": [
+      {
+        "field": "prompt",
+        "status": "has",
+        "reasoning": "The request body maps `input.prompt` to `{{request.prompt}}`, so prompt is a supported user input even though it comes from the standard request template rather than a custom field."
+      },
+      {
+        "field": "negative_prompt",
+        "status": "no",
+        "reasoning": "The documented curl body only shows `prompt` and `aspect_ratio` inside `input`; there is no negative prompt parameter in the example or surrounding request text."
+      },
+      {
+        "field": "aspect_ratio",
+        "status": "has",
+        "reasoning": "The curl example explicitly includes `\"aspect_ratio\": \"auto\"` inside `input`, and it is exposed as a selectable user field."
+      },
+      {
+        "field": "width",
+        "status": "no",
+        "reasoning": "No width parameter appears in the request example or parameter description for this model page."
+      },
+      {
+        "field": "height",
+        "status": "no",
+        "reasoning": "No height parameter appears in the request example or parameter description for this model page."
+      },
+      {
+        "field": "seed",
+        "status": "no",
+        "reasoning": "The docs page does not mention a seed parameter for this model."
+      },
+      {
+        "field": "num_images",
+        "status": "no",
+        "reasoning": "The docs page does not show any multi-image count parameter in the example request."
+      },
+      {
+        "field": "guidance_scale",
+        "status": "no",
+        "reasoning": "There is no guidance or strength slider described in the example request body or nearby parameter text."
+      }
+    ]
+  }
+}

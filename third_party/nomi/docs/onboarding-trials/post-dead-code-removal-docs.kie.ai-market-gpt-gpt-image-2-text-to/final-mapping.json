@@ -1,0 +1,52 @@
+{
+  "vendor": {
+    "key": "kie",
+    "name": "KIE.AI",
+    "baseUrl": "https://api.kie.ai",
+    "auth": {
+      "type": "bearer"
+    },
+    "providerKind": "openai-compatible"
+  },
+  "model": {
+    "key": "gpt-image-2-text-to-image",
+    "displayName": "GPT Image-2 Text to Image",
+    "kind": "image",
+    "fields": [
+      {
+        "key": "aspect_ratio",
+        "displayName": "Aspect Ratio",
+        "type": "select",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          }
+        ],
+        "default": "auto",
+        "evidence": {
+          "field": "aspect_ratio",
+          "evidence": "\"input\": {\n        \"prompt\": \"A cinematic night city poster with neon reflections on a rainy street.\",\n        \"aspect_ratio\": \"auto\"\n    }",
+          "evidence_location": "curl_examples[0] request body",
+          "confidence": "high"
+        }
+      }
+    ]
+  },
+  "mapping": {
+    "create": {
+      "method": "POST",
+      "path": "/api/v1/jobs/createTask",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "model": "{{model.modelKey}}",
+        "input": {
+          "prompt": "{{request.prompt}}",
+          "aspect_ratio": "{{request.params.aspect_ratio}}"
+        }
+      }
+    }
+  }
+}

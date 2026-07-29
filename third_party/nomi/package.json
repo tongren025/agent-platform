@@ -1,0 +1,244 @@
+{
+  "name": "nomi",
+  "private": true,
+  "version": "0.17.0",
+  "description": "Open-source, local-first AI video creation workbench for writing scripts, generating assets, editing timelines, and exporting videos.",
+  "author": "青阳 <TZ857886159>",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.8.1",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "main": "dist-electron/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aqm857886159/Nomi.git"
+  },
+  "scripts": {
+    "dev": "node ./scripts/dev-electron.mjs",
+    "dev:low-memory": "node ./scripts/dev-low-memory.mjs",
+    "dev:renderer": "vite --host 127.0.0.1",
+    "build": "pnpm run build:renderer && pnpm run build:electron",
+    "build:renderer": "node scripts/build-tailwind.mjs --minify && vite build --mode production",
+    "build:electron": "tsc -p electron/tsconfig.json",
+    "build:site": "node -e \"const fs=require('fs'); for (const f of ['marketing/index.html','marketing/quickstart.html','marketing/handbook.html','marketing/robots.txt','marketing/sitemap.xml','marketing/assets/guide/first-video-poster.svg','marketing/assets/guide/install-flow.svg','marketing/assets/guide/model-setup-flow.svg','marketing/assets/guide/scene3d-director.svg','marketing/assets/guide/image-to-video-flow.svg']) { if (!fs.existsSync(f)) throw new Error(f+' is missing'); } console.log('marketing site ready');\"",
+    "start": "node ./scripts/start-electron.mjs",
+    "start:low-memory": "node ./scripts/start-low-memory.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:build": "pnpm run build",
+    "check:filesize": "node ./scripts/check-file-sizes.mjs",
+    "check:tokens": "node ./scripts/check-design-tokens.mjs",
+    "check:dangling-tokens": "node ./scripts/check-dangling-tokens.mjs",
+    "check:archetype-defaults": "tsx scripts/gen-archetype-wire-defaults.ts --check",
+    "check:secrets": "node ./scripts/check-no-secrets.mjs --all",
+    "check:i18n": "node ./scripts/check-i18n-visible-text.mjs",
+    "gen:archetype-defaults": "tsx scripts/gen-archetype-wire-defaults.ts",
+    "build:handbook": "tsx scripts/build-handbook-html.mjs",
+    "check:audit": "node ./scripts/check-audit-cadence.mjs && node ./scripts/check-eval-cadence.mjs",
+    "gates": "pnpm run check:filesize && pnpm run check:tokens && pnpm run check:dangling-tokens && pnpm run check:archetype-defaults && pnpm run check:secrets && pnpm run check:i18n && pnpm run lint:ci && pnpm run typecheck && pnpm run test && pnpm run build && node -e \"const fs=require('fs');fs.mkdirSync('.claude',{recursive:true});fs.writeFileSync('.claude/.gates-ok',new Date().toISOString());\" && echo '✅ 全门通过，已盖 .claude/.gates-ok（push 闸放行）'",
+    "typecheck": "tsc -p tsconfig.app.json && tsc -p electron/tsconfig.json",
+    "lint": "eslint .",
+    "lint:ci": "eslint . --max-warnings=98",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "feedback:radar": "node ./scripts/feedback-radar.mjs",
+    "stats": "node ./scripts/stats-downloads.mjs",
+    "stats:snapshot": "node ./scripts/stats-downloads.mjs --snapshot",
+    "stats:html": "node ./scripts/stats-downloads.mjs --html",
+    "lab:onboard": "tsx scripts/lab-onboard.ts",
+    "eval:ops": "node ./scripts/eval-ops-report.mjs",
+    "eval:run": "node ./scripts/eval-run.mjs",
+    "eval:score": "node ./scripts/eval-score.mjs",
+    "eval:diff": "node ./scripts/eval-diff.mjs",
+    "eval:baseline": "node ./scripts/eval-baseline.mjs",
+    "eval:view": "node ./scripts/eval-trace-viewer.mjs",
+    "eval:judge-calibrate": "node ./scripts/eval-judge-calibrate.mjs",
+    "eval:review-images": "node ./scripts/eval-review-images.mjs",
+    "eval:generate-quality": "node ./scripts/eval-review-images.mjs",
+    "eval:journey": "node ./scripts/eval-journey.mjs",
+    "dist": "electron-builder",
+    "dist:mac:dir": "electron-builder --mac dir --arm64",
+    "postinstall": "node ./scripts/install-git-hooks.cjs",
+    "test:e2e": "node tests/ux/smoke.e2e.mjs",
+    "test:site": "node tests/ux/marketing-quickstart.static.mjs",
+    "test:journeys": "node ./scripts/eval-journey.mjs --ci",
+    "kill:zombies": "pkill -f \"$PWD/node_modules/.pnpm/electron\" || true",
+    "test:system": "node scripts/test-system.mjs",
+    "test:system:ci": "node scripts/test-system.mjs ci",
+    "test:system:full": "node scripts/test-system.mjs full-local",
+    "test:system:release": "node scripts/test-system.mjs release"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
+    "@ai-sdk/openai": "^1",
+    "@ai-sdk/openai-compatible": "^0.2.16",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^2.1.2",
+    "@fontsource-variable/fraunces": "^5.2.9",
+    "@fontsource-variable/inter": "^5.2.8",
+    "@imgly/background-removal": "^1.7.0",
+    "@leafer-in/editor": "^2.1.0",
+    "@leafer-in/export": "^2.1.0",
+    "@mantine/core": "^7.13.1",
+    "@mantine/modals": "^7.13.1",
+    "@mantine/notifications": "^7.13.1",
+    "@photo-sphere-viewer/core": "5.14.3",
+    "@radix-ui/react-switch": "^1.2.6",
+    "@radix-ui/react-tooltip": "^1.2.11",
+    "@react-three/drei": "^9",
+    "@react-three/fiber": "^8",
+    "@tabler/icons-react": "^3.19.0",
+    "@tanstack/react-virtual": "^3.14.2",
+    "@tiptap/core": "3.23.5",
+    "@tiptap/extension-placeholder": "^3.22.5",
+    "@tiptap/pm": "3.23.5",
+    "@tiptap/react": "^3.22.5",
+    "@tiptap/starter-kit": "^3.22.5",
+    "@tiptap/suggestion": "3.23.5",
+    "ai": "^4.3.19",
+    "clsx": "^2.1.1",
+    "electron-updater": "^6.8.9",
+    "framer-motion": "^12.39.0",
+    "i18next": "26.3.6",
+    "immer": "^11.1.8",
+    "leafer-ui": "^2.1.0",
+    "mammoth": "^1.12.0",
+    "perfect-freehand": "^1.2.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "17.0.10",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.9.6",
+    "remark-gfm": "4.0.1",
+    "scheduler": "0.23.2",
+    "swr": "^2.4.1",
+    "tailwind-merge": "^2.6.1",
+    "three": "^0.184.0",
+    "undici": "6.19.8",
+    "use-sync-external-store": "1.6.0",
+    "xlsx": "^0.18.5",
+    "zod": "^3.25.76",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@mastra/core": "^1.45.0",
+    "@types/node": "22.19.17",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@types/three": "^0.184.1",
+    "@vitejs/plugin-react": "^5.2.0",
+    "@vitest/coverage-v8": "^4.1.8",
+    "autoprefixer": "^10.5.0",
+    "electron": "^31.7.7",
+    "electron-builder": "^25.1.8",
+    "eslint": "^10.4.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "fast-check": "^4.8.0",
+    "globals": "^17.6.0",
+    "playwright": "^1.60.0",
+    "postcss": "^8.5.15",
+    "prettier": "^3.8.3",
+    "tailwindcss": "3",
+    "tsx": "^4.22.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.60.1",
+    "vite": "^7.3.5",
+    "vitest": "^4.1.8"
+  },
+  "build": {
+    "appId": "com.nomi.app",
+    "productName": "Nomi",
+    "npmRebuild": false,
+    "directories": {
+      "output": "release"
+    },
+    "afterPack": "scripts/after-pack-mac.cjs",
+    "asarUnpack": [
+      "node_modules/@ffmpeg-installer/**",
+      "node_modules/.pnpm/@ffmpeg-installer+*/**",
+      "node_modules/@ffprobe-installer/**",
+      "node_modules/.pnpm/@ffprobe-installer+*/**"
+    ],
+    "icon": "build/icon.png",
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "public/**",
+      "build/icon.png",
+      "build/icon.ico"
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "identity": null
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    },
+    "artifactName": "${productName}-${os}-${arch}.${ext}"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild",
+      "@ffmpeg-installer/darwin-arm64",
+      "@ffmpeg-installer/darwin-x64",
+      "@ffmpeg-installer/linux-x64",
+      "@ffmpeg-installer/win32-x64",
+      "@ffprobe-installer/darwin-arm64",
+      "@ffprobe-installer/darwin-x64",
+      "@ffprobe-installer/linux-x64",
+      "@ffprobe-installer/win32-x64"
+    ],
+    "ignoredBuiltDependencies": [
+      "@ffmpeg-installer/darwin-arm64",
+      "@ffprobe-installer/darwin-arm64"
+    ]
+  }
+}

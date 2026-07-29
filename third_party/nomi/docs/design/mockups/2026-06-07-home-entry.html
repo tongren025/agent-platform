@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>首屏入口优化 — 现状 vs 优化</title>
+<style>
+  :root{
+    --bg:oklch(0.985 0.003 90); --paper:oklch(1 0 0); --ink:oklch(0.22 0.01 80);
+    --ink80:oklch(0.32 0.01 80); --ink60:oklch(0.50 0.01 80); --ink40:oklch(0.68 0.01 80);
+    --ink20:oklch(0.88 0.005 80); --ink10:oklch(0.94 0.003 80); --ink05:oklch(0.97 0.003 80);
+    --line:oklch(0.91 0.004 80); --lineSoft:oklch(0.95 0.003 80);
+    --accent:oklch(0.55 0.13 250); --accentSoft:color-mix(in oklch,var(--accent) 12%,var(--paper));
+    --r:10px; --rs:6px; --shadow:0 2px 4px oklch(0 0 0/.04),0 8px 24px oklch(0 0 0/.06);
+    --font:Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:13px;padding:28px 24px 60px;}
+  h1{font-size:19px;margin:0 0 18px;}
+  .row{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap;}
+  .col{flex:1;min-width:430px;}
+  .tag{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;margin-bottom:10px;}
+  .bad{background:oklch(.95 .04 30);color:oklch(.5 .16 30);} .rec{background:var(--accentSoft);color:var(--accent);}
+  .frame{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:18px;}
+  .brand{font-weight:700;font-size:15px;margin-bottom:2px;} .brand small{font-weight:400;color:var(--ink40);font-size:12px;margin-left:6px;}
+  .sub{color:var(--ink60);font-size:12px;margin:0 0 14px;}
+  /* tiles */
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .tile{height:88px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);padding:10px;display:flex;flex-direction:column;justify-content:flex-end;font-size:11.5px;color:var(--ink60);}
+  .tile .ic{font-size:18px;color:var(--ink40);margin-bottom:auto;} .tile b{color:var(--ink);font-weight:600;font-size:12px;display:block;}
+  .thumb{background:var(--ink05);}
+  /* hero current */
+  .hero{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow);}
+  .hero .h{font-size:15px;font-weight:700;margin:4px 0 4px;} .hero .ex{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;}
+  .exc{border:1px solid var(--line);border-radius:var(--rs);padding:8px 10px;font-size:11.5px;} .exc b{display:block;color:var(--ink);font-size:12px;}
+  .exc small{color:var(--ink40);}
+  .search{height:30px;border:1px solid var(--line);border-radius:999px;background:var(--paper);margin:14px 0;display:flex;align-items:center;padding:0 12px;color:var(--ink40);font-size:12px;}
+  .note{color:var(--ink60);font-size:12px;margin:12px 2px 0;} .note b{color:var(--ink);} .con{color:oklch(.5 .16 30);} .pro{color:oklch(.45 .13 150);}
+  /* optimized entry zone */
+  .entry{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin-bottom:16px;}
+  .entry .h{font-size:16px;font-weight:700;margin:0 0 2px;} .entry .hs{color:var(--ink60);font-size:12px;margin:0 0 14px;}
+  .startRow{display:flex;gap:10px;align-items:stretch;}
+  .exbig{flex:1;border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;cursor:pointer;background:var(--paper);transition:.12s;}
+  .exbig:hover{border-color:var(--accent);} .exbig .k{font-size:11px;color:var(--accent);font-weight:600;}
+  .exbig b{display:block;color:var(--ink);font-size:12.5px;margin:3px 0 1px;} .exbig small{color:var(--ink40);font-size:11px;}
+  .secondary{display:flex;gap:10px;margin-top:12px;align-items:center;}
+  .btnPrimary{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 16px;border-radius:999px;background:var(--ink);color:var(--paper);font-weight:600;font-size:13px;border:0;cursor:pointer;}
+  .btnGhost{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;background:var(--paper);color:var(--ink80);border:1px solid var(--line);font-size:12.5px;cursor:pointer;}
+  .recenth{font-size:12px;font-weight:600;color:var(--ink60);margin:4px 0 10px;}
+</style></head>
+<body>
+  <h1>首屏入口优化 — 现状 vs 优化（只动入口）</h1>
+  <div class="row">
+
+    <!-- 现状 -->
+    <div class="col">
+      <span class="tag bad">现状 · 两套入口打架</span>
+      <div class="frame">
+        <div class="brand">Nomi 项目库</div>
+        <div class="sub">新建一个项目，开始把你的创意变成作品。</div>
+        <div class="hero">
+          <span style="font-size:11px;color:var(--accent);font-weight:600;">⚡ 30 秒体验 NOMI</span>
+          <div class="h">把一段故事，自动拆成 6-12 个镜头</div>
+          <div style="color:var(--ink60);font-size:11.5px;">选一个示例，Nomi 会新建项目，填入故事文本，开始自动用 Agent 拆镜头 → 画布上看到一整排可生成的镜头节点。</div>
+          <div class="ex">
+            <div class="exc"><b>🎭 漫剧示例</b><small>二次元短剧·校园天台</small></div>
+            <div class="exc"><b>🚀 产品 demo 示例</b><small>SaaS 30 秒介绍</small></div>
+            <div class="exc"><b>🎒 短视频示例</b><small>Vlog·京都一日</small></div>
+          </div>
+        </div>
+        <div class="search">🔍 搜索项目名称…</div>
+        <div class="grid">
+          <div class="tile"><span class="ic">＋</span><b>新建项目</b>存到默认位置</div>
+          <div class="tile"><span class="ic">📁</span><b>打开文件夹</b>选择已有目录</div>
+          <div class="tile thumb"><span class="ic">▦</span><b>示例：30秒产品介绍</b>18 分钟前</div>
+          <div class="tile thumb"><span class="ic">▦</span><b>示例：京都一日</b>18 分钟前</div>
+        </div>
+      </div>
+      <p class="note"><b>问题：</b><span class="con">「30 秒体验示例」和网格里「新建/打开」是两套并行入口</span>，新用户不知道点哪开始；「新建项目」和项目卡同款同尺寸<span class="con">主行动不突出</span>；hero 一长串解释文字。</p>
+    </div>
+
+    <!-- 优化 -->
+    <div class="col">
+      <span class="tag rec">优化 · 一个有层级的统一入口（推荐）</span>
+      <div class="frame">
+        <div class="brand">Nomi 项目库</div>
+        <div class="sub">把你的创意变成作品。</div>
+        <div class="entry">
+          <div class="h">从哪开始？</div>
+          <div class="hs">选个示例 30 秒看效果，或新建一个空白项目。</div>
+          <div class="startRow">
+            <div class="exbig"><span class="k">⚡ 30 秒体验</span><b>🎭 漫剧短片</b><small>二次元·校园天台</small></div>
+            <div class="exbig"><span class="k">⚡ 30 秒体验</span><b>🚀 产品 demo</b><small>SaaS 介绍</small></div>
+            <div class="exbig"><span class="k">⚡ 30 秒体验</span><b>🎒 短视频</b><small>Vlog·京都</small></div>
+          </div>
+          <div class="secondary">
+            <button class="btnPrimary">＋ 新建空白项目</button>
+            <button class="btnGhost">📁 打开已有文件夹</button>
+          </div>
+        </div>
+        <div class="search">🔍 搜索项目名称…</div>
+        <div class="recenth">最近项目</div>
+        <div class="grid">
+          <div class="tile thumb"><span class="ic">▦</span><b>示例：30秒产品介绍</b>18 分钟前</div>
+          <div class="tile thumb"><span class="ic">▦</span><b>示例：京都一日</b>18 分钟前</div>
+          <div class="tile thumb"><span class="ic">▦</span><b>未命名项目</b>1 小时前</div>
+          <div class="tile thumb"><span class="ic">▦</span><b>6月2日</b>5 小时前</div>
+        </div>
+      </div>
+      <p class="note"><b>改了什么：</b><span class="pro">一个统一入口区，层级清楚</span>——示例(主·30秒试)＝大卡可点；<b>新建空白项目</b>＝深色主按钮(一眼是主行动)；打开文件夹＝次级。<span class="pro">「新建/打开」从下方网格移上来</span>→ 不再两套打架；下方网格只剩「最近项目」(纯历史)。hero 文案精简。<b>只动入口，网格清理/去重是另一档没动。</b></p>
+    </div>
+
+  </div>
+</body></html>

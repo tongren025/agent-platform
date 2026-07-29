@@ -5,6 +5,29 @@
 
 ---
 
+## [2026-07-29] feat: 直接迁入 Nomi 短剧无限画布工作台
+
+- `/canvas` 默认入口由六个通用画布引擎页签改为 Nomi v0.17.0 完整 Web
+  工作台，直接保留短剧生成画布、素材库、节点关系、分组/撤销/整理、可展开多轨
+  时间线、预览工作区、分镜计划和 3D 导演相关能力。
+- 完整上游源码按 Apache-2.0 固定在 `third_party/nomi/`，对应 commit
+  `4afb06452064b483a9cd2fb7b82523500b03c0a5`；许可证、上游文档和本地归属声明
+  一并保留，不再以通用画布库仿写短剧工作台。
+- Nomi renderer 的静态构建产物放入 `web/public/nomi/`，主站构建时自动复制到
+  `wwwroot/nomi/`，并通过同源 iframe 嵌入登录后的平台布局。
+- 新增 Nomi Web 适配 API：模型目录直接读取平台 OpenRouter 图片/视频模型，画布
+  图片节点复用平台落图服务，视频节点复用异步提交与轮询服务；浏览器版不再因缺少
+  Electron IPC 而显示“模型目录加载失败”。
+- 原 React Flow 生产画布保留为右上角“旧版画布”兼容入口，避免删除既有画布数据；
+  Nomi 在浏览器环境沿用上游 localStorage 项目存储，Electron 文件系统能力不冒充可用。
+
+**影响面**：新增 `third_party/nomi/` 完整源码快照和 `web/public/nomi/` 静态子应用；
+调整 `/canvas` 默认页面；新增 `/api/v1/agentapp/canvas/nomi/models`、
+`/api/v1/agentapp/canvas/nomi/tasks` 和任务轮询 API；主站静态资源增加约 35MB；
+无数据库迁移。
+
+---
+
 ## [2026-07-29] feat: 数字员工按文字、图片、视频能力分流模型
 
 - 员工与岗位模板新增 `outputModalities`，支持 `text`、`image`、`video`；员工

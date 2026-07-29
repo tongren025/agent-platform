@@ -1,0 +1,75 @@
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { cn } from '../../utils/cn'
+import type { GenerationCanvasNode } from '../generationCanvas/model/generationCanvasTypes'
+
+const SHORT_LABEL_KINDS = new Set<GenerationCanvasNode['kind']>([
+  'text',
+  'character',
+  'scene',
+  'image',
+  'keyframe',
+  'video',
+  'shot',
+  'output',
+  'panorama',
+])
+
+type Props = {
+  node: GenerationCanvasNode
+  active?: boolean
+  depth?: number
+  onSelect?: (nodeId: string) => void
+  onContextMenu?: (event: React.MouseEvent<HTMLButtonElement>, nodeId: string) => void
+}
+
+export default function NodeItem({ node, active = false, depth = 0, onSelect, onContextMenu }: Props): JSX.Element {
+  const { t } = useTranslation()
+  const shortKind = SHORT_LABEL_KINDS.has(node.kind) ? node.kind : 'fallback'
+  const handleDragStart = React.useCallback(
+    (event: React.DragEvent<HTMLButtonElement>) => {
+      event.dataTransfer.setData('application/x-nomi-node-id', node.id)
+      event.dataTransfer.effectAllowed = 'move'
+    },
+    [node.id],
+  )
+
+  const handleClick = React.useCallback(() => {
+    onSelect?.(node.id)
+  }, [node.id, onSelect])
+
+  return (
+    <button
+      type="button"
+      draggable
+      onDragStart={handleDragStart}
+      onClick={handleClick}
+      onContextMenu={(event) => onContextMenu?.(event, node.id)}
+      data-node-id={node.id}
+      data-active={active ? 'true' : 'false'}
+      className={cn(
+        'w-full flex items-center gap-2 rounded-nomi-sm px-2 py-1.5 text-left transition-colors',
+        'text-micro leading-tight border border-transparent',
+        active ? 'bg-nomi-ink-10 text-nomi-accent' : 'text-nomi-ink-60 hover:bg-nomi-ink-05 hover:text-nomi-ink',
+      )}
+      style={{ paddingLeft: `${8 + depth * 10}px` }}
+      title={node.title || node.id}
+    >
+      <span
+        className="grid place-items-center h-4 w-4 shrink-0 rounded-nomi-sm bg-nomi-ink-05 text-micro text-nomi-ink-40"
+        aria-hidden
+      >
+        {t(`libraries.sidebar.nodeKindShort.${shortKind}`)}
+      </span>
+      <span className="min-w-0 flex-1 truncate">{node.title || node.id}</span>
+      {node.derivedFrom ? (
+        <span
+          className="shrink-0 rounded-full bg-nomi-accent/10 px-1.5 py-0.5 text-micro text-nomi-accent"
+          title={t('sidebar.derivedNode')}
+        >
+          ↩
+        </span>
+      ) : null}
+    </button>
+  )
+}

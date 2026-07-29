@@ -22459,3 +22459,5 @@ HTTP Request: GET https://jimeng.jianying.com/ai-tool/home/ "HTTP/1.1 200 OK"
 2026-07-29T04:07:08.832694Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/api/v1/agentapp/tasks request_id=95a3fb19b90a4e8e907f84559cfe954d status=200
 2026-07-29T04:07:13.852316Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/api/v1/agentapp/tasks request_id=befd6ff8169249b49f6cb6e7c3ac531d status=200
 2026-07-29T04:07:18.879565Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/api/v1/agentapp/tasks request_id=f213f604d0b842c38623b3ab80f3e153 status=200
+定时触发蒸馏：comic-video-artist @ 03:00
+定时触发自我进化：comic-video-artist @ 04:00

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>选择面板重设计 · 样张</title>
+<style>
+  :root{
+    --nomi-paper: oklch(1 0 0);
+    --nomi-ink: oklch(0.22 0.01 80);
+    --nomi-ink-80: oklch(0.34 0.01 80);
+    --nomi-ink-60: oklch(0.50 0.01 80);
+    --nomi-ink-40: oklch(0.68 0.01 80);
+    --nomi-ink-10: oklch(0.93 0.004 80);
+    --nomi-ink-05: oklch(0.97 0.003 80);
+    --nomi-line: oklch(0.91 0.004 80);
+    --nomi-line-soft: oklch(0.95 0.003 80);
+    --nomi-accent: oklch(0.55 0.13 250);
+    --nomi-accent-soft: color-mix(in oklch, var(--nomi-accent) 12%, var(--nomi-paper));
+    --shadow-pop: 0 12px 32px rgba(18,24,38,.14), 0 0 0 1px rgba(18,24,38,.05);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#f7f7f9;color:var(--nomi-ink);font:13px/1.5 -apple-system,"PingFang SC",system-ui,sans-serif;padding:40px}
+  h1{font-size:16px;margin:0 0 4px}
+  .sub{color:var(--nomi-ink-60);font-size:12.5px;margin:0 0 28px}
+  .row{display:flex;gap:48px;flex-wrap:wrap;align-items:flex-start}
+  .col{display:flex;flex-direction:column;gap:10px}
+  .label{font-size:11px;color:var(--nomi-ink-40);letter-spacing:.02em}
+
+  /* 底栏参数 pill —— 与现状一致（保持不动） */
+  .footer{display:flex;align-items:center;gap:8px;width:max-content;
+    background:var(--nomi-paper);border:1px solid var(--nomi-line);border-radius:14px;padding:12px;box-shadow:0 8px 24px rgba(18,24,38,.08)}
+  .pill{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 8px 0 10px;border:1px solid var(--nomi-line);border-radius:999px;background:var(--nomi-paper);font-size:12.5px;cursor:pointer;white-space:nowrap}
+  .pill .k{font-size:10.5px;color:var(--nomi-ink-40)}
+  .pill .v{color:var(--nomi-ink-80)}
+  .pill.open{border-color:var(--nomi-accent)}
+  .pill .chev{color:var(--nomi-ink-40);font-size:10px}
+  .badge{font-size:10px;padding:1px 6px;border-radius:999px;background:var(--nomi-accent-soft);color:var(--nomi-accent)}
+  .badge.gen{background:var(--nomi-ink-10);color:var(--nomi-ink-60)}
+  .gen-btn{width:30px;height:30px;border-radius:999px;background:var(--nomi-ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;border:0}
+
+  /* ★ 重设计的下拉：紧凑、贴合内容、设计语言一致 */
+  .anchor{position:relative;display:inline-flex}
+  .menu{position:absolute;top:calc(100% + 6px);left:0;min-width:100%;width:max-content;max-width:260px;
+    background:var(--nomi-paper);border:1px solid var(--nomi-line);border-radius:12px;box-shadow:var(--shadow-pop);
+    padding:4px;z-index:10}
+  .menu.up{top:auto;bottom:calc(100% + 6px)}
+  .opt{display:flex;align-items:center;gap:8px;height:30px;padding:0 8px 0 9px;border-radius:8px;cursor:pointer;white-space:nowrap;font-size:12.5px;color:var(--nomi-ink-80)}
+  .opt:hover{background:var(--nomi-ink-05)}
+  .opt.sel{color:var(--nomi-ink);font-weight:600}
+  .opt .check{width:14px;color:var(--nomi-accent);font-size:12px;flex:0 0 14px}
+  .opt .check.hidden{visibility:hidden}
+  .opt .price{margin-left:auto;padding-left:14px;color:var(--nomi-ink-40);font-size:11px}
+  .menu .scroll{max-height:240px;overflow:auto}
+  .sep{height:1px;background:var(--nomi-line-soft);margin:4px 2px}
+
+  .note{margin-top:10px;font-size:11.5px;color:var(--nomi-ink-60);max-width:300px}
+  .bad{margin-top:36px;padding:14px;border:1px dashed var(--nomi-line);border-radius:12px;background:#fff;max-width:520px}
+  .bad h3{margin:0 0 8px;font-size:13px}
+  .bad ul{margin:0;padding-left:18px;color:var(--nomi-ink-60);font-size:12px}
+  .native{appearance:auto;height:28px;border:1px solid var(--nomi-line);border-radius:999px;padding:0 8px;font:inherit}
+</style>
+</head>
+<body>
+  <h1>选择面板重设计 · 样张（v1）</h1>
+  <p class="sub">把底栏参数/模型的<strong>原生 &lt;select&gt; 下拉</strong>换成与设计语言一致的紧凑下拉。pill 本身不动，只改「点 ▾ 弹出的那个框」。光模式 · token-only · 密度优先。</p>
+
+  <div class="row">
+    <!-- 短列表：比例 -->
+    <div class="col">
+      <span class="label">短列表（比例）— 贴合内容、不留冗余</span>
+      <div class="footer">
+        <span class="pill"><span class="v">Seedream 4.5</span><span class="badge">模板</span><span class="chev">▾</span></span>
+        <span class="anchor">
+          <span class="pill open"><span class="k">比例</span><span class="v">1:1</span><span class="chev">▾</span></span>
+          <div class="menu">
+            <div class="opt sel"><span class="check">✓</span>1:1</div>
+            <div class="opt"><span class="check hidden">✓</span>16:9</div>
+            <div class="opt"><span class="check hidden">✓</span>9:16</div>
+            <div class="opt"><span class="check hidden">✓</span>4:3</div>
+            <div class="opt"><span class="check hidden">✓</span>3:4</div>
+            <div class="opt"><span class="check hidden">✓</span>auto</div>
+          </div>
+        </span>
+        <span class="pill"><span class="k">质量</span><span class="v">basic</span><span class="chev">▾</span></span>
+        <button class="gen-btn">↑</button>
+      </div>
+      <p class="note">下拉宽度 = 最长选项宽度（width:max-content），行高 30px、选中打勾。没有原生下拉那种大块留白。</p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:40px">
+    <!-- 长列表：模型（带徽标 + 价格 + 滚动） -->
+    <div class="col">
+      <span class="label">长列表（模型）— 徽标内嵌、超高滚动、仍紧凑</span>
+      <div class="footer">
+        <span class="anchor">
+          <span class="pill open"><span class="v">GPT Image 2 · 文生图</span><span class="badge">模板</span><span class="chev">▾</span></span>
+          <div class="menu" style="max-width:240px">
+            <div class="scroll">
+              <div class="opt sel"><span class="check">✓</span>GPT Image 2 · 文生图<span class="price">模板</span></div>
+              <div class="opt"><span class="check hidden">✓</span>Seedream 4.5<span class="price">模板</span></div>
+              <div class="opt"><span class="check hidden">✓</span>Nano Banana<span class="price">模板</span></div>
+              <div class="opt"><span class="check hidden">✓</span>GPT Image 2 · 图生图<span class="price">模板</span></div>
+              <div class="opt"><span class="check hidden">✓</span>Gemini Omni Video<span class="price" style="color:var(--nomi-ink-40)">通用</span></div>
+            </div>
+          </div>
+        </span>
+        <span class="pill"><span class="k">比例</span><span class="v">auto</span><span class="chev">▾</span></span>
+        <button class="gen-btn">↑</button>
+      </div>
+      <p class="note">模型名左、模板/通用徽标右对齐；列表超 ~8 项才滚动（max-height 240）。与右键「添加节点」菜单同一套视觉。</p>
+    </div>
+  </div>
+
+  <div class="bad">
+    <h3>对照：现状（原生 &lt;select&gt;）的问题</h3>
+    <select class="native"><option>1:1</option><option>16:9</option><option>9:16</option></select>
+    <ul>
+      <li>点开是 <strong>OS 原生下拉</strong>，字体/圆角/阴影/选中态全不受控，跟设计语言割裂。</li>
+      <li>原生选项行有系统留白，长列表/大屏上「框很大、冗余空间多」。</li>
+      <li>无法内嵌「模板/通用」徽标、价格、分组，能力受限。</li>
+    </ul>
+  </div>
+
+  <p class="sub" style="margin-top:32px">实现备注（待确认后做）：复用设计系统已有的 popover 原语 / 仿右键 <code>NodeAddMenu</code> 视觉，做一个轻量受控下拉替换底栏所有原生 <code>&lt;select&gt;</code>（模型 + 各参数）。加新同 commit 删原生 select（P1）。键盘可达 + 贴边自动翻向（.up）。</p>
+</body>
+</html>

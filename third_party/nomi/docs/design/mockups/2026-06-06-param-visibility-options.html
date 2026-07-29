@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>参数露出 — 自适应宽度 + 横排（2026-06-06 v3）</title>
+<style>
+  :root{
+    --nomi-bg: oklch(0.985 0.003 90);
+    --nomi-paper: oklch(1 0 0);
+    --nomi-ink: oklch(0.22 0.01 80);
+    --nomi-ink-80: oklch(0.32 0.01 80);
+    --nomi-ink-60: oklch(0.50 0.01 80);
+    --nomi-ink-40: oklch(0.68 0.01 80);
+    --nomi-ink-20: oklch(0.88 0.005 80);
+    --nomi-ink-10: oklch(0.94 0.003 80);
+    --nomi-ink-05: oklch(0.97 0.003 80);
+    --nomi-line: oklch(0.91 0.004 80);
+    --nomi-line-soft: oklch(0.95 0.003 80);
+    --nomi-accent: oklch(0.55 0.13 250);
+    --nomi-accent-soft: color-mix(in oklch, var(--nomi-accent) 12%, var(--nomi-paper));
+    --r-sm:6px; --r:10px;
+    --shadow-md: 0 2px 4px oklch(0 0 0 / 0.04), 0 8px 24px oklch(0 0 0 / 0.06);
+    --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.04), 0 1px 1px oklch(0 0 0 / 0.03);
+    --font: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--nomi-bg);color:var(--nomi-ink);font-family:var(--font);
+       font-size:13px;line-height:1.5;padding:32px 28px 64px;}
+  h1{font-size:20px;margin:0 0 4px;}
+  .sub{color:var(--nomi-ink-60);margin:0 0 24px;max-width:900px;}
+  .sub b{color:var(--nomi-ink);}
+  .rulebox{background:var(--nomi-accent-soft);border:1px solid color-mix(in oklch,var(--nomi-accent) 25%,var(--nomi-paper));
+       border-radius:var(--r);padding:12px 14px;margin:0 0 28px;max-width:900px;font-size:12.5px;color:var(--nomi-ink-80);}
+  .rulebox b{color:var(--nomi-accent);}
+  .sech{font-size:13px;font-weight:700;margin:0 0 14px;color:var(--nomi-ink-80);}
+  .row{display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap;margin-bottom:34px;}
+  .ex{display:flex;flex-direction:column;align-items:center;}
+  .exlab{font-size:11.5px;color:var(--nomi-ink-60);margin-top:8px;text-align:center;}
+  .exlab b{color:var(--nomi-ink);}
+
+  .stage{background:
+      linear-gradient(oklch(0.97 0.003 80) 1px, transparent 1px) 0 0/22px 22px,
+      linear-gradient(90deg, oklch(0.97 0.003 80) 1px, transparent 1px) 0 0/22px 22px,
+      var(--nomi-bg);
+      border:1px solid var(--nomi-line-soft);border-radius:var(--r);padding:24px 20px;}
+  .node{display:flex;flex-direction:column;align-items:center;}
+  .preview{width:220px;height:124px;border-radius:var(--r);background:
+      repeating-linear-gradient(45deg, oklch(0.96 0.003 80), oklch(0.96 0.003 80) 9px, oklch(0.98 0.002 80) 9px, oklch(0.98 0.002 80) 18px);
+      border:1px solid var(--nomi-line);display:flex;align-items:center;justify-content:center;color:var(--nomi-ink-40);font-size:11px;box-shadow:var(--shadow-sm);}
+  .gap{height:12px;}
+
+  /* 关键：卡宽 = 内容驱动。fit-content 让它按参数行的自然宽度收，min/max 兜底，超 max 才换行。 */
+  .card{background:var(--nomi-paper);border:1px solid var(--nomi-line);border-radius:var(--r);
+        box-shadow:var(--shadow-md);padding:12px;display:flex;flex-direction:column;
+        width:fit-content;min-width:340px;max-width:620px;}
+  .card.narrow{width:300px;min-width:0;}
+
+  .modebar{display:flex;gap:4px;margin-bottom:9px;}
+  .modebar .m{font-size:11px;padding:3px 9px;border-radius:999px;color:var(--nomi-ink-60);background:var(--nomi-ink-05);white-space:nowrap;}
+  .modebar .m.on{background:var(--nomi-accent-soft);color:var(--nomi-accent);font-weight:600;}
+  .divider{height:1px;background:var(--nomi-line-soft);margin:9px 0;}
+  .prompt{min-height:48px;color:var(--nomi-ink-40);font-size:12.5px;padding:2px 0;}
+
+  .footer{display:flex;align-items:center;gap:8px;margin-top:11px;padding-top:11px;border-top:1px solid var(--nomi-line-soft);}
+  .footer.wrapnarrow{flex-wrap:wrap;}
+  .params-inline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;flex:1;min-width:0;}
+  .chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border:1px solid var(--nomi-line);
+        border-radius:999px;background:var(--nomi-paper);font-size:12px;color:var(--nomi-ink-80);white-space:nowrap;}
+  .chip .badge{font-size:10px;padding:1px 6px;border-radius:999px;background:var(--nomi-accent-soft);color:var(--nomi-accent);}
+  .chip.mini .k{color:var(--nomi-ink-40);margin-right:4px;font-size:10.5px;}
+  .chip.truncate{max-width:118px;overflow:hidden;text-overflow:ellipsis;}
+  .seg{display:inline-flex;gap:2px;padding:2px;border-radius:999px;background:var(--nomi-ink-05);height:28px;align-items:center;white-space:nowrap;}
+  .seg b{font-size:11px;padding:3px 10px;border-radius:999px;color:var(--nomi-ink-60);font-weight:500;}
+  .seg b.on{background:var(--nomi-paper);color:var(--nomi-ink);font-weight:600;box-shadow:var(--shadow-sm);}
+  .seg .k{font-size:10.5px;color:var(--nomi-ink-40);padding-left:6px;}
+  .gen{width:30px;height:30px;border-radius:999px;background:var(--nomi-ink);color:var(--nomi-paper);
+       display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex:none;margin-left:auto;}
+  .chev{color:var(--nomi-ink-40);font-size:10px;}
+</style>
+</head>
+<body>
+  <h1>参数露出 — 自适应宽度 + 横排（v3）</h1>
+  <p class="sub">合成区是浮在节点下方的<b>独立面板</b>，宽度<b>不绑视频比例、也不钉死</b>，而是<b>跟着这个模型实际的参数走</b>：参数少→窄，参数多→宽。所有参数带小标签横排，一眼可见、点一下就调、不用滚。</p>
+  <div class="rulebox"><b>宽度规则：</b>width = <b>内容驱动</b>（按当前模型渲染出的参数自然撑开）<b> clamp 到 [可用下限 ~340 , 视口上限 ~620]</b>。低于下限→保底（保证提示词可写）；高于上限→参数<b>在卡内换行</b>（绝不漏出卡外、绝不竖向堆死）。下面三个是同一节点、不同模型参数量，宽度自动不同：</p>
+
+  <!-- 现状对照 -->
+  <div class="sech">✗ 现状：宽度绑节点(clamp 320–440) → 参数塞不下 → 收进「设置」、看不见、要滚</div>
+  <div class="row">
+    <div class="ex">
+      <div class="stage"><div class="node">
+        <div class="preview">视频预览 16:9</div><div class="gap"></div>
+        <div class="card narrow">
+          <div class="modebar"><span class="m on">全能参考</span><span class="m">首尾帧</span></div>
+          <div class="divider"></div>
+          <div class="prompt">一只猫在霓虹城市奔跑…</div>
+          <div class="footer wrapnarrow">
+            <span class="chip">Seedance 2 <span class="badge">模板</span> <span class="chev">▾</span></span>
+            <span class="chip truncate">4s · 16:9 · 1080… <span class="chev">▾</span></span>
+            <span class="gen">↑</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="exlab">参数被截断、藏起来</div>
+    </div>
+  </div>
+
+  <!-- 新方案：自适应宽度 -->
+  <div class="sech">✓ 新方案：宽度跟参数走（content-driven），横排全可见，不漏出</div>
+  <div class="row">
+
+    <!-- 少参数 -->
+    <div class="ex">
+      <div class="stage"><div class="node">
+        <div class="preview">图片预览 1:1</div><div class="gap"></div>
+        <div class="card">
+          <div class="modebar"><span class="m on">全能参考</span><span class="m">文生图</span></div>
+          <div class="divider"></div>
+          <div class="prompt">赛博朋克少女肖像，霓虹背光…</div>
+          <div class="footer">
+            <div class="params-inline">
+              <span class="chip">GPT Image 2 <span class="badge">模板</span> <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">比例</span>1:1 <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">数量</span>1 <span class="chev">▾</span></span>
+            </div>
+            <span class="gen">↑</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="exlab"><b>2 个参数</b> → 窄面板（≈ 自然宽）</div>
+    </div>
+
+    <!-- 中等参数 -->
+    <div class="ex">
+      <div class="stage"><div class="node">
+        <div class="preview">视频预览 16:9</div><div class="gap"></div>
+        <div class="card">
+          <div class="modebar"><span class="m on">全能参考</span><span class="m">首尾帧</span><span class="m">文生</span></div>
+          <div class="divider"></div>
+          <div class="prompt">一只猫在霓虹城市奔跑，电影感…</div>
+          <div class="footer">
+            <div class="params-inline">
+              <span class="chip">Seedance 2 <span class="badge">模板</span> <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">比例</span>16:9 <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">时长</span>4s <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">清晰度</span>1080p <span class="chev">▾</span></span>
+              <span class="seg"><span class="k">声音</span><b class="on">开</b><b>关</b></span>
+            </div>
+            <span class="gen">↑</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="exlab"><b>4 个参数</b> → 中等宽（自动变宽容纳）</div>
+    </div>
+
+    <!-- 多参数（触顶换行） -->
+    <div class="ex">
+      <div class="stage"><div class="node">
+        <div class="preview">视频预览 16:9</div><div class="gap"></div>
+        <div class="card">
+          <div class="modebar"><span class="m on">全能参考</span><span class="m">首尾帧</span><span class="m">文生</span></div>
+          <div class="divider"></div>
+          <div class="prompt">史诗级运镜，雪山日出，航拍俯冲…</div>
+          <div class="footer">
+            <div class="params-inline">
+              <span class="chip">Kling Pro <span class="badge">模板</span> <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">比例</span>16:9 <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">时长</span>10s <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">清晰度</span>1080p <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">运镜</span>推进 <span class="chev">▾</span></span>
+              <span class="chip mini"><span class="k">CFG</span>0.5 <span class="chev">▾</span></span>
+              <span class="seg"><span class="k">声音</span><b class="on">开</b><b>关</b></span>
+            </div>
+            <span class="gen">↑</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="exlab"><b>6 个参数</b> → 触上限，多出的<b>在卡内换行</b>（不漏出）</div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>上手清单 OnboardingChecklist — 样张</title>
+<style>
+  :root{
+    --bg:oklch(0.985 0.003 90); --paper:oklch(1 0 0); --ink:oklch(0.22 0.01 80);
+    --ink80:oklch(0.32 0.01 80); --ink60:oklch(0.50 0.01 80); --ink40:oklch(0.68 0.01 80);
+    --ink30:oklch(0.78 0.005 80); --ink20:oklch(0.88 0.005 80); --ink10:oklch(0.94 0.003 80); --ink05:oklch(0.97 0.003 80);
+    --line:oklch(0.91 0.004 80); --lineSoft:oklch(0.95 0.003 80);
+    --accent:oklch(0.55 0.13 250); --accentSoft:color-mix(in oklch,var(--accent) 12%,var(--paper));
+    --ok:oklch(0.55 0.13 150); --okSoft:color-mix(in oklch,var(--ok) 14%,var(--paper));
+    --r:10px; --rs:6px; --rl:14px;
+    --shadowSm:0 1px 2px oklch(0 0 0/.04),0 4px 12px oklch(0 0 0/.05);
+    --shadowMd:0 2px 4px oklch(0 0 0/.05),0 10px 28px oklch(0 0 0/.08);
+    --font:Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+    --fast:140ms cubic-bezier(.2,.7,.3,1);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:13px;padding:28px 24px 64px;}
+  h1{font-size:19px;margin:0 0 4px;font-weight:600;}
+  .lead{color:var(--ink60);font-size:12.5px;margin:0 0 24px;max-width:760px;line-height:1.6;}
+  .grid{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;}
+  .col{display:flex;flex-direction:column;gap:10px;}
+  .cap{font-size:11px;font-weight:600;color:var(--ink60);text-transform:uppercase;letter-spacing:.04em;}
+  .stage{background:var(--ink05);border:1px solid var(--lineSoft);border-radius:var(--r);padding:22px;min-width:300px;display:flex;align-items:flex-end;justify-content:flex-end;min-height:230px;position:relative;}
+  .stage::before{content:"工作区右下角";position:absolute;top:10px;left:14px;font-size:10px;color:var(--ink30);}
+
+  /* ── 展开卡 ── */
+  .ck{width:258px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadowMd);overflow:hidden;}
+  .ck__hd{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;}
+  .ck__hd .t{font-size:14px;font-weight:600;color:var(--ink);}
+  .ck__hd .pg{font-size:12px;color:var(--ink40);font-weight:500;}
+  .ck__hd .min{margin-left:auto;width:22px;height:22px;display:grid;place-items:center;border:0;background:transparent;color:var(--ink40);cursor:pointer;border-radius:var(--rs);}
+  .ck__hd .min:hover{background:var(--ink10);color:var(--ink);}
+  .ck__bar{height:3px;background:var(--ink10);margin:0 14px 8px;border-radius:999px;overflow:hidden;}
+  .ck__bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width var(--fast);}
+  .ck__list{display:flex;flex-direction:column;padding:2px 6px 8px;}
+  .row{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:var(--rs);}
+  .row .ind{flex-shrink:0;width:18px;height:18px;border-radius:999px;display:grid;place-items:center;margin-top:1px;}
+  .row.done .ind{background:var(--accent);color:#fff;}
+  .row.todo .ind{border:1.5px solid var(--ink20);}
+  .row.next .ind{border:1.5px solid var(--accent);}
+  .row .ind svg{width:11px;height:11px;}
+  .row .tx .lb{font-size:13px;font-weight:500;color:var(--ink);line-height:1.35;}
+  .row.done .tx .lb{color:var(--ink40);}
+  .row .tx .hint{font-size:12px;color:var(--ink40);line-height:1.4;margin-top:1px;}
+  .row.next{background:var(--accentSoft);}
+  .row.next .tx .lb{color:var(--accent);}
+  .num{font-size:11px;color:var(--ink30);font-weight:600;}
+
+  /* ── 折叠 pill ── */
+  .pill{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 11px 0 10px;background:var(--paper);border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadowSm);cursor:pointer;font-family:var(--font);}
+  .pill svg{width:15px;height:15px;color:var(--ink60);}
+  .pill .t{font-size:13px;color:var(--ink80);font-weight:500;}
+  .pill .badge{font-size:11px;font-weight:600;color:var(--accent);background:var(--accentSoft);border-radius:999px;padding:1px 7px;}
+
+  .note{font-size:12px;color:var(--ink60);line-height:1.6;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;max-width:280px;}
+  .note b{color:var(--ink);}
+</style>
+</head>
+<body>
+  <h1>上手清单 · OnboardingChecklist</h1>
+  <p class="lead">替代旧的三步 spotlight 引导（WorkbenchTour）。被动、克制、不压暗、不抢点击——常驻工作区右下角，可折叠成小 pill。四步随<b>真实行为</b>自动打勾（接模型 / 拆镜头 / 生成一张 / 导出），全部完成后整卡自动消失。token-only。</p>
+
+  <div class="grid">
+    <!-- A. 展开态 2/4 -->
+    <div class="col">
+      <div class="cap">A · 展开（2/4 已完成）</div>
+      <div class="stage">
+        <div class="ck">
+          <div class="ck__hd">
+            <span class="t">上手 4 步</span>
+            <span class="pg">2 / 4</span>
+            <button class="min" title="收起" aria-label="收起">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="ck__bar"><i style="width:50%"></i></div>
+          <div class="ck__list">
+            <div class="row done">
+              <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span>
+              <span class="tx"><div class="lb">接入模型</div></span>
+            </div>
+            <div class="row done">
+              <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span>
+              <span class="tx"><div class="lb">拆一个镜头</div></span>
+            </div>
+            <div class="row next">
+              <span class="ind"></span>
+              <span class="tx"><div class="lb">生成一张</div><div class="hint">在镜头卡里选模型，点「生成」出图。</div></span>
+            </div>
+            <div class="row todo">
+              <span class="ind"></span>
+              <span class="tx"><div class="lb">导出成片</div><div class="hint">排进时间轴，右上「导出」输出 MP4。</div></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. 折叠 pill -->
+    <div class="col">
+      <div class="cap">B · 折叠（收起后的小入口）</div>
+      <div class="stage">
+        <button class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 1.5-1.5M4 12l1 1 1.5-1.5M4 18l1 1 1.5-1.5"/></svg>
+          <span class="t">上手 4 步</span>
+          <span class="badge">2/4</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- C. 全完成 -->
+    <div class="col">
+      <div class="cap">C · 4/4 完成 → 自动消失</div>
+      <div class="stage" style="align-items:center;justify-content:center;">
+        <div class="note">四步全部打勾后，卡片与折叠 pill 都<b>自动隐藏</b>，不再占用工作区。需要时仍可从项目库「看看 Nomi」重看开屏。</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

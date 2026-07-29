@@ -1,0 +1,322 @@
+{
+  "vendor": {
+    "key": "kie",
+    "name": "Kie.ai",
+    "baseUrl": "https://api.kie.ai/api/v1",
+    "auth": {
+      "type": "bearer"
+    }
+  },
+  "model": {
+    "key": "kling-3.0/video",
+    "displayName": "Kling 3.0",
+    "kind": "video",
+    "fields": [
+      {
+        "key": "duration",
+        "displayName": "Duration",
+        "type": "select",
+        "options": [
+          {
+            "value": "3",
+            "label": "3 seconds"
+          },
+          {
+            "value": "4",
+            "label": "4 seconds"
+          },
+          {
+            "value": "5",
+            "label": "5 seconds"
+          },
+          {
+            "value": "6",
+            "label": "6 seconds"
+          },
+          {
+            "value": "7",
+            "label": "7 seconds"
+          },
+          {
+            "value": "8",
+            "label": "8 seconds"
+          },
+          {
+            "value": "9",
+            "label": "9 seconds"
+          },
+          {
+            "value": "10",
+            "label": "10 seconds"
+          },
+          {
+            "value": "11",
+            "label": "11 seconds"
+          },
+          {
+            "value": "12",
+            "label": "12 seconds"
+          },
+          {
+            "value": "13",
+            "label": "13 seconds"
+          },
+          {
+            "value": "14",
+            "label": "14 seconds"
+          },
+          {
+            "value": "15",
+            "label": "15 seconds"
+          }
+        ],
+        "default": "5",
+        "evidence": {
+          "field": "duration",
+          "evidence": "Total video duration in seconds. Integer value, range: 3 to 15.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.duration",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "aspect_ratio",
+        "displayName": "Aspect Ratio",
+        "type": "select",
+        "options": [
+          {
+            "value": "16:9",
+            "label": "16:9"
+          },
+          {
+            "value": "9:16",
+            "label": "9:16"
+          },
+          {
+            "value": "1:1",
+            "label": "1:1"
+          }
+        ],
+        "default": "16:9",
+        "evidence": {
+          "field": "aspect_ratio",
+          "evidence": "Video aspect ratio. Options: 16:9, 9:16, 1:1. When image_urls(first and last frame images) is provided, this parameter is optional",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.aspect_ratio",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "mode",
+        "displayName": "Mode",
+        "type": "select",
+        "options": [
+          {
+            "value": "std",
+            "label": "Standard"
+          },
+          {
+            "value": "pro",
+            "label": "Pro"
+          },
+          {
+            "value": "4K",
+            "label": "4K"
+          }
+        ],
+        "default": "pro",
+        "evidence": {
+          "field": "mode",
+          "evidence": "Generation mode. std has standard resolution, pro has higher resolution, 4K has 4K resolution.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.mode",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "sound",
+        "displayName": "Sound Effects",
+        "type": "boolean",
+        "options": [],
+        "default": "false",
+        "evidence": {
+          "field": "sound",
+          "evidence": "Whether to enable sound effects. true enables sound effects, false disables them. When multi_shots is true, this field defaults to true.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.sound",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "image_urls",
+        "displayName": "Image URLs",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "image_urls",
+          "evidence": "First and last frame image URLs. Required when elements are referenced in the prompt (using @element_name syntax). When multi_shots is false: if length is 2, index 0 is the first frame and index 1 is the last frame",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.image_urls",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "multi_shots",
+        "displayName": "Multi Shot",
+        "type": "boolean",
+        "options": [],
+        "default": "false",
+        "evidence": {
+          "field": "multi_shots",
+          "evidence": "Whether to use multi-shot mode. true enables multi-shot mode, false enables single-shot mode.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.multi_shots",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "multi_prompt",
+        "displayName": "Multi Prompt",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "multi_prompt",
+          "evidence": "Shot prompts. Takes effect when multi_shots is true. Used to describe the text and duration of each shot. Supports up to 5 shots.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.multi_prompt",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "kling_elements",
+        "displayName": "Kling Elements",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "kling_elements",
+          "evidence": "Referenced elements. Detailed information about elements referenced in the prompt. A single task can reference a maximum of three elements.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody input.kling_elements",
+          "confidence": "high"
+        }
+      },
+      {
+        "key": "callBackUrl",
+        "displayName": "Callback URL",
+        "type": "text",
+        "options": [],
+        "default": "",
+        "evidence": {
+          "field": "callBackUrl",
+          "evidence": "The URL to receive generation task completion updates. Optional but recommended for production use.",
+          "evidence_location": "https://docs.kie.ai/market/kling/kling-3-0.md requestBody callBackUrl",
+          "confidence": "high"
+        }
+      }
+    ]
+  },
+  "mapping": {
+    "create": {
+      "method": "POST",
+      "path": "/jobs/createTask",
+      "headers": {
+        "Authorization": "Bearer {{user_api_key}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "model": "{{model.modelKey}}",
+        "input": {
+          "prompt": "{{request.prompt}}",
+          "sound": false,
+          "duration": "{{request.params.duration}}",
+          "aspect_ratio": "{{request.params.aspect_ratio}}",
+          "mode": "{{request.params.mode}}",
+          "multi_shots": false
+        }
+      }
+    },
+    "query": {
+      "method": "GET",
+      "path": "/api/v1/jobs/recordInfo",
+      "headers": {
+        "Authorization": "Bearer {{user_api_key}}"
+      },
+      "query": {
+        "taskId": "{{providerMeta.task_id}}"
+      },
+      "response_mapping": {
+        "task_id": "data.taskId",
+        "status": "data.state",
+        "image_url": "",
+        "video_url": "data.resultJson.resultUrls.0",
+        "audio_url": "",
+        "error_message": "data.failMsg"
+      }
+    }
+  },
+  "completenessCheck": {
+    "kind": "video",
+    "items": [
+      {
+        "field": "prompt",
+        "status": "has",
+        "reasoning": "Has prompt: docs state \"Video generation prompt. Takes effect when multi_shots is false.\" It is sent from request.prompt in input.prompt."
+      },
+      {
+        "field": "negative_prompt",
+        "status": "no",
+        "reasoning": "No negative prompt field appears in the Kling 3.0 OpenAPI request schema or examples. The documented input fields are prompt, image_urls, sound, duration, aspect_ratio, mode, multi_shots, multi_prompt, and kling_elements."
+      },
+      {
+        "field": "duration",
+        "status": "has",
+        "reasoning": "Has duration: docs state \"Total video duration in seconds. Integer value, range: 3 to 15.\""
+      },
+      {
+        "field": "size",
+        "status": "no",
+        "reasoning": "No direct size/resolution request field is documented. Resolution is derived from mode and aspect_ratio; docs say \"The resolution depends on both the `mode` and `aspect_ratio` parameters.\""
+      },
+      {
+        "field": "aspect_ratio",
+        "status": "has",
+        "reasoning": "Has aspect_ratio: docs state \"Video aspect ratio. Options: 16:9, 9:16, 1:1.\""
+      },
+      {
+        "field": "image_url",
+        "status": "has",
+        "reasoning": "Has image reference support as image_urls: docs state \"First and last frame image URLs\" and explain index 0 first frame and index 1 last frame."
+      },
+      {
+        "field": "first_frame_url",
+        "status": "has",
+        "reasoning": "Has first frame via image_urls: docs state \"if length is 1, the array item serves as the first frame\" and in multi-shot \"only the first frame is supported.\""
+      },
+      {
+        "field": "last_frame_url",
+        "status": "has",
+        "reasoning": "Has last frame via image_urls: docs state \"if length is 2, index 0 is the first frame and index 1 is the last frame.\""
+      },
+      {
+        "field": "seed",
+        "status": "no",
+        "reasoning": "No seed field appears in the Kling 3.0 OpenAPI request schema or examples. The documented input properties do not include seed."
+      },
+      {
+        "field": "cfg_scale",
+        "status": "no",
+        "reasoning": "No cfg_scale or guidance_scale field appears in the Kling 3.0 OpenAPI request schema or examples."
+      },
+      {
+        "field": "enable_audio",
+        "status": "has",
+        "reasoning": "Has audio/sound toggle as sound: docs state \"Whether to enable sound effects. true enables sound effects, false disables them.\""
+      },
+      {
+        "field": "fps",
+        "status": "no",
+        "reasoning": "No fps or framerate field appears in the Kling 3.0 OpenAPI request schema or examples."
+      },
+      {
+        "field": "model_version",
+        "status": "has",
+        "reasoning": "Has mode/tier variant as mode: docs state \"Generation mode. std has standard resolution, pro has higher resolution, 4K has 4K resolution.\""
+      }
+    ]
+  }
+}

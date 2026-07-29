@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">3D 导演台操作示意图</title>
+  <desc id="desc">在 3D 场景里摆人物、道具、相机和运镜轨迹，输出参考图或参考视频。</desc>
+  <defs>
+    <linearGradient id="floor" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#e9eef6"/>
+      <stop offset="1" stop-color="#f8f2eb"/>
+    </linearGradient>
+    <pattern id="grid" width="42" height="42" patternUnits="userSpaceOnUse">
+      <path d="M42 0H0v42" fill="none" stroke="#8a8278" stroke-opacity=".22"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#1a1816" flood-opacity=".13"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="620" rx="28" fill="#f7f3ea"/>
+  <text x="54" y="68" font-family="Noto Serif SC, Songti SC, serif" font-size="38" font-weight="900" fill="#1a1816">像导演一样先置景</text>
+  <text x="54" y="106" font-family="Inter, PingFang SC, sans-serif" font-size="17" fill="#6a6258">白模、道具、机位、运镜轨迹都能成为视频模型的参考证据。</text>
+  <g transform="translate(54 148)" filter="url(#shadow)">
+    <rect width="680" height="384" rx="22" fill="url(#floor)" stroke="#d9d3c5"/>
+    <rect x="34" y="44" width="612" height="286" rx="16" fill="url(#grid)" stroke="#d9d3c5"/>
+    <path d="M76 302C188 202 332 170 514 120" fill="none" stroke="#5147b6" stroke-width="7" stroke-linecap="round" stroke-dasharray="3 18"/>
+    <circle cx="76" cy="302" r="10" fill="#5147b6"/>
+    <circle cx="514" cy="120" r="10" fill="#5147b6"/>
+    <g transform="translate(182 138)">
+      <circle cx="38" cy="30" r="26" fill="#fffdf8" stroke="#1a1816" stroke-opacity=".16"/>
+      <path d="M38 58v92M8 100h60M18 178l20-28 24 28" fill="none" stroke="#5147b6" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="-18" y="218" font-family="Inter, PingFang SC, sans-serif" font-size="14" fill="#1a1816">坐姿白模</text>
+    </g>
+    <g transform="translate(336 126)">
+      <circle cx="38" cy="30" r="26" fill="#fffdf8" stroke="#1a1816" stroke-opacity=".16"/>
+      <path d="M38 58v74M8 88h60M22 162l16-30 28 30" fill="none" stroke="#e8765a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="-18" y="202" font-family="Inter, PingFang SC, sans-serif" font-size="14" fill="#1a1816">指向动作</text>
+    </g>
+    <rect x="474" y="208" width="78" height="58" rx="12" fill="#e8765a" opacity=".9"/>
+    <text x="474" y="292" font-family="Inter, PingFang SC, sans-serif" font-size="14" fill="#1a1816">道具 / 场景</text>
+    <g transform="translate(94 64)">
+      <path d="M0 78L116 18v120z" fill="#5147b6" opacity=".18"/>
+      <rect x="-10" y="64" width="36" height="28" rx="8" fill="#1a1816"/>
+      <circle cx="28" cy="78" r="8" fill="#1a1816"/>
+      <text x="-22" y="122" font-family="Inter, PingFang SC, sans-serif" font-size="14" fill="#1a1816">相机</text>
+    </g>
+    <text x="34" y="360" font-family="Inter, PingFang SC, sans-serif" font-size="15" fill="#6a6258">输出：参考图 / 分镜角度 / 运镜参考视频</text>
+  </g>
+  <g transform="translate(784 158)">
+    <text x="0" y="0" font-family="Inter, PingFang SC, sans-serif" font-size="15" font-weight="800" fill="#5147b6" letter-spacing="1.4">SCENE 3D CHECKLIST</text>
+    <g transform="translate(0 38)" font-family="Inter, PingFang SC, sans-serif">
+      <rect width="332" height="60" rx="8" fill="#fffdf8" stroke="#d9d3c5"/>
+      <circle cx="30" cy="30" r="14" fill="#5147b6"/><text x="25" y="36" font-size="15" font-weight="800" fill="#fffdf8">1</text>
+      <text x="58" y="25" font-size="17" font-weight="800" fill="#1a1816">先摆人物和姿势</text>
+      <text x="58" y="45" font-size="13" fill="#6a6258">坐、蹲、跪、指向、举手都已校准</text>
+    </g>
+    <g transform="translate(0 116)" font-family="Inter, PingFang SC, sans-serif">
+      <rect width="332" height="60" rx="8" fill="#fffdf8" stroke="#d9d3c5"/>
+      <circle cx="30" cy="30" r="14" fill="#5147b6"/><text x="25" y="36" font-size="15" font-weight="800" fill="#fffdf8">2</text>
+      <text x="58" y="25" font-size="17" font-weight="800" fill="#1a1816">再架相机和画幅</text>
+      <text x="58" y="45" font-size="13" fill="#6a6258">近景 / 全景 / 俯拍 / 跟拍先定住</text>
+    </g>
+    <g transform="translate(0 194)" font-family="Inter, PingFang SC, sans-serif">
+      <rect width="332" height="60" rx="8" fill="#fffdf8" stroke="#d9d3c5"/>
+      <circle cx="30" cy="30" r="14" fill="#5147b6"/><text x="25" y="36" font-size="15" font-weight="800" fill="#fffdf8">3</text>
+      <text x="58" y="25" font-size="17" font-weight="800" fill="#1a1816">录一条 take</text>
+      <text x="58" y="45" font-size="13" fill="#6a6258">相机轨迹成为视频模型的运动参考</text>
+    </g>
+    <g transform="translate(0 272)" font-family="Inter, PingFang SC, sans-serif">
+      <rect width="332" height="60" rx="8" fill="#1a1816"/>
+      <text x="24" y="36" font-size="17" font-weight="800" fill="#fffdf8">把“文字说不清”变成可见参考</text>
+    </g>
+  </g>
+</svg>

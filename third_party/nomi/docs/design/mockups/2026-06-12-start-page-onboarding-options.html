@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nomi · 起始页与 Onboarding 方案</title>
+  <link rel="stylesheet" href="../../../src/theme/nomi-tokens.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 48px 72px;
+      background: var(--nomi-bg);
+      color: var(--nomi-ink);
+      font-family: var(--nomi-font-sans);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .mock-switcher {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      margin-bottom: 24px;
+      border: 1px solid var(--nomi-line);
+      border-radius: 999px;
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+    }
+
+    .mock-switcher button,
+    .seg button,
+    .button,
+    .icon-button,
+    .project-card {
+      font: inherit;
+    }
+
+    .mock-switcher button {
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--nomi-ink-60);
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .mock-switcher button[aria-selected="true"] {
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+    }
+
+    .screen {
+      display: none;
+      max-width: 1320px;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      font-family: var(--nomi-font-display);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+      font-family: var(--nomi-font-sans);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .sub {
+      margin: 8px 0 0 40px;
+      color: var(--nomi-ink-40);
+      font-size: 13px;
+    }
+
+    .top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--nomi-line);
+      border-radius: 999px;
+      background: var(--nomi-paper);
+      color: var(--nomi-ink-80);
+      padding: 0 14px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .button.primary {
+      border-color: var(--nomi-ink);
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+    }
+
+    .button.soft {
+      background: var(--nomi-ink-05);
+    }
+
+    .button.warning {
+      border-color: color-mix(in oklch, var(--nomi-accent) 30%, var(--nomi-line));
+      background: var(--nomi-accent-soft);
+      color: var(--nomi-accent);
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--nomi-ink-40);
+      font-size: 12px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--nomi-accent);
+    }
+
+    .onboarding-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+    }
+
+    .line-title {
+      margin: 0;
+      color: var(--nomi-ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .line-sub {
+      margin-top: 2px;
+      color: var(--nomi-ink-40);
+      font-size: 12px;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .side-panel {
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+      padding: 16px;
+    }
+
+    .panel-title {
+      margin: 0 0 12px;
+      color: var(--nomi-ink);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr);
+      gap: 9px;
+      align-items: start;
+    }
+
+    .num {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--nomi-ink-05);
+      color: var(--nomi-ink-60);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .step strong {
+      display: block;
+      color: var(--nomi-ink);
+      font-size: 12px;
+    }
+
+    .step span {
+      display: block;
+      color: var(--nomi-ink-40);
+      font-size: 12px;
+    }
+
+    .tool-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .search {
+      width: 360px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-paper);
+      color: var(--nomi-ink-30);
+      font-size: 13px;
+    }
+
+    .section-head {
+      display: inline-flex;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--nomi-ink-60);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .seg {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--nomi-line);
+      border-radius: 999px;
+      background: var(--nomi-paper);
+    }
+
+    .seg button {
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--nomi-ink-60);
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .seg button.active {
+      background: var(--nomi-ink-10);
+      color: var(--nomi-ink);
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+      gap: 14px;
+    }
+
+    .projects.compact {
+      grid-template-columns: repeat(auto-fill, minmax(184px, 1fr));
+      gap: 12px;
+    }
+
+    .project-card {
+      overflow: hidden;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+      cursor: pointer;
+    }
+
+    .thumb {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: var(--nomi-ink-05);
+    }
+
+    .thumb::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0 47%, color-mix(in oklch, var(--nomi-line) 70%, transparent) 47% 48%, transparent 48%),
+        radial-gradient(circle at 22% 40%, color-mix(in oklch, var(--nomi-accent) 18%, var(--nomi-bg)), transparent 38%),
+        linear-gradient(135deg, var(--nomi-ink-05), var(--nomi-paper));
+    }
+
+    .card-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 32px;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .card-name {
+      margin: 0;
+      overflow: hidden;
+      color: var(--nomi-ink);
+      font-size: 13px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-time {
+      margin-top: 3px;
+      color: var(--nomi-ink-40);
+      font-size: 11px;
+    }
+
+    .icon-button {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-paper);
+      color: var(--nomi-ink-60);
+      cursor: pointer;
+    }
+
+    .command-bar {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      margin: 26px 0 20px;
+      padding: 10px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+    }
+
+    .flow-preview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .flow-cell {
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-paper);
+      padding: 12px;
+    }
+
+    .flow-cell strong {
+      display: block;
+      color: var(--nomi-ink);
+      font-size: 13px;
+    }
+
+    .flow-cell span {
+      display: block;
+      margin-top: 2px;
+      color: var(--nomi-ink-40);
+      font-size: 12px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: color-mix(in oklch, var(--nomi-ink) 18%, transparent);
+      padding: 48px;
+    }
+
+    .screen.modal-demo .modal-backdrop {
+      display: flex;
+    }
+
+    .tour {
+      width: min(760px, 100%);
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-lg);
+      padding: 20px;
+    }
+
+    .tour h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .tour p {
+      margin: 6px 0 18px;
+      color: var(--nomi-ink-60);
+      font-size: 13px;
+    }
+
+    .tour-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .tour-card {
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-bg);
+      padding: 12px;
+    }
+
+    .tour-card strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .tour-card span {
+      display: block;
+      margin-top: 4px;
+      color: var(--nomi-ink-40);
+      font-size: 12px;
+    }
+
+    .why {
+      margin-top: 18px;
+      max-width: 800px;
+      color: var(--nomi-ink-60);
+      font-size: 12px;
+    }
+
+    @media (max-width: 920px) {
+      body { padding: 28px 24px 56px; }
+      .top,
+      .tool-strip {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .grid-layout,
+      .flow-preview,
+      .tour-grid {
+        grid-template-columns: 1fr;
+      }
+      .search {
+        width: 100%;
+      }
+      .command-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="mock-switcher" aria-label="设计方案">
+    <button data-target="a" aria-selected="true">A 精简首页 + 首次引导</button>
+    <button data-target="b" aria-selected="false">B 设置清单侧栏</button>
+    <button data-target="c" aria-selected="false">C 命令条 + 流程预览</button>
+  </nav>
+
+  <main id="screen-a" class="screen active">
+    <section class="top">
+      <div>
+        <h1 class="brand"><span class="logo">N</span>Nomi 项目库</h1>
+        <p class="sub">新建或打开项目，继续你的本地视频创作流程。</p>
+      </div>
+      <div class="actions">
+        <button class="button primary">＋ 新建空白项目</button>
+        <button class="button">▣ 打开已有文件夹</button>
+        <button class="button warning">⌁ 接入文本模型</button>
+      </div>
+    </section>
+
+    <section class="onboarding-line" aria-label="首次引导">
+      <div>
+        <h2 class="line-title">先完成一次基础设置</h2>
+        <div class="line-sub">接入文本模型后，再进入创作、生成、预览导出。完成后这条提示不再常驻。</div>
+      </div>
+      <button class="button soft">查看 3 步流程</button>
+    </section>
+
+    <section class="tool-strip">
+      <div class="search">⌕ 搜索项目名称...</div>
+      <div class="status-row"><span class="dot"></span><span>生成物在项目文件夹内；文件夹按钮打开当前位置。</span></div>
+    </section>
+
+    <div class="section-head">
+      <h2 class="section-title">最近项目</h2>
+      <div class="seg">
+        <button class="active">全部项目 78</button>
+        <button>新建项目 75</button>
+        <button>打开文件夹 3</button>
+      </div>
+    </div>
+
+    <section class="projects">
+      <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">示例：京都一日 vlog</h3><div class="card-time">16 分钟前</div></div><button class="icon-button">▣</button></div></article>
+      <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">示例：30 秒产品介绍</h3><div class="card-time">17 分钟前</div></div><button class="icon-button">▣</button></div></article>
+      <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">未命名项目 06/12 00:13</h3><div class="card-time">52 分钟前</div></div><button class="icon-button">▣</button></div></article>
+      <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">示例：天台上的告白</h3><div class="card-time">1 天前</div></div><button class="icon-button">▣</button></div></article>
+    </section>
+    <p class="why">A 把首页还给“项目库”：首屏优先是创建/打开/模型状态和最近项目；Onboarding 只在首次或未接入文本模型时出现，完成后消失。</p>
+  </main>
+
+  <main id="screen-b" class="screen">
+    <section class="top">
+      <div>
+        <h1 class="brand"><span class="logo">N</span>Nomi 项目库</h1>
+        <p class="sub">项目、模型和生成物都留在本机。</p>
+      </div>
+      <div class="actions">
+        <button class="button primary">＋ 新建空白项目</button>
+        <button class="button">▣ 打开已有文件夹</button>
+        <button class="button">⌁ 模型接入</button>
+      </div>
+    </section>
+
+    <section class="grid-layout">
+      <div>
+        <section class="tool-strip">
+          <div class="search">⌕ 搜索项目名称...</div>
+        </section>
+        <div class="section-head">
+          <h2 class="section-title">最近项目</h2>
+          <div class="seg"><button class="active">全部项目 78</button><button>新建项目 75</button><button>打开文件夹 3</button></div>
+        </div>
+        <section class="projects compact">
+          <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">示例：京都一日 vlog</h3><div class="card-time">16 分钟前</div></div><button class="icon-button">▣</button></div></article>
+          <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">未命名项目 06/12</h3><div class="card-time">52 分钟前</div></div><button class="icon-button">▣</button></div></article>
+          <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">示例：天台上的告白</h3><div class="card-time">1 天前</div></div><button class="icon-button">▣</button></div></article>
+          <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">示例：30 秒产品介绍</h3><div class="card-time">1 天前</div></div><button class="icon-button">▣</button></div></article>
+        </section>
+      </div>
+      <aside class="side-panel" aria-label="开始使用">
+        <h2 class="panel-title">开始使用</h2>
+        <ol class="steps">
+          <li class="step"><span class="num">1</span><div><strong>接入文本模型</strong><span>创作助手和 Agent 先依赖它。</span></div></li>
+          <li class="step"><span class="num">2</span><div><strong>创建或打开项目</strong><span>决定生成物保存在哪里。</span></div></li>
+          <li class="step"><span class="num">3</span><div><strong>走一遍工作区</strong><span>创作、生成、预览导出。</span></div></li>
+        </ol>
+        <div class="actions" style="margin-top: 16px;"><button class="button warning">开始引导</button></div>
+      </aside>
+    </section>
+    <p class="why">B 适合“模型未配置/首次安装”的用户：清单一直可见，但会占用右侧空间。完成 Onboarding 后右侧清单应隐藏或变成模型状态。</p>
+  </main>
+
+  <main id="screen-c" class="screen modal-demo">
+    <section class="top">
+      <div>
+        <h1 class="brand"><span class="logo">N</span>Nomi 项目库</h1>
+        <p class="sub">从项目进入创作工作台。</p>
+      </div>
+    </section>
+
+    <section class="command-bar" aria-label="项目操作">
+      <div class="actions">
+        <button class="button primary">＋ 新建空白项目</button>
+        <button class="button">▣ 打开已有文件夹</button>
+      </div>
+      <div class="search">⌕ 搜索项目名称...</div>
+      <div class="actions">
+        <button class="button warning">⌁ 接入文本模型</button>
+        <button class="button soft">快速了解流程</button>
+      </div>
+    </section>
+
+    <section class="flow-preview" aria-label="核心流程">
+      <div class="flow-cell"><strong>创作</strong><span>写目标、脚本、分镜文字。</span></div>
+      <div class="flow-cell"><strong>生成</strong><span>把文字变成图片和视频节点。</span></div>
+      <div class="flow-cell"><strong>预览导出</strong><span>检查时间轴并导出成片。</span></div>
+    </section>
+
+    <div class="section-head">
+      <h2 class="section-title">最近项目</h2>
+      <div class="seg"><button class="active">全部项目 78</button><button>新建项目 75</button><button>打开文件夹 3</button></div>
+    </div>
+    <section class="projects">
+      <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">示例：京都一日 vlog</h3><div class="card-time">16 分钟前</div></div><button class="icon-button">▣</button></div></article>
+      <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">未命名项目 06/12 00:13</h3><div class="card-time">52 分钟前</div></div><button class="icon-button">▣</button></div></article>
+      <article class="project-card"><div class="thumb"></div><div class="card-body"><div><h3 class="card-name">示例：天台上的告白</h3><div class="card-time">1 天前</div></div><button class="icon-button">▣</button></div></article>
+    </section>
+
+    <div class="modal-backdrop" aria-label="Onboarding 弹窗示意">
+      <section class="tour">
+        <h2>第一次使用 Nomi</h2>
+        <p>这不是示例项目选择器，只带你走一遍真实工作流。完成后首页不再显示大块引导。</p>
+        <div class="tour-grid">
+          <div class="tour-card"><strong>1. 接入文本模型</strong><span>让创作助手和 Agent 可用。</span></div>
+          <div class="tour-card"><strong>2. 创建项目</strong><span>确认脚本、素材、导出保存位置。</span></div>
+          <div class="tour-card"><strong>3. 走完工作区</strong><span>创作 → 生成 → 预览导出。</span></div>
+        </div>
+        <div class="actions"><button class="button primary">开始</button><button class="button">稍后</button></div>
+      </section>
+    </div>
+    <p class="why">C 把 Onboarding 完全移进弹窗/流程，只给首页留下一个“快速了解流程”入口。日常最干净，但首次用户可能更依赖弹窗出现时机。</p>
+  </main>
+
+  <script>
+    const buttons = Array.from(document.querySelectorAll('.mock-switcher button'));
+    const screens = Array.from(document.querySelectorAll('.screen'));
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.target;
+        buttons.forEach((item) => item.setAttribute('aria-selected', item === button ? 'true' : 'false'));
+        screens.forEach((screen) => screen.classList.toggle('active', screen.id === `screen-${target}`));
+      });
+    });
+  </script>
+</body>
+</html>

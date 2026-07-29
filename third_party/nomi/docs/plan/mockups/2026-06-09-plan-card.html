@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>计划清单卡 v3 · bug① agent 选模型配参数</title>
+<style>
+  /* ★ 真实 Nomi token（直接复制自 src/theme/nomi-tokens.css，OKLCH 浏览器原生支持）★ */
+  :root{
+    --nomi-bg: oklch(0.985 0.003 90);
+    --nomi-paper: oklch(1 0 0);
+    --nomi-ink: oklch(0.22 0.01 80);
+    --nomi-ink-80: oklch(0.32 0.01 80);
+    --nomi-ink-60: oklch(0.50 0.01 80);
+    --nomi-ink-40: oklch(0.68 0.01 80);
+    --nomi-ink-20: oklch(0.88 0.005 80);
+    --nomi-ink-10: oklch(0.94 0.003 80);
+    --nomi-ink-05: oklch(0.97 0.003 80);
+    --nomi-line: oklch(0.91 0.004 80);
+    --nomi-line-soft: oklch(0.95 0.003 80);
+    --nomi-accent: oklch(0.55 0.13 250);
+    --nomi-accent-soft: color-mix(in oklch, var(--nomi-accent) 12%, var(--nomi-paper));
+    --nomi-radius-sm: 6px; --nomi-radius: 10px; --nomi-radius-lg: 16px;
+    --fast: 140ms cubic-bezier(.2,.7,.3,1);
+    --font: Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--nomi-bg);font-family:var(--font);color:var(--nomi-ink);
+    padding:32px;display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap;}
+  .col{display:flex;flex-direction:column;gap:12px;}
+  .anno{font-size:12px;color:var(--nomi-ink-60);max-width:300px;line-height:1.6;}
+  .anno b{color:var(--nomi-accent);font-weight:600;}
+  .anno-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--nomi-ink-40);font-weight:600;}
+  code{font-size:11px;background:var(--nomi-ink-05);padding:1px 4px;border-radius:4px;}
+
+  /* ===== 通用比例框 AspectBox（随比例变形）===== */
+  .ratio{display:grid;place-items:center;flex:none;}
+  .ratio i{display:block;border:1.5px solid var(--nomi-ink-40);border-radius:2px;
+    background:var(--nomi-ink-05);transition:width var(--fast),height var(--fast);}
+
+  /* ===== 计划清单卡 ===== */
+  .card{width:392px;display:flex;flex-direction:column;gap:12px;padding:12px;
+    border-radius:var(--nomi-radius);border:1px solid var(--nomi-accent-soft);
+    background:color-mix(in oklch,var(--nomi-accent-soft) 45%,var(--nomi-paper));}
+  .head{display:flex;flex-direction:column;gap:2px;}
+  .kicker{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--nomi-accent);}
+  .kicker .dot{width:5px;height:5px;border-radius:999px;background:var(--nomi-accent);}
+  .summary{font-size:14px;font-weight:600;line-height:1.35;}
+  .meta{font-size:12px;color:var(--nomi-ink-60);}
+  .meta b{color:var(--nomi-accent);font-weight:600;}
+
+  .global{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--nomi-radius-sm);
+    background:var(--nomi-ink-05);}
+  .global .lbl{font-size:11px;color:var(--nomi-ink-60);font-weight:600;}
+  .global .spacer{flex:1;}
+  .applybtn{height:24px;padding:0 10px;border-radius:999px;border:1px solid var(--nomi-accent);
+    background:var(--nomi-paper);color:var(--nomi-accent);font-size:11px;font-weight:600;
+    cursor:pointer;font-family:var(--font);}
+
+  .chip{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;
+    border-radius:var(--nomi-radius-sm);border:1px solid var(--nomi-line);background:var(--nomi-paper);
+    font-size:11px;color:var(--nomi-ink-80);cursor:pointer;white-space:nowrap;
+    transition:background var(--fast),border-color var(--fast);}
+  .chip:hover{border-color:var(--nomi-ink-40);}
+  .chip .car{font-size:9px;color:var(--nomi-ink-40);}
+  .chip .txt{overflow:hidden;text-overflow:ellipsis;max-width:120px;}
+  .chip.model{font-weight:600;color:var(--nomi-ink);}
+  .chip.pending{background:var(--nomi-accent-soft);border-color:var(--nomi-accent);
+    color:var(--nomi-accent);font-weight:600;}
+  .chip.edited{background:var(--nomi-paper);border-color:var(--nomi-line);color:var(--nomi-ink);}
+  .pencil{width:11px;height:11px;flex:none;}
+
+  ol{list-style:none;display:flex;flex-direction:column;gap:8px;}
+  li.node{display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:var(--nomi-radius-sm);
+    background:var(--nomi-paper);border:1px solid var(--nomi-line-soft);}
+  .row1{display:flex;align-items:center;gap:8px;}
+  .idx{width:20px;height:20px;border-radius:999px;background:var(--nomi-ink);color:var(--nomi-paper);
+    font-size:11px;font-weight:600;display:grid;place-items:center;flex:none;}
+  .ntitle{font-size:13px;font-weight:600;flex:1;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  /* chips 一行不换行：nowrap，模型名超长才省略 */
+  .chips{display:flex;align-items:center;gap:6px;padding-left:28px;}
+  /* prompt 常驻可编辑框（无"编辑"按钮）*/
+  .pmt{margin-left:28px;width:calc(100% - 28px);min-height:46px;padding:7px 8px;
+    border-radius:var(--nomi-radius-sm);border:1px solid var(--nomi-line-soft);
+    background:var(--nomi-paper);font-family:var(--font);font-size:12px;line-height:1.5;
+    color:var(--nomi-ink-80);resize:vertical;transition:border-color var(--fast);}
+  .pmt:hover{border-color:var(--nomi-line);}
+  .pmt:focus{outline:0;border-color:var(--nomi-accent);color:var(--nomi-ink);}
+
+  /* chip 点击下拉（缩紧间距：左对齐 gap，不再 space-between）*/
+  .pop{display:inline-flex;flex-direction:column;gap:2px;padding:4px;align-self:flex-start;
+    margin-left:28px;border-radius:var(--nomi-radius-sm);border:1px solid var(--nomi-line);
+    background:var(--nomi-paper);box-shadow:0 4px 16px oklch(0 0 0 / .12);}
+  .pop .opt{display:flex;align-items:center;gap:7px;font-size:11px;padding:5px 8px;
+    border-radius:4px;cursor:pointer;color:var(--nomi-ink-80);white-space:nowrap;}
+  .pop .opt:hover{background:var(--nomi-ink-05);}
+  .pop .opt.on{background:var(--nomi-accent-soft);color:var(--nomi-accent);font-weight:600;}
+
+  .foot{display:flex;align-items:center;gap:8px;}
+  .legend{font-size:11px;color:var(--nomi-ink-60);display:flex;align-items:center;gap:5px;margin-right:auto;}
+  .legend .sw{width:18px;height:14px;border-radius:3px;background:var(--nomi-accent-soft);
+    border:1px solid var(--nomi-accent);}
+  .btn{height:32px;padding:0 12px;border-radius:var(--nomi-radius-sm);font-size:13px;cursor:pointer;font-family:var(--font);}
+  .btn.ghost{border:1px solid var(--nomi-line);background:var(--nomi-paper);color:var(--nomi-ink-80);}
+  .btn.primary{border:0;background:var(--nomi-ink);color:var(--nomi-paper);font-weight:600;}
+  .btn.primary .sub{font-weight:400;opacity:.7;font-size:11px;margin-left:2px;}
+
+  /* ===== 画布节点示意（AspectBox 真正用在这里）===== */
+  .canvas{display:flex;gap:16px;padding:16px;border-radius:var(--nomi-radius);
+    background:var(--nomi-bg);border:1px solid var(--nomi-line);}
+  .cnode{position:relative;background:var(--nomi-paper);border:1px solid var(--nomi-line);
+    border-radius:var(--nomi-radius);box-shadow:var(--nomi-shadow-sm,0 1px 2px oklch(0 0 0/.05));
+    padding:8px;display:flex;flex-direction:column;gap:6px;}
+  .cpill{position:absolute;top:6px;left:6px;z-index:2;background:var(--nomi-ink);color:var(--nomi-paper);
+    font-size:11px;font-weight:500;padding:2px 7px;border-radius:6px;}
+  /* 图像区 = AspectBox，随比例变形 */
+  .cimg{display:grid;place-items:center;background:
+    repeating-linear-gradient(45deg,var(--nomi-ink-05),var(--nomi-ink-05) 6px,var(--nomi-paper) 6px,var(--nomi-paper) 12px);
+    border-radius:var(--nomi-radius-sm);color:var(--nomi-ink-40);font-size:11px;}
+  .cnode .cchips{display:flex;gap:5px;}
+  .cmini{height:20px;padding:0 7px;border-radius:var(--nomi-radius-sm);border:1px solid var(--nomi-line);
+    background:var(--nomi-paper);font-size:10px;color:var(--nomi-ink-60);display:inline-flex;align-items:center;}
+</style>
+</head>
+<body>
+
+<!-- ============ 计划清单卡 ============ -->
+<div class="col">
+  <div class="anno-title">样张 v3 · 计划清单卡</div>
+  <div class="card">
+    <div class="head">
+      <div class="kicker"><span class="dot"></span>AGENT 故事板计划</div>
+      <div class="summary">把产品文案拆成 5 个镜头，已为每个建议模型和参数</div>
+      <div class="meta">5 个节点 · 4 条引用边 · <b>蓝底 = AI 配的待你看</b></div>
+    </div>
+
+    <div class="global">
+      <span class="lbl">全局基调</span>
+      <span class="chip"><span class="car">比例</span>竖屏 9:16 ▾</span>
+      <span class="chip"><span class="car">清晰度</span>高清 ▾</span>
+      <span class="spacer"></span>
+      <button class="applybtn" title="只覆盖未手改的节点">应用到全部</button>
+    </div>
+
+    <ol>
+      <!-- 节点 1：无前置比例框、无编辑按钮、prompt 常驻可编辑 -->
+      <li class="node">
+        <div class="row1"><span class="idx">1</span><span class="ntitle">开场：产品全景</span></div>
+        <div class="chips">
+          <span class="chip model pending"><span class="txt">即梦 Seedance</span> ▾</span>
+          <span class="chip pending"><span class="car">比例</span>16:9 ▾</span>
+          <span class="chip pending"><span class="car">清晰度</span>1080p ▾</span>
+        </div>
+        <textarea class="pmt">宽幅产品全景，柔和晨光，浅景深突出主体，电影质感，缓慢推进镜头</textarea>
+      </li>
+
+      <!-- 节点 2：比例 chip 点开下拉（间距已缩紧），prompt 编辑中 -->
+      <li class="node" style="border-color:var(--nomi-accent-soft)">
+        <div class="row1"><span class="idx">2</span><span class="ntitle">特写：核心功能</span></div>
+        <div class="chips">
+          <span class="chip model pending"><span class="txt">即梦 Seedance</span> ▾</span>
+          <span class="chip pending" style="outline:2px solid var(--nomi-accent);outline-offset:1px"><span class="car">比例</span>9:16 ▾</span>
+          <span class="chip pending"><span class="car">清晰度</span>1080p ▾</span>
+        </div>
+        <div class="pop">
+          <div class="opt on">9:16 竖屏 <span class="ratio"><i style="width:11px;height:18px"></i></span></div>
+          <div class="opt">16:9 横屏 <span class="ratio"><i style="width:18px;height:11px"></i></span></div>
+          <div class="opt">1:1 方形 <span class="ratio"><i style="width:15px;height:15px"></i></span></div>
+        </div>
+        <textarea class="pmt" style="border-color:var(--nomi-accent);color:var(--nomi-ink)">极致微距特写，手指轻点屏幕，界面光效流动，背景虚化，质感高级</textarea>
+      </li>
+
+      <!-- 节点 3：比例已手改（安静 + pencil）-->
+      <li class="node">
+        <div class="row1"><span class="idx">3</span><span class="ntitle">转场：使用场景</span></div>
+        <div class="chips">
+          <span class="chip model pending"><span class="txt">即梦 Seedance</span> ▾</span>
+          <span class="chip edited">
+            <svg class="pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <span class="car">比例</span>9:16 ▾</span>
+          <span class="chip pending"><span class="car">清晰度</span>1080p ▾</span>
+        </div>
+        <textarea class="pmt">人物自然使用产品的生活场景，温暖色调，手持轻微晃动增加真实感</textarea>
+      </li>
+    </ol>
+
+    <div class="foot">
+      <span class="legend"><span class="sw"></span>= AI 配的，待你过目</span>
+      <button class="btn ghost">全部拒绝</button>
+      <button class="btn primary">确认全部<span class="sub">未改的用 AI 建议</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 画布节点示意：AspectBox 真正用在这里 ============ -->
+<div class="col">
+  <div class="anno-title">通用比例框 AspectBox 的真正位置 = 画布节点图像区</div>
+  <div class="canvas">
+    <!-- 横屏节点：图像方框是横的 -->
+    <div class="cnode" style="width:150px">
+      <div class="cpill">镜头 01</div>
+      <div class="cimg" style="width:134px;height:75px">16:9</div>
+      <div class="cchips"><span class="cmini">Seedance</span><span class="cmini">16:9</span></div>
+    </div>
+    <!-- 竖屏节点：图像方框是竖的（同一个组件，比例变了形状就变）-->
+    <div class="cnode" style="width:104px">
+      <div class="cpill">镜头 02</div>
+      <div class="cimg" style="width:88px;height:156px">9:16</div>
+      <div class="cchips"><span class="cmini">9:16</span></div>
+    </div>
+  </div>
+  <div class="anno"><b>就是这个框</b>：画布上节点的图像区（生成完图就显示在这里）。它的<b>形状随节点比例参数变</b>——16:9 横、9:16 竖、1:1 方。<br>做成 model-agnostic 通用组件，<b>计划卡的下拉预览、画布节点、参数面板都复用同一个</b>（P4）。</div>
+
+  <div class="anno-title" style="margin-top:8px">本次按你反馈改的</div>
+  <div class="anno">✅ 颜色换成真实 OKLCH token（不再近似）<br>✅ 计划卡里去掉前置比例框（它归画布节点）<br>✅ 去掉「编辑文案」按钮 → prompt 下方常驻可编辑<br>✅ 比例下拉间距缩紧（左对齐，不再两端拉开）<br>✅ chips 一行不换行（nowrap，模型名超长才省略）</div>
+</div>
+
+</body>
+</html>

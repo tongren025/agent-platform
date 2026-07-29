@@ -1,0 +1,222 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { afterEach, describe, expect, it } from "vitest";
+import { ExportJobManager, type ExportJobEvent } from "./exportJobManager";
+import type { NomiRenderManifestV1 } from "./exportManifest";
+
+const tempRoots: string[] = [];
+
+function makeTempDir(): string {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "nomi-export-job-manager-test-"));
+  tempRoots.push(dir);
+  return dir;
+}
+
+afterEach(() => {
+  for (const root of tempRoots.splice(0)) {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+function makeManifest(projectId = "project-1"): NomiRenderManifestV1 {
+  return {
+    version: 1,
+    projectId,
+    createdAt: "2026-05-24T00:00:00.000Z",
+    timeline: {
+      fps: 30,
+      durationFrames: 30,
+      range: { startFrame: 0, endFrame: 30 },
+      tracks: [{ id: "track-1", kind: "video", clips: [] }],
+    },
+    profile: {
+      preset: "publish",
+      container: "mp4",
+      videoCodec: "h264",
+      audioCodec: "none",
+      audioMode: "mute",
+      width: 1920,
+      height: 1080,
+      fps: 30,
+      pixelFormat: "yuv420p",
+      quality: "standard",
+    },
+    assets: {},
+  };
+}
+
+describe("ExportJobManager", () => {
+  it("creates queued job", () => {
+    const projectDir = makeTempDir();
+    const manager = new ExportJobManager({ idGenerator: () => "job-1", clock: () => "2026-05-24T01:00:00.000Z" });
+
+    const job = manager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+
+    expect(job).toMatchObject({
+      id: "job-1",
+      projectId: "project-1",
+      projectDir,
+      jobDir: path.join(projectDir, ".nomi", "jobs", "job-1"),
+      status: "queued",
+      progress: { ratio: 0, stage: "queued", message: "Queued" },
+      cancelled: false,
+      createdAt: "2026-05-24T01:00:00.000Z",
+      updatedAt: "2026-05-24T01:00:00.000Z",
+    });
+    expect(manager.getJob("job-1")).toEqual(job);
+    expect(manager.listJobs("project-1")).toEqual([job]);
+  });
+
+  it("reaps orphaned active jobs from a previous process on hydrate (no deadlock)", () => {
+    const projectDir = makeTempDir();
+    // 进程1：创建 job（queued = active），随即"崩溃"（永不完成）。
+    const m1 = new ExportJobManager({ idGenerator: () => "job-1", clock: () => "2026-05-24T01:00:00.000Z" });
+    m1.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+
+    // 进程2：重启，hydrate 同一项目目录 → 孤儿 active job 应被 reap 成 failed。
+    const m2 = new ExportJobManager({
+      projectDirs: [projectDir],
+      idGenerator: () => "job-2",
+      clock: () => "2026-05-24T02:00:00.000Z",
+    });
+    const reaped = m2.getJob("job-1");
+    expect(reaped?.status).toBe("failed");
+    expect(reaped?.error?.message).toMatch(/restart/i);
+
+    // 不再死锁：能创建新 job（旧版会 throw "Cannot create export job while active …"）。
+    const fresh = m2.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+    expect(fresh.id).toBe("job-2");
+    expect(fresh.status).toBe("queued");
+  });
+
+  it("emits event on status update", () => {
+    const projectDir = makeTempDir();
+    const manager = new ExportJobManager({ idGenerator: () => "job-1", clock: () => "2026-05-24T01:00:00.000Z" });
+    manager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+    const events: ExportJobEvent[] = [];
+    const unsubscribe = manager.onEvent((event) => events.push(event));
+
+    const updated = manager.updateJob("job-1", { status: "rendering", progress: { ratio: 0.5, stage: "rendering", message: "Rendering" } });
+    unsubscribe();
+    manager.updateJob("job-1", { progress: { ratio: 0.75, stage: "rendering", message: "Still rendering" } });
+
+    expect(updated.status).toBe("rendering");
+    expect(events).toEqual([
+      {
+        type: "status",
+        jobId: "job-1",
+        projectId: "project-1",
+        snapshot: updated,
+      },
+      {
+        type: "progress",
+        jobId: "job-1",
+        projectId: "project-1",
+        snapshot: updated,
+      },
+    ]);
+  });
+
+  it("rejects concurrent active jobs in the same project", () => {
+    const projectDir = makeTempDir();
+    const manager = new ExportJobManager({ idGenerator: () => "job-1", clock: () => "2026-05-24T01:00:00.000Z" });
+    manager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+
+    expect(() => manager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() })).toThrow(/active export job/i);
+  });
+
+  it("allows concurrent active jobs across different projects (per-project lock, not global)", () => {
+    // 两个不同项目各起一个导出：旧的全局锁会让第二个项目被第一个阻死；
+    // per-project 锁下两者应都能创建、互不阻塞。
+    const projectDirA = makeTempDir();
+    const projectDirB = makeTempDir();
+    let id = 0;
+    const manager = new ExportJobManager({ idGenerator: () => `job-${++id}`, clock: () => "2026-05-24T01:00:00.000Z" });
+
+    const jobA = manager.createJob({ projectId: "project-A", projectDir: projectDirA, manifest: makeManifest("project-A") });
+    const jobB = manager.createJob({ projectId: "project-B", projectDir: projectDirB, manifest: makeManifest("project-B") });
+
+    expect(jobA.projectId).toBe("project-A");
+    expect(jobB.projectId).toBe("project-B");
+    expect(jobA.status).toBe("queued");
+    expect(jobB.status).toBe("queued");
+    // 同项目再起仍被拒（锁仍生效，只是范围收到 project 维度）。
+    expect(() => manager.createJob({ projectId: "project-A", projectDir: projectDirA, manifest: makeManifest("project-A") })).toThrow(/active export job/i);
+  });
+
+  it("reaps a persisted orphan active job on restart instead of deadlocking (createJob-triggered hydrate)", () => {
+    const projectDir = makeTempDir();
+    const firstManager = new ExportJobManager({ idGenerator: () => "job-1", clock: () => "2026-05-24T01:00:00.000Z" });
+    firstManager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+    // 进程2：未在构造时 hydrate；createJob 内部 hydrate 应 reap 掉上个进程的孤儿 active job。
+    const restartedManager = new ExportJobManager({ idGenerator: () => "job-2", clock: () => "2026-05-24T01:01:00.000Z" });
+
+    // 旧行为：抛 "Cannot create export job while active export job job-1 is queued"（死锁）。
+    // 新行为：reap 孤儿 → 成功创建新 job。
+    const fresh = restartedManager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+    expect(fresh.id).toBe("job-2");
+    expect(fresh.status).toBe("queued");
+    expect(restartedManager.getJob("job-1")?.status).toBe("failed");
+  });
+
+  it("hydrates persisted failed jobs for manager get/list readback", () => {
+    const projectDir = makeTempDir();
+    const firstManager = new ExportJobManager({ idGenerator: () => "job-1", clock: () => "2026-05-24T01:00:00.000Z" });
+    firstManager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+    const failed = firstManager.failJob("job-1", new Error("ffmpeg crashed"));
+
+    const restartedManager = new ExportJobManager({ projectDirs: [projectDir] });
+
+    expect(restartedManager.getJob("job-1")).toEqual(failed);
+    expect(restartedManager.listJobs("project-1")).toEqual([failed]);
+  });
+
+  it("marks job cancelled", async () => {
+    const projectDir = makeTempDir();
+    const manager = new ExportJobManager({ idGenerator: () => "job-1", clock: () => "2026-05-24T01:00:00.000Z" });
+    manager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+
+    const cancelled = await manager.cancelJob("job-1");
+
+    expect(cancelled.status).toBe("cancelled");
+    expect(cancelled.cancelled).toBe(true);
+  });
+
+  it("stores failure message", () => {
+    const projectDir = makeTempDir();
+    const manager = new ExportJobManager({ idGenerator: () => "job-1", clock: () => "2026-05-24T01:00:00.000Z" });
+    manager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+
+    const failed = manager.failJob("job-1", new Error("ffmpeg crashed"));
+
+    expect(failed.status).toBe("failed");
+    expect(failed.error).toMatchObject({ message: "ffmpeg crashed" });
+  });
+
+  it("clears stale terminal details when returning to active or completing successfully", () => {
+    const projectDir = makeTempDir();
+    let now = "2026-05-24T01:00:00.000Z";
+    const manager = new ExportJobManager({ idGenerator: () => "job-1", clock: () => now });
+    manager.createJob({ projectId: "project-1", projectDir, manifest: makeManifest() });
+    manager.failJob("job-1", new Error("ffmpeg crashed"));
+
+    now = "2026-05-24T01:01:00.000Z";
+    const activeAgain = manager.updateJob("job-1", {
+      status: "rendering",
+      progress: { ratio: 0.5, stage: "rendering", message: "Rendering" },
+    });
+
+    expect(activeAgain.status).toBe("rendering");
+    expect(activeAgain.error).toBeUndefined();
+    expect(activeAgain.result).toBeUndefined();
+
+    manager.failJob("job-1", new Error("second failure"));
+    now = "2026-05-24T01:02:00.000Z";
+    const completed = manager.completeJob("job-1", { outputPath: path.join(projectDir, "exports", "video.mp4") });
+
+    expect(completed.status).toBe("succeeded");
+    expect(completed.error).toBeUndefined();
+    expect(completed.result).toEqual({ outputPath: path.join(projectDir, "exports", "video.mp4") });
+  });
+});

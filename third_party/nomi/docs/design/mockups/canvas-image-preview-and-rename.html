@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nomi · 图片放大与原地改名样张</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --paper: #1f1e1b;
+      --paper-raised: #2a2925;
+      --ink: #f3f0e9;
+      --ink-60: rgba(243, 240, 233, .62);
+      --line: rgba(243, 240, 233, .16);
+      --accent: #73aef2;
+      --canvas: #151412;
+      --shadow: 0 14px 40px rgba(0, 0, 0, .35);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.45 Inter, ui-sans-serif, system-ui, sans-serif; color: var(--ink); background: var(--canvas); overflow: hidden; }
+    button, input { font: inherit; }
+    .app { height: 100vh; display: grid; grid-template-rows: 64px 1fr; }
+    .topbar { display: flex; align-items: center; gap: 18px; padding: 0 24px; border-bottom: 1px solid var(--line); background: rgba(31,30,27,.96); }
+    .brand { font: 600 22px Georgia, serif; letter-spacing: .02em; }
+    .crumb { padding: 8px 14px; border: 1px solid var(--line); border-radius: 9px; color: var(--ink-60); }
+    .tabs { margin: auto; display: flex; padding: 4px; border-radius: 999px; background: rgba(243,240,233,.07); }
+    .tab { border: 0; border-radius: 999px; padding: 8px 22px; color: var(--ink-60); background: transparent; }
+    .tab.active { color: var(--ink); background: rgba(243,240,233,.1); }
+    .body { display: grid; grid-template-columns: 82px 1fr; min-height: 0; }
+    .rail { border-right: 1px solid var(--line); padding: 20px 10px; background: var(--paper); }
+    .rail-item { display: grid; place-items: center; gap: 5px; height: 58px; margin-bottom: 8px; border-radius: 10px; color: var(--ink-60); font-size: 12px; }
+    .rail-item.active { color: #25231f; background: #f0ede6; }
+    .canvas { position: relative; overflow: hidden; background-color: var(--canvas); background-image: radial-gradient(circle, rgba(243,240,233,.24) 1.5px, transparent 1.7px); background-size: 48px 48px; }
+    .hint { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); border: 1px solid var(--line); border-radius: 999px; padding: 10px 20px; color: var(--ink-60); background: rgba(31,30,27,.94); box-shadow: var(--shadow); }
+    .node { position: absolute; width: 330px; height: 214px; border-radius: 11px; overflow: visible; background: var(--paper-raised); box-shadow: var(--shadow), inset 0 0 0 1px var(--line); }
+    .node.one { left: 12%; top: 18%; }
+    .node.two { left: 52%; top: 48%; }
+    .node.selected { box-shadow: 0 0 0 2px var(--accent), var(--shadow); }
+    .art { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 11px; overflow: hidden; background: #bcc7c4; }
+    .art svg { width: 100%; height: 100%; display: block; }
+    .shot { position: absolute; z-index: 2; top: 8px; left: 8px; padding: 2px 9px; border-radius: 999px; color: white; background: rgba(20,19,17,.82); font-size: 11px; font-weight: 700; backdrop-filter: blur(8px); }
+    .node-actions { position: absolute; z-index: 3; top: 8px; right: 8px; display: flex; gap: 6px; }
+    .icon-button { width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 999px; color: var(--ink); background: rgba(31,30,27,.82); box-shadow: 0 4px 14px rgba(0,0,0,.25); cursor: pointer; backdrop-filter: blur(10px); }
+    .icon-button:hover { background: #25231f; }
+    .node-title { position: absolute; z-index: 3; left: 9px; bottom: 9px; max-width: 220px; padding: 5px 9px; border: 0; border-radius: 7px; color: white; background: rgba(20,19,17,.82); font-weight: 650; cursor: text; backdrop-filter: blur(10px); }
+    .node-title:hover { box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
+    .node-title input { width: 190px; color: white; border: 0; outline: 0; background: transparent; }
+    .link { position: absolute; left: 38%; top: 41%; width: 260px; height: 2px; transform: rotate(15deg); transform-origin: left; background: rgba(115,174,242,.42); }
+    .annotation { position: absolute; left: 12%; top: calc(18% + 232px); color: var(--ink-60); font-size: 12px; }
+    .lightbox { position: fixed; z-index: 50; inset: 0; display: none; place-items: center; padding: 72px; background: rgba(10,10,9,.92); backdrop-filter: blur(8px); }
+    .lightbox.open { display: grid; }
+    .lightbox-title { position: absolute; left: 28px; top: 22px; font-weight: 650; }
+    .lightbox-meta { margin-left: 10px; color: var(--ink-60); font-size: 12px; font-weight: 400; }
+    .close { position: absolute; right: 28px; top: 18px; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); background: var(--paper-raised); cursor: pointer; }
+    .large-art { width: min(1180px, 88vw); height: min(700px, 78vh); border-radius: 12px; overflow: hidden; background: #bcc7c4; box-shadow: 0 20px 80px rgba(0,0,0,.5); }
+    .large-art svg { width: 100%; height: 100%; display: block; }
+    .esc { position: absolute; bottom: 22px; color: var(--ink-60); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">Nomi</div>
+      <div class="crumb">项目库　›　雨夜追凶</div>
+      <nav class="tabs" aria-label="工作区">
+        <button class="tab">创作</button><button class="tab active">生成</button><button class="tab">预览</button>
+      </nav>
+      <span style="color:var(--ink-60)">模型接入</span><span>导出</span>
+    </header>
+    <div class="body">
+      <aside class="rail"><div class="rail-item active"><span>▣</span><span>素材库</span></div><div class="rail-item"><span>◇</span><span>分组</span></div></aside>
+      <main class="canvas">
+        <div class="hint">滚轮 / 空格拖　平移　 ·　双指滑　平移　 ·　⌘ + 滚轮　缩放</div>
+        <div class="link"></div>
+        <article class="node one selected">
+          <div class="art" aria-hidden="true">
+            <svg viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid slice">
+              <defs><linearGradient id="sky1" x2="0" y2="1"><stop stop-color="#53677c"/><stop offset="1" stop-color="#d3b29b"/></linearGradient></defs>
+              <rect width="1000" height="650" fill="url(#sky1)"/><circle cx="710" cy="170" r="72" fill="#f3d5ad" opacity=".88"/>
+              <path d="M0 470 L220 240 L410 470 L610 285 L1000 510 L1000 650 L0 650Z" fill="#26353e"/>
+              <path d="M0 525 L310 360 L520 530 L740 390 L1000 540 L1000 650 L0 650Z" fill="#14252b"/>
+              <rect y="570" width="1000" height="80" fill="#101d22"/><path d="M465 420 q32-44 64 0 v150 h-64z" fill="#a25045"/><circle cx="497" cy="385" r="31" fill="#d4a07f"/>
+            </svg>
+          </div>
+          <span class="shot">镜头 1</span>
+          <div class="node-actions">
+            <button class="icon-button" title="放大预览" aria-label="放大预览" onclick="openLightbox()">⛶</button>
+            <button class="icon-button" title="生成记录" aria-label="生成记录">ⓘ</button>
+          </div>
+          <button id="titleButton" class="node-title" onclick="editTitle()">雨夜街口 · 主角入场</button>
+        </article>
+        <div class="annotation">选中时标题常显；未选中时移入节点才出现。点击名字直接编辑。</div>
+        <article class="node two">
+          <div class="art" aria-hidden="true">
+            <svg viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid slice"><rect width="1000" height="650" fill="#887e74"/><rect y="390" width="1000" height="260" fill="#3d3835"/><rect x="80" y="100" width="340" height="240" fill="#caa879"/><rect x="590" y="80" width="250" height="310" fill="#50483f"/><circle cx="505" cy="380" r="85" fill="#1f1e1b"/></svg>
+          </div>
+          <span class="shot">镜头 2</span>
+          <div class="node-actions"><button class="icon-button" aria-label="放大预览" onclick="openLightbox()">⛶</button><button class="icon-button" aria-label="生成记录">ⓘ</button></div>
+        </article>
+      </main>
+    </div>
+  </div>
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="图片大图预览" onclick="if(event.target===this) closeLightbox()">
+    <div class="lightbox-title">雨夜街口 · 主角入场 <span class="lightbox-meta">原图预览</span></div>
+    <button class="close" aria-label="关闭大图预览" onclick="closeLightbox()">×</button>
+    <div class="large-art">
+      <svg viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="sky2" x2="0" y2="1"><stop stop-color="#53677c"/><stop offset="1" stop-color="#d3b29b"/></linearGradient></defs><rect width="1000" height="650" fill="url(#sky2)"/><circle cx="710" cy="170" r="72" fill="#f3d5ad" opacity=".88"/><path d="M0 470 L220 240 L410 470 L610 285 L1000 510 L1000 650 L0 650Z" fill="#26353e"/><path d="M0 525 L310 360 L520 530 L740 390 L1000 540 L1000 650 L0 650Z" fill="#14252b"/><rect y="570" width="1000" height="80" fill="#101d22"/><path d="M465 420 q32-44 64 0 v150 h-64z" fill="#a25045"/><circle cx="497" cy="385" r="31" fill="#d4a07f"/></svg>
+    </div>
+    <div class="esc">点击背景或按 Esc 关闭</div>
+  </div>
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    function openLightbox(){ lightbox.classList.add('open'); }
+    function closeLightbox(){ lightbox.classList.remove('open'); }
+    function editTitle(){
+      const button = document.getElementById('titleButton');
+      if (button.querySelector('input')) return;
+      const value = button.textContent;
+      button.textContent = '';
+      const input = document.createElement('input'); input.value = value; button.appendChild(input); input.focus(); input.select();
+      const commit = () => { button.textContent = input.value.trim() || value; };
+      input.addEventListener('blur', commit, { once:true });
+      input.addEventListener('keydown', e => { if(e.key==='Enter') input.blur(); if(e.key==='Escape'){ input.value=value; input.blur(); } e.stopPropagation(); });
+    }
+    window.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+  </script>
+</body>
+</html>

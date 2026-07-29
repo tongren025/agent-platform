@@ -1,0 +1,10 @@
+{
+  "//": "渲染层 (src/) 全量类型检查配置。build 用 vite(esbuild) 只转译不查类型，",
+  "//2": "这份给 `pnpm typecheck` / CI 做真正的 tsc --noEmit，覆盖整个 src（含测试）。",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/vendor/tablerIcons.ts"]
+}

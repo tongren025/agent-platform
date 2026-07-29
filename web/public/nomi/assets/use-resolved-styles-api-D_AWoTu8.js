@@ -1,0 +1,1 @@
+import"./react-vendor-ePGTbDW8.js";import{b5 as l,aS as r,aR as i}from"./index-DIF2b1P9.js";function n({classNames:o,styles:a,props:e,stylesCtx:s}){const t=l();return{resolvedClassNames:i({theme:t,classNames:o,props:e,stylesCtx:s||void 0}),resolvedStyles:r({theme:t,styles:a,props:e,stylesCtx:s||void 0})}}export{n as u};

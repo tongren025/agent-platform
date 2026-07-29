@@ -1,0 +1,298 @@
+import {
+  type TaskKind,
+  type TaskRequestDto,
+  type TaskResultDto,
+  fetchWorkbenchTaskResultByVendor,
+  runWorkbenchTaskByVendor,
+  runWorkbenchTextTaskStream,
+} from '../../api/taskApi'
+import type {
+  GenerationCanvasNode,
+  GenerationNodeResult,
+} from '../model/generationCanvasTypes'
+import type { ResolvedGenerationReferences } from './generationReferenceResolver'
+import { narrateProgress, type GenerationProgressPhase, type ProgressNarrationContext } from '../../observability/narrate'
+import { buildArchetypeInputParams, currentArchetypeMode, orderedSentImageReferenceUrls } from '../nodes/controls/archetypeMeta'
+import { projectPromptForSend } from '../../assets/promptMentions'
+import {
+  type CatalogTaskActionOptions,
+  asFiniteNumber,
+  asTrimmedString,
+  readStringArray,
+  resolveTaskArchetype,
+  resolveExecutableNodeFromCatalog,
+  resolveTaskKind,
+  selectedModelKey,
+  selectedVendor,
+  uniqueStrings,
+} from './catalogTaskResolve'
+import { normalizeCatalogTaskResult } from './catalogTaskResultParse'
+import { RecoverableTimeoutError } from './recoverableTimeout'
+
+// 重导出：实现已拆到 catalogTaskResolve（节点→vendor/model/kind 选择）与
+// catalogTaskResultParse（raw/asset/failure/provenance 解析），但 catalogTaskActions
+// 对外公共导出面保持不变，外部 import 路径无需改动。
+export type { CatalogTaskActionOptions } from './catalogTaskResolve'
+export { normalizeCatalogTaskResult } from './catalogTaskResultParse'
+
+const TERMINAL_STATUSES = new Set(['succeeded', 'failed'])
+
+// 任务已提交(付费已发生)后，查结果连续失败多久就放弃轮询、落「可找回」态（不重发，给「重新拉取」入口）。
+// 短于此 = 网络抖动，免费重试查询；长于此 = 上游/网络持续不可达，没必要干等到硬超时(视频 20min)空耗。
+const POLL_FAILURE_GRACE_MS = 45000
+
+// 走流式文本通道的 kind(与 catalogTaskResultParse 的 TEXT_TASK_KINDS 同语义)。
+const TEXT_STREAM_KINDS = new Set<TaskKind>(['chat', 'prompt_refine', 'image_to_prompt'])
+
+function buildReferenceExtras(
+  node: GenerationCanvasNode,
+  references: Partial<ResolvedGenerationReferences>,
+): Record<string, unknown> {
+  const meta = node.meta || {}
+  const referenceImages = uniqueStrings([
+    ...readStringArray(meta.referenceImages),
+    ...(references.referenceImages || []),
+  ])
+  const styleReferenceImages = uniqueStrings([
+    ...readStringArray(meta.styleReferenceImages),
+    ...(references.styleReferenceImages || []),
+  ])
+  const characterReferenceImages = uniqueStrings([
+    ...readStringArray(meta.characterReferenceImages),
+    ...(references.characterReferenceImages || []),
+  ])
+  const compositionReferenceImages = uniqueStrings([
+    ...readStringArray(meta.compositionReferenceImages),
+    ...(references.compositionReferenceImages || []),
+  ])
+  // 认得档案的模型 → renderer 据**当前模式**把参考值打成完整 snake input（含 per-mode enum），放进
+  // extras.archetypeInput，runtime 原样铺进 params（M1/M2/M3）。别的模式的残留键根本不进结果（互斥）。
+  // 认不出 → 现有无条件带首/尾帧（非档案模型走老路）。
+  const archetype = resolveTaskArchetype(meta)
+  if (archetype) {
+    const archetypeInput = buildArchetypeInputParams(meta, archetype, {
+      firstFrameUrl: asTrimmedString(references.firstFrameUrl) || null,
+      lastFrameUrl: asTrimmedString(references.lastFrameUrl) || null,
+      // 切片1：把画布边产出的实时参考图喂进档案 image 槽（此前只读 meta，边的角色图被丢）。
+      // referenceImages 已是 meta.referenceImages + 边超集的去重并集。
+      referenceImages,
+      // B4：连线进来的视频/音频参考喂进 video_ref/audio_ref 槽（此前只收 meta 上传）。
+      referenceVideos: references.referenceVideos || [],
+      referenceAudios: references.referenceAudios || [],
+    })
+    // 标准参考面（camelCase firstFrameUrl/lastFrameUrl/referenceImages）**与档案投影并存**——
+    // electron 侧的标准键（reference_images/chat_image_parts/image_url…）由它派生，通用中转模板
+    // 只认标准键。旧实现档案分支把 firstFrameUrl/lastFrameUrl 丢掉、archetypeInput 独占参考通道 →
+    // 中转上撞档案名的模型改图不带图/i2v 首帧到不了 wire（2026-07-24 群反馈根因）。
+    // M2 互斥同样约束标准面：首/尾帧只在**当前模式声明了对应槽**时才带（活边优先、meta 兜底），
+    // 否则「首帧模式残留尾帧」的 §2 坑2 会从标准键复活（kie 同名 token 渲进 body）。
+    const mode = currentArchetypeMode(archetype, meta)
+    const modeHasFirst = (mode.slots || []).some((slot) => slot.kind === 'first_frame')
+    const modeHasLast = (mode.slots || []).some((slot) => slot.kind === 'last_frame')
+    const firstFrameUrl = modeHasFirst
+      ? asTrimmedString(references.firstFrameUrl) || asTrimmedString(meta.firstFrameUrl)
+      : ''
+    const lastFrameUrl = modeHasLast
+      ? asTrimmedString(references.lastFrameUrl) || asTrimmedString(meta.lastFrameUrl)
+      : ''
+    // 档案图槽的上传住 meta.referenceImageUrls（ARRAY_SLOT_ROUTE.image_ref.metaKey）——它同样必须进
+    // 标准面，否则中转 multipart 的 params.reference_images 恒空、0 张图被诚实抛（走查 B 段抓出的
+    // 第二个吞点）。同样按当前模式门控（声明了 image_ref 槽才带，防 t2i 残留复活进 chat 回退 body）。
+    const modeHasImageArray = (mode.slots || []).some((slot) => slot.kind === 'image_ref')
+    const standardReferenceImages = uniqueStrings([
+      ...referenceImages,
+      ...(modeHasImageArray ? readStringArray(meta.referenceImageUrls) : []),
+    ])
+    return {
+      ...(standardReferenceImages.length ? { referenceImages: standardReferenceImages } : {}),
+      ...(firstFrameUrl ? { firstFrameUrl } : {}),
+      ...(lastFrameUrl ? { lastFrameUrl } : {}),
+      archetypeInput,
+      ...(styleReferenceImages.length ? { styleReferenceImages } : {}),
+      ...(characterReferenceImages.length ? { characterReferenceImages } : {}),
+      ...(compositionReferenceImages.length ? { compositionReferenceImages } : {}),
+    }
+  }
+
+  const firstFrameUrl = asTrimmedString(references.firstFrameUrl) || asTrimmedString(meta.firstFrameUrl)
+  const lastFrameUrl = asTrimmedString(references.lastFrameUrl) || asTrimmedString(meta.lastFrameUrl)
+  return {
+    ...(referenceImages.length ? { referenceImages } : {}),
+    ...(firstFrameUrl ? { firstFrameUrl } : {}),
+    ...(lastFrameUrl ? { lastFrameUrl } : {}),
+    ...(styleReferenceImages.length ? { styleReferenceImages } : {}),
+    ...(characterReferenceImages.length ? { characterReferenceImages } : {}),
+    ...(compositionReferenceImages.length ? { compositionReferenceImages } : {}),
+  }
+}
+
+export function buildCatalogTaskRequest(
+  node: GenerationCanvasNode,
+  options: CatalogTaskActionOptions = {},
+): { vendor: string; request: TaskRequestDto } {
+  const vendor = selectedVendor(node)
+  if (!vendor) throw new Error('请先在模型管理里选择一个可用模型')
+  const modelKey = selectedModelKey(node)
+  if (!modelKey) throw new Error('请先选择模型')
+  const rawPrompt = asTrimmedString(node.prompt)
+  if (!rawPrompt) throw new Error('prompt is required')
+
+  const references = options.references || {}
+  const kind = resolveTaskKind(node, references)
+  const meta = node.meta || {}
+  // @ 内联引用投影(R6 单源 · option 2):把 prompt 里的 @[asset:url] 标记转成 @imageN，
+  // N = url 在「连线在前+上传」有序数组里的位置——**与实际发送的 reference_image 数组逐位一致**。此前只读
+  // meta.referenceImageUrls，把连线进来的参考图当成「不在数组里」直接把 @ 标记删成空串（连线图 @ 不到/被
+  // 删空的根因）。纯文字 prompt 无标记 → 原样(no-op)。无档案模型回退旧口径（仅上传）。
+  const promptRefArchetype = resolveTaskArchetype(meta)
+  const orderedReferenceUrls = promptRefArchetype
+    ? orderedSentImageReferenceUrls(meta, promptRefArchetype, references.referenceImages || [])
+    : readStringArray(meta.referenceImageUrls)
+  const prompt = projectPromptForSend(rawPrompt, orderedReferenceUrls)
+  // 站位构图参考：出关键帧时把 staging 灰模图当「构图蓝图」而非编辑底图——照站位/姿势/机位，
+  // 但写实重渲染，别照搬灰模 3D 外观（评测发现 image_edit 直喂会出 CGI 感）。只对图像生成加。
+  const finalPrompt =
+    references.stagingComposition && (kind === 'text_to_image' || kind === 'image_edit')
+      ? `${prompt}\n\n（构图参考仅用于确定人物站位、各自姿势和镜头机位；请据此完全写实地重新渲染人物与场景——真实皮肤/衣物/光影，不要保留参考图里灰色人偶或 3D 渲染的外观。）`
+      : prompt
+  const width = asFiniteNumber(meta.width)
+  const height = asFiniteNumber(meta.height)
+  const steps = asFiniteNumber(meta.steps)
+  const cfgScale = asFiniteNumber(meta.cfgScale)
+  const seed = asFiniteNumber(meta.seed)
+
+  return {
+    vendor,
+    request: {
+      kind,
+      prompt: finalPrompt,
+      ...(typeof seed === 'number' ? { seed } : {}),
+      ...(typeof width === 'number' ? { width } : {}),
+      ...(typeof height === 'number' ? { height } : {}),
+      ...(typeof steps === 'number' ? { steps } : {}),
+      ...(typeof cfgScale === 'number' ? { cfgScale } : {}),
+      extras: {
+        ...meta,
+        modelKey,
+        modelAlias: asTrimmedString(meta.modelAlias) || modelKey,
+        nodeId: node.id,
+        nodeKind: node.kind,
+        // 付费守卫令牌：随 extras 下到主进程 runTask 核验消费（无则主进程拦截）。
+        ...(options.grantId ? { grantId: options.grantId } : {}),
+        // 提交幂等键：随 extras 下到主进程 runTask，同键提交内核 at-most-once（堵「丢回执→重试→二次下单」）。
+        ...(options.idempotencyKey ? { idempotencyKey: options.idempotencyKey } : {}),
+        // S8 缓存语义:节点血统里已出过图(result 或 history,含「基于此重生成」副本)→
+        // 再点生成=用户要重抽 → 强制重跑绕指纹缓存;首次生成/批量补跑同配方命中缓存
+        // 秒回零花费(防双击/重复受理重复扣费)。路由旗标,不进指纹。
+        ...(node.result || (node.history && node.history.length > 0) ? { forceRerun: true } : {}),
+        ...buildReferenceExtras(node, references),
+      },
+    },
+  }
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => globalThis.setTimeout(resolve, ms))
+}
+
+async function waitForCatalogTaskResult(
+  vendor: string,
+  request: TaskRequestDto,
+  initialResult: TaskResultDto,
+  options: CatalogTaskActionOptions,
+): Promise<TaskResultDto> {
+  if (TERMINAL_STATUSES.has(initialResult.status)) return initialResult
+  const pollIntervalMs = options.pollIntervalMs ?? 1500
+  const isVideo = request.kind === 'text_to_video' || request.kind === 'image_to_video'
+  // 软超时：到点不报错，只把文案切成「仍在生成·已超常规时长」，后台继续等（视频 5min→续拉到 hard）。
+  // 硬超时：真停，抛可找回错误（视频 20min；非视频 2min）。options.pollTimeoutMs 覆盖时 soft=hard（测试可控）。
+  const softTimeoutMs = options.pollTimeoutMs ?? (isVideo ? 300000 : 120000)
+  const hardTimeoutMs = options.pollTimeoutMs ?? (isVideo ? 1200000 : 120000)
+  const startedAt = Date.now()
+  const fetchResult = options.fetchTaskResult || fetchWorkbenchTaskResultByVendor
+
+  // ⚠️ 钱安全铁律：到这里 runTask 已成功、付费已发生(initialResult.id 是真任务)。本轮询【只查不提交】，
+  // 且查结果失败【绝不】能冒泡出去——否则会落进外层 runGenerationNode 的重试循环重新 runTask 二次扣费
+  // (单确认最多 ×3/节点、批量再乘节点数 = 用户报「平台冒出很多视频、被扣费」的根因)。查结果是免费的：
+  // 抖动就免费重试查询；持续失败超 grace(或到硬超时) → 落可找回态(不重发)。recoverable 在外层不触发重试。
+  const recoverableTimeout = () => new RecoverableTimeoutError({
+    taskId: initialResult.id,
+    vendor,
+    taskKind: request.kind,
+    modelKey: asTrimmedString(request.extras?.modelKey),
+  })
+  let current = initialResult
+  let pollFailureStreakStartedAt: number | null = null
+  while (!TERMINAL_STATUSES.has(current.status)) {
+    const elapsedMs = Date.now() - startedAt
+    if (elapsedMs > hardTimeoutMs) {
+      // 超时≠失败：上游可能仍在跑/已出片 → 抛可找回错误，节点落 recoverable，给「重新拉取」入口。
+      throw recoverableTimeout()
+    }
+    // S2:每个轮询 tick 回报进度(人话 + 已等秒数),不再静默吞掉 status。软超时后切「仍在生成·已超常规时长」。
+    const overSoft = elapsedMs > softTimeoutMs
+    options.onProgress?.({
+      phase: overSoft ? 'still-generating' : 'generating',
+      message: narrateProgress(overSoft ? 'still-generating' : 'generating', { elapsedMs }),
+      taskId: initialResult.id,
+    })
+    await delay(pollIntervalMs)
+    try {
+      const response = await fetchResult({
+        taskId: initialResult.id,
+        vendor,
+        taskKind: request.kind,
+        prompt: request.prompt,
+        modelKey: asTrimmedString(request.extras?.modelKey) || null,
+      })
+      current = response.result
+      pollFailureStreakStartedAt = null // 查成功 → 重置失败连击计数
+    } catch {
+      // 查结果失败：免费重试(下一轮再查)，绝不冒泡触发重发。持续失败超 grace 或已到硬超时 → 落可找回。
+      const now = Date.now()
+      if (pollFailureStreakStartedAt == null) pollFailureStreakStartedAt = now
+      if (now - pollFailureStreakStartedAt > POLL_FAILURE_GRACE_MS || now - startedAt > hardTimeoutMs) {
+        throw recoverableTimeout()
+      }
+      // 仍在 grace 内：回报「仍在生成」(对用户=后台还在等)，继续下一轮免费查询。
+      options.onProgress?.({
+        phase: 'still-generating',
+        message: narrateProgress('still-generating', { elapsedMs: now - startedAt }),
+        taskId: initialResult.id,
+      })
+    }
+  }
+  return current
+}
+
+export async function runCatalogGenerationTask(
+  node: GenerationCanvasNode,
+  options: CatalogTaskActionOptions = {},
+): Promise<GenerationNodeResult> {
+  // S2 进度报告:每个阶段说人话(narrate 注册表),治"卡 30 秒像死了"(bug② 根因之一:
+  // 此前轮询拿到 status 后随手丢弃,且无任何阶段回报)。
+  const report = (phase: GenerationProgressPhase, taskId?: string, ctx?: ProgressNarrationContext) =>
+    options.onProgress?.({ phase, message: narrateProgress(phase, ctx), ...(taskId ? { taskId } : {}) })
+  report('resolving')
+  const executableNode = await resolveExecutableNodeFromCatalog(node, options)
+  const { vendor, request } = buildCatalogTaskRequest(executableNode, options)
+
+  // 文本任务 + 调用方要逐字 → 走流式通道:逐 token 回调 onTextDelta,终态直接返回
+  // (文本无轮询,流 resolve 即 succeeded),不走下面的 runTask + 轮询。runTask 覆盖项
+  // (测试注入)优先,保持单测可控。
+  if (options.onTextDelta && TEXT_STREAM_KINDS.has(request.kind) && !options.runTask) {
+    const runTextStream = options.runTextStream || runWorkbenchTextTaskStream
+    report('requesting')
+    const streamed = await runTextStream(vendor, request, { onDelta: options.onTextDelta })
+    report('finalizing', streamed.id)
+    return normalizeCatalogTaskResult(streamed, executableNode)
+  }
+
+  const runTask = options.runTask || runWorkbenchTaskByVendor
+  report('requesting')
+  const initialResult = await runTask(vendor, request)
+  report('waiting', initialResult.id)
+  const finalResult = await waitForCatalogTaskResult(vendor, request, initialResult, options)
+  report('finalizing', initialResult.id)
+  return normalizeCatalogTaskResult(finalResult, executableNode)
+}

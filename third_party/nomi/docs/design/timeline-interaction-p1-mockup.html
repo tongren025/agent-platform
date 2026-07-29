@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nomi 时间轴 P1 交互样张 — 拖拽吸附 / 可拖 playhead / 多选</title>
+<style>
+  /* ===== Nomi 设计 token（光模式，取自 src/theme/nomi-tokens.css）===== */
+  :root{
+    --nomi-bg: oklch(0.985 0.003 90);
+    --nomi-paper: oklch(1 0 0);
+    --nomi-ink: oklch(0.22 0.01 80);
+    --nomi-ink-60: oklch(0.50 0.01 80);
+    --nomi-ink-40: oklch(0.68 0.01 80);
+    --nomi-ink-20: oklch(0.88 0.005 80);
+    --nomi-line: oklch(0.91 0.004 80);
+    --nomi-line-soft: oklch(0.95 0.003 80);
+    --nomi-accent: oklch(0.55 0.13 250);
+    --nomi-accent-soft: color-mix(in oklch, var(--nomi-accent) 12%, var(--nomi-paper));
+    --nomi-track-image: oklch(0.7 0.13 200);
+    --nomi-track-video: oklch(0.65 0.13 150);
+    --nomi-shadow-sm: 0 1px 2px oklch(0 0 0 / .04), 0 1px 1px oklch(0 0 0 / .03);
+    --nomi-shadow-md: 0 2px 4px oklch(0 0 0 / .04), 0 8px 24px oklch(0 0 0 / .06);
+    --nomi-radius-sm: 6px; --nomi-radius: 10px; --nomi-radius-lg: 16px;
+    --nomi-transition-fast: 140ms cubic-bezier(.2,.7,.3,1);
+    --nomi-font-sans: Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+    --nomi-font-mono: ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    /* 新增色（实现时按设计系统 §9 登记进 nomi-tokens.css）：吸附暖橙，与 accent 蓝互补、对比最大 */
+    --nomi-snap: oklch(0.72 0.18 30);        /* 吸附辅助线（临时态，停手即隐） */
+    --nomi-snap-tag: oklch(0.45 0.18 30);    /* tag 底色压暗一档，保证白字小字可读 */
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--nomi-bg);color:var(--nomi-ink);font-family:var(--nomi-font-sans)}
+  body{padding:24px;user-select:none;-webkit-user-select:none}
+  .wrap{max-width:1040px;margin:0 auto}
+  h1{font-size:15px;font-weight:650;margin:0 0 2px}
+  .sub{font-size:12px;color:var(--nomi-ink-60);margin:0 0 16px}
+  .hint{font-size:11.5px;color:var(--nomi-ink-60);display:flex;gap:14px;flex-wrap:wrap;margin:0 0 14px}
+  .hint b{color:var(--nomi-ink);font-weight:600}
+  kbd{font-family:var(--nomi-font-mono);font-size:10.5px;background:var(--nomi-ink-20);border-radius:4px;padding:1px 5px;color:var(--nomi-ink)}
+
+  /* ===== 工具条 ===== */
+  .toolbar{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--nomi-paper);
+    border:1px solid var(--nomi-line);border-radius:var(--nomi-radius) var(--nomi-radius) 0 0;border-bottom:none}
+  .tcode{font-family:var(--nomi-font-mono);font-size:12px;color:var(--nomi-ink);background:var(--nomi-bg);
+    padding:3px 8px;border-radius:var(--nomi-radius-sm);border:1px solid var(--nomi-line)}
+  .grow{flex:1}
+  .btn{font-size:12px;border:1px solid var(--nomi-line);background:var(--nomi-paper);color:var(--nomi-ink);
+    border-radius:var(--nomi-radius-sm);padding:4px 9px;cursor:pointer;transition:var(--nomi-transition-fast)}
+  .btn:hover{background:var(--nomi-bg)}
+  .seg{display:inline-flex;border:1px solid var(--nomi-line);border-radius:var(--nomi-radius-sm);overflow:hidden}
+  .seg .btn{border:none;border-radius:0}
+  .seg .btn+.btn{border-left:1px solid var(--nomi-line)}
+  .badge{font-size:11px;color:var(--nomi-ink-60)}
+  .badge .on{color:var(--nomi-track-video)}
+
+  /* ===== 时间轴外壳 ===== */
+  .timeline{background:var(--nomi-paper);border:1px solid var(--nomi-line);border-radius:0 0 var(--nomi-radius) var(--nomi-radius);
+    box-shadow:var(--nomi-shadow-sm);overflow:hidden}
+  .lanes{position:relative}
+  .scroll{position:relative;overflow:hidden}
+
+  /* ruler */
+  .ruler{position:relative;height:26px;background:var(--nomi-bg);border-bottom:1px solid var(--nomi-line);
+    cursor:pointer;overflow:hidden}
+  .tick{position:absolute;top:0;height:100%;border-left:1px solid var(--nomi-line)}
+  .tick.major{border-left-color:var(--nomi-ink-40)}
+  .tick span{position:absolute;left:4px;top:5px;font-size:10px;font-family:var(--nomi-font-mono);color:var(--nomi-ink-60)}
+
+  /* tracks */
+  .track{position:relative;height:62px;border-bottom:1px solid var(--nomi-line-soft)}
+  .track:last-child{border-bottom:none}
+  .track .label{position:absolute;left:8px;top:6px;font-size:10.5px;font-weight:600;color:var(--nomi-ink-40);
+    z-index:3;pointer-events:none;letter-spacing:.02em}
+
+  /* clip */
+  .clip{position:absolute;top:8px;height:46px;border-radius:var(--nomi-radius-sm);cursor:grab;
+    box-shadow:var(--nomi-shadow-sm);overflow:hidden;transition:box-shadow var(--nomi-transition-fast);
+    display:flex;align-items:flex-end}
+  .clip:active{cursor:grabbing}
+  .clip .name{font-size:11px;font-weight:550;color:var(--nomi-paper);padding:3px 7px;white-space:nowrap;
+    text-shadow:0 1px 2px oklch(0 0 0 /.25);pointer-events:none} /* clip-on-color 专用：彩底压白字 */
+  .clip[data-type="image"]{background:linear-gradient(180deg,
+     color-mix(in oklch,var(--nomi-track-image) 92%,var(--nomi-paper)),var(--nomi-track-image))}
+  .clip[data-type="video"]{background:linear-gradient(180deg,
+     color-mix(in oklch,var(--nomi-track-video) 92%,var(--nomi-paper)),var(--nomi-track-video))}
+  .clip.sel{box-shadow:0 0 0 1.5px var(--nomi-accent),var(--nomi-shadow-md);z-index:4} /* 选中描边对齐设计系统 1.5px */
+  .clip.dragging{opacity:.96;z-index:6;box-shadow:0 0 0 1.5px var(--nomi-accent),var(--nomi-shadow-md)}
+  /* trim 手柄 */
+  .handle{position:absolute;top:0;width:9px;height:100%;cursor:ew-resize;z-index:5;
+    background:linear-gradient(90deg,transparent,oklch(1 0 0 /.0));opacity:0}
+  .clip.sel .handle, .clip:hover .handle{opacity:1}
+  .handle::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:2px;height:18px;background:#fff;border-radius:2px;box-shadow:0 0 0 1px oklch(0 0 0 /.15)}
+  .handle.l{left:0} .handle.r{right:0}
+
+  /* playhead */
+  .playhead{position:absolute;top:0;bottom:0;width:0;z-index:8;pointer-events:none}
+  .playhead .line{position:absolute;top:0;bottom:0;left:0;width:1.5px;background:var(--nomi-accent);transform:translateX(-.75px)}
+  .playhead .head{position:absolute;top:-1px;left:0;transform:translateX(-50%);width:13px;height:13px;
+    background:var(--nomi-accent);border-radius:3px;box-shadow:var(--nomi-shadow-sm);
+    pointer-events:auto;cursor:ew-resize;border:1.5px solid var(--nomi-paper)}
+  .playhead .head:active{cursor:grabbing}
+
+  /* 吸附辅助线 */
+  .snapline{position:absolute;top:0;bottom:0;width:0;z-index:7;pointer-events:none;opacity:0}
+  .snapline .l{position:absolute;top:0;bottom:0;left:0;width:1px; /* 细线像素，非 spacing token */
+    background:repeating-linear-gradient(var(--nomi-snap) 0 4px,transparent 4px 8px);transform:translateX(-.5px)}
+  .snapline.show{opacity:1}
+  .snapline .tag{position:absolute;top:2px;left:4px;font-size:9.5px;font-family:var(--nomi-font-mono);
+    color:var(--nomi-paper);background:var(--nomi-snap-tag);border-radius:3px;padding:0 4px;white-space:nowrap}
+
+  /* marquee 框选 */
+  .marquee{position:absolute;z-index:9;border:1px solid var(--nomi-accent);
+    background:color-mix(in oklch,var(--nomi-accent) 14%,transparent);pointer-events:none;border-radius:3px;display:none}
+
+  /* 吸附咔哒：clip 轻微脉冲 */
+  @keyframes clack{0%{transform:scale(1)}40%{transform:scale(1.012)}100%{transform:scale(1)}}
+  .clip.clack{animation:clack 130ms var(--nomi-transition-fast)}
+
+  .note{font-size:11px;color:var(--nomi-ink-40);margin-top:12px;line-height:1.6}
+  .note code{font-family:var(--nomi-font-mono);background:var(--nomi-ink-20);padding:0 4px;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Nomi 时间轴 · P1 交互样张</h1>
+  <p class="sub">拖拽自动吸附 · 可拖 playhead scrub · 多选成组拖动 — 整数帧/ticks 模型 + 像素阈值换算（照搬 OpenCut snap-source 架构）</p>
+
+  <div class="hint">
+    <span><b>拖片段</b> 靠近相邻边/playhead 自动吸附，<b>拖远即脱离</b>（无需快捷键）</span>
+    <span><b>拖两端手柄</b> trim</span>
+    <span><b>拖蓝色播放头</b> scrub</span>
+    <span><b>空白处拖</b> 框选多选</span>
+    <span><kbd>Shift</kbd>+点 增选</span>
+    <span>按住 <kbd>Shift</kbd> 拖动 = 全程关吸附（高级）</span>
+  </div>
+
+  <div class="toolbar">
+    <span class="tcode" id="tc">00:00 · f0</span>
+    <span class="badge">吸附 <span class="on" id="snapState">开</span></span>
+    <span class="grow"></span>
+    <div class="seg">
+      <button class="btn" id="zoomOut">−</button>
+      <button class="btn" id="zoomIn">+</button>
+    </div>
+    <span class="badge" id="selCount">已选 0</span>
+  </div>
+
+  <div class="timeline">
+    <div class="scroll" id="scroll">
+      <div class="lanes" id="lanes">
+        <div class="ruler" id="ruler"></div>
+        <div class="track" id="track-image" data-track="image"><span class="label">图片轨</span></div>
+        <div class="track" id="track-video" data-track="video"><span class="label">媒体轨</span></div>
+        <div class="playhead" id="playhead"><div class="line"></div><div class="head"></div></div>
+        <div class="snapline" id="snapline"><div class="l"></div><div class="tag" id="snaptag"></div></div>
+        <div class="marquee" id="marquee"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note">
+    样张要点（对应规则 9 架构）：时间用 <code>整数帧</code> 存（fps=30），像素只在渲染/命中时换算；吸附阈值用 <code>8px</code> 定义、按 zoom 换算成帧 → 缩放下手感一致；
+    靠近即吸、<code>拖远即脱离</code>（稀疏强目标，无需记快捷键）。吸附目标 = 相邻片段头/尾 · playhead · t=0（<code>整秒已默认关</code>，避免搓衣板感）。这套 <code>snap-source</code> 解析与"拖拽事件来源"解耦——故方案可逆（未来若换底座，吸附/playhead/EDL 不动）。
+  </p>
+</div>
+
+<script>
+/* ============================================================
+   P1 交互原型 — 单一真相源 = clips(EDL)，整数帧模型
+   分层：交互(pointer) → px↔帧换算 → snap 解析 → 状态(clips)
+   ============================================================ */
+const FPS = 30;
+const TRACK_TOP = 26;                 // ruler 高
+const TRACK_H = 62;
+const SNAP_PX = 8;                    // 吸附阈值（像素，与 zoom 无关）
+let pxPerSec = 80;                    // zoom
+let durationFrames = 30 * FPS;        // 30s 画布
+let snapEnabled = true;
+
+const lanes = document.getElementById('lanes');
+const ruler = document.getElementById('ruler');
+const playheadEl = document.getElementById('playhead');
+const headEl = playheadEl.querySelector('.head');
+const snaplineEl = document.getElementById('snapline');
+const snaptagEl = document.getElementById('snaptag');
+const marqueeEl = document.getElementById('marquee');
+const tcEl = document.getElementById('tc');
+const selCountEl = document.getElementById('selCount');
+const snapStateEl = document.getElementById('snapState');
+
+let playheadFrame = 0;
+const sel = new Set();
+
+/* 单一真相源：clips（帧为单位） */
+const clips = [
+  {id:'c1', track:'image', type:'image', name:'开场图', start:0,   len:90 },
+  {id:'c2', track:'image', type:'image', name:'角色定妆', start:120, len:75 },
+  {id:'c3', track:'video', type:'video', name:'运镜A',   start:30,  len:150},
+  {id:'c4', track:'video', type:'video', name:'运镜B',   start:200, len:120},
+];
+
+/* ---------- 换算 ---------- */
+const px2frame = px => Math.round(px / pxPerSec * FPS);
+const frame2px = f => f / FPS * pxPerSec;
+const fmt = f => { const s=f/FPS; const m=Math.floor(s/60); const sec=Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')+' · f'+f; };
+
+/* ---------- 渲染 ---------- */
+function render(){
+  const w = frame2px(durationFrames);
+  lanes.style.width = w+'px';
+  ['image','video'].forEach(t=>{ const el=document.getElementById('track-'+t); el.style.width=w+'px'; });
+  // clips
+  document.querySelectorAll('.clip').forEach(e=>e.remove());
+  clips.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='clip'+(sel.has(c.id)?' sel':'');
+    el.dataset.id=c.id; el.dataset.type=c.type;
+    el.style.left=frame2px(c.start)+'px';
+    el.style.width=frame2px(c.len)+'px';
+    el.innerHTML='<div class="handle l"></div><div class="name">'+c.name+'</div><div class="handle r"></div>';
+    document.getElementById('track-'+c.track).appendChild(el);
+  });
+  // playhead
+  playheadEl.style.left=frame2px(playheadFrame)+'px';
+  tcEl.textContent=fmt(playheadFrame);
+  selCountEl.textContent='已选 '+sel.size;
+  snapStateEl.textContent=snapEnabled?'开':'关';
+}
+
+/* ---------- ruler ticks ---------- */
+function renderRuler(){
+  ruler.innerHTML='';
+  const totalSec=durationFrames/FPS;
+  const step = pxPerSec<50?5 : pxPerSec<90?2 : 1;
+  for(let s=0;s<=totalSec;s+=step){
+    const t=document.createElement('div');
+    t.className='tick major';
+    t.style.left=frame2px(s*FPS)+'px';
+    t.innerHTML='<span>'+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'</span>';
+    ruler.appendChild(t);
+  }
+}
+
+/* ---------- snap-source：收集吸附点（帧） ---------- */
+function buildSnapPoints(excludeIds){
+  // 真实用户评审反馈：整秒吸附点太密 → 拖动像走搓衣板 + 咔哒连抖 + 想留缝放不准。
+  // 默认只保留"稀疏强目标"：起点 / playhead / 相邻片段头尾。整秒默认关（可作为 zoom-in 高级选项再开）。
+  const pts=[]; // {frame,type,label}
+  pts.push({frame:0,type:'origin',label:'起点'});
+  pts.push({frame:playheadFrame,type:'playhead',label:'播放头'});
+  clips.forEach(c=>{ if(excludeIds.has(c.id))return;
+    pts.push({frame:c.start,type:'clip',label:c.name+'头'});
+    pts.push({frame:c.start+c.len,type:'clip',label:c.name+'尾'});
+  });
+  return pts;
+}
+/* 在阈值内找最近吸附点；阈值像素→帧 */
+function resolveSnap(targetFrame, excludeIds){
+  if(!snapEnabled) return null;
+  const thrFrames = px2frame(SNAP_PX);
+  let best=null,bestD=Infinity;
+  for(const p of buildSnapPoints(excludeIds)){
+    const d=Math.abs(p.frame-targetFrame);
+    if(d<=thrFrames && d<bestD){bestD=d;best=p;}
+  }
+  return best;
+}
+function showSnap(frame,label){ snaplineEl.style.left=frame2px(frame)+'px'; snaptagEl.textContent=label; snaplineEl.classList.add('show'); }
+function hideSnap(){ snaplineEl.classList.remove('show'); }
+function clack(id){ const el=document.querySelector('.clip[data-id="'+id+'"]'); if(el){el.classList.remove('clack');void el.offsetWidth;el.classList.add('clack');} }
+
+/* ---------- 指针交互 ---------- */
+let drag=null;
+lanes.addEventListener('pointerdown',e=>{
+  const handle=e.target.closest('.handle');
+  const clipEl=e.target.closest('.clip');
+  const onHead=e.target===headEl;
+  const onRuler=e.target.closest('.ruler');
+
+  if(onHead){ startPlayheadDrag(e); return; }
+  if(handle && clipEl){ startTrim(e,clipEl,handle.classList.contains('l')?'l':'r'); return; }
+  if(clipEl){ startClipDrag(e,clipEl); return; }
+  if(onRuler){ // 点标尺跳 + 可继续拖 scrub
+    jumpPlayhead(e); startPlayheadDrag(e); return; }
+  // 空白：框选
+  startMarquee(e);
+});
+
+function relX(e){ const r=lanes.getBoundingClientRect(); return e.clientX-r.left + lanes.parentElement.scrollLeft; }
+
+/* 片段拖动（支持多选成组） */
+function startClipDrag(e,clipEl){
+  const id=clipEl.dataset.id;
+  if(e.shiftKey){ sel.has(id)?sel.delete(id):sel.add(id); render(); return; }
+  if(!sel.has(id)){ sel.clear(); sel.add(id); render(); }
+  const ids=new Set(sel);
+  const startX=relX(e);
+  const startFrames={}; ids.forEach(i=>startFrames[i]=clips.find(c=>c.id===i).start);
+  clipEl.classList.add('dragging'); clipEl.setPointerCapture(e.pointerId);
+  let lastSnap=null;
+  drag={move(ev){
+    snapEnabled=!ev.shiftKey;
+    const dFrame=px2frame(relX(ev)-startX);
+    // 成组：以"任一成员任一边"找最优吸附
+    let applied=dFrame, snap=null, bestD=Infinity;
+    ids.forEach(i=>{
+      const c=clips.find(x=>x.id===i); const base=startFrames[i]+dFrame;
+      [base,base+c.len].forEach((edge,k)=>{
+        const s=resolveSnap(edge,ids);
+        if(s){ const d=Math.abs(s.frame-edge); if(d<bestD){bestD=d;snap=s;applied=dFrame+(s.frame-edge);} }
+      });
+    });
+    ids.forEach(i=>{ const c=clips.find(x=>x.id===i); c.start=Math.max(0,startFrames[i]+applied); });
+    if(snap){ showSnap(snap.frame,snap.label); if(snap.label!==lastSnap){clack([...ids][0]);lastSnap=snap.label;} }
+    else { hideSnap(); lastSnap=null; }
+    render();
+  }, up(){ clipEl.classList.remove('dragging'); hideSnap(); snapEnabled=true; render(); }};
+}
+
+/* trim 手柄 */
+function startTrim(e,clipEl,side){
+  const id=clipEl.dataset.id; const c=clips.find(x=>x.id===id);
+  sel.clear(); sel.add(id); render();
+  const startX=relX(e); const s0=c.start, l0=c.len;
+  clipEl.setPointerCapture(e.pointerId); let lastSnap=null;
+  drag={move(ev){
+    snapEnabled=!ev.shiftKey;
+    const dFrame=px2frame(relX(ev)-startX);
+    if(side==='l'){
+      let ns=s0+dFrame, edge=ns;
+      const snap=resolveSnap(edge,new Set([id]));
+      if(snap){ns=snap.frame; showSnap(snap.frame,snap.label); if(snap.label!==lastSnap){clack(id);lastSnap=snap.label;}} else {hideSnap();lastSnap=null;}
+      ns=Math.max(0,Math.min(ns,s0+l0-1)); c.start=ns; c.len=l0+(s0-ns);
+    }else{
+      let ne=s0+l0+dFrame;
+      const snap=resolveSnap(ne,new Set([id]));
+      if(snap){ne=snap.frame; showSnap(snap.frame,snap.label); if(snap.label!==lastSnap){clack(id);lastSnap=snap.label;}} else {hideSnap();lastSnap=null;}
+      c.len=Math.max(1,ne-c.start);
+    }
+    render();
+  }, up(){ hideSnap(); snapEnabled=true; render(); }};
+}
+
+/* playhead scrub（按帧对齐，可吸附到片段边） */
+function startPlayheadDrag(e){
+  headEl.setPointerCapture && (e.target===headEl) && headEl.setPointerCapture(e.pointerId);
+  drag={move(ev){
+    snapEnabled=!ev.shiftKey;
+    let f=Math.max(0,Math.min(durationFrames,px2frame(relX(ev))));
+    const snap=resolveSnap(f,new Set()); // playhead 也吸附到片段边/整秒
+    if(snap && snap.type!=='playhead'){ f=snap.frame; showSnap(snap.frame,snap.label);} else hideSnap();
+    playheadFrame=f; render();
+  }, up(){ hideSnap(); snapEnabled=true; }};
+}
+function jumpPlayhead(e){ playheadFrame=Math.max(0,Math.min(durationFrames,px2frame(relX(e)))); render(); }
+
+/* 框选 marquee */
+function startMarquee(e){
+  const x0=relX(e), y0=e.clientY-lanes.getBoundingClientRect().top;
+  if(!e.shiftKey) sel.clear();
+  marqueeEl.style.display='block';
+  drag={move(ev){
+    const x=relX(ev), y=ev.clientY-lanes.getBoundingClientRect().top;
+    const l=Math.min(x,x0),t=Math.min(y,y0),w=Math.abs(x-x0),h=Math.abs(y-y0);
+    Object.assign(marqueeEl.style,{left:l+'px',top:t+'px',width:w+'px',height:h+'px'});
+    // 命中检测
+    clips.forEach(c=>{
+      const cl=frame2px(c.start),cr=frame2px(c.start+c.len);
+      const trackTop=TRACK_TOP+(c.track==='image'?0:TRACK_H);
+      const hit=cr>l&&cl<l+w&&trackTop+TRACK_H>t&&trackTop<t+h;
+      if(hit)sel.add(c.id);
+    });
+    render();
+  }, up(){ marqueeEl.style.display='none'; }};
+}
+
+window.addEventListener('pointermove',e=>{ if(drag)drag.move(e); });
+window.addEventListener('pointerup',e=>{ if(drag){drag.up&&drag.up();drag=null;} });
+
+/* zoom */
+document.getElementById('zoomIn').onclick=()=>{pxPerSec=Math.min(240,pxPerSec*1.25);renderRuler();render();};
+document.getElementById('zoomOut').onclick=()=>{pxPerSec=Math.max(30,pxPerSec/1.25);renderRuler();render();};
+
+renderRuler(); render();
+</script>
+</body>
+</html>

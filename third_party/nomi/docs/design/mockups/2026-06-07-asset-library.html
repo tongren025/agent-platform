@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>素材库面板 · 样张</title>
+<style>
+  :root{
+    --nomi-bg:oklch(0.985 0.003 90); --nomi-paper:oklch(1 0 0); --nomi-ink:oklch(0.22 0.01 80);
+    --nomi-ink-80:oklch(0.32 0.01 80); --nomi-ink-60:oklch(0.50 0.01 80); --nomi-ink-40:oklch(0.68 0.01 80);
+    --nomi-ink-30:oklch(0.78 0.005 80); --nomi-ink-20:oklch(0.88 0.005 80); --nomi-ink-10:oklch(0.94 0.003 80); --nomi-ink-05:oklch(0.97 0.003 80);
+    --nomi-line:oklch(0.91 0.004 80); --nomi-line-soft:oklch(0.95 0.003 80);
+    --nomi-accent:oklch(0.55 0.13 250); --nomi-accent-soft:color-mix(in oklch,var(--nomi-accent) 12%,var(--nomi-paper));
+    --r:10px; --rs:6px; --rl:14px; --shadow:0 8px 32px oklch(0 0 0/.12);
+    --font:Inter,-apple-system,"PingFang SC",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font)}
+  body{background:#cfd2d8;padding:28px;display:flex;gap:28px;align-items:flex-start;justify-content:center}
+  .stage{font-size:12px;color:#3a3d45;font-weight:600;margin:0 0 10px 2px}
+  .stage small{font-weight:400;color:#6b6f78}
+
+  /* 抽屉：右侧 380px（比 onboarding 宽，给网格留位）*/
+  .drawer{width:380px;background:var(--nomi-paper);border:1px solid var(--nomi-line);border-radius:var(--rl);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;max-height:660px}
+  .hd{display:flex;align-items:center;gap:8px;padding:14px 16px 12px;border-bottom:1px solid var(--nomi-line)}
+  .hd b{font-size:16px;font-weight:700;color:var(--nomi-ink)}
+  .hd .count{font-size:12px;color:var(--nomi-ink-40);font-weight:400}
+  .hd .sp{flex:1}
+  .btn-up{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 11px;border-radius:999px;background:var(--nomi-ink);color:var(--nomi-paper);font-size:12px;font-weight:600;border:0;cursor:pointer}
+  .icon-btn{width:26px;height:26px;display:grid;place-items:center;border:0;background:transparent;color:var(--nomi-ink-40);border-radius:var(--rs);cursor:pointer}
+  /* 工具行：筛选 + 搜索 */
+  .tools{display:flex;align-items:center;gap:8px;padding:10px 14px}
+  .seg{display:inline-flex;background:var(--nomi-ink-05);border-radius:999px;padding:2px}
+  .seg button{border:0;background:transparent;font-size:12px;color:var(--nomi-ink-60);padding:4px 10px;border-radius:999px;cursor:pointer}
+  .seg button.on{background:var(--nomi-paper);color:var(--nomi-ink);font-weight:600;box-shadow:0 1px 2px oklch(0 0 0/.06)}
+  .search{flex:1;height:30px;display:flex;align-items:center;gap:6px;padding:0 10px;border:1px solid var(--nomi-line);border-radius:999px;color:var(--nomi-ink-40);font-size:12px}
+  /* 网格 */
+  .grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:6px 14px 16px;align-content:start}
+  .tile{position:relative;aspect-ratio:1;border-radius:var(--rs);border:1px solid var(--nomi-line);overflow:hidden;background:var(--nomi-ink-05);cursor:grab}
+  .tile img{width:100%;height:100%;object-fit:cover;display:block}
+  .tile .kind{position:absolute;top:4px;left:4px;font-size:10px;padding:1px 6px;border-radius:999px;background:oklch(0 0 0/.55);color:#fff;backdrop-filter:blur(4px)}
+  .tile .play{position:absolute;inset:0;display:grid;place-items:center;background:oklch(0 0 0/.28)}
+  .tile .play svg{color:#fff}
+  .tile .nm{position:absolute;left:0;right:0;bottom:0;padding:10px 6px 4px;font-size:10.5px;color:#fff;background:linear-gradient(transparent,oklch(0 0 0/.6));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tile .del{position:absolute;top:4px;right:4px;width:18px;height:18px;display:none;place-items:center;border-radius:999px;background:oklch(1 0 0/.92);color:#b42318}
+  .tile:hover .del{display:grid}
+  .tile.audio{background:var(--nomi-paper);display:grid;place-items:center}
+  .wave{display:flex;align-items:flex-end;gap:3px;height:34px}
+  .wave i{width:3px;background:var(--nomi-accent);border-radius:2px;display:block}
+  /* 空态 */
+  .empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:50px 24px;text-align:center}
+  .empty .t{font-size:14px;color:var(--nomi-ink);font-weight:600}
+  .empty .s{font-size:12px;color:var(--nomi-ink-40);line-height:1.5}
+  .note{font-size:11.5px;color:#6b6f78;margin:12px 2px 0;max-width:380px;line-height:1.6}
+  .note b{color:#17191f}
+</style></head>
+<body>
+
+<!-- 现状 -->
+<div>
+  <p class="stage">现状 <small>：「素材库」点了只弹文件上传，没有库</small></p>
+  <div class="drawer" style="max-height:200px">
+    <div class="hd"><b>素材库</b></div>
+    <div style="flex:1;display:grid;place-items:center;color:var(--nomi-ink-40);font-size:13px;padding:30px">点击 → 直接弹出系统文件选择框<br/>（没有任何「库」可看）</div>
+  </div>
+  <p class="note"><b>问题：</b>叫「素材库」却只是个上传按钮，名不副实；导入/生成的素材没有一处可浏览、复用、拖回画布。</p>
+</div>
+
+<!-- 方案：真实素材库 -->
+<div>
+  <p class="stage">方案 <small>：真实素材库面板（复用 useAssetPool + AssetTile）</small></p>
+  <div class="drawer">
+    <div class="hd">
+      <b>素材库</b><span class="count">· 12</span>
+      <span class="sp"></span>
+      <button class="btn-up"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>上传</button>
+      <button class="icon-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="tools">
+      <div class="seg"><button class="on">全部</button><button>图片</button><button>视频</button><button>音频</button></div>
+      <div class="search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>搜索素材…</div>
+    </div>
+    <div class="grid">
+      <div class="tile"><div class="kind">图</div><div style="width:100%;height:100%;background:linear-gradient(135deg,#f0c9a0,#e89b7b)"></div><span class="del"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span><div class="nm">柴犬樱花</div></div>
+      <div class="tile"><div class="kind">视频</div><div style="width:100%;height:100%;background:linear-gradient(135deg,#a0b8f0,#6b7be8)"></div><div class="play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><div class="nm">开场镜头.mp4</div></div>
+      <div class="tile"><div class="kind">图</div><div style="width:100%;height:100%;background:linear-gradient(135deg,#f5d76e,#e8a33d)"></div><div class="nm">FDE 海报</div></div>
+      <div class="tile"><div class="kind">图</div><div style="width:100%;height:100%;background:linear-gradient(135deg,#c9a0f0,#9b6be8)"></div><div class="nm">角色定妆</div></div>
+      <div class="tile audio"><div class="kind" style="position:static;background:var(--nomi-ink-10);color:var(--nomi-ink-60)">音频</div><div class="wave"><i style="height:8px"></i><i style="height:18px"></i><i style="height:26px"></i><i style="height:14px"></i><i style="height:22px"></i><i style="height:10px"></i><i style="height:20px"></i></div></div>
+      <div class="tile"><div class="kind">视频</div><div style="width:100%;height:100%;background:linear-gradient(135deg,#a0e8c0,#6be89b)"></div><div class="play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><div class="nm">片尾.mp4</div></div>
+      <div class="tile"><div class="kind">图</div><div style="width:100%;height:100%;background:linear-gradient(135deg,#f0a0b8,#e86b9b)"></div><div class="nm">场景01</div></div>
+      <div class="tile"><div class="kind">图</div><div style="width:100%;height:100%;background:linear-gradient(135deg,#a0d8f0,#6bb8e8)"></div><div class="nm">参考图</div></div>
+      <div class="tile"><div class="kind">图</div><div style="width:100%;height:100%;background:var(--nomi-ink-10)"></div><div class="nm">道具.png</div></div>
+    </div>
+  </div>
+  <p class="note"><b>交互：</b>顶部 上传 / 关闭；分段筛选 全部·图片·视频·音频 + 搜索；网格块自明（图=缩略图、视频=播放三角、音频=波形），hover 出删除 ×，<b>拖到画布</b>即用作节点/参考图。数据走现成 <code>useAssetPool</code>（画布节点 + 项目文件去重合流），块复用 <code>AssetTile</code>。</p>
+</div>
+
+<!-- 空态 -->
+<div>
+  <p class="stage">空态</p>
+  <div class="drawer" style="max-height:380px">
+    <div class="hd"><b>素材库</b><span class="count">· 0</span><span class="sp"></span><button class="btn-up"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>上传</button><button class="icon-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="empty">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--nomi-ink-30)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.6-3.6a2 2 0 0 0-2.8 0L6 20"/></svg>
+      <div class="t">还没有素材</div>
+      <div class="s">点「上传」导入图片 / 视频 / 音频，<br/>或在生成区生成后会自动出现在这里。</div>
+    </div>
+  </div>
+  <p class="note"><b>本地优先：</b>素材都来自本地（导入 + 生成结果本地化），不上传服务器。</p>
+</div>
+
+</body></html>

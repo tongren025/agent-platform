@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Nomi 模型接入流程示意图</title>
+  <desc id="desc">先接文本大脑，再接图片和视频模型，最后用画布节点生成。</desc>
+  <rect width="1200" height="620" rx="28" fill="#f7f3ea"/>
+  <text x="54" y="70" font-family="Noto Serif SC, Songti SC, serif" font-size="38" font-weight="900" fill="#1a1816">模型接入：先有大脑，再有生成器</text>
+  <text x="54" y="108" font-family="Inter, PingFang SC, sans-serif" font-size="17" fill="#6a6258">很多“点了没反应”的问题，本质是缺文本模型。按这个顺序接，最稳。</text>
+  <g transform="translate(74 170)" font-family="Inter, PingFang SC, sans-serif">
+    <rect x="0" y="0" width="306" height="322" rx="18" fill="#fffdf8" stroke="#d9d3c5"/>
+    <text x="28" y="44" font-size="24" font-weight="800" fill="#1a1816">文本大脑</text>
+    <text x="28" y="76" font-size="15" fill="#6a6258">负责聊天、拆镜头、改提示词。</text>
+    <rect x="28" y="114" width="250" height="52" rx="8" fill="#5147b6"/>
+    <text x="52" y="147" font-size="16" font-weight="800" fill="#fffdf8">OpenAI 兼容 / Anthropic</text>
+    <path d="M54 210h178M54 244h134" stroke="#8a8278" stroke-width="9" stroke-linecap="round" opacity=".45"/>
+    <text x="28" y="294" font-size="14" fill="#6a6258">没有文本大脑，AI 助手和拆镜会卡住。</text>
+  </g>
+  <path d="M404 330h86" stroke="#8a8278" stroke-width="4" stroke-linecap="round"/>
+  <path d="M474 314l20 16-20 16" fill="none" stroke="#8a8278" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(520 170)" font-family="Inter, PingFang SC, sans-serif">
+    <rect x="0" y="0" width="306" height="322" rx="18" fill="#fffdf8" stroke="#d9d3c5"/>
+    <text x="28" y="44" font-size="24" font-weight="800" fill="#1a1816">图片模型</text>
+    <text x="28" y="76" font-size="15" fill="#6a6258">负责角色定妆、关键帧、参考图。</text>
+    <rect x="28" y="114" width="110" height="92" rx="12" fill="#d8e1ec"/>
+    <rect x="168" y="114" width="110" height="92" rx="12" fill="#f4d1c7"/>
+    <circle cx="83" cy="160" r="24" fill="#5147b6"/>
+    <path d="M196 166l28-28 28 28 26-18v48H168v-22z" fill="#e8765a"/>
+    <text x="28" y="254" font-size="14" fill="#6a6258">先出满意的图，再进入视频。</text>
+  </g>
+  <path d="M850 330h86" stroke="#8a8278" stroke-width="4" stroke-linecap="round"/>
+  <path d="M920 314l20 16-20 16" fill="none" stroke="#8a8278" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(966 170)" font-family="Inter, PingFang SC, sans-serif">
+    <rect x="0" y="0" width="160" height="322" rx="18" fill="#1a1816"/>
+    <text x="24" y="44" font-size="24" font-weight="800" fill="#fffdf8">视频</text>
+    <text x="24" y="76" font-size="15" fill="#fffdf8" opacity=".68">图生视频 / 首尾帧</text>
+    <rect x="24" y="116" width="112" height="80" rx="12" fill="#5147b6"/>
+    <path d="M68 142l34 24-34 24z" fill="#fffdf8"/>
+    <rect x="24" y="232" width="112" height="44" rx="8" fill="#e8765a"/>
+    <text x="42" y="260" font-size="15" font-weight="800" fill="#fffdf8">生成成片</text>
+  </g>
+</svg>

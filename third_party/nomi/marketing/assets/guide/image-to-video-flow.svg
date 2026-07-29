@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Image-to-Video 参考图工作流</title>
+  <desc id="desc">先生成或上传参考图，再连接到视频节点，用参考视频锁住镜头运动。</desc>
+  <defs>
+    <linearGradient id="warm" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf8"/>
+      <stop offset="1" stop-color="#efe8dc"/>
+    </linearGradient>
+    <linearGradient id="video" x1="0" x2="1">
+      <stop offset="0" stop-color="#5147b6"/>
+      <stop offset="1" stop-color="#e8765a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="620" rx="28" fill="#f7f3ea"/>
+  <text x="54" y="72" font-family="Noto Serif SC, Songti SC, serif" font-size="38" font-weight="900" fill="#1a1816">Image-to-Video：先做参考图，再做运动</text>
+  <text x="54" y="110" font-family="Inter, PingFang SC, sans-serif" font-size="17" fill="#6a6258">参考图负责“长什么样”，3D take 负责“镜头怎么动”，视频模型负责合成。</text>
+  <g transform="translate(54 170)">
+    <rect width="286" height="310" rx="18" fill="url(#warm)" stroke="#d9d3c5"/>
+    <text x="24" y="40" font-family="Inter, PingFang SC, sans-serif" font-size="20" font-weight="800" fill="#1a1816">参考图</text>
+    <rect x="24" y="64" width="238" height="160" rx="12" fill="#d8e1ec"/>
+    <circle cx="100" cy="116" r="28" fill="#5147b6"/>
+    <path d="M100 146v48M74 178h52" stroke="#5147b6" stroke-width="11" stroke-linecap="round"/>
+    <rect x="156" y="112" width="56" height="74" rx="10" fill="#e8765a"/>
+    <text x="24" y="260" font-family="Inter, PingFang SC, sans-serif" font-size="15" fill="#6a6258">上传照片、生成角色定妆，或从 3D 导演台截图。</text>
+  </g>
+  <path d="M370 326h112" stroke="#8a8278" stroke-width="4" stroke-linecap="round"/>
+  <path d="M466 309l22 17-22 17" fill="none" stroke="#8a8278" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(512 170)">
+    <rect width="286" height="310" rx="18" fill="url(#warm)" stroke="#d9d3c5"/>
+    <text x="24" y="40" font-family="Inter, PingFang SC, sans-serif" font-size="20" font-weight="800" fill="#1a1816">参考视频</text>
+    <rect x="24" y="64" width="238" height="160" rx="12" fill="#1a1816"/>
+    <path d="M60 154C112 94 176 190 230 108" fill="none" stroke="#e8765a" stroke-width="7" stroke-linecap="round" stroke-dasharray="2 18"/>
+    <path d="M116 120l38 24-38 24z" fill="#fffdf8"/>
+    <text x="24" y="260" font-family="Inter, PingFang SC, sans-serif" font-size="15" fill="#6a6258">录相机轨迹：推进、横移、环绕、俯拍下降。</text>
+  </g>
+  <path d="M828 326h112" stroke="#8a8278" stroke-width="4" stroke-linecap="round"/>
+  <path d="M924 309l22 17-22 17" fill="none" stroke="#8a8278" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(970 170)">
+    <rect width="176" height="310" rx="18" fill="#1a1816"/>
+    <text x="24" y="40" font-family="Inter, PingFang SC, sans-serif" font-size="20" font-weight="800" fill="#fffdf8">视频模型</text>
+    <rect x="24" y="72" width="128" height="88" rx="12" fill="url(#video)"/>
+    <rect x="24" y="174" width="128" height="18" rx="9" fill="#fffdf8" opacity=".86"/>
+    <rect x="24" y="206" width="92" height="18" rx="9" fill="#fffdf8" opacity=".56"/>
+    <text x="24" y="260" font-family="Inter, PingFang SC, sans-serif" font-size="15" fill="#fffdf8" opacity=".74">输出可控镜头，而不是反复抽卡。</text>
+  </g>
+  <g transform="translate(54 530)" font-family="Inter, PingFang SC, sans-serif">
+    <rect width="1092" height="44" rx="8" fill="#fffdf8" stroke="#d9d3c5"/>
+    <text x="22" y="28" font-size="15" font-weight="800" fill="#5147b6">提示词骨架：</text>
+    <text x="134" y="28" font-size="15" fill="#1a1816">保持参考图人物和服装一致，按参考视频的相机轨迹运动，动作自然，构图不漂移。</text>
+  </g>
+</svg>

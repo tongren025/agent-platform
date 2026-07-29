@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分镜方案卡片回看 · 样张 2026-06-15</title>
+<style>
+  :root{
+    --paper:#ffffff; --bg:#f6f4ef; --ink:#22201b; --ink80:#46433c; --ink60:#6f6b62;
+    --ink40:#9b968b; --ink05:#f1efe8; --line:#e3e0d7; --line-soft:#eeebe3;
+    --accent:#3a53c4; --accent-soft:#e8ecfb;
+    --warn:#9a6b12; --warn-soft:#faf0d8; --ok:#2c6e49; --ok-soft:#e2f1e8;
+    --radius:10px; --radius-sm:6px;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);padding:32px 20px 80px}
+  h1{font-size:18px;font-weight:600;margin:0 0 4px}
+  .sub{font-size:13px;color:var(--ink60);margin:0 0 28px;max-width:760px;line-height:1.7}
+  .grid{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+  .state{display:flex;flex-direction:column;gap:10px}
+  .lbl{font-size:12px;color:var(--ink60);font-weight:600}
+  .lbl small{font-weight:400;color:var(--ink40)}
+  /* 344px 对话列模拟 */
+  .col{width:344px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .colhead{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink40);font-weight:600;padding-bottom:2px;border-bottom:1px solid var(--line-soft)}
+  .ubub{align-self:flex-end;background:var(--accent-soft);color:var(--accent);padding:6px 10px;border-radius:12px;font-size:12px;max-width:80%}
+  .arow{display:flex;gap:8px;align-items:flex-start}
+  .av{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+  /* 卡片 */
+  .card{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+  .card.editing{border-color:var(--accent)}
+  .chead{display:flex;align-items:center;gap:7px}
+  .ctitle{font-size:13px;font-weight:600}
+  .badge{font-size:11px;padding:1px 8px;border-radius:999px;line-height:1.6;font-weight:500}
+  .b-draft{background:var(--warn-soft);color:var(--warn)}
+  .b-done{background:var(--ok-soft);color:var(--ok)}
+  .meta{font-size:11px;color:var(--ink60)}
+  .shot{display:flex;gap:8px;font-size:11px;color:var(--ink60);padding:4px 0;border-top:1px solid var(--line-soft)}
+  .shotn{color:var(--ink40);flex:none;font-variant-numeric:tabular-nums}
+  .acts{display:flex;align-items:center;gap:8px;margin-top:2px}
+  .btn{font-size:12px;padding:5px 12px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--paper);color:var(--ink80);cursor:pointer}
+  .btn-primary{background:var(--ink);color:var(--paper);border-color:transparent}
+  .ghost{font-size:11px;color:var(--ink40);background:transparent;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:3px;padding:2px}
+  .ml{margin-left:auto}
+  .chip{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--ink60);background:var(--paper)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ink40);flex:none;animation:p 1.1s ease-in-out infinite}
+  @keyframes p{0%,100%{opacity:.3}50%{opacity:1}}
+  .note{margin-top:36px;max-width:760px;font-size:13px;color:var(--ink80);line-height:1.8}
+  .note b{font-weight:600}
+  .note code{background:var(--ink05);padding:1px 5px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+  <h1>分镜方案卡片回看 · 样张</h1>
+  <p class="sub">把拆镜头方案从「占满主列的全屏编辑器 · 确认即焚」改成「创作区 <b>对话流里的一张可收起/可重开卡片</b> · 确认落画布后留痕」。卡片 = 摘要 + 状态 + 入口；点开走现有全宽编辑器（不在窄卡里塞窄版编辑器）。下面四张是同一对话列（344px）里的不同状态。</p>
+
+  <div class="grid">
+
+    <div class="state">
+      <div class="lbl">① 生成中 <small>拆镜头那一轮的输出占位</small></div>
+      <div class="col">
+        <div class="colhead">Nomi 创作助手</div>
+        <div class="ubub">🎬 把这段文案拆成镜头</div>
+        <div class="arow"><div class="av">N</div>
+          <div class="card">
+            <div class="chead"><span class="dot"></span><span class="ctitle">分镜方案</span><span class="meta ml">正在拆镜头，整理分镜…</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="state">
+      <div class="lbl">② 草稿·已收起 <small>休息态 = "输出就是一张卡片"</small></div>
+      <div class="col">
+        <div class="colhead">Nomi 创作助手</div>
+        <div class="arow"><div class="av">N</div>
+          <div class="card">
+            <div class="chead">
+              <span class="ctitle">产品宣传片 · 分镜方案</span>
+              <span class="badge b-draft">草稿</span>
+              <button class="ghost ml" title="展开">▾</button>
+            </div>
+            <div class="meta">6 个镜头 · 3 个参考锚 · 约 18s</div>
+            <div class="shot"><span class="shotn">01</span><span>城市清晨航拍，logo 浮现</span></div>
+            <div class="shot"><span class="shotn">02</span><span>产品特写，旋转展示质感</span></div>
+            <div class="shot"><span class="shotn">···</span><span>还有 4 个镜头</span></div>
+            <div class="acts">
+              <button class="btn btn-primary">打开编辑</button>
+              <button class="ghost ml" title="丢弃">🗑 丢弃</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="state">
+      <div class="lbl">③ 编辑中 <small>点"打开编辑"→ 全宽编辑器在主列</small></div>
+      <div class="col">
+        <div class="colhead">Nomi 创作助手</div>
+        <div class="arow"><div class="av">N</div>
+          <div class="card editing">
+            <div class="chead">
+              <span class="ctitle">产品宣传片 · 分镜方案</span>
+              <span class="badge b-draft">编辑中</span>
+              <button class="ghost ml" title="收起">▴</button>
+            </div>
+            <div class="meta">正在左侧编辑器中修改 · 6 个镜头</div>
+            <div class="acts">
+              <button class="btn">收起卡片</button>
+              <span class="meta ml">在编辑器里确认即落画布</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="state">
+      <div class="lbl">④ 已落画布 <small>确认后卡片仍留在对话流（留痕）</small></div>
+      <div class="col">
+        <div class="colhead">Nomi 创作助手</div>
+        <div class="arow"><div class="av">N</div>
+          <div class="card">
+            <div class="chead">
+              <span class="ctitle">产品宣传片 · 分镜方案</span>
+              <span class="badge b-done">✓ 已落画布</span>
+              <button class="ghost ml" title="展开">▾</button>
+            </div>
+            <div class="meta">6 个镜头已建成画布节点</div>
+            <div class="acts">
+              <button class="btn">再次编辑</button>
+              <span class="chip ml">去生成区 →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <b>行为约定（含两个你没偏好、我按推荐填的点）：</b><br>
+    · <b>编辑入口</b>：卡片「打开编辑」→ 现有 <code>StoryboardPlanEditor</code> 在 900px 主列展开（复用，不造窄版）。<br>
+    · <b>生成完成后</b>（推荐）：自动打开编辑器，让你立刻看到方案；同时卡片进对话流，可手动收起。<br>
+    · <b>确认落画布</b>：不再 <code>setStoryboardPlan(null)</code> 即焚 —— 卡片保留，徽标转「已落画布」。<br>
+    · <b>丢弃</b>：草稿态可丢（删卡）；已落画布后不提供丢弃（节点已独立存在）。<br>
+    · <b>重新拆镜头</b>（推荐）：覆盖同一张卡（一个项目一份活跃方案，符合"只存当前内容"，对话流不堆多张）。<br>
+    · <b>底层</b>：消息模型 <code>WorkbenchAiMessage</code> 加「卡片类型」槽（现纯文本）；卡片从单一真相源 <code>storyboardPlan</code> 渲染，借画布助手侧 <code>AssistantTimeline</code> 的"卡锚定到消息"范式。
+  </div>
+</body>
+</html>

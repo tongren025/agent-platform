@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>导演台运镜升级 · 可体验样张</title>
+<style>
+  /* 暗色编辑器 chrome，对应真实截图 .scene3d-toolbar-lab/01-editor-default.png 的观感；
+     真实实现走 --nomi-* token 翻转，这里是样张近似值 */
+  :root {
+    --bg: #131313; --panel: #1d1d1f; --panel-2: #262628; --line: #333336;
+    --ink: #f2f0ed; --ink-60: #a09e9a; --ink-40: #6f6d69;
+    --accent: #7a8cff; --accent-soft: rgba(122,140,255,.14);
+    --viewport-bg: #f6f3ee;
+    --new: #e8a33d;
+    --r: 10px; --r-sm: 6px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, -apple-system, "PingFang SC", sans-serif; }
+  body { background: var(--bg); color: var(--ink); font-size: 12px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+  .badge-new { display: inline-flex; align-items: center; height: 14px; padding: 0 4px; margin-left: 6px; border-radius: 3px; background: var(--new); color: #131313; font-size: 9px; font-weight: 700; letter-spacing: .5px; vertical-align: 2px; }
+
+  /* ── 顶栏（现状不变）── */
+  .topbar { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px; flex-shrink: 0; }
+  .topbar .brand { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; margin-right: auto; }
+  .tbtn { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 8px; background: var(--panel-2); border: 1px solid transparent; color: var(--ink-60); cursor: pointer; font-size: 12px; }
+  .tbtn:hover { color: var(--ink); }
+  .tbtn.active { background: var(--ink); color: #131313; }
+
+  .main { display: flex; flex: 1; min-height: 0; }
+
+  /* ── 左：场景节点（现状不变）── */
+  .left { width: 220px; flex-shrink: 0; border-right: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; }
+  .left h3 { display: flex; justify-content: space-between; padding: 12px; font-size: 12px; font-weight: 500; }
+  .left h3 span { color: var(--ink-40); font-weight: 400; }
+  .node-row { display: flex; align-items: center; gap: 8px; margin: 0 8px 2px; padding: 6px 8px; border-radius: var(--r-sm); color: var(--ink-60); cursor: pointer; }
+  .node-row.sel { background: var(--panel-2); color: var(--ink); }
+  .node-row .ic { opacity: .6; font-size: 11px; }
+  .node-row .nm { flex: 1; }
+
+  /* ── 中：视口 ── */
+  .viewport { flex: 1; position: relative; background: var(--viewport-bg); min-width: 0; overflow: hidden; }
+  .floor { position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(70,90,140,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(70,90,140,.12) 1px, transparent 1px);
+    background-size: 72px 72px; background-position: center 60%;
+    transform: perspective(700px) rotateX(55deg) translateY(18%) scale(2.1); transform-origin: center 60%; }
+  .mannequin { position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); width: 74px; opacity: .92; }
+  .axisbox { position: absolute; left: 16px; bottom: 84px; background: #1d1d1f; border-radius: 8px; padding: 8px 12px; font-size: 10px; line-height: 1.7; }
+  .axisbox .x { color: #e05252; } .axisbox .y { color: #4fae4f; } .axisbox .z { color: #4f6ae0; }
+
+  /* 底部工具条（现状不变） */
+  .bottombar { position: absolute; left: 50%; bottom: 76px; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+  .bottombar .bbtn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 8px; color: var(--ink-60); cursor: pointer; }
+  .bottombar .bbtn:hover { background: var(--panel-2); color: var(--ink); }
+  .bottombar .plus { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: var(--ink); color: #131313; font-weight: 700; }
+  .bottombar .sep { width: 1px; height: 20px; background: var(--line); }
+
+  /* ── 底部时间轴（现有组件，预设落段后自动展开）── */
+  .timeline { position: absolute; left: 12px; right: 12px; bottom: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 8px 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+  .timeline .play { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; background: var(--panel-2); cursor: pointer; flex-shrink: 0; }
+  .tl-track { flex: 1; position: relative; height: 30px; background: var(--panel-2); border-radius: 6px; overflow: hidden; }
+  .tl-seg { position: absolute; top: 3px; bottom: 3px; border-radius: 4px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--ink); font-size: 10px; display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden; }
+  .tl-empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-40); font-size: 11px; }
+  .tl-playhead { position: absolute; top: 0; bottom: 0; width: 1.5px; background: var(--new); left: 0%; display: none; }
+  .tl-time { color: var(--ink-40); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+  /* ── 右上：相机画中画预览浮窗（w-260 现有 + 新增两行）── */
+  .campreview { position: absolute; right: 16px; top: 16px; width: 260px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+  .cp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .cp-head .t { font-weight: 500; }
+  .cp-head .acts { display: flex; gap: 4px; }
+  .cp-head .cbtn { height: 26px; padding: 0 8px; display: inline-flex; align-items: center; gap: 4px; border-radius: 6px; background: var(--panel-2); color: var(--ink-60); font-size: 11px; cursor: pointer; }
+  .cp-frame { display: flex; align-items: center; justify-content: center; min-height: 126px; background: var(--panel-2); border-radius: 6px; padding: 4px; }
+  .cp-shot { position: relative; overflow: hidden; border-radius: 4px; background: linear-gradient(180deg, #efece6 0 62%, #dad6cd 62%); transition: width .2s, height .2s; }
+  .cp-scene { position: absolute; inset: 0; display: grid; place-items: center; transition: transform .3s; }
+  .cp-scene svg { width: 34%; }
+  .cp-shot.shaking .cp-scene { animation: shake calc(1.2s - var(--shk,0)*0.5s) infinite; }
+  @keyframes shake {
+    0%,100% { transform: translate(0,0) rotate(0deg) scale(var(--zoom,1)); }
+    20% { transform: translate(calc(var(--shk,0)*2.4px), calc(var(--shk,0)*-1.6px)) rotate(calc(var(--shk,0)*.35deg)) scale(var(--zoom,1)); }
+    45% { transform: translate(calc(var(--shk,0)*-2px), calc(var(--shk,0)*1.2px)) rotate(calc(var(--shk,0)*-.3deg)) scale(var(--zoom,1)); }
+    70% { transform: translate(calc(var(--shk,0)*1.4px), calc(var(--shk,0)*2px)) rotate(calc(var(--shk,0)*.2deg)) scale(var(--zoom,1)); }
+  }
+  .cp-aspects { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-top: 8px; }
+  .cp-aspects button { height: 24px; border: 1px solid var(--line); border-radius: 5px; background: none; color: var(--ink-60); font-size: 9.5px; cursor: pointer; }
+  .cp-aspects button.sel { background: var(--ink); color: #131313; border-color: var(--ink); }
+  .cp-slider-block { margin-top: 10px; background: var(--panel-2); border-radius: 6px; padding: 8px; }
+  .cp-slider-block .row1 { display: flex; justify-content: space-between; color: var(--ink-60); font-size: 11px; margin-bottom: 4px; }
+  .cp-slider-block .row1 b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cp-slider-block input[type=range] { width: 100%; accent-color: var(--ink); height: 3px; }
+  .cp-slider-block .scale { display: flex; justify-content: space-between; color: var(--ink-40); font-size: 9.5px; margin-top: 2px; }
+  .cp-shake-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .toggle { position: relative; width: 30px; height: 17px; border-radius: 999px; background: var(--line); cursor: pointer; transition: background .15s; flex-shrink: 0; }
+  .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 13px; height: 13px; border-radius: 50%; background: var(--ink-60); transition: left .15s, background .15s; }
+  .toggle.on { background: var(--accent); }
+  .toggle.on::after { left: 15px; background: #fff; }
+
+  /* ── 右：属性面板 ── */
+  .right { width: 264px; flex-shrink: 0; border-left: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; overflow-y: auto; }
+  .tabs { display: flex; gap: 6px; padding: 12px 12px 0; }
+  .tabs .tab { height: 30px; padding: 0 14px; display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; color: var(--ink-60); cursor: pointer; }
+  .tabs .tab.sel { background: var(--panel-2); color: var(--ink); }
+  .props { padding: 12px; display: grid; gap: 10px; }
+  .field label { display: block; color: var(--ink-60); font-size: 10.5px; margin-bottom: 4px; }
+  .field input, .field select { width: 100%; height: 30px; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-sm); color: var(--ink); padding: 0 8px; font-size: 12px; outline: none; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+
+  /* 新增：运镜预设块 */
+  .moveblock { border: 1px solid var(--line); border-radius: var(--r); padding: 10px; display: grid; gap: 8px; }
+  .moveblock .mb-title { display: flex; align-items: center; font-weight: 600; font-size: 12px; }
+  .movegrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .movegrid button { height: 28px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--panel-2); color: var(--ink-60); font-size: 11px; cursor: pointer; transition: all .1s; }
+  .movegrid button:hover { color: var(--ink); border-color: var(--ink-60); }
+  .movegrid button:active { transform: scale(.95); }
+  .movegrid button.zoomy { border-style: dashed; }
+  .mb-hint { color: var(--ink-40); font-size: 10px; line-height: 1.5; }
+  .mb-flash { color: var(--new); font-size: 10.5px; min-height: 14px; }
+
+  .legend { position: absolute; left: 16px; top: 16px; background: rgba(20,20,20,.85); backdrop-filter: blur(4px); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; font-size: 11px; line-height: 1.8; color: var(--ink-60); max-width: 300px; }
+  .legend b { color: var(--ink); }
+  .legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: var(--new); margin-right: 6px; }
+</style>
+</head>
+<body>
+
+  <!-- 顶栏：现状原样 -->
+  <div class="topbar">
+    <div class="brand">◇ 3D场景</div>
+    <button class="tbtn active">✥</button>
+    <button class="tbtn">⟳</button>
+    <button class="tbtn">🖼 截图</button>
+    <button class="tbtn">〰 轨迹</button>
+    <button class="tbtn" id="topPlay">▶</button>
+    <button class="tbtn">🧍 操控</button>
+    <button class="tbtn">✕</button>
+  </div>
+
+  <div class="main">
+    <!-- 左：场景节点，现状原样 -->
+    <div class="left">
+      <h3>场景节点 <span>2</span></h3>
+      <div class="node-row"><span class="ic">⛶</span><span class="nm">假人</span><span class="ic">👁</span></div>
+      <div class="node-row sel"><span class="ic">⛶</span><span class="nm">相机1</span><span class="ic">👁</span></div>
+    </div>
+
+    <!-- 中：视口 -->
+    <div class="viewport">
+      <div class="floor"></div>
+      <svg class="mannequin" viewBox="0 0 60 130">
+        <g fill="#d94f4f"><circle cx="30" cy="14" r="10"/><rect x="20" y="26" width="20" height="38" rx="8"/>
+        <rect x="8" y="28" width="9" height="32" rx="4.5"/><rect x="43" y="28" width="9" height="32" rx="4.5"/>
+        <rect x="21" y="66" width="8" height="48" rx="4"/><rect x="31" y="66" width="8" height="48" rx="4"/></g>
+      </svg>
+
+      <div class="legend">
+        <b>可体验样张 · 对着推上那个 demo 补我们用户侧的缺口</b><br>
+        <span class="dot"></span>标「新」的是本次加的，其余为现状原样。<br>
+        试试：右侧面板点几个<b>运镜预设</b>（可连点串联）→ 底部时间轴出段 → 点 ▶ 看画中画预演；拖<b>焦段</b>滑杆、开<b>手持抖动</b>、切 <b>2.39:1</b>。
+      </div>
+
+      <!-- 右上：相机画中画（现有浮窗 + 新增焦段/抖动两行、画幅加 2.39:1） -->
+      <div class="campreview">
+        <div class="cp-head">
+          <span class="t" id="cpTitle">相机1 · 16:9</span>
+          <span class="acts">
+            <button class="cbtn">👁 取景</button><button class="cbtn">⟲</button><button class="cbtn">📷</button>
+          </span>
+        </div>
+        <div class="cp-frame">
+          <div class="cp-shot" id="cpShot" style="width:224px; height:126px; --zoom:1; --shk:0">
+            <div class="cp-scene" id="cpScene">
+              <svg viewBox="0 0 60 130"><g fill="#d94f4f"><circle cx="30" cy="14" r="10"/><rect x="20" y="26" width="20" height="38" rx="8"/><rect x="8" y="28" width="9" height="32" rx="4.5"/><rect x="43" y="28" width="9" height="32" rx="4.5"/><rect x="21" y="66" width="8" height="48" rx="4"/><rect x="31" y="66" width="8" height="48" rx="4"/></g></svg>
+            </div>
+          </div>
+        </div>
+        <div class="cp-aspects" id="aspects">
+          <button data-r="1.7778" class="sel">16:9</button>
+          <button data-r="0.5625">9:16</button>
+          <button data-r="1.3333">4:3</button>
+          <button data-r="0.75">3:4</button>
+          <button data-r="1">1:1</button>
+          <button data-r="2.39" style="border-color:var(--new); color:var(--new)">2.39:1</button>
+        </div>
+
+        <div class="cp-slider-block">
+          <div class="row1"><span>焦段<span class="badge-new">新</span></span><b id="mmLabel">35mm · FOV 37°</b></div>
+          <input type="range" id="mmSlider" min="12" max="200" value="35">
+          <div class="scale"><span>12 广角</span><span>50 标准</span><span>200 长焦</span></div>
+        </div>
+
+        <div class="cp-slider-block">
+          <div class="row1"><span>镜头深度</span><b>0%</b></div>
+          <input type="range" min="-100" max="100" value="0">
+          <div class="scale"><span>-100%</span><span>0</span><span>100%</span></div>
+        </div>
+
+        <div class="cp-slider-block">
+          <div class="cp-shake-head">
+            <span style="color:var(--ink-60); font-size:11px">手持抖动<span class="badge-new">新</span></span>
+            <span class="toggle" id="shakeToggle"></span>
+          </div>
+          <input type="range" id="shakeSlider" min="0" max="100" value="40" disabled>
+          <div class="scale"><span>微晃</span><span id="shakeVal">40%</span><span>剧烈</span></div>
+        </div>
+      </div>
+
+      <!-- 底部工具条：现状原样 -->
+      <div class="bottombar">
+        <span class="bbtn"><span class="plus">＋</span> 添加 ⌃</span>
+        <span class="sep"></span>
+        <span class="bbtn">〰 轨迹</span>
+        <span class="bbtn">⛶ 全屏</span>
+      </div>
+
+      <div class="axisbox"><div class="x">X</div><div class="y">Y</div><div class="z">Z</div></div>
+
+      <!-- 底部时间轴：现有组件；预设落段后出现绑定条 -->
+      <div class="timeline">
+        <span class="play" id="tlPlay">▶</span>
+        <div class="tl-track" id="tlTrack">
+          <div class="tl-empty" id="tlEmpty">点右侧「运镜预设」落段，连点自动串联 →</div>
+          <div class="tl-playhead" id="tlPlayhead"></div>
+        </div>
+        <span class="tl-time" id="tlTime">0.0s / 0.0s</span>
+      </div>
+    </div>
+
+    <!-- 右：属性面板（选中相机1） -->
+    <div class="right">
+      <div class="tabs"><span class="tab sel">⚙ 属性</span><span class="tab">〰 轨迹</span></div>
+      <div class="props">
+        <div class="field"><label>名称</label><input value="相机1"></div>
+        <div class="field"><label>相机位置 XYZ</label><div class="grid3"><input value="0"><input value="1.45"><input value="4.8"></div></div>
+        <div class="field"><label>拍摄目标 XYZ</label><div class="grid3"><input value="0"><input value="1.35"><input value="0"></div></div>
+        <div class="grid3">
+          <div class="field"><label>FOV</label><input id="fovInput" value="37"></div>
+          <div class="field"><label>NEAR</label><input value="0.1"></div>
+          <div class="field"><label>FAR</label><input value="200"></div>
+        </div>
+
+        <!-- 新增：运镜预设块 -->
+        <div class="moveblock">
+          <div class="mb-title">运镜预设<span class="badge-new">新</span></div>
+          <div class="grid2">
+            <div class="field"><label>时长（秒）</label><input id="durInput" value="5" type="number" min="1" max="12"></div>
+            <div class="field"><label>幅度（%）</label><input id="ampInput" value="60" type="number" min="10" max="100"></div>
+          </div>
+          <div class="movegrid" id="moveGrid">
+            <button data-m="推近">推近</button><button data-m="拉远">拉远</button><button data-m="左横移">左横移</button>
+            <button data-m="右横移">右横移</button><button data-m="升镜">升镜</button><button data-m="降镜">降镜</button>
+            <button data-m="左弧线">左弧线</button><button data-m="右弧线">右弧线</button><button data-m="左环绕">左环绕</button>
+            <button data-m="右环绕">右环绕</button>
+            <button data-m="变焦推" class="zoomy" style="color:var(--new)">变焦推</button>
+            <button data-m="变焦拉" class="zoomy" style="color:var(--new)">变焦拉</button>
+            <button data-m="希区柯克" class="zoomy" style="color:var(--new); grid-column: span 3">希区柯克变焦（机位后拉 + 变焦推，背景抽离）</button>
+          </div>
+          <div class="mb-flash" id="mbFlash"></div>
+          <div class="mb-hint">按当前机位与拍摄目标就地生成一段轨迹，追加到时间轴末尾；连点即串联多段。金色虚线三个是 FOV 参与动画的新运镜。落段后仍可在轨迹模式里逐点精修。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ── 画幅切换（含新 2.39:1）──
+  const shot = document.getElementById('cpShot');
+  document.getElementById('aspects').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#aspects button').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    const r = Number(b.dataset.r), maxW = 224, maxH = 200;
+    let w = maxW, h = w / r;
+    if (h > maxH) { h = maxH; w = h * r; }
+    shot.style.width = w + 'px'; shot.style.height = h + 'px';
+    document.getElementById('cpTitle').textContent = '相机1 · ' + b.textContent;
+  });
+
+  // ── 焦段 mm ↔ FOV（竖直向，35mm 全幅 24mm 片高：fov = 2·atan(12/mm)）──
+  const mmSlider = document.getElementById('mmSlider'), mmLabel = document.getElementById('mmLabel'), fovInput = document.getElementById('fovInput');
+  const scene = document.getElementById('cpScene');
+  mmSlider.addEventListener('input', () => {
+    const mm = Number(mmSlider.value);
+    const fov = Math.round(2 * Math.atan(12 / mm) * 180 / Math.PI);
+    mmLabel.textContent = mm + 'mm · FOV ' + fov + '°';
+    fovInput.value = fov;
+    shot.style.setProperty('--zoom', (mm / 35) ** 0.6);
+    scene.style.transform = 'scale(' + (mm / 35) ** 0.6 + ')';
+  });
+
+  // ── 手持抖动 ──
+  const shakeToggle = document.getElementById('shakeToggle'), shakeSlider = document.getElementById('shakeSlider'), shakeVal = document.getElementById('shakeVal');
+  let shakeOn = false;
+  shakeToggle.addEventListener('click', () => {
+    shakeOn = !shakeOn;
+    shakeToggle.classList.toggle('on', shakeOn);
+    shakeSlider.disabled = !shakeOn;
+    applyShake();
+  });
+  shakeSlider.addEventListener('input', applyShake);
+  function applyShake() {
+    shakeVal.textContent = shakeSlider.value + '%';
+    shot.style.setProperty('--shk', shakeOn ? shakeSlider.value / 100 : 0);
+    shot.classList.toggle('shaking', shakeOn);
+  }
+
+  // ── 运镜预设 → 时间轴串联 ──
+  const segs = []; let totalDur = 0;
+  const tlTrack = document.getElementById('tlTrack'), tlEmpty = document.getElementById('tlEmpty'), tlTime = document.getElementById('tlTime');
+  const flash = document.getElementById('mbFlash');
+  document.getElementById('moveGrid').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    const dur = Number(document.getElementById('durInput').value) || 5;
+    segs.push({ name: b.dataset.m, dur, zoomy: b.classList.contains('zoomy') });
+    totalDur += dur;
+    flash.textContent = '已追加「' + b.dataset.m + ' · ' + dur + 's」到时间轴末尾';
+    renderTimeline();
+  });
+  function renderTimeline() {
+    tlEmpty.style.display = segs.length ? 'none' : 'grid';
+    tlTrack.querySelectorAll('.tl-seg').forEach(x => x.remove());
+    let acc = 0;
+    for (const s of segs) {
+      const el = document.createElement('div');
+      el.className = 'tl-seg';
+      el.style.left = (acc / totalDur * 100) + '%';
+      el.style.width = (s.dur / totalDur * 100 - 0.4) + '%';
+      el.textContent = s.name + ' ' + s.dur + 's';
+      if (s.zoomy) { el.style.borderColor = 'var(--new)'; el.style.background = 'rgba(232,163,61,.12)'; }
+      tlTrack.appendChild(el);
+      acc += s.dur;
+    }
+    tlTime.textContent = '0.0s / ' + totalDur.toFixed(1) + 's';
+  }
+
+  // ── 播放：画中画按段演示对应机位运动（示意插值）──
+  const playhead = document.getElementById('tlPlayhead');
+  let playing = false;
+  function motionFor(name, t) { // t: 0→1 段内进度
+    const a = Number(document.getElementById('ampInput').value) / 100 || .6;
+    switch (name) {
+      case '推近': return { s: 1 + t * a, x: 0, r: 0 };
+      case '拉远': return { s: 1 + (1 - t) * a, x: 0, r: 0 };
+      case '左横移': return { s: 1, x: t * 40 * a, r: 0 };
+      case '右横移': return { s: 1, x: -t * 40 * a, r: 0 };
+      case '升镜': return { s: 1, x: 0, y: t * 30 * a, r: 0 };
+      case '降镜': return { s: 1, x: 0, y: -t * 30 * a, r: 0 };
+      case '左弧线': return { s: 1, x: Math.sin(t * 1.57) * 30 * a, r: t * 10 * a };
+      case '右弧线': return { s: 1, x: -Math.sin(t * 1.57) * 30 * a, r: -t * 10 * a };
+      case '左环绕': return { s: 1, x: Math.sin(t * 6.28) * 34 * a, r: t * 24 * a };
+      case '右环绕': return { s: 1, x: -Math.sin(t * 6.28) * 34 * a, r: -t * 24 * a };
+      case '变焦推': return { s: 1 + t * a * .9, x: 0, r: 0, glow: true };
+      case '变焦拉': return { s: 1 + (1 - t) * a * .9, x: 0, r: 0, glow: true };
+      case '希区柯克': return { s: 1 + Math.sin(t * 3.14) * .12, x: 0, r: 0, bg: 1 + t * a, glow: true };
+      default: return { s: 1, x: 0, r: 0 };
+    }
+  }
+  function play() {
+    if (!segs.length || playing) return;
+    playing = true; playhead.style.display = 'block';
+    const t0 = performance.now();
+    (function frame(now) {
+      const el = (now - t0) / 1000;
+      if (el >= totalDur) {
+        playing = false; playhead.style.display = 'none';
+        scene.style.transform = 'scale(' + (Number(mmSlider.value) / 35) ** 0.6 + ')';
+        shot.style.background = '';
+        tlTime.textContent = '0.0s / ' + totalDur.toFixed(1) + 's';
+        return;
+      }
+      playhead.style.left = (el / totalDur * 100) + '%';
+      tlTime.textContent = el.toFixed(1) + 's / ' + totalDur.toFixed(1) + 's';
+      let acc = 0, cur = segs[0], t = 0;
+      for (const s of segs) { if (el < acc + s.dur) { cur = s; t = (el - acc) / s.dur; break; } acc += s.dur; }
+      const m = motionFor(cur.name, t);
+      const base = (Number(mmSlider.value) / 35) ** 0.6;
+      scene.style.transform = 'translate(' + (m.x||0) + 'px,' + (-(m.y||0)) + 'px) rotate(' + (m.r||0)/4 + 'deg) scale(' + base * m.s + ')';
+      shot.style.background = m.bg ? 'linear-gradient(180deg,#efece6 0 ' + (62 - (m.bg-1)*18) + '%,#dad6cd ' + (62 - (m.bg-1)*18) + '%)' : '';
+      requestAnimationFrame(frame);
+    })(t0);
+  }
+  document.getElementById('tlPlay').addEventListener('click', play);
+  document.getElementById('topPlay').addEventListener('click', play);
+</script>
+</body>
+</html>

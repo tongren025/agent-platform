@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nomi · 起始页与完整 Onboarding v2</title>
+  <link rel="stylesheet" href="../../../src/theme/nomi-tokens.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 56px 72px;
+      background: var(--nomi-bg);
+      color: var(--nomi-ink);
+      font-family: var(--nomi-font-sans);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .switcher {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      margin-bottom: 24px;
+      border: 1px solid var(--nomi-line);
+      border-radius: 999px;
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .switcher button {
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--nomi-ink-60);
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .switcher button[aria-selected="true"] {
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+    }
+
+    .screen {
+      display: none;
+      max-width: 1320px;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .library-shell {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      font-family: var(--nomi-font-display);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--nomi-ink);
+    }
+
+    .mark {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+      font-family: var(--nomi-font-sans);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin: 8px 0 0 40px;
+      color: var(--nomi-ink-40);
+      font-size: 13px;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--nomi-line);
+      border-radius: 999px;
+      background: var(--nomi-paper);
+      color: var(--nomi-ink-80);
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .button.primary {
+      border-color: var(--nomi-ink);
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+    }
+
+    .button.subtle {
+      background: transparent;
+    }
+
+    .button.accent {
+      border-color: color-mix(in oklch, var(--nomi-accent) 36%, var(--nomi-line));
+      background: var(--nomi-accent-soft);
+      color: var(--nomi-accent);
+    }
+
+    .button:disabled {
+      color: var(--nomi-ink-30);
+      cursor: not-allowed;
+    }
+
+    .action-row.offset {
+      margin-top: 16px;
+    }
+
+    .action-row.end {
+      justify-self: end;
+    }
+
+    .action-row.between {
+      justify-content: space-between;
+    }
+
+    .status-panel,
+    .panel-card {
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+    }
+
+    .status-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 14px;
+    }
+
+    .status-title {
+      margin: 0;
+      color: var(--nomi-ink);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .status-text {
+      margin-top: 2px;
+      color: var(--nomi-ink-60);
+      font-size: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .search {
+      width: 360px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-paper);
+      color: var(--nomi-ink-30);
+      padding: 0 12px;
+      font-size: 13px;
+    }
+
+    .micro-note {
+      color: var(--nomi-ink-40);
+      font-size: 12px;
+    }
+
+    .section-head {
+      display: inline-flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--nomi-ink-60);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .segmented {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--nomi-line);
+      border-radius: 999px;
+      background: var(--nomi-paper);
+    }
+
+    .segmented button {
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--nomi-ink-60);
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .segmented button.active {
+      background: var(--nomi-ink-10);
+      color: var(--nomi-ink);
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .project-card {
+      overflow: hidden;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+    }
+
+    .thumb {
+      aspect-ratio: 16 / 9;
+      display: grid;
+      place-items: center;
+      background: var(--nomi-ink-05);
+      color: var(--nomi-ink-30);
+    }
+
+    .card-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 32px;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .card-title {
+      margin: 0;
+      overflow: hidden;
+      color: var(--nomi-ink);
+      font-size: 13px;
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-time {
+      color: var(--nomi-ink-40);
+      font-size: 11px;
+    }
+
+    .icon-button {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-paper);
+      color: var(--nomi-ink-60);
+      cursor: pointer;
+    }
+
+    .empty-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .empty-main {
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      border: 1px dashed var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+    }
+
+    .empty-box {
+      max-width: 380px;
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .empty-title {
+      margin: 0;
+      color: var(--nomi-ink);
+      font-size: 16px;
+      font-weight: 750;
+    }
+
+    .empty-text {
+      margin: 0;
+      color: var(--nomi-ink-60);
+      font-size: 13px;
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .panel-card {
+      padding: 14px;
+    }
+
+    .panel-title {
+      margin: 0 0 10px;
+      color: var(--nomi-ink);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .check-index {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--nomi-ink-05);
+      color: var(--nomi-ink-60);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .check-row strong {
+      display: block;
+      color: var(--nomi-ink);
+      font-size: 12px;
+    }
+
+    .check-row span {
+      display: block;
+      margin-top: 2px;
+      color: var(--nomi-ink-40);
+      font-size: 12px;
+    }
+
+    .workbench-frame {
+      overflow: hidden;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+    }
+
+    .appbar {
+      height: 48px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--nomi-line);
+      background: var(--nomi-paper);
+    }
+
+    .crumb {
+      display: inline-flex;
+      align-items: center;
+      height: 30px;
+      min-width: 0;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-bg);
+      color: var(--nomi-ink-60);
+      overflow: hidden;
+    }
+
+    .crumb span {
+      padding: 0 10px;
+      white-space: nowrap;
+    }
+
+    .stepper {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--nomi-line);
+      border-radius: 999px;
+      background: var(--nomi-bg);
+    }
+
+    .stepper button {
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--nomi-ink-60);
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .stepper button.active {
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+    }
+
+    .workbench-body {
+      height: 440px;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr) 320px;
+      background: var(--nomi-bg);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--nomi-line);
+      background: var(--nomi-paper);
+      padding: 12px;
+    }
+
+    .category {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: var(--nomi-radius-sm);
+      color: var(--nomi-ink-60);
+      padding: 0 10px;
+      font-size: 12px;
+    }
+
+    .category.active {
+      background: var(--nomi-accent-soft);
+      color: var(--nomi-accent);
+    }
+
+    .canvas {
+      position: relative;
+      padding: 24px;
+      background: var(--nomi-bg);
+    }
+
+    .node {
+      width: 220px;
+      height: 190px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+      padding: 12px;
+    }
+
+    .node + .node {
+      margin-left: 244px;
+      margin-top: -190px;
+    }
+
+    .node-title {
+      display: inline-flex;
+      height: 22px;
+      align-items: center;
+      border-radius: 999px;
+      background: var(--nomi-ink);
+      color: var(--nomi-paper);
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .node-placeholder {
+      height: 86px;
+      display: grid;
+      place-items: center;
+      margin-top: 12px;
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-ink-05);
+      color: var(--nomi-ink-40);
+      font-size: 11px;
+    }
+
+    .assistant {
+      border-left: 1px solid var(--nomi-line);
+      background: var(--nomi-paper);
+      padding: 14px;
+    }
+
+    .tour-card {
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-sm);
+      padding: 16px;
+    }
+
+    .tour-title {
+      margin: 0;
+      color: var(--nomi-ink);
+      font-size: 16px;
+      font-weight: 750;
+    }
+
+    .tour-text {
+      margin: 6px 0 14px;
+      color: var(--nomi-ink-60);
+      font-size: 13px;
+    }
+
+    .callout {
+      position: absolute;
+      right: 28px;
+      top: 72px;
+      width: 320px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-lg);
+      padding: 16px;
+    }
+
+    .modal-layer {
+      display: grid;
+      place-items: center;
+      min-height: 560px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: color-mix(in oklch, var(--nomi-ink) 8%, var(--nomi-bg));
+      padding: 32px;
+    }
+
+    .modal {
+      width: 520px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-lg);
+      background: var(--nomi-paper);
+      box-shadow: var(--nomi-shadow-lg);
+      padding: 20px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .field label {
+      color: var(--nomi-ink);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .input {
+      height: 36px;
+      border: 1px solid var(--nomi-line);
+      border-radius: var(--nomi-radius-sm);
+      background: var(--nomi-bg);
+      color: var(--nomi-ink-30);
+      padding: 0 10px;
+    }
+
+    .note {
+      max-width: 900px;
+      margin-top: 16px;
+      color: var(--nomi-ink-60);
+      font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
+      body { padding: 28px 24px 56px; }
+      .header-row,
+      .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .search { width: 100%; }
+      .empty-layout,
+      .workbench-body {
+        grid-template-columns: 1fr;
+      }
+      .assistant,
+      .sidebar {
+        display: none;
+      }
+      .appbar {
+        grid-template-columns: 1fr;
+        height: auto;
+        padding: 12px;
+      }
+      .callout {
+        position: static;
+        width: auto;
+        margin: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="switcher" aria-label="样张切换">
+    <button data-target="a" aria-selected="true">A 老用户项目库</button>
+    <button data-target="b" aria-selected="false">B 首次空项目</button>
+    <button data-target="c" aria-selected="false">C 完整 Onboarding</button>
+    <button data-target="d" aria-selected="false">D 模型接入步骤</button>
+  </nav>
+
+  <main id="screen-a" class="screen active">
+    <section class="library-shell">
+      <div class="header-row">
+        <div>
+          <h1 class="brand"><span class="mark">N</span>Nomi 项目库</h1>
+          <p class="subtitle">新建或打开本地视频项目。</p>
+        </div>
+        <div class="action-row" aria-label="开始一个项目">
+          <button class="button primary">＋ 新建空白项目</button>
+          <button class="button">▣ 打开已有文件夹</button>
+          <button class="button subtle">⌁ 模型接入</button>
+        </div>
+      </div>
+
+      <section class="status-panel" aria-label="模型状态">
+        <div>
+          <h2 class="status-title">文本模型未接入</h2>
+          <div class="status-text">创作助手和 Agent 需要先有文本模型；图片/视频模型可在后续生成前再接。</div>
+        </div>
+        <button class="button accent">接入文本模型</button>
+      </section>
+
+      <div class="toolbar">
+        <div class="search">⌕ 搜索项目名称...</div>
+        <div class="micro-note">文件夹图标打开项目目录；生成物在项目内保存。</div>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title">最近项目</h2>
+        <div class="segmented" aria-label="筛选项目入口">
+          <button class="active">全部项目 78</button>
+          <button>新建项目 75</button>
+          <button>打开文件夹 3</button>
+        </div>
+      </div>
+
+      <section class="projects" aria-label="最近项目">
+        <article class="project-card"><div class="thumb">film</div><div class="card-body"><div><h3 class="card-title">示例：京都一日 vlog</h3><div class="card-time">16 分钟前</div></div><button class="icon-button">▣</button></div></article>
+        <article class="project-card"><div class="thumb">film</div><div class="card-body"><div><h3 class="card-title">未命名项目 06/12 00:13</h3><div class="card-time">52 分钟前</div></div><button class="icon-button">▣</button></div></article>
+        <article class="project-card"><div class="thumb">film</div><div class="card-body"><div><h3 class="card-title">示例：天台上的告白</h3><div class="card-time">1 天前</div></div><button class="icon-button">▣</button></div></article>
+        <article class="project-card"><div class="thumb">film</div><div class="card-body"><div><h3 class="card-title">示例：30 秒产品介绍</h3><div class="card-time">1 天前</div></div><button class="icon-button">▣</button></div></article>
+      </section>
+    </section>
+    <p class="note">A 用现有 ProjectLibraryPage 结构重排：删除 Try Now hero；模型接入变成状态面板，只有缺文本模型时升权。最近项目回到首屏主体。</p>
+  </main>
+
+  <main id="screen-b" class="screen">
+    <section class="library-shell">
+      <div class="header-row">
+        <div>
+          <h1 class="brand"><span class="mark">N</span>Nomi 项目库</h1>
+          <p class="subtitle">创建或打开一个本地项目。</p>
+        </div>
+        <div class="action-row">
+          <button class="button subtle">⌁ 模型接入</button>
+        </div>
+      </div>
+
+      <section class="empty-layout">
+        <div class="empty-main">
+          <div class="empty-box">
+            <h2 class="empty-title">还没有项目</h2>
+            <p class="empty-text">先决定项目保存在哪里：新建到 Nomi Projects，或直接打开已有文件夹。</p>
+            <div class="action-row">
+              <button class="button primary">＋ 新建空白项目</button>
+              <button class="button">▣ 打开已有文件夹</button>
+            </div>
+          </div>
+        </div>
+        <aside class="side-stack">
+          <section class="panel-card">
+            <h2 class="panel-title">首次使用流程</h2>
+            <ol class="checklist">
+              <li class="check-row"><span class="check-index">1</span><div><strong>接入文本模型</strong><span>创作助手和 Agent 的前置能力。</span></div></li>
+              <li class="check-row"><span class="check-index">2</span><div><strong>创建项目</strong><span>进入工作台后从创作区开始。</span></div></li>
+              <li class="check-row"><span class="check-index">3</span><div><strong>走完三界面</strong><span>创作、生成、预览导出。</span></div></li>
+            </ol>
+            <div class="action-row offset">
+              <button class="button accent">开始引导</button>
+            </div>
+          </section>
+          <section class="panel-card">
+            <h2 class="panel-title">模型状态</h2>
+            <div class="status-text">还没有文本模型。先接文本模型，不需要先接图片/视频模型。</div>
+          </section>
+        </aside>
+      </section>
+    </section>
+    <p class="note">B 是空项目态：隐藏搜索和来源筛选，因为没有可筛选对象；右侧不是示例卡，而是完整首次路径入口。</p>
+  </main>
+
+  <main id="screen-c" class="screen">
+    <section class="workbench-frame" aria-label="工作台 Onboarding">
+      <header class="appbar">
+        <div class="crumb"><span>项目库</span><span>›</span><span>未命名 Nomi 项目</span></div>
+        <nav class="stepper" aria-label="工作台步骤">
+          <button class="active">创作</button>
+          <button>生成</button>
+          <button>预览</button>
+        </nav>
+        <div class="action-row end">
+          <button class="button subtle">素材库</button>
+          <button class="button subtle">模型接入</button>
+          <button class="button primary">导出</button>
+        </div>
+      </header>
+      <div class="workbench-body">
+        <aside class="sidebar">
+          <div class="category active">分镜</div>
+          <div class="category">角色</div>
+          <div class="category">场景</div>
+          <div class="category">道具</div>
+        </aside>
+        <section class="canvas">
+          <article class="node"><span class="node-title">分镜 01</span><div class="node-placeholder">等待生成</div></article>
+          <article class="node"><span class="node-title">角色</span><div class="node-placeholder">等待生成</div></article>
+          <div class="callout">
+            <h2 class="tour-title">1 / 3 创作区</h2>
+            <p class="tour-text">先写目标、脚本或分镜文字。这里不塞示例内容，只指向真实编辑区和创作助手。</p>
+            <div class="action-row"><button class="button primary">下一步：生成区</button><button class="button">跳过</button></div>
+          </div>
+        </section>
+        <aside class="assistant">
+          <section class="tour-card">
+            <h2 class="tour-title">Nomi 创作</h2>
+            <p class="tour-text">可以整理脚本、拆镜头、生成节点计划。没有文本模型时，这里提示先接入模型。</p>
+          </section>
+        </aside>
+      </div>
+    </section>
+    <p class="note">C 是完整产品 Onboarding 的核心：它发生在工作台内，锚定现有 NomiStepper、创作助手、生成画布、预览导出，而不是首页命令条。</p>
+  </main>
+
+  <main id="screen-d" class="screen">
+    <section class="modal-layer" aria-label="模型接入 Onboarding">
+      <div class="modal">
+        <h1 class="tour-title">添加一个 AI 模型</h1>
+        <p class="tour-text">沿用现有 OnboardingWizard：默认先走文本模型；已有文本模型后再开放图片 / 视频模型文档接入。</p>
+        <div class="segmented" aria-label="模型类型">
+          <button class="active">文本模型</button>
+          <button disabled>图片 / 视频模型</button>
+        </div>
+        <div class="field">
+          <label>供应商</label>
+          <div class="action-row"><button class="button">OpenAI</button><button class="button">Kimi</button><button class="button">Anthropic</button><button class="button">自定义</button></div>
+        </div>
+        <div class="field">
+          <label>你的 API Key</label>
+          <div class="input">只存在你的电脑上，加密保存</div>
+        </div>
+        <div class="field">
+          <label>模型</label>
+          <div class="input">输入模型 id 回车，或拉取可用模型</div>
+        </div>
+        <div class="action-row offset between">
+          <button class="button">测试连接</button>
+          <button class="button primary">保存</button>
+        </div>
+      </div>
+    </section>
+    <p class="note">D 不是新的产品引导，而是现有模型接入流程的第一站。产品 Onboarding 只负责在需要 AI 能力前把用户带到这里。</p>
+  </main>
+
+  <script>
+    const buttons = Array.from(document.querySelectorAll('.switcher button'));
+    const screens = Array.from(document.querySelectorAll('.screen'));
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.target;
+        buttons.forEach((item) => item.setAttribute('aria-selected', item === button ? 'true' : 'false'));
+        screens.forEach((screen) => screen.classList.toggle('active', screen.id === `screen-${target}`));
+      });
+    });
+  </script>
+</body>
+</html>
