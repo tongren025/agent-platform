@@ -62,8 +62,12 @@ Configure any OpenAI-compatible LLM endpoint in `appsettings.Development.json` o
 
 `modules/yuxi-runtime/` contains a pinned upstream Yuxi source snapshot used as
 a code source for the platform's existing DeepAgent, Skill, and MCP stack; it
-does not introduce a second agent kernel. The first integrated capability is
-the MCP execution bridge: an MCP server is connected and its tools are appended
+does not introduce a second agent kernel. Integrated capabilities now include
+the MCP execution bridge and read-only SKILL.md discovery. Directory-based
+skills under `data/skills/` are visible to the existing registry and can be
+bound to employees; their full instructions are still loaded on demand through
+`get_skill_detail`, while a same-code JSON definition takes precedence without
+modifying the skill directory. An MCP server is connected and its tools are appended
 to the existing AgentLoop only after it is configured and bound to an employee.
 With no binding, the SDK is not imported, no subprocess is started, and the
 existing local-tool path remains unchanged.

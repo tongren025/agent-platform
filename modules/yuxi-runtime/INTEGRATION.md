@@ -2,10 +2,9 @@
 
 ## 当前阶段
 
-已完成上游源码快照引入和第一项增量接入：复用 Yuxi MCP Service 的配置哈希缓存、
-工具唯一命名、故障隔离与按服务加载设计，在 `app/runtime/mcp.py` 接通现有
-JSON 注册表和 AgentLoop。没有替换 Agent Platform 的 DeepAgent、Skill、MCP 配置
-或本地工具，也没有把 Yuxi 服务加入根目录 `docker-compose.yml`。
+已完成上游源码快照引入和两项增量接入：MCP 工具执行桥接、SKILL.md 技能包发现。
+没有替换 Agent Platform 的 DeepAgent、Skill/MCP 配置或本地工具，也没有把 Yuxi
+服务加入根目录 `docker-compose.yml`。
 
 当前原则不是运行第二套 Yuxi 内核，而是把上游当作固定代码来源库：逐项确认缺口，
 只把成熟实现接到现有模块，每项独立测试、独立提交，随时可按 Git 提交回退。
@@ -24,6 +23,19 @@ JSON 注册表和 AgentLoop。没有替换 Agent Platform 的 DeepAgent、Skill�
 
 实现来源：`backend/package/yuxi/agents/mcp/service.py`。本地适配层没有搬入
 Yuxi 的 PostgreSQL Repository 或 LangChain 运行栈。
+
+### SKILL.md 技能包发现
+
+- 现有 JSON Skill 注册表仍是可编辑配置层，目录型 `SKILL.md` 作为只读来源补充。
+- 同 code 时 JSON 优先，不覆盖、不删除、不迁移技能包目录或链接。
+- 复用 Yuxi frontmatter 解析与 slug 校验，读取 name、description 及工具/MCP/
+  Skill 依赖元数据；单个包损坏只隔离该包。
+- 继续使用平台原有 `get_skill_detail` 工具按需读取完整正文；系统提示词只展示摘要，
+  树形 Skill 也不再预注入子技能全文。
+
+实现来源：`backend/package/yuxi/agents/skills/service.py` 与
+`backend/package/yuxi/agents/middlewares/skills.py`。本地适配不包含 Yuxi 的
+数据库权限、远程安装器或 LangGraph Middleware。
 
 ## 目标职责
 

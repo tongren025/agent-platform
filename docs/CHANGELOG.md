@@ -5,6 +5,26 @@
 
 ---
 
+## [2026-07-29] feat: 让现有 Skill 注册表识别 SKILL.md 技能包
+
+- 从 Yuxi Skills Service 迁入 `SKILL.md` frontmatter 解析、slug 校验、依赖元数据
+  和单包故障隔离，新增只读技能包发现层，不引入 PostgreSQL Skill Repository。
+- 现有 `data/skills/*.json` 继续作为可编辑配置；同 code 的 JSON 配置优先，
+  `SKILL.md` 目录或链接不会被保存、删除或覆盖。
+- `data/skills/` 中已有的 `seedance-v2`、`ai-video-generation`、
+  `remotion-render` 技能包现在可被后台列出、绑定员工，并由现有
+  `get_skill_detail` 工具按需读取完整正文。
+- 系统提示词只注入 Skill 与树形子技能摘要，命中技能后明确要求调用
+  `get_skill_detail`；避免每轮重复注入大型技能全文。
+- 新增 6 个技能包专项测试，覆盖 YAML 折叠描述、依赖、JSON 覆盖优先、
+  损坏包隔离、现有详情工具和提示词按需加载。
+
+**影响面**：扩展 SkillDefinition 返回字段，新增 `PyYAML>=6.0.2` 与只读
+SKILL.md 发现；无数据库、Redis、环境变量、前端或现有 JSON 数据迁移，
+未删除和改写任何技能包。
+
+---
+
 ## [2026-07-29] feat: 接通员工 MCP 服务的真实工具执行链
 
 - 从 Yuxi MCP Service 迁入配置哈希缓存、跨服务工具唯一命名、故障隔离和按绑定
