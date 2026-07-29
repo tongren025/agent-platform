@@ -90,6 +90,15 @@ async def lifespan(app: FastAPI):
     """FastAPI 生命周期：启动时执行数据迁移并拉起每日定时调度器，关闭时停止调度器。"""
     _migrate_employees()
     _migrate_teams_and_seed()
+    try:
+        from app.services.builtin_registry_migration import (
+            migrate_builtin_comic_registry,
+        )
+
+        migrate_builtin_comic_registry()
+    except Exception:
+        # 兜底保护启动；迁移器内部已经逐条隔离，这里只处理导入或框架级异常。
+        logger.warning("内置漫剧配置版本迁移失败", exc_info=True)
     from app.dependencies import daily_scheduler
     daily_scheduler.start()
     yield

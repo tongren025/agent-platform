@@ -7,6 +7,7 @@ import json
 from app.dependencies import employee_registry
 from app.services import openrouter_media
 from app.services.image_generation import generate_image_to_local
+from app.services.media_inspection import inspect_media
 from app.tools.base import ToolContext, register_handler
 
 
@@ -18,6 +19,16 @@ def _policy(ctx: ToolContext) -> dict:
 
 def _json_result(**values) -> str:
     return json.dumps(values, ensure_ascii=False)
+
+
+def _string_list(value: object, *, limit: int) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [
+        str(item).strip()
+        for item in value[:limit]
+        if str(item or "").strip()
+    ]
 
 
 class GenerateImageHandler:
@@ -42,6 +53,7 @@ class GenerateImageHandler:
         quality = str(args.get("quality") or "medium").lower()
         if quality not in {"low", "medium", "high", "auto"}:
             quality = "medium"
+        reference_urls = _string_list(args.get("reference_urls"), limit=14)
 
         try:
             result = await asyncio.to_thread(
@@ -50,6 +62,7 @@ class GenerateImageHandler:
                 model,
                 size,
                 quality,
+                reference_urls,
             )
         except Exception as exc:
             return _json_result(
@@ -64,6 +77,7 @@ class GenerateImageHandler:
             mediaType="image",
             url=url,
             model=result.get("model") or model,
+            referenceUrls=reference_urls,
             markdown=f"![生成图片]({url})",
         )
 
@@ -94,6 +108,9 @@ class GenerateVideoHandler:
         if not model:
             return _json_result(success=False, error="OpenRouter 视频模型不能为空")
         project_id = f"employee-{ctx.employee_key}"
+        reference_urls = _string_list(args.get("reference_urls"), limit=12)
+        first_frame_url = str(args.get("image_url") or "").strip()
+        last_frame_url = str(args.get("last_frame_url") or "").strip()
 
         try:
             result = await asyncio.to_thread(
@@ -104,7 +121,9 @@ class GenerateVideoHandler:
                 duration=args.get("duration", 5),
                 resolution=str(args.get("resolution") or "720p"),
                 aspect_ratio=str(args.get("aspect_ratio") or "9:16"),
-                image_url=str(args.get("image_url") or ""),
+                image_url=first_frame_url,
+                last_frame_url=last_frame_url,
+                reference_urls=reference_urls,
                 generate_audio=bool(args.get("generate_audio", True)),
             )
         except Exception as exc:
@@ -120,6 +139,9 @@ class GenerateVideoHandler:
             jobId=result["id"],
             status=result.get("status") or "pending",
             model=configured,
+            firstFrameUrl=first_frame_url,
+            lastFrameUrl=last_frame_url,
+            referenceUrls=reference_urls,
             nextAction="稍后调用 check_video_generation，并传入该 jobId",
         )
 
@@ -167,6 +189,52 @@ class CheckVideoGenerationHandler:
         return _json_result(**payload)
 
 
+class InspectMediaHandler:
+    """读取真实图片或视频抽帧，并用当前员工的视觉思考模型生成证据报告。"""
+
+    tool_code = "inspect_media"
+
+    async def handle(self, ctx: ToolContext) -> str:
+        args = ctx.parse_args()
+        media_urls = _string_list(args.get("media_urls"), limit=12)
+        inspection_type = str(args.get("inspection_type") or "").strip().lower()
+        criteria_value = args.get("criteria")
+        criteria = (
+            criteria_value
+            if isinstance(criteria_value, str)
+            else json.dumps(criteria_value or {}, ensure_ascii=False)
+        )
+        policy = _policy(ctx)
+        model = str(policy.get("model_id") or "").strip()
+        if not model:
+            return _json_result(
+                success=False,
+                verdict="blocked",
+                error="该员工尚未配置视觉思考模型 model_id",
+            )
+
+        try:
+            result = await asyncio.to_thread(
+                inspect_media,
+                model=model,
+                reasoning_effort=str(
+                    policy.get("reasoning_effort") or "high"
+                ),
+                media_urls=media_urls,
+                inspection_type=inspection_type,
+                criteria=criteria,
+            )
+        except Exception as exc:
+            return _json_result(
+                success=False,
+                verdict="blocked",
+                inspectionType=inspection_type,
+                error=f"媒体证据检查失败: {exc}",
+            )
+        return _json_result(success=True, **result)
+
+
 register_handler(GenerateImageHandler())
 register_handler(GenerateVideoHandler())
 register_handler(CheckVideoGenerationHandler())
+register_handler(InspectMediaHandler())

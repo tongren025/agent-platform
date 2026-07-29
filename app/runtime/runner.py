@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Optional
 
 from app.dependencies import ai_service
@@ -21,10 +21,15 @@ from app.runtime.loop import (
     AgentLoopResult,
     ToolHandler,
     run_agent_loop,
+    run_responses_agent_loop,
 )
 from app.runtime.mcp import mcp_tool_handlers
 
 logger = logging.getLogger(__name__)
+
+
+def _is_gpt_56_model(model_id: str) -> bool:
+    return "gpt-5.6" in str(model_id or "").strip().lower()
 
 
 @dataclass
@@ -137,16 +142,45 @@ async def run_agent(
     run_result = AgentRunResult(active_scopes=compiled_prompt.active_scopes)
 
     model_policy = snapshot.default_model_policy
-    model_id: str = model_policy.get("model_id", "gpt-4o")
+    model_id = str(model_policy.get("model_id") or "").strip()
+    if not model_id:
+        run_result.success = False
+        run_result.error_message = (
+            "员工未配置思考模型 model_id；请先在员工管理中选择聊天模型"
+        )
+        return run_result
     if not is_chat_completion_model_id(model_id):
         run_result.success = False
         run_result.error_message = (
-            f"{model_id} 是图片生成模型，不能作为员工思考模型；"
-            "请把它配置到 image_model_id，并选择 GPT-5.6 等聊天模型作为 model_id"
+            f"{model_id} 不能作为员工思考模型；请把图片/视频模型配置到"
+            "专用字段，并选择 GPT-5.6 等聊天模型作为 model_id"
         )
         return run_result
+    raw_fallback_models = model_policy.get("fallback_models", [])
+    if raw_fallback_models is None:
+        raw_fallback_models = []
+    if not isinstance(raw_fallback_models, list):
+        run_result.success = False
+        run_result.error_message = "fallback_models 配置无效：必须是聊天模型 ID 数组"
+        return run_result
+    fallback_model_ids: list[str] = []
+    for fallback_model in raw_fallback_models:
+        fallback_ref = str(fallback_model or "").strip()
+        if not fallback_ref or not is_chat_completion_model_id(fallback_ref):
+            run_result.success = False
+            run_result.error_message = (
+                f"降级模型 {fallback_ref or '<空>'} 不能用于聊天接口；"
+                "请从 fallback_models 中移除图片或视频模型"
+            )
+            return run_result
+        fallback_model_ids.append(fallback_ref)
     temperature: float = float(model_policy.get("temperature", 0.7))
     max_tokens: int = int(model_policy.get("max_tokens", 4096))
+    reasoning_effort = model_policy.get("reasoning_effort")
+    if reasoning_effort is not None:
+        reasoning_effort = str(reasoning_effort).strip().lower() or None
+    if _is_gpt_56_model(model_id) and reasoning_effort is None:
+        reasoning_effort = "medium"
 
     try:
         client, resolved_model = ai_service.get_client(model_id, async_client=True)
@@ -172,7 +206,7 @@ async def run_agent(
     # 预解析跨 provider 降级模型：各自拿独立 client，主模型失败后依次尝试。
     # 解析失败的降级模型直接跳过——降级本身不该让主流程崩。
     fallback_clients: list = []
-    for fb_model_id in model_policy.get("fallback_models", []):
+    for fb_model_id in fallback_model_ids:
         try:
             fb_client, fb_resolved = ai_service.get_client(fb_model_id, async_client=True)
             fallback_clients.append((fb_client, fb_resolved))
@@ -185,6 +219,7 @@ async def run_agent(
         temperature=temperature,
         max_tokens=max_tokens,
         model=resolved_model,
+        reasoning_effort=reasoning_effort,
         max_retries=int(model_policy.get("max_retries", 2)),
         request_timeout=float(model_policy.get("request_timeout", 60.0)),
         fallback_clients=fallback_clients,
@@ -194,13 +229,58 @@ async def run_agent(
         # MCP 是可选增强：只在员工绑定了服务时建立会话并追加工具；
         # 未配置或单个服务故障时，现有本地工具与 AgentLoop 原样继续。
         async with mcp_tool_handlers(visible_mcp_servers) as mcp_handlers:
-            loop_result: AgentLoopResult = await run_agent_loop(
+            all_tools = [*tool_handlers, *mcp_handlers]
+            configured_surface = str(
+                model_policy.get("api_surface") or "auto"
+            ).strip().lower()
+            use_responses = configured_surface == "responses" or (
+                configured_surface == "auto"
+                and _is_gpt_56_model(resolved_model)
+                and bool(all_tools)
+                and reasoning_effort != "none"
+            )
+            if configured_surface == "chat_completions":
+                use_responses = False
+            loop_runner = (
+                run_responses_agent_loop if use_responses else run_agent_loop
+            )
+            options.api_surface = (
+                "responses" if use_responses else "chat_completions"
+            )
+            loop_result: AgentLoopResult = await loop_runner(
                 client=client,
                 options=options,
                 system_prompt=compiled_prompt.system_prompt,
                 user_message=user_message,
-                tools=[*tool_handlers, *mcp_handlers],
+                tools=all_tools,
             )
+            if (
+                use_responses
+                and not loop_result.success
+                and not loop_result.traces
+                and loop_result.pending_approval is None
+                and bool(model_policy.get("allow_chat_fallback", True))
+            ):
+                # 部分 OpenAI 兼容代理尚未实现 /responses。只有确认尚未执行
+                # 任何工具时才安全降级，避免重复生图/视频等付费副作用。
+                logger.warning(
+                    "Responses API 不可用，安全降级到 Chat Completions "
+                    "reasoning_effort=none (employee=%s): %s",
+                    employee_key,
+                    loop_result.final_text,
+                )
+                fallback_options = replace(
+                    options,
+                    reasoning_effort="none",
+                    api_surface="chat_completions",
+                )
+                loop_result = await run_agent_loop(
+                    client=client,
+                    options=fallback_options,
+                    system_prompt=compiled_prompt.system_prompt,
+                    user_message=user_message,
+                    tools=all_tools,
+                )
     except Exception as exc:
         logger.error("Agent loop failed for %s: %s", employee_key, exc)
         run_result.success = False

@@ -1,16 +1,16 @@
 {
   "sortOrder": 0,
   "createdAt": "2026-06-23T12:19:28.853834Z",
-  "updatedAt": "2026-06-25T00:00:00.000000Z",
+  "updatedAt": "2026-07-29T00:00:00Z",
   "teamCode": "comic-drama-team",
   "name": "漫剧一人团队",
   "memberEmployeeKeys": [
     "comic-director",
     "comic-screenwriter",
+    "comic-storyboard",
     "comic-character-designer",
     "comic-scene-designer",
     "comic-vfx-designer",
-    "comic-trajectory-artist",
     "comic-prompt-engineer",
     "comic-character-artist",
     "comic-scene-artist",
@@ -21,7 +21,7 @@
   "defaultEmployeeKey": "comic-director",
   "ownerUserId": null,
   "leaderEmployeeKey": "comic-director",
-  "description": "一人漫剧创作团队：12 个 AI 角色覆盖统筹、创作、设计、提示词、图片/视频生成与质检。\n\n默认工作流：总导演统筹 → 编剧分镜拆镜头 → 并行（人物设定 + 场景美术 + 特效设计 + 动作轨迹）→ AI 视频提示词整合 → 质检交付；用户明确要求最终媒体时，再由角色/场景/关键帧原画师或视频生成师调用付费生成工具。",
+  "description": "可复用于不同项目的一人漫剧制作团队，共 12 个岗位。生产链路：总导演统筹 → 编剧完成剧本 → 分镜师拆镜 → 人物、场景、动作与特效设计 → 图片/视频提示词工程 → 角色图、场景图、关键帧与视频执行 → 基于真实文本/图片/视频证据的质量门禁。项目 Art Bible、角色与场景资产按任务动态注入，不固化在员工提示词中。",
   "roles": [
     {
       "employeeKey": "comic-director",
@@ -30,53 +30,53 @@
     },
     {
       "employeeKey": "comic-screenwriter",
-      "stage": "创作",
+      "stage": "剧本",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-storyboard",
+      "stage": "分镜",
       "order": 0
     },
     {
       "employeeKey": "comic-character-designer",
-      "stage": "并行生产",
+      "stage": "视觉设计",
       "order": 0
     },
     {
       "employeeKey": "comic-scene-designer",
-      "stage": "并行生产",
+      "stage": "视觉设计",
       "order": 1
     },
     {
       "employeeKey": "comic-vfx-designer",
-      "stage": "并行生产",
+      "stage": "视觉设计",
       "order": 2
     },
     {
-      "employeeKey": "comic-trajectory-artist",
-      "stage": "并行生产",
-      "order": 3
-    },
-    {
       "employeeKey": "comic-prompt-engineer",
-      "stage": "整合",
+      "stage": "提示词整合",
       "order": 0
     },
     {
       "employeeKey": "comic-character-artist",
-      "stage": "生成",
+      "stage": "图片生成",
       "order": 0
     },
     {
       "employeeKey": "comic-scene-artist",
-      "stage": "生成",
+      "stage": "图片生成",
       "order": 1
     },
     {
       "employeeKey": "comic-keyframe-artist",
-      "stage": "生成",
+      "stage": "图片生成",
       "order": 2
     },
     {
       "employeeKey": "comic-video-artist",
-      "stage": "生成",
-      "order": 3
+      "stage": "视频生成",
+      "order": 0
     },
     {
       "employeeKey": "comic-qa-inspector",
