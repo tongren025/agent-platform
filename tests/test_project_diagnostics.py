@@ -82,6 +82,42 @@ def test_end_frame_lock_does_not_create_a_production_unit():
     assert report["issues"][0]["code"] == "production_units_missing"
 
 
+def test_episode_script_and_subshots_share_g_level_production_units():
+    script = _card("script", unit=0, metadata={"g_count": 2, "shot_count": 4})
+    storyboards = [
+        _card("storyboard", unit=1, metadata={"unit_number": 1, "subshot": "G1-S1"}),
+        _card("storyboard", unit=2, metadata={"unit_number": 1, "subshot": "G1-S2"}),
+        _card("storyboard", unit=3, metadata={"unit_number": 2, "subshot": "G2-S1"}),
+        _card("storyboard", unit=4, metadata={"unit_number": 2, "subshot": "G2-S2"}),
+    ]
+    prompts = [
+        _card("img_prompt", unit=1, metadata={"g_unit": "G1"}),
+        _card("img_prompt", unit=2, metadata={"g_unit": "G2"}),
+        _card("vid_prompt", unit=1, metadata={"g_unit": "G1"}),
+        _card("vid_prompt", unit=2, metadata={"g_unit": "G2"}),
+    ]
+
+    report = diagnose_project(_project("final"), [script, *storyboards, *prompts])
+
+    assert report["totalUnits"] == 2
+    assert not any(
+        issue["code"] == "stage_missing"
+        for issue in report["issues"]
+    )
+    assert {
+        check["key"]: (check["passedCount"], check["total"])
+        for check in report["checks"]
+        if check["key"] in {"script", "storyboard", "img_prompt", "vid_prompt"}
+    } == {
+        "script": (2, 2),
+        "storyboard": (2, 2),
+        "img_prompt": (2, 2),
+        "vid_prompt": (2, 2),
+    }
+    assert sum(issue["code"] == "image_missing" for issue in report["issues"]) == 2
+    assert sum(issue["code"] == "video_missing" for issue in report["issues"]) == 2
+
+
 def test_goal_scope_does_not_report_unrequested_video_work():
     cards = [
         _card("script"),

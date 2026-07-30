@@ -24,7 +24,11 @@ from app.api.production import (
 )
 from app.models.production import ProductionCard, ProductionProject
 from app.services import openrouter_media
-from app.services.project_diagnostics import diagnose_project, production_unit_keys
+from app.services.project_diagnostics import (
+    active_card_for_unit,
+    diagnose_project,
+    production_unit_keys,
+)
 from app.services.project_feedback import summarize_project_feedback
 from app.services.project_optimization import (
     append_optimization_run,
@@ -46,10 +50,8 @@ def _unit_keys(cards: list[ProductionCard]) -> list[tuple[Optional[int], int]]:
 
 
 def _card_for(cards: list[ProductionCard], episode: Optional[int], unit: int, stage: str) -> ProductionCard | None:
-    return next((
-        card for card in cards
-        if card.episode == episode and card.shot_number == unit and card.stage == stage
-    ), None)
+    """按逻辑 G 单元取卡，兼容集级剧本和子镜头分镜。"""
+    return active_card_for_unit(cards, episode, unit, stage)
 
 
 def _active_image_url(card: ProductionCard | None) -> str:

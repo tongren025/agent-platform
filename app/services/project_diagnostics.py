@@ -137,24 +137,82 @@ def _issue(
     }
 
 
+def _logical_unit(card: ProductionCard) -> int:
+    """把不同存储粒度的卡片归一到 G 单元。
+
+    历史项目会把逐镜分镜按 S1/S2/S3 分卡保存，但图片/视频提示按 G1/G2
+    保存。此时 `shot_number` 是子镜头序号，`unit_number/g_unit` 才是共同主键。
+    """
+    unit_number = _positive_int(card.metadata.get("unit_number"))
+    if unit_number:
+        return unit_number
+    g_unit = str(card.metadata.get("g_unit") or "").strip().upper()
+    if g_unit.startswith("G"):
+        parsed = _positive_int(g_unit[1:])
+        if parsed:
+            return parsed
+    return card.shot_number if card.shot_number > 0 else 0
+
+
+def _active_cards(
+    cards: list[ProductionCard],
+    episode: Optional[int],
+    unit: int,
+    stage: str,
+) -> list[ProductionCard]:
+    """取 G 单元内各物理子槽位的最新卡片，避免旧返工版本遮住新版本。"""
+    result: list[ProductionCard] = []
+    seen_slots: set[int] = set()
+    for card in reversed(cards):
+        if (
+            card.episode != episode
+            or card.stage != stage
+            or _logical_unit(card) != unit
+            or (stage == "img_prompt" and _is_end_frame_lock(card))
+            or card.shot_number in seen_slots
+        ):
+            continue
+        seen_slots.add(card.shot_number)
+        result.append(card)
+
+    # 连续剧常把整集剧本保存在 shot_number=0 的一张卡里；它覆盖该集所有 G，
+    # 不能强迫用户复制成几十张内容相同的剧本卡。
+    if not result and stage == "script":
+        episode_script = next(
+            (
+                card
+                for card in reversed(cards)
+                if card.episode == episode
+                and card.stage == "script"
+                and card.shot_number == 0
+                and (card.content.strip() or card.prompts)
+            ),
+            None,
+        )
+        if episode_script is not None:
+            result.append(episode_script)
+    return result
+
+
+def active_card_for_unit(
+    cards: list[ProductionCard],
+    episode: Optional[int],
+    unit: int,
+    stage: str,
+) -> ProductionCard | None:
+    """返回 G 单元内可供导演主线展示和执行的最新代表卡。"""
+    active_cards = _active_cards(cards, episode, unit, stage)
+    return active_cards[0] if active_cards else None
+
+
 def _active_card(
     cards: list[ProductionCard],
     episode: Optional[int],
     unit: int,
     stage: str,
 ) -> ProductionCard | None:
-    """取同一生产槽位最后写入的卡片，避免旧返工卡遮住新版本。"""
-    return next(
-        (
-            card
-            for card in reversed(cards)
-            if card.episode == episode
-            and card.shot_number == unit
-            and card.stage == stage
-            and not (stage == "img_prompt" and _is_end_frame_lock(card))
-        ),
-        None,
-    )
+    """内部兼容入口；逐单元媒体检查只需要一张代表卡。"""
+    return active_card_for_unit(cards, episode, unit, stage)
 
 
 def _is_end_frame_lock(card: ProductionCard) -> bool:
@@ -169,14 +227,21 @@ def _is_end_frame_lock(card: ProductionCard) -> bool:
 def production_unit_keys(
     cards: list[ProductionCard],
 ) -> list[tuple[Optional[int], int]]:
-    """只从逐镜规格卡识别生产单元，排除角色/场景资产复用的编号。"""
+    """从逐镜规格卡识别 G 单元，同时兼容集级剧本与子镜头分镜。"""
+    keys = {
+        (card.episode, _logical_unit(card))
+        for card in cards
+        if card.stage in SPEC_STAGES
+        and _logical_unit(card) > 0
+        and not _is_end_frame_lock(card)
+    }
+    for card in cards:
+        if card.stage != "script" or card.shot_number != 0:
+            continue
+        for unit in range(1, _positive_int(card.metadata.get("g_count")) + 1):
+            keys.add((card.episode, unit))
     return sorted(
-        {
-            (card.episode, card.shot_number)
-            for card in cards
-            if card.stage in SPEC_STAGES and card.shot_number > 0
-            and not _is_end_frame_lock(card)
-        },
+        keys,
         key=lambda item: (-1 if item[0] is None else item[0], item[1]),
     )
 
@@ -596,8 +661,8 @@ def diagnose_project(
                 continue
             passed = 0
             for episode, unit in unit_keys:
-                card = _active_card(cards, episode, unit, stage)
-                if card is None:
+                stage_cards = _active_cards(cards, episode, unit, stage)
+                if not stage_cards:
                     issues.append(_issue(
                         code="stage_missing",
                         stage=stage,
@@ -614,9 +679,21 @@ def diagnose_project(
                     ))
                     continue
 
-                gate = card.metadata.get("quality_gate") or {}
-                gate_issues = gate.get("issues") or []
-                if gate.get("passed") is False or gate_issues:
+                failed_card = next(
+                    (
+                        candidate
+                        for candidate in stage_cards
+                        if (
+                            (candidate.metadata.get("quality_gate") or {}).get("passed")
+                            is False
+                            or (candidate.metadata.get("quality_gate") or {}).get("issues")
+                        )
+                    ),
+                    None,
+                )
+                if failed_card is not None:
+                    gate = failed_card.metadata.get("quality_gate") or {}
+                    gate_issues = gate.get("issues") or []
                     detail_messages = [
                         str(item.get("message") or item.get("code") or "未知质量问题")
                         for item in gate_issues
@@ -626,7 +703,7 @@ def diagnose_project(
                         stage=stage,
                         episode=episode,
                         unit=unit,
-                        card=card,
+                        card=failed_card,
                         message=f"{_slot_label(episode, unit)} 的{STAGE_LABELS[stage]}未通过质量门禁。",
                         details=detail_messages,
                         detail_codes=[
@@ -645,18 +722,28 @@ def diagnose_project(
                     continue
 
                 # 图片被人工退回时，提示词本身仍可能合格；交给图片检查生成精准问题。
-                image = _active_image(card) if stage == "img_prompt" else ""
-                review = _current_image_review(card, image)
-                if card.status == "review" and review.get("verdict") != "reject":
+                review_card = next(
+                    (
+                        candidate
+                        for candidate in stage_cards
+                        if candidate.status == "review"
+                        and _current_image_review(
+                            candidate,
+                            _active_image(candidate) if stage == "img_prompt" else "",
+                        ).get("verdict") != "reject"
+                    ),
+                    None,
+                )
+                if review_card is not None:
                     issues.append(_issue(
                         code="manual_review_required",
                         stage=stage,
                         episode=episode,
                         unit=unit,
-                        card=card,
+                        card=review_card,
                         message=f"{_slot_label(episode, unit)} 的{STAGE_LABELS[stage]}仍在待审核状态。",
                         action=_review_action(
-                            card=card,
+                            card=review_card,
                             episode=episode,
                             unit=unit,
                         ),
