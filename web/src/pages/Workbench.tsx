@@ -76,6 +76,13 @@ function firstLine(text?: string | null, max = 80) {
   return clean.length > max ? clean.slice(0, max) + '...' : clean;
 }
 
+function createRunId() {
+  const randomPart = typeof globalThis.crypto?.randomUUID === 'function'
+    ? globalThis.crypto.randomUUID().replace(/-/g, '')
+    : `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
+  return `run_${randomPart.slice(0, 16).padEnd(16, '0')}`;
+}
+
 function CopyBtn({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   const copy = () => { navigator.clipboard.writeText(text).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); }); };
@@ -175,6 +182,8 @@ export default function Workbench() {
   const [activeWorkspaceFile, setActiveWorkspaceFile] = useState<DeepAgentWorkspaceFileView | null>(null);
   const [inputValue, setInputValue] = useInputHabit('workbench.message-draft', '');
   const [loading, setLoading] = useState(false);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const [stoppingRun, setStoppingRun] = useState(false);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [sessionsError, setSessionsError] = useState('');
   const [targetsLoading, setTargetsLoading] = useState(true);
@@ -398,7 +407,7 @@ export default function Workbench() {
 
   const handleSend = async () => {
     const text = inputValue.trim();
-    if ((!text && pendingFiles.length === 0) || !targetReady) return;
+    if ((!text && pendingFiles.length === 0) || !targetReady || loading) return;
 
     let extraContext = '';
     if (pendingFiles.length > 0) {
@@ -417,13 +426,27 @@ export default function Workbench() {
     const filesToSend = [...pendingFiles];
     setPendingFiles([]);
     setLoading(true);
+    setStoppingRun(false);
+    const runId = createRunId();
+    setActiveRunId(runId);
 
     try {
-      const payload: any = { employeeKey: selectedKey, userInput: text || '请查看附件', sessionId: sessionId || undefined };
+      const payload: any = {
+        employeeKey: selectedKey,
+        userInput: text || '请查看附件',
+        sessionId: sessionId || undefined,
+        runId,
+      };
       if (extraContext) payload.extraContext = extraContext;
 
       const res: AgentRunResponse = mode === 'team'
-        ? await api.runTeam({ teamCode: selectedKey, userInput: text || '请查看附件', sessionId: sessionId || undefined, extraContext: extraContext || undefined })
+        ? await api.runTeam({
+            teamCode: selectedKey,
+            userInput: text || '请查看附件',
+            sessionId: sessionId || undefined,
+            extraContext: extraContext || undefined,
+            runId,
+          })
         : await api.runAgent(payload);
 
       const assistantMsg: ChatMessage = {
@@ -431,9 +454,26 @@ export default function Workbench() {
         tokenUsage: res.tokenUsage, traces: res.traces?.length ? res.traces : undefined,
       };
       setMessages((prev) => [...prev, assistantMsg]);
+      if (res.cancelled) message.info('当前运行已安全停止。');
       if (res.sessionId) { setSessionId(res.sessionId); hydrateSession(res.sessionId); }
     } catch (e: any) { message.error(e.message); }
-    finally { setLoading(false); }
+    finally {
+      setLoading(false);
+      setActiveRunId(null);
+      setStoppingRun(false);
+    }
+  };
+
+  const handleStopRun = async () => {
+    if (!activeRunId || stoppingRun) return;
+    setStoppingRun(true);
+    try {
+      const observation = await api.cancelAgentRun(activeRunId);
+      message.info(observation.summary);
+    } catch (e: any) {
+      setStoppingRun(false);
+      message.error(e.message || '停止运行失败，请稍后重试。');
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
@@ -907,11 +947,24 @@ export default function Workbench() {
               autoSize={{ minRows: 1, maxRows: 5 }} disabled={!targetReady || loading}
               style={{ flex: 1, borderRadius: 10 }}
             />
-            <Button type="primary" icon={<SendOutlined />} onClick={handleSend} loading={loading}
-              disabled={!targetReady || (!inputValue.trim() && pendingFiles.length === 0)}
-              style={{ borderRadius: 10, height: 40, fontWeight: 500 }}>
-              {isMobile ? null : '发送'}
-            </Button>
+            {loading ? (
+              <Button
+                danger
+                icon={<StopOutlined />}
+                onClick={handleStopRun}
+                loading={stoppingRun}
+                disabled={!activeRunId}
+                style={{ borderRadius: 10, height: 40, fontWeight: 500 }}
+              >
+                {isMobile ? null : stoppingRun ? '正在停止' : '停止'}
+              </Button>
+            ) : (
+              <Button type="primary" icon={<SendOutlined />} onClick={handleSend}
+                disabled={!targetReady || (!inputValue.trim() && pendingFiles.length === 0)}
+                style={{ borderRadius: 10, height: 40, fontWeight: 500 }}>
+                {isMobile ? null : '发送'}
+              </Button>
+            )}
           </div>
         </div>
       </div>

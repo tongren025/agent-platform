@@ -6,7 +6,6 @@ Session CRUD → sessions.py
 from __future__ import annotations
 
 import asyncio
-import base64
 import json
 import logging
 import uuid
@@ -17,9 +16,11 @@ from pydantic import BaseModel, Field
 
 from app.api.common import ok as _ok
 from app.config import BASE_DIR, settings
-from app.core.rate_limit import check_quota, limiter, record_token_usage
-from app.dependencies import employee_registry, memory_store, team_registry
+from app.core.rate_limit import check_quota, limiter
+from app.dependencies import agent_run_store, employee_registry, memory_store, team_registry
 from app.models.conversation import AgentRunRequest, AgentRunResponse
+from app.models.run_record import generate_run_id
+from app.runtime.run_control import ActiveRunConflictError, active_run_control
 from app.services.invocation import run_invocation
 
 router = APIRouter(prefix="/api/v1/agentapp/agent")
@@ -76,6 +77,11 @@ class TeamRunBody(BaseModel):
     user_input: str = Field("", alias="userInput")
     session_id: str | None = Field(None, alias="sessionId")
     extra_context: str | None = Field(None, alias="extraContext")
+    run_id: str | None = Field(
+        None,
+        alias="runId",
+        pattern=r"^run_[A-Za-z0-9_-]{1,64}$",
+    )
 
 
 # ── 员工列表（带计算标签）──────────────────────────────────────────
@@ -133,15 +139,38 @@ async def upload_file(file: UploadFile = File(...)):
 # ── Agent Run ──────────────────────────────────────────────────────
 
 
-@router.post("/run")
-@limiter.limit("20/minute")
-async def run_agent_endpoint(request: Request, body: AgentRunRequest):
-    """POST /run：执行一次 agent 运行并同步返回结果；配额超限返 429，超时返 504，内部失败返 500。"""
+async def _execute_agent_run(body: AgentRunRequest) -> dict:
+    """登记并执行一次可取消运行；控制状态只驻留当前进程。"""
     quotas = getattr(settings, "quotas", {})
     if quotas:
         allowed, reason = check_quota(body.employee_key, quotas)
         if not allowed:
             raise HTTPException(status_code=429, detail=reason)
+
+    run_id = body.run_id or generate_run_id()
+    body.run_id = run_id
+    if agent_run_store.load_run(run_id) is not None:
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                f"运行 ID 已有历史结果：{run_id}。请生成新的 runId 后重试；"
+                "若这是重复提交，请停止重试并查看原运行记录。"
+            ),
+        )
+    try:
+        active_run_control.register(
+            run_id,
+            employee_key=body.employee_key,
+            session_id=body.session_id,
+        )
+    except ActiveRunConflictError as exc:
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                f"{exc}。请等待当前运行结束或调用取消接口；"
+                "状态未变化前请停止重复提交同一 runId。"
+            ),
+        ) from exc
 
     timeout = settings.agent.run_timeout_seconds
 
@@ -161,9 +190,14 @@ async def run_agent_endpoint(request: Request, body: AgentRunRequest):
             status_code=500,
             detail=f"Agent run failed: {exc}",
         )
+    finally:
+        active_run_control.finish(run_id)
 
     response = AgentRunResponse(
+        run_id=run_id,
         assistant_message=agent_result.assistant_message,
+        cancelled=agent_result.cancelled,
+        error_message=agent_result.error_message,
         token_usage=agent_result.token_usage,
         traces=agent_result.traces,
         active_scopes=agent_result.active_scopes,
@@ -173,6 +207,13 @@ async def run_agent_endpoint(request: Request, body: AgentRunRequest):
         delegation_stack=agent_result.delegation_stack,
     )
     return _ok(response.model_dump(by_alias=True, mode="json"))
+
+
+@router.post("/run")
+@limiter.limit("20/minute")
+async def run_agent_endpoint(request: Request, body: AgentRunRequest):
+    """POST /run：执行可取消的同步运行；客户端可预生成 runId 并从另一请求停止。"""
+    return await _execute_agent_run(body)
 
 
 # ── Team Run ──────────────────────────────────────────────────────
@@ -234,7 +275,8 @@ def _team_context(team_code: str, user_input: str, extra_context: str | None = N
 
 
 @router.post("/team-run")
-async def run_team_endpoint(body: TeamRunBody):
+@limiter.limit("20/minute")
+async def run_team_endpoint(request: Request, body: TeamRunBody):
     """POST /team-run：以团队 leader 身份执行一次团队对话（复用 /run），并把会话标记为 team 类型；参数缺失返 400。"""
     team_code = body.team_code
     user_input = body.user_input
@@ -246,13 +288,14 @@ async def run_team_endpoint(body: TeamRunBody):
         raise HTTPException(status_code=400, detail="userInput is required")
 
     leader_key, team_name, context = _team_context(team_code, user_input, extra_context)
-    request = AgentRunRequest(
+    agent_request = AgentRunRequest(
         employeeKey=leader_key,
         userInput=user_input,
         sessionId=session_id,
         extraContext=json.dumps(context, ensure_ascii=False),
+        runId=body.run_id,
     )
-    response = await run_agent_endpoint(request)
+    response = await _execute_agent_run(agent_request)
     data = response["data"]
     sid = data.get("sessionId")
     if sid:

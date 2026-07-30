@@ -1,5 +1,10 @@
 // 用户端 API 封装：统一 BASE 前缀、Bearer 凭证、错误信封解包；401 自动清 token 回登录页。
-import type { ApiResult, AgentRunRecord } from './types';
+import type {
+  AgentRunControlView,
+  AgentRunRecord,
+  AgentRunResponse,
+  ApiResult,
+} from './types';
 import { userToken } from './userAuth';
 import { friendlyFetch, getHttpErrorMessage, readJson } from './httpErrors';
 import { isSessionExpired, redirectToLogin } from './sessionGuard';
@@ -373,8 +378,8 @@ export const api = {
       '/agent/upload', { method: 'POST', body: form },
     );
   },
-  runAgent: (data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string }) =>
-    request<any>('/agent/run', { method: 'POST', body: JSON.stringify(data) }),
+  runAgent: (data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string; runId?: string }) =>
+    request<AgentRunResponse>('/agent/run', { method: 'POST', body: JSON.stringify(data) }),
   listSessions: (employeeKey: string, limit = 20, includeArchived = false) =>
     request<any[]>(`/agent/sessions?employeeKey=${encodeURIComponent(employeeKey)}&targetType=employee&includeArchived=${includeArchived}&limit=${limit}`),
   listTeamSessions: (teamCode: string, limit = 20, includeArchived = false) =>
@@ -391,8 +396,13 @@ export const api = {
   archiveSession: (sessionId: string, archived = true) =>
     request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}/archive`, { method: 'POST', body: JSON.stringify({ archived }) }),
   deleteSession: (sessionId: string) => request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}`, { method: 'DELETE' }),
-  runTeam: (data: { teamCode: string; userInput: string; sessionId?: string; extraContext?: string }) =>
-    request<any>('/agent/team-run', { method: 'POST', body: JSON.stringify(data) }),
+  runTeam: (data: { teamCode: string; userInput: string; sessionId?: string; extraContext?: string; runId?: string }) =>
+    request<AgentRunResponse>('/agent/team-run', { method: 'POST', body: JSON.stringify(data) }),
+  cancelAgentRun: (runId: string) =>
+    request<AgentRunControlView>(
+      `/agent/runs/${encodeURIComponent(runId)}/cancel`,
+      { method: 'POST' },
+    ),
 
   // 工作台常用指令：后端按当前登录用户隔离。
   listQuickPrompts: () => request<QuickPrompt[]>('/quick-prompts'),

@@ -78,6 +78,8 @@ class AgentLoopOptions:
     fallback_clients: list = field(default_factory=list)
     # DeepAgent 可注入大型工具结果精简器；完整结果由调用方存入可恢复工作区。
     tool_result_transform: Optional[Callable[[str, str], str]] = None
+    # AgentRun 控制面注入的轻量取消检查；只在模型/工具安全边界读取。
+    should_cancel: Optional[Callable[[], bool]] = None
 
 
 @dataclass
@@ -92,6 +94,25 @@ class AgentLoopResult:
     pending_approval: Optional[PendingApprovalDetail] = None
     prompt_tokens: int = 0
     completion_tokens: int = 0
+    cancelled: bool = False
+
+
+def _cancel_requested(options: AgentLoopOptions) -> bool:
+    """读取可选取消信号；控制面异常时 fail-open，不让检查本身打断运行。"""
+    if options.should_cancel is None:
+        return False
+    try:
+        return bool(options.should_cancel())
+    except Exception:
+        logger.warning("Agent run cancellation check failed", exc_info=True)
+        return False
+
+
+def _mark_cancelled(result: AgentLoopResult) -> None:
+    """把循环收敛为可持久化的取消结果。"""
+    result.success = False
+    result.cancelled = True
+    result.final_text = "已停止当前运行。"
 
 
 def _build_openai_tools(handlers: list[ToolHandler]) -> list[dict]:
@@ -261,6 +282,9 @@ async def run_agent_loop(
 
     for iteration in range(1, options.max_iterations + 1):
         result.iterations = iteration
+        if _cancel_requested(options):
+            _mark_cancelled(result)
+            break
 
         try:
             base_kwargs: dict = dict(
@@ -287,6 +311,11 @@ async def run_agent_loop(
             result.prompt_tokens += response.usage.prompt_tokens or 0
             result.completion_tokens += response.usage.completion_tokens or 0
 
+        # 模型请求期间收到停止信号时，保留已产生的 token 统计，但不执行它提出的工具。
+        if _cancel_requested(options):
+            _mark_cancelled(result)
+            break
+
         choice = response.choices[0]
         assistant_msg = choice.message
 
@@ -311,6 +340,11 @@ async def run_agent_loop(
 
         should_break = False
         for tc in assistant_msg.tool_calls:
+            if _cancel_requested(options):
+                _mark_cancelled(result)
+                should_break = True
+                break
+
             fn_name = tc.function.name
             fn_args = tc.function.arguments
 
@@ -402,9 +436,14 @@ async def run_agent_loop(
                 "tool_call_id": tc.id,
                 "content": context_tool_result,
             })
+            if _cancel_requested(options):
+                _mark_cancelled(result)
+                should_break = True
+                break
 
         if should_break:
-            result.final_text = assistant_msg.content or "操作已暂停，等待人工审批。"
+            if not result.cancelled:
+                result.final_text = assistant_msg.content or "操作已暂停，等待人工审批。"
             break
     else:
         result.final_text = (

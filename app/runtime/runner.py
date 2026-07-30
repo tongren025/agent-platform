@@ -26,6 +26,7 @@ from app.runtime.loop import (
 )
 from app.runtime.context_compaction import compact_tool_result
 from app.runtime.mcp import mcp_tool_handlers
+from app.runtime.run_control import active_run_control
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +36,10 @@ DEEP_AGENT_CHECKPOINT_KEY = "deepAgentCheckpoint"
 @dataclass
 class AgentRunResult:
     """一次 agent 运行的完整结果；checkpoint 仅供会话编排层内部持久化。"""
+    run_id: Optional[str] = None
     assistant_message: str = ""
     success: bool = True
+    cancelled: bool = False
     error_message: Optional[str] = None
     token_usage: Optional[AgentTokenUsage] = None
     traces: list[AgentInvocationTrace] = field(default_factory=list)
@@ -139,9 +142,13 @@ async def run_agent(
     extra_context: Optional[str] = None,
     existing_messages: Optional[list[dict]] = None,
     existing_deep_state_checkpoint: Optional[dict] = None,
+    run_id: Optional[str] = None,
 ) -> AgentRunResult:
     """运行 agent，并在 DeepAgent 模式恢复/返回同一会话的 todos/files checkpoint。"""
-    run_result = AgentRunResult(active_scopes=compiled_prompt.active_scopes)
+    run_result = AgentRunResult(
+        run_id=run_id,
+        active_scopes=compiled_prompt.active_scopes,
+    )
 
     model_policy = snapshot.default_model_policy
     model_id: str = model_policy.get("model_id", "gpt-4o")
@@ -225,6 +232,11 @@ async def run_agent(
         )
         if shared_deep_state is not None
         else None,
+        should_cancel=(
+            lambda: active_run_control.should_cancel(run_id)
+            if run_id is not None
+            else False
+        ),
     )
 
     try:
@@ -253,7 +265,10 @@ async def run_agent(
         loop_result.traces,
     )
     run_result.success = loop_result.success
-    if not loop_result.success:
+    run_result.cancelled = loop_result.cancelled
+    if loop_result.cancelled:
+        run_result.error_message = "运行已由用户停止"
+    elif not loop_result.success:
         run_result.error_message = final_text or "AI 生成失败"
     run_result.traces = loop_result.traces
     run_result.auto_invoke_count = loop_result.iterations

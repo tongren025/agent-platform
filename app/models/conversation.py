@@ -24,6 +24,11 @@ class AgentRunRequest(BaseModel):
     model_overrides: Optional[dict] = Field(None, alias="modelOverrides")
     session_id: Optional[str] = Field(None, alias="sessionId")
     approval_decision: Optional[str] = Field(None, alias="approvalDecision")
+    run_id: Optional[str] = Field(
+        None,
+        alias="runId",
+        pattern=r"^run_[A-Za-z0-9_-]{1,64}$",
+    )
 
     model_config = {"populate_by_name": True}
 
@@ -60,7 +65,10 @@ class AgentInvocationTrace(BaseModel):
 
 class AgentRunResponse(BaseModel):
     """一次 agent 运行的出参：助手回复、token 用量、工具轨迹、会话 ID、待审批信息等。"""
+    run_id: Optional[str] = Field(None, alias="runId")
     assistant_message: str = Field("", alias="assistantMessage")
+    cancelled: bool = False
+    error_message: Optional[str] = Field(None, alias="errorMessage")
     token_usage: Optional[AgentTokenUsage] = Field(None, alias="tokenUsage")
     traces: list[AgentInvocationTrace] = Field(default_factory=list)
     active_scopes: list[str] = Field(default_factory=list, alias="activeScopes")

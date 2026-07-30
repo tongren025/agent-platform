@@ -5,6 +5,27 @@
 
 ---
 
+## [2026-07-30] feat: AgentRun 进程内安全停止
+
+- 迁入 Yuxi AgentRun cancel signal 与安全生命周期边界：客户端发送前生成稳定
+  `runId`，后端以进程内控制表登记活动运行，不配置 Redis 也能发布幂等取消信号。
+- AgentLoop 在模型调用前、模型返回后和每个工具执行前检查停止状态；模型请求期间
+  收到停止时会保留已产生的 token 统计，但不会再启动模型建议的新工具。
+- 新增 `POST /api/v1/agentapp/agent/runs/{run_id}/cancel`；响应包含
+  `status/summary/nextActions/artifacts/runId/state`，已结束运行保持幂等，未知 ID
+  返回刷新、重试和停止建议。
+- `/agent/run` 与 `/agent/team-run` 接受并返回 `runId`，取消结果继续写入现有会话
+  和运行记录；同时修正团队运行复用个人运行端点时的参数边界。
+- 工作台运行期间把发送按钮切换为真实停止按钮，个人员工和团队会话使用相同控制。
+- 新增 8 个决定性测试，覆盖取消幂等、重复 ID、模型调用前停止、工具执行前/后停止、
+  HTTP 观察结构，以及个人/团队客户端 `runId` 全链路。
+
+**影响面**：新增 `app/runtime/run_control.py` 和 AgentRun 取消 API；扩展运行请求/
+响应、AgentLoop、运行记录 ID 与工作台交互。无数据库表、环境变量或数据迁移，不要求
+PostgreSQL 或 Redis；多进程部署仍需后续配置共享控制后端才能跨进程取消。
+
+---
+
 ## [2026-07-30] fix: 画布统一使用平台模型与现有制作项目
 
 - 画布模型目录改为直接聚合平台中已启用的数字员工和 AI 供应商配置，按文本、图片、

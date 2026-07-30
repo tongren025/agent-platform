@@ -22,7 +22,7 @@ from app.models.conversation import (
 )
 from app.core.metrics import record_run_metrics
 from app.core.rate_limit import record_token_usage
-from app.models.run_record import AgentRunRecord
+from app.models.run_record import AgentRunRecord, generate_run_id
 from app.services.run_store import estimate_cost
 from app.runtime.prompt import compile
 from app.runtime.runner import (
@@ -91,12 +91,16 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
 
     返回 AgentRunResult，其中 session_id 会被回填为本次实际使用的会话 ID。
     """
+    run_id = request.run_id or generate_run_id()
+    request.run_id = run_id
+
     # 1. 构建可见范围并加载员工快照（快照 = 该员工当前生效的模型/工具/记忆等只读切片）
     scopes = build_scopes(request.employee_key, request.workflow_key)
 
     snapshot = load_snapshot(request.employee_key, scopes)
     if snapshot is None:
         return AgentRunResult(
+            run_id=run_id,
             success=False,
             error_message=f"Employee not found: {request.employee_key}",
         )
@@ -167,6 +171,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         extra_context=extra_context,
         existing_messages=existing_messages,
         existing_deep_state_checkpoint=existing_deep_state_checkpoint,
+        run_id=run_id,
     )
     elapsed_ms = int((time.monotonic() - _t0) * 1000)
 
@@ -212,6 +217,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         model_id = (snapshot.default_model_policy or {}).get("model_id", "")
         cost = estimate_cost(model_id, pt, ct)
         agent_run_store.save_run(AgentRunRecord(
+            run_id=run_id,
             session_id=session.session_id,
             employee_key=request.employee_key,
             workflow_key=request.workflow_key,

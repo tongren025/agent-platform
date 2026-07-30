@@ -2,8 +2,9 @@
 
 ## 当前阶段
 
-已完成上游源码快照引入和六项增量接入：MCP 工具执行桥接、SKILL.md 技能包发现、
-Skill 依赖闭包、DeepAgent 本地 checkpoint、大型工具结果精简和工作区只读视图。
+已完成上游源码快照引入和七项增量接入：MCP 工具执行桥接、SKILL.md 技能包发现、
+Skill 依赖闭包、DeepAgent 本地 checkpoint、大型工具结果精简、工作区只读视图
+和进程内 AgentRun 取消。
 没有替换 Agent Platform 的 DeepAgent、Skill/MCP 配置或本地工具，也没有把 Yuxi
 服务加入根目录 `docker-compose.yml`。
 
@@ -94,12 +95,30 @@ tool result replacement 逻辑。本地适配保持算法边界，存储改接�
 `get_agent_state_view` / `extract_agent_state` 状态观察形态。本地适配继续复用现有
 FastAPI 会话接口和 React 工作台，不引入 Yuxi Vue 页面、数据库或 Redis。
 
+### 进程内 AgentRun 取消
+
+- 迁入 Yuxi `request_cancel_agent_run`、cancel signal 和 SteerMiddleware
+  “在安全生命周期边界结束”的核心设计，但不搬 PostgreSQL 队列与 Redis 事件总线。
+- 工作台在发送前生成稳定 `runId`；当前进程登记运行和幂等取消信号，模型返回后、
+  下一轮模型前和每个工具执行前都会检查，停止后不再启动新的工具。
+- 取消响应固定返回 `status/summary/nextActions/artifacts/runId/state`，未知运行
+  明确给出刷新、重试和停止边界；完成后的重复取消保持幂等。
+- 取消结果继续通过现有会话和 AgentRun 记录保存；进程重启只清空活动控制状态，
+  不删除历史 JSON/可选 PostgreSQL 记录。
+- React 工作台的发送按钮在运行期间切换为真实停止按钮，个人与团队会话使用同一
+  控制边界。
+
+实现来源：`backend/package/yuxi/services/agent_run_service.py` 中的
+`request_cancel_agent_run` 和 `backend/package/yuxi/agents/middlewares/steer.py`。
+本地适配以 `app/runtime/run_control.py` 替代数据库/Redis 信号，后续启用分布式运行
+时可在不改变前端 API 的前提下替换控制实现。
+
 ## 目标职责
 
 后续继续从 Yuxi 筛选可补齐的通用 Agent Harness 能力：
 
 - Agent Context 与中间件
-- 请求排队、AgentRun、Steer、取消和恢复
+- 请求排队、Steer 和跨进程恢复
 - 更完整的运行恢复、Steer 与工具审批
 - Skills、MCP、工具门控和子智能体生命周期
 - 工作区、沙盒文件系统和 Artifact 交付

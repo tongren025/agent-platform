@@ -16,14 +16,14 @@ from app.models.conversation import AgentInvocationTrace
 from app.utils import utcnow as _now
 
 
-def _generate_run_id() -> str:
+def generate_run_id() -> str:
     """生成 run_ 前缀的随机运行 ID。"""
     return "run_" + secrets.token_hex(8)
 
 
 class AgentRunRecord(BaseModel):
     """一条 agent 运行记录：模型/token/成本/耗时/工具轨迹/成败，落库供 /runs API 事后审计。"""
-    run_id: str = Field(default_factory=_generate_run_id, alias="runId")
+    run_id: str = Field(default_factory=generate_run_id, alias="runId")
     session_id: str = Field("", alias="sessionId")
     employee_key: str = Field("", alias="employeeKey")
     workflow_key: Optional[str] = Field(None, alias="workflowKey")
@@ -40,5 +40,17 @@ class AgentRunRecord(BaseModel):
     pending_approval: bool = Field(False, alias="pendingApproval")
     traces: list[AgentInvocationTrace] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=_now, alias="createdAt")
+
+    model_config = {"populate_by_name": True}
+
+
+class AgentRunControlView(BaseModel):
+    """运行控制的稳定观察结果；供停止按钮展示原因、状态和后续动作。"""
+    status: str = "success"
+    summary: str = ""
+    next_actions: list[str] = Field(default_factory=list, alias="nextActions")
+    artifacts: list[str] = Field(default_factory=list)
+    run_id: str = Field("", alias="runId")
+    state: str = "running"
 
     model_config = {"populate_by_name": True}

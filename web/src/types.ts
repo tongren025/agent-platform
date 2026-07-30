@@ -139,11 +139,23 @@ export interface DeepAgentWorkspaceFileView {
 }
 
 export interface AgentRunResponse {
+  runId: string | null;
   assistantMessage: string;
+  cancelled: boolean;
+  errorMessage: string | null;
   tokenUsage: { promptTokens: number; completionTokens: number; totalTokens: number } | null;
   traces: { toolName: string; arguments: string | null; result: string | null; success: boolean }[];
   sessionId: string | null;
   pendingApproval: { description: string; actionType: string } | null;
+}
+
+export interface AgentRunControlView {
+  status: 'success' | 'warning' | 'error';
+  summary: string;
+  nextActions: string[];
+  artifacts: string[];
+  runId: string;
+  state: 'running' | 'cancelling' | 'cancelled' | 'completed' | 'failed';
 }
 
 export interface AgentInvocationTrace {
