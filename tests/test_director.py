@@ -141,7 +141,7 @@ def test_update_image_prompt_rejects_blank_and_non_image_card(director_env):
 
 
 def test_image_video_and_compose_flow(director_env):
-    """新图片必须精品验收；通过后才能进入视频和 FFmpeg 成片。"""
+    """图片、镜头视频与整集成片必须逐级精品验收后才能交付。"""
     client = director_env
     pid, card_ids = _create_gc(client)
 
@@ -185,8 +185,36 @@ def test_image_video_and_compose_flow(director_env):
         f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['vid_prompt']}/video/sync",
     )
     assert sync_response.status_code == 200
-    assert sync_response.json()["data"]["card"]["videos"]
+    synced_card = sync_response.json()["data"]["card"]
+    assert synced_card["videos"]
+    assert synced_card["status"] == "review"
 
+    state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
+    assert state["shots"][0]["videoCandidateUrl"].endswith("/shot.mp4")
+    assert state["shots"][0]["videoUrl"] == ""
+    assert state["videoReviewCount"] == 1
+    blocked_compose = client.post(f"/api/v1/agentapp/director/projects/{pid}/compose")
+    assert blocked_compose.status_code == 400
+
+    video_review = client.post(
+        (
+            f"/api/v1/agentapp/production/projects/{pid}/cards/"
+            f"{card_ids['vid_prompt']}/video-review"
+        ),
+        json={
+            "verdict": "pass",
+            "video": synced_card["videos"][-1],
+            "ratings": {
+                "identity_stability": 5,
+                "motion_integrity": 5,
+                "shot_fidelity": 4,
+                "temporal_continuity": 4,
+                "audio_dialogue": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert video_review.status_code == 200, video_review.text
     state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
     assert state["nextAction"]["kind"] == "compose"
 
@@ -194,8 +222,48 @@ def test_image_video_and_compose_flow(director_env):
     assert compose_response.status_code == 200
     data = compose_response.json()["data"]
     assert data["clipCount"] == 1
+    assert data["state"]["finalUrl"] == ""
+    assert data["state"]["finalCandidateUrl"].endswith("/final.mp4")
+    assert data["state"]["finalPendingReview"] is True
+    assert data["state"]["nextAction"]["kind"] == "final_review"
+
+    final_card_id = data["state"]["finalCardId"]
+    final_review = client.post(
+        (
+            f"/api/v1/agentapp/production/projects/{pid}/cards/"
+            f"{final_card_id}/video-review"
+        ),
+        json={
+            "verdict": "pass",
+            "video": data["state"]["finalCandidateUrl"],
+            "ratings": {
+                "narrative_continuity": 5,
+                "visual_continuity": 5,
+                "pacing": 4,
+                "audio_mix": 4,
+                "dialogue_delivery": 4,
+                "delivery_integrity": 4,
+            },
+        },
+    )
+    assert final_review.status_code == 200, final_review.text
+    data["state"] = client.get(
+        f"/api/v1/agentapp/director/projects/{pid}"
+    ).json()["data"]
     assert data["state"]["finalUrl"].endswith("/final.mp4")
     assert data["state"]["nextAction"]["kind"] == "done"
+
+    # 重新提交视频只是在后台生成新候选，不能让已验收旧版和整集交付暂时消失。
+    replacement_video = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['vid_prompt']}/video",
+        json={"model": "demo/video", "duration": 4, "aspect_ratio": "9:16"},
+    )
+    assert replacement_video.status_code == 200, replacement_video.text
+    preserved_while_generating = client.get(
+        f"/api/v1/agentapp/director/projects/{pid}"
+    ).json()["data"]
+    assert preserved_while_generating["shots"][0]["videoUrl"].endswith("/shot.mp4")
+    assert preserved_while_generating["finalUrl"].endswith("/final.mp4")
 
     # 退回当前首帧会暂停下游交付；重新通过同一版本后可恢复。
     reject = client.post(
@@ -297,6 +365,76 @@ def test_video_submission_requires_current_project_image(director_env):
 
     assert response.status_code == 400
     assert "先生成当前镜头图片" in response.json()["message"]
+
+
+def test_rejected_video_feedback_is_applied_to_next_submission(
+    director_env,
+    monkeypatch,
+):
+    """视频退回原因必须进入下一次真实供应商请求，而不是只留在历史里。"""
+    client = director_env
+    from app.services import openrouter_media
+
+    submitted_prompts: list[str] = []
+
+    def capture_submit(project_id, **kwargs):
+        submitted_prompts.append(kwargs["prompt"])
+        return {
+            "id": f"job-{len(submitted_prompts)}",
+            "status": "pending",
+            "pollingUrl": f"/videos/job-{len(submitted_prompts)}",
+            "model": kwargs["model"],
+        }
+
+    monkeypatch.setattr(openrouter_media, "submit_video", capture_submit)
+    pid, card_ids = _create_gc(client)
+    image = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['img_prompt']}/image",
+        json={"model": "demo/image"},
+    ).json()["data"]["url"]
+    approved = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_ids['img_prompt']}/review",
+        json={
+            "verdict": "pass",
+            "image": image,
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 4,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert approved.status_code == 200, approved.text
+    endpoint = (
+        f"/api/v1/agentapp/director/projects/{pid}/cards/"
+        f"{card_ids['vid_prompt']}/video"
+    )
+    first = client.post(endpoint, json={"model": "demo/video"})
+    assert first.status_code == 200, first.text
+    synced = client.post(f"{endpoint}/sync")
+    assert synced.status_code == 200, synced.text
+    video = synced.json()["data"]["card"]["videos"][-1]
+    rejected = client.post(
+        (
+            f"/api/v1/agentapp/production/projects/{pid}/cards/"
+            f"{card_ids['vid_prompt']}/video-review"
+        ),
+        json={
+            "verdict": "reject",
+            "video": video,
+            "reason": "motion_broken",
+            "note": "第 3 秒右手穿过衣服",
+        },
+    )
+    assert rejected.status_code == 200, rejected.text
+
+    second = client.post(endpoint, json={"model": "demo/video"})
+    assert second.status_code == 200, second.text
+    assert second.json()["data"]["qualityFeedbackApplied"] is True
+    assert "确保肢体、头发、衣物和物体运动连续完整" in submitted_prompts[-1]
+    assert "第 3 秒右手穿过衣服" in submitted_prompts[-1]
 
 
 def test_rejected_image_feedback_is_applied_to_next_generation(

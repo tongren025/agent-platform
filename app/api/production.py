@@ -32,10 +32,15 @@ from app.services.image_generation import generate_image_to_local
 from app.services.inbox_ingest import parse_inbox_filename, resolve_inbox_target
 from app.services.production_quality import (
     build_image_repair_prompt,
+    evaluate_media_quality,
     evaluate_production_draft,
     evaluate_visual_quality,
     image_is_approved,
     image_requires_precision_review,
+    latest_video_review,
+    media_quality_profile,
+    video_is_approved,
+    video_requires_precision_review,
     visual_quality_profile,
 )
 
@@ -1209,6 +1214,29 @@ def update_card(card_id: str, req: UpdateCardReq):
                     c.videos = req.videos or []
                 if "metadata" in provided:
                     next_metadata = req.metadata or {}
+                    quality_controlled_keys = {
+                        "active_image",
+                        "image_reviews",
+                        "image_candidates",
+                        "review_verdict",
+                        "active_image_changed_at",
+                        "active_video",
+                        "video_reviews",
+                        "video_candidates",
+                        "video_review_verdict",
+                        "active_video_changed_at",
+                    }
+                    changed_controlled_keys = [
+                        key
+                        for key in quality_controlled_keys
+                        if key in c.metadata
+                        and next_metadata.get(key) != c.metadata.get(key)
+                    ]
+                    if changed_controlled_keys:
+                        raise HTTPException(
+                            409,
+                            "质量候选、评审历史和当前采用版本必须使用专用质量验收接口修改",
+                        )
                     previous_active = str(c.metadata.get("active_image") or "")
                     next_active = str(next_metadata.get("active_image") or "")
                     if next_active and next_active != previous_active:
@@ -1216,8 +1244,57 @@ def update_card(card_id: str, req: UpdateCardReq):
                             409,
                             "切换当前图片必须使用候选采用操作，并先完成质量验收",
                         )
+                    previous_active_video = str(
+                        c.metadata.get("active_video") or ""
+                    )
+                    next_active_video = str(
+                        next_metadata.get("active_video") or ""
+                    )
+                    if (
+                        next_active_video
+                        and next_active_video != previous_active_video
+                    ):
+                        raise HTTPException(
+                            409,
+                            "切换当前视频必须使用候选采用操作，并先完成质量验收",
+                        )
                     c.metadata = next_metadata
                 if "status" in provided and req.status is not None:
+                    if req.status == "done":
+                        active_image = str(c.metadata.get("active_image") or "")
+                        active_video = str(c.metadata.get("active_video") or "")
+                        if (
+                            active_image
+                            and image_requires_precision_review(
+                                c.metadata,
+                                active_image,
+                            )
+                            and not image_is_approved(
+                                c.metadata,
+                                "done",
+                                active_image,
+                            )
+                        ):
+                            raise HTTPException(
+                                409,
+                                "当前图片未通过精品验收，不能直接标记完成",
+                            )
+                        if (
+                            active_video
+                            and video_requires_precision_review(
+                                c.metadata,
+                                active_video,
+                            )
+                            and not video_is_approved(
+                                c.metadata,
+                                "done",
+                                active_video,
+                            )
+                        ):
+                            raise HTTPException(
+                                409,
+                                "当前视频未通过精品验收，不能直接标记完成",
+                            )
                     c.status = req.status
                 if "assignee" in provided:
                     c.assignee = req.assignee or ""
@@ -1583,6 +1660,26 @@ REVIEW_REJECT_REASONS = {
     "other": "其他",
 }
 
+VIDEO_REJECT_REASONS = {
+    "identity_drift": "角色闪变或走形",
+    "motion_broken": "动作断裂或穿模",
+    "shot_mismatch": "运镜或节奏不符",
+    "continuity_break": "首尾帧无法衔接",
+    "audio_sync": "对白口型或声音不同步",
+    "visual_artifact": "闪烁、重影或异常文字",
+    "other": "其他",
+}
+
+FINAL_REJECT_REASONS = {
+    "narrative_gap": "叙事信息缺失",
+    "visual_discontinuity": "跨镜视觉不连续",
+    "pacing_issue": "节奏拖沓或跳切",
+    "audio_mix": "声音层次或响度异常",
+    "dialogue_issue": "对白、口型或字幕错误",
+    "delivery_error": "画幅、编码或完整播放异常",
+    "other": "其他",
+}
+
 
 def _project_image_path_from_url(pid: str, image: str) -> Path | None:
     """把本项目 resource URL 安全解析为本地文件；外部 URL 返回 None。"""
@@ -1669,15 +1766,40 @@ class ActivateImageCandidateReq(BaseModel):
     image: str
 
 
+class ReviewCardVideoReq(BaseModel):
+    """评审镜头视频或整集成片；新候选通过时必须提交完整量表。"""
+    verdict: str
+    video: str = ""
+    reason: str = ""
+    note: str = ""
+    ratings: dict[str, int] = Field(default_factory=dict)
+    promote: bool = True
+
+
+class ActivateVideoCandidateReq(BaseModel):
+    """把已经通过精品验收的视频候选设为当前生产版本。"""
+    video: str
+
+
 @router.get("/quality-profile")
 def get_quality_profile():
-    """返回精品图片验收量表；前端不得自行复制阈值。"""
+    """返回图片、镜头视频和整集成片量表；前端不得自行复制阈值。"""
     return {"code": 200, "data": {
         "profile": "precision",
         "image": visual_quality_profile(),
+        "video": media_quality_profile("video"),
+        "final": media_quality_profile("final"),
         "reject_reasons": [
             {"key": key, "name": name}
             for key, name in REVIEW_REJECT_REASONS.items()
+        ],
+        "video_reject_reasons": [
+            {"key": key, "name": name}
+            for key, name in VIDEO_REJECT_REASONS.items()
+        ],
+        "final_reject_reasons": [
+            {"key": key, "name": name}
+            for key, name in FINAL_REJECT_REASONS.items()
         ],
     }}
 
@@ -1819,6 +1941,164 @@ def activate_image_candidate(
             "active_image": image,
             "review_verdict": "pass",
             "active_image_changed_at": _now(),
+        }
+        card.status = "done"
+        card.updated_at = _now()
+        _save_cards(pid, cards)
+    return {"code": 200, "data": card.model_dump()}
+
+
+@router.post("/projects/{pid}/cards/{card_id}/video-review")
+def review_card_video(pid: str, card_id: str, req: ReviewCardVideoReq):
+    """评审镜头视频或整集成片；只有采用版本的结论会改变生产状态。"""
+    if req.verdict not in ("pass", "reject"):
+        raise HTTPException(400, "verdict 必须是 pass 或 reject")
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        card = next((item for item in cards if item.card_id == card_id), None)
+        if card is None:
+            raise HTTPException(404, "卡片不存在")
+        if card.stage not in ("vid_prompt", "vid_gen", "final"):
+            raise HTTPException(400, "只有镜头视频或整集成片可以进行视频验收")
+        kind = "final" if card.stage == "final" else "video"
+        reject_reasons = (
+            FINAL_REJECT_REASONS if kind == "final" else VIDEO_REJECT_REASONS
+        )
+        if req.verdict == "reject" and req.reason not in reject_reasons:
+            raise HTTPException(
+                400,
+                f"退回必须选择原因，可选: {list(reject_reasons)}",
+            )
+        current_video = (
+            str(card.metadata.get("active_video") or "")
+            if "active_video" in card.metadata
+            else (str(card.videos[-1]) if card.videos else "")
+        )
+        if not current_video:
+            raise HTTPException(400, "卡片没有可评审的视频")
+        video = req.video.strip() or current_video
+        if video not in {str(item) for item in card.videos}:
+            raise HTTPException(409, "候选视频已变化，请刷新后重新评审")
+        known_candidates = {
+            str(item.get("video") or "")
+            for item in (card.metadata.get("video_candidates") or [])
+        }
+        if video != current_video and video not in known_candidates:
+            raise HTTPException(409, "历史视频不能重新评审；请先登记为质量候选")
+
+        requires_precision = video_requires_precision_review(card.metadata, video)
+        if req.verdict == "pass" and requires_precision and not req.ratings:
+            raise HTTPException(400, "新生成候选必须完成精品评分后才能通过")
+        quality: dict[str, Any] = {}
+        if req.ratings:
+            try:
+                quality = evaluate_media_quality(kind, req.ratings)
+            except ValueError as exc:
+                raise HTTPException(400, str(exc)) from exc
+            if req.verdict == "pass" and not quality["passed"]:
+                raise HTTPException(400, f"{quality['summary']} 请退回并说明主要问题。")
+
+        reviews = list(card.metadata.get("video_reviews") or [])
+        review_id = uuid.uuid4().hex[:12]
+        review_record = {
+            "id": review_id,
+            "video": video,
+            "kind": kind,
+            "verdict": req.verdict,
+            "reason": req.reason if req.verdict == "reject" else "",
+            "note": req.note,
+            "time": _now(),
+        }
+        if quality:
+            review_record["quality"] = quality
+        reviews.append(review_record)
+
+        candidates = list(card.metadata.get("video_candidates") or [])
+        candidate = next(
+            (item for item in candidates if str(item.get("video") or "") == video),
+            None,
+        )
+        if candidate is None:
+            candidate = {"video": video}
+            candidates.append(candidate)
+        candidate.update({
+            "latest_review_id": review_id,
+            "verdict": req.verdict,
+            "quality_score": quality.get("score"),
+            "reviewed_at": review_record["time"],
+        })
+
+        promoted = req.verdict == "pass" and (req.promote or video == current_video)
+        active_video = video if promoted else current_video
+        active_review = latest_video_review(
+            {"video_reviews": reviews},
+            active_video,
+        )
+        card.metadata = {
+            **card.metadata,
+            "active_video": active_video,
+            "video_reviews": reviews,
+            "video_candidates": candidates,
+            "video_review_verdict": str(active_review.get("verdict") or ""),
+        }
+        active_requires_precision = video_requires_precision_review(
+            card.metadata,
+            active_video,
+        )
+        active_quality = active_review.get("quality") or {}
+        if (
+            active_review.get("verdict") == "pass"
+            and (
+                not active_requires_precision
+                or active_quality.get("passed") is True
+            )
+        ):
+            card.status = "done"
+            if active_video == video:
+                card.metadata["active_video_changed_at"] = review_record["time"]
+        elif video == active_video:
+            card.status = "review"
+        card.updated_at = _now()
+        _save_cards(pid, cards)
+    return {"code": 200, "data": card.model_dump()}
+
+
+@router.post("/projects/{pid}/cards/{card_id}/video-candidates/activate")
+def activate_video_candidate(
+    pid: str,
+    card_id: str,
+    req: ActivateVideoCandidateReq,
+):
+    """采用一个已通过验收的视频候选；未达门槛的候选不能进入下一阶段。"""
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        card = next((item for item in cards if item.card_id == card_id), None)
+        if card is None:
+            raise HTTPException(404, "卡片不存在")
+        video = req.video.strip()
+        if not video or video not in {str(item) for item in card.videos}:
+            raise HTTPException(400, "候选视频不存在")
+        current_video = (
+            str(card.metadata.get("active_video") or "")
+            if "active_video" in card.metadata
+            else (str(card.videos[-1]) if card.videos else "")
+        )
+        if card.stage == "final" and video != current_video:
+            raise HTTPException(409, "整集成片必须基于当前镜头重新合成，不能采用旧版成片")
+        review = latest_video_review(card.metadata, video)
+        if review.get("verdict") != "pass":
+            raise HTTPException(409, "候选视频必须先通过人工验收才能采用")
+        if video_requires_precision_review(card.metadata, video):
+            quality = review.get("quality") or {}
+            if quality.get("passed") is not True:
+                raise HTTPException(409, "新生成候选必须达到精品评分门槛才能采用")
+        card.metadata = {
+            **card.metadata,
+            "active_video": video,
+            "video_review_verdict": "pass",
+            "active_video_changed_at": _now(),
         }
         card.status = "done"
         card.updated_at = _now()

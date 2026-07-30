@@ -682,12 +682,34 @@ export const api = {
     request<{
       profile: 'precision';
       image: VisualQualityProfile;
+      video: VisualQualityProfile;
+      final: VisualQualityProfile;
       reject_reasons: { key: string; name: string }[];
+      video_reject_reasons: { key: string; name: string }[];
+      final_reject_reasons: { key: string; name: string }[];
     }>('/production/quality-profile'),
   activateImageCandidate: (pid: string, cardId: string, image: string) =>
     request<any>(`/production/projects/${pid}/cards/${cardId}/image-candidates/activate`, {
       method: 'POST',
       body: JSON.stringify({ image }),
+    }),
+  /** 镜头视频/整集成片评审：新候选必须提交对应的完整评分。 */
+  reviewCardVideo: (pid: string, cardId: string, data: {
+    verdict: 'pass' | 'reject';
+    video?: string;
+    reason?: string;
+    note?: string;
+    ratings?: VisualQualityRatings;
+    promote?: boolean;
+  }) =>
+    request<any>(`/production/projects/${pid}/cards/${cardId}/video-review`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  activateVideoCandidate: (pid: string, cardId: string, video: string) =>
+    request<any>(`/production/projects/${pid}/cards/${cardId}/video-candidates/activate`, {
+      method: 'POST',
+      body: JSON.stringify({ video }),
     }),
   /** 收件箱批量回填：拖入多个文件，按文件名规则自动分拣挂到对应生产卡。 */
   inboxUpload: async (pid: string, files: File[], defaultEpisode?: number) => {

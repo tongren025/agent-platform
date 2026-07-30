@@ -38,8 +38,13 @@ from app.services.project_optimization import (
 )
 from app.services.production_quality import (
     build_image_repair_prompt,
+    build_video_repair_prompt,
     image_is_approved,
     image_requires_precision_review,
+    latest_video_review,
+    video_candidate,
+    video_is_approved,
+    video_requires_precision_review,
 )
 
 
@@ -83,6 +88,15 @@ def _current_image_review(
     return reviews[-1] if reviews else {}
 
 
+def _active_video_url(card: ProductionCard | None) -> str:
+    """取当前采用视频；显式 active_video 优先于历史列表。"""
+    if card is None:
+        return ""
+    if "active_video" in card.metadata:
+        return str(card.metadata.get("active_video") or "")
+    return str(card.videos[-1]) if card.videos else ""
+
+
 def _director_state(project_id: str) -> dict:
     project = _load_project(project_id)
     cards = _load_cards(project_id)
@@ -92,7 +106,7 @@ def _director_state(project_id: str) -> dict:
 
     counts = {stage: 0 for stage in SPEC_STAGES}
     image_done = video_done = 0
-    image_review_total = 0
+    image_review_total = video_review_total = 0
     ready_video_updated_at: list[str] = []
     shots = []
     for episode, unit in unit_keys:
@@ -136,6 +150,11 @@ def _director_state(project_id: str) -> dict:
         image_review_total += image_review_count
 
         video_url = ""
+        video_candidate_url = ""
+        latest_video_quality: dict = {}
+        video_quality_required = False
+        video_quality_passed: bool | None = None
+        video_review_verdict = ""
         video_job = None
         video_stale = False
         if video_card:
@@ -152,14 +171,68 @@ def _director_state(project_id: str) -> dict:
             )
             if job_matches_inputs:
                 video_job = raw_video_job or None
-            video_ready = image_ready and bool(video_card.videos) and job_matches_inputs and (
-                not raw_video_job or not job_status or job_status in READY_VIDEO_STATUSES
+            active_video = _active_video_url(video_card)
+            active_candidate = video_candidate(video_card.metadata, active_video)
+            active_matches_inputs = (
+                (
+                    not str(active_candidate.get("imageUrl") or "")
+                    or str(active_candidate.get("imageUrl") or "") == image_url
+                )
+                and (
+                    not str(active_candidate.get("prompt") or "").strip()
+                    or str(active_candidate.get("prompt") or "").strip()
+                    == current_video_prompt
+                )
             )
-            video_stale = bool(video_card.videos) and not video_ready
+            video_approved = video_is_approved(
+                video_card.metadata,
+                video_card.status,
+                active_video,
+            )
+            active_uses_current_job = bool(
+                not active_candidate
+                or (
+                    str(active_candidate.get("job_id") or "")
+                    and str(active_candidate.get("job_id") or "")
+                    == str(raw_video_job.get("id") or "")
+                    and (
+                        not str(raw_video_job.get("submittedAt") or "")
+                        or not str(active_candidate.get("created_at") or "")
+                        or str(raw_video_job.get("submittedAt") or "")
+                        <= str(active_candidate.get("created_at") or "")
+                    )
+                )
+            )
+            active_job_ready = bool(
+                not raw_video_job
+                or not job_status
+                or not active_uses_current_job
+                or job_status in READY_VIDEO_STATUSES
+            )
+            video_ready = image_ready and bool(active_video) and active_matches_inputs and (
+                active_job_ready
+            ) and video_approved
+            video_stale = bool(active_video) and not active_matches_inputs
             if video_ready:
-                video_url = str(video_card.metadata.get("active_video") or video_card.videos[-1])
+                video_url = active_video
                 video_done += 1
-                ready_video_updated_at.append(str(video_card.updated_at))
+                ready_video_updated_at.append(str(
+                    video_card.metadata.get("active_video_changed_at")
+                    or video_card.updated_at
+                ))
+            if video_card.videos:
+                latest_video = str(video_card.videos[-1])
+                latest_review = latest_video_review(video_card.metadata, latest_video)
+                latest_video_quality = dict(latest_review.get("quality") or {})
+                video_quality_required = video_requires_precision_review(
+                    video_card.metadata,
+                    latest_video,
+                )
+                video_quality_passed = latest_video_quality.get("passed")
+                video_review_verdict = str(latest_review.get("verdict") or "")
+                if video_quality_required and video_quality_passed is not True:
+                    video_candidate_url = latest_video
+                    video_review_total += 1
 
         title_card = stage_cards["script"] or stage_cards["storyboard"] or image_card or video_card
         duration = 5
@@ -186,8 +259,13 @@ def _director_state(project_id: str) -> dict:
                 if video_card else ""
             ),
             "videoUrl": video_url,
+            "videoCandidateUrl": video_candidate_url,
             "videoJob": video_job,
             "videoStale": video_stale,
+            "videoReviewVerdict": video_review_verdict,
+            "videoQualityRequired": video_quality_required,
+            "videoQualityScore": latest_video_quality.get("score"),
+            "videoQualityPassed": video_quality_passed,
             "durationSeconds": max(1, min(duration, 15)),
             "reviewCount": image_review_count,
             "imageReviewVerdict": str(latest_image_review.get("verdict") or ""),
@@ -200,12 +278,35 @@ def _director_state(project_id: str) -> dict:
 
     final_candidate = next((card for card in reversed(cards) if card.stage == "final" and card.videos), None)
     latest_video_update = max(ready_video_updated_at, default="")
-    final_card = (
+    final_candidate_url = _active_video_url(final_candidate)
+    final_review = (
+        latest_video_review(final_candidate.metadata, final_candidate_url)
+        if final_candidate and final_candidate_url
+        else {}
+    )
+    final_quality = dict(final_review.get("quality") or {})
+    final_quality_required = bool(
         final_candidate
-        if final_candidate
+        and video_requires_precision_review(final_candidate.metadata, final_candidate_url)
+    )
+    final_approved = bool(
+        final_candidate
+        and video_is_approved(
+            final_candidate.metadata,
+            final_candidate.status,
+            final_candidate_url,
+        )
+    )
+    final_up_to_date = bool(
+        final_candidate
         and total > 0
         and video_done == total
         and str(final_candidate.updated_at) >= latest_video_update
+    )
+    final_pending_review = final_up_to_date and not final_approved
+    final_card = (
+        final_candidate
+        if final_up_to_date and final_approved
         else None
     )
     stages = [
@@ -234,8 +335,10 @@ def _director_state(project_id: str) -> dict:
             next_action = {"kind": "stage", "stage": "vid_prompt", "label": "生成视频提示", "count": total - counts["vid_prompt"]}
         elif video_done < total:
             next_action = {"kind": "video", "stage": "video", "label": "生成镜头视频", "count": total - video_done}
-        elif final_card is None:
+        elif not final_up_to_date:
             next_action = {"kind": "compose", "stage": "final", "label": "合成成片预览", "count": video_done}
+        elif final_card is None:
+            next_action = {"kind": "final_review", "stage": "final", "label": "验收整集成片", "count": 1}
 
     # 质量门禁失败必须先返工，不能仅凭“卡片存在”继续推进到昂贵的图片/视频生成。
     first_issue = diagnostics["issues"][0] if diagnostics["issues"] else None
@@ -271,17 +374,32 @@ def _director_state(project_id: str) -> dict:
         "totalUnits": total,
         "overallProgress": overall_progress,
         "nextAction": next_action,
-        "reviewCount": image_review_total,
+        "reviewCount": image_review_total + video_review_total + int(
+            final_pending_review
+        ),
+        "imageReviewCount": image_review_total,
+        "videoReviewCount": video_review_total,
         "activeJobs": sum(
             1 for shot in shots
             if shot["videoJob"]
             and str(shot["videoJob"].get("status") or "").lower() in ACTIVE_VIDEO_STATUSES
         ),
-        "finalStale": bool(final_candidate and final_card is None),
+        "finalStale": bool(final_candidate and not final_up_to_date),
+        "finalPendingReview": final_pending_review,
         "finalUrl": (
             str(final_card.metadata.get("active_video") or final_card.videos[-1])
             if final_card else ""
         ),
+        "finalCandidateUrl": (
+            final_candidate_url
+            if final_up_to_date
+            else ""
+        ),
+        "finalCardId": final_candidate.card_id if final_candidate else "",
+        "finalReviewVerdict": str(final_review.get("verdict") or ""),
+        "finalQualityRequired": final_quality_required,
+        "finalQualityScore": final_quality.get("score"),
+        "finalQualityPassed": final_quality.get("passed"),
         "diagnostics": {
             "state": diagnostics["state"],
             "score": diagnostics["score"],
@@ -784,13 +902,17 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
                 raise HTTPException(409, "当前镜头图片待返工，请修改并通过后再提交视频")
             raise HTTPException(409, "当前镜头图片必须完成精品评分并通过后才能提交视频")
         image_url = current_image_url
+        generation_prompt = build_video_repair_prompt(
+            prompt,
+            list(card.metadata.get("video_reviews") or []),
+        )
         aspect_ratio = req.aspect_ratio or project.aspect_ratio
         submission_started_at = _now()
     try:
         job = openrouter_media.submit_video(
             project_id,
             model=req.model,
-            prompt=prompt,
+            prompt=generation_prompt,
             duration=req.duration,
             resolution=req.resolution,
             aspect_ratio=aspect_ratio,
@@ -843,6 +965,7 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         job_payload = {
             **job,
             "prompt": prompt,
+            "generationPrompt": generation_prompt,
             "imageUrl": image_url,
             "submittedAt": submission_started_at,
         }
@@ -865,6 +988,7 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         "card": card.model_dump(),
         "applied": applied,
         "stale": not applied,
+        "qualityFeedbackApplied": generation_prompt != prompt,
     })
 
 
@@ -921,8 +1045,42 @@ def sync_director_video(project_id: str, card_id: str):
         input_matches = prompt_matches and image_matches
         applied = same_job and input_matches
         if applied:
-            if result.get("url") and result["url"] not in card.videos:
-                card.videos.append(result["url"])
+            result_url = str(result.get("url") or "")
+            existing_active_video = _active_video_url(card)
+            existing_active_approved = video_is_approved(
+                card.metadata,
+                card.status,
+                existing_active_video,
+            )
+            if result_url and result_url not in card.videos:
+                card.videos.append(result_url)
+            candidates = list(card.metadata.get("video_candidates") or [])
+            if result_url:
+                candidate = next(
+                    (
+                        item for item in candidates
+                        if str(item.get("video") or "") == result_url
+                    ),
+                    None,
+                )
+                if candidate is None:
+                    candidate = {"video": result_url}
+                    candidates.append(candidate)
+                candidate.update({
+                    "review_required": True,
+                    "kind": "video",
+                    "prompt": current_prompt,
+                    "imageUrl": current_image_url,
+                    "job_id": job_id,
+                    "created_at": _now(),
+                    "verdict": "",
+                    "quality_score": None,
+                })
+            active_video = (
+                existing_active_video
+                if existing_active_video and existing_active_approved
+                else result_url
+            )
             card.metadata = {
                 **card.metadata,
                 "openrouter_video_job": {
@@ -930,10 +1088,16 @@ def sync_director_video(project_id: str, card_id: str):
                     **result,
                     "syncedAt": _now(),
                 },
+                "active_video": active_video,
+                "video_candidates": candidates,
             }
-            if result.get("url"):
-                card.metadata["active_video"] = result["url"]
-                card.status = "done"
+            if result_url:
+                if active_video == result_url:
+                    card.metadata["video_review_verdict"] = ""
+                    card.metadata["active_video_changed_at"] = _now()
+                    card.status = "review"
+                else:
+                    card.status = "done"
             elif result.get("status") == "failed":
                 card.status = "review"
         else:
@@ -1092,12 +1256,33 @@ def compose_director_cut(project_id: str):
             cards.append(final_card)
         if result["url"] not in final_card.videos:
             final_card.videos.append(result["url"])
+        candidates = list(final_card.metadata.get("video_candidates") or [])
+        candidate = next(
+            (
+                item for item in candidates
+                if str(item.get("video") or "") == result["url"]
+            ),
+            None,
+        )
+        if candidate is None:
+            candidate = {"video": result["url"]}
+            candidates.append(candidate)
+        candidate.update({
+            "review_required": True,
+            "kind": "final",
+            "source_videos": video_urls,
+            "created_at": now,
+            "verdict": "",
+            "quality_score": None,
+        })
         final_card.metadata = {
             **final_card.metadata,
             "active_video": result["url"],
             "compose": result,
+            "video_candidates": candidates,
+            "video_review_verdict": "",
         }
-        final_card.status = "done"
+        final_card.status = "review"
         final_card.updated_at = now
         project.updated_at = now
         _save_cards(project_id, cards)

@@ -1,7 +1,8 @@
-"""漫剧生产的确定性质量门禁与人工视觉评分规则。
+"""漫剧生产的确定性质量门禁与人工媒体评分规则。
 
 文本草稿使用静态规则拦截明显不可生产的内容；实际图片则由人工按同一套五维量表
-评分。两者都只产生可解释结果，不调用额外模型，也不会自动采用或删除媒体。
+评分，镜头视频与整集成片使用各自的六维量表。所有规则都只产生可解释结果，
+不调用额外模型，也不会自动采用或删除媒体。
 """
 from __future__ import annotations
 
@@ -60,6 +61,100 @@ VISUAL_QUALITY_RUBRIC: tuple[dict[str, Any], ...] = (
     },
 )
 
+VIDEO_QUALITY_RUBRIC_VERSION = "video-v1"
+VIDEO_QUALITY_MIN_SCORE = 85.0
+VIDEO_QUALITY_RUBRIC: tuple[dict[str, Any], ...] = (
+    {
+        "key": "identity_stability",
+        "label": "角色稳定性",
+        "description": "运动全过程中脸、五官、服装和道具不漂移、不闪变",
+        "weight": 25,
+        "critical": True,
+    },
+    {
+        "key": "motion_integrity",
+        "label": "运动完整性",
+        "description": "动作连贯，肢体、头发、衣物和物体运动没有断裂或穿模",
+        "weight": 20,
+        "critical": True,
+    },
+    {
+        "key": "shot_fidelity",
+        "label": "镜头符合度",
+        "description": "运镜、景别、构图、动作节奏与本镜视频提示一致",
+        "weight": 15,
+        "critical": False,
+    },
+    {
+        "key": "temporal_continuity",
+        "label": "时序连续性",
+        "description": "首尾帧、角色位置、视线和环境变化可自然衔接相邻镜头",
+        "weight": 15,
+        "critical": False,
+    },
+    {
+        "key": "audio_dialogue",
+        "label": "声音与对白",
+        "description": "对白、口型、音效和环境声清楚同步，无明显爆音或断音",
+        "weight": 15,
+        "critical": False,
+    },
+    {
+        "key": "technical_integrity",
+        "label": "技术完整性",
+        "description": "无闪烁、重影、黑帧、编码损坏、水印或异常文字",
+        "weight": 10,
+        "critical": False,
+    },
+)
+
+FINAL_QUALITY_RUBRIC_VERSION = "final-v1"
+FINAL_QUALITY_MIN_SCORE = 88.0
+FINAL_QUALITY_RUBRIC: tuple[dict[str, Any], ...] = (
+    {
+        "key": "narrative_continuity",
+        "label": "叙事连贯性",
+        "description": "情节因果、信息释放和人物动机完整，观众无需猜测缺失桥段",
+        "weight": 25,
+        "critical": True,
+    },
+    {
+        "key": "visual_continuity",
+        "label": "视觉连续性",
+        "description": "跨镜角色、场景、时间、光线和动作承接一致",
+        "weight": 20,
+        "critical": True,
+    },
+    {
+        "key": "pacing",
+        "label": "节奏与情绪",
+        "description": "镜头时长、转场和情绪起伏服务剧情，没有拖沓或突兀跳切",
+        "weight": 15,
+        "critical": False,
+    },
+    {
+        "key": "audio_mix",
+        "label": "整体声音",
+        "description": "对白可懂，音乐、音效和环境声层次平衡，镜间响度连续",
+        "weight": 15,
+        "critical": False,
+    },
+    {
+        "key": "dialogue_delivery",
+        "label": "对白呈现",
+        "description": "口型、字幕、台词时序和角色语气一致，无错字漏字",
+        "weight": 10,
+        "critical": False,
+    },
+    {
+        "key": "delivery_integrity",
+        "label": "交付完整性",
+        "description": "画幅、分辨率、首尾、黑帧、编码和完整播放均符合交付要求",
+        "weight": 15,
+        "critical": False,
+    },
+)
+
 REJECTION_CORRECTIONS = {
     "tone_off": "保持项目视觉母版的色调、材质和光影层级",
     "character_drift": "严格复用当前角色时期的脸、发型、服装和标志性道具",
@@ -73,24 +168,69 @@ REJECTION_CORRECTIONS = {
     "other": "严格修正人工评审补充说明中指出的问题",
 }
 
+VIDEO_REJECTION_CORRECTIONS = {
+    "identity_drift": "保持角色脸、五官、发型、服装和道具在全段运动中稳定不变",
+    "motion_broken": "降低动作复杂度，确保肢体、头发、衣物和物体运动连续完整",
+    "shot_mismatch": "严格执行本镜运镜、景别、动作幅度和时间节拍",
+    "continuity_break": "首帧承接上一镜状态，尾帧准确落到下一镜所需位置和朝向",
+    "audio_sync": "对白、口型、音效和环境声严格同步，保持人声清晰",
+    "visual_artifact": "避免闪烁、重影、黑帧、水印、异常文字和编码损坏",
+    "other": "严格修正人工视频验收补充说明中指出的问题",
+}
+
 
 def visual_quality_profile() -> dict[str, Any]:
     """返回前后端共用的精品图片评分规则。"""
+    return media_quality_profile("image")
+
+
+def media_quality_profile(kind: str) -> dict[str, Any]:
+    """返回指定媒体阶段的评分规则，阈值只在后端维护。"""
+    profiles = {
+        "image": (
+            VISUAL_QUALITY_RUBRIC_VERSION,
+            VISUAL_QUALITY_MIN_SCORE,
+            VISUAL_QUALITY_RUBRIC,
+        ),
+        "video": (
+            VIDEO_QUALITY_RUBRIC_VERSION,
+            VIDEO_QUALITY_MIN_SCORE,
+            VIDEO_QUALITY_RUBRIC,
+        ),
+        "final": (
+            FINAL_QUALITY_RUBRIC_VERSION,
+            FINAL_QUALITY_MIN_SCORE,
+            FINAL_QUALITY_RUBRIC,
+        ),
+    }
+    if kind not in profiles:
+        raise ValueError(f"未知质量规则：{kind}")
+    version, minimum_score, rubric = profiles[kind]
     return {
-        "version": VISUAL_QUALITY_RUBRIC_VERSION,
-        "minimumScore": VISUAL_QUALITY_MIN_SCORE,
+        "version": version,
+        "minimumScore": minimum_score,
         "minimumRating": VISUAL_QUALITY_MIN_RATING,
         "criticalMinimumRating": VISUAL_QUALITY_CRITICAL_MIN_RATING,
         "ratingScale": {"min": 1, "max": 5},
-        "dimensions": [dict(item) for item in VISUAL_QUALITY_RUBRIC],
+        "dimensions": [dict(item) for item in rubric],
     }
 
 
 def evaluate_visual_quality(ratings: Mapping[str, object]) -> dict[str, Any]:
     """按五维量表计算可解释得分；缺项或越界直接拒绝，避免虚假高分。"""
+    return evaluate_media_quality("image", ratings)
+
+
+def evaluate_media_quality(
+    kind: str,
+    ratings: Mapping[str, object],
+) -> dict[str, Any]:
+    """按媒体阶段量表计算可解释得分；缺项或越界直接拒绝。"""
+    profile = media_quality_profile(kind)
+    rubric = profile["dimensions"]
     normalized: dict[str, int] = {}
     missing: list[str] = []
-    for dimension in VISUAL_QUALITY_RUBRIC:
+    for dimension in rubric:
         key = str(dimension["key"])
         if key not in ratings:
             missing.append(str(dimension["label"]))
@@ -110,10 +250,10 @@ def evaluate_visual_quality(ratings: Mapping[str, object]) -> dict[str, Any]:
 
     score = round(sum(
         normalized[str(item["key"])] / 5 * int(item["weight"])
-        for item in VISUAL_QUALITY_RUBRIC
+        for item in rubric
     ), 1)
     failed_dimensions: list[dict[str, Any]] = []
-    for item in VISUAL_QUALITY_RUBRIC:
+    for item in rubric:
         key = str(item["key"])
         required = (
             VISUAL_QUALITY_CRITICAL_MIN_RATING
@@ -127,9 +267,11 @@ def evaluate_visual_quality(ratings: Mapping[str, object]) -> dict[str, Any]:
                 "rating": normalized[key],
                 "required": required,
             })
-    passed = score >= VISUAL_QUALITY_MIN_SCORE and not failed_dimensions
+    minimum_score = float(profile["minimumScore"])
+    passed = score >= minimum_score and not failed_dimensions
     return {
-        "version": VISUAL_QUALITY_RUBRIC_VERSION,
+        "version": profile["version"],
+        "kind": kind,
         "ratings": normalized,
         "score": score,
         "passed": passed,
@@ -138,7 +280,7 @@ def evaluate_visual_quality(ratings: Mapping[str, object]) -> dict[str, Any]:
             f"精品验收通过，综合 {score:.1f} 分。"
             if passed
             else (
-                f"综合 {score:.1f} 分，未达到 {VISUAL_QUALITY_MIN_SCORE:.0f} 分"
+                f"综合 {score:.1f} 分，未达到 {minimum_score:.0f} 分"
                 if not failed_dimensions
                 else "未通过：" + "、".join(
                     f"{item['label']} {item['rating']}/{item['required']}"
@@ -177,6 +319,43 @@ def build_image_repair_prompt(base_prompt: str, reviews: list[Mapping[str, Any]]
         f"{base_prompt.rstrip()}\n\n"
         "【本次返工必须满足的正向硬约束】\n"
         + "\n".join(f"{index}. {item}" for index, item in enumerate(corrections, 1))
+    )
+
+
+def build_video_repair_prompt(
+    base_prompt: str,
+    reviews: list[Mapping[str, Any]],
+) -> str:
+    """把最近视频退回原因转成下一次生成的有限正向约束。"""
+    corrections: list[str] = []
+    seen: set[str] = set()
+    for review in reversed(reviews):
+        if str(review.get("verdict") or "") != "reject":
+            continue
+        reason = str(review.get("reason") or "other")
+        if reason not in seen:
+            corrections.append(
+                VIDEO_REJECTION_CORRECTIONS.get(
+                    reason,
+                    VIDEO_REJECTION_CORRECTIONS["other"],
+                )
+            )
+            seen.add(reason)
+        note = " ".join(str(review.get("note") or "").split())[:200]
+        if note and f"note:{note}" not in seen:
+            corrections.append(f"人工视频验收补充：{note}")
+            seen.add(f"note:{note}")
+        if len(corrections) >= 5:
+            break
+    if not corrections:
+        return base_prompt
+    return (
+        f"{base_prompt.rstrip()}\n\n"
+        "【本次视频返工必须满足的正向硬约束】\n"
+        + "\n".join(
+            f"{index}. {item}"
+            for index, item in enumerate(corrections, 1)
+        )
     )
 
 
@@ -226,6 +405,60 @@ def image_is_approved(
         return False
     review = latest_image_review(metadata, image)
     if image_requires_precision_review(metadata, image):
+        quality = review.get("quality") or {}
+        return (
+            review.get("verdict") == "pass"
+            and quality.get("passed") is True
+        )
+    return status != "review" and review.get("verdict") != "reject"
+
+
+def latest_video_review(
+    metadata: Mapping[str, Any],
+    video: str,
+) -> Mapping[str, Any]:
+    """取指定视频的最后一次评审，镜头视频和整集成片共用。"""
+    reviews = [
+        item
+        for item in (metadata.get("video_reviews") or [])
+        if str(item.get("video") or "") == video
+    ]
+    return reviews[-1] if reviews else {}
+
+
+def video_candidate(
+    metadata: Mapping[str, Any],
+    video: str,
+) -> Mapping[str, Any]:
+    """取视频候选元数据；旧项目没有候选记录时返回空映射。"""
+    return next(
+        (
+            item
+            for item in (metadata.get("video_candidates") or [])
+            if str(item.get("video") or "") == video
+        ),
+        {},
+    )
+
+
+def video_requires_precision_review(
+    metadata: Mapping[str, Any],
+    video: str,
+) -> bool:
+    """只有新质量链路产生的视频候选强制六维评分。"""
+    return bool(video_candidate(metadata, video).get("review_required"))
+
+
+def video_is_approved(
+    metadata: Mapping[str, Any],
+    status: str,
+    video: str,
+) -> bool:
+    """判断镜头视频或整集成片是否已达到对应精品门槛。"""
+    if not video:
+        return False
+    review = latest_video_review(metadata, video)
+    if video_requires_precision_review(metadata, video):
         quality = review.get("quality") or {}
         return (
             review.get("verdict") == "pass"

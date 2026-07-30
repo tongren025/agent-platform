@@ -61,6 +61,7 @@ interface ShotState {
   videoCardId: string;
   videoPrompt: string;
   videoUrl: string;
+  videoCandidateUrl?: string;
   videoJob?: VideoJob | null;
   durationSeconds: number;
   reviewCount: number;
@@ -70,6 +71,10 @@ interface ShotState {
   imageQualityPassed?: boolean | null;
   imageStale?: boolean;
   videoStale?: boolean;
+  videoReviewVerdict?: 'pass' | 'reject' | '';
+  videoQualityRequired?: boolean;
+  videoQualityScore?: number | null;
+  videoQualityPassed?: boolean | null;
 }
 
 interface DirectorState {
@@ -82,7 +87,14 @@ interface DirectorState {
   reviewCount: number;
   activeJobs: number;
   finalUrl: string;
+  finalCandidateUrl?: string;
+  finalCardId?: string;
   finalStale?: boolean;
+  finalPendingReview?: boolean;
+  finalReviewVerdict?: 'pass' | 'reject' | '';
+  finalQualityRequired?: boolean;
+  finalQualityScore?: number | null;
+  finalQualityPassed?: boolean | null;
   diagnostics?: {
     state: string;
     score: number;
@@ -130,6 +142,26 @@ const REVIEW_REASON_OPTIONS = [
   { value: 'style_drift', label: '画风漂移' },
   { value: 'continuity_break', label: '前后镜不连续' },
   { value: 'text_artifact', label: '文字或符号错误' },
+  { value: 'other', label: '其他' },
+];
+
+const VIDEO_REVIEW_REASON_OPTIONS = [
+  { value: 'identity_drift', label: '角色闪变或走形' },
+  { value: 'motion_broken', label: '动作断裂或穿模' },
+  { value: 'shot_mismatch', label: '运镜或节奏不符' },
+  { value: 'continuity_break', label: '首尾帧无法衔接' },
+  { value: 'audio_sync', label: '对白口型或声音不同步' },
+  { value: 'visual_artifact', label: '闪烁、重影或异常文字' },
+  { value: 'other', label: '其他' },
+];
+
+const FINAL_REVIEW_REASON_OPTIONS = [
+  { value: 'narrative_gap', label: '叙事信息缺失' },
+  { value: 'visual_discontinuity', label: '跨镜视觉不连续' },
+  { value: 'pacing_issue', label: '节奏拖沓或跳切' },
+  { value: 'audio_mix', label: '声音层次或响度异常' },
+  { value: 'dialogue_issue', label: '对白、口型或字幕错误' },
+  { value: 'delivery_error', label: '画幅、编码或完整播放异常' },
   { value: 'other', label: '其他' },
 ];
 
@@ -300,6 +332,12 @@ export default function DirectorStudio() {
   const [cardMediaBusy, setCardMediaBusy] = useState<Record<string, MediaKind>>({});
   const [reviewBusy, setReviewBusy] = useState<Record<string, boolean>>({});
   const [qualityReviewTargetCardId, setQualityReviewTargetCardId] = useState('');
+  const [videoQualityTargetCardId, setVideoQualityTargetCardId] = useState('');
+  const [videoRejectTargetCardId, setVideoRejectTargetCardId] = useState('');
+  const [finalQualityOpen, setFinalQualityOpen] = useState(false);
+  const [finalRejectOpen, setFinalRejectOpen] = useState(false);
+  const [mediaRejectReason, setMediaRejectReason] = useState('');
+  const [mediaRejectNote, setMediaRejectNote] = useState('');
   const [rejectTargetCardId, setRejectTargetCardId] = useState('');
   const [rejectReason, setRejectReason] = useState('');
   const [rejectNote, setRejectNote] = useState('');
@@ -930,6 +968,52 @@ export default function DirectorStudio() {
     }
   };
 
+  const submitVideoReview = async (
+    cardId: string,
+    video: string,
+    kind: 'video' | 'final',
+    verdict: 'pass' | 'reject',
+    ratings?: VisualQualityRatings,
+    reason = '',
+    note = '',
+  ) => {
+    if (!cardId || !video || reviewBusy[cardId]) return false;
+    setReviewBusy(current => ({ ...current, [cardId]: true }));
+    try {
+      await api.reviewCardVideo(projectId, cardId, {
+        verdict,
+        video,
+        ...(ratings ? { ratings } : {}),
+        ...(verdict === 'reject' ? { reason, note: note.trim() } : {}),
+      });
+      await loadState(projectId, true);
+      message.success(
+        verdict === 'pass'
+          ? kind === 'final' ? '整集成片已通过精品验收' : '镜头视频已通过精品验收'
+          : kind === 'final' ? '整集成片已退回' : '镜头视频已退回',
+      );
+      if (kind === 'final') {
+        setFinalQualityOpen(false);
+        setFinalRejectOpen(false);
+      } else {
+        setVideoQualityTargetCardId('');
+        setVideoRejectTargetCardId('');
+      }
+      setMediaRejectReason('');
+      setMediaRejectNote('');
+      return true;
+    } catch (error: any) {
+      message.error(error.message || '视频验收提交失败，请稍后重试');
+      return false;
+    } finally {
+      setReviewBusy(current => {
+        const next = { ...current };
+        delete next[cardId];
+        return next;
+      });
+    }
+  };
+
   const runNext = async () => {
     if (!state || !projectId || goalReached) return;
     const next = state.nextAction;
@@ -969,6 +1053,10 @@ export default function DirectorStudio() {
       } finally {
         setBusy('');
       }
+      return;
+    }
+    if (next.kind === 'final_review') {
+      setFinalQualityOpen(true);
       return;
     }
     if (next.kind !== 'stage') return;
@@ -1072,7 +1160,15 @@ export default function DirectorStudio() {
   const qualityReviewTarget = state?.shots.find(
     shot => shot.imageCardId === qualityReviewTargetCardId,
   );
-  const finalMediaUrl = safeMediaUrl(state?.finalUrl || '');
+  const videoQualityTarget = state?.shots.find(
+    shot => shot.videoCardId === videoQualityTargetCardId,
+  );
+  const videoRejectTarget = state?.shots.find(
+    shot => shot.videoCardId === videoRejectTargetCardId,
+  );
+  const finalMediaUrl = safeMediaUrl(
+    state?.finalUrl || state?.finalCandidateUrl || '',
+  );
   const finalMediaIsCrossOrigin = useMemo(() => {
     if (!finalMediaUrl) return false;
     try {
@@ -1352,24 +1448,52 @@ export default function DirectorStudio() {
                 <div><Text className="director-section-kicker">最新成片</Text><Title level={3}>成片预览</Title></div>
                 <div className="director-final-actions">
                   <Tag
-                    color={state.finalStale ? 'warning' : 'success'}
-                    icon={state.finalStale ? <ExclamationCircleOutlined /> : <CheckCircleFilled />}
+                    color={state.finalStale || state.finalPendingReview ? 'warning' : 'success'}
+                    icon={state.finalStale || state.finalPendingReview
+                      ? <ExclamationCircleOutlined />
+                      : <CheckCircleFilled />}
                   >
-                    {state.finalStale ? '旧成片已过期' : '已合成'}
+                    {state.finalStale
+                      ? '旧成片已过期'
+                      : state.finalPendingReview ? '待整集验收' : '已验收可交付'}
                   </Tag>
-                  <a
-                    className="director-download-button"
-                    href={finalMediaUrl}
-                    download={downloadFilename(state.project.name)}
-                    {...(finalMediaIsCrossOrigin
-                      ? { target: '_blank', rel: 'noopener noreferrer' }
-                      : {})}
-                    aria-label={`下载成片：${state.project.name}`}
-                    title={finalMediaIsCrossOrigin ? '跨域文件将在安全的新窗口中打开' : undefined}
-                  >
-                    <DownloadOutlined aria-hidden="true" />
-                    下载成片
-                  </a>
+                  {state.finalPendingReview && (
+                    <>
+                      <Button
+                        type="primary"
+                        icon={<CheckOutlined />}
+                        onClick={() => setFinalQualityOpen(true)}
+                      >
+                        整集精品验收
+                      </Button>
+                      <Button
+                        danger
+                        icon={<CloseOutlined />}
+                        onClick={() => {
+                          setMediaRejectReason('');
+                          setMediaRejectNote('');
+                          setFinalRejectOpen(true);
+                        }}
+                      >
+                        退回成片
+                      </Button>
+                    </>
+                  )}
+                  {state.finalUrl && (
+                    <a
+                      className="director-download-button"
+                      href={safeMediaUrl(state.finalUrl)}
+                      download={downloadFilename(state.project.name)}
+                      {...(finalMediaIsCrossOrigin
+                        ? { target: '_blank', rel: 'noopener noreferrer' }
+                        : {})}
+                      aria-label={`下载成片：${state.project.name}`}
+                      title={finalMediaIsCrossOrigin ? '跨域文件将在安全的新窗口中打开' : undefined}
+                    >
+                      <DownloadOutlined aria-hidden="true" />
+                      下载成片
+                    </a>
+                  )}
                 </div>
               </div>
               <div className="director-final-frame">
@@ -1378,6 +1502,11 @@ export default function DirectorStudio() {
               {state.finalStale && (
                 <p className="director-final-stale" role="status">
                   当前预览仍可查看，但不含最新镜头图片。完成镜头视频后请重新合成。
+                </p>
+              )}
+              {state.finalPendingReview && (
+                <p className="director-final-stale" role="status">
+                  当前只是合成候选；叙事、视觉、节奏、声音和交付完整性全部达标后才会开放下载。
                 </p>
               )}
             </section>
@@ -1415,8 +1544,15 @@ export default function DirectorStudio() {
                   const generatingImage = cardMediaBusy[shot.imageCardId] === 'image';
                   const generatingVideo = cardMediaBusy[shot.videoCardId] === 'video';
                   const reviewing = Boolean(reviewBusy[shot.imageCardId]);
+                  const reviewingVideo = Boolean(reviewBusy[shot.videoCardId]);
+                  const displayVideoUrl = shot.videoCandidateUrl || shot.videoUrl;
                   const imageNeedsReview = Boolean(
                     shot.imageQualityRequired && shot.imageQualityPassed !== true,
+                  );
+                  const videoNeedsReview = Boolean(
+                    shot.videoCandidateUrl
+                    && shot.videoQualityRequired
+                    && shot.videoQualityPassed !== true,
                   );
                   const imageNeedsRework = (
                     shot.reviewCount > 0
@@ -1426,8 +1562,8 @@ export default function DirectorStudio() {
                   return (
                     <article key={`${shot.episode ?? 'global'}-${shot.unit}`} className="director-shot-card">
                       <div className="director-shot-media">
-                        {shot.videoUrl ? (
-                          <video src={shot.videoUrl} controls playsInline />
+                        {displayVideoUrl ? (
+                          <video src={displayVideoUrl} controls playsInline />
                         ) : shot.imageUrl ? (
                           <img src={shot.imageUrl} alt={shot.title} loading="lazy" />
                         ) : (
@@ -1435,7 +1571,11 @@ export default function DirectorStudio() {
                         )}
                         <div className="director-shot-index"><span>镜头</span> G{shot.unit}</div>
                         <div className="director-shot-media-state">
-                          {shot.imageStale ? '画面需重做' : shot.videoStale ? '视频需重做' : shot.videoUrl ? '视频' : shot.imageUrl ? '画面' : '脚本'}
+                          {shot.imageStale
+                            ? '画面需重做'
+                            : shot.videoStale
+                              ? '视频需重做'
+                              : videoNeedsReview ? '视频待验收' : shot.videoUrl ? '视频' : shot.imageUrl ? '画面' : '脚本'}
                         </div>
                       </div>
                       <div className="director-shot-body">
@@ -1499,14 +1639,26 @@ export default function DirectorStudio() {
                           <Tag color={shot.imageStale ? 'warning' : shot.imageUrl ? 'success' : 'default'}>
                             {shot.imageStale ? '提示词已更新，需重做画面' : shot.imageUrl ? '画面就绪' : '等待画面'}
                           </Tag>
-                          <Tag color={shot.videoStale ? 'warning' : shot.videoUrl ? 'success' : jobActive ? 'processing' : 'default'}>
+                          <Tag color={
+                            shot.videoStale || videoNeedsReview
+                              ? 'warning'
+                              : shot.videoUrl ? 'success' : jobActive ? 'processing' : 'default'
+                          }>
                             {shot.videoStale
                               ? '图片已更新，需重做视频'
-                              : shot.videoUrl ? '视频就绪' : jobActive ? '视频生成中' : '等待视频'}
+                              : videoNeedsReview
+                                ? '视频待精品验收'
+                                : shot.videoUrl ? '视频已验收' : jobActive ? '视频生成中' : '等待视频'}
                           </Tag>
                           {shot.reviewCount > 0 && <Tag color="warning">待返工 {shot.reviewCount}</Tag>}
                           {!shot.imageStale && shot.imageReviewVerdict === 'pass' && <Tag color="success">画面已通过</Tag>}
                           {!shot.imageStale && shot.imageReviewVerdict === 'reject' && <Tag color="error">画面已退回</Tag>}
+                          {shot.videoQualityPassed && (
+                            <Tag color="success">视频已通过 {shot.videoQualityScore ?? ''}</Tag>
+                          )}
+                          {shot.videoReviewVerdict === 'reject' && (
+                            <Tag color="error">视频已退回</Tag>
+                          )}
                         </div>
                         {shot.videoJob?.status === 'failed' && (
                           <div className="director-shot-error"><ExclamationCircleOutlined /> {shot.videoJob.error || '视频生成失败'}</div>
@@ -1580,6 +1732,35 @@ export default function DirectorStudio() {
                                 }}
                               >
                                 退回
+                              </Button>
+                            </>
+                          )}
+                          {shot.videoCandidateUrl && shot.videoCardId && !shot.videoStale && (
+                            <>
+                              <Button
+                                size="small"
+                                type={shot.videoQualityPassed ? 'primary' : 'default'}
+                                icon={<CheckOutlined />}
+                                loading={reviewingVideo}
+                                disabled={generatingVideo || jobActive}
+                                onClick={() => setVideoQualityTargetCardId(shot.videoCardId)}
+                              >
+                                {shot.videoQualityPassed
+                                  ? `视频已通过 ${shot.videoQualityScore ?? ''}`
+                                  : '视频精品验收'}
+                              </Button>
+                              <Button
+                                size="small"
+                                danger
+                                icon={<CloseOutlined />}
+                                disabled={reviewingVideo || generatingVideo || jobActive}
+                                onClick={() => {
+                                  setVideoRejectTargetCardId(shot.videoCardId);
+                                  setMediaRejectReason('');
+                                  setMediaRejectNote('');
+                                }}
+                              >
+                                退回视频
                               </Button>
                             </>
                           )}
@@ -1666,6 +1847,58 @@ export default function DirectorStudio() {
         onSubmit={async ratings => {
           if (qualityReviewTarget) {
             await submitReview(qualityReviewTarget, 'pass', '', '', ratings);
+          }
+        }}
+      />
+
+      <VisualQualityReviewModal
+        open={Boolean(videoQualityTarget)}
+        video={videoQualityTarget?.videoCandidateUrl || ''}
+        kind="video"
+        title={videoQualityTarget ? `视频精品验收 · G${videoQualityTarget.unit}` : '视频精品验收'}
+        busy={Boolean(
+          videoQualityTarget
+          && reviewBusy[videoQualityTarget.videoCardId]
+        )}
+        onCancel={() => {
+          if (
+            videoQualityTarget
+            && reviewBusy[videoQualityTarget.videoCardId]
+          ) return;
+          setVideoQualityTargetCardId('');
+        }}
+        onSubmit={async ratings => {
+          if (videoQualityTarget?.videoCandidateUrl) {
+            await submitVideoReview(
+              videoQualityTarget.videoCardId,
+              videoQualityTarget.videoCandidateUrl,
+              'video',
+              'pass',
+              ratings,
+            );
+          }
+        }}
+      />
+
+      <VisualQualityReviewModal
+        open={finalQualityOpen}
+        video={state?.finalCandidateUrl || ''}
+        kind="final"
+        title="整集成片精品验收"
+        busy={Boolean(state?.finalCardId && reviewBusy[state.finalCardId])}
+        onCancel={() => {
+          if (state?.finalCardId && reviewBusy[state.finalCardId]) return;
+          setFinalQualityOpen(false);
+        }}
+        onSubmit={async ratings => {
+          if (state?.finalCardId && state.finalCandidateUrl) {
+            await submitVideoReview(
+              state.finalCardId,
+              state.finalCandidateUrl,
+              'final',
+              'pass',
+              ratings,
+            );
           }
         }}
       />
@@ -1907,6 +2140,85 @@ export default function DirectorStudio() {
               placeholder="例如：人物应看向画面右侧"
               onChange={event => setRejectNote(event.target.value)}
               aria-label="镜头退回补充说明"
+            />
+          </label>
+        </div>
+      </Modal>
+
+      <Modal
+        open={Boolean(videoRejectTarget) || finalRejectOpen}
+        title={finalRejectOpen
+          ? '退回整集成片'
+          : videoRejectTarget ? `退回镜头视频 G${videoRejectTarget.unit}` : '退回视频'}
+        okText="确认退回"
+        cancelText="取消"
+        okButtonProps={{ danger: true, disabled: !mediaRejectReason }}
+        confirmLoading={Boolean(
+          finalRejectOpen
+            ? state?.finalCardId && reviewBusy[state.finalCardId]
+            : videoRejectTarget && reviewBusy[videoRejectTarget.videoCardId]
+        )}
+        onOk={() => {
+          if (!mediaRejectReason) return;
+          if (finalRejectOpen && state?.finalCardId && state.finalCandidateUrl) {
+            void submitVideoReview(
+              state.finalCardId,
+              state.finalCandidateUrl,
+              'final',
+              'reject',
+              undefined,
+              mediaRejectReason,
+              mediaRejectNote,
+            );
+          } else if (videoRejectTarget?.videoCandidateUrl) {
+            void submitVideoReview(
+              videoRejectTarget.videoCardId,
+              videoRejectTarget.videoCandidateUrl,
+              'video',
+              'reject',
+              undefined,
+              mediaRejectReason,
+              mediaRejectNote,
+            );
+          }
+        }}
+        onCancel={() => {
+          const cardId = finalRejectOpen
+            ? state?.finalCardId
+            : videoRejectTarget?.videoCardId;
+          if (cardId && reviewBusy[cardId]) return;
+          setVideoRejectTargetCardId('');
+          setFinalRejectOpen(false);
+          setMediaRejectReason('');
+          setMediaRejectNote('');
+        }}
+        width={isMobile ? 'calc(100vw - 24px)' : 520}
+      >
+        <div className="director-review-dialog">
+          <p>
+            退回原因会写入候选历史；未通过的视频不会进入合成，未通过的整集不会开放交付。
+          </p>
+          <label>
+            退回原因
+            <Select
+              value={mediaRejectReason || undefined}
+              placeholder="请选择主要问题"
+              options={finalRejectOpen
+                ? FINAL_REVIEW_REASON_OPTIONS
+                : VIDEO_REVIEW_REASON_OPTIONS}
+              onChange={setMediaRejectReason}
+              aria-label="选择视频退回原因"
+            />
+          </label>
+          <label>
+            补充说明（可选）
+            <TextArea
+              value={mediaRejectNote}
+              maxLength={500}
+              autoSize={{ minRows: 3, maxRows: 6 }}
+              placeholder="例如：第 3 秒人物右手变形，口型比台词慢半拍"
+              onChange={event => setMediaRejectNote(event.target.value)}
+              aria-label="视频退回补充说明"
             />
           </label>
         </div>

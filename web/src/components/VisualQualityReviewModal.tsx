@@ -1,4 +1,4 @@
-// 精品图片五维验收：评分规则由后端返回，所有图片入口共用，避免各页面口径漂移。
+// 精品媒体验收：图片、镜头视频、整集成片共用交互，规则统一由后端返回。
 import { useEffect, useMemo, useState } from 'react';
 import { Alert, Image, Modal, Progress, Rate, Skeleton, Space, Tag, Typography } from 'antd';
 import {
@@ -11,11 +11,15 @@ import { message } from '../ui';
 
 const { Text } = Typography;
 
-let cachedProfile: VisualQualityProfile | null = null;
+type QualityKind = 'image' | 'video' | 'final';
+
+const cachedProfiles: Partial<Record<QualityKind, VisualQualityProfile>> = {};
 
 interface Props {
   open: boolean;
-  image: string;
+  image?: string;
+  video?: string;
+  kind?: QualityKind;
   title?: string;
   busy?: boolean;
   onCancel: () => void;
@@ -24,31 +28,36 @@ interface Props {
 
 export default function VisualQualityReviewModal({
   open,
-  image,
+  image = '',
+  video = '',
+  kind = 'image',
   title,
   busy = false,
   onCancel,
   onSubmit,
 }: Props) {
   const { isMobile } = useResponsive();
-  const [profile, setProfile] = useState<VisualQualityProfile | null>(cachedProfile);
+  const [profile, setProfile] = useState<VisualQualityProfile | null>(
+    cachedProfiles[kind] || null,
+  );
   const [loading, setLoading] = useState(false);
   const [ratings, setRatings] = useState<VisualQualityRatings>({});
 
   useEffect(() => {
     if (!open) return;
     setRatings({});
-    if (cachedProfile) {
-      setProfile(cachedProfile);
+    if (cachedProfiles[kind]) {
+      setProfile(cachedProfiles[kind] || null);
       return;
     }
     let active = true;
+    setProfile(null);
     setLoading(true);
     api.getProductionQualityProfile()
       .then(result => {
         if (!active) return;
-        cachedProfile = result.image;
-        setProfile(result.image);
+        cachedProfiles[kind] = result[kind];
+        setProfile(result[kind]);
       })
       .catch((error: any) => {
         if (active) message.error(error.message || '精品验收规则加载失败');
@@ -59,7 +68,7 @@ export default function VisualQualityReviewModal({
     return () => {
       active = false;
     };
-  }, [open]);
+  }, [kind, open]);
 
   const result = useMemo(() => {
     if (!profile) return { complete: false, score: 0, failed: [] as string[] };
@@ -119,8 +128,14 @@ export default function VisualQualityReviewModal({
         <Alert
           type="info"
           showIcon
-          message="新图片只是候选，不会自动进入视频阶段"
-          description="五项必须全部评分；角色一致性和分镜符合度是关键项。未达到门槛时请关闭本窗口并选择退回原因。"
+          message={
+            kind === 'image'
+              ? '新图片只是候选，不会自动进入视频阶段'
+              : kind === 'video'
+                ? '新视频只是候选，不会自动进入整集合成'
+                : '合成结果只是候选，通过整集验收后才算可交付'
+          }
+          description="所有维度必须评分，关键项必须单独达标；综合分不足时请关闭本窗口并选择退回原因。"
         />
         {image && (
           <div style={{ textAlign: 'center' }}>
@@ -128,6 +143,17 @@ export default function VisualQualityReviewModal({
               src={image}
               alt="待验收图片"
               style={{ maxHeight: 280, maxWidth: '100%', objectFit: 'contain', borderRadius: 8 }}
+            />
+          </div>
+        )}
+        {video && (
+          <div style={{ textAlign: 'center' }}>
+            <video
+              src={video}
+              controls
+              playsInline
+              aria-label={kind === 'final' ? '待验收整集成片' : '待验收镜头视频'}
+              style={{ maxHeight: 320, maxWidth: '100%', borderRadius: 8, background: '#000' }}
             />
           </div>
         )}
@@ -206,7 +232,7 @@ export default function VisualQualityReviewModal({
                     ? `未达标维度：${result.failed.join('、')}`
                     : `综合分需达到 ${profile.minimumScore}`
                 }
-                description="这张图不能标记通过，请返回后选择最主要的退回原因。"
+                description="当前候选不能标记通过，请返回后选择最主要的退回原因。"
               />
             )}
           </>
