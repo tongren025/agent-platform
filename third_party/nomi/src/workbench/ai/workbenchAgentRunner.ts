@@ -56,6 +56,10 @@ export type RunWorkbenchAgentInput = {
   skillName: string
   projectId?: string
   mode?: 'auto'
+  /** 制作向导可显式派工，优先级高于用户上一次手选的助手。 */
+  agentPreference?: { vendorKey: string; modelKey: string }
+  /** 本轮必须产生的工具动作；Web 运行时据此拒绝“只说不做”。 */
+  requiredTool?: string
   /** 待发附件（图片走原生多模态；文件 S4 抽文本）。 */
   attachments?: AgentAttachmentPayload[]
   onContent?: (delta: string, text: string) => void
@@ -71,7 +75,7 @@ export type RunWorkbenchAgentInput = {
 export async function runWorkbenchAgent(input: RunWorkbenchAgentInput): Promise<AgentsChatResponseDto> {
   // 助手模型偏好（用户在助手面板选的）→ 加进 payload，后端 chooseTextModel 优先用它，
   // 否则回退「第一个可用 text 模型」。两个面板都走这里 → 自动生效，无需各自传。
-  const pref = getAssistantModelPref()
+  const pref = input.agentPreference ?? getAssistantModelPref()
   const request = {
     prompt: input.prompt,
     ...(input.systemPrompt ? { systemPrompt: input.systemPrompt } : {}),
@@ -84,6 +88,7 @@ export async function runWorkbenchAgent(input: RunWorkbenchAgentInput): Promise<
     skillName: input.skillName,
     mode: input.mode || ('auto' as const),
     ...(pref ? { agentModelKey: pref.modelKey, agentVendorKey: pref.vendorKey } : {}),
+    ...(input.requiredTool ? { requiredTool: input.requiredTool } : {}),
     ...(input.attachments?.length ? { attachments: input.attachments } : {}),
   }
 

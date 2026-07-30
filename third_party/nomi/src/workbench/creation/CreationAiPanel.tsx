@@ -12,6 +12,7 @@ import { NoTextModelRecoveryCard } from '../ai/NoTextModelRecoveryCard'
 import { AssistantErrorCard } from '../ai/AssistantErrorCard'
 import { useHasTextModel } from '../library/useHasTextModel'
 import AssistantModelPicker from '../ai/AssistantModelPicker'
+import { setAssistantModelPref } from '../ai/assistantModelPref'
 import StoryboardPlanCard from './storyboard/StoryboardPlanCard'
 import StoryboardActionCard from './storyboard/StoryboardActionCard'
 import { handleAiComposerKeyDown } from '../ai/aiComposerKeyboard'
@@ -76,6 +77,13 @@ type SendOptions = {
   displayMessage?: string
   autoApproveWrites?: boolean
   guided?: boolean
+  employeeKey?: string
+  requiredTool?: WriteToolName
+}
+
+function isCompleteGuidedScript(text: string): boolean {
+  const normalized = text.trim()
+  return normalized.length >= 120 && /(^|\n)\s*#\s*故事设定/m.test(normalized) && /(^|\n)\s*#\s*剧本/m.test(normalized)
 }
 
 export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => void } = {}): JSX.Element {
@@ -177,7 +185,7 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
     return <IconFilePlus size={13} />
   }, [])
 
-  const launchStoryboardPlanning = React.useCallback((displayPrompt: string = t('creationAi.storyboardCommand'), revisionRequest?: string, shotMode: 'image' | 'video' | 'image-video' = 'image') => {
+  const launchStoryboardPlanning = React.useCallback((displayPrompt: string = t('creationAi.storyboardCommand'), revisionRequest?: string, shotMode: 'image' | 'video' | 'image-video' = 'image', employeeKey?: string) => {
     // P0-9 Slice 3：已有未落画布的方案 + 用户给了修改要求 → 进「改方案」模式（基于现方案改，不从头拆）。
     const store = useWorkbenchStore.getState()
     const currentPlan = store.storyboardPlan
@@ -216,6 +224,10 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
             )
           },
           onCancelReady: (cancel) => turn.getState().attachCancel(handle.id, cancel),
+          ...(employeeKey ? {
+            agentPreference: { vendorKey: 'platform-employee', modelKey: employeeKey },
+            requiredTool: 'propose_storyboard_plan' as const,
+          } : {}),
         })
         if (!handle.isCurrent()) return // 轮次已被切项目/新对话作废:别把旧项目内容写进新项目
         setMessages((prev) =>
@@ -325,6 +337,7 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
     clearAttachments()
     setError('')
     const handle = turn.getState().begin()
+    let guidedWriteApplied = false
     try {
       const response = await runWorkbenchAgent({
         prompt,
@@ -339,6 +352,10 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
         skillName: !sendOptions.modeId && skillSelRef.current.activeSkill
           ? skillSelRef.current.activeSkill.name
           : t(`creationAi.mode.${requestMode.id}.title` as 'creationAi.mode.general.title'),
+        ...(sendOptions.employeeKey ? {
+          agentPreference: { vendorKey: 'platform-employee', modelKey: sendOptions.employeeKey },
+        } : {}),
+        ...(sendOptions.requiredTool ? { requiredTool: sendOptions.requiredTool } : {}),
         onContent: (_delta, streamedText) => {
           if (!handle.isCurrent()) return
           pushStreamFrame(() =>
@@ -406,18 +423,24 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
               return
             }
             const args = (event.args && typeof event.args === 'object') ? event.args as Record<string, unknown> : {}
-            const content = typeof args.content === 'string' ? args.content : ''
+            // Web 结构化适配器旧契约曾输出 args.text；兼容读取但统一向 content 收口。
+            const content = typeof args.content === 'string'
+              ? args.content
+              : typeof args.text === 'string'
+                ? args.text
+                : ''
             // 制作向导的主按钮已经是对“本步骤写入”的明确授权。只对本次引导轮次自动
             // 应用文稿写入，普通聊天仍保留逐卡确认。
             if (sendOptions.autoApproveWrites) {
               const tools = documentToolsRef.current
-              if (!tools) {
+              if (!tools || !content.trim()) {
                 void event.confirm({ ok: false, message: 'editor_not_ready' })
                 return
               }
               if (event.toolName === 'insert_at_cursor') tools.insertAtCursor(content)
               else if (event.toolName === 'replace_selection') tools.replaceSelection(content)
               else tools.appendToEnd(content)
+              guidedWriteApplied = true
               void event.confirm({ ok: true, result: { applied: true, guided: true } })
               return
             }
@@ -436,6 +459,19 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
       // 用户主动「停止」→ 流层合成的取消结果(raw.cancelled)落「已取消」第三态,不混作完成。
       const cancelled = Boolean((response.raw as { cancelled?: unknown } | undefined)?.cancelled)
       const streamed = readWorkbenchAiReplyText(response)
+      // 桌面运行时的部分员工会直接返回完整稿而不发工具事件。仅在内容满足向导的完整
+      // 剧本结构时才兜底写入；“我先读取/我将生成”之类承诺绝不能伪装成完成。
+      if (
+        !cancelled &&
+        sendOptions.requiredTool === 'append_to_end' &&
+        !guidedWriteApplied
+      ) {
+        if (!isCompleteGuidedScript(streamed) || !documentToolsRef.current) {
+          throw new Error('编剧只回复了说明，没有交付可写入的完整剧本；系统已拦截这次假完成，请重新点击“生成剧本”。')
+        }
+        documentToolsRef.current.appendToEnd(streamed)
+        guidedWriteApplied = true
+      }
       if (cancelled) {
         setMessages((prev) => prev.map((message) => (
           message.id === pendingId
@@ -473,15 +509,19 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
     const runRequest = (request: GuidedCreationRequest | null | undefined) => {
       if (!request) return
       if (request.action === 'storyboard') {
-        launchStoryboardPlanning(request.displayMessage, undefined, request.shotMode)
+        setAssistantModelPref({ vendorKey: 'platform-employee', modelKey: request.employeeKey })
+        launchStoryboardPlanning(request.displayMessage, undefined, request.shotMode, request.employeeKey)
         return
       }
+      setAssistantModelPref({ vendorKey: 'platform-employee', modelKey: request.employeeKey })
       setModeId(request.modeId)
       void send(request.prompt, {
         modeId: request.modeId,
         displayMessage: request.displayMessage,
         autoApproveWrites: request.autoApproveWrites,
         guided: true,
+        employeeKey: request.employeeKey,
+        requiredTool: request.requiredTool,
       })
     }
     const handler = (event: Event) => {

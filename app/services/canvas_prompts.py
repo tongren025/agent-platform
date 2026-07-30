@@ -153,9 +153,9 @@ _CREATION_SYSTEM = """你在 Agent Studio 创作区协助用户从创意推进�
 可用结构化动作：
 - read_full_text: args={}
 - read_selection: args={}
-- insert_at_cursor: args={"text":"..."}
-- replace_selection: args={"text":"..."}
-- replace_full_text: args={"text":"..."}
+- insert_at_cursor: args={"content":"..."}
+- replace_selection: args={"content":"..."}
+- append_to_end: args={"content":"..."}
 若只是问答可以不调用工具。"""
 
 _GENERATION_SYSTEM = """你在 Agent Studio 生成画布工作。用户要求创建人物、场景、图片或视频节点时，使用 create_canvas_nodes，一次提交 nodes 与 edges；每个节点必须有 clientId、kind、title 和非空的专业 prompt。用户只问问题时可以不调用工具。
@@ -169,7 +169,7 @@ _ALLOWED_TOOLS = {
         "read_selection",
         "insert_at_cursor",
         "replace_selection",
-        "replace_full_text",
+        "append_to_end",
         "author_skill",
     },
     "generation": {
@@ -201,6 +201,7 @@ def build_agent_system_prompt(
     *,
     frontend_system_prompt: str = "",
     model_catalog: str = "",
+    required_tool: str = "",
 ) -> str:
     """构造 Web 画布 Agent 的完整系统提示词和统一 JSON 工具契约。"""
     family = skill_family(skill_key)
@@ -226,6 +227,11 @@ create_canvas_nodes 的 args 必须为：
         parts.append(frontend_system_prompt.strip())
     if model_catalog.strip():
         parts.append(f"当前平台可用模型（只能从中选择，拿不准可省略）：\n{model_catalog.strip()}")
+    if required_tool.strip():
+        parts.append(
+            f"本轮必须执行结构化动作 {required_tool.strip()}。"
+            "禁止只说“我先处理/我将生成/稍后写入”；必须在本轮 toolCalls 中交付完整参数。"
+        )
     parts.append(contract)
     return "\n\n".join(parts)
 
@@ -406,6 +412,16 @@ def parse_agent_response(skill_key: str, text: str) -> dict[str, Any]:
             args = _normalize_fixation(args)
         elif not isinstance(args, dict):
             continue
+        elif family == "creation" and name in {
+            "insert_at_cursor",
+            "replace_selection",
+            "append_to_end",
+        }:
+            # 兼容早期 Web 契约的 args.text，但统一输出前端真实消费的 content。
+            content = args.get("content", args.get("text", ""))
+            if not isinstance(content, str) or not content.strip():
+                continue
+            args = {**args, "content": content}
         calls.append({"toolName": name, "args": args})
 
     if family in {"storyboard", "fixation"} and not calls:
@@ -419,6 +435,49 @@ def parse_agent_response(skill_key: str, text: str) -> dict[str, Any]:
         ).strip(),
         "toolCalls": calls,
     }
+
+
+def enforce_required_tool_response(
+    skill_key: str,
+    parsed: dict[str, Any],
+    raw_text: str,
+    required_tool: str,
+) -> dict[str, Any]:
+    """保证新手向导点一次就产生真实动作，拒绝员工只承诺不交付。
+
+    平台员工有时会直接返回完整剧本正文而不是 JSON 工具调用；对剧本步骤可在结构
+    完整时安全包装成 append_to_end。其余画布动作包含节点/边等结构，不能从自然
+    语言猜测，缺失时直接报错要求重试。
+    """
+
+    required = required_tool.strip()
+    if not required:
+        return parsed
+    family = skill_family(skill_key)
+    if required not in _ALLOWED_TOOLS[family]:
+        raise ValueError(f"当前技能不允许必需动作 {required}")
+    if any(call.get("toolName") == required for call in parsed.get("toolCalls", [])):
+        return parsed
+
+    if family == "creation" and required == "append_to_end":
+        candidate = str(parsed.get("assistantMessage") or raw_text or "").strip()
+        complete_script = (
+            len(candidate) >= 120
+            and re.search(r"(^|\n)\s*#\s*故事设定", candidate)
+            and re.search(r"(^|\n)\s*#\s*剧本", candidate)
+        )
+        if complete_script:
+            return {
+                "assistantMessage": "完整剧本已经生成并写入左侧文稿。",
+                "toolCalls": [{
+                    "toolName": "append_to_end",
+                    "args": {"content": candidate},
+                }],
+            }
+
+    raise ValueError(
+        f"执行员工没有完成必需动作 {required}，系统已拦截“只说不做”的结果"
+    )
 
 
 def _load_learning_records() -> list[dict[str, Any]]:

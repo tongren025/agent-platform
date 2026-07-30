@@ -164,6 +164,42 @@ def test_natural_language_mcp_infers_config_without_server_code(tmp_path):
     assert definition["name"] == "Example"
 
 
+def test_ip_mcp_gets_readable_default_name(tmp_path):
+    service = _service(root_dir=tmp_path / "manager")
+
+    reply = service.chat(
+        "帮我添加 MCP：http://10.183.29.49/mcp",
+        "/advanced/tools",
+    )
+    proposal = service._consume_proposal(reply["proposal"]["proposalId"], "local")
+
+    assert proposal.payload["definition"]["serverCode"] == "10-183-29-49"
+    assert proposal.payload["definition"]["name"] == "MCP 10.183.29.49"
+
+
+def test_replacing_mcp_clears_stale_health(tmp_path):
+    existing = McpServerDefinition(
+        serverCode="demo",
+        name="旧服务",
+        transportType="stdio",
+        command="old-command",
+    )
+    service = _service(mcps=[existing], root_dir=tmp_path / "manager")
+    service.record_mcp_health("demo", status="error", error="old failure")
+    assert service.context("/advanced/tools")["mcpStatus"][0]["status"] == "error"
+
+    reply = service.chat(
+        '添加 MCP {"serverCode":"demo","name":"新服务",'
+        '"transportType":"stdio","command":"new-command"}',
+        "/advanced/tools",
+    )
+    service.confirm(reply["proposal"]["proposalId"])
+
+    status = service.context("/advanced/tools")["mcpStatus"][0]
+    assert status["status"] == "configured"
+    assert status["lastCheck"] is None
+
+
 def test_initial_mcp_message_respects_explicit_display_name(tmp_path):
     service = _service(root_dir=tmp_path / "manager")
 

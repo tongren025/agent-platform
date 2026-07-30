@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import hashlib
+import ipaddress
 import io
 import json
 import os
@@ -269,8 +270,12 @@ class SystemManagerService:
                 last_check = json.loads(health_path.read_text(encoding="utf-8"))
             except Exception:
                 last_check = None
-        if last_check and last_check.get("status") == "error" and status == "configured":
-            status = "error"
+        if (
+            last_check
+            and last_check.get("status") in {"error", "timeout"}
+            and status == "configured"
+        ):
+            status = str(last_check["status"])
         return {
             "serverCode": item.server_code,
             "name": item.name,
@@ -303,6 +308,14 @@ class SystemManagerService:
             "tools": (tool_names or [])[:100],
             "error": error[:500],
         }, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    def _clear_mcp_runtime_state(self, server_code: str) -> None:
+        """配置变更或删除后清除旧健康结果与工具缓存，避免继续展示历史故障。"""
+        health_path = self._root / "mcp-health" / f"{server_code}.json"
+        health_path.unlink(missing_ok=True)
+        from app.runtime.mcp import clear_mcp_tools_cache
+
+        clear_mcp_tools_cache(server_code)
 
     def context(self, page_path: str) -> dict[str, Any]:
         """返回当前页面指引、资源盘点、MCP 健康摘要与最近失败。"""
@@ -730,6 +743,11 @@ class SystemManagerService:
     def _friendly_mcp_name(raw: str) -> str:
         """把域名或 npm 包名转换为可读名称，去掉 mcp/server/api 等技术噪声。"""
         value = urllib.parse.unquote(raw).strip().strip("/")
+        try:
+            ipaddress.ip_address(value)
+            return f"MCP {value}"[:80]
+        except ValueError:
+            pass
         if "/" in value:
             value = value.rsplit("/", 1)[-1]
         if value.startswith("@") and "-" not in value:
@@ -1455,6 +1473,7 @@ class SystemManagerService:
             item = McpServerDefinition.model_validate(proposal.payload["definition"])
             previous = self._mcps.get(item.server_code)
             saved = self._mcps.save(item)
+            self._clear_mcp_runtime_state(saved.server_code)
             message = f"MCP「{saved.name}」已保存。下一步请测试连接，再绑定给数字员工。"
             change_id = self._save_change(
                 owner,
@@ -1580,6 +1599,7 @@ class SystemManagerService:
             from app.services.mcp_oauth import mcp_oauth_coordinator
 
             mcp_oauth_coordinator.clear_tokens(server_code)
+            self._clear_mcp_runtime_state(server_code)
             message = f"MCP「{item.name}」已删除。"
             change_id = self._save_change(owner, proposal.action, "mcp", server_code, before)
             self._write_audit(proposal, "success", message, change_id=change_id)

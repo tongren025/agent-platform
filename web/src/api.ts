@@ -315,7 +315,7 @@ export interface SystemManagerContext {
     serverCode: string;
     name: string;
     transportType: string;
-    status: 'configured' | 'incomplete' | 'auth_required' | 'error';
+    status: 'configured' | 'incomplete' | 'auth_required' | 'error' | 'timeout';
     missingFields: string[];
     missingEnvironmentVariables: string[];
     authType: 'none' | 'oauth' | string;
@@ -490,7 +490,7 @@ export const api = {
   testSystemManagerMcp: (serverCode: string) =>
     request<{ serverCode: string; status: string; toolCount: number; tools: { name: string; description: string }[] }>(
       `/system-manager/mcp/${encodeURIComponent(serverCode)}/test`,
-      { method: 'POST', timeoutMs: 30000 },
+      { method: 'POST', timeoutMs: 20000 },
     ),
   startSystemManagerMcpOAuth: (serverCode: string, redirectUri: string) =>
     request<{ authorizationUrl: string; state: string }>(

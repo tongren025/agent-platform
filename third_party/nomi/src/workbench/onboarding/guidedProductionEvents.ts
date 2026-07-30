@@ -10,17 +10,23 @@ export type GuidedCreationRequest =
       modeId: CreationAiModeId
       displayMessage: string
       autoApproveWrites: true
+      employeeKey: string
+      requiredTool: 'append_to_end'
     }
   | {
       action: 'storyboard'
       displayMessage: string
       shotMode: 'image' | 'video' | 'image-video'
+      employeeKey: string
+      requiredTool: 'propose_storyboard_plan'
     }
 
 export type GuidedCanvasRequest = {
   prompt: string
   displayMessage: string
   autoApproveSafeWrites: true
+  employeeKey: string
+  requiredTool: 'create_canvas_nodes' | 'run_generation_batch'
 }
 
 let pendingCreationRequest: GuidedCreationRequest | null = null
@@ -47,4 +53,3 @@ export function consumePendingGuidedCanvas(): GuidedCanvasRequest | null {
   pendingCanvasRequest = null
   return request
 }
-

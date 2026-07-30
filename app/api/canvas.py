@@ -506,6 +506,7 @@ class WorkbenchAgentReq(BaseModel):
     skill_name: str = Field("", alias="skillName")
     prompt: str
     system_prompt: str = Field("", alias="systemPrompt")
+    required_tool: str = Field("", alias="requiredTool")
     session_id: str | None = Field(None, alias="sessionId")
     project_id: str = Field("", alias="projectId")
 
@@ -551,6 +552,7 @@ async def _execute_workbench_agent(req: WorkbenchAgentReq, *, on_text_delta=None
         skill_key,
         frontend_system_prompt=req.system_prompt,
         model_catalog=_format_workbench_model_catalog(),
+        required_tool=req.required_tool,
     )
     try:
         if req.vendor == "platform-employee":
@@ -661,6 +663,12 @@ async def _execute_workbench_agent(req: WorkbenchAgentReq, *, on_text_delta=None
             if family in {"storyboard", "fixation"}:
                 raise
             parsed = {"assistantMessage": raw_text.strip(), "toolCalls": []}
+        parsed = canvas_prompts.enforce_required_tool_response(
+            skill_key,
+            parsed,
+            raw_text,
+            req.required_tool,
+        )
     except HTTPException:
         raise
     except ValueError as exc:

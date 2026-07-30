@@ -23,7 +23,10 @@ export async function runStoryboardPlanner(input: {
   revisionRequest?: string
   onContent?: (text: string) => void
   onCancelReady?: (cancel: () => void) => void
+  agentPreference?: { vendorKey: string; modelKey: string }
+  requiredTool?: 'propose_storyboard_plan'
 }): Promise<{ text: string }> {
+  let requiredToolEmitted = !input.requiredTool
   const response = await sendGenerationCanvasAgentMessage({
     message: buildStoryboardPlanningMessage({
       storyText: input.storyText,
@@ -35,9 +38,12 @@ export async function runStoryboardPlanner(input: {
     selectedNodes: [],
     mode: 'agent',
     skill: STORYBOARD_PLANNER_SKILL,
+    ...(input.agentPreference ? { agentPreference: input.agentPreference } : {}),
+    ...(input.requiredTool ? { requiredTool: input.requiredTool } : {}),
     onContent: (_delta, text) => input.onContent?.(text),
     ...(input.onCancelReady ? { onCancelReady: input.onCancelReady } : {}),
     onToolCall: (event) => {
+      if (event.toolName === input.requiredTool) requiredToolEmitted = true
       const decision = evaluateGate(
         { kind: 'tool-call', toolName: event.toolName, args: event.args },
         buildLockGateContext(),
@@ -62,5 +68,8 @@ export async function runStoryboardPlanner(input: {
       })
     },
   })
+  if (!requiredToolEmitted) {
+    throw new Error('分镜师没有交付可审阅的分镜方案，系统已拦截“只说不做”，请重试当前步骤。')
+  }
   return { text: response.response.text?.trim() ?? '' }
 }

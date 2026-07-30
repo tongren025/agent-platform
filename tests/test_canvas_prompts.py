@@ -82,6 +82,61 @@ def test_fixation_agent_rejects_empty_prompt():
         canvas_prompts.parse_agent_response("workbench.fixation.planner", raw)
 
 
+def test_creation_write_contract_uses_content_and_keeps_legacy_text_compatible():
+    raw = json.dumps({
+        "assistantMessage": "剧本已经写好。",
+        "toolCalls": [{
+            "toolName": "append_to_end",
+            "args": {"text": "# 故事设定\n旧城\n\n# 剧本\n△ 剑客转身。"},
+        }],
+    }, ensure_ascii=False)
+
+    parsed = canvas_prompts.parse_agent_response("workbench.creation.script", raw)
+
+    assert parsed["toolCalls"] == [{
+        "toolName": "append_to_end",
+        "args": {
+            "text": "# 故事设定\n旧城\n\n# 剧本\n△ 剑客转身。",
+            "content": "# 故事设定\n旧城\n\n# 剧本\n△ 剑客转身。",
+        },
+    }]
+
+
+def test_required_script_write_wraps_complete_plain_text():
+    script = (
+        "# 故事设定\n"
+        "架空旧城中，失忆剑客陆沉被神秘黑衣人追杀，二人共享同一枚断裂玉佩。"
+        "陆沉想找回记忆，未来的陆沉则想阻止一场由自己造成的灾难。\n\n"
+        "# 剧本\n"
+        "△ 镜头1｜4秒｜雨夜长街。陆沉右手按住剑柄，左脚后撤，雨水沿剑鞘滴落。\n"
+        "陆沉：你到底是谁？\n"
+        "镜头运动：缓慢推近。音效：雨声、刀剑轻鸣。\n"
+        "△ 镜头2｜5秒｜黑衣人摘下面具，露出苍老却相同的脸，手中玉佩与陆沉拼合。\n"
+        "黑衣人：我是来阻止你的。\n"
+        "镜头运动：固定镜头。结尾钩子：远处城楼在白光中开始倒流。"
+    )
+
+    parsed = canvas_prompts.enforce_required_tool_response(
+        "workbench.creation.script",
+        {"assistantMessage": script, "toolCalls": []},
+        script,
+        "append_to_end",
+    )
+
+    assert parsed["toolCalls"][0]["toolName"] == "append_to_end"
+    assert parsed["toolCalls"][0]["args"]["content"] == script
+
+
+def test_required_script_write_rejects_promise_only_reply():
+    with pytest.raises(ValueError, match="只说不做"):
+        canvas_prompts.enforce_required_tool_response(
+            "workbench.creation.script",
+            {"assistantMessage": "我先读取当前文稿，再扩写成完整短剧。", "toolCalls": []},
+            "我先读取当前文稿，再扩写成完整短剧。",
+            "append_to_end",
+        )
+
+
 def test_accepted_canvas_prompt_enters_existing_memory_chain(tmp_path, monkeypatch):
     monkeypatch.setattr(canvas_prompts, "LEARNING_PATH", tmp_path / "prompt-learning.json")
     from app import dependencies

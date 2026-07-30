@@ -6,13 +6,16 @@ function storyContext(documentText: string): string {
   return text.length <= 16000 ? text : `${text.slice(0, 16000)}\n（文稿过长，已截取前 16000 字）`
 }
 
-export function buildGuidedScriptPrompt(): string {
+export function buildGuidedScriptPrompt(documentText: string): string {
   return [
     '用户已经点击“生成剧本”，这就是对本次写入的明确授权。',
-    '先调用 read_full_text 读取当前文稿里的一句话创意，再扩写成能直接生产的短剧剧本。',
-    '必须调用 append_to_end 把最终剧本写回文稿，不要只在聊天里解释。',
+    '当前文稿已经完整附在下面，不要再说“我先读取”，直接根据它扩写成能生产的短剧剧本。',
+    '本轮必须调用 append_to_end，把最终剧本放在 args.content 中写回文稿；不要只在聊天里解释、承诺或复述步骤。',
     '写入内容必须先写“# 故事设定”，包含世界观、时代与地点、人物关系、剧情脉络和核心冲突；再写“# 剧本”，包含场次、逐镜可见动作、对白/旁白、情绪、声音、镜头时长和结尾钩子。',
     '每个连续生成镜头控制在 2-6 秒；镜头运动与人物动作分开写；缺少的非关键设定直接做合理假设，不反问新手。',
+    '',
+    '当前文稿：',
+    storyContext(documentText),
   ].join('\n')
 }
 

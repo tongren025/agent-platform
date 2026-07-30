@@ -42,6 +42,10 @@ type SendGenerationCanvasAgentMessageInput = {
   onToolCall?: (event: ToolCallEvent) => void
   /** Exposes a cancel handle (user "Stop") once the backend session exists. */
   onCancelReady?: (cancel: () => void) => void
+  /** 制作向导按阶段指定的数字员工；普通聊天不传，继续尊重用户手选项。 */
+  agentPreference?: { vendorKey: string; modelKey: string }
+  /** 引导步骤必须完成的动作，用于拦截“只说不做”。 */
+  requiredTool?: string
   /** 待发附件（图片/PDF 走原生多模态；文档抽文本）。透传给共享 runWorkbenchAgent。 */
   attachments?: AgentAttachmentPayload[]
 }
@@ -165,6 +169,8 @@ export async function sendGenerationCanvasAgentMessage(
     sessionKey: workbenchSessionKey('generation'),
     skillKey: input.skill?.key || 'workbench.generation.canvas-planner',
     skillName: input.skill?.name || '生成区节点规划',
+    ...(input.agentPreference ? { agentPreference: input.agentPreference } : {}),
+    ...(input.requiredTool ? { requiredTool: input.requiredTool } : {}),
     ...(input.attachments?.length ? { attachments: input.attachments } : {}),
     onContent: input.onContent,
     onCancelReady: input.onCancelReady,

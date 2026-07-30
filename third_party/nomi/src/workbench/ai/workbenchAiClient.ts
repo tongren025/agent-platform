@@ -16,9 +16,12 @@ export type WorkbenchAiRequest = {
   skillKey: string
   skillName: string
   mode?: 'chat' | 'auto'
+  systemPrompt?: string
   /** 助手模型偏好（用户选的）：透传给后端 chooseTextModel 优先用。 */
   agentModelKey?: string
   agentVendorKey?: string
+  /** Web 端结构化适配器必须看到该动作，否则本轮按失败处理。 */
+  requiredTool?: string
   /** 待发附件（图片走原生多模态；文件 S4 抽文本）。 */
   attachments?: AgentAttachmentPayload[]
 }
@@ -33,6 +36,7 @@ function buildWorkbenchAiPayload(input: WorkbenchAiRequest) {
   return {
     vendor: 'agents',
     prompt: input.prompt,
+    ...(input.systemPrompt ? { systemPrompt: input.systemPrompt } : {}),
     displayPrompt: input.displayPrompt,
     sessionKey: input.sessionKey,
     ...(input.projectId ? { canvasProjectId: input.projectId } : {}),
@@ -47,6 +51,7 @@ function buildWorkbenchAiPayload(input: WorkbenchAiRequest) {
     mode: input.mode || 'auto',
     temperature: 0.7,
     ...(input.agentModelKey ? { agentModelKey: input.agentModelKey, agentVendorKey: input.agentVendorKey } : {}),
+    ...(input.requiredTool ? { requiredTool: input.requiredTool } : {}),
     ...(input.attachments?.length ? { attachments: input.attachments } : {}),
   }
 }

@@ -35,6 +35,10 @@ class McpToolExecutionError(RuntimeError):
     """MCP 服务已响应，但工具执行结果标记为失败。"""
 
 
+class McpConnectionTimeoutError(TimeoutError):
+    """MCP 服务在限定时间内未完成连接或工具发现。"""
+
+
 @dataclass(frozen=True)
 class McpToolSpec:
     """缓存的 MCP 工具声明；会话本身不跨调用缓存。"""
@@ -261,10 +265,18 @@ async def probe_mcp_server(
     server: RuntimeMcpServer,
     *,
     http_client: httpx.AsyncClient | None = None,
+    timeout_seconds: float = _MCP_CONNECT_TIMEOUT_SECONDS,
 ) -> list[McpToolSpec]:
-    """建立一次真实 MCP 会话并返回工具清单，供系统管家验证配置和登录状态。"""
-    async with _open_session(server, http_client=http_client) as session:
-        return await _discover_tool_specs(session, server)
+    """在硬超时内建立真实 MCP 会话，失败时确保退出传输并回收子进程。"""
+    try:
+        async with asyncio.timeout(timeout_seconds):
+            async with _open_session(server, http_client=http_client) as session:
+                return await _discover_tool_specs(session, server)
+    except TimeoutError as exc:
+        timeout_label = f"{timeout_seconds:g}"
+        raise McpConnectionTimeoutError(
+            f"MCP 服务 {server.server_code} 连接超过 {timeout_label} 秒，已自动终止"
+        ) from exc
 
 
 def _content_value(item: Any) -> Any:

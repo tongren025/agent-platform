@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from app.api.common import ok
 from app.dependencies import mcp_server_registry, system_manager
 from app.models.runtime import RuntimeMcpServer
-from app.runtime.mcp import probe_mcp_server
+from app.runtime.mcp import McpConnectionTimeoutError, probe_mcp_server
 from app.services.mcp_oauth import mcp_oauth_coordinator
 
 
@@ -143,6 +143,16 @@ async def test_mcp(server_code: str):
     )
     try:
         specs = await probe_mcp_server(runtime)
+    except McpConnectionTimeoutError as exc:
+        system_manager.record_mcp_health(
+            server_code,
+            status="timeout",
+            error=str(exc),
+        )
+        raise HTTPException(
+            status_code=504,
+            detail=str(exc),
+        ) from exc
     except Exception as exc:
         system_manager.record_mcp_health(
             server_code,

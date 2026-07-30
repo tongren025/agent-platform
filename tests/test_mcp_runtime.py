@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import asyncio
 import sys
 from contextlib import asynccontextmanager
 from types import SimpleNamespace
@@ -127,6 +128,30 @@ async def test_failed_server_does_not_hide_healthy_server(monkeypatch):
         assert [handler.name for handler in handlers] == [
             "mcp__healthy__addValues"
         ]
+
+
+async def test_probe_timeout_closes_hanging_session(monkeypatch):
+    """系统管家验证不能无限等待，并且取消后必须退出底层传输。"""
+    closed = False
+
+    @asynccontextmanager
+    async def hanging_open_session(_server, *, http_client=None):
+        nonlocal closed
+        try:
+            await asyncio.sleep(60)
+            yield _FakeSession()
+        finally:
+            closed = True
+
+    monkeypatch.setattr(mcp_runtime, "_open_session", hanging_open_session)
+
+    with pytest.raises(
+        mcp_runtime.McpConnectionTimeoutError,
+        match="连接超过 0.01 秒，已自动终止",
+    ):
+        await mcp_runtime.probe_mcp_server(_server(), timeout_seconds=0.01)
+
+    assert closed is True
 
 
 async def test_mcp_error_result_becomes_tool_failure(monkeypatch):

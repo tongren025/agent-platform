@@ -87,6 +87,14 @@ export default function SystemManagerDrawer() {
     }
   };
 
+  const refreshContext = async () => {
+    try {
+      setContext(await api.getSystemManagerContext(pagePath));
+    } catch (error: any) {
+      message.error(error?.message || '系统状态刷新失败');
+    }
+  };
+
   useEffect(() => {
     if (open) void loadContext();
     // 路由变化后重新读取页面上下文，但保留本次对话。
@@ -166,6 +174,7 @@ export default function SystemManagerDrawer() {
         content: `MCP「${serverCode}」验证失败：${error?.message || '无法连接'}`,
       }]);
     } finally {
+      await refreshContext();
       setTestingMcp('');
     }
   };
@@ -268,6 +277,7 @@ export default function SystemManagerDrawer() {
               role: 'assistant',
               content: `新对话已开始。你现在在「${context.page.title}」，可以直接告诉我想完成什么。`,
             }] : []);
+            void refreshContext();
           }}>
             新对话
           </Button>
@@ -298,8 +308,12 @@ export default function SystemManagerDrawer() {
                     <Space size={4}>
                       {item.status === 'configured'
                         ? <Tag color="green">已配置</Tag>
-                        : <Tag color={item.status === 'error' ? 'red' : 'orange'}>
-                            {item.status === 'auth_required' ? '需登录' : (item.status === 'error' ? '连接失败' : '缺配置')}
+                        : <Tag color={['error', 'timeout'].includes(item.status) ? 'red' : 'orange'}>
+                            {item.status === 'auth_required'
+                              ? '需登录'
+                              : (item.status === 'timeout'
+                                  ? '连接超时'
+                                  : (item.status === 'error' ? '连接失败' : '缺配置'))}
                           </Tag>}
                       {item.authType === 'oauth' && item.authStatus !== 'authorized' && (
                         <Button
@@ -314,9 +328,10 @@ export default function SystemManagerDrawer() {
                       <Button
                         size="small"
                         loading={testingMcp === item.serverCode}
+                        disabled={Boolean(testingMcp) && testingMcp !== item.serverCode}
                         onClick={() => void testMcp(item.serverCode)}
                       >
-                        验证
+                        {testingMcp === item.serverCode ? '验证中' : '验证'}
                       </Button>
                     </Space>
                   </Space>

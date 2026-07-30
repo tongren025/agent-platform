@@ -38,6 +38,7 @@ import { useGenerationCanvasStore } from '../store/generationCanvasStore'
 import { handleAiComposerKeyDown } from '../../ai/aiComposerKeyboard'
 import { WorkbenchAiHeaderActions } from '../../ai/WorkbenchAiHeaderActions'
 import AssistantModelPicker from '../../ai/AssistantModelPicker'
+import { setAssistantModelPref } from '../../ai/assistantModelPref'
 import { useStaleConversationBoundary } from '../../ai/staleConversationDivider'
 import { AttachmentRail } from '../../ai/composer/AttachmentRail'
 import { AutoGrowTextarea } from '../../ai/composer/AutoGrowTextarea'
@@ -221,6 +222,8 @@ export default function CanvasAssistantPanel({
     skill?: { key: string; name: string }
     displayMessage?: string
     autoApproveSafeWrites?: boolean
+    employeeKey?: string
+    requiredTool?: 'create_canvas_nodes' | 'run_generation_batch'
   }
 
   const submitAgentMessage = React.useCallback((text: string, options: SubmitMessageOptions = {}) => {
@@ -253,6 +256,7 @@ export default function CanvasAssistantPanel({
       // 本轮模型是否发出过任何 tool 调用（含只读）。0 = 模型只回文字、没触发任何操作——
       // 自动选模型撞到不会工具调用的模型时的典型「只说不做」（2026-06-07 走查 P0）。
       let toolEmittedCount = 0
+      let requiredToolEmitted = !options.requiredTool
       // S6-2 提议事务批:用户点「确认」后整批原子应用——全成 committed,中途失败补偿回滚
       // (零半截)。先落地后回话:LLM 收到的每步成败与画布事实一致。
       approveCallsRef.current = async (requests: ApproveCallRequest[]) => {
@@ -439,6 +443,10 @@ export default function CanvasAssistantPanel({
           selectedNodes,
           mode,
           skill: options.skill,
+          ...(options.employeeKey ? {
+            agentPreference: { vendorKey: 'platform-employee', modelKey: options.employeeKey },
+          } : {}),
+          ...(options.requiredTool ? { requiredTool: options.requiredTool } : {}),
           onContent: (delta) => {
             if (activeId === null) openBubble()
             if (activeText === '') anchorId = activeId as string // 首字:后续卡锚到本气泡
@@ -450,6 +458,7 @@ export default function CanvasAssistantPanel({
           },
           onToolCall: (event: ToolCallEvent) => {
             toolEmittedCount += 1
+            if (event.toolName === options.requiredTool) requiredToolEmitted = true
             // 统一求值流(§6.1):一道门替代散落 if。allow=只读直通 / deny=校验/锁拒绝 / ask=等点头。
             const decision = evaluateGate({ kind: 'tool-call', toolName: event.toolName, args: event.args }, buildLockGateContext())
             if (decision.outcome === 'deny') {
@@ -498,6 +507,9 @@ export default function CanvasAssistantPanel({
             }
           },
         })
+        if (!requiredToolEmitted) {
+          throw new Error(`本步骤没有执行 ${options.requiredTool}，系统已拦截“只说不做”，请重试当前步骤。`)
+        }
 
         // 流结束:收口尾段气泡 + 特例定稿(只说不做⚠️ / 空回复)。
         if (streamRaf !== null) cancelAnimationFrame(streamRaf)
@@ -572,11 +584,14 @@ export default function CanvasAssistantPanel({
   React.useEffect(() => {
     const runRequest = (request: GuidedCanvasRequest | null | undefined) => {
       if (!request) return
+      setAssistantModelPref({ vendorKey: 'platform-employee', modelKey: request.employeeKey })
       setMode('agent')
       setCollapsed(false)
       submitAgentMessage(request.prompt, {
         displayMessage: request.displayMessage,
         autoApproveSafeWrites: request.autoApproveSafeWrites,
+        employeeKey: request.employeeKey,
+        requiredTool: request.requiredTool,
       })
     }
     const handler = (event: Event) => {

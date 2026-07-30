@@ -27,6 +27,9 @@ export type AgentsChatRequestDto = {
   temperature?: number
   systemPrompt?: string
   attachments?: AgentAttachmentPayload[]
+  agentModelKey?: string
+  agentVendorKey?: string
+  requiredTool?: string
 }
 
 export type AgentUsage = {
@@ -146,8 +149,6 @@ export async function openDesktopAgentsChatStream(
     try {
       const token = window.localStorage.getItem('user_token')
       const platformPayload = payload as AgentsChatRequestDto & {
-        agentModelKey?: string
-        agentVendorKey?: string
         projectId?: string
       }
       let modelKey = platformPayload.agentModelKey || ''
@@ -191,6 +192,7 @@ export async function openDesktopAgentsChatStream(
           skillName: String(skill.name || ''),
           prompt: payload.prompt,
           systemPrompt: payload.systemPrompt || '',
+          requiredTool: platformPayload.requiredTool || '',
           sessionId: payload.sessionKey || `canvas-${platformPayload.projectId || payload.canvasProjectId || 'default'}`,
           projectId: platformPayload.projectId || payload.canvasProjectId || '',
         }),

@@ -31,6 +31,7 @@ import {
   buildGuidedMediaRunPrompt,
   buildGuidedScriptPrompt,
 } from './guidedProductionPrompts'
+import { guidedEmployeeForStage } from './guidedProductionEmployees'
 
 function stageTranslationKey(
   stageId: GuidedProductionStageId,
@@ -136,10 +137,12 @@ export default function GuidedProductionBar(): JSX.Element {
       setCreationAiCollapsed(false)
       requestGuidedCreation({
         action: 'send',
-        prompt: buildGuidedScriptPrompt(),
+        prompt: buildGuidedScriptPrompt(documentText),
         modeId: 'script',
         displayMessage: t('guidedProduction.stage.script.displayMessage'),
         autoApproveWrites: true,
+        employeeKey: guidedEmployeeForStage('script'),
+        requiredTool: 'append_to_end',
       })
       return
     }
@@ -156,6 +159,8 @@ export default function GuidedProductionBar(): JSX.Element {
           prompt: buildGuidedMediaRunPrompt('storyboard'),
           displayMessage: t('guidedProduction.stage.storyboard.generateDisplayMessage'),
           autoApproveSafeWrites: true,
+          employeeKey: guidedEmployeeForStage('storyboard', true),
+          requiredTool: 'run_generation_batch',
         })
         return
       }
@@ -165,6 +170,8 @@ export default function GuidedProductionBar(): JSX.Element {
         action: 'storyboard',
         displayMessage: t('guidedProduction.stage.storyboard.displayMessage'),
         shotMode: 'image',
+        employeeKey: guidedEmployeeForStage('storyboard'),
+        requiredTool: 'propose_storyboard_plan',
       })
       return
     }
@@ -184,6 +191,8 @@ export default function GuidedProductionBar(): JSX.Element {
         ? t(stageTranslationKey(current.id, 'generateDisplayMessage'))
         : t(`guidedProduction.stage.${current.id}.displayMessage` as 'guidedProduction.stage.style.displayMessage'),
       autoApproveSafeWrites: true,
+      employeeKey: guidedEmployeeForStage(current.id, currentNeedsGeneration),
+      requiredTool: currentNeedsGeneration ? 'run_generation_batch' : 'create_canvas_nodes',
     })
   }, [
     allComplete,
