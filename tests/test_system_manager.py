@@ -150,6 +150,39 @@ def test_system_manager_chat_api_returns_actionable_guide(app_client, tmp_path, 
     assert "建议下一步" in payload["answer"]
 
 
+def test_mcp_test_api_returns_clear_gateway_timeout(app_client, tmp_path, monkeypatch):
+    import app.api.system_manager as system_manager_api
+    from app.dependencies import system_manager
+    from app.runtime.mcp import McpConnectionTimeoutError
+
+    mcp = McpServerDefinition(
+        serverCode="hanging",
+        name="Hanging",
+        transportType="stdio",
+        command="hanging-command",
+    )
+    monkeypatch.setattr(system_manager_api.mcp_server_registry, "get", lambda _code: mcp)
+    monkeypatch.setattr(system_manager, "_root", tmp_path / "manager")
+
+    async def timeout_probe(_runtime):
+        raise McpConnectionTimeoutError(
+            "MCP 服务 hanging 连接超过 15 秒，已自动终止"
+        )
+
+    monkeypatch.setattr(system_manager_api, "probe_mcp_server", timeout_probe)
+
+    response = app_client.post(
+        "/api/v1/agentapp/system-manager/mcp/hanging/test",
+    )
+
+    assert response.status_code == 504
+    assert "已自动终止" in response.json()["detail"]
+    health = (
+        tmp_path / "manager" / "mcp-health" / "hanging.json"
+    ).read_text(encoding="utf-8")
+    assert '"status": "timeout"' in health
+
+
 def test_natural_language_mcp_infers_config_without_server_code(tmp_path):
     service = _service(root_dir=tmp_path / "manager")
 
