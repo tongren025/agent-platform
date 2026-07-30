@@ -56,6 +56,22 @@ def test_project_without_units_starts_from_structured_script():
     assert report["nextAction"]["shotNumber"] is None
 
 
+def test_asset_cards_do_not_create_fake_production_units():
+    cards = [
+        _card("setting", unit=1),
+        _card("design", unit=2),
+    ]
+
+    report = diagnose_project(_project("storyboard"), cards)
+
+    assert report["totalUnits"] == 0
+    assert report["issues"][0]["code"] == "production_units_missing"
+    assert not any(
+        issue["code"] == "stage_missing"
+        for issue in report["issues"]
+    )
+
+
 def test_goal_scope_does_not_report_unrequested_video_work():
     cards = [
         _card("script"),

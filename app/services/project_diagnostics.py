@@ -156,6 +156,20 @@ def _active_card(
     )
 
 
+def production_unit_keys(
+    cards: list[ProductionCard],
+) -> list[tuple[Optional[int], int]]:
+    """只从逐镜规格卡识别生产单元，排除角色/场景资产复用的编号。"""
+    return sorted(
+        {
+            (card.episode, card.shot_number)
+            for card in cards
+            if card.stage in SPEC_STAGES and card.shot_number > 0
+        },
+        key=lambda item: (-1 if item[0] is None else item[0], item[1]),
+    )
+
+
 def _active_image(card: ProductionCard | None) -> str:
     if card is None:
         return ""
@@ -244,6 +258,8 @@ def _aggregate_expected_units(cards: list[ProductionCard]) -> int:
     """识别旧项目里“整支预告聚合在一张卡”的镜头总数。"""
     expected = 0
     for card in cards:
+        if card.stage not in SPEC_STAGES:
+            continue
         order = card.metadata.get("prompt_order")
         if isinstance(order, list):
             expected = max(expected, len(order))
@@ -495,14 +511,7 @@ def diagnose_project(
     """
     goal = project.production_goal
     requirements = GOAL_REQUIREMENTS.get(goal, GOAL_REQUIREMENTS["final"])
-    unit_keys = sorted(
-        {
-            (card.episode, card.shot_number)
-            for card in cards
-            if card.shot_number > 0
-        },
-        key=lambda item: (-1 if item[0] is None else item[0], item[1]),
-    )
+    unit_keys = production_unit_keys(cards)
     aggregate_units = _aggregate_expected_units(cards) if not unit_keys else 0
     issues: list[dict[str, Any]] = []
     checks: list[dict[str, Any]] = []

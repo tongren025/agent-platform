@@ -24,7 +24,7 @@ from app.api.production import (
 )
 from app.models.production import ProductionCard, ProductionProject
 from app.services import openrouter_media
-from app.services.project_diagnostics import diagnose_project
+from app.services.project_diagnostics import diagnose_project, production_unit_keys
 from app.services.project_feedback import summarize_project_feedback
 from app.services.project_optimization import (
     append_optimization_run,
@@ -41,10 +41,8 @@ READY_VIDEO_STATUSES = {"completed", "complete", "succeeded"}
 
 
 def _unit_keys(cards: list[ProductionCard]) -> list[tuple[Optional[int], int]]:
-    return sorted(
-        {(card.episode, card.shot_number) for card in cards if card.shot_number > 0},
-        key=lambda item: (-1 if item[0] is None else item[0], item[1]),
-    )
+    """导演主线与诊断共用同一生产单元口径。"""
+    return production_unit_keys(cards)
 
 
 def _card_for(cards: list[ProductionCard], episode: Optional[int], unit: int, stage: str) -> ProductionCard | None:
