@@ -112,27 +112,7 @@ export async function listWorkbenchModelCatalogVendors(): Promise<ModelCatalogVe
   const desktop = getDesktopBridge()
   if (desktop) return desktop.modelCatalog.listVendors() as ModelCatalogVendorDto[]
   if (!isPlatformWebRuntime()) throw new Error('model catalog requires the Electron desktop runtime')
-  const now = new Date().toISOString()
-  return [
-    {
-      key: 'platform-employee',
-      name: 'Agent Studio 数字员工',
-      enabled: true,
-      hasApiKey: true,
-      authType: 'none',
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      key: 'openrouter',
-      name: 'Agent Studio 媒体模型',
-      enabled: true,
-      hasApiKey: true,
-      authType: 'bearer',
-      createdAt: now,
-      updatedAt: now,
-    },
-  ]
+  return platformRequest<ModelCatalogVendorDto[]>('/canvas/workbench/vendors')
 }
 
 export async function getWorkbenchModelCatalogHealth(): Promise<ModelCatalogHealthDto> {
@@ -144,17 +124,21 @@ export async function getWorkbenchModelCatalogHealth(): Promise<ModelCatalogHeal
     listWorkbenchModelCatalogModels({ kind: 'image', enabled: true }).catch(() => []),
     listWorkbenchModelCatalogModels({ kind: 'video', enabled: true }).catch(() => []),
   ])
+  const vendors = await listWorkbenchModelCatalogVendors().catch(() => [])
   const total = texts.length + images.length + videos.length
+  const enabledVendors = vendors.filter((vendor) => vendor.enabled)
   return {
     ok: total > 0,
     counts: {
-      vendors: 2,
-      enabledVendors: 2,
+      vendors: vendors.length,
+      enabledVendors: enabledVendors.length,
       models: total,
       enabledModels: total,
       mappings: total,
       enabledMappings: total,
-      enabledApiKeys: 1,
+      enabledApiKeys: enabledVendors.filter(
+        (vendor) => vendor.authType === 'none' || vendor.hasApiKey,
+      ).length,
     },
     byKind: [
       { kind: 'text', enabledModels: texts.length, executableModels: texts.length },
@@ -180,28 +164,7 @@ export async function listWorkbenchModelCatalogModels(params?: {
   const kinds: BillingModelKind[] = params?.kind ? [params.kind] : ['text', 'image', 'video']
   const rows = (
     await Promise.all(kinds.map(async (kind): Promise<ModelCatalogModelDto[]> => {
-      if (kind === 'text') {
-        const employees = await platformRequest<Array<Record<string, unknown>>>('/registry/employees')
-        const now = new Date().toISOString()
-        return employees.flatMap((employee): ModelCatalogModelDto[] => {
-          const modelKey = String(employee.employeeKey || employee.employee_key || '').trim()
-          if (!modelKey || employee.enabled === false) return []
-          return [{
-            modelKey,
-            vendorKey: 'platform-employee',
-            labelZh: String(employee.name || modelKey),
-            kind: 'text',
-            enabled: true,
-            meta: {
-              description: employee.computedDescription || employee.roleProfile || '',
-              employee,
-            },
-            createdAt: now,
-            updatedAt: now,
-          }]
-        })
-      }
-      if (kind === 'image' || kind === 'video') {
+      if (kind === 'text' || kind === 'image' || kind === 'video') {
         const query = new URLSearchParams({ kind })
         return platformRequest<ModelCatalogModelDto[]>(`/canvas/workbench/models?${query.toString()}`)
       }

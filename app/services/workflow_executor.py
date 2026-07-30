@@ -183,8 +183,9 @@ async def run_workflow(wf: WorkflowDefinition, inputs: dict | None) -> WorkflowR
             steps[k].status = "running"
 
         try:
+            # 每个并行节点拿到 variables 的浅拷贝，防止并发分支互相覆盖
             results = await asyncio.gather(
-                *[_run_node(nodes[k], variables, run) for k in runnable],
+                *[_run_node(nodes[k], dict(variables), run) for k in runnable],
                 return_exceptions=True,
             )
         except asyncio.CancelledError:

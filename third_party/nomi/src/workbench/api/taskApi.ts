@@ -197,6 +197,7 @@ export async function fetchWorkbenchTaskResultByVendor(
   const params = new URLSearchParams({
     kind: payload.taskKind || 'text_to_video',
     project_id: projectId || 'agent-canvas',
+    ...(payload.vendor ? { vendor: payload.vendor } : {}),
   })
   return platformTaskRequest<FetchWorkbenchTaskResultResponseDto>(
     `/canvas/workbench/tasks/${encodeURIComponent(payload.taskId)}?${params}`,

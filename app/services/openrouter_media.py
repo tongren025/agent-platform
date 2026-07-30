@@ -22,14 +22,19 @@ _SAFE_ID_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 RECOMMENDED_IMAGE_MODEL = "google/gemini-3.1-flash-lite-image"
 
 
-def _openrouter_config() -> tuple[str, str]:
-    """返回已启用 OpenRouter 的 API 基址与密钥。"""
+def _openrouter_config(provider_name: str = "openrouter") -> tuple[str, str]:
+    """返回已启用的 OpenAI/OpenRouter 兼容媒体供应商 API 基址与密钥。
+
+    默认值保留既有 OpenRouter 调用；画布可传入后台已配置的其它兼容供应商，
+    避免视频生成被写死到单一厂商。
+    """
+    target = str(provider_name or "openrouter").strip().lower()
     for provider in ai_service.list_all_providers():
-        if provider.name.lower() == "openrouter" and provider.enabled:
+        if provider.name.lower() == target and provider.enabled:
             if not provider.api_key:
-                raise ValueError("OpenRouter API Key 未配置")
+                raise ValueError(f"{provider.name} API Key 未配置")
             return provider.endpoint.rstrip("/"), provider.api_key
-    raise ValueError("OpenRouter 供应商未启用")
+    raise ValueError(f"{provider_name} 供应商未启用")
 
 
 def _headers(api_key: str) -> dict[str, str]:
@@ -271,11 +276,16 @@ def submit_video(
     image_url: str = "",
     image_path: Path | None = None,
     generate_audio: bool = True,
+    provider: str = "openrouter",
 ) -> dict:
-    """提交 OpenRouter 异步视频任务，支持平台 URL 或仓库内本地首帧。"""
+    """提交兼容供应商异步视频任务，支持平台 URL 或仓库内本地首帧。"""
     if image_url and image_path is not None:
         raise ValueError("image_url 与 image_path 只能提供一个")
-    endpoint, api_key = _openrouter_config()
+    endpoint, api_key = (
+        _openrouter_config()
+        if provider.lower() == "openrouter"
+        else _openrouter_config(provider)
+    )
     payload: dict = {
         "model": model,
         "prompt": prompt,
@@ -313,14 +323,19 @@ def submit_video(
         "status": body.get("status") or "pending",
         "pollingUrl": body.get("polling_url") or f"{endpoint}/videos/{job_id}",
         "model": model,
+        "provider": provider,
     }
 
 
-def sync_video(project_id: str, job_id: str) -> dict:
-    """同步一个 OpenRouter 视频任务；完成时下载视频到项目目录。"""
+def sync_video(project_id: str, job_id: str, *, provider: str = "openrouter") -> dict:
+    """同步一个兼容供应商视频任务；完成时下载视频到项目目录。"""
     if not _SAFE_ID_RE.fullmatch(job_id):
         raise ValueError("视频任务 ID 非法")
-    endpoint, api_key = _openrouter_config()
+    endpoint, api_key = (
+        _openrouter_config()
+        if provider.lower() == "openrouter"
+        else _openrouter_config(provider)
+    )
     status_response = httpx.get(
         f"{endpoint}/videos/{job_id}",
         headers=_headers(api_key),

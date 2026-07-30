@@ -169,10 +169,20 @@ if wwwroot.exists():
     @app.get("/{full_path:path}")
     async def spa_fallback(request: Request, full_path: str):
         """SPA 兜底路由：命中静态文件则直接返回，否则回退到 index.html 交给前端路由。"""
-        file_path = wwwroot / full_path
-        if file_path.is_file() and file_path.name != "index.html":
+        file_path = (wwwroot / full_path).resolve()
+        wwwroot_resolved = wwwroot.resolve()
+        # 路径穿越防御：file_path 必须在 wwwroot 内部
+        if (
+            file_path.is_relative_to(wwwroot_resolved)
+            and file_path.is_file()
+            and file_path.name != "index.html"
+        ):
             return FileResponse(file_path)
-        return FileResponse(wwwroot / "index.html", headers=_INDEX_NO_CACHE)
+        index_file = wwwroot / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, headers=_INDEX_NO_CACHE)
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=404, content={"message": "Not Found"})
 
 
 # ── Main ────────────────────────────────────────────────────────────

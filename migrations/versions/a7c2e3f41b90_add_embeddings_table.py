@@ -26,10 +26,13 @@ def upgrade() -> None:
         sa.Column('source_type', sa.String(length=32), nullable=False),
         sa.Column('source_id', sa.String(length=128), nullable=False),
         sa.Column('content', sa.Text(), nullable=False, server_default=''),
-        sa.Column('embedding', sa.LargeBinary(), nullable=True),
+        # ORM 定义为 pgvector Vector(1024)；Alembic 不支持 Vector 类型声明，
+        # 先建表后用 raw DDL 添加正确类型的列。
         sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint('id'),
     )
+    # 用 raw DDL 添加 vector(1024) 列，与 ORM 定义一致。
+    op.execute("ALTER TABLE embeddings ADD COLUMN embedding vector(1024)")
     op.create_index('ix_emb_employee_key', 'embeddings', ['employee_key'])
     op.create_index('ix_emb_source_type', 'embeddings', ['source_type'])
     op.create_index('ix_emb_source_id', 'embeddings', ['source_id'])

@@ -19,9 +19,9 @@
     "result": "成功提供了高度结构化、可直接用于生产的视频提示词方案。",
     "successScore": 1.0,
     "sourceSession": "ses_1211078d3a79ebf1",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T14:15:19.378083Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-29T14:08:48.221813Z"
   },
   {
     "memoryId": "v3_epi_01_negative_prompt_wasted",
@@ -31,9 +31,9 @@
     "result": "节省了约30词的配额用于更有价值的光影和动作描述,生成质量反而提升",
     "successScore": 0.98,
     "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T14:00:00Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-29T14:08:48.221813Z"
   },
   {
     "memoryId": "v3_epi_02_fast_word_blur",
@@ -67,9 +67,9 @@
     "result": "确认生产级提示词的实际格式，与八层框架完全吻合。关键发现：每段都独立写角色外貌词，不省略",
     "successScore": 0.96,
     "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T15:30:00Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-29T14:08:48.221813Z"
   },
   {
     "memoryId": "v3_epi_04_xianxia_three_phase",
@@ -91,9 +91,9 @@
     "result": "验证仙侠三段式是生产通用模式,不限于仙侠——鬼灭风也用相同节奏。特效描述越具体(水花四溅/冲击波向四周扩散),AI执行越准",
     "successScore": 0.95,
     "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T15:30:00Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-29T14:08:48.221813Z"
   },
   {
     "memoryId": "v3_epi_05_camera_action_separate",
@@ -115,9 +115,9 @@
     "result": "确认多段拼接的实战写法。关键：每段仍然≤6秒(这里用3秒更安全),角色描述不省略,段间续接词是固定公式",
     "successScore": 0.94,
     "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T15:30:00Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-29T14:08:48.221813Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-prompt-engineer_epi_01",

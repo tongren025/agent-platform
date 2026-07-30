@@ -114,9 +114,9 @@ export const adminApi = {
   createUser: (data: { username: string; password: string; displayName?: string; role?: string; enabled?: boolean }) =>
     request<PlatformUser>('/users', { method: 'POST', body: JSON.stringify(data) }),
   updateUser: (username: string, data: { displayName?: string; role?: string; enabled?: boolean; password?: string }) =>
-    request<PlatformUser>(`/users/${username}`, { method: 'PUT', body: JSON.stringify(data) }),
+    request<PlatformUser>(`/users/${encodeURIComponent(username)}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteUser: (username: string) =>
-    request<boolean>(`/users/${username}`, { method: 'DELETE' }),
+    request<boolean>(`/users/${encodeURIComponent(username)}`, { method: 'DELETE' }),
 
   // 角色管理
   listRoles: () => request<PlatformRole[]>('/roles'),
@@ -124,18 +124,18 @@ export const adminApi = {
   createRole: (data: { roleCode: string; name: string; description?: string; permissions: string[] }) =>
     request<PlatformRole>('/roles', { method: 'POST', body: JSON.stringify(data) }),
   updateRole: (roleCode: string, data: { roleCode: string; name: string; description?: string; permissions: string[] }) =>
-    request<PlatformRole>(`/roles/${roleCode}`, { method: 'PUT', body: JSON.stringify(data) }),
+    request<PlatformRole>(`/roles/${encodeURIComponent(roleCode)}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteRole: (roleCode: string) =>
-    request<boolean>(`/roles/${roleCode}`, { method: 'DELETE' }),
+    request<boolean>(`/roles/${encodeURIComponent(roleCode)}`, { method: 'DELETE' }),
 
   // AI 服务商
   listProviders: () => request<AdminProvider[]>('/providers'),
   saveProvider: (data: { name: string; endpoint: string; apiKey: string; enabled?: boolean; models?: unknown[] }) =>
     request<AdminProvider>('/providers', { method: 'POST', body: JSON.stringify(data) }),
   updateProvider: (name: string, data: { name: string; endpoint: string; apiKey?: string; enabled?: boolean; models?: unknown[] }) =>
-    request<AdminProvider>(`/providers/${name}`, { method: 'PUT', body: JSON.stringify(data) }),
+    request<AdminProvider>(`/providers/${encodeURIComponent(name)}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteProvider: (name: string) =>
-    request<boolean>(`/providers/${name}`, { method: 'DELETE' }),
+    request<boolean>(`/providers/${encodeURIComponent(name)}`, { method: 'DELETE' }),
   testProvider: (name: string) =>
-    request<TestResult>(`/providers/${name}/test`, { method: 'POST' }),
+    request<TestResult>(`/providers/${encodeURIComponent(name)}/test`, { method: 'POST' }),
 };

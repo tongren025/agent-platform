@@ -5,6 +5,58 @@
 
 ---
 
+## [2026-07-30] fix: 画布统一使用平台模型与现有制作项目
+
+- 画布模型目录改为直接聚合平台中已启用的数字员工和 AI 供应商配置，按文本、图片、
+  视频能力分类；不再把员工误当成全部文本模型，也不再展示未在平台启用的
+  OpenRouter 公共模型。
+- 画布生成任务会校验所选模型确实属于当前平台配置，并按实际供应商执行文本、
+  图片或视频任务；视频轮询同时携带供应商信息，避免同名模型被路由到错误后端。
+- 画布项目库会合并显示 `data/production` 中已有的漫剧制作项目和画布原生项目；
+  首次打开制作项目时，用相同项目 ID 无损生成画布工作记录，把剧本、角色、场景、
+  分镜及已有图片/视频转换为可继续编辑的节点、连线、素材和时间线，不改写原制作数据。
+- 浏览器版“打开已有文件夹”改为“打开已有项目”，直接定位到平台项目列表；
+  大型制作项目超过浏览器缓存容量时仍以服务端记录为准，不再因本地缓存失败而打不开。
+- 同一模型 ID 在多个供应商下配置时，模型选择器保留每个供应商选项并按实际来源执行，
+  不再静默覆盖。
+- 新增平台模型能力目录、模型任务校验、制作项目导入和素材聚合回归测试；重新构建
+  Agent Studio 画布模块及主站生产静态资源。
+
+**影响面**：新增 `app/services/canvas_catalog.py`、
+`app/services/canvas_projects.py`；调整 `/canvas/image-models`、
+`/canvas/workbench/vendors`、`/canvas/workbench/models`、
+`/canvas/workbench/projects`、`/canvas/workbench/assets`、
+`/canvas/workbench/tasks` 及画布 Web 适配层。无数据库迁移、无新增环境变量，
+现有制作项目首次打开时会新增同 ID 的 `data/canvas/workbench/*.json` 画布记录。
+
+---
+
+## [2026-07-29] fix: 批量安全与稳定性修复（6 项）
+
+- **依赖版本对齐**：`requirements.txt` 中 `openai>=1.60.0`（允许安装与代码不兼容的 v1）
+  等五个包的最低版本上调至与 `pyproject.toml` 一致，消除 v1/v2 破坏性变更风险。
+- **迁移 schema drift**：`a7c2e3f41b90` embedding 列从 `sa.LargeBinary()` 改为
+  raw DDL `vector(1024)`，与 ORM `Vector(1024)` 定义一致，消除 Alembic autogenerate 漂移。
+- **asyncio 弃用 API**：`loop.py` 中 `asyncio.get_event_loop()` → `asyncio.get_running_loop()`，
+  Python 3.12+ 不再报 DeprecationWarning。
+- **SPA 路径穿越漏洞**：`main.py` 的 `spa_fallback` 添加 `resolve()` + `is_relative_to()`
+  校验，防止 `../../etc/passwd` 类攻击；`index.html` 不存在时优雅返回 404 而非 500。
+- **工作流 DAG 竞态**：`workflow_executor.py` 并行节点执行时传入 `dict(variables)` 浅拷贝，
+  防止并发分支互相覆盖共享字典。
+- **跨进程 ADMIN_SECRET 不一致**：`admin/config.py` 在未配置 `ADMIN_SECRET` 时改用固定
+  开发密钥（不再每次启动随机生成），确保 app(8000) 与 admin(8001) token 互认；
+  启动时输出警告提醒生产必须配置。
+- **前端 URL 参数编码缺失**：`api.ts` 中 16 处、`adminApi.ts` 中 7 处路径参数缺少
+  `encodeURIComponent`，当员工 key / 团队 code 等含特殊字符时请求 404。
+- **Blob URL 过早释放**：`api.ts` 的 `download()` 把 `revokeObjectURL` 延迟从 0ms
+  改为 10s，避免慢速设备下载失败。
+
+**影响面**：`requirements.txt`、`migrations/versions/a7c2e3f41b90_*.py`、`app/runtime/loop.py`、
+`app/main.py`、`app/services/workflow_executor.py`、`admin/config.py`、
+`web/src/api.ts`、`web/src/adminApi.ts`；无新增环境变量，无数据库迁移。
+
+---
+
 ## [2026-07-29] fix: 收敛制作看板 AI 生成卡死与模型路由失败
 
 - 制作项目未绑定员工时改为按目标阶段选择专业员工，不再取注册表第一项，

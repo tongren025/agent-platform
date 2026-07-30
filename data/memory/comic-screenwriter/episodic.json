@@ -7,9 +7,9 @@
     "result": "每镜都有动作因果和下游特效/轨迹需求。",
     "successScore": 0.96,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 3,
+    "accessCount": 4,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": "2026-07-29T14:01:55.565467Z"
+    "lastAccessed": "2026-07-29T14:05:56.654399Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-screenwriter_epi_01",
@@ -19,9 +19,9 @@
     "result": "情绪从炸亮跌到最低谷,『也是』成为可截图的嘴替",
     "successScore": 0.95,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 3,
+    "accessCount": 4,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": "2026-07-29T14:01:55.565467Z"
+    "lastAccessed": "2026-07-29T14:05:56.654399Z"
   },
   {
     "memoryId": "seed_comic-screenwriter_epi_02",
@@ -31,9 +31,9 @@
     "result": "提示词工程师能直接抽取视频提示词。",
     "successScore": 0.94,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 3,
+    "accessCount": 4,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": "2026-07-29T14:01:55.565467Z"
+    "lastAccessed": "2026-07-29T14:05:56.654399Z"
   },
   {
     "memoryId": "mem_5269eaf5432f",
@@ -43,9 +43,9 @@
     "result": "剧本结构紧凑，分镜师反馈画面感极强，每个场景都有明确的视觉冲突",
     "successScore": 0.9,
     "sourceSession": "",
-    "accessCount": 3,
+    "accessCount": 4,
     "createdAt": "2026-06-23T12:26:31.405482Z",
-    "lastAccessed": "2026-07-29T14:01:55.565467Z"
+    "lastAccessed": "2026-07-29T14:05:56.654399Z"
   },
   {
     "memoryId": "mem_406e762d4714",
@@ -79,9 +79,9 @@
     "result": "24集全90s共794卡spec完成过验;端点序列化OK",
     "successScore": 0.9,
     "sourceSession": "jiulu_s1_gaoran_complete_20260709",
-    "accessCount": 2,
+    "accessCount": 3,
     "createdAt": "2026-07-09T08:53:24.294976Z",
-    "lastAccessed": "2026-07-29T14:01:55.565467Z"
+    "lastAccessed": "2026-07-29T14:05:56.654399Z"
   },
   {
     "memoryId": "mem_925214429f47",

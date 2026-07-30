@@ -1,1 +1,3 @@
-{}
+{
+  "tests/test_openrouter_media.py::test_canvas_image_models_only_returns_verified_media_models": true
+}

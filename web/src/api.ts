@@ -138,7 +138,9 @@ async function request<T>(path: string, init?: RequestOptions): Promise<T> {
         ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
         'Accept': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...fetchInit.headers,
+        ...(fetchInit.headers instanceof Headers
+          ? Object.fromEntries(fetchInit.headers.entries())
+          : fetchInit.headers),
       },
     });
   } finally {
@@ -200,7 +202,7 @@ async function download(
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  window.setTimeout(() => URL.revokeObjectURL(url), 10_000);
   return { filename };
 }
 
@@ -233,50 +235,50 @@ export const api = {
   searchKnowledge: (key: string, q: string, topK = 5) =>
     request<any[]>(`/registry/employees/${encodeURIComponent(key)}/knowledge/search?q=${encodeURIComponent(q)}&topK=${topK}`),
   listEmployees: () => request<any[]>('/registry/employees'),
-  getEmployee: (key: string) => request<any>(`/registry/employees/${key}`),
+  getEmployee: (key: string) => request<any>(`/registry/employees/${encodeURIComponent(key)}`),
   generateEmployeeDraft: (roleRequest: string, modelId?: string) =>
     request<any>('/registry/employees/generate-draft', {
       method: 'POST',
       body: JSON.stringify({ roleRequest, ...(modelId ? { modelId } : {}) }),
     }),
   saveEmployee: (data: any) => request<any>('/registry/employees', { method: 'POST', body: JSON.stringify(data) }),
-  updateEmployee: (key: string, data: any) => request<any>(`/registry/employees/${key}`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteEmployee: (key: string) => request<any>(`/registry/employees/${key}`, { method: 'DELETE' }),
-  toggleEnabled: (key: string, enabled: boolean) => request<any>(`/registry/employees/${key}/enabled`, { method: 'POST', body: JSON.stringify({ enabled }) }),
+  updateEmployee: (key: string, data: any) => request<any>(`/registry/employees/${encodeURIComponent(key)}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteEmployee: (key: string) => request<any>(`/registry/employees/${encodeURIComponent(key)}`, { method: 'DELETE' }),
+  toggleEnabled: (key: string, enabled: boolean) => request<any>(`/registry/employees/${encodeURIComponent(key)}/enabled`, { method: 'POST', body: JSON.stringify({ enabled }) }),
   cloneEmployee: (key: string, newKey: string, newName: string) =>
-    request<any>(`/registry/employees/${key}/clone`, { method: 'POST', body: JSON.stringify({ newKey, newName }) }),
+    request<any>(`/registry/employees/${encodeURIComponent(key)}/clone`, { method: 'POST', body: JSON.stringify({ newKey, newName }) }),
   applyTemplate: (code: string, employeeKey: string, employeeName: string) =>
-    request<any>(`/registry/role-templates/${code}/apply`, { method: 'POST', body: JSON.stringify({ employeeKey, employeeName }) }),
+    request<any>(`/registry/role-templates/${encodeURIComponent(code)}/apply`, { method: 'POST', body: JSON.stringify({ employeeKey, employeeName }) }),
 
   listTemplates: () => request<any[]>('/registry/role-templates'),
   listTools: () => request<any[]>('/registry/tools'),
   listSkills: () => request<any[]>('/registry/skills'),
   listTeams: () => request<any[]>('/registry/teams'),
   saveTeam: (data: any) => request<any>('/registry/teams', { method: 'POST', body: JSON.stringify(data) }),
-  deleteTeam: (code: string) => request<any>(`/registry/teams/${code}`, { method: 'DELETE' }),
+  deleteTeam: (code: string) => request<any>(`/registry/teams/${encodeURIComponent(code)}`, { method: 'DELETE' }),
   updateTeamMembers: (code: string, memberEmployeeKeys: string[]) =>
-    request<any>(`/registry/teams/${code}/members`, { method: 'PUT', body: JSON.stringify({ memberEmployeeKeys }) }),
+    request<any>(`/registry/teams/${encodeURIComponent(code)}/members`, { method: 'PUT', body: JSON.stringify({ memberEmployeeKeys }) }),
 
   listMcpServers: () => request<any[]>('/registry/mcp-servers'),
   saveMcpServer: (data: any) => request<any>('/registry/mcp-servers', { method: 'POST', body: JSON.stringify(data) }),
-  deleteMcpServer: (code: string) => request<any>(`/registry/mcp-servers/${code}`, { method: 'DELETE' }),
+  deleteMcpServer: (code: string) => request<any>(`/registry/mcp-servers/${encodeURIComponent(code)}`, { method: 'DELETE' }),
 
   saveTool: (data: any) => request<any>('/registry/tools', { method: 'POST', body: JSON.stringify(data) }),
-  deleteTool: (code: string) => request<any>(`/registry/tools/${code}`, { method: 'DELETE' }),
+  deleteTool: (code: string) => request<any>(`/registry/tools/${encodeURIComponent(code)}`, { method: 'DELETE' }),
 
   saveSkill: (data: any) => request<any>('/registry/skills', { method: 'POST', body: JSON.stringify(data) }),
-  deleteSkill: (code: string) => request<any>(`/registry/skills/${code}`, { method: 'DELETE' }),
+  deleteSkill: (code: string) => request<any>(`/registry/skills/${encodeURIComponent(code)}`, { method: 'DELETE' }),
 
   updateBindings: (key: string, bindings: { skillRefs?: string[]; toolRefs?: string[]; mcpServerRefs?: string[] }) =>
-    request<any>(`/registry/employees/${key}/bindings`, { method: 'PUT', body: JSON.stringify(bindings) }),
+    request<any>(`/registry/employees/${encodeURIComponent(key)}/bindings`, { method: 'PUT', body: JSON.stringify(bindings) }),
 
   // Knowledge
-  listKnowledge: (key: string) => request<any[]>(`/registry/employees/${key}/knowledge`),
-  deleteKnowledge: (key: string, docId: string) => request<any>(`/registry/employees/${key}/knowledge/${docId}`, { method: 'DELETE' }),
+  listKnowledge: (key: string) => request<any[]>(`/registry/employees/${encodeURIComponent(key)}/knowledge`),
+  deleteKnowledge: (key: string, docId: string) => request<any>(`/registry/employees/${encodeURIComponent(key)}/knowledge/${encodeURIComponent(docId)}`, { method: 'DELETE' }),
   uploadKnowledge: async (key: string, file: File) => {
     const form = new FormData();
     form.append('file', file);
-    return request<any>(`/registry/employees/${key}/knowledge`, { method: 'POST', body: form });
+    return request<any>(`/registry/employees/${encodeURIComponent(key)}/knowledge`, { method: 'POST', body: form });
   },
 
   // AI Providers
@@ -388,7 +390,7 @@ export const api = {
     ),
   archiveSession: (sessionId: string, archived = true) =>
     request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}/archive`, { method: 'POST', body: JSON.stringify({ archived }) }),
-  deleteSession: (sessionId: string) => request<any>(`/agent/sessions/${sessionId}`, { method: 'DELETE' }),
+  deleteSession: (sessionId: string) => request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}`, { method: 'DELETE' }),
   runTeam: (data: { teamCode: string; userInput: string; sessionId?: string; extraContext?: string }) =>
     request<any>('/agent/team-run', { method: 'POST', body: JSON.stringify(data) }),
 
@@ -421,7 +423,7 @@ export const api = {
   deleteCard: (cardId: string) =>
     request<any>(`/production/cards/${cardId}`, { method: 'DELETE' }),
   moveCard: (cardId: string, stage: string) =>
-    request<any>(`/production/cards/${cardId}/move?stage=${stage}`, { method: 'POST' }),
+    request<any>(`/production/cards/${cardId}/move?stage=${encodeURIComponent(stage)}`, { method: 'POST' }),
   batchMoveCards: (cardIds: string[], stage: string) =>
     request<any>(`/production/cards/batch-move`, { method: 'POST', body: JSON.stringify({ card_ids: cardIds, stage }) }),
   uploadCardFile: async (pid: string, cardId: string, file: File, fileType: 'image' | 'video' = 'image') => {

@@ -107,19 +107,18 @@ def test_generic_image_generation_routes_openrouter_models(monkeypatch):
     assert result["url"] == "/uploads/canvas/result.png"
 
 
-def test_canvas_image_models_only_returns_verified_media_models(monkeypatch):
-    """画布生图下拉框不能再混入 openrouter/free 等纯文字模型。"""
+def test_canvas_image_models_only_returns_configured_media_models(monkeypatch):
+    """画布生图下拉框只接受平台已配置图片模型，不读取公共全量目录。"""
     monkeypatch.setattr(
-        canvas.openrouter_media,
-        "list_media_models",
+        canvas.canvas_catalog,
+        "list_canvas_models",
         lambda kind: [{
-            "id": openrouter_media.RECOMMENDED_IMAGE_MODEL,
-            "name": "Recommended Image",
-            "pricing": {"image_output": "0.00003"},
-            "isFree": False,
-            "recommended": True,
-            "recommendationReason": "适合角色一致性",
-            "supportedParameters": {},
+            "modelKey": openrouter_media.RECOMMENDED_IMAGE_MODEL,
+            "vendorKey": "openrouter",
+            "labelZh": "Configured Image",
+            "enabled": True,
+            "pricing": {"cost": 1},
+            "meta": {"supportedParameters": {}},
         }],
     )
 
@@ -128,7 +127,7 @@ def test_canvas_image_models_only_returns_verified_media_models(monkeypatch):
     assert len(models) == 1
     assert models[0]["modelId"].startswith("openrouter:")
     assert models[0]["actualModelId"] == openrouter_media.RECOMMENDED_IMAGE_MODEL
-    assert models[0]["recommended"] is True
+    assert models[0]["provider"] == "openrouter"
 
 
 def test_generate_image_encodes_local_input_references(tmp_path, monkeypatch):

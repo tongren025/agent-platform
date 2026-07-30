@@ -88,6 +88,7 @@ export default function ProjectLibraryPage({
   const { t } = useTranslation()
   const [query, setQuery] = React.useState('')
   const [sourceFilter, setSourceFilter] = React.useState<'all' | 'native' | 'folder'>('all')
+  const recentProjectsRef = React.useRef<HTMLDivElement | null>(null)
   const normalizedQuery = query.trim().toLowerCase()
   const searchedProjects = normalizedQuery
     ? projects.filter((project) => project.name.toLowerCase().includes(normalizedQuery))
@@ -118,6 +119,13 @@ export default function ProjectLibraryPage({
   const isWindows = window.nomiDesktop?.platform === 'win32'
   const openBrowser = React.useCallback(() => {
     window.dispatchEvent(new CustomEvent('nomi-open-browser'))
+  }, [])
+  const focusExistingProjects = React.useCallback(() => {
+    setQuery('')
+    setSourceFilter('all')
+    window.requestAnimationFrame(() => {
+      recentProjectsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }, [])
 
   const libraryTopActions = (
@@ -215,7 +223,14 @@ export default function ProjectLibraryPage({
                 description={t('library.openFolderDescription')}
                 onClick={onOpenFolder}
               />
-            ) : null}
+            ) : (
+              <ActionCard
+                icon={<IconFolderOpen size={18} stroke={1.6} />}
+                title={t('library.openExistingProject')}
+                description={t('library.openExistingProjectDescription')}
+                onClick={focusExistingProjects}
+              />
+            )}
             {onPlayJourneyTour ? (
               <ActionCard
                 icon={<IconPlayerPlay size={18} stroke={1.6} />}
@@ -256,7 +271,10 @@ export default function ProjectLibraryPage({
           ) : null}
 
           {/* ── 最近项目：标题 + 来源筛选（名词，与动作动词区隔）｜搜索同行 ── */}
-          <div className="shrink-0 flex items-center justify-between gap-4 flex-wrap">
+          <div
+            ref={recentProjectsRef}
+            className="shrink-0 flex items-center justify-between gap-4 flex-wrap scroll-mt-4"
+          >
             <div className="inline-flex items-center gap-8 flex-wrap">
               <h2 className="m-0 text-caption font-medium text-nomi-ink-60">{t('library.recentProjects')}</h2>
               <div

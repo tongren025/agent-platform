@@ -130,7 +130,7 @@ async def _create_completion(
     """执行一次 chat.completions.create；同步客户端丢到线程池，避免阻塞事件循环。"""
     if is_async:
         return await client.chat.completions.create(**create_kwargs)
-    return await asyncio.get_event_loop().run_in_executor(
+    return await asyncio.get_running_loop().run_in_executor(
         None, lambda: client.chat.completions.create(**create_kwargs)
     )
 
@@ -254,6 +254,11 @@ async def run_agent_loop(
 
     is_async = isinstance(client, openai.AsyncOpenAI)
 
+    # 追踪连续相同的工具调用失败，防止模型陷入循环浪费 token
+    _last_failed_call: tuple[str, str] | None = None  # (tool_name, args)
+    _consecutive_failures: int = 0
+    _MAX_IDENTICAL_FAILURES = 2
+
     for iteration in range(1, options.max_iterations + 1):
         result.iterations = iteration
 
@@ -333,10 +338,27 @@ async def run_agent_loop(
             try:
                 tool_result = await handler.handler(fn_args)
                 success = True
+                # 成功调用重置失败计数
+                _last_failed_call = None
+                _consecutive_failures = 0
             except Exception as exc:
                 logger.error("Tool handler error (%s): %s", fn_name, exc)
                 tool_result = f"工具执行失败: {exc}"
                 success = False
+                # 检测连续相同失败：同名工具 + 同参数连续失败 N 次则短路
+                call_sig = (fn_name, fn_args)
+                if call_sig == _last_failed_call:
+                    _consecutive_failures += 1
+                else:
+                    _last_failed_call = call_sig
+                    _consecutive_failures = 1
+                if _consecutive_failures >= _MAX_IDENTICAL_FAILURES:
+                    logger.warning(
+                        "Tool %s failed %d times with identical args, short-circuiting",
+                        fn_name, _consecutive_failures,
+                    )
+                    tool_result += "（同一调用已连续失败多次，请更换参数或放弃该工具）"
+                    should_break = True
 
             elapsed = int((time.monotonic() - start_ms) * 1000)
 

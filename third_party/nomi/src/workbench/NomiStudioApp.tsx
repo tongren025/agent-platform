@@ -615,8 +615,8 @@ export default function NomiStudioApp(): JSX.Element {
           onOpenProject={openProject}
           onDeleteProject={deleteProject}
           onNewProject={() => void newProject()}
-          onOpenFolder={() => void openWorkspaceFolder()}
-          onRevealProjectFolder={revealProjectFolder}
+          onOpenFolder={getDesktopBridge() ? () => void openWorkspaceFolder() : undefined}
+          onRevealProjectFolder={getDesktopBridge() ? revealProjectFolder : undefined}
           onOpenModelCatalog={() => setModelCatalogOpened(true)}
           onPlayJourneyTour={playJourneyTour}
           journeyTourSeen={hasSeenJourneyTour()}

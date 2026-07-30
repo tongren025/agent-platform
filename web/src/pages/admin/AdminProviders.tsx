@@ -29,7 +29,7 @@ export default function AdminProviders() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(fetch, []);
+  useEffect(() => { fetch(); }, []);
 
   const openCreate = () => {
     setEditing(null);

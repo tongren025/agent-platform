@@ -40,21 +40,15 @@ def test_canvas_engine_rejects_unsafe_key(tmp_path, monkeypatch, engine):
 
 def test_image_model_catalog_maps_platform_media_models(monkeypatch):
     monkeypatch.setattr(
-        canvas.openrouter_media,
-        "list_media_models",
+        canvas.canvas_catalog,
+        "list_canvas_models",
         lambda kind: [{
-            "id": "vendor/image-model",
-            "name": "Image Model",
-            "description": "test",
-            "pricing": {"prompt": "0", "image": "0.01"},
-            "isFree": False,
-            "inputModalities": ["text"],
-            "outputModalities": [kind],
-            "supportedParameters": {"aspect_ratio": ["9:16"]},
-            "supportedResolutions": ["1024x1536"],
-            "supportedAspectRatios": ["9:16"],
-            "recommended": True,
-            "recommendationReason": "适合画布生图",
+            "modelKey": "vendor/image-model",
+            "vendorKey": "openrouter",
+            "labelZh": "Image Model",
+            "enabled": True,
+            "pricing": {"cost": 1},
+            "meta": {"supportedParameters": {"aspect_ratio": ["9:16"]}},
         }],
     )
 
@@ -64,7 +58,7 @@ def test_image_model_catalog_maps_platform_media_models(monkeypatch):
     assert result["data"][0]["modelId"] == "openrouter:vendor/image-model"
     assert result["data"][0]["actualModelId"] == "vendor/image-model"
     assert result["data"][0]["modelName"] == "Image Model"
-    assert result["data"][0]["recommended"] is True
+    assert result["data"][0]["provider"] == "openrouter"
 
 
 def test_canvas_image_generation_uses_platform_service(tmp_path, monkeypatch):
@@ -94,6 +88,9 @@ def test_canvas_image_generation_uses_platform_service(tmp_path, monkeypatch):
 
 def test_workbench_project_round_trip_uses_server_storage(tmp_path, monkeypatch):
     monkeypatch.setattr(canvas, "WORKBENCH_DIR", tmp_path)
+    production_dir = tmp_path / "production"
+    production_dir.mkdir()
+    monkeypatch.setattr(canvas, "PRODUCTION_DIR", production_dir)
     record = {
         "id": "project-1",
         "name": "平台画布项目",
@@ -132,18 +129,16 @@ def test_workbench_project_rejects_mismatched_id(tmp_path, monkeypatch):
 
 def test_workbench_model_catalog_maps_platform_media_models(monkeypatch):
     monkeypatch.setattr(
-        canvas.openrouter_media,
-        "list_media_models",
+        canvas.canvas_catalog,
+        "list_canvas_models",
         lambda kind: [{
-            "id": f"vendor/{kind}-model",
-            "name": f"{kind.title()} Model",
-            "description": "平台媒体模型",
-            "inputModalities": ["text"],
-            "outputModalities": [kind],
-            "supportedParameters": {"aspect_ratio": ["9:16"]},
-            "supportedResolutions": ["1024x1536"],
-            "supportedAspectRatios": ["9:16"],
-            "recommended": True,
+            "modelKey": f"vendor/{kind}-model",
+            "vendorKey": "openrouter",
+            "modelAlias": f"vendor/{kind}-model",
+            "labelZh": f"{kind.title()} Model",
+            "kind": kind,
+            "enabled": True,
+            "meta": {"recommended": True},
         }],
     )
 
@@ -164,6 +159,11 @@ def test_workbench_image_task_uses_platform_image_service(monkeypatch):
         return {"url": "/uploads/canvas/result.png"}
 
     monkeypatch.setattr(canvas, "generate_image_to_local", fake_generate)
+    monkeypatch.setattr(
+        canvas.canvas_catalog,
+        "find_canvas_model",
+        lambda vendor, model, kind: {"vendorKey": vendor, "modelKey": model, "kind": kind},
+    )
     result = canvas.run_workbench_task(canvas.WorkbenchTaskReq(
         kind="text_to_image",
         prompt="雨夜街道",
@@ -190,9 +190,14 @@ def test_workbench_video_task_submit_and_poll_platform_service(monkeypatch):
 
     monkeypatch.setattr(canvas.openrouter_media, "submit_video", fake_submit)
     monkeypatch.setattr(
+        canvas.canvas_catalog,
+        "find_canvas_model",
+        lambda vendor, model, kind: {"vendorKey": vendor, "modelKey": model, "kind": kind},
+    )
+    monkeypatch.setattr(
         canvas.openrouter_media,
         "sync_video",
-        lambda project_id, job_id: {
+        lambda project_id, job_id, **kwargs: {
             "id": job_id,
             "status": "completed",
             "url": f"/uploads/director/{project_id}/result.mp4",
@@ -217,6 +222,7 @@ def test_workbench_video_task_submit_and_poll_platform_service(monkeypatch):
     assert submitted["data"]["status"] == "running"
     assert captured["project_id"] == "unsafeproject"
     assert captured["model"] == "vendor/video-model"
+    assert captured["provider"] == "openrouter"
     assert captured["image_url"] == "/uploads/canvas/frame.png"
     assert captured["generate_audio"] is False
 
@@ -227,6 +233,57 @@ def test_workbench_video_task_submit_and_poll_platform_service(monkeypatch):
     )
     assert polled["data"]["result"]["status"] == "succeeded"
     assert polled["data"]["result"]["assets"][0]["url"].endswith("/result.mp4")
+
+
+def test_workbench_lists_and_imports_existing_production_project(tmp_path, monkeypatch):
+    workbench_dir = tmp_path / "workbench"
+    production_dir = tmp_path / "production"
+    project_dir = production_dir / "story-1"
+    workbench_dir.mkdir()
+    project_dir.mkdir(parents=True)
+    (project_dir / "project.json").write_text(
+        """{
+          "project_id": "story-1",
+          "name": "已有漫剧",
+          "description": "继续完成这一季",
+          "created_at": "2026-07-01T00:00:00+00:00",
+          "updated_at": "2026-07-02T00:00:00+00:00"
+        }""",
+        "utf-8",
+    )
+    (project_dir / "cards.json").write_text(
+        """[
+          {
+            "card_id": "shot-1",
+            "project_id": "story-1",
+            "stage": "storyboard",
+            "title": "第一镜",
+            "content": "主角推门进入雨巷",
+            "prompts": ["雨夜巷口"],
+            "images": ["/uploads/production/story-1/shot.png"],
+            "videos": [],
+            "shot_number": 1,
+            "created_at": "2026-07-02T00:00:00+00:00",
+            "updated_at": "2026-07-02T00:00:00+00:00"
+          }
+        ]""",
+        "utf-8",
+    )
+    monkeypatch.setattr(canvas, "WORKBENCH_DIR", workbench_dir)
+    monkeypatch.setattr(canvas, "PRODUCTION_DIR", production_dir)
+
+    listed = canvas.list_workbench_projects()["data"]
+    assert [(item["id"], item["name"]) for item in listed] == [("story-1", "已有漫剧")]
+
+    imported = canvas.get_workbench_project("story-1")["data"]
+    nodes = imported["payload"]["generationCanvas"]["nodes"]
+    assert imported["id"] == "story-1"
+    assert nodes[0]["meta"]["productionCardId"] == "shot-1"
+    assert nodes[0]["result"]["url"].endswith("/shot.png")
+    assert (workbench_dir / "story-1.json").exists()
+
+    assets = canvas.list_workbench_assets("story-1")["data"]["items"]
+    assert assets[0]["data"]["url"].endswith("/shot.png")
 
 
 @pytest.mark.asyncio

@@ -218,8 +218,15 @@ export async function readLocalProjectAsync(projectId: string): Promise<Workbenc
   if (isPlatformRuntime()) {
     try {
       const record = await platformProjectRequest<WorkbenchProjectRecordV1>(`/${encodeURIComponent(id)}`)
-      writeJson(projectRecordKey(id), record)
-      return record
+      // 平台生产项目可能含数千张卡片，完整画布快照会超过浏览器 localStorage 配额。
+      // 服务端才是平台运行时真相源；本地缓存失败不能反过来让“打开已有项目”失败。
+      try {
+        writeJson(projectRecordKey(id), record)
+      } catch (error) {
+        console.warn('平台画布项目较大，跳过浏览器快照缓存', error)
+      }
+      const summary = normalizeSummary(record)
+      return summary ? normalizeRecord(summary, record) : record
     } catch {
       // 服务端不存在时回退本地缓存，兼容首次迁移前的浏览器项目。
     }
@@ -277,9 +284,21 @@ export function saveLocalProject(
   if (desktop) {
     return desktop.projects.save(id, record) as WorkbenchProjectRecordV1
   }
-  if (existingRecord) rememberProjectBackup(id, existingRecord)
+  if (existingRecord) {
+    try {
+      rememberProjectBackup(id, existingRecord)
+    } catch (error) {
+      if (!isPlatformRuntime()) throw error
+      console.warn('平台画布项目较大，跳过浏览器备份缓存', error)
+    }
+  }
   const nextIndex = [summary, ...readMergedProjectSummaries().filter((item) => item.id !== id)]
-  writeJson(projectRecordKey(id), record)
+  try {
+    writeJson(projectRecordKey(id), record)
+  } catch (error) {
+    if (!isPlatformRuntime()) throw error
+    console.warn('平台画布项目较大，改由服务端持久化', error)
+  }
   writeIndex(nextIndex)
   mirrorProject(record)
   return record

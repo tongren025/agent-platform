@@ -21,8 +21,17 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 
-# 签 token 用的密钥：未配置则每次启动随机生成（重启即令所有已发 token 失效）
-ADMIN_SECRET = os.environ.get("ADMIN_SECRET") or secrets.token_hex(32)
+# 签 token 用的密钥：未配置则用固定开发密钥（跨进程一致），
+# 避免 app(8000) 与 admin(8001) 各自随机生成导致 token 互不认账。
+_env_secret = os.environ.get("ADMIN_SECRET", "").strip()
+if _env_secret:
+    ADMIN_SECRET = _env_secret
+else:
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "ADMIN_SECRET 未配置，使用固定开发密钥——生产环境务必在 .env 中设置 ADMIN_SECRET"
+    )
+    ADMIN_SECRET = "dev-only-secret-change-in-production"
 
 # token 有效期（秒），默认 12 小时
 ADMIN_TOKEN_TTL = int(os.environ.get("ADMIN_TOKEN_TTL", str(12 * 3600)))

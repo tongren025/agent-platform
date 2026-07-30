@@ -24,7 +24,7 @@ export default function AdminRoles() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(fetchAll, []);
+  useEffect(() => { fetchAll(); }, []);
 
   const openCreate = () => {
     setEditing(null);

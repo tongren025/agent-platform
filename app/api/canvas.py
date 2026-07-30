@@ -22,8 +22,10 @@ from pydantic import BaseModel, Field
 from app.api.common import ok, validate_key
 from app.config import BASE_DIR
 from app.core.logging import get_logger
+from app.dependencies import ai_service
 from app.services.image_generation import generate_image_to_local
-from app.services import openrouter_media
+from app.services import canvas_catalog, canvas_projects, openrouter_media
+from app.services.chat_response import extract_chat_content
 from app.models.conversation import AgentRunRequest
 from app.models.production import STAGES, STAGE_INSTRUCTIONS
 from app.services.invocation import run_invocation
@@ -40,6 +42,7 @@ WORKBENCH_DIR = DATA_DIR / "workbench"
 WORKBENCH_DIR.mkdir(parents=True, exist_ok=True)
 WORKBENCH_ASSET_DIR = DATA_DIR / "workbench-assets"
 WORKBENCH_ASSET_DIR.mkdir(parents=True, exist_ok=True)
+PRODUCTION_DIR = BASE_DIR / "data" / "production"
 UPLOAD_DIR = BASE_DIR / "data" / "uploads" / "canvas"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -298,27 +301,27 @@ def save_canvas_engine(engine: str, req: SaveCanvasEngineReq):
 
 @router.get("/image-models")
 def list_image_models():
-    """只列出实时确认支持图片输出的 OpenRouter 模型，禁止聊天模型混入。"""
+    """列出后台明确配置且可用的图片模型，禁止公共目录和聊天模型混入。"""
     try:
-        models = openrouter_media.list_media_models("image")
+        models = canvas_catalog.list_canvas_models("image")
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(502, f"读取 OpenRouter 图片模型失败: {exc}") from exc
+        raise HTTPException(500, f"读取平台图片模型失败: {exc}") from exc
     return ok([
         {
-            "provider": "openrouter",
-            # 加显式供应商前缀，让通用生图服务走 OpenRouter 专用 /images API。
-            "modelId": f"openrouter:{model['id']}",
-            "actualModelId": model["id"],
-            "modelName": model["name"],
-            "pricing": model["pricing"],
-            "isFree": model["isFree"],
-            "recommended": model["recommended"],
-            "recommendationReason": model["recommendationReason"],
-            "supportedParameters": model["supportedParameters"],
+            "provider": model["vendorKey"],
+            "modelId": f"{model['vendorKey']}:{model['modelKey']}",
+            "actualModelId": model["modelKey"],
+            "modelName": model["labelZh"],
+            "pricing": model.get("pricing") or {},
+            "isFree": False,
+            "recommended": False,
+            "recommendationReason": "",
+            "supportedParameters": (model.get("meta") or {}).get("supportedParameters") or {},
         }
         for model in models
+        if model.get("enabled")
     ])
 
 
@@ -327,32 +330,20 @@ def list_image_models():
 
 @router.get("/workbench/projects")
 def list_workbench_projects():
-    """列出完整工作台项目摘要，数据由平台服务端统一保存。"""
-    projects = []
-    for path in WORKBENCH_DIR.glob("*.json"):
-        try:
-            record = json.loads(path.read_text("utf-8"))
-            projects.append({
-                key: record.get(key)
-                for key in (
-                    "id", "name", "createdAt", "updatedAt", "revision", "savedAt",
-                    "thumbStyle", "thumbnail", "thumbnailUrls", "seedKey", "source",
-                    "rootPath", "missing", "draft",
-                )
-                if key in record
-            })
-        except Exception:
-            logger.warning("工作台项目文件损坏，跳过: %s", path.name)
-    projects.sort(key=lambda item: int(item.get("updatedAt") or 0), reverse=True)
-    return ok(projects)
+    """列出画布项目和平台现有生产项目，二者使用同一项目 ID。"""
+    return ok(canvas_projects.list_project_summaries(WORKBENCH_DIR, PRODUCTION_DIR))
 
 
 @router.get("/workbench/projects/{project_id}")
 def get_workbench_project(project_id: str):
-    path = _workbench_path(project_id)
-    if not path.exists():
+    record = canvas_projects.read_or_import_project(
+        project_id,
+        WORKBENCH_DIR,
+        PRODUCTION_DIR,
+    )
+    if record is None:
         raise HTTPException(404, f"工作台项目 {project_id} 不存在")
-    return ok(json.loads(path.read_text("utf-8")))
+    return ok(record)
 
 
 @router.put("/workbench/projects/{project_id}")
@@ -377,8 +368,14 @@ def delete_workbench_project(project_id: str):
 
 @router.get("/workbench/assets")
 def list_workbench_assets(project_id: str = Query(..., min_length=1)):
-    """列出一个完整工作台项目已上传或引用的素材。"""
+    """列出画布上传素材，并合并同 ID 生产项目已有的图片和视频。"""
     items = _load_workbench_assets(project_id)
+    known_ids = {str(item.get("id") or "") for item in items}
+    items.extend(
+        item
+        for item in canvas_projects.production_assets(PRODUCTION_DIR, project_id)
+        if str(item.get("id") or "") not in known_ids
+    )
     items.sort(key=lambda item: str(item.get("updatedAt") or ""), reverse=True)
     return ok({"items": items, "cursor": None})
 
@@ -468,39 +465,21 @@ def _workbench_project_id(value: Any) -> str:
     return cleaned.strip(".-_")[:80] or "agent-canvas"
 
 
+@router.get("/workbench/vendors")
+def list_workbench_vendors():
+    """列出平台已有数字员工入口和 AI 供应商，不返回任何密钥。"""
+    return ok(canvas_catalog.list_canvas_vendors())
+
+
 @router.get("/workbench/models")
-def list_workbench_models(kind: str = Query("image", pattern="^(image|video)$")):
-    """把平台媒体模型目录映射为画布工作台可消费的 catalog。"""
+def list_workbench_models(kind: str = Query("image", pattern="^(text|image|video)$")):
+    """把平台已配置员工/模型映射为画布工作台可消费的 catalog。"""
     try:
-        models = openrouter_media.list_media_models(kind)
+        return ok(canvas_catalog.list_canvas_models(kind))
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(502, f"读取平台 {kind} 模型失败: {exc}") from exc
-    now = _now()
-    return ok([
-        {
-            "modelKey": model["id"],
-            "vendorKey": "openrouter",
-            "modelAlias": model["id"],
-            "labelZh": model["name"],
-            "kind": kind,
-            "enabled": True,
-            "meta": {
-                "description": model.get("description") or "",
-                "inputModalities": model.get("inputModalities") or ["text"],
-                "outputModalities": model.get("outputModalities") or [kind],
-                "supportedParameters": model.get("supportedParameters") or {},
-                "supportedResolutions": model.get("supportedResolutions") or [],
-                "supportedAspectRatios": model.get("supportedAspectRatios") or [],
-                "recommended": bool(model.get("recommended")),
-            },
-            "pricing": {"cost": 0, "enabled": True, "specCosts": []},
-            "createdAt": now,
-            "updatedAt": now,
-        }
-        for model in models
-    ])
+        raise HTTPException(500, f"读取平台 {kind} 模型失败: {exc}") from exc
 
 
 class WorkbenchTaskReq(BaseModel):
@@ -516,24 +495,59 @@ class WorkbenchTaskReq(BaseModel):
 
 @router.post("/workbench/tasks")
 def run_workbench_task(req: WorkbenchTaskReq):
-    """使用平台模型执行工作台图片任务或提交视频任务。"""
+    """使用平台已配置员工/模型执行文本、图片或视频任务。"""
     prompt = req.prompt.strip()
     if not prompt:
         raise HTTPException(400, "提示词不能为空")
-    if req.vendor != "openrouter":
-        raise HTTPException(400, f"平台暂不支持供应商: {req.vendor}")
     model = str(req.extras.get("modelKey") or "").strip()
     if not model:
         raise HTTPException(400, "请选择模型")
     project_id = _workbench_project_id(req.extras.get("projectId"))
     task_id = f"canvas_{uuid.uuid4().hex[:16]}"
+    kind_by_task = {
+        "chat": "text",
+        "prompt_refine": "text",
+        "text_to_image": "image",
+        "image_edit": "image",
+        "text_to_video": "video",
+        "image_to_video": "video",
+    }
+    catalog_kind = kind_by_task.get(req.kind)
+    if catalog_kind is None:
+        raise HTTPException(400, f"平台暂不支持任务类型: {req.kind}")
+    if canvas_catalog.find_canvas_model(req.vendor, model, catalog_kind) is None:
+        raise HTTPException(
+            400,
+            f"模型未在平台启用的 {catalog_kind} 目录中: {req.vendor}:{model}",
+        )
     try:
+        if req.kind in ("chat", "prompt_refine"):
+            client, actual_model = ai_service.get_client(f"{req.vendor}:{model}")
+            response = client.chat.completions.create(
+                model=actual_model,
+                messages=[{"role": "user", "content": prompt}],
+                timeout=120,
+            )
+            content = extract_chat_content(response)
+            return ok({
+                "id": task_id,
+                "kind": req.kind,
+                "status": "succeeded",
+                "assets": [],
+                "raw": {"choices": [{"message": {"content": content}}]},
+                "provenance": {
+                    "provider": req.vendor,
+                    "modelKey": model,
+                    "prompt": prompt,
+                    "timestamp": int(datetime.now(timezone.utc).timestamp() * 1000),
+                },
+            })
         if req.kind in ("text_to_image", "image_edit"):
             width = max(256, min(int(req.width or 1024), 4096))
             height = max(256, min(int(req.height or 1536), 4096))
             generated = generate_image_to_local(
                 prompt,
-                f"openrouter:{model}",
+                f"{req.vendor}:{model}",
                 f"{width}x{height}",
             )
             return ok({
@@ -543,7 +557,7 @@ def run_workbench_task(req: WorkbenchTaskReq):
                 "assets": [{"type": "image", "url": generated["url"]}],
                 "raw": generated,
                 "provenance": {
-                    "provider": "openrouter",
+                    "provider": req.vendor,
                     "modelKey": model,
                     "prompt": prompt,
                     "timestamp": int(datetime.now(timezone.utc).timestamp() * 1000),
@@ -564,6 +578,7 @@ def run_workbench_task(req: WorkbenchTaskReq):
                 aspect_ratio=str(req.extras.get("aspectRatio") or "9:16"),
                 image_url=first_frame,
                 generate_audio=bool(req.extras.get("generateAudio", True)),
+                provider=req.vendor,
             )
             return ok({
                 "id": job["id"],
@@ -585,10 +600,15 @@ def get_workbench_task(
     task_id: str,
     kind: str = Query("text_to_video"),
     project_id: str = Query("agent-canvas"),
+    vendor: str = Query("openrouter"),
 ):
     """轮询工作台视频任务，完成后返回已落地的平台 MP4 地址。"""
     try:
-        result = openrouter_media.sync_video(_workbench_project_id(project_id), task_id)
+        result = openrouter_media.sync_video(
+            _workbench_project_id(project_id),
+            task_id,
+            provider=vendor,
+        )
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
     except Exception as exc:
@@ -605,7 +625,7 @@ def get_workbench_task(
         else []
     )
     return ok({
-        "vendor": "openrouter",
+        "vendor": vendor,
         "result": {
             "id": task_id,
             "kind": kind,

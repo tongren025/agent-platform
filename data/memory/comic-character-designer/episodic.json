@@ -7,9 +7,9 @@
     "result": "跨镜头识别度提高，提示词整合不再随意改写。",
     "successScore": 0.95,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-29T14:06:48.130682Z"
   },
   {
     "memoryId": "seed_comic-character-designer_epi_02",
@@ -19,9 +19,9 @@
     "result": "巨龙主体更清晰，动作轨迹和特效能落到具体部位。",
     "successScore": 0.94,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-29T14:06:48.130682Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-character-designer_epi_01",
@@ -31,8 +31,8 @@
     "result": "下游提示词角色不漂移,EP01到EP09有可见成长",
     "successScore": 0.93,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
-    "createdAt": "2026-06-30T11:44:56.150698+00:00",
-    "lastAccessed": null
+    "accessCount": 1,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": "2026-07-29T14:06:48.130682Z"
   }
 ]
