@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import logging
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Awaitable, Callable, Optional
 
 import openai
 
@@ -49,6 +49,11 @@ class AgentRunResult:
     pending_approval: Optional[PendingApprovalDetail] = None
     delegation_stack: Optional[list[str]] = None
     deep_state_checkpoint: Optional[dict] = None
+    resolved_model: str = ""
+    model_call_count: int = 0
+    retry_count: int = 0
+    llm_elapsed_ms: int = 0
+    first_token_ms: int | None = None
 
 
 def _parse_schema(raw: Optional[str]) -> dict:
@@ -143,6 +148,9 @@ async def run_agent(
     existing_messages: Optional[list[dict]] = None,
     existing_deep_state_checkpoint: Optional[dict] = None,
     run_id: Optional[str] = None,
+    on_text_delta: Optional[
+        Callable[[str, str], Awaitable[None] | None]
+    ] = None,
 ) -> AgentRunResult:
     """运行 agent，并在 DeepAgent 模式恢复/返回同一会话的 todos/files checkpoint。"""
     run_result = AgentRunResult(
@@ -221,6 +229,10 @@ async def run_agent(
         max_retries=int(model_policy.get("max_retries", 2)),
         request_timeout=float(model_policy.get("request_timeout", 60.0)),
         fallback_clients=fallback_clients,
+        on_text_delta=on_text_delta,
+        reasoning_effort=(
+            str(model_policy.get("reasoning_effort", "")).strip() or None
+        ),
         tool_result_transform=(
             lambda tool_name, content: compact_tool_result(
                 tool_name,
@@ -273,6 +285,11 @@ async def run_agent(
     run_result.traces = loop_result.traces
     run_result.auto_invoke_count = loop_result.iterations
     run_result.pending_approval = loop_result.pending_approval
+    run_result.resolved_model = loop_result.resolved_model or resolved_model
+    run_result.model_call_count = loop_result.model_call_count
+    run_result.retry_count = loop_result.retry_count
+    run_result.llm_elapsed_ms = loop_result.llm_elapsed_ms
+    run_result.first_token_ms = loop_result.first_token_ms
 
     if loop_result.prompt_tokens or loop_result.completion_tokens:
         run_result.token_usage = AgentTokenUsage(

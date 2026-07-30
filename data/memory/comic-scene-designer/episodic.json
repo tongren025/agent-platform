@@ -7,9 +7,9 @@
     "result": "动作轨迹能接上，镜头不会空间跳变。",
     "successScore": 0.94,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-30T06:32:33.261693Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-scene-designer_epi_01",
@@ -19,8 +19,8 @@
     "result": "场景母版可被EP02所有镜头复用,风格统一",
     "successScore": 0.92,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-30T06:32:33.261693Z"
   }
 ]

@@ -428,6 +428,7 @@ export default function Workbench() {
     setLoading(true);
     setStoppingRun(false);
     const runId = createRunId();
+    const streamMessageTimestamp = new Date().toISOString();
     setActiveRunId(runId);
 
     try {
@@ -439,21 +440,49 @@ export default function Workbench() {
       };
       if (extraContext) payload.extraContext = extraContext;
 
+      const updateStreamingMessage = (content: string) => {
+        setMessages((prev) => {
+          const index = prev.findIndex(
+            (item) => item.timestamp === streamMessageTimestamp,
+          );
+          if (index < 0) {
+            return [...prev, {
+              role: 'assistant',
+              content,
+              timestamp: streamMessageTimestamp,
+            }];
+          }
+          const next = [...prev];
+          next[index] = { ...next[index], content };
+          return next;
+        });
+      };
       const res: AgentRunResponse = mode === 'team'
-        ? await api.runTeam({
+        ? await api.runTeamStream({
             teamCode: selectedKey,
             userInput: text || '请查看附件',
             sessionId: sessionId || undefined,
             extraContext: extraContext || undefined,
             runId,
-          })
-        : await api.runAgent(payload);
+          }, { onContent: (_delta, currentText) => updateStreamingMessage(currentText) })
+        : await api.runAgentStream(
+            payload,
+            { onContent: (_delta, currentText) => updateStreamingMessage(currentText) },
+          );
 
       const assistantMsg: ChatMessage = {
         role: 'assistant', content: res.assistantMessage, timestamp: new Date().toISOString(),
         tokenUsage: res.tokenUsage, traces: res.traces?.length ? res.traces : undefined,
       };
-      setMessages((prev) => [...prev, assistantMsg]);
+      setMessages((prev) => {
+        const index = prev.findIndex(
+          (item) => item.timestamp === streamMessageTimestamp,
+        );
+        if (index < 0) return [...prev, assistantMsg];
+        const next = [...prev];
+        next[index] = assistantMsg;
+        return next;
+      });
       if (res.cancelled) message.info('当前运行已安全停止。');
       if (res.sessionId) { setSessionId(res.sessionId); hydrateSession(res.sessionId); }
     } catch (e: any) { message.error(e.message); }

@@ -20,6 +20,9 @@ class AgentRunRequest(BaseModel):
     workflow_key: Optional[str] = Field(None, alias="workflowKey")
     user_input: str = Field(..., alias="userInput")
     extra_context: Optional[str] = Field(None, alias="extraContext")
+    # 只参与本次模型请求、不写入会话历史。画布方法论、动态模型清单等大块
+    # 运行时上下文应走此字段，避免每轮续聊都把相同内容永久复制一遍。
+    transient_context: Optional[str] = Field(None, alias="transientContext")
     structured_schema_json: Optional[str] = Field(None, alias="structuredSchemaJson")
     model_overrides: Optional[dict] = Field(None, alias="modelOverrides")
     session_id: Optional[str] = Field(None, alias="sessionId")

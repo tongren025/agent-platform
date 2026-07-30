@@ -26,6 +26,7 @@ import {
 import { COLORS } from '../theme';
 import { hasPerm, userAuth } from '../userAuth';
 import TaskCompletionNotifier from './TaskCompletionNotifier';
+import SystemManagerDrawer from './SystemManagerDrawer';
 
 // perm 为空的条目所有登录用户可见;有 perm 的按角色权限显隐(与后端中间件的映射一致)
 type NavItem = {
@@ -254,6 +255,7 @@ export default function Layout() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100vw', overflowX: 'hidden' }}>
       <TaskCompletionNotifier />
+      <SystemManagerDrawer />
       {/* Mobile header */}
       {isMobile && (
         <div style={{

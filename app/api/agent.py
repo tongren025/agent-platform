@@ -13,6 +13,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile
 from pydantic import BaseModel, Field
+from starlette.responses import StreamingResponse
 
 from app.api.common import ok as _ok
 from app.config import BASE_DIR, settings
@@ -139,7 +140,11 @@ async def upload_file(file: UploadFile = File(...)):
 # ── Agent Run ──────────────────────────────────────────────────────
 
 
-async def _execute_agent_run(body: AgentRunRequest) -> dict:
+async def _execute_agent_run(
+    body: AgentRunRequest,
+    *,
+    on_text_delta=None,
+) -> dict:
     """登记并执行一次可取消运行；控制状态只驻留当前进程。"""
     quotas = getattr(settings, "quotas", {})
     if quotas:
@@ -175,8 +180,13 @@ async def _execute_agent_run(body: AgentRunRequest) -> dict:
     timeout = settings.agent.run_timeout_seconds
 
     try:
+        invocation = (
+            run_invocation(body, on_text_delta=on_text_delta)
+            if on_text_delta is not None
+            else run_invocation(body)
+        )
         agent_result = await asyncio.wait_for(
-            run_invocation(body),
+            invocation,
             timeout=timeout,
         )
     except asyncio.TimeoutError:
@@ -214,6 +224,92 @@ async def _execute_agent_run(body: AgentRunRequest) -> dict:
 async def run_agent_endpoint(request: Request, body: AgentRunRequest):
     """POST /run：执行可取消的同步运行；客户端可预生成 runId 并从另一请求停止。"""
     return await _execute_agent_run(body)
+
+
+def _ndjson(event: str, data: dict) -> bytes:
+    """编码一条浏览器可增量解析的 NDJSON 事件。"""
+    return (
+        json.dumps({"event": event, "data": data}, ensure_ascii=False)
+        + "\n"
+    ).encode("utf-8")
+
+
+def _stream_agent_events(
+    request: Request,
+    body: AgentRunRequest,
+    *,
+    finalize=None,
+):
+    """把统一 AgentRun 执行桥接成 NDJSON；断连时取消后台运行。"""
+    run_id = body.run_id or generate_run_id()
+    body.run_id = run_id
+
+    async def events():
+        queue: asyncio.Queue[tuple[str, dict]] = asyncio.Queue(maxsize=128)
+
+        async def on_text_delta(delta: str, text: str) -> None:
+            await queue.put(("content", {"delta": delta, "text": text}))
+
+        async def execute() -> None:
+            try:
+                envelope = await _execute_agent_run(
+                    body,
+                    on_text_delta=on_text_delta,
+                )
+                data = envelope["data"]
+                if finalize is not None:
+                    finalize(data)
+                await queue.put(("result", data))
+            except HTTPException as exc:
+                await queue.put(("error", {
+                    "message": str(exc.detail),
+                    "status": exc.status_code,
+                }))
+            except Exception as exc:
+                logger.exception("Streaming agent run failed run=%s", run_id)
+                await queue.put(("error", {"message": str(exc)}))
+            finally:
+                await queue.put(("done", {"reason": "finished"}))
+
+        task = asyncio.create_task(execute())
+        yield _ndjson("initial", {"runId": run_id})
+        try:
+            while True:
+                try:
+                    event, data = await asyncio.wait_for(queue.get(), timeout=0.5)
+                except asyncio.TimeoutError:
+                    if await request.is_disconnected():
+                        active_run_control.request_cancel(run_id)
+                        task.cancel()
+                        break
+                    continue
+                yield _ndjson(event, data)
+                if event == "done":
+                    break
+        finally:
+            if not task.done():
+                active_run_control.request_cancel(run_id)
+                task.cancel()
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
+
+    return StreamingResponse(
+        events(),
+        media_type="application/x-ndjson",
+        headers={
+            "Cache-Control": "no-cache, no-transform",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@router.post("/run-stream")
+@limiter.limit("20/minute")
+async def run_agent_stream_endpoint(request: Request, body: AgentRunRequest):
+    """POST /run-stream：逐字返回模型内容，末尾发送完整 AgentRunResponse。"""
+    return _stream_agent_events(request, body)
 
 
 # ── Team Run ──────────────────────────────────────────────────────
@@ -297,6 +393,17 @@ async def run_team_endpoint(request: Request, body: TeamRunBody):
     )
     response = await _execute_agent_run(agent_request)
     data = response["data"]
+    _mark_team_session(data, team_code, team_name, leader_key)
+    return response
+
+
+def _mark_team_session(
+    data: dict,
+    team_code: str,
+    team_name: str,
+    leader_key: str,
+) -> None:
+    """把统一 Agent 结果对应的会话标为团队会话。"""
     sid = data.get("sessionId")
     if sid:
         session = memory_store.load_session(sid)
@@ -307,4 +414,35 @@ async def run_team_endpoint(request: Request, body: TeamRunBody):
             session.metadata["teamName"] = team_name
             session.metadata["leaderEmployeeKey"] = leader_key
             memory_store.save_session(session)
-    return response
+
+
+@router.post("/team-run-stream")
+@limiter.limit("20/minute")
+async def run_team_stream_endpoint(request: Request, body: TeamRunBody):
+    """POST /team-run-stream：团队负责人流式回复并保留团队会话标记。"""
+    if not body.team_code:
+        raise HTTPException(status_code=400, detail="teamCode is required")
+    if not body.user_input.strip():
+        raise HTTPException(status_code=400, detail="userInput is required")
+    leader_key, team_name, context = _team_context(
+        body.team_code,
+        body.user_input,
+        body.extra_context,
+    )
+    agent_request = AgentRunRequest(
+        employeeKey=leader_key,
+        userInput=body.user_input,
+        sessionId=body.session_id,
+        extraContext=json.dumps(context, ensure_ascii=False),
+        runId=body.run_id,
+    )
+    return _stream_agent_events(
+        request,
+        agent_request,
+        finalize=lambda data: _mark_team_session(
+            data,
+            body.team_code,
+            team_name,
+            leader_key,
+        ),
+    )

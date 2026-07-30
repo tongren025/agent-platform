@@ -196,6 +196,7 @@ export default function Employees() {
       outputModalities: ['text'],
       temperature: 0.7,
       maxTokens: 4096,
+      reasoningEffort: 'low',
       ...remembered,
       modelId: rememberedModel,
     });
@@ -215,6 +216,7 @@ export default function Employees() {
       outputModalities: record.outputModalities?.length ? record.outputModalities : ['text'],
       temperature: record.defaultModelPolicy?.temperature ?? 0.7,
       maxTokens: record.defaultModelPolicy?.max_tokens ?? record.defaultModelPolicy?.maxTokens ?? 4096,
+      reasoningEffort: record.defaultModelPolicy?.reasoning_effort ?? record.defaultModelPolicy?.reasoningEffort ?? 'low',
     });
     setOpen(true);
   };
@@ -239,7 +241,8 @@ export default function Employees() {
       videoModelId: policy.video_model_id || policy.videoModelId,
       outputModalities: draft.outputModalities?.length ? draft.outputModalities : ['text'],
       temperature: policy.temperature ?? 0.35,
-      maxTokens: policy.max_tokens ?? policy.maxTokens ?? 8192,
+      maxTokens: policy.max_tokens ?? policy.maxTokens ?? 4096,
+      reasoningEffort: policy.reasoning_effort ?? policy.reasoningEffort ?? 'low',
     });
   };
 
@@ -333,6 +336,7 @@ export default function Employees() {
         videoModelId,
         temperature,
         maxTokens,
+        reasoningEffort,
         ...rest
       } = values;
       const parsedTemperature = Number(temperature);
@@ -360,6 +364,12 @@ export default function Employees() {
       delete defaultModelPolicy.modelId;
       delete defaultModelPolicy.imageModelId;
       delete defaultModelPolicy.videoModelId;
+      delete defaultModelPolicy.reasoningEffort;
+      if (reasoningEffort && reasoningEffort !== 'auto') {
+        defaultModelPolicy.reasoning_effort = reasoningEffort;
+      } else {
+        delete defaultModelPolicy.reasoning_effort;
+      }
       if (modalities.includes('image') && imageModelId) {
         defaultModelPolicy.image_model_id = imageModelId;
       } else {
@@ -399,6 +409,7 @@ export default function Employees() {
         videoModelId: modalities.includes('video') ? videoModelId : undefined,
         temperature: Number.isFinite(parsedTemperature) ? parsedTemperature : 0.7,
         maxTokens: Number.isFinite(parsedMaxTokens) && parsedMaxTokens > 0 ? Math.trunc(parsedMaxTokens) : 4096,
+        reasoningEffort: reasoningEffort || 'low',
         tags: values.tags ?? [],
         enabled: values.enabled !== false,
       });
@@ -685,10 +696,26 @@ export default function Employees() {
                 />
               </Form.Item>
             </Col>
-            <Col xs={12} sm={12} md={6}>
+            <Col xs={12} sm={12} md={4}>
+              <Form.Item
+                label="推理强度"
+                name="reasoningEffort"
+                extra="GPT-5.6 日常任务推荐 low；复杂终审再用 medium/high。"
+              >
+                <Select options={[
+                  { label: '自动', value: 'auto' },
+                  { label: '无', value: 'none' },
+                  { label: '极低', value: 'minimal' },
+                  { label: '低（推荐）', value: 'low' },
+                  { label: '中', value: 'medium' },
+                  { label: '高', value: 'high' },
+                ]} />
+              </Form.Item>
+            </Col>
+            <Col xs={12} sm={12} md={4}>
               <Form.Item label="温度" name="temperature"><Slider min={0} max={2} step={0.1} /></Form.Item>
             </Col>
-            <Col xs={12} sm={12} md={6}>
+            <Col xs={12} sm={12} md={4}>
               <Form.Item label="最大 Token" name="maxTokens"><InputNumber min={256} max={128000} step={256} style={{ width: '100%' }} /></Form.Item>
             </Col>
           </Row>

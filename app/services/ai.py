@@ -14,6 +14,7 @@ import re
 import tempfile
 import time
 from pathlib import Path
+from threading import Lock
 from typing import Sequence
 
 import openai
@@ -139,6 +140,11 @@ class _ProviderSecretCipher:
         if not raw:
             raise ProviderSecretError("服务器供应商加密主密钥文件为空")
         return raw
+
+
+# 系统内其它凭证（例如 MCP OAuth token）复用同一套本地密钥治理。
+# 保留旧类名避免影响现有供应商存储，同时提供有明确用途的公共名称。
+LocalSecretCipher = _ProviderSecretCipher
 
 
 class AiProviderStore:
@@ -298,6 +304,13 @@ class AIService:
     ) -> None:
         self._config_providers = list(config_providers)
         self._store = provider_store
+        # OpenAI SDK 客户端内部维护 HTTP 连接池。按供应商复用客户端，避免每次
+        # 对话重复建立 TCP/TLS 连接；配置变化会形成新 key，不会复用旧凭据。
+        self._client_cache: dict[
+            tuple[str, str, str, bool],
+            openai.OpenAI | openai.AsyncOpenAI,
+        ] = {}
+        self._client_cache_lock = Lock()
 
     @property
     def _providers(self) -> list[AiModelConfig]:
@@ -341,13 +354,31 @@ class AIService:
         return self._store
 
     def _make_client(self, provider: AiModelConfig, *, async_client: bool) -> openai.OpenAI | openai.AsyncOpenAI:
-        """按供应商的 endpoint / api_key 造一个同步或异步 OpenAI 客户端。"""
+        """按供应商复用同步或异步 OpenAI 客户端及其 HTTP 连接池。"""
         if not provider.endpoint.strip():
             raise ValueError(f"AI provider {provider.name!r} missing endpoint")
         if not provider.api_key.strip():
             raise ValueError(f"AI provider {provider.name!r} missing API key")
-        cls = openai.AsyncOpenAI if async_client else openai.OpenAI
-        return cls(base_url=provider.endpoint, api_key=provider.api_key)
+        cache_key = (
+            provider.name.lower(),
+            provider.endpoint.strip(),
+            provider.api_key,
+            async_client,
+        )
+        with self._client_cache_lock:
+            cached = self._client_cache.get(cache_key)
+            if cached is not None:
+                return cached
+            cls = openai.AsyncOpenAI if async_client else openai.OpenAI
+            client = cls(
+                base_url=provider.endpoint.strip(),
+                api_key=provider.api_key,
+            )
+            # 单进程通常只有少量供应商；仍设置上限，防止频繁改配置无限积累旧 client。
+            if len(self._client_cache) >= 32:
+                self._client_cache.pop(next(iter(self._client_cache)))
+            self._client_cache[cache_key] = client
+            return client
 
     def _resolve_with_provider(
         self, provider_name: str, model_name: str, *, async_client: bool = False,

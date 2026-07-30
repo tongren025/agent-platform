@@ -169,3 +169,90 @@ async def test_empty_response_without_fallback_is_explicit_failure():
         )
 
     assert create.models == ["primary"]
+
+
+class _AsyncChunkStream:
+    """最小异步流，模拟 OpenAI ChatCompletionChunk。"""
+
+    def __init__(self, chunks: list):
+        self._chunks = list(chunks)
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        if not self._chunks:
+            raise StopAsyncIteration
+        return self._chunks.pop(0)
+
+
+def _chunk(content: str = "", *, finish_reason=None, tool_calls=None):
+    return SimpleNamespace(
+        choices=[
+            SimpleNamespace(
+                delta=SimpleNamespace(
+                    content=content,
+                    tool_calls=tool_calls,
+                ),
+                finish_reason=finish_reason,
+            )
+        ],
+        usage=None,
+    )
+
+
+async def test_streaming_completion_emits_incremental_text():
+    stream = _AsyncChunkStream([
+        _chunk("你"),
+        _chunk("好"),
+        _chunk("", finish_reason="stop"),
+    ])
+    client, _ = _fake_client([stream])
+    events: list[tuple[str, str]] = []
+
+    async def on_text(delta: str, text: str):
+        events.append((delta, text))
+
+    result = await _create_with_retry(
+        client,
+        {},
+        True,
+        _opts(max_retries=0, on_text_delta=on_text),
+        iteration=1,
+    )
+
+    assert result.choices[0].message.content == "你好"
+    assert events == [("你", "你"), ("好", "你好")]
+
+
+async def test_streaming_completion_reconstructs_tool_call():
+    first = SimpleNamespace(
+        index=0,
+        id="call_1",
+        type="function",
+        function=SimpleNamespace(name="generate_", arguments='{"prompt":"'),
+    )
+    second = SimpleNamespace(
+        index=0,
+        id=None,
+        type=None,
+        function=SimpleNamespace(name="image", arguments='夜景"}'),
+    )
+    stream = _AsyncChunkStream([
+        _chunk(tool_calls=[first]),
+        _chunk(tool_calls=[second], finish_reason="tool_calls"),
+    ])
+    client, _ = _fake_client([stream])
+
+    result = await _create_with_retry(
+        client,
+        {},
+        True,
+        _opts(max_retries=0, on_text_delta=lambda *_: None),
+        iteration=1,
+    )
+
+    tool_call = result.choices[0].message.tool_calls[0]
+    assert tool_call.id == "call_1"
+    assert tool_call.function.name == "generate_image"
+    assert tool_call.function.arguments == '{"prompt":"夜景"}'

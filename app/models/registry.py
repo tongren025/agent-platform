@@ -62,6 +62,9 @@ class McpServerDefinition(RegistryEntity):
     command_args: Optional[list[str]] = Field(None, alias="commandArgs")
     url: Optional[str] = None
     env: Optional[dict[str, str]] = None
+    headers: Optional[dict[str, str]] = None
+    auth_type: str = Field("none", alias="authType")
+    oauth_scope: Optional[str] = Field(None, alias="oauthScope")
     description: Optional[str] = None
 
     def get_key(self) -> str:

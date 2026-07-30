@@ -10,6 +10,7 @@ API key 从 DASHSCOPE_API_KEY 环境变量读（见 core/settings.py）。
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Sequence
 
@@ -41,7 +42,10 @@ async def embed_texts(
         from dashscope import TextEmbedding
 
         dashscope.api_key = api_key
-        resp = TextEmbedding.call(
+        # DashScope SDK 是同步接口；放进工作线程，避免阻塞 FastAPI 事件循环，
+        # 否则一次慢 embedding 会让同进程的画布和其他 API 一起“卡住”。
+        resp = await asyncio.to_thread(
+            TextEmbedding.call,
             model=model,
             input=list(texts),
             dimension=dimension,

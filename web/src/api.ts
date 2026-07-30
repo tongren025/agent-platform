@@ -237,6 +237,113 @@ async function request<T>(path: string, init?: RequestOptions): Promise<T> {
   return json.data;
 }
 
+export interface SystemManagerProposal {
+  proposalId: string;
+  action: string;
+  summary: string;
+  expiresInSeconds: number;
+}
+
+export interface SystemManagerContext {
+  page: { title: string; summary: string; steps: string[] };
+  inventory: { employees: number; skills: number; tools: number; mcpServers: number };
+  mcpStatus: {
+    serverCode: string;
+    name: string;
+    transportType: string;
+    status: 'configured' | 'incomplete' | 'auth_required' | 'error';
+    missingFields: string[];
+    missingEnvironmentVariables: string[];
+    authType: 'none' | 'oauth' | string;
+    authStatus: 'not_required' | 'login_required' | 'authorized';
+    lastCheck?: { status: string; checkedAt: string; toolCount: number; tools: string[]; error: string } | null;
+  }[];
+  recentFailures: { runId: string; employeeKey: string; createdAt: string; error: string }[];
+  recentChanges: { timestamp: string; action: string; summary: string; status: string; message: string }[];
+  knowledgeSources: string[];
+}
+
+export interface SystemManagerReply {
+  mode: 'guide' | 'manage' | 'diagnose';
+  answer: string;
+  suggestions: string[];
+  sources: { title: string; type: string }[];
+  proposal?: SystemManagerProposal;
+  diagnostics?: SystemManagerContext;
+  sessionId: string;
+  uiAction?: { kind: 'mcp_oauth' | 'mcp_test'; serverCode: string; label: string };
+}
+
+export interface AgentStreamHandlers {
+  onInitial?: (data: { runId?: string }) => void;
+  onContent?: (delta: string, text: string) => void;
+}
+
+async function streamAgentRun(
+  path: string,
+  data: Record<string, unknown>,
+  handlers: AgentStreamHandlers = {},
+): Promise<AgentRunResponse> {
+  if (isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
+  const token = userToken.get();
+  const res = await friendlyFetch(`${BASE}${path}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/x-ndjson',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+  if (res.status === 401) {
+    userToken.clear();
+    redirectToLogin('/login');
+    throw new Error(SESSION_EXPIRED_MESSAGE);
+  }
+  if (!res.ok) throw new Error(await getHttpErrorMessage(res));
+  if (!res.body) throw new Error('浏览器不支持流式响应');
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let finalResult: AgentRunResponse | null = null;
+  let streamError = '';
+
+  const consumeLine = (line: string) => {
+    if (!line.trim()) return;
+    const event = JSON.parse(line) as {
+      event?: string;
+      data?: Record<string, unknown>;
+    };
+    const payload = event.data || {};
+    if (event.event === 'initial') {
+      handlers.onInitial?.({ runId: String(payload.runId || '') });
+    } else if (event.event === 'content') {
+      handlers.onContent?.(
+        String(payload.delta || ''),
+        String(payload.text || ''),
+      );
+    } else if (event.event === 'result') {
+      finalResult = payload as unknown as AgentRunResponse;
+    } else if (event.event === 'error') {
+      streamError = String(payload.message || '模型请求失败');
+    }
+  };
+
+  while (true) {
+    const { value, done } = await reader.read();
+    buffer += decoder.decode(value || new Uint8Array(), { stream: !done });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+    lines.forEach(consumeLine);
+    if (done) break;
+  }
+  if (buffer.trim()) consumeLine(buffer);
+  if (streamError) throw new Error(streamError);
+  if (!finalResult) throw new Error('流式请求结束但未收到完整结果');
+  return finalResult;
+}
+
 async function download(
   path: string,
   fallbackName: string,
@@ -286,6 +393,65 @@ async function download(
 export const api = {
   // Registry
   getOverview: () => request<Record<string, number>>('/registry/overview'),
+
+  // 系统管家：页面指导、系统诊断和需要二次确认的配置变更。
+  getSystemManagerContext: (pagePath: string) =>
+    request<SystemManagerContext>(`/system-manager/context?pagePath=${encodeURIComponent(pagePath)}`),
+  chatWithSystemManager: (message: string, pagePath: string) =>
+    request<SystemManagerReply>('/system-manager/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, pagePath }),
+      timeoutMs: 30000,
+    }),
+  continueSystemManagerChat: (message: string, pagePath: string, sessionId?: string) =>
+    request<SystemManagerReply>('/system-manager/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, pagePath, ...(sessionId ? { sessionId } : {}) }),
+      timeoutMs: 30000,
+    }),
+  getSystemManagerSession: (sessionId: string) =>
+    request<{ sessionId: string; messages: any[] }>(
+      `/system-manager/sessions/${encodeURIComponent(sessionId)}`,
+    ),
+  confirmSystemManagerAction: (proposalId: string) =>
+    request<{ action: string; message: string; resource?: any; changeId?: string }>('/system-manager/actions/confirm', {
+      method: 'POST',
+      body: JSON.stringify({ proposalId }),
+      timeoutMs: 30000,
+    }),
+  testSystemManagerMcp: (serverCode: string) =>
+    request<{ serverCode: string; status: string; toolCount: number; tools: { name: string; description: string }[] }>(
+      `/system-manager/mcp/${encodeURIComponent(serverCode)}/test`,
+      { method: 'POST', timeoutMs: 30000 },
+    ),
+  startSystemManagerMcpOAuth: (serverCode: string, redirectUri: string) =>
+    request<{ authorizationUrl: string; state: string }>(
+      `/system-manager/mcp/${encodeURIComponent(serverCode)}/oauth/start`,
+      { method: 'POST', body: JSON.stringify({ redirectUri }), timeoutMs: 30000 },
+    ),
+  completeSystemManagerMcpOAuth: (state: string, code: string) =>
+    request<{ serverCode: string; status: string; toolCount: number; tools: string[] }>(
+      '/system-manager/mcp/oauth/callback',
+      { method: 'POST', body: JSON.stringify({ state, code }), timeoutMs: 90000 },
+    ),
+  logoutSystemManagerMcpOAuth: (serverCode: string) =>
+    request<{ serverCode: string; status: string }>(
+      `/system-manager/mcp/${encodeURIComponent(serverCode)}/oauth`,
+      { method: 'DELETE' },
+    ),
+  proposeSystemManagerRollback: (changeId: string) =>
+    request<SystemManagerProposal>(
+      `/system-manager/changes/${encodeURIComponent(changeId)}/rollback`,
+      { method: 'POST' },
+    ),
+  importSystemManagerSkill: async (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<{
+      preview: { skillCode: string; name: string; description: string; risks: string[]; dependencies: any };
+      proposal: SystemManagerProposal;
+    }>('/system-manager/skills/import', { method: 'POST', body: form, timeoutMs: 30000 });
+  },
 
   // Runs (运行可观测)
   listRuns: (params?: { employeeKey?: string; sessionId?: string; success?: boolean; limit?: number }) => {
@@ -454,6 +620,10 @@ export const api = {
   },
   runAgent: (data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string; runId?: string }) =>
     request<AgentRunResponse>('/agent/run', { method: 'POST', body: JSON.stringify(data) }),
+  runAgentStream: (
+    data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string; runId?: string },
+    handlers?: AgentStreamHandlers,
+  ) => streamAgentRun('/agent/run-stream', data, handlers),
   listSessions: (employeeKey: string, limit = 20, includeArchived = false) =>
     request<any[]>(`/agent/sessions?employeeKey=${encodeURIComponent(employeeKey)}&targetType=employee&includeArchived=${includeArchived}&limit=${limit}`),
   listTeamSessions: (teamCode: string, limit = 20, includeArchived = false) =>
@@ -472,6 +642,10 @@ export const api = {
   deleteSession: (sessionId: string) => request<any>(`/agent/sessions/${encodeURIComponent(sessionId)}`, { method: 'DELETE' }),
   runTeam: (data: { teamCode: string; userInput: string; sessionId?: string; extraContext?: string; runId?: string }) =>
     request<AgentRunResponse>('/agent/team-run', { method: 'POST', body: JSON.stringify(data) }),
+  runTeamStream: (
+    data: { teamCode: string; userInput: string; sessionId?: string; extraContext?: string; runId?: string },
+    handlers?: AgentStreamHandlers,
+  ) => streamAgentRun('/agent/team-run-stream', data, handlers),
   cancelAgentRun: (runId: string) =>
     request<AgentRunControlView>(
       `/agent/runs/${encodeURIComponent(runId)}/cancel`,

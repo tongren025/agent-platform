@@ -38,6 +38,7 @@ const AdminRoles = lazy(() => import('./pages/admin/AdminRoles'));
 const AdminProviders = lazy(() => import('./pages/admin/AdminProviders'));
 const UserLogin = lazy(() => import('./pages/UserLogin'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const McpOAuthCallback = lazy(() => import('./pages/McpOAuthCallback'));
 
 export default function App() {
   return (
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="/advanced" element={<Navigate to="/dashboard" replace />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/models" element={<OpenRouterModels />} />
+          <Route path="/oauth/callback" element={<McpOAuthCallback />} />
         </Route>
       </Route>
 

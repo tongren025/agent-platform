@@ -7,9 +7,9 @@
     "result": "下游所有角色按S01-S07对齐,可逐镜整合视频提示词",
     "successScore": 0.93,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": "2026-07-06T06:35:52.156066Z"
+    "lastAccessed": "2026-07-30T06:33:11.418165Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-storyboard_epi_02",
@@ -19,9 +19,9 @@
     "result": "文字剧本变成可执行分镜表",
     "successScore": 0.9,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": "2026-07-06T06:35:52.156066Z"
+    "lastAccessed": "2026-07-30T06:33:11.418165Z"
   },
   {
     "memoryId": "jiulu_ep1_gaoran_20260709_comic-storyboard",
@@ -31,9 +31,9 @@
     "result": "8单元45段90s，招牌大场面锁死不串台(烬龙陆无赛博)，spec完成过质检",
     "successScore": 0.9,
     "sourceSession": "jiulu_ep1_gaoran_20260709",
-    "accessCount": 0,
+    "accessCount": 3,
     "createdAt": "2026-07-09T08:16:29.663714Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-30T06:33:11.418165Z"
   },
   {
     "memoryId": "jiulu_s1_gaoran_complete_20260709_comic-storyboard",
@@ -43,8 +43,8 @@
     "result": "24集全90s共794卡spec完成过验;端点序列化OK",
     "successScore": 0.9,
     "sourceSession": "jiulu_s1_gaoran_complete_20260709",
-    "accessCount": 0,
+    "accessCount": 3,
     "createdAt": "2026-07-09T08:53:24.294976Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-30T06:33:11.418165Z"
   }
 ]

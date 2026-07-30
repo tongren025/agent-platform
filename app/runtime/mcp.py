@@ -19,6 +19,8 @@ from contextlib import AsyncExitStack, asynccontextmanager
 from dataclasses import dataclass
 from typing import Any
 
+import httpx
+
 from app.models.runtime import RuntimeMcpServer
 from app.runtime.loop import ToolHandler
 
@@ -90,8 +92,35 @@ def clear_mcp_tools_cache(server_code: str | None = None) -> None:
         _mcp_tool_specs_cache.pop(key, None)
 
 
+def _resolved_secret_refs(values: dict[str, str] | None, *, label: str) -> dict[str, str] | None:
+    """解析 ``${ENV_VAR}`` 引用；密钥仅在进程内展开，不写入注册表。"""
+    if not values:
+        return None
+    resolved: dict[str, str] = {}
+    for name, value in values.items():
+        match = re.fullmatch(r"\$\{([A-Z][A-Z0-9_]*)\}", str(value).strip())
+        if match:
+            env_name = match.group(1)
+            resolved_value = os.getenv(env_name)
+            if resolved_value is None:
+                raise ValueError(f"MCP {label}引用的环境变量未配置：{env_name}")
+            resolved[name] = resolved_value
+        else:
+            resolved[name] = str(value)
+    return resolved
+
+
+def _resolved_env(env: dict[str, str] | None) -> dict[str, str] | None:
+    """解析 stdio 子进程环境变量。"""
+    return _resolved_secret_refs(env, label="环境变量")
+
+
 @asynccontextmanager
-async def _open_session(server: RuntimeMcpServer) -> AsyncIterator[Any]:
+async def _open_session(
+    server: RuntimeMcpServer,
+    *,
+    http_client: httpx.AsyncClient | None = None,
+) -> AsyncIterator[Any]:
     """按注册表配置建立一个 MCP 会话；SDK 仅在确实需要 MCP 时加载。"""
     try:
         from mcp import ClientSession, StdioServerParameters
@@ -100,45 +129,71 @@ async def _open_session(server: RuntimeMcpServer) -> AsyncIterator[Any]:
             "已绑定 MCP 服务，但未安装 MCP SDK；请安装 requirements.txt 后重试"
         ) from exc
 
-    transport_type = (server.transport_type or "stdio").strip().lower()
-    if transport_type == "stdio":
-        if not server.command:
-            raise ValueError(f"MCP 服务 {server.server_code} 缺少 command")
-        from mcp.client.stdio import stdio_client
+    async with AsyncExitStack() as stack:
+        transport_type = (server.transport_type or "stdio").strip().lower()
+        if transport_type == "stdio":
+            if not server.command:
+                raise ValueError(f"MCP 服务 {server.server_code} 缺少 command")
+            from mcp.client.stdio import stdio_client
 
-        env = None
-        if server.env:
-            env = dict(os.environ)
-            env.update(server.env)
-        parameters = StdioServerParameters(
-            command=server.command,
-            args=list(server.command_args or []),
-            env=env,
-        )
-        transport = stdio_client(parameters)
-    elif transport_type in {"http", "streamable_http", "streamable-http"}:
-        if not server.url:
-            raise ValueError(f"MCP 服务 {server.server_code} 缺少 url")
-        from mcp.client.streamable_http import streamable_http_client
+            env = None
+            resolved_env = _resolved_env(server.env)
+            if resolved_env:
+                env = dict(os.environ)
+                env.update(resolved_env)
+            parameters = StdioServerParameters(
+                command=server.command,
+                args=list(server.command_args or []),
+                env=env,
+            )
+            transport = stdio_client(parameters)
+        elif transport_type in {"http", "streamable_http", "streamable-http"}:
+            if not server.url:
+                raise ValueError(f"MCP 服务 {server.server_code} 缺少 url")
+            from mcp.client.streamable_http import streamable_http_client
 
-        transport = streamable_http_client(server.url)
-    elif transport_type == "sse":
-        if not server.url:
-            raise ValueError(f"MCP 服务 {server.server_code} 缺少 url")
-        from mcp.client.sse import sse_client
+            client = http_client
+            if client is None and (
+                server.headers or (server.auth_type or "none").lower() == "oauth"
+            ):
+                headers = _resolved_secret_refs(server.headers, label="请求头") or {}
+                auth = None
+                if (server.auth_type or "none").lower() == "oauth":
+                    from app.services.mcp_oauth import mcp_oauth_coordinator
 
-        transport = sse_client(server.url)
-    else:
-        raise ValueError(
-            f"MCP 服务 {server.server_code} 使用了不支持的传输类型: "
-            f"{server.transport_type}"
-        )
+                    auth = mcp_oauth_coordinator.auth_provider(server)
+                client = await stack.enter_async_context(
+                    httpx.AsyncClient(
+                        headers=headers,
+                        auth=auth,
+                        follow_redirects=True,
+                        timeout=30,
+                    )
+                )
+            transport = streamable_http_client(server.url, http_client=client)
+        elif transport_type == "sse":
+            if not server.url:
+                raise ValueError(f"MCP 服务 {server.server_code} 缺少 url")
+            from mcp.client.sse import sse_client
 
-    async with transport as streams:
-        read_stream, write_stream = streams[0], streams[1]
-        async with ClientSession(read_stream, write_stream) as session:
-            await session.initialize()
-            yield session
+            headers = _resolved_secret_refs(server.headers, label="请求头") or None
+            auth = None
+            if (server.auth_type or "none").lower() == "oauth":
+                from app.services.mcp_oauth import mcp_oauth_coordinator
+
+                auth = mcp_oauth_coordinator.auth_provider(server)
+            transport = sse_client(server.url, headers=headers, auth=auth)
+        else:
+            raise ValueError(
+                f"MCP 服务 {server.server_code} 使用了不支持的传输类型: "
+                f"{server.transport_type}"
+            )
+
+        async with transport as streams:
+            read_stream, write_stream = streams[0], streams[1]
+            async with ClientSession(read_stream, write_stream) as session:
+                await session.initialize()
+                yield session
 
 
 def _tool_input_schema(tool: Any) -> dict[str, Any]:
@@ -200,6 +255,16 @@ async def _discover_tool_specs(
             _mcp_tool_specs_cache.pop(stale_key, None)
         _mcp_tool_specs_cache[cache_key] = specs
     return specs
+
+
+async def probe_mcp_server(
+    server: RuntimeMcpServer,
+    *,
+    http_client: httpx.AsyncClient | None = None,
+) -> list[McpToolSpec]:
+    """建立一次真实 MCP 会话并返回工具清单，供系统管家验证配置和登录状态。"""
+    async with _open_session(server, http_client=http_client) as session:
+        return await _discover_tool_specs(session, server)
 
 
 def _content_value(item: Any) -> Any:

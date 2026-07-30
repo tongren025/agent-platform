@@ -158,3 +158,15 @@ async def test_web_canvas_agent_restores_storyboard_tool_event(monkeypatch):
 
     assert result["data"]["toolCalls"][0]["toolName"] == "propose_storyboard_plan"
     assert result["data"]["toolCalls"][0]["args"]["shots"][0]["prompt"]
+
+
+def test_partial_assistant_message_can_stream_before_json_is_closed():
+    partial = (
+        '{"assistantMessage":"正在拆分第一幕\\n已识别主角",'
+        '"toolCalls":[{"toolName":"propose_storyboard_plan","args":'
+    )
+
+    assert canvas._partial_json_string(
+        partial,
+        "assistantMessage",
+    ) == "正在拆分第一幕\n已识别主角"

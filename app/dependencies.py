@@ -28,6 +28,7 @@ from app.services.learn_store import LearnHistoryStore, LearnSourceStore
 from app.services.scheduler import DailyScheduler
 from app.services.long_term_memory import LongTermMemoryStore
 from app.services.user_store import RoleStore, UserStore
+from app.services.system_manager import SystemManagerService
 
 skill_registry = SkillRegistryService()
 mcp_server_registry = McpServerRegistryService()
@@ -86,3 +87,13 @@ workflow_run_store = WorkflowRunStore()
 # ── 平台用户与角色 ─────────────────────────────────────────────
 role_store = RoleStore()
 user_store = UserStore(role_store)
+
+# ── 系统管家：统一产品知识、运行诊断与受控配置变更 ────────────────
+system_manager = SystemManagerService(
+    skill_registry=skill_registry,
+    mcp_registry=mcp_server_registry,
+    tool_registry=tool_registry,
+    employee_registry=employee_registry,
+    run_store=agent_run_store,
+    ai_service=ai_service,
+)

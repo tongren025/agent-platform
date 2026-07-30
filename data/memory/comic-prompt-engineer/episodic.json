@@ -7,9 +7,9 @@
     "result": "成功提供了高度结构化、专业且符合工具需求的提示词方案。",
     "successScore": 1.0,
     "sourceSession": "ses_1211078d3a79ebf1",
-    "accessCount": 0,
+    "accessCount": 3,
     "createdAt": "2026-06-30T13:19:24.854354Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-30T06:33:11.388166Z"
   },
   {
     "memoryId": "mem_19876ddf2cb1",
@@ -19,9 +19,9 @@
     "result": "成功提供了高度结构化、可直接用于生产的视频提示词方案。",
     "successScore": 1.0,
     "sourceSession": "ses_1211078d3a79ebf1",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-30T14:15:19.378083Z",
-    "lastAccessed": "2026-07-29T14:08:48.221813Z"
+    "lastAccessed": "2026-07-30T06:33:11.388166Z"
   },
   {
     "memoryId": "v3_epi_01_negative_prompt_wasted",
@@ -31,9 +31,9 @@
     "result": "节省了约30词的配额用于更有价值的光影和动作描述,生成质量反而提升",
     "successScore": 0.98,
     "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-25T14:00:00Z",
-    "lastAccessed": "2026-07-29T14:08:48.221813Z"
+    "lastAccessed": "2026-07-30T06:33:11.388166Z"
   },
   {
     "memoryId": "v3_epi_02_fast_word_blur",
@@ -55,9 +55,9 @@
     "result": "跨镜头风格一致性从约50%提升到约90%。再也不用每镜头单独调风格词",
     "successScore": 0.96,
     "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 0,
+    "accessCount": 3,
     "createdAt": "2026-06-25T14:00:00Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-30T06:33:11.388166Z"
   },
   {
     "memoryId": "v3_epi_07_wuxia_duel_prompt",
@@ -67,9 +67,9 @@
     "result": "确认生产级提示词的实际格式，与八层框架完全吻合。关键发现：每段都独立写角色外貌词，不省略",
     "successScore": 0.96,
     "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-25T15:30:00Z",
-    "lastAccessed": "2026-07-29T14:08:48.221813Z"
+    "lastAccessed": "2026-07-30T06:33:11.388166Z"
   },
   {
     "memoryId": "v3_epi_04_xianxia_three_phase",

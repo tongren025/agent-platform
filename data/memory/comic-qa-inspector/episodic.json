@@ -7,9 +7,9 @@
     "result": "避免无法接入 comic-drama-tool。",
     "successScore": 0.94,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-30T06:32:33.289073Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
@@ -19,9 +19,9 @@
     "result": "运动模糊风险消除,提示词回炉合格",
     "successScore": 0.94,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
-    "createdAt": "2026-06-30T11:44:56.150698+00:00",
-    "lastAccessed": null
+    "accessCount": 1,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": "2026-07-30T06:32:33.289073Z"
   },
   {
     "memoryId": "seed_comic-qa-inspector_epi_02",
@@ -31,8 +31,8 @@
     "result": "降低生成脏图概率。",
     "successScore": 0.93,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": null
+    "lastAccessed": "2026-07-30T06:32:33.289073Z"
   }
 ]

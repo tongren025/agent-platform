@@ -6,9 +6,9 @@
     "category": "shortdrama_law",
     "importance": 1.0,
     "sourceSession": "duanju_spine_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T23:30:00Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.266691Z",
     "updatedAt": "2026-07-30T04:04:45.103738Z"
   },
   {
@@ -18,9 +18,9 @@
     "category": "knowledge",
     "importance": 1.0,
     "sourceSession": "jiulu_gaoran_pivot_20260709",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-07-09T08:02:22.877352Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.266691Z",
     "updatedAt": "2026-07-30T04:04:45.104738Z"
   },
   {
@@ -30,9 +30,9 @@
     "category": "workflow",
     "importance": 0.98,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.266691Z",
     "updatedAt": "2026-07-30T04:04:45.105737Z"
   },
   {
@@ -42,9 +42,9 @@
     "category": "vfx",
     "importance": 0.98,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.266691Z",
     "updatedAt": "2026-07-30T04:04:45.107737Z"
   },
   {
@@ -54,9 +54,9 @@
     "category": "light",
     "importance": 0.97,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.266691Z",
     "updatedAt": "2026-07-30T04:04:45.108738Z"
   }
 ]

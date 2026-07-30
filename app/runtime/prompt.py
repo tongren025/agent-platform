@@ -210,11 +210,11 @@ def compile(
 
         procedural = long_term_memory.list_procedural(emp_key)
         if procedural:
-            rules = [f"  - {m.rule}" for m in procedural[:12]]
+            rules = [f"  - {m.rule}" for m in procedural[:8]]
             mem_lines.append("<learned_behaviors>\n" + "\n".join(rules) + "\n</learned_behaviors>")
 
         if user_query:
-            semantic = long_term_memory.retrieve_semantic(emp_key, user_query, top_k=20)
+            semantic = long_term_memory.retrieve_semantic(emp_key, user_query, top_k=12)
         else:
             semantic = long_term_memory.list_semantic(emp_key)
         if semantic:
@@ -228,20 +228,20 @@ def compile(
             groups = list(by_cat.values())
             selected: list = []
             depth = 0
-            while len(selected) < 30 and any(depth < len(g) for g in groups):
+            while len(selected) < 16 and any(depth < len(g) for g in groups):
                 for g in groups:
                     if depth < len(g):
                         selected.append(g[depth])
-                        if len(selected) >= 30:
+                        if len(selected) >= 16:
                             break
                 depth += 1
             facts = [f"  - [{m.category}] {m.content}" for m in selected]
             mem_lines.append("<user_knowledge>\n" + "\n".join(facts) + "\n</user_knowledge>")
 
         if user_query:
-            episodic = long_term_memory.retrieve_episodic(emp_key, user_query, top_k=5)
+            episodic = long_term_memory.retrieve_episodic(emp_key, user_query, top_k=3)
         else:
-            episodic = long_term_memory.list_episodic(emp_key)[:5]
+            episodic = long_term_memory.list_episodic(emp_key)[:3]
         if episodic:
             eps = []
             for m in episodic:

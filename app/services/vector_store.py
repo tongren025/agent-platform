@@ -8,6 +8,7 @@
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Sequence
 
@@ -228,7 +229,14 @@ async def retrieve_knowledge(
     snippets: list[KnowledgeSnippet] = []
     if semantic_retriever is not None:
         try:
-            snippets = await semantic_retriever.search(employee_key, query, top_k=top_k)
+            # RAG 是回答增强而不是主链路硬依赖。远程 embedding 超过预算时立即
+            # 回退本地关键词检索，避免用户在模型真正开始前先无反馈等待几十秒。
+            snippets = await asyncio.wait_for(
+                semantic_retriever.search(employee_key, query, top_k=top_k),
+                timeout=2.5,
+            )
+        except asyncio.TimeoutError:
+            logger.info("语义检索超过 2.5s，回退关键词 employee=%s", employee_key)
         except Exception:
             logger.warning("语义检索失败，回退关键词", exc_info=True)
     if not snippets:

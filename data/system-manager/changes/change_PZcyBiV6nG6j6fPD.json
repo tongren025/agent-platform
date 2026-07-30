@@ -1,0 +1,10 @@
+{
+  "changeId": "change_PZcyBiV6nG6j6fPD",
+  "owner": "local",
+  "action": "add_mcp",
+  "resourceType": "mcp",
+  "resourceCode": "demo",
+  "before": null,
+  "createdAt": 1785397803.7124004,
+  "rolledBackAt": null
+}

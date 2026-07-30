@@ -1,0 +1,24 @@
+{
+  "sessionId": "sm_U_blF5pBCeqoaVXd",
+  "messages": [
+    {
+      "role": "user",
+      "content": "请添加 MCP {\"serverCode\":\"demo\",\"name\":\"Demo\",\"transportType\":\"stdio\",\"command\":\"demo\",\"env\":{\"TOKEN\":\"***\"}}",
+      "pagePath": "/advanced/tools",
+      "createdAt": 1785397469.6026025
+    },
+    {
+      "role": "assistant",
+      "content": "MCP 配置格式有效。我已生成变更预览；确认后才会保存。",
+      "proposal": {
+        "proposalId": "proposal_Sc6vWJpQmhzS-ZvK",
+        "action": "add_mcp",
+        "summary": "添加 MCP「Demo」（stdio，demo）；需要环境变量：TOKEN",
+        "expiresInSeconds": 900
+      },
+      "createdAt": 1785397469.6026025
+    }
+  ],
+  "createdAt": 1785397469.6026025,
+  "updatedAt": 1785397469.6026025
+}

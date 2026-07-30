@@ -1,0 +1,19 @@
+{
+  "sessionId": "sm_shMBZIKoQJjaLqXs",
+  "messages": [
+    {
+      "role": "user",
+      "content": "刚才一直生成，看看日志为什么失败",
+      "pagePath": "/production/demo",
+      "createdAt": 1785397804.050372
+    },
+    {
+      "role": "assistant",
+      "content": "最近一次失败来自 `screenwriter`，运行号 `run_failed`：\n\n模型返回空内容",
+      "proposal": null,
+      "createdAt": 1785397804.050372
+    }
+  ],
+  "createdAt": 1785397804.050372,
+  "updatedAt": 1785397804.050372
+}

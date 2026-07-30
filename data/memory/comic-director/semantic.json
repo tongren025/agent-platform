@@ -6,9 +6,9 @@
     "category": "knowledge",
     "importance": 1.0,
     "sourceSession": "jiulu_gaoran_pivot_20260709",
-    "accessCount": 0,
+    "accessCount": 3,
     "createdAt": "2026-07-09T08:02:22.890250Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-30T04:04:44.614887Z"
   },
   {
@@ -18,9 +18,9 @@
     "category": "shortdrama_law",
     "importance": 0.99,
     "sourceSession": "duanju_spine_20260630",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-30T23:30:00Z",
-    "lastAccessed": "2026-07-01T03:12:39.807009Z",
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-30T04:04:44.613787Z"
   },
   {
@@ -30,9 +30,9 @@
     "category": "craft",
     "importance": 0.98,
     "sourceSession": "pro_craft_deep_20260630",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-30T12:34:27.366500Z",
-    "lastAccessed": "2026-07-01T03:12:39.807009Z",
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-30T04:04:44.607788Z"
   },
   {
@@ -42,9 +42,9 @@
     "category": "story",
     "importance": 0.98,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": "2026-07-01T03:12:39.807009Z",
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-30T04:04:44.618787Z"
   },
   {
@@ -54,9 +54,9 @@
     "category": "style",
     "importance": 0.97,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": "2026-07-01T03:12:39.807009Z",
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-30T04:04:44.615787Z"
   },
   {
@@ -66,9 +66,9 @@
     "category": "platform",
     "importance": 0.97,
     "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-25T15:30:00Z",
-    "lastAccessed": "2026-07-01T03:12:39.807009Z",
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-07T06:19:46.251002Z"
   },
   {
@@ -78,9 +78,9 @@
     "category": "scene",
     "importance": 0.97,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": "2026-07-01T03:12:39.807009Z",
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-30T04:04:44.617787Z"
   },
   {
@@ -90,9 +90,9 @@
     "category": "craft",
     "importance": 0.95,
     "sourceSession": "pro_craft_deep_20260630",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-30T12:34:27.366500Z",
-    "lastAccessed": "2026-07-01T03:12:39.807009Z",
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-06T13:44:09.611013Z"
   },
   {
@@ -102,9 +102,9 @@
     "category": "toolchain",
     "importance": 0.95,
     "sourceSession": "seed_comic_drama_reliable_roles_20260625",
-    "accessCount": 1,
+    "accessCount": 4,
     "createdAt": "2026-06-25T03:06:39.067620Z",
-    "lastAccessed": "2026-07-01T03:12:39.807009Z",
+    "lastAccessed": "2026-07-30T06:33:11.395164Z",
     "updatedAt": "2026-07-30T04:04:44.610786Z"
   }
 ]

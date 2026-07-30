@@ -29,6 +29,15 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ## 核心功能
 
+### 系统管家
+- **全局产品教练** — 每个用户页面右下角均可打开，自动识别当前页面，解释功能并给出下一步操作
+- **系统自检** — 盘点数字员工、Skill、工具和 MCP，读取最近失败运行；复杂产品问题可由平台已配置的默认聊天模型结合本地手册解释
+- **受控能力管理** — 可从公开 GitHub 或本地 ZIP 安装、更新和卸载 `SKILL.md` 技能包，也可通过 URL、安装命令或 JSON 添加 MCP；所有写操作先预览再确认，并可从变更记录发起二次确认回滚
+- **登录与连接验证** — 支持标准 MCP OAuth 浏览器登录并加密保存本机令牌，也可建立真实会话读取工具列表；密钥通过 `${ENV_VAR}` 引用，不写入注册表
+- **会话可恢复** — 管家对话按当前登录用户隔离保存，刷新页面可继续此前的诊断和变更上下文
+- **对话式绑定与项目指导** — 可把 Skill、内置工具或 MCP 绑定/解绑到指定员工；项目页直接读取真实诊断结果回答唯一下一步
+- 使用说明见 [系统管家用户手册](docs/SYSTEM_MANAGER.md)
+
 ### 数字员工管理
 - **员工注册表** — 每个员工有独立身份（`employeeKey`）、角色提示词（`roleProfile`）、绑定的工具和技能
 - **能力驱动模型路由** — 员工的 `model_id` 只负责理解需求、文字规划和工具编排；最终生图、视频分别由 `image_model_id`、`video_model_id` 通过专用 API 完成，避免把 `gpt-image-2` 错发到 Chat Completions
@@ -124,10 +133,10 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ### 短剧无限画布（`/canvas`）
 - **完整短剧工作台** — `/canvas` 直接挂载由 `third_party/nomi/` 源码编译出的 React 模块，包含项目库、创作助手、无限生成画布、素材/提示词/技能库、分镜计划、多轨时间线、预览导出与 3D 导演；不是 iframe、独立 HTML 或外链应用
-- **平台数字员工** — 画布助手的文本能力目录直接读取 `/registry/employees`；选择某个员工后，通过 `/canvas/workbench/agent` 以该员工的 `employeeKey` 调用现有运行时，继续使用平台角色、知识、Skill、工具、MCP 与模型路由
+- **平台数字员工** — 画布助手的文本能力目录直接读取 `/registry/employees`；选择某个员工后，通过 `/canvas/workbench/agent/stream` 以该员工的 `employeeKey` 调用现有运行时，继续使用平台角色、知识、Skill、工具、MCP 与模型路由，并在生成过程中逐字回显
 - **平台媒体模型** — 已连接的官方 OpenRouter 供应商实时提供该账号可用的图片/视频模型目录，并使用短时缓存抵御上游抖动；图片走统一落图服务，视频走平台异步提交和轮询，画布不保存或使用上游供应商密钥
 - **提示词与学习闭环** — 人物、场景、图片分镜、视频分镜和图生视频节点内置平台化专业提示词；被用户采纳的生成或优化结果会写入账号级提示词学习记录和现有长期记忆，供后续员工复用
-- **大型项目性能** — 画布自动修复历史异常缩放，只挂载当前视区附近节点；低缩放点击轻量节点会自动聚焦，数百节点的制作项目也不会在首屏一次生成全部节点 DOM
+- **大型项目性能** — 画布自动修复历史异常缩放，只挂载当前视区附近节点；低缩放点击轻量节点会自动聚焦，数百节点的制作项目也不会在首屏一次生成全部节点 DOM；文本模型、Embedding 与 RAG 不阻塞 Web 事件循环
 - **平台项目持久化** — 完整工作台项目由 `/canvas/workbench/projects` 保存到 `data/canvas/workbench/`；浏览器 localStorage 只作同步缓存，服务端记录是重新登录和换浏览器后的恢复来源
 - **主站同源模块** — 源码入口为 `third_party/nomi/src/agentStudioMount.tsx`，产物为 `web/public/agent-canvas/agent-canvas.js`；主站 `CanvasHub` 在同一 DOM、同一登录态下加载并负责卸载
 - **品牌与许可证** — 产品界面使用 Agent Studio 品牌，不展示上游 Logo、官网、更新器或模型配置；`third_party/nomi/LICENSE` 和 `NOTICE.agent-platform.md` 保留 Apache-2.0 许可证、上游归属和本项目修改说明
@@ -141,7 +150,8 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 再在 `web/` 执行 `npm run build`。第一步刷新可部署的源码模块，第二步把它和主站一起复制到 `wwwroot/agent-canvas/`。
 
 ### 对话工作台
-- **实时对话** — 选择员工直接开始 AI 对话
+- **实时对话** — 选择员工直接开始 AI 对话；个人和团队运行均使用真流式接口，模型产生首批文字后立即显示，不必等待整次运行完成
+- **GPT 延迟档位** — 员工模型设置可选择推理强度；新员工默认 `low` 和 4096 输出上限，已有员工可按任务在低延迟与深度推理间切换
 - **职责分工** — “快速制作”负责把一集漫剧沿生产步骤推进到交付目标；“找数字员工帮忙”负责翻译、调研、写文案等制作之外的通用任务，两边都提供互相跳转提示
 - **会话管理** — 自动保存会话历史，支持加载历史会话
 - **工具轨迹** — 实时展示 AI 调用了哪些工具、传了什么参数、返回了什么结果
@@ -276,7 +286,9 @@ docker compose up -d --build
 前端 http://localhost:8000 · 管理端 http://localhost:8001（默认 `admin/admin123`，生产请改）· Grafana http://localhost:3000
 
 短剧无限画布入口为 http://localhost:8000/canvas。它是主站原生页面，直接使用平台
-登录态、数字员工、模型目录、项目数据和任务 API，不加载任何第三方 HTML。
+登录态、数字员工、模型目录、项目数据和任务 API，不加载任何第三方 HTML。画布助手
+使用 `/api/v1/agentapp/canvas/workbench/agent/stream` 接收增量输出；旧的
+`/workbench/agent` 非流式接口继续保留给兼容客户端。
 
 画布中心零配置即可使用 React Flow、Excalidraw、Fabric.js 和 Rete.js。两个外部模式按需配置：
 
@@ -647,8 +659,8 @@ memory / evolution / ai-providers / auth 登录等完整端点以 `app/api/` 代
 
 ## 已知限制（v1）
 
-- ~~LLM 调用同步~~ — **已解决**：agent 主链路已迁 AsyncOpenAI（含超时、指数退避重试、同供应商换模型、跨供应商 fallback），并行节点真并发；仅画布生图（`canvas.py`）与网页抓取总结（`scraper.py`）两条旁路仍为同步裸调
-- **无 SSE 实时推送** — 运行状态通过轮询获取，暂无 Server-Sent Events 实时更新
+- ~~LLM 调用同步~~ — **已解决**：agent 主链路和画布文本助手均使用 AsyncOpenAI（含连接池复用、超时、指数退避重试、同供应商换模型和跨供应商 fallback），Embedding 在工作线程执行，并行节点真并发；画布生图与网页抓取总结仍是独立旁路
+- ~~对话无实时推送~~ — **已解决**：个人员工、团队和画布助手提供 NDJSON 增量流；工作流后台状态仍按任务接口轮询
 - ~~文件存储无锁~~ — **已解决**：`USE_DB_STORES=true` 时运行态切 PostgreSQL（事务保并发安全）；JSON 仍为默认（单人零依赖）
 - ~~节点类型待扩展~~ — **已扩展**：迭代（循环）、HTTP 请求、代码执行、子工作流均已上线（共 11 种节点）；仅变量聚合节点仍在规划
 

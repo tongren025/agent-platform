@@ -11,7 +11,7 @@ import logging
 import secrets
 import time
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Awaitable, Callable, Optional
 
 from app.dependencies import agent_run_store, memory_store
 from app.models.conversation import (
@@ -34,6 +34,34 @@ from app.runtime.scope import build_scopes
 from app.runtime.snapshot import load_snapshot
 
 logger = logging.getLogger(__name__)
+
+TextDeltaCallback = Callable[[str, str], Awaitable[None]]
+_HISTORY_MAX_MESSAGES = 24
+_HISTORY_MAX_CHARS = 32_000
+
+
+def _bounded_history(session: ConversationSession) -> list[dict]:
+    """按消息数和字符数裁剪历史，保留最近上下文并避免长会话无限膨胀。"""
+    selected: list[dict] = []
+    used_chars = 0
+    for message in reversed(session.messages):
+        content = message.content or ""
+        if not selected and len(content) > _HISTORY_MAX_CHARS:
+            content = "【较长消息已截取末尾】\n" + content[-_HISTORY_MAX_CHARS:]
+        elif (
+            len(selected) >= _HISTORY_MAX_MESSAGES
+            or used_chars + len(content) > _HISTORY_MAX_CHARS
+        ):
+            break
+        selected.append({"role": message.role, "content": content})
+        used_chars += len(content)
+    selected.reverse()
+    if session.compressed_summary and len(selected) < len(session.messages):
+        selected.insert(0, {
+            "role": "system",
+            "content": f"较早会话摘要：\n{session.compressed_summary[:6000]}",
+        })
+    return selected
 
 
 def _generate_session_id() -> str:
@@ -76,7 +104,11 @@ def _maybe_add_artifact(session: ConversationSession, content: str) -> None:
     ))
 
 
-async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
+async def run_invocation(
+    request: AgentRunRequest,
+    *,
+    on_text_delta: TextDeltaCallback | None = None,
+) -> AgentRunResult:
     """执行一次完整的 agent 调用，并把过程与结果持久化。
 
     流程：
@@ -91,6 +123,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
 
     返回 AgentRunResult，其中 session_id 会被回填为本次实际使用的会话 ID。
     """
+    total_started_at = time.monotonic()
     run_id = request.run_id or generate_run_id()
     request.run_id = run_id
 
@@ -120,9 +153,16 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         kb_snippets=kb_snippets,
     )
 
-    user_message = request.user_input
-    if request.extra_context:
-        user_message = f"{request.extra_context}\n\n{user_message}"
+    user_message_parts = [
+        value.strip()
+        for value in (
+            request.transient_context,
+            request.extra_context,
+            request.user_input,
+        )
+        if value and value.strip()
+    ]
+    user_message = "\n\n".join(user_message_parts)
 
     if compiled_prompt.response_instruction:
         user_message = f"{user_message}\n\n{compiled_prompt.response_instruction}"
@@ -136,10 +176,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         existing_session = memory_store.load_session(request.session_id)
         if existing_session is not None:
             if existing_session.messages:
-                existing_messages = [
-                    {"role": msg.role, "content": msg.content}
-                    for msg in existing_session.messages
-                ]
+                existing_messages = _bounded_history(existing_session)
             checkpoint = existing_session.metadata.get(DEEP_AGENT_CHECKPOINT_KEY)
             if isinstance(checkpoint, dict):
                 existing_deep_state_checkpoint = checkpoint
@@ -160,7 +197,19 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         extra_context = _json.dumps(extra, ensure_ascii=False)
 
     # 5. 执行 agent 循环（工具调用 / 多轮自动推进都在 run_agent 内部完成）
-    _t0 = time.monotonic()
+    preflight_ms = int((time.monotonic() - total_started_at) * 1000)
+    streamed_first_token_ms: int | None = None
+
+    async def measured_text_delta(delta: str, text: str) -> None:
+        """把首字时间按用户请求起点计量，再转交展示层。"""
+        nonlocal streamed_first_token_ms
+        if streamed_first_token_ms is None:
+            streamed_first_token_ms = int(
+                (time.monotonic() - total_started_at) * 1000
+            )
+        if on_text_delta is not None:
+            await on_text_delta(delta, text)
+
     result = await run_agent(
         snapshot=snapshot,
         compiled_prompt=compiled_prompt,
@@ -172,8 +221,13 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         existing_messages=existing_messages,
         existing_deep_state_checkpoint=existing_deep_state_checkpoint,
         run_id=run_id,
+        on_text_delta=measured_text_delta if on_text_delta is not None else None,
     )
-    elapsed_ms = int((time.monotonic() - _t0) * 1000)
+    if streamed_first_token_ms is not None:
+        result.first_token_ms = streamed_first_token_ms
+    elif result.first_token_ms is not None:
+        result.first_token_ms += preflight_ms
+    elapsed_ms = int((time.monotonic() - total_started_at) * 1000)
 
     # 6. 组织会话：复用旧会话或新建，追加本轮 user / assistant 消息
     now = datetime.now(timezone.utc)
@@ -214,7 +268,8 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     try:
         pt = result.token_usage.prompt_tokens if result.token_usage else 0
         ct = result.token_usage.completion_tokens if result.token_usage else 0
-        model_id = (snapshot.default_model_policy or {}).get("model_id", "")
+        requested_model_id = (snapshot.default_model_policy or {}).get("model_id", "")
+        model_id = result.resolved_model or requested_model_id
         cost = estimate_cost(model_id, pt, ct)
         agent_run_store.save_run(AgentRunRecord(
             run_id=run_id,
@@ -236,6 +291,20 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         ))
         record_run_metrics(request.employee_key, result.success, pt, ct, cost)
         record_token_usage(request.employee_key, pt + ct)
+        logger.info(
+            "Agent latency run=%s employee=%s requested_model=%s resolved_model=%s "
+            "preflight_ms=%d llm_ms=%d first_token_ms=%s model_calls=%d retries=%d total_ms=%d",
+            run_id,
+            request.employee_key,
+            requested_model_id,
+            model_id,
+            preflight_ms,
+            result.llm_elapsed_ms,
+            result.first_token_ms,
+            result.model_call_count,
+            result.retry_count,
+            elapsed_ms,
+        )
     except Exception:
         logger.warning("运行记录落库/指标失败（不影响主流程）", exc_info=True)
 

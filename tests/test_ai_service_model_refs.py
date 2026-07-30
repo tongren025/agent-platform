@@ -36,6 +36,19 @@ def test_provider_qualified_model_with_colon_keeps_full_model_id(tmp_path):
     assert model_id == "tencent/hy3:free"
 
 
+def test_clients_are_reused_for_same_provider_and_mode(tmp_path):
+    service = _service(tmp_path)
+
+    first_sync, _ = service.get_client("tencent/hy3:free")
+    second_sync, _ = service.get_client("tencent/hy3:free")
+    first_async, _ = service.get_client("tencent/hy3:free", async_client=True)
+    second_async, _ = service.get_client("tencent/hy3:free", async_client=True)
+
+    assert first_sync is second_sync
+    assert first_async is second_async
+    assert first_sync is not first_async
+
+
 def test_provider_without_api_key_is_rejected_before_network_call(tmp_path):
     provider = AiModelConfig(
         name="missing-key",

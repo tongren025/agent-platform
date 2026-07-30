@@ -12,13 +12,15 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, File, HTTPException, Query, UploadFile
+from fastapi import APIRouter, File, HTTPException, Query, Request, UploadFile
 from pydantic import BaseModel, Field
+from starlette.responses import StreamingResponse
 
 from app.api.common import ok, validate_key
 from app.config import BASE_DIR
@@ -29,6 +31,7 @@ from app.services import canvas_catalog, canvas_projects, canvas_prompts, openro
 from app.services.chat_response import extract_chat_content
 from app.models.conversation import AgentRunRequest
 from app.models.production import STAGES, STAGE_INSTRUCTIONS
+from app.runtime.loop import AgentLoopOptions, run_agent_loop
 from app.services.invocation import run_invocation
 
 logger = get_logger(__name__)
@@ -522,8 +525,7 @@ def _format_workbench_model_catalog() -> str:
     return "\n".join(lines)
 
 
-@router.post("/workbench/agent")
-async def run_workbench_agent(req: WorkbenchAgentReq):
+async def _execute_workbench_agent(req: WorkbenchAgentReq, *, on_text_delta=None):
     """运行带专业 skill 的画布 Agent，并恢复 Web 端需要的结构化工具调用。
 
     桌面版由 Electron Agent Runtime 注入 SKILL.md 和 tool-call 事件；Web 版没有该
@@ -547,34 +549,86 @@ async def run_workbench_agent(req: WorkbenchAgentReq):
     )
     try:
         if req.vendor == "platform-employee":
-            result = await run_invocation(AgentRunRequest(
+            invocation_request = AgentRunRequest(
                 employeeKey=model_key,
-                userInput=f"{system_prompt}\n\n用户任务：\n{prompt}",
+                userInput=prompt,
+                transientContext=system_prompt,
                 sessionId=req.session_id,
-            ))
+            )
+            if on_text_delta is None:
+                result = await run_invocation(invocation_request)
+            else:
+                result = await run_invocation(
+                    invocation_request,
+                    on_text_delta=on_text_delta,
+                )
             if not result.success:
                 raise HTTPException(502, result.error_message or "画布数字员工执行失败")
             raw_text = result.assistant_message or ""
             session_id = result.session_id
             usage = result.token_usage.model_dump(by_alias=True) if result.token_usage else None
         else:
-            client, actual_model = ai_service.get_client(f"{req.vendor}:{model_key}")
-            response = client.chat.completions.create(
-                model=actual_model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": prompt},
-                ],
-                timeout=180,
+            client, actual_model = ai_service.get_client(
+                f"{req.vendor}:{model_key}",
+                async_client=True,
             )
-            raw_text = extract_chat_content(response)
+            # 画布助手更看重首字速度而非深度推理。GPT-5 / o 系列显式使用 low，
+            # 避免供应商默认高推理档导致简单的节点规划也等待很久。
+            lowered_model = actual_model.lower()
+            reasoning_effort = (
+                "low"
+                if lowered_model.startswith(("gpt-5", "o1", "o3", "o4"))
+                or "/gpt-5" in lowered_model
+                else None
+            )
+            if on_text_delta is None:
+                create_kwargs = dict(
+                    model=actual_model,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": prompt},
+                    ],
+                    max_tokens=4096,
+                    timeout=180,
+                )
+                if reasoning_effort:
+                    create_kwargs["reasoning_effort"] = reasoning_effort
+                response = await client.chat.completions.create(**create_kwargs)
+                raw_text = extract_chat_content(response)
+                usage_raw = getattr(response, "usage", None)
+                usage = (
+                    usage_raw.model_dump()
+                    if hasattr(usage_raw, "model_dump")
+                    else usage_raw if isinstance(usage_raw, dict) else None
+                )
+            else:
+                loop_result = await run_agent_loop(
+                    client=client,
+                    options=AgentLoopOptions(
+                        max_iterations=1,
+                        temperature=0.4,
+                        max_tokens=4096,
+                        model=actual_model,
+                        max_retries=1,
+                        request_timeout=180,
+                        on_text_delta=on_text_delta,
+                        reasoning_effort=reasoning_effort,
+                    ),
+                    system_prompt=system_prompt,
+                    user_message=prompt,
+                    tools=[],
+                )
+                if not loop_result.success:
+                    raise HTTPException(502, loop_result.final_text or "画布文本模型执行失败")
+                raw_text = loop_result.final_text
+                usage = {
+                    "promptTokens": loop_result.prompt_tokens,
+                    "completionTokens": loop_result.completion_tokens,
+                    "totalTokens": (
+                        loop_result.prompt_tokens + loop_result.completion_tokens
+                    ),
+                }
             session_id = req.session_id
-            usage_raw = getattr(response, "usage", None)
-            usage = (
-                usage_raw.model_dump()
-                if hasattr(usage_raw, "model_dump")
-                else usage_raw if isinstance(usage_raw, dict) else None
-            )
         try:
             parsed = canvas_prompts.parse_agent_response(skill_key, raw_text)
         except ValueError:
@@ -596,13 +650,144 @@ async def run_workbench_agent(req: WorkbenchAgentReq):
         )
         raise HTTPException(502, f"画布助手执行失败: {exc}") from exc
 
-    return ok({
+    return {
         **parsed,
         "sessionId": session_id,
         "usage": usage,
         "skillKey": skill_key,
         "model": {"vendor": req.vendor, "modelKey": model_key},
-    })
+    }
+
+
+@router.post("/workbench/agent")
+async def run_workbench_agent(req: WorkbenchAgentReq):
+    """兼容非流式客户端的画布 Agent 端点。"""
+    return ok(await _execute_workbench_agent(req))
+
+
+def _partial_json_string(text: str, key: str) -> str:
+    """从尚未闭合的 JSON 字符串字段中提取可见文本，供结构化响应流式展示。"""
+    match = re.search(rf'"{re.escape(key)}"\s*:\s*"', text)
+    if match is None:
+        return text if text.strip() and not text.lstrip().startswith("{") else ""
+    output: list[str] = []
+    index = match.end()
+    escape_map = {
+        '"': '"',
+        "\\": "\\",
+        "/": "/",
+        "b": "\b",
+        "f": "\f",
+        "n": "\n",
+        "r": "\r",
+        "t": "\t",
+    }
+    while index < len(text):
+        character = text[index]
+        if character == '"':
+            break
+        if character != "\\":
+            output.append(character)
+            index += 1
+            continue
+        index += 1
+        if index >= len(text):
+            break
+        escaped = text[index]
+        if escaped == "u":
+            code = text[index + 1:index + 5]
+            if len(code) < 4 or not all(c in "0123456789abcdefABCDEF" for c in code):
+                break
+            output.append(chr(int(code, 16)))
+            index += 5
+            continue
+        output.append(escape_map.get(escaped, escaped))
+        index += 1
+    return "".join(output)
+
+
+def _workbench_ndjson(event: str, data: dict) -> bytes:
+    return (
+        json.dumps({"event": event, "data": data}, ensure_ascii=False)
+        + "\n"
+    ).encode("utf-8")
+
+
+@router.post("/workbench/agent/stream")
+async def stream_workbench_agent(request: Request, req: WorkbenchAgentReq):
+    """画布 Agent 的 NDJSON 流：增量展示 assistantMessage，末尾返回结构化工具调用。"""
+
+    async def events():
+        queue: asyncio.Queue[tuple[str, dict]] = asyncio.Queue(maxsize=128)
+        last_visible = ""
+
+        async def on_raw_delta(_delta: str, raw_text: str) -> None:
+            nonlocal last_visible
+            visible = _partial_json_string(raw_text, "assistantMessage")
+            if not visible or visible == last_visible:
+                return
+            delta = (
+                visible[len(last_visible):]
+                if visible.startswith(last_visible)
+                else visible
+            )
+            last_visible = visible
+            await queue.put(("content", {"delta": delta, "text": visible}))
+
+        async def execute() -> None:
+            try:
+                data = await _execute_workbench_agent(
+                    req,
+                    on_text_delta=on_raw_delta,
+                )
+                await queue.put(("result", data))
+            except HTTPException as exc:
+                await queue.put(("error", {
+                    "message": str(exc.detail),
+                    "status": exc.status_code,
+                }))
+            except Exception as exc:
+                logger.exception(
+                    "画布 Agent 流式执行失败 model=%s:%s",
+                    req.vendor,
+                    req.model_key,
+                )
+                await queue.put(("error", {"message": str(exc)}))
+            finally:
+                await queue.put(("done", {"reason": "finished"}))
+
+        task = asyncio.create_task(execute())
+        yield _workbench_ndjson("initial", {
+            "sessionId": req.session_id or "",
+        })
+        try:
+            while True:
+                try:
+                    event, data = await asyncio.wait_for(queue.get(), timeout=0.5)
+                except asyncio.TimeoutError:
+                    if await request.is_disconnected():
+                        task.cancel()
+                        break
+                    continue
+                yield _workbench_ndjson(event, data)
+                if event == "done":
+                    break
+        finally:
+            if not task.done():
+                task.cancel()
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
+
+    return StreamingResponse(
+        events(),
+        media_type="application/x-ndjson",
+        headers={
+            "Cache-Control": "no-cache, no-transform",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 class PromptLearningItem(BaseModel):

@@ -12,11 +12,13 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 import json
 import logging
 import random
 import time
 from dataclasses import dataclass, field
+from types import SimpleNamespace
 from typing import Awaitable, Callable, Optional
 
 import openai
@@ -60,6 +62,17 @@ class ToolHandler:
 
 
 @dataclass
+class LlmCallTelemetry:
+    """一次 AgentLoop 内所有模型尝试的轻量性能统计。"""
+
+    model_calls: int = 0
+    retry_count: int = 0
+    llm_elapsed_ms: int = 0
+    first_token_ms: int | None = None
+    resolved_model: str = ""
+
+
+@dataclass
 class AgentLoopOptions:
     """一次循环的运行参数：会话历史、迭代/生成上限、模型，以及重试/超时/降级等可靠性配置（由 runner 按员工模型策略填好）。"""
 
@@ -80,6 +93,12 @@ class AgentLoopOptions:
     tool_result_transform: Optional[Callable[[str, str], str]] = None
     # AgentRun 控制面注入的轻量取消检查；只在模型/工具安全边界读取。
     should_cancel: Optional[Callable[[], bool]] = None
+    # 设置后启用真正的 Chat Completions 流式消费；回调参数为（本次增量，当前完整文本）。
+    on_text_delta: Optional[
+        Callable[[str, str], Awaitable[None] | None]
+    ] = None
+    reasoning_effort: Optional[str] = None
+    telemetry: LlmCallTelemetry = field(default_factory=LlmCallTelemetry)
 
 
 @dataclass
@@ -95,6 +114,11 @@ class AgentLoopResult:
     prompt_tokens: int = 0
     completion_tokens: int = 0
     cancelled: bool = False
+    resolved_model: str = ""
+    model_call_count: int = 0
+    retry_count: int = 0
+    llm_elapsed_ms: int = 0
+    first_token_ms: int | None = None
 
 
 def _cancel_requested(options: AgentLoopOptions) -> bool:
@@ -147,13 +171,161 @@ async def _create_completion(
     client: SyncOrAsyncClient,
     create_kwargs: dict,
     is_async: bool,
+    on_text_delta: Optional[Callable[[str, str], Awaitable[None] | None]] = None,
 ):
-    """执行一次 chat.completions.create；同步客户端丢到线程池，避免阻塞事件循环。"""
+    """执行一次 completion；配置回调时消费流，否则返回完整响应。"""
+    started_at = time.monotonic()
+    if on_text_delta is not None:
+        response, first_token_ms = await _create_streaming_completion(
+            client,
+            create_kwargs,
+            is_async,
+            on_text_delta,
+            started_at,
+        )
+        return response, first_token_ms
     if is_async:
-        return await client.chat.completions.create(**create_kwargs)
-    return await asyncio.get_running_loop().run_in_executor(
-        None, lambda: client.chat.completions.create(**create_kwargs)
-    )
+        response = await client.chat.completions.create(**create_kwargs)
+    else:
+        response = await asyncio.get_running_loop().run_in_executor(
+            None, lambda: client.chat.completions.create(**create_kwargs)
+        )
+    return response, int((time.monotonic() - started_at) * 1000)
+
+
+def _stream_next(iterator):
+    """在线程中安全读取同步 stream；用二元组避免 StopIteration 穿过 Future。"""
+    try:
+        return True, next(iterator)
+    except StopIteration:
+        return False, None
+
+
+def _delta_text(delta) -> str:
+    """兼容字符串与多内容块两种流式 delta.content。"""
+    content = getattr(delta, "content", None)
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts: list[str] = []
+        for item in content:
+            text = getattr(item, "text", None)
+            if isinstance(text, str):
+                parts.append(text)
+            elif isinstance(item, dict) and isinstance(item.get("text"), str):
+                parts.append(item["text"])
+        return "".join(parts)
+    return ""
+
+
+async def _emit_text_delta(
+    callback: Callable[[str, str], Awaitable[None] | None],
+    delta: str,
+    text: str,
+) -> None:
+    """调用流式回调；展示层故障不应让模型请求重试并产生重复内容。"""
+    try:
+        value = callback(delta, text)
+        if inspect.isawaitable(value):
+            await value
+    except Exception:
+        logger.warning("LLM 流式回调失败，继续完成模型请求", exc_info=True)
+
+
+async def _create_streaming_completion(
+    client: SyncOrAsyncClient,
+    create_kwargs: dict,
+    is_async: bool,
+    on_text_delta: Callable[[str, str], Awaitable[None] | None],
+    started_at: float,
+):
+    """消费 OpenAI 兼容流并重建 loop 可继续处理的完整响应。"""
+    stream_kwargs = dict(create_kwargs, stream=True)
+    if is_async:
+        stream = await client.chat.completions.create(**stream_kwargs)
+        async def _chunks():
+            async for chunk in stream:
+                yield chunk
+    else:
+        stream = await asyncio.get_running_loop().run_in_executor(
+            None, lambda: client.chat.completions.create(**stream_kwargs)
+        )
+
+        async def _chunks():
+            iterator = iter(stream)
+            while True:
+                has_item, chunk = await asyncio.to_thread(_stream_next, iterator)
+                if not has_item:
+                    return
+                yield chunk
+
+    text_parts: list[str] = []
+    tool_parts: dict[int, dict] = {}
+    finish_reason = "stop"
+    usage = None
+    first_token_ms: int | None = None
+
+    async for chunk in _chunks():
+        chunk_usage = getattr(chunk, "usage", None)
+        if chunk_usage is not None:
+            usage = chunk_usage
+        choices = getattr(chunk, "choices", None) or []
+        for choice in choices:
+            if getattr(choice, "finish_reason", None):
+                finish_reason = choice.finish_reason
+            delta = getattr(choice, "delta", None)
+            if delta is None:
+                continue
+            piece = _delta_text(delta)
+            if piece:
+                text_parts.append(piece)
+                full_text = "".join(text_parts)
+                if first_token_ms is None:
+                    first_token_ms = int((time.monotonic() - started_at) * 1000)
+                await _emit_text_delta(on_text_delta, piece, full_text)
+            for tool_delta in getattr(delta, "tool_calls", None) or []:
+                index = int(getattr(tool_delta, "index", 0) or 0)
+                target = tool_parts.setdefault(index, {
+                    "id": "",
+                    "type": "function",
+                    "name": "",
+                    "arguments": "",
+                })
+                target["id"] += str(getattr(tool_delta, "id", "") or "")
+                target["type"] = str(
+                    getattr(tool_delta, "type", "") or target["type"]
+                )
+                function = getattr(tool_delta, "function", None)
+                if function is not None:
+                    target["name"] += str(getattr(function, "name", "") or "")
+                    target["arguments"] += str(
+                        getattr(function, "arguments", "") or ""
+                    )
+
+    tool_calls = [
+        SimpleNamespace(
+            id=value["id"] or f"call_{index}",
+            type=value["type"],
+            function=SimpleNamespace(
+                name=value["name"],
+                arguments=value["arguments"],
+            ),
+        )
+        for index, value in sorted(tool_parts.items())
+    ]
+    return SimpleNamespace(
+        choices=[
+            SimpleNamespace(
+                message=SimpleNamespace(
+                    role="assistant",
+                    content="".join(text_parts),
+                    tool_calls=tool_calls or None,
+                ),
+                finish_reason=finish_reason,
+            )
+        ],
+        usage=usage,
+    ), first_token_ms
 
 
 async def _create_with_retry(
@@ -181,16 +353,36 @@ async def _create_with_retry(
         create_kwargs = dict(base_kwargs, model=model)
         if options.request_timeout:
             create_kwargs["timeout"] = options.request_timeout
+        if (
+            options.reasoning_effort
+            and (
+                model.lower().startswith(("gpt-5", "o1", "o3", "o4"))
+                or "/gpt-5" in model.lower()
+            )
+        ):
+            create_kwargs["reasoning_effort"] = options.reasoning_effort
 
         for attempt in range(options.max_retries + 1):
+            options.telemetry.model_calls += 1
+            if attempt > 0:
+                options.telemetry.retry_count += 1
+            call_started_at = time.monotonic()
             try:
-                response = await _create_completion(a_client, create_kwargs, a_is_async)
+                response, first_token_ms = await _create_completion(
+                    a_client,
+                    create_kwargs,
+                    a_is_async,
+                    options.on_text_delta,
+                )
                 normalized = normalize_chat_completion(response)
                 if not normalized.choices:
                     raise EmptyModelResponseError(f"模型 {model} 未返回 choices")
                 choice = normalized.choices[0]
                 content = str(choice.message.content or "").strip()
                 if content or choice.message.tool_calls:
+                    if options.telemetry.first_token_ms is None:
+                        options.telemetry.first_token_ms = first_token_ms
+                    options.telemetry.resolved_model = model
                     return response
 
                 finish_reason = str(choice.finish_reason or "unknown")
@@ -236,6 +428,10 @@ async def _create_with_retry(
                     model, iteration, exc,
                 )
                 break
+            finally:
+                options.telemetry.llm_elapsed_ms += int(
+                    (time.monotonic() - call_started_at) * 1000
+                )
 
     assert last_exc is not None
     raise last_exc
@@ -453,4 +649,9 @@ async def run_agent_loop(
         )
 
     result.messages = messages
+    result.resolved_model = options.telemetry.resolved_model
+    result.model_call_count = options.telemetry.model_calls
+    result.retry_count = options.telemetry.retry_count
+    result.llm_elapsed_ms = options.telemetry.llm_elapsed_ms
+    result.first_token_ms = options.telemetry.first_token_ms
     return result

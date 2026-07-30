@@ -140,6 +140,9 @@ def load_snapshot(
                 command_args=defn.command_args,
                 url=defn.url,
                 env=defn.env,
+                headers=defn.headers,
+                auth_type=defn.auth_type,
+                oauth_scope=defn.oauth_scope,
                 sort_order=defn.sort_order,
             ))
         if servers:

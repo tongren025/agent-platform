@@ -6,9 +6,9 @@
     "category": "knowledge",
     "importance": 1.0,
     "sourceSession": "jiulu_gaoran_pivot_20260709",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-07-09T08:02:22.642452Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-07-30T04:04:42.292463Z"
   },
   {
@@ -18,9 +18,9 @@
     "category": "shortdrama_law",
     "importance": 1.0,
     "sourceSession": "duanju_spine_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T23:30:00Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-07-30T04:04:42.294298Z"
   },
   {
@@ -30,9 +30,9 @@
     "category": "scene",
     "importance": 0.98,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-07-30T04:04:42.296296Z"
   },
   {
@@ -42,9 +42,9 @@
     "category": "knowledge",
     "importance": 0.97,
     "sourceSession": "jiulu_gaoran_pivot_20260709",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-07-09T08:02:22.827542Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-07-30T04:04:42.297295Z"
   },
   {
@@ -54,9 +54,9 @@
     "category": "scene",
     "importance": 0.95,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-07-30T04:04:42.299297Z"
   },
   {
@@ -66,9 +66,9 @@
     "category": "quality",
     "importance": 0.93,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-07-30T04:04:42.283294Z"
   },
   {
@@ -78,9 +78,9 @@
     "category": "prompt",
     "importance": 0.91,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-06-30T11:44:56.150698Z"
   },
   {
@@ -90,9 +90,9 @@
     "category": "light",
     "importance": 0.85,
     "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-07-30T04:04:42.301297Z"
   },
   {
@@ -102,9 +102,9 @@
     "category": "craft",
     "importance": 0.55,
     "sourceSession": "pro_craft_deep2_20260630",
-    "accessCount": 0,
+    "accessCount": 1,
     "createdAt": "2026-06-30T12:40:38.660400Z",
-    "lastAccessed": null,
+    "lastAccessed": "2026-07-30T06:32:33.227693Z",
     "updatedAt": "2026-07-30T04:04:42.287293Z"
   }
 ]

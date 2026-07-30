@@ -116,7 +116,27 @@ export async function openDesktopAgentsChatStream(
   const desktop = getDesktopBridge()
   if (!desktop && typeof window !== 'undefined') {
     let stopped = false
-    const stop = async () => { stopped = true }
+    let streamedText = ''
+    const requestId = `platform-${Date.now()}`
+    const controller = new AbortController()
+    const stop = async () => {
+      if (stopped) return
+      stopped = true
+      controller.abort()
+      handlers.onEvent({
+        event: 'result',
+        data: {
+          response: {
+            id: requestId,
+            text: streamedText || '（已停止生成）',
+            raw: { cancelled: true },
+            toolCalls: [],
+            artifacts: [],
+          },
+        },
+      })
+      handlers.onEvent({ event: 'done', data: { reason: 'finished' } })
+    }
     handlers.onOpen?.()
     handlers.onSession?.({
       sessionId: payload.sessionKey || `canvas-${Date.now()}`,
@@ -156,10 +176,12 @@ export async function openDesktopAgentsChatStream(
       const skill = chatContext.skill && typeof chatContext.skill === 'object'
         ? chatContext.skill as Record<string, unknown>
         : {}
-      const response = await fetch('/api/v1/agentapp/canvas/workbench/agent', {
+      const response = await fetch('/api/v1/agentapp/canvas/workbench/agent/stream', {
         method: 'POST',
+        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/x-ndjson',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
@@ -173,19 +195,64 @@ export async function openDesktopAgentsChatStream(
           projectId: platformPayload.projectId || payload.canvasProjectId || '',
         }),
       })
-      const envelope = await response.json() as { code?: number; data?: Record<string, unknown>; message?: string }
-      if (!response.ok || envelope.code !== 200 || !envelope.data) {
-        throw new Error(envelope.message || `数字员工请求失败（${response.status}）`)
+      if (!response.ok) {
+        throw new Error((await response.text()) || `数字员工请求失败（${response.status}）`)
       }
+      if (!response.body) throw new Error('当前浏览器不支持画布流式响应')
+      handlers.onEvent({ event: 'initial', data: { requestId } })
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+      let resultData: Record<string, unknown> = {}
+      let receivedResult = false
+      let streamError = ''
+      const consumeLine = (line: string) => {
+        if (!line.trim()) return
+        const event = JSON.parse(line) as {
+          event?: string
+          data?: Record<string, unknown>
+        }
+        const data = event.data || {}
+        if (event.event === 'content') {
+          const delta = String(data.delta || '')
+          const text = String(data.text || streamedText + delta)
+          streamedText = text
+          handlers.onEvent({ event: 'content', data: { delta, text } })
+        } else if (event.event === 'result') {
+          resultData = data
+          receivedResult = true
+        } else if (event.event === 'error') {
+          streamError = String(data.message || '数字员工请求失败')
+        }
+      }
+      while (true) {
+        const { value, done } = await reader.read()
+        buffer += decoder.decode(value || new Uint8Array(), { stream: !done })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        lines.forEach(consumeLine)
+        if (done) break
+      }
+      if (buffer.trim()) consumeLine(buffer)
+      if (streamError) throw new Error(streamError)
+      if (!receivedResult) throw new Error('画布流式请求结束但没有完整结果')
       if (stopped) return stop
       const text = String(
-        envelope.data.assistantMessage
-        || envelope.data.assistant_message
-        || envelope.data.output
-        || envelope.data.content
+        resultData.assistantMessage
+        || resultData.assistant_message
+        || resultData.output
+        || resultData.content
         || '',
       )
-      const rawToolCalls = Array.isArray(envelope.data.toolCalls) ? envelope.data.toolCalls : []
+      if (text && text !== streamedText) {
+        const delta = text.startsWith(streamedText)
+          ? text.slice(streamedText.length)
+          : text
+        streamedText = text
+        handlers.onEvent({ event: 'content', data: { delta, text } })
+      }
+      const rawToolCalls = Array.isArray(resultData.toolCalls) ? resultData.toolCalls : []
       const toolCalls: Array<{ toolCallId: string; toolName: string; args: unknown }> = []
       rawToolCalls.forEach((item, index) => {
         if (!item || typeof item !== 'object') return
@@ -198,9 +265,6 @@ export async function openDesktopAgentsChatStream(
           args: call.args ?? call.arguments ?? {},
         })
       })
-      const requestId = `platform-${Date.now()}`
-      handlers.onEvent({ event: 'initial', data: { requestId } })
-      if (text) handlers.onEvent({ event: 'content', data: { delta: text, text } })
       for (const call of toolCalls) {
         handlers.onEvent({
           event: 'tool-call',
@@ -219,16 +283,17 @@ export async function openDesktopAgentsChatStream(
           response: {
             id: requestId,
             text,
-            raw: envelope.data,
+            raw: resultData,
             toolCalls,
             artifacts: [],
-            usage: coerceAgentUsage(envelope.data.usage),
+            usage: coerceAgentUsage(resultData.usage),
             finishReason: toolCalls.length ? 'tool-calls' : 'stop',
           },
         },
       })
       handlers.onEvent({ event: 'done', data: { reason: 'finished' } })
     } catch (error: unknown) {
+      if (stopped) return stop
       const err = error instanceof Error ? error : new Error(String(error))
       handlers.onError?.(err)
       handlers.onEvent({ event: 'error', data: { message: err.message } })

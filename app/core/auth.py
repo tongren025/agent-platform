@@ -32,6 +32,10 @@ _READ_EXEMPT_PREFIXES = ("/api/v1/agentapp/production/resource/",)
 
 # 写操作的前缀 → 所需权限。顺序即匹配顺序:更长/更具体的前缀放前面。
 _WRITE_PERMS: list[tuple[str, str]] = [
+    ("/api/v1/agentapp/system-manager/actions", "tool:manage"),
+    ("/api/v1/agentapp/system-manager/changes", "tool:manage"),
+    ("/api/v1/agentapp/system-manager/skills", "tool:manage"),
+    ("/api/v1/agentapp/system-manager/mcp", "tool:manage"),
     ("/api/v1/agentapp/agent/ai-providers", "settings:manage"),
     ("/api/v1/agentapp/registry/teams", "team:manage"),
     ("/api/v1/agentapp/registry/tools", "tool:manage"),
