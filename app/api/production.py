@@ -30,7 +30,11 @@ from app.models.production import (
 from app.services.invocation import run_invocation
 from app.services.image_generation import generate_image_to_local
 from app.services.inbox_ingest import parse_inbox_filename, resolve_inbox_target
-from app.services.production_quality import evaluate_production_draft
+from app.services.production_quality import (
+    evaluate_production_draft,
+    evaluate_visual_quality,
+    visual_quality_profile,
+)
 
 router = APIRouter(prefix="/api/v1/agentapp/production", tags=["production"])
 logger = get_logger(__name__)
@@ -1561,6 +1565,10 @@ REVIEW_REJECT_REASONS = {
     "composition_mismatch": "构图不符分镜",
     "lighting_wrong": "光影错误",
     "anatomy_broken": "结构崩坏",
+    "scene_drift": "场景漂移",
+    "style_drift": "画风漂移",
+    "continuity_break": "前后镜不连续",
+    "text_artifact": "文字或符号错误",
     "other": "其他",
 }
 
@@ -1641,6 +1649,26 @@ class ReviewCardImageReq(BaseModel):
     image: str = ""
     reason: str = ""
     note: str = ""
+    ratings: dict[str, int] = Field(default_factory=dict)
+    promote: bool = True
+
+
+class ActivateImageCandidateReq(BaseModel):
+    """把已经通过人工验收的历史候选设为当前生产版本。"""
+    image: str
+
+
+@router.get("/quality-profile")
+def get_quality_profile():
+    """返回精品图片验收量表；前端不得自行复制阈值。"""
+    return {"code": 200, "data": {
+        "profile": "precision",
+        "image": visual_quality_profile(),
+        "reject_reasons": [
+            {"key": key, "name": name}
+            for key, name in REVIEW_REJECT_REASONS.items()
+        ],
+    }}
 
 
 @router.post("/projects/{pid}/cards/{card_id}/review")
@@ -1666,12 +1694,23 @@ def review_card_image(pid: str, card_id: str, req: ReviewCardImageReq):
         )
         if not current_image:
             raise HTTPException(400, "卡片没有可评审的图片")
-        if req.image and req.image != current_image:
-            raise HTTPException(409, "图片已更新，请刷新后评审当前版本")
-        image = current_image
+        image = req.image.strip() or current_image
+        known_images = {str(item) for item in card.images}
+        if image != current_image and image not in known_images:
+            raise HTTPException(409, "候选图片已变化，请刷新后重新评审")
+        quality: dict[str, Any] = {}
+        if req.ratings:
+            try:
+                quality = evaluate_visual_quality(req.ratings)
+            except ValueError as exc:
+                raise HTTPException(400, str(exc)) from exc
+            if req.verdict == "pass" and not quality["passed"]:
+                raise HTTPException(400, f"{quality['summary']} 请退回并说明主要问题。")
         image_path = _project_image_path_from_url(pid, image)
         reviews = list(card.metadata.get("image_reviews") or [])
-        reviews.append({
+        review_id = uuid.uuid4().hex[:12]
+        review_record = {
+            "id": review_id,
             "image": image,
             "file_sha256": _file_sha256(image_path),
             "spec_fingerprint": _card_review_spec_fingerprint(card),
@@ -1679,11 +1718,85 @@ def review_card_image(pid: str, card_id: str, req: ReviewCardImageReq):
             "reason": req.reason if req.verdict == "reject" else "",
             "note": req.note,
             "time": _now(),
+        }
+        if quality:
+            review_record["quality"] = quality
+        reviews.append(review_record)
+
+        candidate_records = list(card.metadata.get("image_candidates") or [])
+        candidate = next(
+            (item for item in candidate_records if str(item.get("image") or "") == image),
+            None,
+        )
+        if candidate is None:
+            candidate = {"image": image}
+            candidate_records.append(candidate)
+        candidate.update({
+            "latest_review_id": review_id,
+            "verdict": req.verdict,
+            "quality_score": quality.get("score"),
+            "reviewed_at": review_record["time"],
         })
-        card.metadata = {**card.metadata, "image_reviews": reviews, "review_verdict": req.verdict}
-        # status 仍是生产流转态：通过会关闭待处理项，废弃会把卡片重新送入返工队列；
-        # 完整的人审历史以 metadata.image_reviews 为准。
-        card.status = "done" if req.verdict == "pass" else "review"
+
+        promoted = req.verdict == "pass" and (req.promote or image == current_image)
+        active_image = image if promoted else current_image
+        active_reviews = [
+            item
+            for item in reviews
+            if str(item.get("image") or "") == active_image
+        ]
+        active_verdict = (
+            str(active_reviews[-1].get("verdict") or "")
+            if active_reviews
+            else ""
+        )
+        card.metadata = {
+            **card.metadata,
+            "active_image": active_image,
+            "image_reviews": reviews,
+            "image_candidates": candidate_records,
+            "review_verdict": active_verdict,
+        }
+        # 只有当前采用版本的结论影响生产状态；评审未采用候选不能打断现有镜头。
+        if active_verdict == "pass":
+            card.status = "done"
+        elif active_verdict == "reject":
+            card.status = "review"
+        card.updated_at = _now()
+        _save_cards(pid, cards)
+    return {"code": 200, "data": card.model_dump()}
+
+
+@router.post("/projects/{pid}/cards/{card_id}/image-candidates/activate")
+def activate_image_candidate(
+    pid: str,
+    card_id: str,
+    req: ActivateImageCandidateReq,
+):
+    """采用一个已通过验收的图片候选；切换会让绑定旧图的视频自然变为过期。"""
+    with _project_lock(pid):
+        _load_project(pid)
+        cards = _load_cards(pid)
+        card = next((item for item in cards if item.card_id == card_id), None)
+        if card is None:
+            raise HTTPException(404, "卡片不存在")
+        image = req.image.strip()
+        if not image or image not in {str(item) for item in card.images}:
+            raise HTTPException(400, "候选图片不存在")
+        reviews = [
+            item
+            for item in (card.metadata.get("image_reviews") or [])
+            if str(item.get("image") or "") == image
+        ]
+        if not reviews or reviews[-1].get("verdict") != "pass":
+            raise HTTPException(409, "候选图片必须先通过人工验收才能采用")
+        card.metadata = {
+            **card.metadata,
+            "active_image": image,
+            "review_verdict": "pass",
+            "active_image_changed_at": _now(),
+        }
+        card.status = "done"
         card.updated_at = _now()
         _save_cards(pid, cards)
     return {"code": 200, "data": card.model_dump()}

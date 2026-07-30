@@ -36,6 +36,7 @@ from app.services.project_optimization import (
     list_optimization_runs,
     optimization_control,
 )
+from app.services.production_quality import build_image_repair_prompt
 
 
 router = APIRouter(prefix="/api/v1/agentapp/director", tags=["director"])
@@ -627,12 +628,16 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
         )
         if not prompt:
             raise HTTPException(400, "镜头没有图片提示词")
+        generation_prompt = build_image_repair_prompt(
+            prompt,
+            list(card.metadata.get("image_reviews") or []),
+        )
         aspect_ratio = req.aspect_ratio or project.aspect_ratio
     try:
         result = openrouter_media.generate_image(
             project_id,
             model=req.model,
-            prompt=prompt,
+            prompt=generation_prompt,
             resolution=req.resolution,
             aspect_ratio=aspect_ratio,
         )
@@ -656,11 +661,28 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
         if applied:
             if result["url"] not in card.images:
                 card.images.append(result["url"])
+            candidates = list(card.metadata.get("image_candidates") or [])
+            candidates = [
+                item
+                for item in candidates
+                if str(item.get("image") or "") != result["url"]
+            ]
+            candidates.append({
+                "image": result["url"],
+                "model": result["model"],
+                "base_prompt": prompt,
+                "generation_prompt": generation_prompt,
+                "created_at": _now(),
+                "verdict": "",
+                "quality_score": None,
+            })
             card.metadata = {
                 **card.metadata,
                 "active_image": result["url"],
+                "image_candidates": candidates[-20:],
                 "last_image_model": result["model"],
                 "last_image_prompt": prompt,
+                "last_image_generation_prompt": generation_prompt,
                 "last_image_usage": result.get("usage") or {},
             }
             card.status = "done"
@@ -684,6 +706,7 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
         "card": card.model_dump(),
         "applied": applied,
         "stale": not applied,
+        "qualityFeedbackApplied": generation_prompt != prompt,
     })
 
 

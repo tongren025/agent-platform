@@ -235,3 +235,52 @@ def test_video_submission_requires_current_project_image(director_env):
 
     assert response.status_code == 400
     assert "先生成当前镜头图片" in response.json()["message"]
+
+
+def test_rejected_image_feedback_is_applied_to_next_generation(
+    director_env,
+    monkeypatch,
+):
+    """退回原因和人工备注必须进入下一次真实生图请求，不能只停留在统计页。"""
+    client = director_env
+    from app.services import openrouter_media
+
+    prompts: list[str] = []
+
+    def capture_generation(project_id, **kwargs):
+        prompts.append(kwargs["prompt"])
+        return {
+            "url": f"/uploads/production/{project_id}/quality-{len(prompts)}.png",
+            "model": kwargs["model"],
+            "usage": {"cost": 0.01},
+        }
+
+    monkeypatch.setattr(openrouter_media, "generate_image", capture_generation)
+    pid, card_ids = _create_gc(client)
+    endpoint = (
+        f"/api/v1/agentapp/director/projects/{pid}"
+        f"/cards/{card_ids['img_prompt']}/image"
+    )
+    first = client.post(endpoint, json={"model": "demo/image"})
+    assert first.status_code == 200, first.text
+    image = first.json()["data"]["url"]
+    rejected = client.post(
+        (
+            f"/api/v1/agentapp/production/projects/{pid}"
+            f"/cards/{card_ids['img_prompt']}/review"
+        ),
+        json={
+            "verdict": "reject",
+            "image": image,
+            "reason": "character_drift",
+            "note": "女主必须保留左眼泪痣和青色发带",
+        },
+    )
+    assert rejected.status_code == 200, rejected.text
+
+    second = client.post(endpoint, json={"model": "demo/image"})
+    assert second.status_code == 200, second.text
+    assert second.json()["data"]["qualityFeedbackApplied"] is True
+    assert "当前角色时期的脸、发型、服装" in prompts[-1]
+    assert "女主必须保留左眼泪痣和青色发带" in prompts[-1]
+    assert prompts[-1].startswith("img_prompt prompt")

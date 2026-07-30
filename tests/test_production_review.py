@@ -151,3 +151,99 @@ def test_review_stats_aggregate_reasons(review_env):
     assert top["name"] == "基调偏差"
     assert top["count"] == 2
     assert data["by_episode"]["1"] == {"passed": 1, "rejected": 3}
+
+
+def test_quality_profile_and_structured_visual_review(review_env):
+    """精品验收量表来自后端；关键维度不达标时不能伪装成通过。"""
+    client, pid, (cid, _) = review_env
+    profile = client.get("/api/v1/agentapp/production/quality-profile")
+    assert profile.status_code == 200, profile.text
+    image_profile = profile.json()["data"]["image"]
+    assert image_profile["minimumScore"] == 80
+    assert [item["key"] for item in image_profile["dimensions"]] == [
+        "identity_consistency",
+        "composition_accuracy",
+        "scene_consistency",
+        "style_fidelity",
+        "technical_integrity",
+    ]
+
+    endpoint = f"/api/v1/agentapp/production/projects/{pid}/cards/{cid}/review"
+    failed = client.post(endpoint, json={
+        "verdict": "pass",
+        "ratings": {
+            "identity_consistency": 3,
+            "composition_accuracy": 5,
+            "scene_consistency": 5,
+            "style_fidelity": 5,
+            "technical_integrity": 5,
+        },
+    })
+    assert failed.status_code == 400
+    assert "角色一致性" in failed.json()["message"]
+
+    passed = client.post(endpoint, json={
+        "verdict": "pass",
+        "ratings": {
+            "identity_consistency": 5,
+            "composition_accuracy": 4,
+            "scene_consistency": 4,
+            "style_fidelity": 4,
+            "technical_integrity": 4,
+        },
+    })
+    assert passed.status_code == 200, passed.text
+    quality = passed.json()["data"]["metadata"]["image_reviews"][-1]["quality"]
+    assert quality["passed"] is True
+    assert quality["score"] == 86.0
+    assert quality["version"] == "visual-v1"
+
+
+def test_review_and_activate_non_current_candidate(review_env):
+    """历史候选可独立评分；未采用的候选不打断当前版本，通过后才允许晋级。"""
+    client, pid, _ = review_env
+    created = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards",
+        json={
+            "stage": "img_prompt",
+            "title": "G3 候选比较",
+            "content": "x",
+            "episode": 1,
+            "shot_number": 3,
+            "images": ["/uploads/candidate-a.png", "/uploads/candidate-b.png"],
+            "metadata": {"active_image": "/uploads/candidate-a.png"},
+            "status": "done",
+        },
+    )
+    assert created.status_code == 200, created.text
+    card_id = created.json()["data"]["card_id"]
+    reviewed = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}/review",
+        json={
+            "verdict": "pass",
+            "image": "/uploads/candidate-b.png",
+            "promote": False,
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 4,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert reviewed.status_code == 200, reviewed.text
+    card = reviewed.json()["data"]
+    assert card["metadata"]["active_image"] == "/uploads/candidate-a.png"
+    assert card["status"] == "done"
+
+    activated = client.post(
+        (
+            f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}"
+            "/image-candidates/activate"
+        ),
+        json={"image": "/uploads/candidate-b.png"},
+    )
+    assert activated.status_code == 200, activated.text
+    assert activated.json()["data"]["metadata"]["active_image"] == "/uploads/candidate-b.png"
+    assert activated.json()["data"]["metadata"]["review_verdict"] == "pass"
