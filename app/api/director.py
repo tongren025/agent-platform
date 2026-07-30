@@ -63,6 +63,21 @@ def _active_image_url(card: ProductionCard | None) -> str:
     return str(card.images[-1]) if card.images else ""
 
 
+def _current_image_review(
+    card: ProductionCard | None,
+    image_url: str,
+) -> dict:
+    """取当前图片最后一次审核；历史图片的结论不能污染新版本。"""
+    if card is None or not image_url:
+        return {}
+    reviews = [
+        review
+        for review in (card.metadata.get("image_reviews") or [])
+        if str(review.get("image") or "") == image_url
+    ]
+    return reviews[-1] if reviews else {}
+
+
 def _director_state(project_id: str) -> dict:
     project = _load_project(project_id)
     cards = _load_cards(project_id)
@@ -100,11 +115,7 @@ def _director_state(project_id: str) -> dict:
                 or not current_image_prompt
                 or generated_image_prompt == current_image_prompt
             )
-        image_reviews = [
-            review for review in ((image_card.metadata.get("image_reviews") or []) if image_card else [])
-            if str(review.get("image") or "") == image_url
-        ]
-        latest_image_review = image_reviews[-1] if image_reviews else {}
+        latest_image_review = _current_image_review(image_card, image_url)
         image_review_count = 1 if image_card and image_card.status == "review" else 0
         image_ready = bool(image_url) and image_inputs_match and image_review_count == 0 and (
             latest_image_review.get("verdict") != "reject"
@@ -705,17 +716,25 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         if not prompt:
             raise HTTPException(400, "镜头没有视频提示词")
 
-        image_url = req.image_url
-        if not image_url:
-            image_card = next((
-                item for item in cards
-                if item.episode == card.episode
-                and item.shot_number == card.shot_number
-                and item.stage in ("img_prompt", "storyboard")
-                and item.images
-            ), None)
-            if image_card:
-                image_url = _active_image_url(image_card)
+        image_card = (
+            _card_for(cards, card.episode, card.shot_number, "img_prompt")
+            or _card_for(cards, card.episode, card.shot_number, "storyboard")
+        )
+        current_image_url = _active_image_url(image_card)
+        if not current_image_url:
+            raise HTTPException(400, "请先生成当前镜头图片，再提交视频")
+        if req.image_url and req.image_url != current_image_url:
+            raise HTTPException(409, "镜头图片已变化，请刷新后使用当前版本提交视频")
+        image_review = _current_image_review(image_card, current_image_url)
+        if (
+            image_card is not None
+            and (
+                image_card.status == "review"
+                or image_review.get("verdict") == "reject"
+            )
+        ):
+            raise HTTPException(409, "当前镜头图片待返工，请修改并通过后再提交视频")
+        image_url = current_image_url
         aspect_ratio = req.aspect_ratio or project.aspect_ratio
         submission_started_at = _now()
     try:
@@ -744,20 +763,25 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
             if card.prompts
             else card.content.strip()
         )
-        image_card = next((
-            item for item in cards
-            if item.episode == card.episode
-            and item.shot_number == card.shot_number
-            and item.stage in ("img_prompt", "storyboard")
-            and item.images
-        ), None)
+        image_card = (
+            _card_for(cards, card.episode, card.shot_number, "img_prompt")
+            or _card_for(cards, card.episode, card.shot_number, "storyboard")
+        )
         current_image_url = _active_image_url(image_card)
+        current_image_review = _current_image_review(image_card, current_image_url)
+        image_approved = (
+            bool(current_image_url)
+            and image_card is not None
+            and image_card.status != "review"
+            and current_image_review.get("verdict") != "reject"
+        )
         current_job = card.metadata.get("openrouter_video_job") or {}
         newer_job_exists = (
             str(current_job.get("submittedAt") or "") > submission_started_at
         )
         inputs_match = (
             current_prompt == prompt
+            and image_approved
             and (
                 not image_url
                 or not current_image_url

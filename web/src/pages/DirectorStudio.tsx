@@ -1029,6 +1029,8 @@ export default function DirectorStudio() {
         shot.videoCardId
         && shot.imageUrl
         && !shot.imageStale
+        && shot.reviewCount === 0
+        && shot.imageReviewVerdict !== 'reject'
         && (!shot.videoUrl || shot.videoStale)
         && !(shot.videoJob && ACTIVE_VIDEO_STATUSES.has(shot.videoJob.status)),
       ));
@@ -1395,6 +1397,7 @@ export default function DirectorStudio() {
                   const generatingImage = cardMediaBusy[shot.imageCardId] === 'image';
                   const generatingVideo = cardMediaBusy[shot.videoCardId] === 'video';
                   const reviewing = Boolean(reviewBusy[shot.imageCardId]);
+                  const imageNeedsRework = shot.reviewCount > 0 || shot.imageReviewVerdict === 'reject';
                   return (
                     <article key={`${shot.episode ?? 'global'}-${shot.unit}`} className="director-shot-card">
                       <div className="director-shot-media">
@@ -1500,13 +1503,19 @@ export default function DirectorStudio() {
                             </Tooltip>
                           )}
                           {shot.videoCardId && (
-                            <Tooltip title={!shot.imageUrl || shot.imageStale ? '先按最新提示词生成这张镜头图片' : ''}>
+                            <Tooltip title={
+                              !shot.imageUrl || shot.imageStale
+                                ? '先按最新提示词生成这张镜头图片'
+                                : imageNeedsRework
+                                  ? '当前图片待返工，修改并通过后再生成视频'
+                                  : ''
+                            }>
                               <span>
                                 <Button
                                   size="small"
                                   icon={<VideoCameraOutlined />}
                                   loading={generatingVideo || jobActive}
-                                  disabled={!shot.imageUrl || shot.imageStale || jobActive}
+                                  disabled={!shot.imageUrl || shot.imageStale || imageNeedsRework || jobActive}
                                   onClick={() => void openMedia('video', shot)}
                                 >
                                   {shot.videoStale
