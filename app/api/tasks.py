@@ -10,7 +10,7 @@ import logging
 import time
 
 from fastapi import APIRouter, HTTPException, Request
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from app.api.common import ok as _ok
 from app.core.queue import QueueUnavailable
@@ -121,7 +121,7 @@ async def enqueue_agent_run(request: Request, body: AgentRunRequest):
 
 @router.get("")
 async def list_tasks(request: Request, limit: int = 50):
-    """列出当前用户最近任务，供任务中心直接展示，无需用户保存 Job ID。"""
+    """列出当前用户最近任务；未配置 Redis 时按可选能力降级为空列表。"""
     try:
         from app.core.queue import get_pool
         pool = await get_pool()
@@ -135,6 +135,11 @@ async def list_tasks(request: Request, limit: int = 50):
             if view:
                 views.append(view)
         return _ok(views)
+    except QueueUnavailable as exc:
+        # 单机默认模式不要求 Redis。任务中心只是附加能力，后台轮询不应制造 503；
+        # 真正触发入队、查询具体任务时仍保留明确的不可用错误。
+        logger.info("任务列表降级为空：%s", exc)
+        return _ok([])
     except Exception as exc:
         raise _queue_error("查询任务列表", exc) from exc
 
