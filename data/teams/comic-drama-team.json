@@ -10,6 +10,7 @@
     "comic-character-designer",
     "comic-scene-designer",
     "comic-vfx-designer",
+    "comic-storyboard",
     "comic-trajectory-artist",
     "comic-prompt-engineer",
     "comic-character-artist",
@@ -21,68 +22,73 @@
   "defaultEmployeeKey": "comic-director",
   "ownerUserId": null,
   "leaderEmployeeKey": "comic-director",
-  "description": "一人漫剧创作团队：12 个 AI 角色覆盖统筹、创作、设计、提示词、图片/视频生成与质检。\n\n默认工作流：总导演统筹 → 编剧分镜拆镜头 → 并行（人物设定 + 场景美术 + 特效设计 + 动作轨迹）→ AI 视频提示词整合 → 质检交付；用户明确要求最终媒体时，再由角色/场景/关键帧原画师或视频生成师调用付费生成工具。",
+  "description": "面向零基础用户的一人漫剧创作团队：13 个 AI 岗位按固定关卡工作，用户只需给一句创意并持续点击唯一“下一步”。\n\n标准流程：一句创意 → 故事设定/剧本 → 视觉风格母版 → 人物三视图/表情/服装 → 场景/道具 → 逐镜分镜 → 镜头动态设计 → 首帧/关键帧/可选尾帧 → 逐镜视频 → 审片/剪辑/声音/成片。建稿和建卡可直接执行，真实生图/生视频仍须用户确认额度。",
   "roles": [
     {
       "employeeKey": "comic-director",
-      "stage": "统筹",
+      "stage": "01 故事策划",
       "order": 0
     },
     {
       "employeeKey": "comic-screenwriter",
-      "stage": "创作",
+      "stage": "02 剧本",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-vfx-designer",
+      "stage": "03 视觉风格",
       "order": 0
     },
     {
       "employeeKey": "comic-character-designer",
-      "stage": "并行生产",
-      "order": 0
-    },
-    {
-      "employeeKey": "comic-scene-designer",
-      "stage": "并行生产",
-      "order": 1
-    },
-    {
-      "employeeKey": "comic-vfx-designer",
-      "stage": "并行生产",
-      "order": 2
-    },
-    {
-      "employeeKey": "comic-trajectory-artist",
-      "stage": "并行生产",
-      "order": 3
-    },
-    {
-      "employeeKey": "comic-prompt-engineer",
-      "stage": "整合",
+      "stage": "04 人物资产",
       "order": 0
     },
     {
       "employeeKey": "comic-character-artist",
-      "stage": "生成",
+      "stage": "04 人物资产",
+      "order": 1
+    },
+    {
+      "employeeKey": "comic-scene-designer",
+      "stage": "05 场景资产",
       "order": 0
     },
     {
       "employeeKey": "comic-scene-artist",
-      "stage": "生成",
+      "stage": "05 场景资产",
       "order": 1
     },
     {
+      "employeeKey": "comic-storyboard",
+      "stage": "06 逐镜分镜",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-trajectory-artist",
+      "stage": "07 镜头动态设计",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-prompt-engineer",
+      "stage": "08 关键帧准备",
+      "order": 0
+    },
+    {
       "employeeKey": "comic-keyframe-artist",
-      "stage": "生成",
-      "order": 2
+      "stage": "08 关键帧准备",
+      "order": 1
     },
     {
       "employeeKey": "comic-video-artist",
-      "stage": "生成",
-      "order": 3
+      "stage": "09 视频生成",
+      "order": 0
     },
     {
       "employeeKey": "comic-qa-inspector",
-      "stage": "质检",
+      "stage": "10 审片成片",
       "order": 0
     }
   ],
-  "defaultWorkflowKey": "comic-drama-10s"
+  "defaultWorkflowKey": "comic-drama"
 }

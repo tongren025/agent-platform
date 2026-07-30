@@ -18,6 +18,7 @@ import {
   IconMoodConfuzed,
   IconMovie,
   IconPencil,
+  IconPhoto,
   IconPlugConnectedX,
   IconScissors,
   IconTimeline,
@@ -29,7 +30,6 @@ import {
 } from '@tabler/icons-react'
 import type { Icon } from '@tabler/icons-react'
 import { cn } from '../../utils/cn'
-import { NomiWordmark } from '../../design'
 import { handbookContentForLocale } from './handbookContent'
 
 type Props = {
@@ -40,6 +40,7 @@ type Props = {
 /** iconKey（kebab）→ vendor 已登记组件。新增 iconKey 时同步补这里 + vendor 登记。 */
 const HANDBOOK_ICON: Record<string, Icon> = {
   pencil: IconPencil,
+  photo: IconPhoto,
   scissors: IconScissors,
   'layout-grid': IconLayoutGrid,
   wand: IconWand,
@@ -111,7 +112,6 @@ export function HandbookPanel({ opened, onClose }: Props): JSX.Element | null {
           <div className={cn('flex items-center gap-2 px-5 pt-4 pb-3 border-b border-nomi-line')}>
             <IconMap size={18} stroke={1.6} className={cn('text-nomi-accent')} />
             <b className={cn('text-title font-bold text-nomi-ink')}>{content.title}</b>
-            <NomiWordmark fontSize={13} className={cn('text-nomi-ink-40')} />
             <span className={cn('flex-1')} />
             <button
               type="button"

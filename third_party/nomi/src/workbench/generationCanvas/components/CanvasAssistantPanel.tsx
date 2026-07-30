@@ -43,6 +43,11 @@ import { AttachmentRail } from '../../ai/composer/AttachmentRail'
 import { AutoGrowTextarea } from '../../ai/composer/AutoGrowTextarea'
 import { COMPOSER_ATTACHMENT_ACCEPT, useComposerAttachments } from '../../ai/composer/useComposerAttachments'
 import type { ComposerAttachment } from '../../ai/composer/composerAttachmentTypes'
+import {
+  consumePendingGuidedCanvas,
+  GUIDED_CANVAS_EVENT,
+  type GuidedCanvasRequest,
+} from '../../onboarding/guidedProductionEvents'
 
 type PendingToolCall = {
   toolCallId: string
@@ -215,6 +220,7 @@ export default function CanvasAssistantPanel({
   type SubmitMessageOptions = {
     skill?: { key: string; name: string }
     displayMessage?: string
+    autoApproveSafeWrites?: boolean
   }
 
   const submitAgentMessage = React.useCallback((text: string, options: SubmitMessageOptions = {}) => {
@@ -474,6 +480,22 @@ export default function CanvasAssistantPanel({
               anchorMessageId: anchorId,
             })
             sealBubble()
+            // “制作向导”的主按钮已经明确授权本步骤。建卡、连线、站位和运镜参考均可撤销，
+            // 因此自动通过，避免新手再点一张技术确认卡；真实生成/删除仍必须人工确认。
+            if (
+              options.autoApproveSafeWrites &&
+              new Set([
+                'create_canvas_nodes',
+                'connect_canvas_edges',
+                'create_staging_reference',
+                'create_camera_move',
+                'set_node_prompt',
+              ]).has(event.toolName)
+            ) {
+              void Promise.resolve().then(() =>
+                approveCallsRef.current?.([{ toolCallId: event.toolCallId }]),
+              )
+            }
           },
         })
 
@@ -545,6 +567,25 @@ export default function CanvasAssistantPanel({
     }
     window.addEventListener(FIXATION_PLANNING_EVENT, handler as EventListener)
     return () => window.removeEventListener(FIXATION_PLANNING_EVENT, handler as EventListener)
+  }, [setCollapsed, submitAgentMessage])
+
+  React.useEffect(() => {
+    const runRequest = (request: GuidedCanvasRequest | null | undefined) => {
+      if (!request) return
+      setMode('agent')
+      setCollapsed(false)
+      submitAgentMessage(request.prompt, {
+        displayMessage: request.displayMessage,
+        autoApproveSafeWrites: request.autoApproveSafeWrites,
+      })
+    }
+    const handler = (event: Event) => {
+      consumePendingGuidedCanvas()
+      runRequest((event as CustomEvent<GuidedCanvasRequest>).detail)
+    }
+    window.addEventListener(GUIDED_CANVAS_EVENT, handler as EventListener)
+    runRequest(consumePendingGuidedCanvas())
+    return () => window.removeEventListener(GUIDED_CANVAS_EVENT, handler as EventListener)
   }, [setCollapsed, submitAgentMessage])
 
   const handleNewConversation = React.useCallback(() => {

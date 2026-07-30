@@ -17,6 +17,7 @@ import { lazyWithChunkBoundary } from "../ui/chunkBoundary";
 import { WindowControls } from "../ui/app-shell/WindowControls";
 import { handleWindowTitlebarDoubleClick } from "../ui/app-shell/windowTitlebarDoubleClick";
 import { OnboardingChecklist } from "./onboarding/OnboardingChecklist";
+import GuidedProductionBar from "./onboarding/GuidedProductionBar";
 
 // 工作区懒加载走容错域（审计 A5）：单个工作区 chunk 失败不拖死其余工作区。
 const CreationWorkspace = lazyWithChunkBoundary(
@@ -261,6 +262,7 @@ export default function WorkbenchShell({
                 onOpenModelCatalog={onOpenModelCatalog}
                 onRenameProject={onRenameProject}
             />
+            <GuidedProductionBar />
 
             {/* 左侧面板重做: 分类导航 + 文件树统一收进 ProjectExplorerSidebar 的双 Tab。
           创作模式是纯文稿写作，不挂项目资源树（仅生成/预览显示）。 */}

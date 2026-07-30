@@ -41,6 +41,11 @@ import { AutoGrowTextarea } from '../ai/composer/AutoGrowTextarea'
 import { COMPOSER_ATTACHMENT_ACCEPT, useComposerAttachments } from '../ai/composer/useComposerAttachments'
 import { useRafCoalesce } from '../ai/useRafCoalesce'
 import StoryboardNudge from './storyboard/StoryboardNudge'
+import {
+  consumePendingGuidedCreation,
+  GUIDED_CREATION_EVENT,
+  type GuidedCreationRequest,
+} from '../onboarding/guidedProductionEvents'
 
 
 // The creation agent's write tools map 1:1 to the editor's document mutations.
@@ -64,6 +69,13 @@ function readWorkbenchAiReplyText(response: unknown): string {
     return typeof nestedText === 'string' ? nestedText.trim() : ''
   }
   return ''
+}
+
+type SendOptions = {
+  modeId?: CreationAiModeId
+  displayMessage?: string
+  autoApproveWrites?: boolean
+  guided?: boolean
 }
 
 export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => void } = {}): JSX.Element {
@@ -247,9 +259,10 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
     }, 60)
   }, [documentText, selectedText, setDraft, setError, setMessages, setWorkspaceMode, turn, t])
 
-  const send = React.useCallback(async (textOverride?: string) => {
+  const send = React.useCallback(async (textOverride?: string, sendOptions: SendOptions = {}) => {
     if (turn.getState().sending) return
     const userRequest = (textOverride ?? draft).trim()
+    const requestMode = sendOptions.modeId ? getCreationAiMode(sendOptions.modeId) : activeMode
     // 附件还在上传就发送 = 静默丢弃在途附件（clearAttachments 会连 uploading 一起清）。
     // 拦下并提示用户稍候,等就绪再发,绝不悄悄把用户附的文件吞掉。
     if (attachments.some((item) => item.status === 'uploading')) {
@@ -270,7 +283,10 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
     //  ② 选了「写分镜」模式 = 明确要在文稿里写**文字分镜稿**，别再劫持到「拆镜头→画布」规划师
     //     （规划师是结构化落画布路径；默认模式下说「拆镜头/分镜」才走它）。
     // 否则含「分镜/镜头」的输入会盖过用户明确选的模式/技能（这正是双路互劫的根因）。
-    const skipIntentRouting = skillSelRef.current.activeSkill || skillSelRef.current.activeMode.id === 'storyboard'
+    const skipIntentRouting =
+      sendOptions.guided ||
+      skillSelRef.current.activeSkill ||
+      requestMode.id === 'storyboard'
     const intent = skipIntentRouting ? null : routeCreationIntent(userRequest)
     if (intent) {
       // 识别到跨面板意图 → 不再静默直接开跑，推一张可见的动作卡（治隐形）：
@@ -287,10 +303,10 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
       setError('')
       return
     }
-    const prompt = buildCreationAiPrompt({ mode: activeMode, userRequest })
-    const displayPrompt = userRequest || (readyAttachments.length
+    const prompt = buildCreationAiPrompt({ mode: requestMode, userRequest })
+    const displayPrompt = sendOptions.displayMessage || userRequest || (readyAttachments.length
       ? t('creationAi.attachmentPrompt')
-      : t('creationAi.processDocument', { mode: t(`creationAi.mode.${activeMode.id}.label` as 'creationAi.mode.general.label') }))
+      : t('creationAi.processDocument', { mode: t(`creationAi.mode.${requestMode.id}.label` as 'creationAi.mode.general.label') }))
     const attachmentPayload = readyAttachments.map((item) => ({
       url: item.url as string,
       contentType: item.contentType,
@@ -317,10 +333,12 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
         sessionKey: workbenchSessionKey('creation'),
         projectId: readWindowUrlParam('projectId'),
         // 手动锁定的 active skill 优先（如「品牌宣传片」playbook）；否则回退创作模式推导。
-        skillKey: skillSelRef.current.activeSkill ? skillSelRef.current.activeSkill.key : `workbench.creation.${skillSelRef.current.activeMode.id}`,
-        skillName: skillSelRef.current.activeSkill
+        skillKey: !sendOptions.modeId && skillSelRef.current.activeSkill
+          ? skillSelRef.current.activeSkill.key
+          : `workbench.creation.${requestMode.id}`,
+        skillName: !sendOptions.modeId && skillSelRef.current.activeSkill
           ? skillSelRef.current.activeSkill.name
-          : t(`creationAi.mode.${skillSelRef.current.activeMode.id}.title` as 'creationAi.mode.general.title'),
+          : t(`creationAi.mode.${requestMode.id}.title` as 'creationAi.mode.general.title'),
         onContent: (_delta, streamedText) => {
           if (!handle.isCurrent()) return
           pushStreamFrame(() =>
@@ -383,12 +401,26 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
             // 能力声明驱动能力执行(P4):chatOnly 模式(通用问答)不接受写文档工具——
             // 直接拒绝,不渲染写卡。prompt 软约束挡不住模型仍发 insert/replace/append,
             // 这里按模式能力声明硬挡,保证「不改文档」是真约束而非文字祈求。
-            if (!modeAllowsWriteTools(activeMode)) {
+            if (!modeAllowsWriteTools(requestMode)) {
               void event.confirm({ ok: false, message: 'chat-only mode does not write to the document' })
               return
             }
             const args = (event.args && typeof event.args === 'object') ? event.args as Record<string, unknown> : {}
             const content = typeof args.content === 'string' ? args.content : ''
+            // 制作向导的主按钮已经是对“本步骤写入”的明确授权。只对本次引导轮次自动
+            // 应用文稿写入，普通聊天仍保留逐卡确认。
+            if (sendOptions.autoApproveWrites) {
+              const tools = documentToolsRef.current
+              if (!tools) {
+                void event.confirm({ ok: false, message: 'editor_not_ready' })
+                return
+              }
+              if (event.toolName === 'insert_at_cursor') tools.insertAtCursor(content)
+              else if (event.toolName === 'replace_selection') tools.replaceSelection(content)
+              else tools.appendToEnd(content)
+              void event.confirm({ ok: true, result: { applied: true, guided: true } })
+              return
+            }
             turn.getState().addPendingToolCall({
               toolCallId: event.toolCallId,
               toolName: event.toolName,
@@ -436,6 +468,30 @@ export default function CreationAiPanel({ onCollapse }: { onCollapse?: () => voi
       turn.getState().finish(handle.id)
     }
   }, [activeMode, activeSkill, attachments, cancelStreamFrame, clearAttachments, documentText, draft, launchStoryboardPlanning, launchFixationPlanning, pushStreamFrame, selectedText, setDraft, setError, setMessages, turn, t])
+
+  React.useEffect(() => {
+    const runRequest = (request: GuidedCreationRequest | null | undefined) => {
+      if (!request) return
+      if (request.action === 'storyboard') {
+        launchStoryboardPlanning(request.displayMessage, undefined, request.shotMode)
+        return
+      }
+      setModeId(request.modeId)
+      void send(request.prompt, {
+        modeId: request.modeId,
+        displayMessage: request.displayMessage,
+        autoApproveWrites: request.autoApproveWrites,
+        guided: true,
+      })
+    }
+    const handler = (event: Event) => {
+      consumePendingGuidedCreation()
+      runRequest((event as CustomEvent<GuidedCreationRequest>).detail)
+    }
+    window.addEventListener(GUIDED_CREATION_EVENT, handler as EventListener)
+    runRequest(consumePendingGuidedCreation())
+    return () => window.removeEventListener(GUIDED_CREATION_EVENT, handler as EventListener)
+  }, [launchStoryboardPlanning, send, setModeId])
 
   // 通用创作动作，贴 Nomi 视频创作调性、不绑小说题材（旧的「悬疑开场/童话语气」在产品/宣传项目里调性错配）。
   const suggestions = React.useMemo(() => [

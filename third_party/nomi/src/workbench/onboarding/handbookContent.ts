@@ -21,26 +21,30 @@ export type HandbookIntentRoute = {
 }
 export type HandbookGotcha = { iconKey: string; title: string; body: string }
 
-/** 顶部一行流水线图：写故事 → 拆分镜 → 落画布 → 锁身份/运镜 → 时间轴 → 导出。 */
+/** 专业漫剧生产线：从一句话到成片，和工作台常驻制作向导保持同一顺序。 */
 export const HANDBOOK_PIPELINE: HandbookPipelineStep[] = [
-  { iconKey: 'pencil', label: '写故事' },
-  { iconKey: 'scissors', label: 'AI 拆分镜' },
-  { iconKey: 'layout-grid', label: '落画布' },
-  { iconKey: 'wand', label: '锁身份/运镜' },
-  { iconKey: 'timeline', label: '时间轴' },
-  { iconKey: 'movie', label: '导出 MP4', accent: true },
+  { iconKey: 'pencil', label: '一句创意' },
+  { iconKey: 'scissors', label: '剧本' },
+  { iconKey: 'wand', label: '风格母版' },
+  { iconKey: 'user-check', label: '人物三视图/服装' },
+  { iconKey: 'box', label: '场景/道具' },
+  { iconKey: 'layout-grid', label: '逐镜分镜' },
+  { iconKey: 'device-gamepad-2', label: '镜头动态设计' },
+  { iconKey: 'photo', label: '首尾关键帧' },
+  { iconKey: 'movie', label: '逐镜视频' },
+  { iconKey: 'timeline', label: '审片/剪辑/声音', accent: true },
 ]
 
-/** 90 秒先尝甜头：不用读完手册，先看一条片自己跑出来。 */
+/** 新手只需要做四件事，其余由常驻制作向导按顺序调度。 */
 export const HANDBOOK_FIRST_WIN: HandbookFirstWinStep[] = [
-  { n: 1, title: '看回放', body: '首页点「60 秒看画布怎么出片」，零额度看整条流水线跑一遍。' },
-  { n: 2, title: '接一个模型', body: '用自己的 Key，或接 Agnes 免费网关（文 / 图 / 视全解锁）。' },
+  { n: 1, title: '只写一句话', body: '在创作区写一句你想看的故事，不必先学剧本、提示词或节点。' },
+  { n: 2, title: '只点“下一步”', body: '顶部制作导演条会自动派编剧、视觉导演、人物、场景、分镜、运镜和关键帧岗位。' },
   {
     n: 3,
-    title: '写一句 + 拆镜',
-    body: '在创作区写下故事，说「拆成镜头」——可选图片分镜（先定画面，满意再转视频）或视频分镜，一键铺成画布。',
+    title: '确认付费生成',
+    body: '建稿、建卡和连线自动完成；真正生图/生视频前会显示所用模型与额度确认。',
   },
-  { n: 4, title: '生成 + 导出', body: '点镜头卡的生成出图，排进时间轴，右上导出 MP4。' },
+  { n: 4, title: '审片并导出', body: '成功镜头会按顺序加入时间轴；再补字幕、对白、音效、音乐并导出 MP4。' },
 ]
 
 /** 「我想做 X → 走这条路」：能做的指清楚路径，做不到的当场标 ⚠️。 */
@@ -63,9 +67,8 @@ export const HANDBOOK_INTENT_ROUTES: HandbookIntentRoute[] = [
   },
   {
     iconKey: 'gift',
-    title: '没有 API 额度，想先白嫖试试',
-    body: '模型设置接 Agnes AI，一个 Key 解锁文本 / 图 / 视频，无限期免费。',
-    badge: '0.16 新',
+    title: '想用我在平台配置的全部模型',
+    body: '向导读取 Agent Studio 的模型目录，按文本、图片、视频能力自动选择；不会调用外部画布作者的账号。',
   },
   {
     iconKey: 'typography',
@@ -108,34 +111,38 @@ export const HANDBOOK_TITLE = 'Agent Studio 画布一页上手'
 export const HANDBOOK_SUBTITLE = '本地优先的 AI 视频创作台 · 从一句话到一条成片'
 
 const EN_HANDBOOK_PIPELINE: HandbookPipelineStep[] = [
-  { iconKey: 'pencil', label: 'Write story' },
-  { iconKey: 'scissors', label: 'AI splits shots' },
-  { iconKey: 'layout-grid', label: 'Build canvas' },
-  { iconKey: 'wand', label: 'Lock identity / camera' },
-  { iconKey: 'timeline', label: 'Timeline' },
-  { iconKey: 'movie', label: 'Export MP4', accent: true },
+  { iconKey: 'pencil', label: 'One-line idea' },
+  { iconKey: 'scissors', label: 'Script' },
+  { iconKey: 'wand', label: 'Style bible' },
+  { iconKey: 'user-check', label: 'Character sheets' },
+  { iconKey: 'box', label: 'Scenes / props' },
+  { iconKey: 'layout-grid', label: 'Storyboard' },
+  { iconKey: 'device-gamepad-2', label: 'Actor / camera motion' },
+  { iconKey: 'photo', label: 'Keyframes' },
+  { iconKey: 'movie', label: 'Shot videos' },
+  { iconKey: 'timeline', label: 'Review / edit / sound', accent: true },
 ]
 
 const EN_HANDBOOK_FIRST_WIN: HandbookFirstWinStep[] = [
   {
     n: 1,
-    title: 'Watch the replay',
-    body: 'From Home, open “See how the canvas makes a video in 60 seconds” to watch the whole workflow without spending credits.',
+    title: 'Write only one sentence',
+    body: 'Describe the story you want in Creation. You do not need to learn scripts, prompts, or node types first.',
   },
   {
     n: 2,
-    title: 'Connect one model',
-    body: 'Use your own API key or connect the free Agnes gateway to unlock text, image, and video models.',
+    title: 'Click only “Next”',
+    body: 'The production director bar dispatches the writer, visual director, character, scene, storyboard, motion, and keyframe roles.',
   },
   {
     n: 3,
-    title: 'Write one line and split shots',
-    body: 'Write a story in Creation and ask to “split into shots.” Choose image storyboards to lock visuals first or video storyboards to go directly to motion.',
+    title: 'Confirm paid generation',
+    body: 'Writing, asset planning, and connections run automatically. Real image and video generation still shows the selected model and credit confirmation.',
   },
   {
     n: 4,
-    title: 'Generate and export',
-    body: 'Generate from the shot cards, arrange the results on the timeline, then export MP4 from the top right.',
+    title: 'Review and export',
+    body: 'Successful shots are added to the timeline in order. Add captions, dialogue, effects, and music, then export MP4.',
   },
 ]
 
@@ -158,9 +165,8 @@ const EN_HANDBOOK_INTENT_ROUTES: HandbookIntentRoute[] = [
   },
   {
     iconKey: 'gift',
-    title: 'Try it without API credits',
-    body: 'Connect Agnes AI in Model setup. One key unlocks text, image, and video models for free.',
-    badge: 'New in 0.16',
+    title: 'Use every model configured in my platform',
+    body: 'The guide reads the Agent Studio model catalog and routes by text, image, and video capability. It never uses the upstream canvas author’s account.',
   },
   {
     iconKey: 'typography',
