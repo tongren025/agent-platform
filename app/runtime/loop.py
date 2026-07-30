@@ -24,6 +24,7 @@ import openai
 from app.models.conversation import AgentInvocationTrace, PendingApprovalDetail
 from app.services.chat_response import normalize_chat_completion
 from app.services.model_transport import (
+    ModelStreamError,
     build_prompt_cache_key,
     create_model_completion,
     preferred_api,
@@ -41,6 +42,7 @@ _RETRYABLE_ERRORS: tuple[type[BaseException], ...] = (
     openai.APIConnectionError,
     openai.APITimeoutError,
     openai.InternalServerError,
+    ModelStreamError,
 )
 # 立即放弃的错误：鉴权、权限、请求体本身有问题——重试或降级都没意义。
 _FATAL_ERRORS: tuple[type[BaseException], ...] = (

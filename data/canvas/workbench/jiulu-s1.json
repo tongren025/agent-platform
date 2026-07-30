@@ -8,7 +8,7 @@
   "thumbnail": "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_三个月前赤脚伤痕弱小版.png",
   "thumbnailUrls": [
     "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_三个月前赤脚伤痕弱小版.png",
-    "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+    "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
     "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/04_艾拉_星圣陆法则学徒.png",
     "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png"
   ],
@@ -132,7 +132,7 @@
               "frameCount": 90,
               "offsetStartFrame": 0,
               "offsetEndFrame": 0,
-              "url": "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+              "url": "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png"
             },
             {
               "id": "clip-production-g-des-r1",
@@ -4201,7 +4201,7 @@
           "result": {
             "id": "production-g-des-r3-mid-image-0",
             "type": "image",
-            "url": "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+            "url": "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
             "createdAt": 1782378000000
           },
           "shotIndex": 652,

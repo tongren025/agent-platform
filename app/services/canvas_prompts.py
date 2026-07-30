@@ -456,7 +456,31 @@ def enforce_required_tool_response(
     family = skill_family(skill_key)
     if required not in _ALLOWED_TOOLS[family]:
         raise ValueError(f"当前技能不允许必需动作 {required}")
-    if any(call.get("toolName") == required for call in parsed.get("toolCalls", [])):
+    matched_call = next(
+        (
+            call for call in parsed.get("toolCalls", [])
+            if call.get("toolName") == required
+        ),
+        None,
+    )
+    if matched_call is not None:
+        assistant_message = str(parsed.get("assistantMessage") or "").strip()
+        if (
+            family == "generation"
+            and required == "create_canvas_nodes"
+            and re.search(r"我将|准备|请确认|是否继续", assistant_message)
+        ):
+            args = matched_call.get("args")
+            nodes = args.get("nodes") if isinstance(args, dict) else None
+            node_count = len(nodes) if isinstance(nodes, list) else 0
+            return {
+                **parsed,
+                "assistantMessage": (
+                    f"已完成当前镜头规划，正在应用 {node_count} 个生成节点。"
+                    if node_count
+                    else "已完成当前镜头规划，正在应用生成节点。"
+                ),
+            }
         return parsed
 
     if family == "creation" and required == "append_to_end":

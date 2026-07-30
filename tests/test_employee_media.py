@@ -1,6 +1,7 @@
 """多模态员工：能力迁移、专用媒体工具与聊天模型隔离测试。"""
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
 import json
 from types import SimpleNamespace
 
@@ -11,7 +12,13 @@ from app.api.registry import _validate_employee_model_routes
 from app.core.model_capabilities import is_video_generation_model_id
 from app.models.registry import EmployeeDefinition, ToolDefinition
 from app.models.runtime import EmployeeRuntimeSnapshot, PromptCompileResult
-from app.runtime.runner import _append_generated_media, run_agent
+from app.runtime import runner as runner_module
+from app.runtime.loop import AgentLoopResult
+from app.runtime.runner import (
+    _append_generated_media,
+    _configured_chat_model_refs,
+    run_agent,
+)
 from app.runtime.snapshot import load_snapshot
 from app.tools.base import ToolContext
 from app.tools.media import (
@@ -368,6 +375,117 @@ async def test_media_model_is_rejected_as_runtime_fallback():
 
     assert result.success is False
     assert "不能用于聊天接口" in (result.error_message or "")
+
+
+def test_configured_chat_fallbacks_skip_media_disabled_and_free_first(
+    monkeypatch,
+):
+    providers = [
+        SimpleNamespace(
+            name="openrouter",
+            endpoint="https://openrouter.test/v1",
+            api_key="configured",
+            models=[
+                {"modelId": "vendor/image-model"},
+                {"modelId": "openrouter/free"},
+                {"modelId": "openrouter/auto"},
+                {"modelId": "disabled-chat", "enabled": False},
+            ],
+        ),
+        SimpleNamespace(
+            name="primary",
+            endpoint="https://primary.test/v1",
+            api_key="configured",
+            models=[{"modelId": "gpt-5.6-sol"}],
+        ),
+    ]
+    monkeypatch.setattr(
+        runner_module.ai_service,
+        "list_providers",
+        lambda: providers,
+    )
+
+    assert _configured_chat_model_refs(
+        ["openrouter:openrouter/free"]
+    ) == [
+        "primary:gpt-5.6-sol",
+        "openrouter:openrouter/auto",
+    ]
+
+
+@pytest.mark.asyncio
+async def test_missing_employee_model_uses_enabled_platform_chat_model(
+    monkeypatch,
+):
+    selected: dict[str, object] = {"refs": []}
+    fallback_client = SimpleNamespace()
+    provider = SimpleNamespace(
+        name="openrouter",
+        endpoint="https://openrouter.test/v1",
+        api_key="configured",
+        models=[{"modelId": "openrouter/auto"}],
+    )
+
+    def fake_get_client(model_ref, *, async_client=False):
+        selected["refs"].append(model_ref)
+        assert async_client is True
+        if model_ref == "gpt-5.6-luna":
+            raise ValueError("model not found")
+        return fallback_client, "openrouter/auto"
+
+    async def fake_run_agent_loop(*, client, options, **_kwargs):
+        selected["client"] = client
+        selected["model"] = options.model
+        selected["reasoning_effort"] = options.reasoning_effort
+        return AgentLoopResult(
+            success=True,
+            final_text="已接管并继续执行",
+            resolved_model=options.model,
+        )
+
+    @asynccontextmanager
+    async def no_mcp(_servers):
+        yield []
+
+    monkeypatch.setattr(
+        runner_module.ai_service,
+        "list_providers",
+        lambda: [provider],
+    )
+    monkeypatch.setattr(
+        runner_module.ai_service,
+        "get_client",
+        fake_get_client,
+    )
+    monkeypatch.setattr(
+        runner_module,
+        "run_agent_loop",
+        fake_run_agent_loop,
+    )
+    monkeypatch.setattr(runner_module, "mcp_tool_handlers", no_mcp)
+
+    result = await run_agent(
+        snapshot=EmployeeRuntimeSnapshot(
+            employee_key="comic-video-artist",
+            default_model_policy={"model_id": "gpt-5.6-luna"},
+        ),
+        compiled_prompt=PromptCompileResult(system_prompt="继续当前镜头"),
+        user_message="创建当前镜头视频任务",
+        visible_tools=[],
+        visible_mcp_servers=[],
+        employee_key="comic-video-artist",
+    )
+
+    assert result.success is True
+    assert result.assistant_message == "已接管并继续执行"
+    assert result.resolved_model == "openrouter/auto"
+    assert selected["refs"] == [
+        "gpt-5.6-luna",
+        "openrouter:openrouter/auto",
+    ]
+    assert selected["client"] is fallback_client
+    assert selected["model"] == "openrouter/auto"
+    assert selected["reasoning_effort"] is None
 
 
 def test_generated_media_is_appended_to_final_reply():

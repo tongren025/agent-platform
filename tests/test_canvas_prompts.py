@@ -137,6 +137,31 @@ def test_required_script_write_rejects_promise_only_reply():
         )
 
 
+def test_required_generation_action_rewrites_redundant_confirmation():
+    parsed = {
+        "assistantMessage": "我将创建视频节点，请确认是否继续。",
+        "toolCalls": [{
+            "toolName": "create_canvas_nodes",
+            "args": {
+                "nodes": [
+                    {"clientId": "v1", "kind": "video", "prompt": "缓慢推近"},
+                    {"clientId": "v2", "kind": "video", "prompt": "固定镜头"},
+                ],
+            },
+        }],
+    }
+
+    result = canvas_prompts.enforce_required_tool_response(
+        "workbench.generation.canvas-planner",
+        parsed,
+        parsed["assistantMessage"],
+        "create_canvas_nodes",
+    )
+
+    assert result["assistantMessage"] == "已完成当前镜头规划，正在应用 2 个生成节点。"
+    assert result["toolCalls"] == parsed["toolCalls"]
+
+
 def test_accepted_canvas_prompt_enters_existing_memory_chain(tmp_path, monkeypatch):
     monkeypatch.setattr(canvas_prompts, "LEARNING_PATH", tmp_path / "prompt-learning.json")
     from app import dependencies

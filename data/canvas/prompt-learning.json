@@ -1,0 +1,11 @@
+[
+  {
+    "id": "cpl_af9fa48256cf",
+    "projectId": "jiulu-s1",
+    "employeeKey": "comic-video-artist",
+    "kind": "video_prompt",
+    "title": "G1 九陆巡礼 视频",
+    "prompt": "@图片1(R3母版) @图片2(production-e01-ip01) @图片4(production-e01-ip01b) @视频1(production-e01-vp01) 【生成模式】首帧锁定：锁首帧、后续交模型。\n\n素材引用：R3 苍霖 角色母版图 (production-g-char-canglin)\n首帧承接：G1 首帧图提示词(七要素) (production-e01-ip01)\n末帧姿态：G1末帧锁(FLF·七要素) (production-e01-ip01b)\n风格参考：Art Bible 风格锁定 (production-g-art-bible)\n场景参考：场景母版图合集 (production-g-scene-bible)\n\n人物身体动作：苍霖站立，准备迎接挑战。\n唯一运镜：镜头缓慢推近，聚焦苍霖的面部表情。\n场景光影：废墟场景，光线昏暗，有熔浆的微弱红光映照。\n对白/音效：无对白，只有环境音效（风声，远处怪物的低吼）。",
+    "acceptedAt": "2026-07-30T19:04:15.562899+00:00"
+  }
+]

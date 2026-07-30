@@ -1,61 +1,5 @@
 [
   {
-    "logId": "dist_ca536f0ea80b",
-    "employeeKey": "comic-character-designer",
-    "ranAt": "2026-07-01T03:06:56.561684Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-character-designer_color_01",
-        "mergeIntoId": "pro_craft_deep_20260630_comic-character-designer_film_color_02",
-        "newContent": "色彩叙事与理论：1.基础属性：通过色相/明度/饱和度独立控制画面；利用互补色制造张力（冲突场景），类似色营造和谐（统一氛围）。2.叙事决策：色彩非装饰，需通过color script规划随情绪变化。暖冷色具有双面性（如暖色既是温暖也是愤怒），具体含义由饱和度、明度及语境决定。（来源:No Film School/StudioBinder/Wikipedia）",
-        "newImportance": null,
-        "reason": "将基础色彩理论与进阶色彩叙事理论合并，消除冗余，形成从基础到应用的完整知识链。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "procedural",
-        "targetId": "learn_consolidation_20260630_comic-character-designer_proc_01",
-        "mergeIntoId": "seed_comic-character-designer_proc_02",
-        "newContent": "每个角色必须包含：R编号、母版图提示词(含三视图)、正向固定词(5-8个核心视觉DNA词，需标注分阶段变化如R3服装/R2体型)、正向约束词(保持面部一致/无变形)、CHAR四层结构(身份层/装备层/可变层/母版图层)、每镜姿态/表情表。⚠️ 绝对禁止负向提示词。",
-        "newImportance": null,
-        "reason": "将具体的DNA词数量要求和分阶段变化规则整合进角色设定标准流程中，提高执行一致性。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-character-designer_shape_language_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "形状语言是角色设计的行业验收标准，其价值高于一般的基础人体比例知识，应适当提升权重。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-character-designer_expression_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "表情设计直接影响短剧的“情绪钩子”和识别速度，在快节奏短剧环境下重要性增加。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 18,
-      "episodic": 3,
-      "procedural": 4
-    },
-    "afterCounts": {
-      "semantic_count": 17,
-      "episodic_count": 3,
-      "procedural_count": 3
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 11843,
-    "error": null
-  },
-  {
     "logId": "dist_26e12810a63e",
     "employeeKey": "comic-character-designer",
     "ranAt": "2026-07-01T03:09:26.928420Z",
@@ -1811,5 +1755,142 @@
     "llmModel": "openrouter/auto",
     "durationMs": 11359,
     "error": "JSON 解析失败: 无 JSON 数组"
+  },
+  {
+    "logId": "dist_702335e9c4dd",
+    "employeeKey": "comic-character-designer",
+    "ranAt": "2026-07-30T19:00:08.097815Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_comic-character-designer_sem_09_seedance_rules",
+        "mergeIntoId": "v3_comic-character-designer_sem_11_char_4_layer",
+        "newContent": "Seedance 2.0角色管理与质量规则：1.绝对禁止负向提示词(Seedance 2.0不读取)，所有禁止项必须转为正向约束（如：保持面部一致,无变形,人体比例正确,画面干净无描边/墨线/裂纹/草稿线/脏黑边/死黑阴影/文字水印,服装不漂移）。2.每个角色分配R编号(R1=艾拉,R2=巨龙,R3=苍霖),全剧统一。3.角色固定词必须逐字复制到每条提示词,禁止缩写或写「同上」。4.固定词使用具体名词,禁用「漂亮的」等抽象形容词。\n\nCHAR资产库四层结构与叙事逻辑：1.身份层(永不变化)=年龄感/体型/脸型/发型/瞳色/肤色/身高比例。2.装备层(场景内固定)=服装结构/标志物/武器法器/材质/配色。设计应遵循“剪影渐变追踪弧光”：弱角色起始圆肩塌肩 → 得权后变挺括方肩。三阶段造型=初始look/冲突look(破损错搭)/结局look(进化剪影)。\n\n【角色具体DNA锚点】：\n- R1艾拉：成年年轻东方幻想女法师，黑长发银蓝高光，蓝瞳，偏白肤，黑蓝露肩星环法师战斗装，透明纱质外摆，大腿绑带，膝上长靴，月牙发饰，晶体腰链，暗金属法杖/铁管式施法媒介。魔法特效：蓝白星环、淡金星轨、透明几何法阵、悬停雨滴、晶体粒子、细线星座网络。\n- R2龙：EP04幼龙(巴掌大/鳞片稀疏/半透明翼膜/熔金龙瞳) → EP05-07少龙(猫大/鳞片渐密/翼展一米/爪尖火星) → EP09-10巨龙(马大/宽阔翼展/血管可见/胸腔白热龙焰/熔金龙瞳/爪尖火星)。\n- R3苍霖：EP01-03早期(破烂灰褐麻布短衣/赤脚/胸口龙骨碎片) → EP04-08中期(同上+旧毯子披风) → EP09-10后期(深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚)。\n\n3.可变层(镜头间变化)=表情/姿态/镜头角度/受伤程度/特效遮挡。4.母版图层=正面全身定妆照。视觉符号每镜必写，作为角色一致性的锚点，防止角色漂移。",
+        "newImportance": null,
+        "reason": "两条记忆都涉及Seedance 2.0的角色管理规则和CHAR资产库的四层结构，内容高度重叠且互为补充，合并后可形成更完整的角色管理和资产库规则。原memory_id 'v3_comic-character-designer_sem_09_seedance_rules' 的内容被整合进新内容中。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-character-designer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了短剧的最高优先级准则，直接影响内容生产的节奏和核心逻辑，重要性应与平台关键规则同等最高级别。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_02_style_core",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了视觉风格的核心锚点，是所有提示词的基础，重要性应与平台关键规则同等最高级别。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆关于宫格和关键图的规则直接影响最终输出的质量和标准，重要性应与平台关键规则同等最高级别。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_film_color_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "色彩叙事是重要的视觉表达手段，但相较于短剧节奏和核心风格，其优先级略低，但仍需保持高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-character-designer_sem_05_toolchain",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "工具链和交付标准是确保流程顺畅的关键，重要性应与核心风格和质量标准接近。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-character-designer_shape_language_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "形状语言和剪影是角色设计的基础，直接影响可识别性，重要性应与色彩叙事和工具链同等，仅次于最高优先级规则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-character-designer_expression_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "表情设计是角色情感表达的关键，重要性应与形状语言和色彩叙事同等，仅次于最高优先级规则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该经验记忆解决了服装漂移这一关键问题，直接提升了角色一致性，其重要性应提升至最高级别，以确保未来不再犯同类错误。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-character-designer_epi_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该经验记忆解决了巨龙画面模糊的问题，提升了关键元素的清晰度，其重要性应提升至最高级别，以确保未来生成巨龙时能保持清晰。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-character-designer_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该经验记忆解决了角色成长对照的问题，确保了叙事连贯性，其重要性应提升至最高级别，以指导后续角色发展。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-character-designer_proc_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该行为记忆详细规定了角色生成必须包含的要素和流程，是执行角色设计的核心指导，其重要性应提升至最高级别。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-character-designer_proc_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该行为记忆规定了成人角色的审美和安全边界，是角色设计中不可或缺的约束，其重要性应提升至最高级别。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 8,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 9733,
+    "error": null
   }
 ]

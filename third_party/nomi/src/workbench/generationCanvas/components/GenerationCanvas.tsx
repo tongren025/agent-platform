@@ -36,12 +36,14 @@ import { SelectionPromptSaveController } from './SelectionPromptSaveController'
 import { useNodeAppearTracking } from './useNodeAppearTracking'
 import { useTidyCanvas } from './useTidyCanvas'
 import {
+  calculateFitViewTransform,
   centerNodeOffset,
   clampCanvasZoom,
   clampNumber,
   getCanvasGroupBoxes,
   getNodeSize,
   getSelectedBounds,
+  PRODUCTION_READABLE_MIN_ZOOM,
 } from './generationCanvasGeometry'
 import { useCanvasViewport } from './useCanvasViewport'
 import CanvasEdgeLayer, { type ActiveEdge } from './CanvasEdgeLayer'
@@ -61,6 +63,11 @@ import {
 } from '../production/productionHierarchy'
 import { useProductionScopeStore } from '../production/productionScopeStore'
 import { useProductionDirectorUiStore } from '../production/productionDirectorUiStore'
+import {
+  deriveProductionDirectorProgress,
+  matchesProductionDirectorStage,
+  type ProductionDirectorStageId,
+} from '../production/productionDirectorFlow'
 import '../styles/generationCanvas.css'
 
 const FOCUS_GENERATION_NODE_EVENT = 'nomi-focus-generation-node'
@@ -76,6 +83,14 @@ const BatchPlanOverlay = lazyWithChunkBoundary('批量生成面板', () =>
 
 const MULTI_SELECTION_BOUNDS_PADDING = 16
 const MULTI_SELECTION_TOOLBAR_OFFSET = 58
+const DIRECTOR_FOCUS_STAGES: Record<ProductionDirectorStageId, readonly ProductionDirectorStageId[]> = {
+  script: ['script'],
+  storyboard: ['script', 'storyboard'],
+  motion: ['storyboard', 'motion'],
+  keyframe: ['motion', 'keyframe'],
+  video: ['motion', 'keyframe', 'video'],
+  review: ['video'],
+}
 
 type GenerationCanvasProps = {
   readOnly?: boolean
@@ -122,6 +137,15 @@ export default function GenerationCanvas({
       return isNodeInProductionDisplayScope(node, activeProductionScope)
     })
   }, [activeCategoryId, activeProductionScope, allNodes, hierarchy.isProductionProject])
+  const guidedFocusNodes = React.useMemo(() => {
+    if (!guidedProductionView || !nodes.length) return nodes
+    const currentStage = deriveProductionDirectorProgress({ nodes }).current.id
+    const focusStages = DIRECTOR_FOCUS_STAGES[currentStage]
+    const focused = nodes.filter((node) =>
+      focusStages.some((stage) => matchesProductionDirectorStage(node, stage)),
+    )
+    return focused.length ? focused : nodes
+  }, [guidedProductionView, nodes])
   const visibleNodeIds = React.useMemo(() => new Set(nodes.map((n) => n.id)), [nodes])
   const edges = React.useMemo(
     () => allEdges.filter((edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target)),
@@ -614,21 +638,15 @@ export default function GenerationCanvas({
   const fitView = React.useCallback((animate = false) => {
     if (!nodes.length || !stageRef.current) return
     const rect = stageRef.current.getBoundingClientRect()
-    const padding = 80
-    const minX = Math.min(...nodes.map((n) => n.position.x))
-    const minY = Math.min(...nodes.map((n) => n.position.y))
-    const maxX = Math.max(...nodes.map((n) => n.position.x + getNodeSize(n).width))
-    const maxY = Math.max(...nodes.map((n) => n.position.y + getNodeSize(n).height))
-    const contentW = maxX - minX + padding * 2
-    const contentH = maxY - minY + padding * 2
-    const nextZoom = clampCanvasZoom(Math.min(1.2, Math.min(rect.width / contentW, rect.height / contentH)))
-    const nextOffset = {
-      x: (rect.width - contentW * nextZoom) / 2 - (minX - padding) * nextZoom,
-      y: (rect.height - contentH * nextZoom) / 2 - (minY - padding) * nextZoom,
-    }
-    if (animate) animateViewportTo(nextZoom, nextOffset, 200)
-    else setViewportTransform(nextZoom, nextOffset)
-  }, [animateViewportTo, nodes, setViewportTransform, stageRef])
+    const transform = calculateFitViewTransform({
+      nodes: guidedFocusNodes,
+      viewport: rect,
+      readableMinZoom: guidedProductionView ? PRODUCTION_READABLE_MIN_ZOOM : undefined,
+    })
+    if (!transform) return
+    if (animate) animateViewportTo(transform.zoom, transform.offset, 200)
+    else setViewportTransform(transform.zoom, transform.offset)
+  }, [animateViewportTo, guidedFocusNodes, guidedProductionView, setViewportTransform, stageRef])
 
   // memo 化 minimap 的跳转回调（内联会每渲染新建 → 废掉 CanvasMinimap 的 memo）。
   const handleMinimapJump = React.useCallback((point: { x: number; y: number }) => {

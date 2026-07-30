@@ -1,52 +1,5 @@
 [
   {
-    "logId": "dist_21891c168927",
-    "employeeKey": "comic-director",
-    "ranAt": "2026-07-01T03:08:59.990562Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-director_ai_consistency_03",
-        "mergeIntoId": "pro_craft_deep_20260630_comic-director_ai_consistency_02",
-        "newContent": "AI角色漂移根因在于每个clip独立生成且解读不一。保一致性的硬解法：1. 建立转面母版：备3-5张参考图(正面+3/4侧+全身服装+道具单独)，提示词仅描述动作和环境，由参考图负责长相；2. 运动控制：锁首帧+尾帧(first/end frame)控制运动起止，配合锁定风格和稳定布光，确保跨镜一致性。（来源:AI Magicx/neolemon/Artlist/Kittl AI一致性工作流）",
-        "newImportance": null,
-        "reason": "两条记忆均探讨AI视频一致性的技术方案，分别涵盖了“静态资产锚定”与“动态起止控制”，合并后可形成完整的AI一致性技术链路。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "procedural",
-        "targetId": "learn_consolidation_20260630_comic-director_proc_02",
-        "mergeIntoId": "v3_comic-director_sem_10_workflow_step0",
-        "newContent": "工作流Step 0「锁基准资产」必须在任何分镜前完成：每个角色生成母版图1张(作为@图片锚定),找风格视频锁成@视频1(写「画风动作严格对齐@视频1的风格」),全剧控制10个核心场景。跨集复用资产必须引用同一ID，严禁下游重复绘制。没有基准资产的制作包不允许进入生成阶段。",
-        "newImportance": null,
-        "reason": "行为记忆中的资产引用纪律与语义记忆中的Step 0资产锁定在逻辑上完全一致，将行为准则合并入语义工作流定义中，增强执行力。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "该记忆关于分镜草图的通用性描述较高，相对于具体的短剧节奏准则（0.99）和质量硬规则（0.98），其在当前AI生成流中的权重应适当下调。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 20,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 19,
-      "episodic_count": 3,
-      "procedural_count": 5
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 12014,
-    "error": null
-  },
-  {
     "logId": "dist_5c1b6f678ced",
     "employeeKey": "comic-director",
     "ranAt": "2026-07-01T03:10:45.763922Z",
@@ -1906,5 +1859,20 @@
     "llmModel": "openrouter/auto",
     "durationMs": 7516,
     "error": null
+  },
+  {
+    "logId": "dist_134e2df7cc1b",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-30T19:00:08.076598Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "openrouter/auto",
+    "durationMs": 9093,
+    "error": "JSON 解析失败: 无 JSON 数组"
   }
 ]

@@ -515,5 +515,79 @@
     "llmModel": "openrouter/auto",
     "durationMs": 5547,
     "error": null
+  },
+  {
+    "logId": "dist_c83bdcc82b3d",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-30T19:00:08.122599Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-scene-artist_register_law",
+        "mergeIntoId": "duanju_spine_20260630_comic-scene-artist_law",
+        "newContent": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别这些电影美术手艺只是工具,必须服从短剧节奏,不是目的。\n【九陆纪元·register铁律·最高优先级】全程高燃、高格调门槛、起点即天花板。无拉跨、无卡拉米——'贴地无脸/样本视角/体温/一个少年一块石头'那套小人物文艺分镜全部作废。主角苍霖开局即强者:懒散欠揍、世界树觉醒者、力量地貌/城市尺度,不是泥里被打的弱者。反天选是魂但埋线不点破(力量是自己爬来的,1秒闪回足矣)。每集=一个大场面set-piece+一个反转(以为A其实B)+一个钩子;1秒剪辑,约60刀/90秒,战斗段0.5秒。爽点=抬手改写一座城。",
+        "newImportance": null,
+        "reason": "两条记忆都强调了短剧的高节奏、高信息密度和叙事策略，'jiulu_gaoran_pivot_20260709_comic-scene-artist_register_law' 提供了具体的世界观和主角设定，可以作为'duanju_spine_20260630_comic-scene-artist_law' 的内容填充和应用示例，合并后能更全面地指导短剧创作。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_01",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-artist_sem_02",
+        "newContent": "【色彩体系与叙事决策】配色是情绪工具而非装饰。基础属性为色相/明度/饱和度；互补色制造冲突张力，类似色营造和谐氛围。具体配色方案：龙骨碎片=蓝白脉动光(苍霖核心符号)/龙焰=赤金白热/星环治疗阵=蓝白+数据流(艾拉)/世界树=金绿光脉/矿洞=幽暗+碎片微光/废巷=暖色午后光/云海飞行=金色阳光+体积光。整片应通过color script规划色调随情绪走向变化。\n7核心场景：scene01废巷(暖色午后散射光)/scene02废矿坑(30米深,碎片蓝光+裂缝金绿光丝)/scene03矿洞口(半明半暗过渡)/scene04矿洞深处(全黑只有碎片光)/scene05世界树遗迹(枯根迷宫,金绿光脉,体积光)/scene06悬崖(断崖云海,日落暖橙侧光)/cloud云海(金色无边际,阳光穿云体积光)。",
+        "newImportance": null,
+        "reason": "两条记忆都围绕场景的视觉呈现展开，'learn_consolidation_20260630_comic-scene-artist_sem_01' 提供了具体的场景列表和光影描述，'learn_consolidation_20260630_comic-scene-artist_sem_02' 则深入阐述了色彩体系与叙事决策，并将色彩与场景元素关联。合并后能更系统地指导场景的色彩与光影设计。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_05",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "风格锚点句和正向约束后缀是生成高质量图像的关键，直接影响最终输出的风格和质量，应提高其重要性以确保在提示词生成时被充分重视。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_06",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.93,
+        "reason": "七要素图片公式是构建提示词的基础框架，对于指导AI生成符合要求的图像至关重要，应适当提高其重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "光影与情绪的关联以及实操准则对于画面表现力至关重要，但其重要性略低于风格和核心场景描述，适当调整。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-artist_env_layer_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "构图与空间纵深原则是提升画面专业度的重要方面，但相较于核心的风格、节奏和色彩，其优先级稍低，适当调整。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 9,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 7,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 6609,
+    "error": null
   }
 ]

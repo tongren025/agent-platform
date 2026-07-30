@@ -1,61 +1,5 @@
 [
   {
-    "logId": "dist_313d2c19bd07",
-    "employeeKey": "comic-scene-designer",
-    "ranAt": "2026-07-01T03:09:37.582887Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "seed_comic-scene-designer_sem_04_no_grid_keyframe",
-        "mergeIntoId": "seed_comic-scene-designer_sem_01_quality_clean_negative",
-        "newContent": "正片级图片和视频必须使用正向约束词（⚠️ Seedance 2.0不读负向提示词）。正向表述：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移；严禁出现宫格、多面板、分格线或脏线。宫格/多面板仅限内部时序参考，不可作为正片关键图，优先使用单张干净行动图。",
-        "newImportance": null,
-        "reason": "两条记忆均在强调禁止宫格/分格线以及使用正向约束词，内容高度重叠。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "learn_consolidation_20260630_comic-scene-designer_sem_04",
-        "mergeIntoId": "seed_comic-scene-designer_sem_02_style_core",
-        "newContent": "九陆纪元视觉核心（所有提示词必带风格锚点）：干净半写实东方幻想漫剧插画、电影级高特效动作关键帧、柔和漫射光、清晰主体、低描边、蓝白魔法阵与赤金龙焰对撞。",
-        "newImportance": null,
-        "reason": "两者内容完全一致，一个是核心定义，一个是提示词锚点，应合并为统一的风格标准。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-scene-designer_film_color_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "该记忆提供了色彩叙事的理论基础，虽然目前权重较低，但对于高阶视觉规划具有指导意义，适当提升。"
-      },
-      {
-        "action": "prune",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-scene-designer_composition_02",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": null,
-        "reason": "基础的三分法构图属于通用常识，且在实际的短剧节奏（duanju_spine）和行动图（sem_06）要求面前，其指导价值较低，可剪枝以减少冗余。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 23,
-      "episodic": 3,
-      "procedural": 4
-    },
-    "afterCounts": {
-      "semantic_count": 20,
-      "episodic_count": 3,
-      "procedural_count": 4
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 11546,
-    "error": null
-  },
-  {
     "logId": "dist_162e2386b008",
     "employeeKey": "comic-scene-designer",
     "ranAt": "2026-07-01T03:10:46.710576Z",
@@ -1942,5 +1886,20 @@
     "llmModel": "openrouter/auto",
     "durationMs": 6000,
     "error": null
+  },
+  {
+    "logId": "dist_3088ac114760",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-30T19:00:08.102597Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 7,
+      "episodic": 2,
+      "procedural": 1
+    },
+    "afterCounts": {},
+    "llmModel": "openrouter/auto",
+    "durationMs": 4577,
+    "error": "JSON 解析失败: 无 JSON 数组"
   }
 ]

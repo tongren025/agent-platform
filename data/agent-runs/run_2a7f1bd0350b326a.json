@@ -1,0 +1,18 @@
+{
+  "runId": "run_2a7f1bd0350b326a",
+  "sessionId": "nomi:workbench:jiulu-s1:generation",
+  "employeeKey": "comic-video-artist",
+  "workflowKey": null,
+  "model": "gpt-5.6-luna",
+  "success": false,
+  "iterations": 0,
+  "promptTokens": 0,
+  "completionTokens": 0,
+  "totalTokens": 0,
+  "costUsd": null,
+  "elapsedMilliseconds": 0,
+  "errorMessage": "没有可用的聊天模型：gpt-5.6-luna: Model 'gpt-5.6-luna' not found in any provider",
+  "pendingApproval": false,
+  "traces": [],
+  "createdAt": "2026-07-30T18:48:53.226215Z"
+}

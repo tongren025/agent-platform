@@ -1,43 +1,5 @@
 [
   {
-    "logId": "dist_33dcc90ba167",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-07-01T03:10:45.994225Z",
-    "actions": [
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_3dbb51e63cbe",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 1.0,
-        "reason": "经验记忆 mem_f9c130a07c89 的高成功率验证了该语义偏好的准确性，维持最高权重。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "mem_f9c130a07c89",
-        "mergeIntoId": "mem_3dbb51e63cbe",
-        "newContent": "用户偏好电影感的视觉风格和暖色调画面；在产品宣传短视频场景下，结合慢镜头效果用户满意度极高。",
-        "newImportance": null,
-        "reason": "将具体的成功经验（episodic）蒸馏为更泛化的语义偏好（semantic），提高记忆检索效率。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 1,
-      "episodic": 1,
-      "procedural": 1
-    },
-    "afterCounts": {
-      "semantic_count": 1,
-      "episodic_count": 1,
-      "procedural_count": 1
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 31703,
-    "error": null
-  },
-  {
     "logId": "dist_46303342c322",
     "employeeKey": "demo-assistant",
     "ranAt": "2026-07-01T14:07:14.695867Z",
@@ -1320,6 +1282,44 @@
     },
     "llmModel": "openrouter/auto",
     "durationMs": 2812,
+    "error": null
+  },
+  {
+    "logId": "dist_4c953a540d23",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-30T19:00:08.081669Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 描述了具体的一次成功实践，其内容与语义记忆 mem_3dbb51e63cbe 高度重叠，可以将其经验融入到更通用的语义记忆中，并保留成功率信息。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "mem_cf146eef1f65",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "行为记忆 mem_cf146eef1f65 提出了一个重要的平台优化建议，尽管激活次数为0，但其潜在价值高，应提高其重要性以便未来考虑。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 2875,
     "error": null
   }
 ]

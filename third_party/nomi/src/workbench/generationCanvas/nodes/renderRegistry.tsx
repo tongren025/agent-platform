@@ -27,7 +27,13 @@ export type { GenerationNodeRenderProps, GenerationNodeComponent } from './regis
 
 export type GenerationNodeIcon = React.ComponentType<any>
 
-export type GenerationNodeRenderPlugin = Omit<GenerationNodePlugin, 'component' | 'icon'> & {
+export type GenerationNodeRenderPlugin = Omit<
+  GenerationNodePlugin,
+  'component' | 'icon' | 'label' | 'menuLabel' | 'defaultTitle' | 'promptPlaceholder'
+> & {
+  label: string
+  menuLabel: string
+  defaultTitle?: string
   icon: GenerationNodeIcon
   component: React.LazyExoticComponent<GenerationNodeComponent>
   promptPlaceholder?: string

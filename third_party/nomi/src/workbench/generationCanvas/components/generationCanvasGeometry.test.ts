@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
+  calculateFitViewTransform,
   getNodeSize,
   getSelectedBounds,
   getCanvasGroupBoxes,
+  PRODUCTION_READABLE_MIN_ZOOM,
 } from './generationCanvasGeometry'
 import { getGenerationNodeDefaultSize } from '../model/generationNodeKinds'
 import type { GenerationCanvasNode, NodeGroup } from '../model/generationCanvasTypes'
@@ -75,5 +77,31 @@ describe('几何调用点使用真实渲染尺寸', () => {
     // 包围盒 = 成员视觉尺寸 + 左右 padding(24*2)，高度再加顶部标签预留(28)。
     expect(box.width).toBe(visualSize.width + 48)
     expect(box.height).toBe(visualSize.height + 48 + 28)
+  })
+})
+
+describe('calculateFitViewTransform', () => {
+  const distantNodes = [
+    makeNode({ id: 'top', kind: 'text', position: { x: 0, y: 0 }, size: { width: 600, height: 300 } }),
+    makeNode({ id: 'bottom', kind: 'video', position: { x: 1800, y: 10_000 }, size: { width: 600, height: 400 } }),
+  ]
+
+  it('普通画布仍可完整适应到全局最低缩放', () => {
+    const transform = calculateFitViewTransform({
+      nodes: distantNodes,
+      viewport: { width: 1440, height: 900 },
+    })
+    expect(transform?.zoom).toBe(0.2)
+  })
+
+  it('逐镜引导画布守住可读缩放，不再把节点压成百余像素宽', () => {
+    const transform = calculateFitViewTransform({
+      nodes: distantNodes,
+      viewport: { width: 1440, height: 900 },
+      readableMinZoom: PRODUCTION_READABLE_MIN_ZOOM,
+    })
+    expect(transform?.zoom).toBe(0.75)
+    expect(transform?.offset.x).toBeTypeOf('number')
+    expect(transform?.offset.y).toBeTypeOf('number')
   })
 })

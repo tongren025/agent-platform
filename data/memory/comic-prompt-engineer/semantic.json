@@ -1,27 +1,15 @@
 [
   {
-    "memoryId": "jiulu_gaoran_pivot_20260709_comic-prompt-engineer_register_law",
-    "employeeKey": "comic-prompt-engineer",
-    "content": "【九陆纪元·register铁律·最高优先级】全程高燃、高格调门槛、起点即天花板。无拉跨、无卡拉米——'贴地无脸/样本视角/体温/一个少年一块石头'那套小人物文艺分镜全部作废。主角苍霖开局即强者:懒散欠揍、世界树觉醒者、力量地貌/城市尺度,不是泥里被打的弱者。反天选是魂但埋线不点破(力量是自己爬来的,1秒闪回足矣)。每集=一个大场面set-piece+一个反转(以为A其实B)+一个钩子;1秒剪辑,约60刀/90秒,战斗段0.5秒。爽点=抬手改写一座城。",
-    "category": "knowledge",
-    "importance": 1.0,
-    "sourceSession": "jiulu_gaoran_pivot_20260709",
-    "accessCount": 4,
-    "createdAt": "2026-07-09T08:02:22.593021Z",
-    "lastAccessed": "2026-07-30T06:33:11.386197Z",
-    "updatedAt": "2026-07-09T08:02:22.593021Z"
-  },
-  {
     "memoryId": "duanju_spine_20260630_comic-prompt-engineer_law",
     "employeeKey": "comic-prompt-engineer",
     "content": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧，不是电影。节奏=信息/反转密度：每1-2秒砸一个新事件/反转/钩子。生产提示词必须包含三层结构：1.全局头部（风格、时长、角色、全局要求：9:16竖屏+风格对齐@视频1+角色一致性+前3秒情绪炸点+单句台词≤10字）；2.时间码（每段≤6秒，格式[00:00-00:05]，含景别+主体+动作+运镜+光影+音效+口型字幕）；3.三件套文件。单集15-25个事件beat，结尾5秒必须有反转或悬念钩子。美术手艺必须服从节奏。",
     "category": "shortdrama_law",
-    "importance": 0.99,
+    "importance": 1.0,
     "sourceSession": "duanju_spine_20260630",
     "accessCount": 4,
     "createdAt": "2026-06-30T23:30:00Z",
     "lastAccessed": "2026-07-30T06:33:11.386197Z",
-    "updatedAt": "2026-07-06T06:33:46.014628Z"
+    "updatedAt": "2026-07-30T19:00:17.605501Z"
   },
   {
     "memoryId": "v3_sem_01_eight_layer",
@@ -48,6 +36,18 @@
     "updatedAt": "2026-07-06T13:44:09.739793Z"
   },
   {
+    "memoryId": "jiulu_gaoran_pivot_20260709_comic-prompt-engineer_register_law",
+    "employeeKey": "comic-prompt-engineer",
+    "content": "【九陆纪元·register铁律·最高优先级】全程高燃、高格调门槛、起点即天花板。无拉跨、无卡拉米——'贴地无脸/样本视角/体温/一个少年一块石头'那套小人物文艺分镜全部作废。主角苍霖开局即强者:懒散欠揍、世界树觉醒者、力量地貌/城市尺度,不是泥里被打的弱者。反天选是魂但埋线不点破(力量是自己爬来的,1秒闪回足矣)。每集=一个大场面set-piece+一个反转(以为A其实B)+一个钩子;1秒剪辑,约60刀/90秒,战斗段0.5秒。爽点=抬手改写一座城。",
+    "category": "knowledge",
+    "importance": 0.98,
+    "sourceSession": "jiulu_gaoran_pivot_20260709",
+    "accessCount": 4,
+    "createdAt": "2026-07-09T08:02:22.593021Z",
+    "lastAccessed": "2026-07-30T06:33:11.386197Z",
+    "updatedAt": "2026-07-30T19:00:17.602499Z"
+  },
+  {
     "memoryId": "v3_sem_04_camera_separate",
     "employeeKey": "comic-prompt-engineer",
     "content": "镜头运动和角色动作必须分开描述。✗「镜头环绕旋转,女子翩翩起舞」→✓「一位女子缓慢旋转舞动,双臂上扬。镜头以稳定弧线环绕她(orbit)」。每镜只写一个运镜动作,中英双写。运镜术语：dolly/pan/tracking/orbit/handheld/fixed/crane/push in/pull out/tilt/whip pan。",
@@ -70,18 +70,6 @@
     "createdAt": "2026-06-25T15:00:00Z",
     "lastAccessed": "2026-07-30T06:33:11.386197Z",
     "updatedAt": "2026-07-10T03:08:21.854501Z"
-  },
-  {
-    "memoryId": "v3_sem_08_industrial_workflow",
-    "employeeKey": "comic-prompt-engineer",
-    "content": "工业化四步工作流：1.生成角色母版图(正面+3/4侧+全身服装+道具单独)及场景母版图作为所有后续生成的锚点，提示词重点写动作和环境，由参考图负责长相。 2.找一段风格最接近的视频锁成@视频1。 3.控制全剧在10个核心场景以提高复用率。 4.每镜批量生成10+张备选。角色当资产管，用CHAR资产库四层管理：身份ID(脸)→外观资产(服装)→风格层→镜头语言层。",
-    "category": "workflow",
-    "importance": 0.97,
-    "sourceSession": "seedance2_deep_study_20260625",
-    "accessCount": 4,
-    "createdAt": "2026-06-25T14:00:00Z",
-    "lastAccessed": "2026-07-30T06:33:11.386197Z",
-    "updatedAt": "2026-07-07T06:21:46.050035Z"
   },
   {
     "memoryId": "v3_sem_12_toolchain_mapping",
@@ -132,6 +120,18 @@
     "updatedAt": "2026-07-02T13:29:38.893847Z"
   },
   {
+    "memoryId": "v3_sem_08_industrial_workflow",
+    "employeeKey": "comic-prompt-engineer",
+    "content": "工业化四步工作流：1.生成角色母版图(正面+3/4侧+全身服装+道具单独)及场景母版图作为所有后续生成的锚点，提示词重点写动作和环境，由参考图负责长相。 2.找一段风格最接近的视频锁成@视频1。 3.控制全剧在10个核心场景以提高复用率。 4.每镜批量生成10+张备选。角色当资产管，用CHAR资产库四层管理：身份ID(脸)→外观资产(服装)→风格层→镜头语言层。",
+    "category": "workflow",
+    "importance": 0.95,
+    "sourceSession": "seedance2_deep_study_20260625",
+    "accessCount": 4,
+    "createdAt": "2026-06-25T14:00:00Z",
+    "lastAccessed": "2026-07-30T06:33:11.386197Z",
+    "updatedAt": "2026-07-30T19:00:17.607637Z"
+  },
+  {
     "memoryId": "v3_sem_13_multi_segment",
     "employeeKey": "comic-prompt-engineer",
     "content": "超过15秒的视频用多段拼接：每段15秒独立生成,段间用「接上段画面」+@视频1(上一段输出)做续接。续接关键：上段尾帧 = 下段首帧。具体写法：在下一段提示词开头写「@视频1为上一段结尾画面,从该画面续接」。一镜到底长镜头写法：「全程不要切镜头,一镜到底」+用多张@图片按顺序做场景过渡。",
@@ -142,18 +142,6 @@
     "createdAt": "2026-06-25T14:00:00Z",
     "lastAccessed": "2026-07-30T06:33:11.386197Z",
     "updatedAt": "2026-06-25T14:00:00Z"
-  },
-  {
-    "memoryId": "learn_consolidation_20260630_comic-prompt-engineer_sem_04",
-    "employeeKey": "comic-prompt-engineer",
-    "content": "项目《九陆纪元》角色苍霖设定：16岁少年，特征为黑色短碎发、左脸颊竖向旧伤疤、胸口布条绑龙骨碎片。演进阶段：EP01-03早期=偏瘦有韧劲/深褐近黑瞳孔/破烂灰褐麻布短衣/赤脚；EP04-08中期=同上+旧毯子当披风；EP09-10后期=深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚。每镜必完整复述。",
-    "category": "character",
-    "importance": 0.95,
-    "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 4,
-    "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": "2026-07-30T06:33:11.386197Z",
-    "updatedAt": "2026-07-06T03:34:17.385696Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-prompt-engineer_sem_06",
@@ -192,15 +180,27 @@
     "updatedAt": "2026-07-13T03:14:41.645629Z"
   },
   {
-    "memoryId": "learn_consolidation_20260630_comic-prompt-engineer_sem_05",
+    "memoryId": "learn_consolidation_20260630_comic-prompt-engineer_sem_04",
     "employeeKey": "comic-prompt-engineer",
-    "content": "7核心场景：scene01废巷(暖色午后散射光)/scene02废矿坑(30米深,碎片蓝光+裂缝金绿光丝)/scene03矿洞口(半明半暗过渡)/scene04矿洞深处(全黑只有碎片光)/scene05世界树遗迹(枯根迷宫,金绿光脉,体积光)/scene06悬崖(断崖云海,日落暖橙侧光)/cloud云海(金色无边际,阳光穿云体积光)。",
-    "category": "scene",
-    "importance": 0.92,
+    "content": "项目《九陆纪元》角色苍霖设定：16岁少年，特征为黑色短碎发、左脸颊竖向旧伤疤、胸口布条绑龙骨碎片。演进阶段：EP01-03早期=偏瘦有韧劲/深褐近黑瞳孔/破烂灰褐麻布短衣/赤脚；EP04-08中期=同上+旧毯子当披风；EP09-10后期=深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚。每镜必完整复述。",
+    "category": "character",
+    "importance": 0.93,
     "sourceSession": "learn_consolidation_20260630",
     "accessCount": 4,
     "createdAt": "2026-06-30T11:44:56.150698Z",
     "lastAccessed": "2026-07-30T06:33:11.386197Z",
-    "updatedAt": "2026-06-30T11:44:56.150698Z"
+    "updatedAt": "2026-07-30T19:00:17.609498Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-prompt-engineer_sem_05",
+    "employeeKey": "comic-prompt-engineer",
+    "content": "7核心场景：scene01废巷(暖色午后散射光)/scene02废矿坑(30米深,碎片蓝光+裂缝金绿光丝)/scene03矿洞口(半明半暗过渡)/scene04矿洞深处(全黑只有碎片光)/scene05世界树遗迹(枯根迷宫,金绿光脉,体积光)/scene06悬崖(断崖云海,日落暖橙侧光)/cloud云海(金色无边际,阳光穿云体积光)。",
+    "category": "scene",
+    "importance": 0.9,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 4,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": "2026-07-30T06:33:11.386197Z",
+    "updatedAt": "2026-07-30T19:00:17.611499Z"
   }
 ]

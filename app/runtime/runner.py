@@ -31,6 +31,7 @@ from app.runtime.run_control import active_run_control
 logger = logging.getLogger(__name__)
 
 DEEP_AGENT_CHECKPOINT_KEY = "deepAgentCheckpoint"
+AUTOMATIC_CHAT_FALLBACK_LIMIT = 4
 
 
 @dataclass
@@ -68,6 +69,67 @@ def _parse_schema(raw: Optional[str]) -> dict:
         return json.loads(raw)
     except (json.JSONDecodeError, TypeError):
         return {"type": "object", "properties": {}}
+
+
+def _configured_chat_model_refs(
+    excluded_refs: list[str] | None = None,
+    *,
+    limit: int = AUTOMATIC_CHAT_FALLBACK_LIMIT,
+) -> list[str]:
+    """列出平台已启用且凭据完整的文字模型，供员工模型失效时自动接管。
+
+    员工显式配置的主/降级模型始终优先；这里仅补充平台模型目录中的候选。
+    返回值保留供应商前缀，避免同名模型被路由到错误供应商。
+    """
+    excluded = {
+        str(model_ref or "").strip().lower()
+        for model_ref in (excluded_refs or [])
+        if str(model_ref or "").strip()
+    }
+    candidates: list[tuple[int, int, int, str]] = []
+    seen: set[str] = set()
+
+    for provider_index, provider in enumerate(ai_service.list_providers()):
+        if not provider.endpoint.strip() or not provider.api_key.strip():
+            continue
+        for model_index, model in enumerate(provider.models):
+            if model.get("enabled") is False:
+                continue
+            model_id = str(
+                model.get("modelId")
+                or model.get("actualModelId")
+                or model.get("modelName")
+                or ""
+            ).strip()
+            if not model_id or not is_chat_completion_model_id(model_id):
+                continue
+            model_ref = f"{provider.name}:{model_id}"
+            normalized_ref = model_ref.lower()
+            if normalized_ref in seen:
+                continue
+            if normalized_ref in excluded or model_id.lower() in excluded:
+                continue
+
+            model_lower = model_id.lower()
+            if "gpt-5.6" in model_lower:
+                priority = 0
+            elif "gpt-5" in model_lower:
+                priority = 1
+            elif "gpt-4.1" in model_lower or "gpt-4o" in model_lower:
+                priority = 2
+            elif model_lower == "openrouter/auto":
+                priority = 3
+            elif "free" in model_lower:
+                priority = 20
+            else:
+                priority = 10
+            candidates.append(
+                (priority, provider_index, model_index, model_ref)
+            )
+            seen.add(normalized_ref)
+
+    candidates.sort()
+    return [candidate[3] for candidate in candidates[:max(0, limit)]]
 
 
 def _append_generated_media(text: str, traces: list[AgentInvocationTrace]) -> str:
@@ -202,11 +264,16 @@ async def run_agent(
     reasoning_effort = (
         str(model_policy.get("reasoning_effort", "")).strip().lower() or None
     )
-    if "gpt-5.6" in model_id.lower() and reasoning_effort is None:
-        reasoning_effort = "medium"
+    automatic_fallback_ids = _configured_chat_model_refs(
+        [model_id, *fallback_model_ids]
+    )
     resolved_candidates: list[tuple[object, str, str]] = []
     resolution_errors: list[str] = []
-    for candidate_id in [model_id, *fallback_model_ids]:
+    for candidate_id in [
+        model_id,
+        *fallback_model_ids,
+        *automatic_fallback_ids,
+    ]:
         try:
             candidate_client, candidate_model = ai_service.get_client(
                 candidate_id,
@@ -224,8 +291,14 @@ async def run_agent(
         return run_result
 
     client, resolved_model, selected_model_id = resolved_candidates[0]
+    if "gpt-5.6" in resolved_model.lower() and reasoning_effort is None:
+        reasoning_effort = "medium"
     if selected_model_id != model_id:
-        logger.warning("主模型 %s 不可用，已降级到 %s", model_id, selected_model_id)
+        logger.warning(
+            "主模型 %s 不可用，已由平台启用模型 %s 接管",
+            model_id,
+            selected_model_id,
+        )
 
     shared_deep_state = None
     if snapshot.deep_agent:

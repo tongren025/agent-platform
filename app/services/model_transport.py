@@ -20,6 +20,12 @@ import openai
 logger = logging.getLogger(__name__)
 
 TextDeltaCallback = Callable[[str, str], Awaitable[None] | None]
+
+
+class ModelStreamError(RuntimeError):
+    """HTTP 已成功建立但模型流在完成事件前异常中断。"""
+
+
 def build_prompt_cache_key(
     *,
     model: str,
@@ -298,16 +304,21 @@ def _stream_next(iterator):
 
 
 async def _iterate_stream(stream: Any, is_async: bool):
-    if is_async:
-        async for item in stream:
-            yield item
-        return
-    iterator = iter(stream)
-    while True:
-        has_item, item = await asyncio.to_thread(_stream_next, iterator)
-        if not has_item:
+    try:
+        if is_async:
+            async for item in stream:
+                yield item
             return
-        yield item
+        iterator = iter(stream)
+        while True:
+            has_item, item = await asyncio.to_thread(_stream_next, iterator)
+            if not has_item:
+                return
+            yield item
+    except (asyncio.CancelledError, GeneratorExit):
+        raise
+    except Exception as exc:
+        raise ModelStreamError(f"模型流式响应中断: {exc}") from exc
 
 
 def _chat_delta_text(delta: Any) -> str:
@@ -471,7 +482,12 @@ async def _create_responses_completion(
         elif event_type == "response.failed":
             response = getattr(event, "response", None)
             error = getattr(response, "error", None)
-            raise RuntimeError(str(getattr(error, "message", None) or error or "Responses 流式请求失败"))
+            detail = str(
+                getattr(error, "message", None)
+                or error
+                or "Responses 流式请求失败"
+            )
+            raise ModelStreamError(detail)
 
     if completed_response is not None:
         return response_to_chat(completed_response), first_token_ms

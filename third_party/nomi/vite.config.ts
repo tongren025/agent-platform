@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import react from '@vitejs/plugin-react';
 import { createLogger, defineConfig, loadEnv, type Logger, type Plugin } from 'vite';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { resolve } from 'node:path';
@@ -158,9 +159,7 @@ function shouldDeferModulePreload(dep: string): boolean {
   return DEFERRED_MODULE_PRELOAD_PATTERNS.some((pattern) => pattern.test(fileName))
 }
 
-export default defineConfig(async ({ command, mode }) => {
-  const react = (await import('@vitejs/plugin-react')).default;
-
+export default defineConfig(({ command, mode }) => {
   loadEnv(mode, process.cwd(), 'VITE_');
 
   if (command === 'build' && mode !== 'production') {

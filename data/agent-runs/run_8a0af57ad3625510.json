@@ -1,0 +1,18 @@
+{
+  "runId": "run_8a0af57ad3625510",
+  "sessionId": "nomi:workbench:jiulu-s1:generation",
+  "employeeKey": "comic-video-artist",
+  "workflowKey": null,
+  "model": "openrouter/auto",
+  "success": true,
+  "iterations": 1,
+  "promptTokens": 26134,
+  "completionTokens": 73,
+  "totalTokens": 26207,
+  "costUsd": null,
+  "elapsedMilliseconds": 3188,
+  "errorMessage": null,
+  "pendingApproval": false,
+  "traces": [],
+  "createdAt": "2026-07-30T19:01:32.075767Z"
+}

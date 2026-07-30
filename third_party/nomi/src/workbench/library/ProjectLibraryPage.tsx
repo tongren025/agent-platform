@@ -57,6 +57,7 @@ function formatUpdatedAt(value: number): string {
 // urls 每次是新数组引用，故用按值比较的 comparator。
 const ThumbnailMosaic = React.memo(
   function ThumbnailMosaic({ urls }: { urls: string[] }): JSX.Element {
+    const { t } = useTranslation()
     if (urls.length === 0) {
       // 未生成的项目无封面 → 只放中性占位图标；名称由卡片下方统一显示，缩略图里不再重复（去重）。
       return (
@@ -67,7 +68,15 @@ const ThumbnailMosaic = React.memo(
     }
     // 单封面：一个项目用一张代表图（首个产物）。早先 2–4 宫格把不同镜头并排塞进 200px 小卡，
     // 读起来像一张糊在一起的图、看不出是什么项目（用户报「糊在一起」）。改单封面更干净、可识别。
-    return <NomiImage className="absolute inset-0 w-full h-full object-cover block" src={urls[0]} alt="" />
+    return (
+      <NomiImage
+        className="absolute inset-0 w-full h-full object-cover block"
+        src={urls[0]}
+        alt=""
+        fallbackLabel={t('library.thumbnailUnavailable')}
+        fallbackTitle={t('library.thumbnailUnavailableHint')}
+      />
+    )
   },
   (prev, next) => (prev.urls[0] || '') === (next.urls[0] || ''),
 )

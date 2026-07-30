@@ -51,20 +51,35 @@ function isSuccessful(node: GenerationCanvasNode, resultType?: 'image' | 'video'
   return resultType ? node.result?.type === resultType : true
 }
 
-function matchesStage(node: GenerationCanvasNode, stageId: ProductionDirectorStageId): boolean {
+export function matchesProductionDirectorStage(
+  node: GenerationCanvasNode,
+  stageId: ProductionDirectorStageId,
+): boolean {
   const stage = productionStage(node)
+  // 导入的生产卡已经有明确阶段时，以结构化元数据为准。长剧本/提示词通常会同时出现
+  // “分镜、首帧、视频”等词；继续对全文做模糊命中会让一张文本卡冒充多个已完成阶段。
+  if (stage) {
+    if (stageId === 'script') return stage === 'script'
+    if (stageId === 'storyboard') return stage === 'storyboard'
+    if (stageId === 'motion') return stage === 'vid_prompt' || stage === 'motion'
+    if (stageId === 'keyframe') return stage === 'img_prompt' || stage === 'keyframe'
+    if (stageId === 'video') {
+      return stage === 'video' || node.kind === 'video' || node.result?.type === 'video'
+    }
+    return false
+  }
   const text = searchableNodeText(node)
   switch (stageId) {
     case 'script':
-      return stage === 'script' || node.kind === 'text' && /剧本|台词|对白|shot script/.test(text)
+      return node.kind === 'text' && /剧本|台词|对白|shot script/.test(text)
     case 'storyboard':
-      return stage === 'storyboard' || /分镜|storyboard/.test(text)
+      return /分镜|storyboard/.test(text)
     case 'motion':
-      return stage === 'vid_prompt' || stage === 'motion' || /动态设计|运镜|镜头运动|视频提示词|camera move/.test(text)
+      return /动态设计|运镜|镜头运动|视频提示词|camera move/.test(text)
     case 'keyframe':
-      return stage === 'img_prompt' || node.kind === 'keyframe' || /首帧|尾帧|关键帧|keyframe/.test(text)
+      return node.kind === 'keyframe' || /首帧|尾帧|关键帧|keyframe/.test(text)
     case 'video':
-      return node.kind === 'video' || node.result?.type === 'video' || stage === 'video'
+      return node.kind === 'video' || node.result?.type === 'video'
     case 'review':
       return false
   }
@@ -74,7 +89,7 @@ function stageState(
   nodes: readonly GenerationCanvasNode[],
   stageId: Exclude<ProductionDirectorStageId, 'review'>,
 ): Pick<ProductionDirectorStage, 'complete' | 'planned' | 'failed' | 'running'> {
-  const matches = nodes.filter((node) => matchesStage(node, stageId))
+  const matches = nodes.filter((node) => matchesProductionDirectorStage(node, stageId))
   const failed = matches.some((node) => node.status === 'error')
   const running = matches.some((node) => node.status === 'queued' || node.status === 'running')
   let complete = false
@@ -111,7 +126,7 @@ export function deriveProductionDirectorProgress(params: {
   }))
   const successfulVideoIds = new Set(
     nodes
-      .filter((node) => matchesStage(node, 'video') && isSuccessful(node, 'video'))
+      .filter((node) => matchesProductionDirectorStage(node, 'video') && isSuccessful(node, 'video'))
       .map((node) => node.id),
   )
   const reviewComplete = Array.from(successfulVideoIds).some((id) => timelineSourceNodeIds.has(id))

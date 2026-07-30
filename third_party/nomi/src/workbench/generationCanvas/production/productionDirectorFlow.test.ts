@@ -41,6 +41,15 @@ describe('productionDirectorFlow', () => {
     expect(productionShotStatus(progress)).toBe('videoMissing')
   })
 
+  it('结构化阶段优先于长文本关键词，不让一张剧本卡冒充后续全部阶段', () => {
+    const script = node('script', 'text', 'script')
+    script.prompt = '剧本写完后制作分镜、首帧、运镜和视频提示词'
+    const progress = deriveProductionDirectorProgress({ nodes: [script] })
+
+    expect(progress.current.id).toBe('storyboard')
+    expect(progress.productionCompletedCount).toBe(1)
+  })
+
   it('视频节点已规划但未出片时提示待出片，失败时提示需处理', () => {
     const base = [
       node('script', 'text', 'script'),

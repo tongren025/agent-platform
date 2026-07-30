@@ -2167,5 +2167,151 @@
     "llmModel": "openrouter/auto",
     "durationMs": 9766,
     "error": "JSON 解析失败: 无 JSON 数组"
+  },
+  {
+    "logId": "dist_a3995fcb55ff",
+    "employeeKey": "comic-prompt-engineer",
+    "ranAt": "2026-07-30T19:00:08.112599Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_sem_04_camera_separate",
+        "mergeIntoId": "v3_proc_05_camera_one_per_shot",
+        "newContent": "镜头运动和角色动作必须分开描述。✗「镜头环绕旋转,女子翩翩起舞」→✓「一位女子缓慢旋转舞动,双臂上扬。镜头以稳定弧线环绕她(orbit)」。每镜只写一个运镜动作,中英双写。运镜术语：dolly/pan/tracking/orbit/handheld/fixed/crane/push in/pull out/tilt/whip pan。每镜只写一个运镜动作,中英双写(如「缓慢推进(dolly in)」)。镜头运动和角色动作分开描述,不混写。竖屏9:16构图强调主体居中偏下(lower third)。",
+        "newImportance": null,
+        "reason": "v3_sem_04_camera_separate 描述了镜头运动和角色动作分开的原则，v3_proc_05_camera_one_per_shot 进一步细化了具体操作和竖屏构图要求，两者内容高度重叠且互补，可合并以强化规则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_sem_01_eight_layer",
+        "mergeIntoId": "v3_proc_01_eight_layer_order",
+        "newContent": "八层框架：1.素材角色声明(@图片/@视频/@音频+R1/R2编号) 2.镜头标签(镜头1/2分段,每段≤6秒) 3.景别与主体(景别+2-3个静态特征用具体名词) 4.动作(身体部位级+幅度+速度,优先慢速连续小动作) 5.运镜(每镜只一个运镜,中英双写如「缓慢推进(dolly in)」) 6.场景与光影(环境+光源方向/色温+氛围元素,质量ROI最高) 7.音频(对话/音效/环境音) 8.全局收尾(风格锚点+正向约束词+质量后缀)。底层S-A-C-S-C不变,八层是生产展开。提示词必须严格按八层顺序组装（每层缺一即为不合格）：素材声明(@引用+R编号) → 镜头标签(每段≤6秒) → 景别与主体(2-3个静态特征) → 动作(身体部位级+幅度+速度) → 运镜(每镜只一个,中英双写) → 场景光影(方向+色温+氛围) → 音频(对话/音效) → 全局收尾(风格锚+约束词)。",
+        "newImportance": null,
+        "reason": "v3_sem_01_eight_layer 详细描述了八层框架的内容，v3_proc_01_eight_layer_order 则强调了其顺序和重要性。两者内容高度一致，可合并以形成一个更完整的关于八层框架的记忆。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-prompt-engineer_sem_06",
+        "mergeIntoId": "v3_proc_02_no_negative_ever",
+        "newContent": "⚠️ 致命知识与正向约束后缀：Seedance 2.0不读负向提示词，禁止使用：夸张/高速/快速/fast/大幅度扭曲/剧烈/激烈（会导致崩坏或模糊）。所有禁止项必须转化为正向约束词，每条提示词结尾必带：画面干净无描边/无墨线/无裂纹/无草稿线/无脏黑边/无死黑阴影/无文字水印/保持角色一致性/服装不漂移/保持面部一致/无变形/无拉伸/面部清晰/人体结构正常/动作自然流畅/画面稳定/竖屏9:16/电影质感。情绪外化为身体细节：悲伤→「肩膀微颤,眼眶泛红,手指不自觉攥紧衣角」。永远不写负向提示词/negative prompt。Seedance 2.0完全不读。所有禁止项用正向表述：不要水印→画面干净无遮挡,不要模糊→面部清晰细节锐利,不要变形→保持人体比例正确面部一致。",
+        "newImportance": null,
+        "reason": "learn_consolidation_20260630_comic-prompt-engineer_sem_06 强调了负向提示词的危害和正向约束的重要性，v3_proc_02_no_negative_ever 则直接给出了“永远不写负向提示词”的规则。两者内容高度重叠，可合并以强化“禁止使用负向提示词”的规则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "v3_sem_14_audio_prompt",
+        "mergeIntoId": "v3_proc_01_eight_layer_order",
+        "newContent": "音频提示词写法：Seedance 2.0原生音画一体,用「音效：」前缀标注。三类音频：1.对白语气(干声优先,不带BGM,否则模型把BGM当同步内容) 2.环境音效(风吹沙沙/剑鸣/心跳/雷鸣/水流) 3.背景音乐(用@音频引用参考曲或写风格节奏如「舒缓钢琴旋律」)。镜头间音频渐入渐出保持连贯。完整示例：「音效：一声心跳,然后寂静」「音效：风吹过麦秆的沙沙声,远处隐约的管弦乐渐强」。口播场景：干声优先,不要加BGM。战斗场景：环境音(兵器交击/能量释放)+BGM(紧张弦乐渐强→爆发时鼓点)。八层框架中的音频层（第7层）负责处理此内容。",
+        "newImportance": null,
+        "reason": "v3_sem_14_audio_prompt 详细描述了音频提示词的写法，而 v3_proc_01_eight_layer_order 将音频作为八层框架的第七层。合并这两条记忆，将音频提示词的详细规则整合到八层框架的描述中，使其更完整。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-prompt-engineer_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该记忆是关于“九陆纪元”项目设定的核心规则，重要性很高，但相较于短剧第一准则和八层框架，其优先级略低，故略微下调重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-prompt-engineer_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆是关于短剧制作的核心准则，优先级最高，应保持其最高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "v3_sem_08_industrial_workflow",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "工业化工作流是重要的生产方法论，但相较于核心的提示词结构和内容规则，其优先级略低，故略微下调重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-prompt-engineer_sem_04",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.93,
+        "reason": "角色苍霖的设定是项目特有的细节，虽然重要，但相较于通用的制作规则和世界观设定，其优先级略低，故略微下调重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-prompt-engineer_sem_05",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.9,
+        "reason": "核心场景的描述是项目特有的细节，虽然重要，但相较于通用的制作规则和世界观设定，其优先级略低，故略微下调重要性。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "episodic",
+        "targetId": "v3_epi_02_fast_word_blur",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆记录了使用“快速”导致模糊的经验，但该经验已被 v3_proc_04_action_body_part 和 v3_sem_15_platform_comparison 等记忆中的规则所覆盖和强化，且 access_count 为 0，价值较低。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "episodic",
+        "targetId": "v3_epi_04_xianxia_three_phase",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆记录了仙侠战斗场景的三段式节奏，但该经验已被 v3_epi_08_water_dragon_prompt 等记忆中的更通用规则所覆盖和强化，且 access_count 为 0，价值较低。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "episodic",
+        "targetId": "v3_epi_05_camera_action_separate",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆记录了镜头运动和角色动作分开描述的经验，但该经验已被 v3_sem_04_camera_separate 和 v3_proc_05_camera_one_per_shot 等记忆中的规则所覆盖和强化，且 access_count 为 0，价值较低。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "episodic",
+        "targetId": "v3_epi_06_segment_over_6s",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆记录了单段不超过6秒的经验，但该经验已被 v3_proc_06_segment_6s_max 等记忆中的规则所覆盖和强化，且 access_count 为 0，价值较低。"
+      },
+      {
+        "action": "prune",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-prompt-engineer_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该记忆记录了将EP04养龙10秒做成提示词的经验，但其内容相对具体且 access_count 为 0，价值较低，且相关规则已在其他记忆中体现。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 17,
+      "episodic": 12,
+      "procedural": 9
+    },
+    "afterCounts": {
+      "semantic_count": 17,
+      "episodic_count": 7,
+      "procedural_count": 9
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 9514,
+    "error": null
   }
 ]

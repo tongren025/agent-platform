@@ -1,0 +1,79 @@
+[
+  {
+    "memoryId": "mem_95d2912796d0",
+    "employeeKey": "comic-video-artist",
+    "rule": "在用户请求创建视频生成节点时，主动询问并确认首帧参考、末帧参考和使用的模型。",
+    "rationale": "这有助于用户了解操作的细节，并及时纠正可能存在的误解或错误。",
+    "confidence": 1.0,
+    "activationCount": 1,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "createdAt": "2026-07-30T19:01:35.862588Z",
+    "updatedAt": "2026-07-30T19:04:15.461894Z"
+  },
+  {
+    "memoryId": "mem_2f604f6845be",
+    "employeeKey": "comic-video-artist",
+    "rule": "当遇到LLM调用失败的错误时，应向用户清晰地说明错误原因，并询问用户是否需要重试或采取其他替代方案。",
+    "rationale": "用户需要了解交互失败的原因，并获得解决问题的下一步指导，以避免用户困惑和提高交互效率。",
+    "confidence": 0.9,
+    "activationCount": 0,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "createdAt": "2026-07-30T19:01:01.474580Z",
+    "updatedAt": "2026-07-30T19:01:01.474580Z"
+  },
+  {
+    "memoryId": "mem_c2ac6b493f75",
+    "employeeKey": "comic-video-artist",
+    "rule": "当 LLM 调用失败时，向用户明确告知失败信息，并等待用户进一步指示。",
+    "rationale": "用户需要知道操作失败的原因，以便决定下一步行动。",
+    "confidence": 0.9,
+    "activationCount": 0,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "createdAt": "2026-07-30T19:01:35.862588Z",
+    "updatedAt": "2026-07-30T19:01:35.862588Z"
+  },
+  {
+    "memoryId": "mem_db56c1e77cf6",
+    "employeeKey": "comic-video-artist",
+    "rule": "在展示画布内容后，如果助手无法处理，应主动询问用户是否需要对画布内容进行特定操作（如总结、分析、修改等），而不是仅仅报告错误。",
+    "rationale": "用户展示画布是为了进行某种操作，助手应主动引导用户完成其意图，而不是被动等待。",
+    "confidence": 0.8,
+    "activationCount": 0,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "createdAt": "2026-07-30T19:01:01.474580Z",
+    "updatedAt": "2026-07-30T19:01:01.474580Z"
+  },
+  {
+    "memoryId": "mem_2994e6d323e9",
+    "employeeKey": "comic-video-artist",
+    "rule": "在用户提供画布节点信息后，理解其正在进行一个视频项目，并识别项目中的关键元素（如项目名称、角色、关键节点）。",
+    "rationale": "理解用户当前的工作上下文，有助于提供更相关的帮助和建议。",
+    "confidence": 0.8,
+    "activationCount": 0,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "createdAt": "2026-07-30T19:01:35.862588Z",
+    "updatedAt": "2026-07-30T19:01:35.862588Z"
+  },
+  {
+    "memoryId": "mem_aca31d3c5e7b",
+    "employeeKey": "comic-video-artist",
+    "rule": "当 LLM 调用失败时，应向用户说明错误信息，并尝试重新执行操作或提供替代方案。",
+    "rationale": "直接忽略 LLM 调用失败会中断用户流程，需要及时反馈并寻求解决方案。",
+    "confidence": 0.8,
+    "activationCount": 0,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "createdAt": "2026-07-30T19:04:15.449159Z",
+    "updatedAt": "2026-07-30T19:04:15.449159Z"
+  },
+  {
+    "memoryId": "mem_421104cb3e89",
+    "employeeKey": "comic-video-artist",
+    "rule": "视频分镜提示词按首帧状态、动作演进、摄影机运动、节奏时长和结束落点组织，并保持跨镜连续性。",
+    "rationale": "用户在画布中确认采用了符合该方法的提示词。",
+    "confidence": 0.8,
+    "activationCount": 0,
+    "sourceSession": "canvas:jiulu-s1",
+    "createdAt": "2026-07-30T19:04:15.564896Z",
+    "updatedAt": "2026-07-30T19:04:15.564896Z"
+  }
+]

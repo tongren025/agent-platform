@@ -188,6 +188,16 @@ class _AsyncChunkStream:
         return self._chunks.pop(0)
 
 
+class _BrokenAsyncChunkStream:
+    """模拟 HTTP 200 后供应商在首个 token 前关闭模型流。"""
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        raise httpx.RemoteProtocolError("stream closed with reason: error")
+
+
 def _chunk(content: str = "", *, finish_reason=None, tool_calls=None):
     return SimpleNamespace(
         choices=[
@@ -225,6 +235,32 @@ async def test_streaming_completion_emits_incremental_text():
 
     assert result.choices[0].message.content == "你好"
     assert events == [("你", "你"), ("好", "你好")]
+
+
+async def test_stream_disconnect_falls_back_to_next_model():
+    broken = _BrokenAsyncChunkStream()
+    backup = _AsyncChunkStream([
+        _chunk("备用模型已接管"),
+        _chunk("", finish_reason="stop"),
+    ])
+    client, create = _fake_client([broken, backup])
+    options = _opts(
+        max_retries=0,
+        fallback_models=["backup"],
+        on_text_delta=lambda *_: None,
+    )
+
+    result = await _create_with_retry(
+        client,
+        {},
+        True,
+        options,
+        iteration=1,
+    )
+
+    assert result.choices[0].message.content == "备用模型已接管"
+    assert create.models == ["primary", "backup"]
+    assert options.used_models == ["backup"]
 
 
 async def test_streaming_completion_reconstructs_tool_call():

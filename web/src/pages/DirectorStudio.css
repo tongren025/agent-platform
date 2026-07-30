@@ -1423,6 +1423,15 @@
     gap: 28px;
   }
 
+  .director-action-band {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .director-action-buttons {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
   .director-project-vitals {
     gap: 18px;
   }
@@ -1477,14 +1486,6 @@
     text-align: left;
   }
 
-  .director-action-band {
-    grid-template-columns: auto 1fr;
-  }
-
-  .director-action-buttons {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
-  }
 }
 
 @media (max-width: 768px) {

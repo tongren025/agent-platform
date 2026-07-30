@@ -1030,5 +1030,24 @@
     "llmModel": "openrouter/auto",
     "durationMs": 3358,
     "error": null
+  },
+  {
+    "logId": "dist_1143e3376134",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-30T19:00:08.075598Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 0,
+      "procedural_count": 0
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 2125,
+    "error": null
   }
 ]

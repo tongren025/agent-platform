@@ -1,0 +1,50 @@
+[
+  {
+    "memoryId": "mem_468d522d047d",
+    "employeeKey": "comic-video-artist",
+    "observation": "画布项目 jiulu-s1 的 video_prompt 创作",
+    "action": "@图片1(R3母版) @图片2(production-e01-ip01) @图片4(production-e01-ip01b) @视频1(production-e01-vp01) 【生成模式】首帧锁定：锁首帧、后续交模型。\n\n素材引用：R3 苍霖 角色母版图 (production-g-char-canglin)\n首帧承接：G1 首帧图提示词(七要素) (production-e01-ip01)\n末帧姿态：G1末帧锁(FLF·七要素) (production-e01-ip01b)\n风格参考：Art Bible 风格锁定 (production-g-art-bible)\n场景参考：场景母版图合集 (production-g-scene-bible)\n\n人物身体动作：苍霖站立，准备迎接挑战。\n唯一运镜：镜头缓慢推近，聚焦苍霖的面部表情。\n场景光影：废墟场景，光线昏暗，有熔浆的微弱红光映照。\n对白/音效：无对白，只有环境音效（风声，远处怪物的低吼）。",
+    "result": "用户确认采用：G1 九陆巡礼 视频",
+    "successScore": 1.0,
+    "sourceSession": "canvas:jiulu-s1",
+    "accessCount": 0,
+    "createdAt": "2026-07-30T19:04:15.566896Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "mem_fdde5c2b301e",
+    "employeeKey": "comic-video-artist",
+    "observation": "用户需要为 G1 镜头创建视频生成节点，并指定了首帧、末帧参考和模型。",
+    "action": "助手提议创建视频生成节点，并明确了使用的参考节点和模型，然后请求用户确认。",
+    "result": "用户在后续的对话中确认了创建节点的请求。",
+    "successScore": 0.9,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "accessCount": 0,
+    "createdAt": "2026-07-30T19:04:15.449159Z",
+    "lastAccessed": null
+  },
+  {
+    "memoryId": "mem_00686c60fbab",
+    "employeeKey": "comic-video-artist",
+    "observation": "用户在进行视频生成时，需要创建视频生成节点，并指定首帧、末帧参考以及使用的模型。",
+    "action": "助手主动提出为 G1 镜头创建视频生成节点，并明确了首帧参考 (`production-e01-ip01`)、末帧参考 (`production-e01-ip01b`) 和使用的模型 (`alibaba/happyhorse-1.1`)。",
+    "result": "用户被动接受助手的提议，等待确认。",
+    "successScore": 0.8,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "accessCount": 1,
+    "createdAt": "2026-07-30T19:01:35.862588Z",
+    "lastAccessed": "2026-07-30T19:04:06.995048Z"
+  },
+  {
+    "memoryId": "mem_fee7de43f34f",
+    "employeeKey": "comic-video-artist",
+    "observation": "用户展示了画布的当前状态，其中包含多个创作节点，助手在尝试处理时遇到了LLM调用失败的错误。",
+    "action": "展示画布内容，并记录助手遇到的错误。",
+    "result": "助手未能成功处理用户请求，并报告了LLM调用失败。",
+    "successScore": 0.1,
+    "sourceSession": "nomi:workbench:jiulu-s1:generation",
+    "accessCount": 2,
+    "createdAt": "2026-07-30T19:01:01.474580Z",
+    "lastAccessed": "2026-07-30T19:04:06.995048Z"
+  }
+]

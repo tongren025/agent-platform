@@ -21,6 +21,8 @@ const GROUP_BOX_LABEL_HEIGHT = 28
 // 但滚轮/按钮最低只允许 20%，导致节点虽已挂载却几乎无法点击。
 export const MIN_CANVAS_ZOOM = 0.2
 export const MAX_CANVAS_ZOOM = 3
+/** 引导式逐镜画布的卡片与正文必须可直接阅读；更远的内容交给平移和小地图导航。 */
+export const PRODUCTION_READABLE_MIN_ZOOM = 0.75
 
 export type WheelZoomEvent = Pick<WheelEvent, 'deltaMode' | 'deltaY'>
 
@@ -83,6 +85,32 @@ export function centerNodeOffset(node: GenerationCanvasNode, stageSize: { width:
   return {
     x: Math.round(stageSize.width / 2 - (node.position.x + size.width / 2) * zoom),
     y: Math.round(stageSize.height / 2 - (node.position.y + size.height / 2) * zoom),
+  }
+}
+
+export function calculateFitViewTransform(params: {
+  nodes: readonly GenerationCanvasNode[]
+  viewport: { width: number; height: number }
+  padding?: number
+  /** 逐镜制作时宁可让边缘内容可平移查看，也不能把卡片缩成不可阅读的缩略图。 */
+  readableMinZoom?: number
+}): { zoom: number; offset: { x: number; y: number } } | null {
+  const { nodes, viewport, padding = 80, readableMinZoom = MIN_CANVAS_ZOOM } = params
+  if (!nodes.length || viewport.width <= 0 || viewport.height <= 0) return null
+  const minX = Math.min(...nodes.map((node) => node.position.x))
+  const minY = Math.min(...nodes.map((node) => node.position.y))
+  const maxX = Math.max(...nodes.map((node) => node.position.x + getNodeSize(node).width))
+  const maxY = Math.max(...nodes.map((node) => node.position.y + getNodeSize(node).height))
+  const contentWidth = maxX - minX + padding * 2
+  const contentHeight = maxY - minY + padding * 2
+  const fitZoom = Math.min(1.2, viewport.width / contentWidth, viewport.height / contentHeight)
+  const zoom = clampCanvasZoom(Math.max(readableMinZoom, fitZoom))
+  return {
+    zoom,
+    offset: {
+      x: (viewport.width - contentWidth * zoom) / 2 - (minX - padding) * zoom,
+      y: (viewport.height - contentHeight * zoom) / 2 - (minY - padding) * zoom,
+    },
   }
 }
 

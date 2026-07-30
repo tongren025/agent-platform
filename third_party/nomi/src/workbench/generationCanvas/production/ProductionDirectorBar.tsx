@@ -76,7 +76,7 @@ function actionLabel(t: Translate, progress: ProductionDirectorProgress): string
       : t('generationCommon.director.keyframeAction')
   }
   return stage.planned
-    ? t('generationCommon.director.stagePlannedAction', { stage: stageTitle(t, stage.id) })
+    ? t('generationCommon.director.videoGenerateAction')
     : t('generationCommon.director.videoAction')
 }
 
@@ -92,6 +92,7 @@ export default function ProductionDirectorBar({ projectName }: { projectName?: s
   const setWorkspaceMode = useWorkbenchStore((state) => state.setWorkspaceMode)
   const setActiveCategoryId = useWorkbenchStore((state) => state.setActiveCategoryId)
   const setCreationAiCollapsed = useWorkbenchStore((state) => state.setCreationAiCollapsed)
+  const setGenerationAiCollapsed = useGenerationCanvasStore((state) => state.setGenerationAiCollapsed)
   const storedScope = useProductionScopeStore((state) => state.activeScope)
   const setActiveScope = useProductionScopeStore((state) => state.setActiveScope)
   const directorMode = useProductionDirectorUiStore((state) => state.mode)
@@ -218,6 +219,9 @@ export default function ProductionDirectorBar({ projectName }: { projectName?: s
       return
     }
     setWorkspaceMode('generation')
+    // 生产主按钮发出的请求由 CanvasAssistantPanel 消费。面板默认按需挂载；
+    // 若这里只派发事件却不先展开，首次点击时没有监听者，用户看到的就是“按钮没反应”。
+    setGenerationAiCollapsed(false)
     if (stage.planned && canRunPlannedMedia(stage.id)) {
       requestGuidedCanvas({
         prompt: buildGuidedMediaRunPrompt(stage.id),
@@ -252,6 +256,7 @@ export default function ProductionDirectorBar({ projectName }: { projectName?: s
     selectScope,
     sendCurrentVideoToTimeline,
     setCreationAiCollapsed,
+    setGenerationAiCollapsed,
     setWorkspaceMode,
     t,
   ])

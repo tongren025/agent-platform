@@ -605,5 +605,20 @@
     "llmModel": "openrouter/auto",
     "durationMs": 9936,
     "error": null
+  },
+  {
+    "logId": "dist_c94f3ad4930b",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-30T19:00:08.128187Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 14,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "openrouter/auto",
+    "durationMs": 3563,
+    "error": "JSON 解析失败: 无 JSON 数组"
   }
 ]

@@ -30,7 +30,7 @@
     ],
     "negative_prompts": [],
     "images": [
-      "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+      "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png"
     ],
     "videos": [],
     "metadata": {
@@ -38,7 +38,7 @@
       "reference_role": "identity_and_style",
       "approved_for_video": true,
       "source_project_id": "jiulu-s1",
-      "active_image": "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png"
+      "active_image": "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png"
     },
     "status": "done",
     "assignee": "",
@@ -1135,7 +1135,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1177,7 +1177,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1224,7 +1224,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1266,7 +1266,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1279,7 +1279,7 @@
       "subsegment": "GC-S05-A",
       "flf": false,
       "reference_images": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1289,7 +1289,7 @@
       "seedance_input": {
         "prompt": "以本镜首帧和锁定母版保持身份、服装、体色与画风。动作：巨龙抬头展开带蓝光纹的翼膜，苍霖俯身握紧缰绳。 环境变化：成年巨龙金色竖瞳睁开，镜头揭示后期苍霖伏在深青巨龙背上，前方是熔浆龙骨荒原。 运镜：龙眼特写切同镜揭示为低机位全景，升镜头。光效：熔浆赤金底光勾勒深青鳞片与深灰龙翼披风。声音：成年龙低吼；后期字幕：三个月后。 单一连续动作，画面稳定，竖屏9:16；字幕与系统文字仅后期叠加，不在生成画面内出现。",
         "image_url": [
-          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
           "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1328,7 +1328,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1370,7 +1370,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1417,7 +1417,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1459,7 +1459,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1472,7 +1472,7 @@
       "subsegment": "GC-S06-A",
       "flf": false,
       "reference_images": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1482,7 +1482,7 @@
       "seedance_input": {
         "prompt": "以本镜首帧和锁定母版保持身份、服装、体色与画风。动作：苍霖没有躲，左眼从披风阴影里缓缓睁开；巨龙压低身体蓄势。 环境变化：暗场揭开冷蓝净化舰队压住天际，上百道锁定光点落在苍霖与巨龙身上。 运镜：大远景切苍霖近景，剪辑切换而非单镜复合运镜。光效：冷蓝舰队顶光侵入赤金荒原，苍霖半脸冷暖分割。声音：机械女声：异常数据，执行删除。锁定蜂鸣逐渐密集。 单一连续动作，画面稳定，竖屏9:16；字幕与系统文字仅后期叠加，不在生成画面内出现。",
         "image_url": [
-          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
           "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1520,7 +1520,7 @@
         "苍霖后期"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -1559,7 +1559,7 @@
         "苍霖后期"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -1604,7 +1604,7 @@
         "苍霖后期"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -1644,7 +1644,7 @@
         "苍霖后期"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -1656,7 +1656,7 @@
       "subsegment": "GC-S07-A",
       "flf": false,
       "reference_images": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -1665,7 +1665,7 @@
       "seedance_input": {
         "prompt": "以本镜首帧和锁定母版保持身份、服装、体色与画风。动作：苍霖嘴角轻挑，抬眼看向舰队，只说“又来？”。 环境变化：苍霖左脸带疤一侧近景，锁定红点扫过深褐瞳孔，身后龙翼披风被热风扬起。 运镜：中近景，固定机位。光效：左侧赤金熔浆光，右侧冷蓝锁定光。声音：背景音乐压低，只保留两个字口型：又来？随后龙翼爆响。 单一连续动作，画面稳定，竖屏9:16；字幕与系统文字仅后期叠加，不在生成画面内出现。",
         "image_url": [
-          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
           "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
         ],
@@ -1703,7 +1703,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1744,7 +1744,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1791,7 +1791,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1833,7 +1833,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1846,7 +1846,7 @@
       "subsegment": "GC-S08-A",
       "flf": false,
       "reference_images": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1856,7 +1856,7 @@
       "seedance_input": {
         "prompt": "以本镜首帧和锁定母版保持身份、服装、体色与画风。动作：巨龙完成一次有力振翼和连续抬升，苍霖始终压低重心抓稳缰绳。 环境变化：深青巨龙贴着熔浆河谷掠行，翼尖卷起赤金火浪，随后迎着冷蓝光束抬升。 运镜：大远景，低机位平稳跟随。光效：下方白热赤金龙焰为主光，上方冷蓝光束为对抗色。声音：翼膜爆响、熔浆奔涌、龙吼；配乐进入第一拍高潮。 单一连续动作，画面稳定，竖屏9:16；字幕与系统文字仅后期叠加，不在生成画面内出现。",
         "image_url": [
-          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
           "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1895,7 +1895,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1936,7 +1936,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -1983,7 +1983,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -2025,7 +2025,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -2038,7 +2038,7 @@
       "subsegment": "GC-S09-A",
       "flf": true,
       "reference_images": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -2048,7 +2048,7 @@
       "seedance_input": {
         "prompt": "以本镜首帧和锁定母版保持身份、服装、体色与画风。动作：巨龙保持直线喷吐龙焰；苍霖转头看向燃烧舰队，说出一句话。 环境变化：白热龙焰横扫舰队，冷蓝飞船在赤金火海中成排熔断，苍霖与巨龙从爆炸前景穿出。 运镜：极大远景，水平跟随。光效：白热龙焰与冷蓝舰体形成强烈双色爆点。声音：连环爆炸后短暂抽空环境声；苍霖：废墟里的东西，也配你们删？ 单一连续动作，画面稳定，竖屏9:16；字幕与系统文字仅后期叠加，不在生成画面内出现。",
         "image_url": [
-          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/01_烬龙陆_龙骨废墟.png",
           "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
@@ -2087,7 +2087,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2127,7 +2127,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2173,7 +2173,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2214,7 +2214,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2226,7 +2226,7 @@
       "subsegment": "GC-S10-A",
       "flf": false,
       "reference_images": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2235,7 +2235,7 @@
       "seedance_input": {
         "prompt": "以本镜首帧和锁定母版保持身份、服装、体色与画风。动作：苍霖低头看见碎片亮起；巨龙在他身旁停止咆哮，望向远方。 环境变化：世界树横贯天穹，连接九大陆的九缕金绿光丝中八缕连续熄灭，最后一缕落在苍霖胸口龙骨碎片。 运镜：极大远景，缓慢后拉。光效：金绿光丝逐根熄灭，环境由辉煌转为冷暗。声音：八声递减脉冲后寂静；机械女声：世界树钥匙，确认。 单一连续动作，画面稳定，竖屏9:16；字幕与系统文字仅后期叠加，不在生成画面内出现。",
         "image_url": [
-          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
           "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
         ],
@@ -2273,7 +2273,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2313,7 +2313,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2359,7 +2359,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2400,7 +2400,7 @@
         "成年巨龙"
       ],
       "reference_assets": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2412,7 +2412,7 @@
       "subsegment": "GC-S11-A",
       "flf": true,
       "reference_images": [
-        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+        "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
         "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
         "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
       ],
@@ -2421,7 +2421,7 @@
       "seedance_input": {
         "prompt": "以本镜首帧和锁定母版保持身份、服装、体色与画风。动作：苍霖停顿一次呼吸，抬手握住龙骨碎片，向门前迈出一步。 环境变化：苍霖与巨龙背对镜头站在龙骨断崖，面对遮天虚空门；最后一缕金绿光穿过少年胸口延伸进门内。 运镜：全景，缓慢推进。光效：冷灰逆光勾勒人物，胸口金绿微光与门内蓝白裂光呼应。声音：苍霖：没人选我。那我自己选。脚步落地后切黑，只留一次龙心跳。 单一连续动作，画面稳定，竖屏9:16；字幕与系统文字仅后期叠加，不在生成画面内出现。",
         "image_url": [
-          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png",
+          "/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_正式母版_后期三视图_v1.png",
           "/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/人物图/11_龙骑士_烬龙陆.png",
           "/api/v1/agentapp/production/resource/漫剧/output/storyboard/九陆纪元_48镜头视觉分镜_v2_Page01_P01-P24.png"
         ],
