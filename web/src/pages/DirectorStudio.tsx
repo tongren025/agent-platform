@@ -916,6 +916,10 @@ export default function DirectorStudio() {
   const runNext = async () => {
     if (!state || !projectId || goalReached) return;
     const next = state.nextAction;
+    if (next.kind === 'review') {
+      navigate(`/production/${projectId}/matrix`);
+      return;
+    }
     if (next.kind === 'optimize' && next.issueId) {
       setBusy(`optimize-${next.stage}`);
       try {

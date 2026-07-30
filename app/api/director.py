@@ -8,6 +8,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from app.api import production as production_api
 from app.api.common import ok, validate_key
 from app.api.production import (
     GenerateReq,
@@ -24,8 +25,10 @@ from app.api.production import (
 from app.models.production import ProductionCard, ProductionProject
 from app.services import openrouter_media
 from app.services.project_diagnostics import diagnose_project
+from app.services.project_feedback import summarize_project_feedback
 from app.services.project_optimization import (
     append_optimization_run,
+    build_repair_instruction,
     list_optimization_runs,
     optimization_control,
 )
@@ -211,12 +214,17 @@ def _director_state(project_id: str) -> dict:
 
     # 质量门禁失败必须先返工，不能仅凭“卡片存在”继续推进到昂贵的图片/视频生成。
     first_issue = diagnostics["issues"][0] if diagnostics["issues"] else None
-    if first_issue and first_issue["code"] in {
-        "quality_gate_failed",
-        "manual_review_required",
-    }:
+    if first_issue and first_issue["code"] == "quality_gate_failed":
         next_action = {
             "kind": "optimize",
+            "stage": first_issue["stage"],
+            "label": first_issue["action"]["label"],
+            "count": 1,
+            "issueId": first_issue["id"],
+        }
+    elif first_issue and first_issue["action"]["kind"] == "review_card":
+        next_action = {
+            "kind": "review",
             "stage": first_issue["stage"],
             "label": first_issue["action"]["label"],
             "count": 1,
@@ -297,6 +305,35 @@ def get_project_optimization_runs(
     return ok(runs)
 
 
+@router.get("/feedback")
+def get_project_feedback():
+    """聚合全部 JSON 项目的高频问题、低分项目和真实修复成功率。"""
+    projects: list[dict] = []
+    runs: list[dict] = []
+    skipped = 0
+    if production_api.DATA_DIR.exists():
+        for directory in sorted(production_api.DATA_DIR.iterdir()):
+            if not (directory / "project.json").exists():
+                continue
+            try:
+                project = _load_project(directory.name)
+                diagnostics = diagnose_project(
+                    project,
+                    _load_cards(project.project_id),
+                )
+                projects.append({
+                    "projectId": project.project_id,
+                    "name": project.name,
+                    "diagnostics": diagnostics,
+                })
+                runs.extend(list_optimization_runs(directory, 100))
+            except (OSError, ValueError, TypeError, json.JSONDecodeError):
+                skipped += 1
+    feedback = summarize_project_feedback(projects, runs)
+    feedback["skippedProjectCount"] = skipped
+    return ok(feedback)
+
+
 @router.post("/projects/{project_id}/optimize")
 async def optimize_project(project_id: str, req: OptimizeProjectReq):
     """按诊断问题调用现有阶段生成器定向返工，并记录优化前后结果。
@@ -332,14 +369,10 @@ async def optimize_project(project_id: str, req: OptimizeProjectReq):
                 f"下一步：{action.get('label', '返回导演页处理')}。",
             )
 
-        problem_details = "；".join([issue["message"], *issue.get("details", [])])
-        extra_instruction = (
-            "这是一次问题驱动的定向返工。只修复下面列出的问题，"
-            "保留已经正确的剧情事实、角色设定、镜头编号和上下游引用：\n"
-            f"{problem_details}"
+        extra_instruction = build_repair_instruction(
+            issue,
+            req.extra_instruction,
         )
-        if req.extra_instruction.strip():
-            extra_instruction += f"\n用户补充要求：{req.extra_instruction.strip()}"
 
         generation = await generate_stage(
             project_id,

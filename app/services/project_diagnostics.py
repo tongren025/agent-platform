@@ -27,6 +27,56 @@ GOAL_REQUIREMENTS = {
     "images": ("script", "storyboard", "img_prompt", "image"),
     "final": (*SPEC_STAGES, "image", "video", "final"),
 }
+# 健康分按交付价值加权，而不是按卡片数量平均。否则大型项目少一条成片只扣
+# 0.1 分，四舍五入后甚至会显示 100 分。
+GOAL_SCORE_WEIGHTS = {
+    "storyboard": {
+        "source": 10,
+        "script": 35,
+        "storyboard": 55,
+    },
+    "images": {
+        "source": 5,
+        "script": 15,
+        "storyboard": 20,
+        "img_prompt": 20,
+        "image": 40,
+    },
+    "final": {
+        "source": 5,
+        "script": 10,
+        "storyboard": 15,
+        "img_prompt": 10,
+        "image": 20,
+        "vid_prompt": 10,
+        "video": 20,
+        "final": 10,
+    },
+}
+SCORE_GROUPS = (
+    ("content", "内容规格", ("source", "script", "storyboard", "production_units")),
+    ("prompt", "模型提示", ("img_prompt", "vid_prompt")),
+    ("media", "媒体资产", ("image", "video")),
+    ("delivery", "交付成片", ("final",)),
+)
+STAGE_ACCEPTANCE_CRITERIA = {
+    "script": [
+        "镜头或 G 单元编号、时间范围和可见动作明确",
+        "剧情事实、角色关系和上下游引用保持不变",
+    ],
+    "storyboard": [
+        "画面内容、角色动作、景别运镜、光影、时长和承接信息齐全",
+        "只使用可直接绘制的名词和动作，单个连续生成段不超过 6 秒",
+    ],
+    "img_prompt": [
+        "一条提示词只描述一个主体、一个明确动作和一套光影构图",
+        "只写希望出现的内容，不混入负向措辞或过量纹理粒子",
+    ],
+    "vid_prompt": [
+        "一张卡只描述一个不超过 6 秒的连续动作",
+        "角色动作与唯一运镜分开描述，不使用快速或剧烈运动词",
+    ],
+}
 STAGE_ORDER = {
     "source": 0,
     "script": 10,
@@ -62,6 +112,8 @@ def _issue(
     card: ProductionCard | None = None,
     severity: str = "blocker",
     details: list[str] | None = None,
+    detail_codes: list[str] | None = None,
+    acceptance_criteria: list[str] | None = None,
 ) -> dict[str, Any]:
     return {
         "id": _issue_id(code, stage, episode, unit),
@@ -74,6 +126,12 @@ def _issue(
         "cardId": card.card_id if card else "",
         "message": message,
         "details": details or [],
+        "detailCodes": detail_codes or [],
+        "acceptanceCriteria": (
+            acceptance_criteria
+            if acceptance_criteria is not None
+            else STAGE_ACCEPTANCE_CRITERIA.get(stage, [])
+        ),
         "autoFixable": action.get("kind") == "generate_stage",
         "action": action,
     }
@@ -153,6 +211,22 @@ def _generate_action(
     }
 
 
+def _review_action(
+    *,
+    card: ProductionCard,
+    episode: Optional[int],
+    unit: Optional[int],
+) -> dict[str, Any]:
+    """返回人工确认动作；没有失败原因的 review 卡不能擅自重写。"""
+    return {
+        "kind": "review_card",
+        "label": "打开内容并确认",
+        "cardId": card.card_id,
+        "episode": episode,
+        "shotNumber": unit,
+    }
+
+
 def _slot_label(episode: Optional[int], unit: Optional[int]) -> str:
     episode_label = "全局" if episode is None else f"EP{episode:02d}"
     return episode_label if unit is None else f"{episode_label} / G{unit}"
@@ -229,6 +303,11 @@ def _diagnose_aggregate_project(
                         str(item.get("message") or item.get("code") or "未知质量问题")
                         for item in gate_issues
                     ],
+                    detail_codes=[
+                        str(item.get("code") or "")
+                        for item in gate_issues
+                        if item.get("code")
+                    ],
                     action=_generate_action(
                         stage,
                         episode=None,
@@ -244,12 +323,10 @@ def _diagnose_aggregate_project(
                     stage=stage,
                     card=card,
                     message=f"聚合项目的{STAGE_LABELS[stage]}仍在待审核状态。",
-                    action=_generate_action(
-                        stage,
+                    action=_review_action(
+                        card=card,
                         episode=None,
                         unit=None,
-                        mode="replace",
-                        label=f"按审核意见返工{STAGE_LABELS[stage]}",
                     ),
                 ))
         checks.append({
@@ -367,6 +444,45 @@ def _sort_issues(issues: list[dict[str, Any]]) -> list[dict[str, Any]]:
             item["code"],
         ),
     )
+
+
+def _score_checks(
+    goal: str,
+    checks: list[dict[str, Any]],
+) -> tuple[int, list[dict[str, Any]]]:
+    """按目标阶段计算可解释健康分，并把每项权重写回检查结果。"""
+    check_keys = {str(check["key"]) for check in checks}
+    if "production_units" in check_keys:
+        # 还没建立生产主键时，不能用尚不存在的数百张卡片稀释问题。
+        weights = {"source": 10, "production_units": 90}
+    else:
+        weights = GOAL_SCORE_WEIGHTS.get(goal, GOAL_SCORE_WEIGHTS["final"])
+
+    for check in checks:
+        total = max(0, int(check["total"]))
+        passed = max(0, min(int(check["passedCount"]), total))
+        completion = passed / total if total else 0
+        weight = int(weights.get(str(check["key"]), 0))
+        check["weight"] = weight
+        check["completion"] = round(completion * 100)
+        check["weightedScore"] = round(completion * weight, 1)
+
+    breakdown: list[dict[str, Any]] = []
+    for group_key, label, keys in SCORE_GROUPS:
+        group_checks = [check for check in checks if check["key"] in keys]
+        weight = sum(int(check["weight"]) for check in group_checks)
+        if weight <= 0:
+            continue
+        score = round(sum(float(check["weightedScore"]) for check in group_checks), 1)
+        breakdown.append({
+            "key": group_key,
+            "label": label,
+            "score": score,
+            "weight": weight,
+        })
+
+    score = round(sum(float(check["weightedScore"]) for check in checks))
+    return max(0, min(score, 100)), breakdown
 
 
 def diagnose_project(
@@ -491,6 +607,11 @@ def diagnose_project(
                         card=card,
                         message=f"{_slot_label(episode, unit)} 的{STAGE_LABELS[stage]}未通过质量门禁。",
                         details=detail_messages,
+                        detail_codes=[
+                            str(item.get("code") or "")
+                            for item in gate_issues
+                            if item.get("code")
+                        ],
                         action=_generate_action(
                             stage,
                             episode=episode,
@@ -512,12 +633,10 @@ def diagnose_project(
                         unit=unit,
                         card=card,
                         message=f"{_slot_label(episode, unit)} 的{STAGE_LABELS[stage]}仍在待审核状态。",
-                        action=_generate_action(
-                            stage,
+                        action=_review_action(
+                            card=card,
                             episode=episode,
                             unit=unit,
-                            mode="replace",
-                            label=f"按审核意见返工{STAGE_LABELS[stage]}",
                         ),
                     ))
                     continue
@@ -669,7 +788,7 @@ def diagnose_project(
     issues = _sort_issues(issues)
     total_checks = sum(int(check["total"]) for check in checks)
     passed_checks = sum(int(check["passedCount"]) for check in checks)
-    score = round(passed_checks / total_checks * 100) if total_checks else 0
+    score, score_breakdown = _score_checks(goal, checks)
     blockers = sum(1 for issue in issues if issue["severity"] == "blocker")
     warnings = sum(1 for issue in issues if issue["severity"] == "warning")
     in_progress = sum(1 for issue in issues if issue["severity"] == "info")
@@ -707,6 +826,7 @@ def diagnose_project(
         "goal": goal,
         "state": state,
         "score": score,
+        "scoreBreakdown": score_breakdown,
         "totalUnits": len(unit_keys) or aggregate_units,
         "blockerCount": blockers,
         "warningCount": warnings,

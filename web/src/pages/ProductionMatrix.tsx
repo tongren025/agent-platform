@@ -5,7 +5,7 @@
 // (季, 集, G单元) 拉成行，把阶段拉成列，缺口一眼可见。
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Table, Tag, Segmented, Space, Typography, Spin, Empty, Tooltip, Badge, Progress, Alert, Button, Drawer, List, Modal, Popconfirm, Divider } from 'antd';
+import { Table, Tag, Segmented, Space, Typography, Spin, Empty, Tooltip, Badge, Progress, Alert, Button, Drawer, List, Modal, Popconfirm, Divider, Input } from 'antd';
 import { message } from '../ui';
 import {
   FileTextOutlined, BuildOutlined, PictureOutlined, LockOutlined,
@@ -20,6 +20,7 @@ import {
   type OrphanCard,
   type ProjectDiagnosticIssue,
   type ProjectDiagnostics,
+  type ProjectFeedback,
   type ProjectOptimizationRun,
 } from '../api';
 import { useResponsive } from '../hooks/useResponsive';
@@ -40,6 +41,7 @@ const CHAIN: { key: keyof MatrixRow; label: string; icon: React.ReactNode; color
 ];
 
 type Filter = 'all' | 'gap' | 'noimg';
+type IssueFilter = 'priority' | 'automatic' | 'manual';
 
 /** 单元格：有几张就显示几张，0 张时区分"该有却没有"(红叉)与"本就可选"(灰点)。 */
 function Cell({ n, required }: { n: number; required: boolean }) {
@@ -70,10 +72,12 @@ export default function ProductionMatrix() {
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [diagnostics, setDiagnostics] = useState<ProjectDiagnostics | null>(null);
+  const [feedback, setFeedback] = useState<ProjectFeedback | null>(null);
   const [optimizationRuns, setOptimizationRuns] = useState<ProjectOptimizationRun[]>([]);
   const [diagnosticsLoading, setDiagnosticsLoading] = useState(false);
   const [diagnosticsError, setDiagnosticsError] = useState('');
   const [issuesOpen, setIssuesOpen] = useState(false);
+  const [issueFilter, setIssueFilter] = useState<IssueFilter>('priority');
   const [optimizingIssueId, setOptimizingIssueId] = useState('');
 
   const reload = useCallback(async () => {
@@ -110,6 +114,10 @@ export default function ProductionMatrix() {
     if (routePid) setPid(routePid);
   }, [routePid]);
 
+  useEffect(() => {
+    setIssueFilter('priority');
+  }, [pid]);
+
   const loadDiagnostics = useCallback(async (projectId = pid) => {
     if (!projectId) return;
     setDiagnosticsLoading(true);
@@ -133,6 +141,18 @@ export default function ProductionMatrix() {
   useEffect(() => {
     void loadDiagnostics();
   }, [loadDiagnostics]);
+
+  const loadFeedback = useCallback(async () => {
+    try {
+      setFeedback(await api.getProjectFeedback());
+    } catch {
+      setFeedback(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadFeedback();
+  }, [loadFeedback]);
 
   const refreshArchive = useCallback(async () => {
     if (!pid) return;
@@ -183,20 +203,29 @@ export default function ProductionMatrix() {
       navigate(`/production/${pid}/pipeline`);
       return;
     }
+    if (issue.action.kind === 'review_card') {
+      setIssuesOpen(false);
+      navigate(
+        issue.episode == null
+          ? `/production/${pid}/pipeline`
+          : `/production/${pid}/ep/${issue.episode}`,
+      );
+      return;
+    }
     // 图片、视频、状态同步和成片合成都回到导演主线处理；那里会继续定位到当前项目。
     navigate(`/studio?project=${pid}`);
   };
 
-  const runOptimization = async (issue: ProjectDiagnosticIssue) => {
+  const runOptimization = async (issue: ProjectDiagnosticIssue, extraInstruction = '') => {
     setOptimizingIssueId(issue.id);
     try {
-      const result = await api.optimizeProjectIssue(pid, issue.id);
+      const result = await api.optimizeProjectIssue(pid, issue.id, extraInstruction);
       if (result.resolved) {
         message.success(`已修复，项目健康分 ${result.beforeScore} → ${result.afterScore}`);
       } else {
         message.warning(result.summary);
       }
-      await Promise.all([reload(), loadDiagnostics(pid)]);
+      await Promise.all([reload(), loadDiagnostics(pid), loadFeedback()]);
     } catch (error: any) {
       message.error(error.message || '自动修复失败，请刷新后重试');
       await loadDiagnostics(pid);
@@ -210,21 +239,38 @@ export default function ProductionMatrix() {
       openManualAction(issue);
       return;
     }
+    let extraInstruction = '';
     Modal.confirm({
       title: issue.action.label,
       content: (
         <div>
           <Paragraph style={{ marginBottom: 8 }}>{issue.message}</Paragraph>
-          {issue.details.length > 0 && (
-            <Paragraph type="secondary" style={{ marginBottom: 0 }}>
-              本次只返工这个镜头和阶段，已有正确内容不会被批量覆盖。
-            </Paragraph>
+          {issue.acceptanceCriteria.length > 0 && (
+            <div style={{ marginBottom: 10 }}>
+              <Text strong style={{ fontSize: 12 }}>本次验收条件</Text>
+              {issue.acceptanceCriteria.map(item => (
+                <Text key={item} type="secondary" style={{ display: 'block', fontSize: 12 }}>
+                  · {item}
+                </Text>
+              ))}
+            </div>
           )}
+          <Input.TextArea
+            aria-label="本次返工的补充要求"
+            placeholder="可选：补充必须保留的画风、台词或剧情约束"
+            autoSize={{ minRows: 2, maxRows: 4 }}
+            maxLength={4000}
+            showCount
+            onChange={event => { extraInstruction = event.target.value; }}
+          />
+          <Paragraph type="secondary" style={{ margin: '8px 0 0' }}>
+            只替换这个镜头的这个阶段；开始前会自动保存版本快照。
+          </Paragraph>
         </div>
       ),
       okText: '开始定向返工',
       cancelText: '取消',
-      onOk: () => runOptimization(issue),
+      onOk: () => runOptimization(issue, extraInstruction),
     });
   };
 
@@ -248,6 +294,21 @@ export default function ProductionMatrix() {
       withVid: r.filter(x => x.videos > 0).length,
     };
   }, [rows, pid]);
+
+  const issueView = useMemo(() => {
+    const issues = diagnostics?.issues || [];
+    const automatic = issues.filter(issue => issue.autoFixable);
+    const manual = issues.filter(issue => !issue.autoFixable && issue.severity !== 'info');
+    const selected = issueFilter === 'automatic'
+      ? automatic
+      : issueFilter === 'manual' ? manual : issues;
+    return {
+      automaticCount: automatic.length,
+      manualCount: manual.length,
+      total: selected.length,
+      visible: selected.slice(0, 50),
+    };
+  }, [diagnostics, issueFilter]);
 
   const columns = [
     {
@@ -386,6 +447,18 @@ export default function ProductionMatrix() {
                 size="small"
                 strokeColor={diagnostics.state === 'complete' ? '#52c41a' : COLORS.iris}
               />
+              <Space size={[4, 4]} wrap style={{ margin: '4px 0 6px' }}>
+                {diagnostics.scoreBreakdown.map(item => (
+                  <Tooltip
+                    key={item.key}
+                    title={`${item.label}在当前交付目标中占 ${item.weight} 分`}
+                  >
+                    <Tag color={item.score >= item.weight ? 'success' : 'default'}>
+                      {item.label} {item.score}/{item.weight}
+                    </Tag>
+                  </Tooltip>
+                ))}
+              </Space>
               {diagnostics.issues[0] && (
                 <Text type="secondary" style={{ fontSize: 12 }}>
                   首要问题：{diagnostics.issues[0].message}
@@ -488,6 +561,34 @@ export default function ProductionMatrix() {
       >
         {diagnostics ? (
           <>
+            {feedback && (
+              <Alert
+                type="info"
+                showIcon
+                message={`真实反馈 · ${feedback.projectCount} 个项目 / ${feedback.issueCount} 个待办`}
+                description={(
+                  <div>
+                    <Paragraph style={{ margin: '4px 0 8px' }}>{feedback.summary}</Paragraph>
+                    <Space size={[4, 4]} wrap>
+                      {feedback.topIssues.slice(0, 3).map(item => (
+                        <Tooltip key={item.code} title={item.recommendation}>
+                          <Tag color={item.code === feedback.recommendedIssueCode ? 'processing' : 'default'}>
+                            {item.label} {item.count}
+                          </Tag>
+                        </Tooltip>
+                      ))}
+                    </Space>
+                    <Text type="secondary" style={{ display: 'block', marginTop: 8, fontSize: 12 }}>
+                      建议：{feedback.nextActions[0]}
+                      {feedback.optimization.total > 0
+                        ? ` · 定向修复成功率 ${feedback.optimization.successRate}%`
+                        : ' · 实际修复成功率将在首次操作后开始累计'}
+                    </Text>
+                  </div>
+                )}
+                style={{ marginBottom: 12 }}
+              />
+            )}
             <Alert
               type={diagnostics.state === 'complete' ? 'success' : 'info'}
               showIcon
@@ -499,8 +600,34 @@ export default function ProductionMatrix() {
               description="自动修复只会替换对应镜头的对应阶段；图片和视频仍需你选择模型后执行。"
               style={{ marginBottom: 12 }}
             />
+            <Divider orientation="left"><WarningOutlined /> 当前项目问题</Divider>
+            <Segmented
+              block
+              value={issueFilter}
+              onChange={value => setIssueFilter(value as IssueFilter)}
+              options={[
+                {
+                  value: 'priority',
+                  label: isMobile ? `优先 ${diagnostics.issues.length}` : `按优先级（${diagnostics.issues.length}）`,
+                },
+                {
+                  value: 'automatic',
+                  label: isMobile ? `自动 ${issueView.automaticCount}` : `可自动（${issueView.automaticCount}）`,
+                },
+                {
+                  value: 'manual',
+                  label: isMobile ? `人工 ${issueView.manualCount}` : `需人工（${issueView.manualCount}）`,
+                },
+              ]}
+              style={{ marginBottom: 8 }}
+            />
+            {issueView.total > issueView.visible.length && (
+              <Text type="secondary" style={{ display: 'block', marginBottom: 8, fontSize: 12 }}>
+                当前筛选有 {issueView.total} 项，为保持页面流畅先显示前 {issueView.visible.length} 项。
+              </Text>
+            )}
             <List<ProjectDiagnosticIssue>
-              dataSource={diagnostics.issues}
+              dataSource={issueView.visible}
               rowKey={issue => issue.id}
               locale={{ emptyText: '没有待处理问题' }}
               renderItem={issue => (
@@ -542,6 +669,11 @@ export default function ProductionMatrix() {
                             · {detail}
                           </Text>
                         ))}
+                        {issue.acceptanceCriteria.length > 0 && (
+                          <Text type="secondary" style={{ display: 'block', marginTop: 4, fontSize: 12 }}>
+                            验收：{issue.acceptanceCriteria.join('；')}
+                          </Text>
+                        )}
                       </div>
                     )}
                   />
