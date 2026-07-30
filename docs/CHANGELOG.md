@@ -5,6 +5,22 @@
 
 ---
 
+## [2026-07-30] feat: 接入 CodeGraph 本地代码图谱 MCP
+
+- 新增 `codegraph` MCP 注册定义，使用 stdio 启动官方
+  `@colbymchenry/codegraph` 的 `codegraph serve --mcp`，平台数字员工可按需绑定。
+- 开启源码探索、符号搜索、调用方/被调用方、影响分析、文件树和索引状态工具；
+  CodeGraph 图谱保存在项目本地 SQLite，不要求登录、API Key、Neo4j 或外部服务。
+- 漫剧项目已建立并同步 `.codegraph/` 索引；该目录是可重建的本地开发产物，
+  新增 Git 忽略规则，避免提交约 50 MB 的数据库和 WAL 文件。
+- README 新增开发机安装、初始化、同步和部署边界说明；生产 Docker 镜像不包含完整
+  开发源码，因此 CodeGraph 默认作为本地开发/自托管源码环境能力。
+
+**影响面**：新增 `data/mcp-servers/codegraph.json` 和 `.codegraph/` 忽略规则；
+无数据库迁移、无新增密钥或环境变量，不绑定员工时不会启动 MCP 子进程。
+
+---
+
 ## [2026-07-30] fix: 系统管家升级为有状态管理 Agent
 
 - 修复管家会话“只落盘、不回读”的问题：模型回答现在接收最近 16 条对话和结构化

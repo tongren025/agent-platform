@@ -1,0 +1,18 @@
+{
+  "serverCode": "codegraph",
+  "name": "CodeGraph 代码图谱",
+  "transportType": "stdio",
+  "command": "codegraph",
+  "commandArgs": [
+    "serve",
+    "--mcp"
+  ],
+  "env": {
+    "CODEGRAPH_MCP_TOOLS": "explore,node,search,callers,callees,impact,files,status"
+  },
+  "authType": "none",
+  "description": "本地代码知识图谱：查询符号、调用链、影响范围和相关源码。索引保存在项目 .codegraph/，不上传代码，不需要登录或 API Key。",
+  "sortOrder": 10,
+  "createdAt": "2026-07-30T09:55:00Z",
+  "updatedAt": "2026-07-30T09:55:00Z"
+}

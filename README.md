@@ -38,6 +38,21 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **对话式绑定与项目指导** — 可把 Skill、内置工具或 MCP 绑定/解绑到指定员工；项目页直接读取真实诊断结果回答唯一下一步
 - 使用说明见 [系统管家用户手册](docs/SYSTEM_MANAGER.md)
 
+### CodeGraph 本地代码图谱
+- **已登记为平台 MCP** — `data/mcp-servers/codegraph.json` 使用 stdio 启动 `codegraph serve --mcp`，可绑定给需要理解源码的数字员工
+- **完整结构查询** — 提供 `explore`、符号搜索、调用方/被调用方、影响分析、文件树和索引状态等工具
+- **本地与免登录** — 源码图谱保存在项目 `.codegraph/` 的 SQLite 数据库，不需要账号、API Key 或外部图数据库，索引目录不进入 Git
+- 开发机首次准备：
+
+```powershell
+npm install -g @colbymchenry/codegraph@0.9.6
+codegraph init
+codegraph status
+```
+
+已有索引只需运行 `codegraph sync`；MCP 启动后会监听源码变化并自动增量同步。Docker
+生产镜像默认不包含开发源码和 CodeGraph CLI，因此此 MCP 面向本地开发/自托管源码环境。
+
 ### 数字员工管理
 - **员工注册表** — 每个员工有独立身份（`employeeKey`）、角色提示词（`roleProfile`）、绑定的工具和技能
 - **能力驱动模型路由** — 员工的 `model_id` 只负责理解需求、文字规划和工具编排；最终生图、视频分别由 `image_model_id`、`video_model_id` 通过专用 API 完成，避免把 `gpt-image-2` 错发到 Chat Completions
