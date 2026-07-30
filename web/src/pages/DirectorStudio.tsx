@@ -30,6 +30,7 @@ interface Project {
   name: string;
   description?: string;
   source_type: string;
+  team_code?: string;
   aspect_ratio: string;
   updated_at: string;
   production_goal: ProductionGoal;
@@ -132,6 +133,20 @@ const ACTIVE_VIDEO_STATUSES = new Set([
 ]);
 const READY_VIDEO_STATUSES = new Set(['completed', 'complete', 'succeeded', 'success', 'done', 'ready']);
 
+const COMIC_DRAMA_TEAM_CODE = 'comic-drama-team';
+const COMIC_STAGE_EMPLOYEE_KEYS: Record<string, string> = {
+  script: 'comic-screenwriter',
+  setting: 'comic-character-designer',
+  design: 'comic-keyframe-artist',
+  storyboard: 'comic-storyboard',
+  img_prompt: 'comic-prompt-engineer',
+  vid_prompt: 'comic-prompt-engineer',
+  image: 'comic-keyframe-artist',
+  video: 'comic-video-artist',
+  final: 'comic-qa-inspector',
+  qa: 'comic-qa-inspector',
+};
+
 const REVIEW_REASON_OPTIONS = [
   { value: 'tone_off', label: '基调偏差' },
   { value: 'character_drift', label: '角色走形' },
@@ -230,8 +245,8 @@ function stagePercent(stage: StageState) {
 
 function modelPriceLabel(model: MediaModel | undefined, kind: MediaKind) {
   if (model?.isFree) return '免费';
-  if (kind === 'image') return '付费 · 以 OpenRouter 实际结算为准';
-  if (!model?.pricing || Object.keys(model.pricing).length === 0) return '价格以 OpenRouter 结算为准';
+  if (kind === 'image') return '付费 · 以模型供应商实际结算为准';
+  if (!model?.pricing || Object.keys(model.pricing).length === 0) return '价格以模型供应商结算为准';
   if (kind === 'video') {
     const value = model.pricing['per-video-second'] ?? model.pricing['per_video_second'];
     if (value !== undefined) return `$${value} / 秒`;
@@ -851,8 +866,11 @@ export default function DirectorStudio() {
     setMediaModel(rememberedModel);
     const requestId = ++mediaModelRequestRef.current;
     const mediaProjectId = projectId;
+    const employeeKey = state?.project.team_code === COMIC_DRAMA_TEAM_CODE
+      ? COMIC_STAGE_EMPLOYEE_KEYS[kind]
+      : undefined;
     try {
-      const models = await api.listDirectorMediaModels(kind);
+      const models = await api.listDirectorMediaModels(kind, employeeKey);
       if (
         mediaModelRequestRef.current === requestId
         && currentProjectRef.current === mediaProjectId
@@ -1062,8 +1080,15 @@ export default function DirectorStudio() {
     if (next.kind !== 'stage') return;
     setBusy(next.stage);
     try {
+      const employeeKey = state.project.team_code === COMIC_DRAMA_TEAM_CODE
+        ? COMIC_STAGE_EMPLOYEE_KEYS[next.stage]
+        : undefined;
+      if (state.project.team_code === COMIC_DRAMA_TEAM_CODE && !employeeKey) {
+        throw new Error(`漫剧团队尚未配置「${next.label}」的执行员工`);
+      }
       await api.generateStage(projectId, {
         target_stage: next.stage,
+        ...(employeeKey ? { employee_key: employeeKey } : {}),
         episode: state.project.source_type === 'gc' ? null : 1,
         mode: 'replace',
       });
@@ -1093,6 +1118,7 @@ export default function DirectorStudio() {
         episodeDurationSeconds: createForm.format === 'gc' ? 30 : 90,
         aspectRatio: createForm.aspectRatio,
         productionGoal: createForm.goal,
+        teamCode: COMIC_DRAMA_TEAM_CODE,
       });
       setCreateOpen(false);
       setCreateForm(current => ({ ...current, name: '', source: '' }));
@@ -1195,6 +1221,9 @@ export default function DirectorStudio() {
     const requestedModel = mediaModel;
     const requestedShots = [...selectedPendingShots];
     const requestedTargetCardId = mediaTargetCardId;
+    const requestedEmployeeKey = state.project.team_code === COMIC_DRAMA_TEAM_CODE
+      ? COMIC_STAGE_EMPLOYEE_KEYS[requestedKind]
+      : undefined;
     const singleShot = Boolean(requestedTargetCardId);
     Modal.confirm({
       title: singleShot
@@ -1202,7 +1231,7 @@ export default function DirectorStudio() {
         : requestedKind === 'image'
           ? `生成 ${requestedShots.length} 张镜头图`
           : `提交 ${requestedShots.length} 个视频任务`,
-      content: `${selectedModel?.name || requestedModel} · ${modelPriceLabel(selectedModel, requestedKind)}。本操作会消耗 OpenRouter 额度。`,
+      content: `${selectedModel?.name || requestedModel} · ${modelPriceLabel(selectedModel, requestedKind)}。本操作会消耗对应模型供应商额度。`,
       okText: '确认生成',
       cancelText: '取消',
       onOk: async () => {
@@ -1219,6 +1248,7 @@ export default function DirectorStudio() {
             if (requestedKind === 'image') {
               const result = await api.generateDirectorImage(projectId, shot.imageCardId, {
                 model: requestedModel,
+                ...(requestedEmployeeKey ? { employee_key: requestedEmployeeKey } : {}),
                 prompt: shot.imagePrompt,
                 resolution: '1K',
                 aspect_ratio: state.project.aspect_ratio,
@@ -1227,6 +1257,7 @@ export default function DirectorStudio() {
             } else {
               const result = await api.generateDirectorVideo(projectId, shot.videoCardId, {
                 model: requestedModel,
+                ...(requestedEmployeeKey ? { employee_key: requestedEmployeeKey } : {}),
                 prompt: shot.videoPrompt,
                 duration: shot.durationSeconds,
                 resolution: '720p',

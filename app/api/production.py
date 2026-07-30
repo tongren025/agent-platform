@@ -2214,11 +2214,154 @@ def get_project_stats(pid: str):
 
 # ── AI Generation ─────────────────────────────────────────────────
 
+COMIC_DRAMA_TEAM_CODE = "comic-drama-team"
+
+# 漫剧团队的岗位路由是生产合同，不依赖注册表排序。复合阶段保留多个合法岗位，
+# 由请求中的工作内容选择；无法判别时使用元组中的第一个岗位。
+COMIC_DRAMA_STAGE_EMPLOYEES: dict[str, tuple[str, ...]] = {
+    "script": ("comic-screenwriter",),
+    "setting": ("comic-character-designer", "comic-scene-designer"),
+    "design": (
+        "comic-keyframe-artist",
+        "comic-character-artist",
+        "comic-scene-artist",
+        "comic-prompt-engineer",
+    ),
+    "storyboard": ("comic-storyboard",),
+    "img_prompt": (
+        "comic-prompt-engineer",
+        "comic-character-artist",
+        "comic-scene-artist",
+        "comic-keyframe-artist",
+    ),
+    "vid_prompt": ("comic-prompt-engineer",),
+    "img_gen": (
+        "comic-keyframe-artist",
+        "comic-character-artist",
+        "comic-scene-artist",
+    ),
+    "vid_gen": ("comic-video-artist",),
+    "final": ("comic-qa-inspector",),
+    "qa": ("comic-qa-inspector",),
+}
+
+_CHARACTER_ROUTE_TERMS = (
+    "角色", "人物", "人设", "造型", "服装", "妆容", "表情", "立绘",
+    "character", "portrait",
+)
+_SCENE_ROUTE_TERMS = (
+    "场景", "环境", "布景", "地点", "空间", "建筑", "景观", "背景",
+    "scene", "environment", "background",
+)
+_KEYFRAME_ROUTE_TERMS = (
+    "关键帧", "首帧", "末帧", "分镜", "镜头", "构图",
+    "keyframe", "storyboard", "shot",
+)
+
+
+def _contains_route_term(text: str, terms: tuple[str, ...]) -> bool:
+    """大小写无关地判断工作说明是否包含某类岗位关键词。"""
+    normalized = text.casefold()
+    return any(term.casefold() in normalized for term in terms)
+
+
+def _comic_context_employee(stage: str, work_context: str) -> str:
+    """按复合阶段的明确工作说明选择人物、场景或关键帧岗位。"""
+    candidates = COMIC_DRAMA_STAGE_EMPLOYEES[stage]
+    if stage == "setting":
+        has_character = _contains_route_term(work_context, _CHARACTER_ROUTE_TERMS)
+        has_scene = _contains_route_term(work_context, _SCENE_ROUTE_TERMS)
+        if has_character and has_scene:
+            raise HTTPException(
+                400,
+                "角色与场景设定需要拆成两次生成，或显式指定 "
+                "comic-character-designer / comic-scene-designer",
+            )
+        if has_scene:
+            return "comic-scene-designer"
+        if has_character:
+            return "comic-character-designer"
+    elif stage in {"design", "img_prompt", "img_gen"}:
+        if stage == "img_prompt":
+            return "comic-prompt-engineer"
+        if (
+            stage == "img_gen"
+            and _contains_route_term(work_context, _KEYFRAME_ROUTE_TERMS)
+        ):
+            return "comic-keyframe-artist"
+        if _contains_route_term(work_context, _CHARACTER_ROUTE_TERMS):
+            return "comic-character-artist"
+        if _contains_route_term(work_context, _SCENE_ROUTE_TERMS):
+            return "comic-scene-artist"
+        if _contains_route_term(work_context, _KEYFRAME_ROUTE_TERMS):
+            return "comic-keyframe-artist"
+    return candidates[0]
+
+
+def _resolve_generation_employee(
+    project: ProductionProject,
+    requested_employee_key: str,
+    target_stage: str,
+    target_name: str,
+    work_context: str = "",
+) -> str:
+    """解析阶段执行员工；漫剧团队执行岗位合同，其他项目保持显式/项目默认逻辑。
+
+    漫剧团队会校验岗位是否支持目标阶段，以及路由目标是否存在并启用。非漫剧
+    项目不增加员工白名单校验，以兼容用户自建员工，但不再回退到全局首员工。
+    """
+    requested = requested_employee_key.strip()
+    project_default = project.employee_key.strip()
+    if project.team_code != COMIC_DRAMA_TEAM_CODE:
+        employee_key = requested or project_default
+        if not employee_key:
+            raise HTTPException(
+                400,
+                f"需要为「{target_name}」阶段指定数字员工（employee_key），"
+                "项目也未配置默认员工",
+            )
+        return employee_key
+
+    candidates = COMIC_DRAMA_STAGE_EMPLOYEES.get(target_stage)
+    if not candidates:
+        raise HTTPException(
+            400,
+            f"漫剧团队尚未配置「{target_name}」阶段的执行员工，"
+            "请先补充 stage→employee 路由",
+        )
+
+    if requested and requested not in candidates:
+        raise HTTPException(
+            400,
+            f"漫剧团队「{target_name}」阶段不支持员工 {requested}；"
+            f"可选员工：{', '.join(candidates)}",
+        )
+
+    employee_key = requested or _comic_context_employee(target_stage, work_context)
+    from app.dependencies import employee_registry
+
+    employee = employee_registry.get(employee_key)
+    if employee is None:
+        raise HTTPException(
+            400,
+            f"漫剧团队「{target_name}」阶段配置的员工 {employee_key} 不存在，"
+            "请在员工管理中补齐该岗位或修正路由",
+        )
+    if not employee.enabled:
+        raise HTTPException(
+            400,
+            f"漫剧团队「{target_name}」阶段配置的员工 {employee_key} 已停用，"
+            "请先启用该员工或改用同阶段的其他岗位",
+        )
+    return employee_key
+
+
 class GenerateReq(BaseModel):
-    """POST /projects/{pid}/generate 的请求体：目标阶段、执行员工（缺省用项目默认）与额外生成要求。
+    """POST /projects/{pid}/generate 请求体：目标阶段、执行员工与额外生成要求。
 
     episode 限定生成范围（None=全局资产）：上下文只取该集卡片 + 全局资产，新卡片落到该集。
     mode 控制落卡方式：append（默认）只追加不动已有卡片；replace 仅删除同阶段**同集数**的旧卡片。
+    漫剧团队按阶段岗位合同路由；其他项目缺省使用项目默认员工。
     """
     target_stage: str
     employee_key: str = ""
@@ -2449,14 +2592,13 @@ async def generate_stage(pid: str, req: GenerateReq):
     if req.extra_instruction:
         instruction += f"\n\n额外要求：{req.extra_instruction}"
 
-    emp_key = _select_generation_employee(
+    emp_key = _resolve_generation_employee(
+        proj,
+        req.employee_key,
         req.target_stage,
-        req.employee_key or "",
-        proj.employee_key or "",
+        target_name,
+        req.extra_instruction,
     )
-
-    if not emp_key:
-        raise HTTPException(400, f"没有可执行“{target_name}”阶段的已启用数字员工")
 
     scope_label = f"EP{req.episode:02d}" if req.episode is not None else "全局资产"
     if req.shot_number is not None:

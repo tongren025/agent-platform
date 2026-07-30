@@ -50,7 +50,7 @@ class ProviderBody(BaseModel):
     apiKey: str = ""
     enabled: bool = True
     models: list[dict] = []
-    apiMode: Literal["auto", "responses", "chat"] = "auto"
+    apiMode: Literal["auto", "responses", "chat"] = "responses"
 
 
 @router.get("")

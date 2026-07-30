@@ -20,9 +20,6 @@ import openai
 logger = logging.getLogger(__name__)
 
 TextDeltaCallback = Callable[[str, str], Awaitable[None] | None]
-_RESPONSES_MODEL_PREFIXES = ("gpt-5", "o1", "o3", "o4")
-
-
 def build_prompt_cache_key(
     *,
     model: str,
@@ -68,17 +65,18 @@ def _default_prompt_cache_key(client: Any, create_kwargs: dict) -> str:
 
 def preferred_api(client: Any, model: str) -> str:
     """返回本次请求实际应使用的协议：responses 或 chat。"""
-    mode = str(getattr(client, "_agent_api_mode", "chat") or "chat").lower()
+    configured_mode = getattr(client, "_agent_api_mode", None)
+    # 单元测试桩或旧 SDK 客户端可能只有 chat 属性；未显式配置协议时保留兼容。
+    # 正式供应商客户端都会写入 _agent_api_mode，因此默认 responses 不受影响。
+    if configured_mode is None and not hasattr(client, "responses"):
+        return "chat"
+    mode = str(configured_mode or "responses").lower()
     if mode == "responses":
         return "responses"
     if mode == "chat":
         return "chat"
-    normalized = model.lower().split("/", 1)[-1]
-    if normalized.startswith(_RESPONSES_MODEL_PREFIXES):
-        unavailable = getattr(client, "_agent_responses_unavailable_models", set())
-        if model not in unavailable:
-            return "responses"
-    return "chat"
+    unavailable = getattr(client, "_agent_responses_unavailable_models", set())
+    return "chat" if model in unavailable else "responses"
 
 
 def _responses_unavailable_error(exc: BaseException) -> bool:
@@ -113,7 +111,9 @@ def mark_responses_unavailable(client: Any, model: str) -> None:
 
 def should_fallback_to_chat(client: Any, exc: BaseException) -> bool:
     """自动模式遇到明确协议不兼容时允许回退；强制 Responses 模式不回退。"""
-    mode = str(getattr(client, "_agent_api_mode", "chat") or "chat").lower()
+    mode = str(
+        getattr(client, "_agent_api_mode", "responses") or "responses"
+    ).lower()
     return mode == "auto" and _responses_unavailable_error(exc)
 
 

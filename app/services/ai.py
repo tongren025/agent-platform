@@ -286,7 +286,9 @@ class AiProviderStore:
                 api_key=resolve_secret(d.get("apiKey", "")),
                 enabled=d.get("enabled", True),
                 models=d.get("models", []),
-                api_mode=str(d.get("apiMode", "auto") or "auto").lower(),
+                api_mode=str(
+                    d.get("apiMode", "responses") or "responses"
+                ).lower(),
             ))
         return configs
 

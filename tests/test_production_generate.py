@@ -19,11 +19,16 @@ def prod_env(tmp_path, monkeypatch, app_client):
 
     monkeypatch.setattr(prod, "DATA_DIR", tmp_path)
 
-    captured: dict = {"prompts": [], "employee_keys": []}
+    employee_keys: list[str] = []
+    captured: dict = {
+        "prompts": [],
+        "employee_keys": employee_keys,
+        "employees": employee_keys,
+    }
 
     async def fake_invocation(req):
         captured["prompts"].append(req.user_input)
-        captured["employee_keys"].append(req.employee_key)
+        employee_keys.append(req.employee_key)
         return SimpleNamespace(
             success=True,
             assistant_message="镜头01: 新卡A\n内容A\n---\n镜头02: 新卡B\n内容B",
@@ -255,10 +260,17 @@ def test_project_runtime_constraints_are_injected_into_generation_prompt(prod_en
     assert "画幅 16:9" in prompt
 
 
-def test_project_without_employee_uses_stage_specialist(prod_env):
-    """未绑定项目员工时按目标阶段选专业员工，不能再拿注册表第一项碰运气。"""
+def test_comic_project_without_employee_uses_stage_specialist(prod_env):
+    """漫剧团队未指定员工时按目标阶段选择固定专业岗位。"""
     client, captured = prod_env
-    pid = _create_project_with_cards(client)
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "漫剧专业岗位测试",
+            "source_content": "测试素材",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]["project_id"]
 
     response = client.post(
         f"/api/v1/agentapp/production/projects/{pid}/generate",
@@ -402,3 +414,252 @@ def test_split_legacy_storyboard_into_one_card_per_subshot(prod_env):
     assert all(card["shot_number"] == 1 for card in data["cards"])
     cards = _cards(client, pid)
     assert not any(card["card_id"] == source["card_id"] for card in cards)
+
+
+def test_comic_team_routes_each_text_stage_to_designated_employee(prod_env):
+    """导演台绑定漫剧团队后，各文字阶段必须调用明确岗位，不能使用项目首员工兜底。"""
+    client, captured = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "岗位路由测试",
+            "source_content": "少年在废墟中发现龙蛋",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]["project_id"]
+
+    for stage in ("script", "storyboard", "img_prompt", "vid_prompt"):
+        response = client.post(
+            f"/api/v1/agentapp/production/projects/{pid}/generate",
+            json={"target_stage": stage, "episode": 1, "mode": "replace"},
+        )
+        assert response.status_code == 200, response.text
+
+    assert captured["employees"][-4:] == [
+        "comic-screenwriter",
+        "comic-storyboard",
+        "comic-prompt-engineer",
+        "comic-prompt-engineer",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("extra_instruction", "expected_employee"),
+    [
+        ("只生成主要角色的人物造型、服装和道具设定", "comic-character-designer"),
+        ("只生成废墟场景的空间、建筑、光影和布景设定", "comic-scene-designer"),
+    ],
+)
+def test_comic_team_setting_employee_follows_context(
+    prod_env,
+    extra_instruction,
+    expected_employee,
+):
+    """setting 是复合阶段，明确人物/场景上下文时必须分派给对应设计师。"""
+    client, captured = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "设定路由测试",
+            "source_content": "测试素材",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]["project_id"]
+
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={
+            "target_stage": "setting",
+            "extra_instruction": extra_instruction,
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    assert captured["employees"][-1] == expected_employee
+
+
+def test_comic_team_setting_rejects_ambiguous_character_and_scene_context(prod_env):
+    """单次 setting 同时要求人物和场景时提示拆单，避免任意挑一个岗位漏产资产。"""
+    client, captured = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "复合设定测试",
+            "source_content": "测试素材",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]["project_id"]
+
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={
+            "target_stage": "setting",
+            "extra_instruction": "同时生成人物角色造型和场景布景",
+        },
+    )
+
+    assert response.status_code == 400
+    assert "拆成两次" in response.text
+    assert "comic-character-designer" in response.text
+    assert "comic-scene-designer" in response.text
+    assert captured["employees"] == []
+
+
+def test_comic_team_rejects_employee_that_does_not_support_stage(prod_env):
+    """漫剧团队不能把视频生成师显式塞给剧本阶段，应返回可操作的岗位提示。"""
+    client, _ = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "错误岗位测试",
+            "source_content": "测试素材",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]["project_id"]
+
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={
+            "target_stage": "script",
+            "employee_key": "comic-video-artist",
+        },
+    )
+
+    assert response.status_code == 400
+    body = response.text
+    assert "剧本" in body
+    assert "comic-video-artist" in body
+    assert "comic-screenwriter" in body
+
+
+def test_comic_team_reports_missing_routed_employee(prod_env, monkeypatch):
+    """团队路由目标不存在时直接说明配置问题，不能再换成注册表中的其他员工。"""
+    client, captured = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "缺失岗位测试",
+            "source_content": "测试素材",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]["project_id"]
+
+    import app.dependencies as dependencies
+
+    original_get = dependencies.employee_registry.get
+    monkeypatch.setattr(
+        dependencies.employee_registry,
+        "get",
+        lambda key: None if key == "comic-screenwriter" else original_get(key),
+    )
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "script"},
+    )
+
+    assert response.status_code == 400
+    assert "comic-screenwriter" in response.text
+    assert "不存在" in response.text
+    assert captured["employees"] == []
+
+
+def test_comic_team_reports_disabled_routed_employee(prod_env, monkeypatch):
+    """团队路由目标已停用时给出启用提示，不得悄悄换岗继续生成。"""
+    client, captured = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "停用岗位测试",
+            "source_content": "测试素材",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]["project_id"]
+
+    import app.dependencies as dependencies
+
+    original_get = dependencies.employee_registry.get
+
+    def fake_get(key):
+        employee = original_get(key)
+        if key == "comic-screenwriter" and employee is not None:
+            employee.enabled = False
+        return employee
+
+    monkeypatch.setattr(dependencies.employee_registry, "get", fake_get)
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "script"},
+    )
+
+    assert response.status_code == 400
+    assert "comic-screenwriter" in response.text
+    assert "已停用" in response.text
+    assert captured["employees"] == []
+
+
+def test_comic_media_and_qa_stage_route_contract():
+    """图片、视频与质检阶段保留明确岗位合同，供媒体流水线复用。"""
+    import app.api.production as prod
+
+    assert prod._comic_context_employee("img_gen", "角色立绘") == "comic-character-artist"
+    assert prod._comic_context_employee("img_gen", "纯场景布景") == "comic-scene-artist"
+    assert prod._comic_context_employee("img_gen", "G1 关键帧") == "comic-keyframe-artist"
+    assert prod.COMIC_DRAMA_STAGE_EMPLOYEES["vid_gen"] == ("comic-video-artist",)
+    assert prod.COMIC_DRAMA_STAGE_EMPLOYEES["qa"] == ("comic-qa-inspector",)
+
+
+def test_empty_employee_no_longer_falls_back_to_global_first_employee(prod_env):
+    """非团队项目若既无请求员工也无项目默认员工，必须明确要求选择，不能偷偷取全局首员工。"""
+    client, captured = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={"name": "空员工测试", "source_content": "测试素材"},
+    ).json()["data"]["project_id"]
+
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "script"},
+    )
+
+    assert response.status_code == 400
+    assert "需要" in response.text
+    assert "指定" in response.text
+    assert captured["employees"] == []
+
+
+def test_non_comic_project_keeps_explicit_employee_behavior(prod_env):
+    """非漫剧项目仍原样使用请求中的显式员工，不受漫剧岗位白名单影响。"""
+    client, captured = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={"name": "外部员工测试", "source_content": "测试素材"},
+    ).json()["data"]["project_id"]
+
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "script", "employee_key": "external-writer"},
+    )
+
+    assert response.status_code == 200, response.text
+    assert captured["employees"][-1] == "external-writer"
+
+
+def test_non_comic_project_keeps_project_default_employee_behavior(prod_env):
+    """非漫剧项目未传请求员工时，仍使用项目原有默认员工。"""
+    client, captured = prod_env
+    pid = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "项目默认员工测试",
+            "source_content": "测试素材",
+            "employee_key": "project-writer",
+        },
+    ).json()["data"]["project_id"]
+
+    response = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/generate",
+        json={"target_stage": "script"},
+    )
+
+    assert response.status_code == 200, response.text
+    assert captured["employees"][-1] == "project-writer"

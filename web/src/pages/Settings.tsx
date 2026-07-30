@@ -87,7 +87,7 @@ export default function Settings() {
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
-    const vals = { name: '', endpoint: '', apiKey: '', enabled: true, apiMode: 'auto', models: [{ modelName: '', modelId: '', timeoutMinutes: 10 }] };
+    const vals = { name: '', endpoint: '', apiKey: '', enabled: true, apiMode: 'responses', models: [{ modelName: '', modelId: '', timeoutMinutes: 10 }] };
     setPendingFormValues(vals);
     setModalOpen(true);
   };
@@ -100,7 +100,7 @@ export default function Settings() {
       endpoint: provider.endpoint,
       apiKey: '',
       enabled: provider.enabled,
-      apiMode: provider.apiMode || 'auto',
+      apiMode: provider.apiMode || 'responses',
       models: provider.models?.length
         ? provider.models.map(m => ({ modelName: m.modelName, modelId: m.modelId, timeoutMinutes: m.timeoutMinutes || 10 }))
         : [{ modelName: '', modelId: '', timeoutMinutes: 10 }],

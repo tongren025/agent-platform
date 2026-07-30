@@ -22,8 +22,10 @@ from app.api.production import (
     _save_project,
     generate_stage,
 )
+from app.dependencies import employee_registry
 from app.models.production import ProductionCard, ProductionProject
 from app.services import openrouter_media
+from app.services.image_generation import generate_image_to_local
 from app.services.project_diagnostics import (
     active_card_for_unit,
     diagnose_project,
@@ -52,6 +54,101 @@ router = APIRouter(prefix="/api/v1/agentapp/director", tags=["director"])
 SPEC_STAGES = ("script", "storyboard", "img_prompt", "vid_prompt")
 ACTIVE_VIDEO_STATUSES = {"pending", "in_progress", "queued", "processing", "running"}
 READY_VIDEO_STATUSES = {"completed", "complete", "succeeded"}
+COMIC_DRAMA_TEAM_CODE = "comic-drama-team"
+COMIC_MEDIA_EMPLOYEES = {
+    "image": "comic-keyframe-artist",
+    "video": "comic-video-artist",
+}
+
+
+def _unqualified_media_model(model_ref: str) -> str:
+    normalized = str(model_ref or "").strip()
+    if normalized.lower().startswith("openrouter:"):
+        return normalized.split(":", 1)[1].strip()
+    return normalized
+
+
+def _same_media_model(left: str, right: str) -> bool:
+    return (
+        _unqualified_media_model(left).lower()
+        == _unqualified_media_model(right).lower()
+    )
+
+
+def _resolve_media_route(
+    project: ProductionProject,
+    kind: str,
+    employee_key: str,
+    requested_model: str,
+) -> tuple[str, str]:
+    """漫剧项目强制走岗位配置；其他项目保留显式模型兼容。"""
+    key = str(employee_key or "").strip()
+    if project.team_code == COMIC_DRAMA_TEAM_CODE:
+        expected = COMIC_MEDIA_EMPLOYEES[kind]
+        if key and key != expected:
+            raise HTTPException(
+                400,
+                f"漫剧团队的{'图片' if kind == 'image' else '视频'}执行岗位"
+                f"必须是 {expected}，不能使用 {key}",
+            )
+        key = expected
+
+    if not key:
+        model_ref = str(requested_model or "").strip()
+        if not model_ref:
+            raise HTTPException(400, "请选择媒体模型或指定媒体执行员工")
+        return "", model_ref
+
+    employee = employee_registry.get(key)
+    if employee is None:
+        raise HTTPException(400, f"媒体执行员工 {key} 不存在")
+    if not employee.enabled:
+        raise HTTPException(400, f"媒体执行员工 {key} 已停用")
+    policy = employee.default_model_policy or {}
+    route_key = "image_model_id" if kind == "image" else "video_model_id"
+    model_ref = str(policy.get(route_key) or "").strip()
+    if not model_ref:
+        raise HTTPException(400, f"员工 {key} 尚未配置 {route_key}")
+    if requested_model and not _same_media_model(requested_model, model_ref):
+        raise HTTPException(
+            400,
+            f"员工 {key} 已固定使用 {model_ref}；"
+            f"如需更换，请先在员工配置中修改 {route_key}",
+        )
+    return key, model_ref
+
+
+def _configured_media_model(employee_key: str, kind: str) -> dict:
+    """把员工配置的专用媒体模型转成导演台可展示的单模型选项。"""
+    employee = employee_registry.get(employee_key)
+    if employee is None or not employee.enabled:
+        raise HTTPException(400, f"媒体执行员工 {employee_key} 不存在或已停用")
+    route_key = "image_model_id" if kind == "image" else "video_model_id"
+    model_ref = str(
+        (employee.default_model_policy or {}).get(route_key) or ""
+    ).strip()
+    if not model_ref:
+        raise HTTPException(400, f"员工 {employee_key} 尚未配置 {route_key}")
+    return {
+        "id": model_ref,
+        "name": f"{employee.name}默认 · {_unqualified_media_model(model_ref)}",
+        "kind": kind,
+        "description": "由数字员工配置统一管理；如需更换请到员工管理中修改",
+        "pricing": {},
+        "isFree": False,
+        "recommended": True,
+        "recommendationReason": "当前岗位已配置的执行模型",
+        "employeeKey": employee_key,
+    }
+
+
+def _director_image_size(aspect_ratio: str) -> str:
+    """映射到 GPT Image 支持的标准尺寸；OpenRouter 会再换算为最近画幅。"""
+    if aspect_ratio in {"9:16", "3:4", "2:3"}:
+        return "1024x1536"
+    if aspect_ratio in {"16:9", "4:3", "3:2"}:
+        return "1536x1024"
+    return "1024x1024"
 
 
 def _unit_keys(cards: list[ProductionCard]) -> list[tuple[Optional[int], int]]:
@@ -95,6 +192,45 @@ def _active_video_url(card: ProductionCard | None) -> str:
     if "active_video" in card.metadata:
         return str(card.metadata.get("active_video") or "")
     return str(card.videos[-1]) if card.videos else ""
+
+
+def _reference_urls_for_card(
+    cards: list[ProductionCard],
+    card: ProductionCard,
+    explicit_urls: list[str],
+) -> list[str]:
+    """收集显式参考、角色/场景母版及上一镜当前图，稳定跨镜头身份与场景。"""
+    candidates = list(explicit_urls)
+    for key in ("reference_urls", "reference_assets"):
+        raw = card.metadata.get(key)
+        if isinstance(raw, list):
+            candidates.extend(str(value) for value in raw)
+
+    for source in cards:
+        if source.card_id == card.card_id:
+            continue
+        if source.episode not in (None, card.episode):
+            continue
+        if source.stage in {"setting", "design"}:
+            candidates.extend(source.images)
+
+    for source in cards:
+        if (
+            source.episode == card.episode
+            and source.shot_number == card.shot_number - 1
+            and source.stage in {"img_prompt", "storyboard"}
+            and source.images
+        ):
+            active_url = _active_image_url(source)
+            if active_url:
+                candidates.append(active_url)
+
+    unique: list[str] = []
+    for value in candidates:
+        url = str(value or "").strip()
+        if url and url not in unique:
+            unique.append(url)
+    return unique[:14]
 
 
 def _director_state(project_id: str) -> dict:
@@ -516,11 +652,19 @@ async def optimize_project(project_id: str, req: OptimizeProjectReq):
             issue,
             req.extra_instruction,
         )
+        repair_employee_key = ""
+        if project.team_code != COMIC_DRAMA_TEAM_CODE:
+            repair_employee_key = production_api._select_generation_employee(
+                action["targetStage"],
+                "",
+                project.employee_key,
+            )
 
         generation = await generate_stage(
             project_id,
             GenerateReq(
                 target_stage=action["targetStage"],
+                employee_key=repair_employee_key,
                 episode=action.get("episode"),
                 shot_number=action.get("shotNumber"),
                 mode=action.get("mode", "replace"),
@@ -604,8 +748,13 @@ async def optimize_project(project_id: str, req: OptimizeProjectReq):
 
 
 @router.get("/media-models")
-def get_media_models(kind: str = Query("image", pattern="^(image|video)$")):
-    """列出 OpenRouter 专用图片/视频模型，不暴露供应商密钥。"""
+def get_media_models(
+    kind: str = Query("image", pattern="^(image|video)$"),
+    employee_key: str = Query(""),
+):
+    """有员工时只返回其已配置模型；无员工时保留 OpenRouter 目录兼容。"""
+    if employee_key:
+        return ok([_configured_media_model(employee_key, kind)])
     try:
         return ok(openrouter_media.list_media_models(kind))
     except ValueError as exc:
@@ -615,10 +764,12 @@ def get_media_models(kind: str = Query("image", pattern="^(image|video)$")):
 
 
 class ImageGenerateReq(BaseModel):
-    model: str
+    model: str = ""
+    employee_key: str = ""
     prompt: str = ""
     resolution: str = "1K"
     aspect_ratio: str = "9:16"
+    reference_urls: list[str] = Field(default_factory=list)
 
 
 class ImagePromptUpdateReq(BaseModel):
@@ -743,7 +894,7 @@ def reorder_director_shots(project_id: str, req: ShotOrderReq):
 
 @router.post("/projects/{project_id}/cards/{card_id}/image")
 def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq):
-    """为一个镜头生成图片并自动回填到图片提示卡。"""
+    """按图片执行员工的模型策略生成镜头图，并自动回填到图片提示卡。"""
     with _project_lock(project_id):
         project = _load_project(project_id)
         cards = _load_cards(project_id)
@@ -764,23 +915,49 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
             list(card.metadata.get("image_reviews") or []),
         )
         aspect_ratio = req.aspect_ratio or project.aspect_ratio
-    try:
-        result = openrouter_media.generate_image(
-            project_id,
-            model=req.model,
-            prompt=generation_prompt,
-            resolution=req.resolution,
-            aspect_ratio=aspect_ratio,
+        employee_key, model_ref = _resolve_media_route(
+            project,
+            "image",
+            req.employee_key,
+            req.model,
         )
+        reference_urls = _reference_urls_for_card(
+            cards,
+            card,
+            req.reference_urls,
+        )
+    try:
+        if employee_key:
+            result = generate_image_to_local(
+                generation_prompt,
+                model_ref,
+                _director_image_size(aspect_ratio),
+                "medium",
+                reference_urls,
+            )
+        else:
+            result = openrouter_media.generate_image(
+                project_id,
+                model=model_ref,
+                prompt=generation_prompt,
+                resolution=req.resolution,
+                aspect_ratio=aspect_ratio,
+                reference_urls=reference_urls,
+            )
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(502, f"OpenRouter 生图失败: {exc}") from exc
+        raise HTTPException(502, f"图片执行员工生图失败: {exc}") from exc
 
     with _project_lock(project_id):
         cards = _load_cards(project_id)
         card = next((item for item in cards if item.card_id == card_id), None)
-        if card is None or card.stage not in ("img_prompt", "storyboard"):
+        if card is None or card.stage not in (
+            "img_prompt",
+            "storyboard",
+            "setting",
+            "design",
+        ):
             raise HTTPException(409, "生图期间卡片已被删除或改变，请重新操作")
         current_prompt = (
             card.prompts[0].strip()
@@ -823,9 +1000,12 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
                 "active_image": active_image,
                 "image_candidates": candidates[-20:],
                 "last_image_model": result["model"],
+                "last_image_model_ref": model_ref,
+                "last_image_employee_key": employee_key,
                 "last_image_prompt": prompt,
                 "last_image_generation_prompt": generation_prompt,
                 "last_image_usage": result.get("usage") or {},
+                "last_image_reference_urls": reference_urls,
             }
             if active_image == result["url"]:
                 card.metadata["review_verdict"] = ""
@@ -834,7 +1014,9 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
             late_results = list(card.metadata.get("late_image_results") or [])
             late_results.append({
                 "url": result["url"],
-                "model": result.get("model") or req.model,
+                "model": result.get("model") or model_ref,
+                "model_ref": model_ref,
+                "employee_key": employee_key,
                 "prompt": prompt,
                 "finished_at": _now(),
             })
@@ -855,12 +1037,15 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
 
 
 class VideoGenerateReq(BaseModel):
-    model: str
+    model: str = ""
+    employee_key: str = ""
     prompt: str = ""
     duration: int = 5
     resolution: str = "720p"
     aspect_ratio: str = "9:16"
     image_url: str = ""
+    last_frame_url: str = ""
+    reference_urls: list[str] = Field(default_factory=list)
     generate_audio: bool = True
 
 
@@ -882,6 +1067,17 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         )
         if not prompt:
             raise HTTPException(400, "镜头没有视频提示词")
+        employee_key, model_ref = _resolve_media_route(
+            project,
+            "video",
+            req.employee_key,
+            req.model,
+        )
+        if employee_key and not model_ref.lower().startswith("openrouter:"):
+            raise HTTPException(
+                400,
+                f"员工 {employee_key} 的视频模型必须使用 openrouter: 前缀",
+            )
 
         image_card = (
             _card_for(cards, card.episode, card.shot_number, "img_prompt")
@@ -911,12 +1107,14 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
     try:
         job = openrouter_media.submit_video(
             project_id,
-            model=req.model,
+            model=_unqualified_media_model(model_ref),
             prompt=generation_prompt,
             duration=req.duration,
             resolution=req.resolution,
             aspect_ratio=aspect_ratio,
             image_url=image_url,
+            last_frame_url=req.last_frame_url,
+            reference_urls=req.reference_urls,
             generate_audio=req.generate_audio,
         )
     except ValueError as exc:
@@ -964,9 +1162,13 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         applied = inputs_match and not newer_job_exists
         job_payload = {
             **job,
+            "modelRef": model_ref,
+            "employeeKey": employee_key,
             "prompt": prompt,
             "generationPrompt": generation_prompt,
             "imageUrl": image_url,
+            "lastFrameUrl": req.last_frame_url,
+            "referenceUrls": req.reference_urls,
             "submittedAt": submission_started_at,
         }
         if applied:

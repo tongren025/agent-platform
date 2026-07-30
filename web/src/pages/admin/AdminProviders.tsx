@@ -34,7 +34,7 @@ export default function AdminProviders() {
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
-    form.setFieldsValue({ enabled: true, apiMode: 'auto', models: [{ modelId: '' }] });
+    form.setFieldsValue({ enabled: true, apiMode: 'responses', models: [{ modelId: '' }] });
     setOpen(true);
   };
 
@@ -45,7 +45,7 @@ export default function AdminProviders() {
       endpoint: record.endpoint,
       apiKey: '',
       enabled: record.enabled,
-      apiMode: record.apiMode || 'auto',
+      apiMode: record.apiMode || 'responses',
       models: record.models?.length ? record.models.map((m) => ({ modelId: m.modelId || m.modelName || '' })) : [{ modelId: '' }],
     });
     setOpen(true);

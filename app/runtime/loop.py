@@ -86,6 +86,8 @@ class AgentLoopOptions:
     temperature: float = 0.7
     max_tokens: int = 4096
     model: str = "gpt-4o"
+    reasoning_effort: Optional[str] = None
+    api_surface: str = "responses"
     # —— 可靠性（默认值即生效，调用方无需改动）——
     max_retries: int = 2            # 瞬时错误的重试次数（不含首次调用）
     retry_base_delay: float = 1.0   # 指数退避基准秒数
@@ -166,6 +168,25 @@ def _build_openai_tools(handlers: list[ToolHandler]) -> list[dict]:
     return tools
 
 
+def _build_responses_tools(handlers: list[ToolHandler]) -> list[dict]:
+    """把工具声明转换为 Responses API 的扁平 function tool 结构。"""
+    return [
+        {
+            "type": "function",
+            "name": handler.name,
+            "description": handler.description,
+            "parameters": handler.input_schema,
+        }
+        for handler in handlers
+    ]
+
+
+def _is_gpt_56_model(model: str) -> bool:
+    """识别 GPT-5.6 家族；兼容供应商解析后仍带命名空间的模型 ID。"""
+    normalized = str(model or "").strip().lower()
+    return "gpt-5.6" in normalized
+
+
 def _parse_pending_approval(raw: str) -> PendingApprovalDetail | None:
     """解析 ##PENDING_APPROVAL## 信号后的 JSON 体为审批详情；解析失败降级为 unknown 类型（不让坏格式打断中断流程）。"""
     try:
@@ -219,6 +240,13 @@ async def _create_with_retry(
 
     for a_client, a_is_async, model in attempts:
         create_kwargs = dict(base_kwargs, model=model)
+        if _is_gpt_56_model(model):
+            create_kwargs["max_completion_tokens"] = options.max_tokens
+            if options.reasoning_effort:
+                create_kwargs["reasoning_effort"] = options.reasoning_effort
+        else:
+            create_kwargs["max_tokens"] = options.max_tokens
+            create_kwargs["temperature"] = options.temperature
         if options.request_timeout:
             create_kwargs["timeout"] = options.request_timeout
         if (
@@ -312,6 +340,123 @@ async def _create_with_retry(
     raise last_exc
 
 
+async def _create_response(
+    client: SyncOrAsyncClient,
+    create_kwargs: dict,
+    is_async: bool,
+):
+    """执行一次 Responses API 请求；同步客户端放入线程池。"""
+    if is_async:
+        return await client.responses.create(**create_kwargs)
+    return await asyncio.get_event_loop().run_in_executor(
+        None, lambda: client.responses.create(**create_kwargs)
+    )
+
+
+async def _create_response_with_retry(
+    client: SyncOrAsyncClient,
+    base_kwargs: dict,
+    is_async: bool,
+    options: AgentLoopOptions,
+    iteration: int,
+):
+    """Responses API 版本的重试与跨模型降级。"""
+    attempts: list[tuple[SyncOrAsyncClient, bool, str]] = [
+        (client, is_async, options.model)
+    ]
+    attempts += [(client, is_async, model) for model in options.fallback_models]
+    attempts += [
+        (candidate, isinstance(candidate, openai.AsyncOpenAI), model)
+        for candidate, model in options.fallback_clients
+    ]
+    last_exc: BaseException | None = None
+
+    for candidate, candidate_is_async, model in attempts:
+        create_kwargs = dict(base_kwargs, model=model)
+        if options.reasoning_effort and _is_gpt_56_model(model):
+            create_kwargs["reasoning"] = {"effort": options.reasoning_effort}
+        if options.request_timeout:
+            create_kwargs["timeout"] = options.request_timeout
+
+        for attempt in range(options.max_retries + 1):
+            try:
+                return await _create_response(
+                    candidate,
+                    create_kwargs,
+                    candidate_is_async,
+                )
+            except _FATAL_ERRORS:
+                raise
+            except openai.NotFoundError as exc:
+                last_exc = exc
+                logger.warning("Responses 模型 %s 不可用，尝试降级: %s", model, exc)
+                break
+            except _RETRYABLE_ERRORS as exc:
+                last_exc = exc
+                if attempt < options.max_retries:
+                    delay = options.retry_base_delay * (2 ** attempt)
+                    delay += random.uniform(0, options.retry_base_delay)
+                    logger.warning(
+                        "Responses 瞬时失败，%.1fs 后重试 "
+                        "(model=%s, iteration=%d, attempt=%d/%d): %s",
+                        delay,
+                        model,
+                        iteration,
+                        attempt + 1,
+                        options.max_retries,
+                        exc,
+                    )
+                    await asyncio.sleep(delay)
+                    continue
+                logger.warning(
+                    "Responses 模型 %s 重试用尽，尝试降级 "
+                    "(iteration=%d): %s",
+                    model,
+                    iteration,
+                    exc,
+                )
+                break
+
+    assert last_exc is not None
+    raise last_exc
+
+
+def _response_item_value(item: object, key: str, default=None):
+    if isinstance(item, dict):
+        return item.get(key, default)
+    return getattr(item, key, default)
+
+
+def _response_item_dict(item: object) -> dict:
+    """保留 Responses 输出项，供无服务端状态的下一轮手工回放。"""
+    if isinstance(item, dict):
+        return dict(item)
+    model_dump = getattr(item, "model_dump", None)
+    if callable(model_dump):
+        return model_dump(exclude_none=True)
+    return {
+        key: value
+        for key, value in vars(item).items()
+        if value is not None
+    }
+
+
+def _response_text(response: object) -> str:
+    direct = str(getattr(response, "output_text", "") or "")
+    if direct:
+        return direct
+    chunks: list[str] = []
+    for item in getattr(response, "output", []) or []:
+        if _response_item_value(item, "type") != "message":
+            continue
+        for content in _response_item_value(item, "content", []) or []:
+            if _response_item_value(content, "type") in {"output_text", "text"}:
+                text = str(_response_item_value(content, "text", "") or "")
+                if text:
+                    chunks.append(text)
+    return "\n".join(chunks)
+
+
 async def run_agent_loop(
     client: SyncOrAsyncClient,
     options: AgentLoopOptions,
@@ -352,6 +497,18 @@ async def run_agent_loop(
     handler_map: dict[str, ToolHandler] = {h.name: h for h in tools}
 
     is_async = isinstance(client, openai.AsyncOpenAI)
+    if (
+        openai_tools
+        and _is_gpt_56_model(options.model)
+        and options.reasoning_effort != "none"
+    ):
+        result.success = False
+        result.final_text = (
+            "LLM 调用失败: GPT-5.6 在 Chat Completions 中使用函数工具时，"
+            "reasoning_effort 必须为 none；需要推理与工具并用时请使用 Responses API。"
+        )
+        result.messages = messages
+        return result
 
     # 追踪连续相同的工具调用失败，防止模型陷入循环浪费 token
     _last_failed_call: tuple[str, str] | None = None  # (tool_name, args)
@@ -365,11 +522,7 @@ async def run_agent_loop(
             break
 
         try:
-            base_kwargs: dict = dict(
-                messages=messages,
-                temperature=options.temperature,
-                max_tokens=options.max_tokens,
-            )
+            base_kwargs: dict = {"messages": messages}
             if openai_tools:
                 base_kwargs["tools"] = openai_tools
 
@@ -542,4 +695,146 @@ async def run_agent_loop(
     result.first_token_ms = options.telemetry.first_token_ms
     result.cached_prompt_tokens = options.telemetry.cached_prompt_tokens
     result.transport = options.telemetry.transport
+    return result
+
+
+async def run_responses_agent_loop(
+    client: SyncOrAsyncClient,
+    options: AgentLoopOptions,
+    system_prompt: str,
+    user_message: str,
+    tools: list[ToolHandler],
+) -> AgentLoopResult:
+    """使用 Responses API 运行支持推理与函数工具并用的代理循环。
+
+    为兼容不使用服务端会话存储的部署，每轮都手工回放此前的 output items，
+    并把 function_call_output 追加到下一轮 input。这样既保留 call_id，也不会
+    依赖 previous_response_id。
+    """
+    result = AgentLoopResult()
+    input_items: list[dict] = []
+    for message in options.existing_messages or []:
+        role = str(message.get("role") or "user")
+        if role not in {"user", "assistant"}:
+            role = "user"
+        input_items.append({
+            "role": role,
+            "content": str(message.get("content") or ""),
+        })
+    input_items.append({"role": "user", "content": user_message})
+
+    responses_tools = _build_responses_tools(tools)
+    handler_map = {handler.name: handler for handler in tools}
+    is_async = isinstance(client, openai.AsyncOpenAI)
+
+    for iteration in range(1, options.max_iterations + 1):
+        result.iterations = iteration
+        base_kwargs: dict = {
+            "instructions": system_prompt,
+            "input": input_items,
+            "max_output_tokens": options.max_tokens,
+            "store": False,
+        }
+        if responses_tools:
+            base_kwargs["tools"] = responses_tools
+
+        try:
+            response = await _create_response_with_retry(
+                client,
+                base_kwargs,
+                is_async,
+                options,
+                iteration,
+            )
+        except Exception as exc:
+            logger.error(
+                "Responses 调用最终失败（已重试+降级后，iteration=%d）: %s",
+                iteration,
+                exc,
+            )
+            result.success = False
+            result.final_text = f"LLM 调用失败: {exc}"
+            break
+
+        usage = getattr(response, "usage", None)
+        if usage is not None:
+            result.prompt_tokens += int(
+                getattr(usage, "input_tokens", 0) or 0
+            )
+            result.completion_tokens += int(
+                getattr(usage, "output_tokens", 0) or 0
+            )
+
+        output_items = list(getattr(response, "output", []) or [])
+        input_items.extend(_response_item_dict(item) for item in output_items)
+        function_calls = [
+            item
+            for item in output_items
+            if _response_item_value(item, "type") == "function_call"
+        ]
+        response_text = _response_text(response)
+        if not function_calls:
+            result.final_text = response_text
+            break
+
+        should_break = False
+        for call in function_calls:
+            fn_name = str(_response_item_value(call, "name", "") or "")
+            fn_args = str(_response_item_value(call, "arguments", "{}") or "{}")
+            call_id = str(
+                _response_item_value(call, "call_id")
+                or _response_item_value(call, "id")
+                or ""
+            )
+            handler = handler_map.get(fn_name)
+
+            if handler is None:
+                tool_result = f"错误: 未知工具 '{fn_name}'"
+                success = False
+                elapsed = 0
+                logger.warning("Unknown Responses tool called: %s", fn_name)
+            else:
+                start_ms = time.monotonic()
+                try:
+                    tool_result = await handler.handler(fn_args)
+                    success = True
+                except Exception as exc:
+                    logger.error(
+                        "Responses tool handler error (%s): %s",
+                        fn_name,
+                        exc,
+                    )
+                    tool_result = f"工具执行失败: {exc}"
+                    success = False
+                elapsed = int((time.monotonic() - start_ms) * 1000)
+
+            result.traces.append(AgentInvocationTrace(
+                iteration=iteration,
+                tool_name=fn_name,
+                arguments=fn_args,
+                result=tool_result[:2000] if tool_result else None,
+                success=success,
+                elapsed_milliseconds=elapsed,
+            ))
+
+            if tool_result and tool_result.startswith(_PENDING_PREFIX):
+                result.pending_approval = _parse_pending_approval(tool_result)
+                tool_result = "操作已暂停，等待人工审批。"
+                should_break = True
+
+            input_items.append({
+                "type": "function_call_output",
+                "call_id": call_id,
+                "output": tool_result or "",
+            })
+            if should_break:
+                break
+
+        if should_break:
+            result.final_text = response_text or "操作已暂停，等待人工审批。"
+            break
+    else:
+        result.final_text = result.final_text or "已达到最大迭代次数。"
+
+    result.messages = input_items
     return result

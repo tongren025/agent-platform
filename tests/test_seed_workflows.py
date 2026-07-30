@@ -6,26 +6,11 @@ def test_comic_workflow_is_the_guided_one_sentence_to_finish_pipeline():
     node_keys = [node.node_key for node in workflow.nodes]
 
     assert workflow.enabled is True
-    assert node_keys == [
-        "start",
-        "director",
-        "writer",
-        "visual_bible",
-        "char_design",
-        "char_art",
-        "scene_design",
-        "scene_art",
-        "storyboard",
-        "motion",
-        "prompt_eng",
-        "keyframe_art",
-        "video",
-        "qa",
-        "end",
-    ]
-    assert [(edge.source, edge.target) for edge in workflow.edges] == list(
-        zip(node_keys, node_keys[1:])
-    )
+    assert node_keys[0] == "start"
+    assert node_keys[-1] == "end"
+    assert len(node_keys) == 26
+    assert len(workflow.edges) == 31
+    assert {"spec_gate", "image_gate", "video_gate"} <= set(node_keys)
 
 
 def test_comic_team_roles_cover_every_production_gate():
@@ -40,7 +25,6 @@ def test_comic_team_roles_cover_every_production_gate():
         "comic-scene-designer",
         "comic-scene-artist",
         "comic-storyboard",
-        "comic-trajectory-artist",
         "comic-prompt-engineer",
         "comic-keyframe-artist",
         "comic-video-artist",

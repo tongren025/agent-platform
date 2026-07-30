@@ -97,6 +97,191 @@ def test_director_media_models_are_normalized(director_env):
     assert response.json()["data"][0]["id"] == "demo/video"
 
 
+def test_comic_director_uses_employee_media_routes(
+    director_env,
+    monkeypatch,
+):
+    """漫剧导演台必须使用岗位配置，不能让请求模型绕过员工策略。"""
+    import app.api.director as director
+
+    client = director_env
+    project = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "员工路由测试",
+            "source_type": "gc",
+            "source_content": "雨夜旧影院",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]
+    pid = project["project_id"]
+    setting = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards",
+        json={
+            "stage": "setting",
+            "title": "角色母版",
+            "content": "锁定人物",
+            "images": ["/uploads/canvas/character-master.png"],
+        },
+    )
+    assert setting.status_code == 200
+    card_ids = {}
+    for stage in ("img_prompt", "vid_prompt"):
+        response = client.post(
+            f"/api/v1/agentapp/production/projects/{pid}/cards",
+            json={
+                "stage": stage,
+                "title": f"G1 {stage}",
+                "content": f"{stage} prompt",
+                "shot_number": 1,
+                "prompts": [f"{stage} prompt"],
+            },
+        )
+        card_ids[stage] = response.json()["data"]["card_id"]
+
+    image_calls = {}
+
+    def fake_employee_image(
+        prompt,
+        model,
+        size,
+        quality,
+        reference_urls,
+    ):
+        image_calls.update({
+            "prompt": prompt,
+            "model": model,
+            "size": size,
+            "quality": quality,
+            "reference_urls": reference_urls,
+        })
+        return {
+            "url": "/uploads/canvas/employee-shot.png",
+            "model": model,
+        }
+
+    video_calls = {}
+
+    def fake_employee_video(project_id, **kwargs):
+        video_calls.update(kwargs)
+        return {
+            "id": "job-employee",
+            "status": "queued",
+            "model": kwargs["model"],
+        }
+
+    monkeypatch.setattr(
+        director,
+        "generate_image_to_local",
+        fake_employee_image,
+    )
+    monkeypatch.setattr(
+        director.openrouter_media,
+        "submit_video",
+        fake_employee_video,
+    )
+
+    models = client.get(
+        "/api/v1/agentapp/director/media-models",
+        params={
+            "kind": "image",
+            "employee_key": "comic-keyframe-artist",
+        },
+    )
+    assert models.status_code == 200
+    assert models.json()["data"][0]["id"] == "gpt-image-2"
+
+    image = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/"
+        f"{card_ids['img_prompt']}/image",
+        json={
+            "model": "gpt-image-2",
+            "employee_key": "comic-keyframe-artist",
+        },
+    )
+    assert image.status_code == 200, image.text
+    assert image_calls["model"] == "gpt-image-2"
+    assert image_calls["reference_urls"] == [
+        "/uploads/canvas/character-master.png"
+    ]
+    assert (
+        image.json()["data"]["card"]["metadata"]["last_image_employee_key"]
+        == "comic-keyframe-artist"
+    )
+    approved_image = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/"
+        f"{card_ids['img_prompt']}/review",
+        json={
+            "verdict": "pass",
+            "image": image.json()["data"]["url"],
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 4,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert approved_image.status_code == 200, approved_image.text
+
+    video = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/"
+        f"{card_ids['vid_prompt']}/video",
+        json={
+            "model": "openrouter:bytedance/seedance-2.0",
+            "employee_key": "comic-video-artist",
+            "image_url": "/uploads/canvas/employee-shot.png",
+        },
+    )
+    assert video.status_code == 200, video.text
+    assert video_calls["model"] == "bytedance/seedance-2.0"
+    job_metadata = video.json()["data"]["card"]["metadata"][
+        "openrouter_video_job"
+    ]
+    assert job_metadata["employeeKey"] == "comic-video-artist"
+    assert (
+        job_metadata["modelRef"]
+        == "openrouter:bytedance/seedance-2.0"
+    )
+
+
+def test_comic_director_rejects_model_that_bypasses_employee(director_env):
+    client = director_env
+    project = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "禁止绕过模型",
+            "source_type": "gc",
+            "source_content": "测试",
+            "team_code": "comic-drama-team",
+        },
+    ).json()["data"]
+    pid = project["project_id"]
+    card = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards",
+        json={
+            "stage": "img_prompt",
+            "title": "G1 首帧",
+            "content": "镜头图",
+            "shot_number": 1,
+            "prompts": ["镜头图"],
+        },
+    ).json()["data"]
+
+    response = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/"
+        f"{card['card_id']}/image",
+        json={
+            "model": "openrouter:another/image-model",
+            "employee_key": "comic-keyframe-artist",
+        },
+    )
+
+    assert response.status_code == 400
+    assert "已固定使用 gpt-image-2" in response.text
+
+
 def test_update_image_prompt_preserves_secondary_prompts(director_env):
     """镜头编辑只替换首条生产提示词，不误删同卡片上的补充提示。"""
     client = director_env

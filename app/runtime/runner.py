@@ -163,22 +163,47 @@ async def run_agent(
     )
 
     model_policy = snapshot.default_model_policy
-    model_id: str = model_policy.get("model_id", "gpt-4o")
+    model_id = str(model_policy.get("model_id") or "").strip()
+    if not model_id:
+        run_result.success = False
+        run_result.error_message = (
+            "员工未配置思考模型 model_id；请先在员工管理中选择文字模型"
+        )
+        return run_result
     if not is_chat_completion_model_id(model_id):
         run_result.success = False
         run_result.error_message = (
-            f"{model_id} 是图片生成模型，不能作为员工思考模型；"
-            "请把它配置到 image_model_id，并选择 GPT-5.6 等聊天模型作为 model_id"
+            f"{model_id} 不能作为员工思考模型；请把图片/视频模型配置到"
+            "专用字段，并选择 GPT-5.6 等文字模型作为 model_id"
         )
         return run_result
     temperature: float = float(model_policy.get("temperature", 0.7))
     max_tokens: int = int(model_policy.get("max_tokens", 4096))
 
-    fallback_model_ids = [
-        str(item).strip()
-        for item in model_policy.get("fallback_models", [])
-        if str(item).strip() and str(item).strip() != model_id
-    ]
+    raw_fallback_models = model_policy.get("fallback_models", [])
+    if raw_fallback_models is None:
+        raw_fallback_models = []
+    if not isinstance(raw_fallback_models, list):
+        run_result.success = False
+        run_result.error_message = "fallback_models 配置无效：必须是文字模型 ID 数组"
+        return run_result
+    fallback_model_ids: list[str] = []
+    for fallback_model in raw_fallback_models:
+        fallback_ref = str(fallback_model or "").strip()
+        if not fallback_ref or not is_chat_completion_model_id(fallback_ref):
+            run_result.success = False
+            run_result.error_message = (
+                f"降级模型 {fallback_ref or '<空>'} 不能用于聊天接口或文字生成；"
+                "请从 fallback_models 中移除图片或视频模型"
+            )
+            return run_result
+        if fallback_ref != model_id:
+            fallback_model_ids.append(fallback_ref)
+    reasoning_effort = (
+        str(model_policy.get("reasoning_effort", "")).strip().lower() or None
+    )
+    if "gpt-5.6" in model_id.lower() and reasoning_effort is None:
+        reasoning_effort = "medium"
     resolved_candidates: list[tuple[object, str, str]] = []
     resolution_errors: list[str] = []
     for candidate_id in [model_id, *fallback_model_ids]:
@@ -234,9 +259,7 @@ async def run_agent(
         request_timeout=float(model_policy.get("request_timeout", 60.0)),
         fallback_clients=fallback_clients,
         on_text_delta=on_text_delta,
-        reasoning_effort=(
-            str(model_policy.get("reasoning_effort", "")).strip() or None
-        ),
+        reasoning_effort=reasoning_effort,
         prompt_cache_scope=employee_key,
         tool_result_transform=(
             lambda tool_name, content: compact_tool_result(

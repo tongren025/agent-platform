@@ -157,6 +157,7 @@ def generate_image_bytes(
     resolution: str = "1K",
     aspect_ratio: str = "9:16",
     reference_paths: list[Path] | None = None,
+    reference_urls: list[str] | None = None,
 ) -> dict:
     """调用 OpenRouter 图片 API，返回已下载的图片字节，供不同业务目录落盘。"""
     endpoint, api_key = _openrouter_config()
@@ -168,14 +169,26 @@ def generate_image_bytes(
         "n": 1,
         "output_format": "png",
     }
+    references: list[dict] = []
     if reference_paths:
-        payload["input_references"] = [
+        references.extend(
             {
                 "type": "image_url",
                 "image_url": {"url": _path_image_reference(path)},
             }
             for path in reference_paths
-        ]
+        )
+    if reference_urls:
+        references.extend(
+            {
+                "type": "image_url",
+                "image_url": {"url": _image_reference(url)},
+            }
+            for url in reference_urls
+            if str(url or "").strip()
+        )
+    if references:
+        payload["input_references"] = references
     response = httpx.post(
         f"{endpoint}/images",
         headers=_headers(api_key),
@@ -214,6 +227,7 @@ def generate_image(
     resolution: str = "1K",
     aspect_ratio: str = "9:16",
     reference_paths: list[Path] | None = None,
+    reference_urls: list[str] | None = None,
 ) -> dict:
     """调用 OpenRouter 图片 API；可附带仓库内本地参考图并保存首张结果。"""
     generated = generate_image_bytes(
@@ -222,6 +236,7 @@ def generate_image(
         resolution=resolution,
         aspect_ratio=aspect_ratio,
         reference_paths=reference_paths,
+        reference_urls=reference_urls,
     )
     url = _save_bytes(project_id, generated["content"], generated["suffix"])
     return {"url": url, "model": model, "usage": generated["usage"]}
@@ -239,6 +254,11 @@ def _local_upload_path(url: str) -> Path | None:
     if not path.is_file():
         raise ValueError(f"参考图不存在: {url}")
     return path
+
+
+def resolve_upload_path(url: str) -> Path | None:
+    """安全解析平台 ``/uploads/`` URL；远端 HTTPS 资源返回 None。"""
+    return _local_upload_path(url)
 
 
 def _image_reference(url: str) -> str:
@@ -274,13 +294,20 @@ def submit_video(
     resolution: str = "720p",
     aspect_ratio: str = "9:16",
     image_url: str = "",
+    last_frame_url: str = "",
+    reference_urls: list[str] | None = None,
     image_path: Path | None = None,
     generate_audio: bool = True,
     provider: str = "openrouter",
 ) -> dict:
-    """提交兼容供应商异步视频任务，支持平台 URL 或仓库内本地首帧。"""
+    """提交兼容供应商异步视频任务，支持首末帧或参考图两种互斥模式。"""
     if image_url and image_path is not None:
         raise ValueError("image_url 与 image_path 只能提供一个")
+    if (image_url or image_path is not None or last_frame_url) and reference_urls:
+        raise ValueError(
+            "OpenRouter 视频的首末帧模式与参考图模式不能同时使用；"
+            "有关键帧时请把角色和场景一致性先固化到关键帧"
+        )
     endpoint, api_key = (
         _openrouter_config()
         if provider.lower() == "openrouter"
@@ -294,18 +321,38 @@ def submit_video(
         "aspect_ratio": aspect_ratio,
         "generate_audio": generate_audio,
     }
+    frame_images: list[dict] = []
     if image_url:
-        payload["frame_images"] = [{
+        frame_images.append({
             "type": "image_url",
             "image_url": {"url": _image_reference(image_url)},
             "frame_type": "first_frame",
-        }]
+        })
     elif image_path is not None:
-        payload["frame_images"] = [{
+        frame_images.append({
             "type": "image_url",
             "image_url": {"url": _path_image_reference(image_path)},
             "frame_type": "first_frame",
-        }]
+        })
+    if last_frame_url:
+        frame_images.append({
+            "type": "image_url",
+            "image_url": {"url": _image_reference(last_frame_url)},
+            "frame_type": "last_frame",
+        })
+    if frame_images:
+        payload["frame_images"] = frame_images
+
+    references = [
+        {
+            "type": "image_url",
+            "image_url": {"url": _image_reference(url)},
+        }
+        for url in reference_urls or []
+        if str(url or "").strip()
+    ]
+    if references:
+        payload["input_references"] = references
 
     response = httpx.post(
         f"{endpoint}/videos",

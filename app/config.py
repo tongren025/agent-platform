@@ -25,9 +25,9 @@ class AiModelConfig:
     api_key: str
     enabled: bool
     models: list[dict]
-    # auto：GPT-5/o 系列优先 Responses，不兼容时记忆并降级 Chat；
-    # responses/chat：强制使用对应协议。
-    api_mode: str = "auto"
+    # responses：默认统一使用 Responses；auto：优先 Responses，仅协议不兼容时降级；
+    # chat：显式固定使用旧 Chat Completions 接口。
+    api_mode: str = "responses"
 
 
 @dataclass
@@ -171,7 +171,7 @@ def load_settings() -> Settings:
             api_key=resolve_secret(m["apiKey"]),
             enabled=str(m.get("enabled", "true")).lower() == "true",
             models=m.get("models", []),
-            api_mode=str(m.get("apiMode", "auto") or "auto").lower(),
+            api_mode=str(m.get("apiMode", "responses") or "responses").lower(),
         ))
 
     return Settings(

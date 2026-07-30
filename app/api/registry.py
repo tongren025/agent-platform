@@ -503,6 +503,15 @@ def _validate_employee_model_routes(employee: EmployeeDefinition) -> None:
             status_code=400,
             detail=f"思考模型未在已启用供应商中配置: {chat_model}",
         ) from exc
+    for fallback_model in policy.get("fallback_models") or []:
+        fallback_ref = str(fallback_model).strip()
+        try:
+            ai_service.get_client(fallback_ref)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=400,
+                detail=f"降级模型未在已启用供应商中配置: {fallback_ref}",
+            ) from exc
 
     enabled_providers = {
         provider.name.lower(): provider

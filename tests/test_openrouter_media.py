@@ -221,3 +221,21 @@ def test_submit_video_rejects_two_first_frame_sources(tmp_path):
             image_url="https://example.test/frame.png",
             image_path=frame,
         )
+
+
+def test_submit_video_rejects_frames_mixed_with_input_references(monkeypatch):
+    """OpenRouter 会让 frame_images 覆盖 input_references，平台必须阻止假一致性。"""
+    monkeypatch.setattr(
+        openrouter_media,
+        "_openrouter_config",
+        lambda: ("https://example.test/api/v1", "secret"),
+    )
+
+    with pytest.raises(ValueError, match="不能同时使用"):
+        openrouter_media.submit_video(
+            "demo",
+            model="video-model",
+            prompt="continue motion",
+            image_url="https://example.test/frame.png",
+            reference_urls=["https://example.test/character.png"],
+        )

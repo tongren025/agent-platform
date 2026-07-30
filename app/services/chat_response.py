@@ -12,8 +12,8 @@ from typing import Any
 from app.core.model_capabilities import is_chat_completion_model_id
 
 
-def select_chat_completion_model(models: list[dict]) -> str:
-    """选择可用于 Chat Completions 连通测试的模型，跳过纯生图模型。"""
+def select_text_generation_model(models: list[dict]) -> str:
+    """选择可用于 Responses 文本生成的模型，跳过图片/视频等专用模型。"""
     for model in models:
         model_id = str(
             model.get("modelId")
@@ -27,6 +27,11 @@ def select_chat_completion_model(models: list[dict]) -> str:
             continue
         return model_id
     return ""
+
+
+def select_chat_completion_model(models: list[dict]) -> str:
+    """旧名称兼容；新代码应使用 ``select_text_generation_model``。"""
+    return select_text_generation_model(models)
 
 
 def _to_namespace(value: Any) -> Any:

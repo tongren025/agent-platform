@@ -57,7 +57,8 @@ codegraph status
 - **员工注册表** — 每个员工有独立身份（`employeeKey`）、角色提示词（`roleProfile`）、绑定的工具和技能
 - **能力驱动模型路由** — 员工的 `model_id` 只负责理解需求、文字规划和工具编排；最终生图、视频分别由 `image_model_id`、`video_model_id` 通过专用 API 完成，避免把 `gpt-image-2` 错发到 Chat Completions
 - **三类输出能力** — 员工可声明 `text` / `image` / `video`；选择图片或视频能力后，管理页显示独立媒体模型选择器并自动绑定对应工具
-- **漫剧岗位推荐档位** — 导演、分镜师和质检员推荐 GPT-5.6 Sol；编剧、设定设计与提示词岗位推荐 GPT-5.6 Terra；角色原画、场景原画和关键帧原画额外使用 GPT Image 2 生图，专职视频生成师额外走 OpenRouter 视频模型。系统只展示已启用供应商的模型，不会用未配置的推荐模型覆盖现有员工
+- **漫剧岗位模型分层** — 导演、分镜和质检使用 GPT-5.6 Sol；编剧、媒体提示词与动作特效使用 Terra high；人物/场景设计使用 Terra medium；角色图、场景图、关键帧和视频执行使用 Luna none 编排专用媒体工具。最终图片固定走 `image_model_id`（内置为 `gpt-image-2`），视频固定走 `video_model_id`（内置为 OpenRouter Seedance 2.0）
+- **Responses-first 运行时** — 员工对话、函数工具、视觉质检、记忆提取、趋势分析和供应商连通测试统一走 Responses API；没有工具或推理为 `none` 也不会自动改走 Chat。旧代理只有显式配置 `api_surface=chat_completions`，或同时开启 `allow_chat_fallback=true` 时才进入兼容通道
 - **角色模板库** — 内置 12 种预设角色（数据分析师、文案写手、代码审查员、SEO 分析师等），一键创建员工
 - **独立知识库** — 每个员工可上传专属文档（`.txt` / `.md`），对话时自动检索相关片段注入上下文
 - **长期记忆** — 对话结束后自动提取关键信息存入员工长期记忆，下次对话可回忆历史
@@ -120,8 +121,9 @@ codegraph status
 - **先选交付目标** — 建项时可选择“完成文字分镜 / 生成镜头图片 / 制作完整成片”；页面只推动当前目标所需步骤，达到目标后明确停止，并可随时继续制作成片
 - **一条生产主线** — 新建创意后只显示剧本、分镜、画面提示、图片、视频提示、视频、成片七步进度，并根据真实素材缺口给出唯一下一步；原制作看板保留为高级下钻
 - **质量问题先于昂贵生成** — 剧本、分镜或提示词未通过静态门禁/人工审核时，导演页会先给出定向返工动作，不会仅因“卡片存在”继续生图或生视频；返工只替换对应镜头和阶段
-- **OpenRouter 原生媒体生成** — 实时读取 OpenRouter 专用图片/视频模型目录；图片直接落地项目素材目录，视频按异步任务提交、轮询并自动回填到对应 G 镜头
-- **明确费用确认** — 批量生图/生视频前展示模型、镜头数量与 OpenRouter 价格信息，必须再次确认才会提交，不会因打开页面或刷新而消耗额度
+- **员工驱动媒体生成** — 漫剧项目不再由页面临时模型绕过员工配置：关键帧生成师使用自己的 `image_model_id`，视频生成师使用自己的 `video_model_id`；图片直接落地项目素材目录，视频异步提交、轮询并回填对应镜头
+- **参考资产与真实审片** — 镜头图自动继承人物/场景母版和上一镜画面；视频支持首末帧或参考图两种互斥模式；图片读取真实像素、视频抽取前中后段画面后再由质检员判断，证据不可访问即阻塞
+- **明确费用确认** — 批量生图/生视频前展示执行员工、模型、镜头数量与价格信息，必须再次确认才会提交，不会因打开页面或刷新而消耗额度
 - **三级精品候选制** — 新图片、新镜头视频和新合成成片都先作为候选，不会把“生成成功”冒充成“质量通过”；图片按五维 80 分门槛、视频按六维 85 分门槛、整集按六维 88 分门槛验收，关键项还必须单独达标，只有通过后才依次解锁视频生成、整集合成和成片下载
 - **失败反馈回流** — 图片的角色/场景/画风问题与视频的闪变、运动断裂、口型声音等退回原因，会连同人工备注转成下一次对应生成的有限正向硬约束；历史候选、评分和采用版本全部可追踪
 - **镜头审片与成片** — 同页预览每个 G 的剧本、首帧、视频与审核状态；只有逐镜视频全部通过后才调用本机 FFmpeg 合成，合成结果完成整集叙事、视觉、节奏、声音与交付完整性验收后才开放下载
@@ -267,6 +269,12 @@ Redis、MinIO、Milvus 或 Neo4j；在后台配置对应服务后再启用数据
 
 ### 生产部署形态（docker-compose）
 
+内置漫剧员工、团队、媒体工具和工作流同时打包在
+`app/resources/comic_team_manifest.json`。应用启动时按 `managedRevision`
+把它们迁移到运行时 `data/`，因此 Docker 的 `app_data:/app/data` 持久卷不会再
+遮蔽新版本；带 `ownerUserId` 的用户记录和同 revision 后的手工编辑不会被覆盖。
+修改这些内置 JSON 后运行 `python scripts/build_comic_team_manifest.py` 同步清单。
+
 | 服务 | 端口 | 说明 |
 |------|------|------|
 | app | 8000 | 用户端 API + 前端 SPA |
@@ -364,7 +372,7 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
       "endpoint": "https://your-openai-compatible-endpoint/",
       "apiKey": "sk-your-api-key-here",
       "enabled": "true",
-      "apiMode": "auto",
+      "apiMode": "responses",
       "models": [
         {
           "modelName": "gpt-4o",
@@ -377,10 +385,10 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 }
 ```
 
-> `apiMode` 可取 `auto`（默认）、`responses` 或 `chat`。`auto` 会让 GPT-5/o 系列优先
-> 直连 Responses API，并发送稳定的 `prompt_cache_key`、消费原生流式事件；仅当供应商
-> 明确不支持 `/v1/responses` 时，当前进程才记忆该结果并自动降级到 Chat Completions。
-> 其他模型默认使用兼容性更广的 Chat Completions。设置页和独立管理端均可修改该选项。
+> `apiMode` 可取 `responses`（默认）、`auto` 或 `chat`。`responses` 统一直连 Responses API，
+> 并发送稳定的 `prompt_cache_key`、消费原生流式事件，不会静默切回旧接口。只有显式选择
+> `auto` 时，供应商明确不支持 `/v1/responses` 后才会在当前进程降级到 Chat Completions；
+> 只提供旧接口的代理应明确选择 `chat`。设置页和独立管理端均可修改该选项。
 >
 > 支持兼容 OpenAI Responses API 或 Chat Completions API 的服务（OpenAI、Azure OpenAI、
 > OpenRouter 及各类兼容网关）。

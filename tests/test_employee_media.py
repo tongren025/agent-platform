@@ -18,6 +18,7 @@ from app.tools.media import (
     CheckVideoGenerationHandler,
     GenerateImageHandler,
     GenerateVideoHandler,
+    InspectMediaHandler,
 )
 
 
@@ -50,6 +51,23 @@ def test_new_employee_requires_explicit_thinking_model():
 
     assert exc_info.value.status_code == 400
     assert "显式配置 model_id" in str(exc_info.value.detail)
+
+
+def test_new_employee_rejects_media_model_as_fallback():
+    employee = EmployeeDefinition(
+        employee_key="bad-fallback",
+        name="错误降级模型",
+        default_model_policy={
+            "model_id": "gpt-5.6-terra",
+            "fallback_models": ["gpt-image-2"],
+        },
+    )
+
+    with pytest.raises(HTTPException) as exc_info:
+        _validate_employee_model_routes(employee)
+
+    assert exc_info.value.status_code == 400
+    assert "fallback_models 只能配置聊天模型" in str(exc_info.value.detail)
 
 
 @pytest.mark.parametrize(
@@ -111,19 +129,24 @@ async def test_image_employee_uses_images_service(monkeypatch):
         lambda _key: employee,
     )
 
-    def fake_generate(prompt, model, size, quality):
+    def fake_generate(prompt, model, size, quality, reference_urls):
         captured.update({
             "prompt": prompt,
             "model": model,
             "size": size,
             "quality": quality,
+            "reference_urls": reference_urls,
         })
         return {"url": "/uploads/canvas/generated.png", "model": model}
 
     monkeypatch.setattr("app.tools.media.generate_image_to_local", fake_generate)
     result = json.loads(await GenerateImageHandler().handle(ToolContext(
         "generate_image",
-        json.dumps({"prompt": "角色立绘", "quality": "high"}),
+        json.dumps({
+            "prompt": "角色立绘",
+            "quality": "high",
+            "reference_urls": ["/uploads/canvas/approved.png"],
+        }),
         "artist",
     )))
 
@@ -132,6 +155,9 @@ async def test_image_employee_uses_images_service(monkeypatch):
     assert result["markdown"] == "![生成图片](/uploads/canvas/generated.png)"
     assert captured["model"] == "gpt-image-2"
     assert captured["quality"] == "high"
+    assert captured["reference_urls"] == [
+        "/uploads/canvas/approved.png"
+    ]
 
 
 @pytest.mark.asyncio
@@ -163,7 +189,11 @@ async def test_video_employee_submits_and_checks_job(monkeypatch):
 
     submitted = json.loads(await GenerateVideoHandler().handle(ToolContext(
         "generate_video",
-        json.dumps({"prompt": "缓慢推进镜头"}),
+        json.dumps({
+            "prompt": "缓慢推进镜头",
+            "image_url": "/uploads/canvas/start.png",
+            "last_frame_url": "/uploads/canvas/end.png",
+        }),
         "video-artist",
     )))
     completed = json.loads(await CheckVideoGenerationHandler().handle(ToolContext(
@@ -174,6 +204,8 @@ async def test_video_employee_submits_and_checks_job(monkeypatch):
 
     assert submitted["status"] == "queued"
     assert submitted["model"] == "openrouter:bytedance/seedance-2.0"
+    assert submitted["firstFrameUrl"] == "/uploads/canvas/start.png"
+    assert submitted["lastFrameUrl"] == "/uploads/canvas/end.png"
     assert completed["mediaType"] == "video"
     assert completed["markdown"].endswith(
         "(/uploads/production/employee-video-artist/result.mp4)"
@@ -223,6 +255,83 @@ async def test_failed_video_status_is_not_reported_as_success(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_media_inspector_returns_real_evidence_report(monkeypatch):
+    employee = SimpleNamespace(default_model_policy={
+        "model_id": "gpt-5.6-sol",
+        "reasoning_effort": "high",
+    })
+    captured = {}
+    monkeypatch.setattr(
+        "app.tools.media.employee_registry.get",
+        lambda _key: employee,
+    )
+
+    def fake_inspect(**kwargs):
+        captured.update(kwargs)
+        return {
+            "inspectionType": "image",
+            "model": "gpt-5.6-sol",
+            "evidence": [{"evidence_id": "image-1", "accessible": True}],
+            "visualInputCount": 1,
+            "report": {
+                "visual_inspection": {
+                    "verdict": "pass",
+                    "checks": [],
+                    "summary": "画面证据已检查",
+                }
+            },
+        }
+
+    monkeypatch.setattr("app.tools.media.inspect_media", fake_inspect)
+    result = json.loads(await InspectMediaHandler().handle(ToolContext(
+        "inspect_media",
+        json.dumps({
+            "inspection_type": "image",
+            "media_urls": ["/uploads/canvas/result.png"],
+            "criteria": {"character_id": "C001"},
+        }),
+        "comic-qa-inspector",
+    )))
+
+    assert result["success"] is True
+    assert result["visualInputCount"] == 1
+    assert result["report"]["visual_inspection"]["verdict"] == "pass"
+    assert captured["model"] == "gpt-5.6-sol"
+    assert captured["reasoning_effort"] == "high"
+
+
+@pytest.mark.asyncio
+async def test_media_inspector_blocks_when_evidence_cannot_be_read(monkeypatch):
+    employee = SimpleNamespace(default_model_policy={
+        "model_id": "gpt-5.6-sol",
+        "reasoning_effort": "high",
+    })
+    monkeypatch.setattr(
+        "app.tools.media.employee_registry.get",
+        lambda _key: employee,
+    )
+    monkeypatch.setattr(
+        "app.tools.media.inspect_media",
+        lambda **_kwargs: (_ for _ in ()).throw(
+            ValueError("视频质检只接受平台 URL")
+        ),
+    )
+
+    result = json.loads(await InspectMediaHandler().handle(ToolContext(
+        "inspect_media",
+        json.dumps({
+            "inspection_type": "video",
+            "media_urls": ["https://example.test/result.mp4"],
+        }),
+        "comic-qa-inspector",
+    )))
+
+    assert result["success"] is False
+    assert result["verdict"] == "blocked"
+    assert "平台 URL" in result["error"]
+
+
+@pytest.mark.asyncio
 async def test_image_model_is_rejected_as_thinking_model():
     result = await run_agent(
         snapshot=EmployeeRuntimeSnapshot(
@@ -238,6 +347,27 @@ async def test_image_model_is_rejected_as_thinking_model():
 
     assert result.success is False
     assert "不能作为员工思考模型" in (result.error_message or "")
+
+
+@pytest.mark.asyncio
+async def test_media_model_is_rejected_as_runtime_fallback():
+    result = await run_agent(
+        snapshot=EmployeeRuntimeSnapshot(
+            employee_key="legacy-bad-fallback",
+            default_model_policy={
+                "model_id": "gpt-5.6-terra",
+                "fallback_models": ["openrouter:bytedance/seedance-2.0"],
+            },
+        ),
+        compiled_prompt=PromptCompileResult(),
+        user_message="继续工作",
+        visible_tools=[],
+        visible_mcp_servers=[],
+        employee_key="legacy-bad-fallback",
+    )
+
+    assert result.success is False
+    assert "不能用于聊天接口" in (result.error_message or "")
 
 
 def test_generated_media_is_appended_to_final_reply():

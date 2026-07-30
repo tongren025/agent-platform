@@ -954,8 +954,12 @@ export const api = {
       body: JSON.stringify({ issue_id: issueId, extra_instruction: extraInstruction }),
       timeoutMs: 195_000,
     }),
-  listDirectorMediaModels: (kind: 'image' | 'video') =>
-    request<any[]>(`/director/media-models?kind=${kind}`),
+  listDirectorMediaModels: (kind: 'image' | 'video', employeeKey?: string) =>
+    request<any[]>(
+      `/director/media-models?kind=${kind}${employeeKey
+        ? `&employee_key=${encodeURIComponent(employeeKey)}`
+        : ''}`,
+    ),
   updateDirectorImagePrompt: (pid: string, cardId: string, data: { prompt: string }) =>
     request<any>(`/director/projects/${pid}/cards/${cardId}/image-prompt`, {
       method: 'PUT', body: JSON.stringify(data),
@@ -974,13 +978,16 @@ export const api = {
       method: 'PUT', body: JSON.stringify(data),
     }),
   generateDirectorImage: (pid: string, cardId: string, data: {
-    model: string; prompt?: string; resolution?: string; aspect_ratio?: string;
+    model?: string; employee_key?: string; prompt?: string;
+    resolution?: string; aspect_ratio?: string; reference_urls?: string[];
   }) => request<any>(`/director/projects/${pid}/cards/${cardId}/image`, {
     method: 'POST', body: JSON.stringify(data),
   }),
   generateDirectorVideo: (pid: string, cardId: string, data: {
-    model: string; prompt?: string; duration?: number; resolution?: string;
-    aspect_ratio?: string; image_url?: string; generate_audio?: boolean;
+    model?: string; employee_key?: string; prompt?: string; duration?: number;
+    resolution?: string; aspect_ratio?: string; image_url?: string;
+    last_frame_url?: string; reference_urls?: string[];
+    generate_audio?: boolean;
   }) => request<any>(`/director/projects/${pid}/cards/${cardId}/video`, {
     method: 'POST', body: JSON.stringify(data),
   }),

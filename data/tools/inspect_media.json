@@ -1,0 +1,7 @@
+{
+  "toolCode": "inspect_media",
+  "name": "检查图片或视频成品",
+  "description": "质检专用。读取实际图片内容，或从平台视频自动抽取前、中、后段画面，再由视觉思考模型输出带证据的 pass/fail/blocked 报告。无法读取证据时禁止放行。",
+  "inputSchema": "{\"type\":\"object\",\"properties\":{\"inspection_type\":{\"type\":\"string\",\"enum\":[\"image\",\"video\"],\"description\":\"要检查的媒体类型\"},\"media_urls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"minItems\":1,\"maxItems\":12,\"description\":\"实际成品 URL。图片可用 /uploads/、HTTPS 或 data:image；视频必须是平台 /uploads/ URL\"},\"criteria\":{\"description\":\"本批次验收标准，可传字符串或结构化对象\"}},\"required\":[\"inspection_type\",\"media_urls\"]}",
+  "sortOrder": 32
+}

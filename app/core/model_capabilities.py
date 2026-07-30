@@ -99,6 +99,19 @@ def validate_employee_model_routes(
             f"{chat_model} 不能作为员工思考模型；请配置到对应的图片或视频模型字段"
         )
 
+    fallback_models = model_policy.get("fallback_models", [])
+    if fallback_models is None:
+        fallback_models = []
+    if not isinstance(fallback_models, list):
+        raise ValueError("fallback_models 必须是聊天模型 ID 数组")
+    for fallback_model in fallback_models:
+        fallback_ref = str(fallback_model or "").strip()
+        if not fallback_ref or not is_chat_completion_model_id(fallback_ref):
+            raise ValueError(
+                f"降级模型 {fallback_ref or '<空>'} 不能用于员工思考；"
+                "fallback_models 只能配置聊天模型"
+            )
+
     image_model = str(model_policy.get("image_model_id") or "").strip()
     if "image" in modalities:
         if not image_model:

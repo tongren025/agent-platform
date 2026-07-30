@@ -1,7 +1,7 @@
 {
   "toolCode": "generate_image",
   "name": "生成图片",
-  "description": "仅在用户明确要求最终图片时调用。使用员工配置的 image_model_id 通过图片专用 API 生成并返回可展示的图片 URL；不要用思考模型冒充生图模型。",
-  "inputSchema": "{\"type\":\"object\",\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"完整、可直接生图的正向提示词\"},\"size\":{\"type\":\"string\",\"enum\":[\"1024x1024\",\"1024x1536\",\"1536x1024\"],\"default\":\"1024x1536\"},\"quality\":{\"type\":\"string\",\"enum\":[\"low\",\"medium\",\"high\",\"auto\"],\"default\":\"medium\"}},\"required\":[\"prompt\"]}",
+  "description": "仅在需要最终图片时调用。使用员工配置的 image_model_id 生成图片；角色、场景和风格母版通过 reference_urls 传入，返回可展示的永久图片 URL。",
+  "inputSchema": "{\"type\":\"object\",\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"完整、可直接生图的正向提示词\"},\"reference_urls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"maxItems\":14,\"description\":\"可选的角色、场景、风格母版 /uploads/ URL；按重要性排序\"},\"size\":{\"type\":\"string\",\"enum\":[\"1024x1024\",\"1024x1536\",\"1536x1024\"],\"default\":\"1024x1536\"},\"quality\":{\"type\":\"string\",\"enum\":[\"low\",\"medium\",\"high\",\"auto\"],\"default\":\"medium\"}},\"required\":[\"prompt\"]}",
   "sortOrder": 30
 }

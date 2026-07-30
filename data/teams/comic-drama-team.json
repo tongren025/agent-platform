@@ -1,17 +1,16 @@
 {
   "sortOrder": 0,
   "createdAt": "2026-06-23T12:19:28.853834Z",
-  "updatedAt": "2026-06-25T00:00:00.000000Z",
+  "updatedAt": "2026-07-29T00:00:00Z",
   "teamCode": "comic-drama-team",
   "name": "漫剧一人团队",
   "memberEmployeeKeys": [
     "comic-director",
     "comic-screenwriter",
+    "comic-storyboard",
     "comic-character-designer",
     "comic-scene-designer",
     "comic-vfx-designer",
-    "comic-storyboard",
-    "comic-trajectory-artist",
     "comic-prompt-engineer",
     "comic-character-artist",
     "comic-scene-artist",
@@ -22,73 +21,68 @@
   "defaultEmployeeKey": "comic-director",
   "ownerUserId": null,
   "leaderEmployeeKey": "comic-director",
-  "description": "面向零基础用户的一人漫剧创作团队：13 个 AI 岗位按固定关卡工作，用户只需给一句创意并持续点击唯一“下一步”。\n\n标准流程：一句创意 → 故事设定/剧本 → 视觉风格母版 → 人物三视图/表情/服装 → 场景/道具 → 逐镜分镜 → 镜头动态设计 → 首帧/关键帧/可选尾帧 → 逐镜视频 → 审片/剪辑/声音/成片。建稿和建卡可直接执行，真实生图/生视频仍须用户确认额度。",
+  "description": "可复用于不同项目的一人漫剧制作团队，共 12 个岗位。生产链路：总导演统筹 → 编剧完成剧本 → 分镜师拆镜 → 人物、场景、动作与特效设计 → 图片/视频提示词工程 → 角色图、场景图、关键帧与视频执行 → 基于真实文本/图片/视频证据的质量门禁。项目 Art Bible、角色与场景资产按任务动态注入，不固化在员工提示词中。",
   "roles": [
     {
       "employeeKey": "comic-director",
-      "stage": "01 故事策划",
+      "stage": "统筹",
       "order": 0
     },
     {
       "employeeKey": "comic-screenwriter",
-      "stage": "02 剧本",
+      "stage": "剧本",
       "order": 0
     },
     {
-      "employeeKey": "comic-vfx-designer",
-      "stage": "03 视觉风格",
+      "employeeKey": "comic-storyboard",
+      "stage": "分镜",
       "order": 0
     },
     {
       "employeeKey": "comic-character-designer",
-      "stage": "04 人物资产",
+      "stage": "视觉设计",
+      "order": 0
+    },
+    {
+      "employeeKey": "comic-scene-designer",
+      "stage": "视觉设计",
+      "order": 1
+    },
+    {
+      "employeeKey": "comic-vfx-designer",
+      "stage": "视觉设计",
+      "order": 2
+    },
+    {
+      "employeeKey": "comic-prompt-engineer",
+      "stage": "提示词整合",
       "order": 0
     },
     {
       "employeeKey": "comic-character-artist",
-      "stage": "04 人物资产",
-      "order": 1
-    },
-    {
-      "employeeKey": "comic-scene-designer",
-      "stage": "05 场景资产",
+      "stage": "图片生成",
       "order": 0
     },
     {
       "employeeKey": "comic-scene-artist",
-      "stage": "05 场景资产",
+      "stage": "图片生成",
       "order": 1
-    },
-    {
-      "employeeKey": "comic-storyboard",
-      "stage": "06 逐镜分镜",
-      "order": 0
-    },
-    {
-      "employeeKey": "comic-trajectory-artist",
-      "stage": "07 镜头动态设计",
-      "order": 0
-    },
-    {
-      "employeeKey": "comic-prompt-engineer",
-      "stage": "08 关键帧准备",
-      "order": 0
     },
     {
       "employeeKey": "comic-keyframe-artist",
-      "stage": "08 关键帧准备",
-      "order": 1
+      "stage": "图片生成",
+      "order": 2
     },
     {
       "employeeKey": "comic-video-artist",
-      "stage": "09 视频生成",
+      "stage": "视频生成",
       "order": 0
     },
     {
       "employeeKey": "comic-qa-inspector",
-      "stage": "10 审片成片",
+      "stage": "质检",
       "order": 0
     }
   ],
-  "defaultWorkflowKey": "comic-drama"
+  "defaultWorkflowKey": "comic-drama-10s"
 }

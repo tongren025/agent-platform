@@ -47,6 +47,52 @@ class _ForbiddenChat:
         raise AssertionError("Responses 模式不应调用 Chat Completions")
 
 
+class _FallbackChat:
+    def __init__(self):
+        self.kwargs = None
+
+    def create(self, **kwargs):
+        self.kwargs = kwargs
+        return SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(content="兼容成功", tool_calls=None),
+                    finish_reason="stop",
+                )
+            ],
+            usage=None,
+        )
+
+
+def test_auto_mode_falls_back_only_after_responses_is_unsupported():
+    request = httpx.Request("POST", "https://gateway.example/v1/responses")
+
+    class UnsupportedResponses:
+        def create(self, **_kwargs):
+            response = httpx.Response(404, request=request)
+            raise openai.NotFoundError(
+                "responses endpoint not found",
+                response=response,
+                body=None,
+            )
+
+    chat = _FallbackChat()
+    client = SimpleNamespace(
+        _agent_api_mode="auto",
+        responses=UnsupportedResponses(),
+        chat=SimpleNamespace(completions=chat),
+    )
+
+    result = create_model_completion_sync(client, {
+        "model": "gpt-5.6-sol",
+        "messages": [{"role": "user", "content": "hi"}],
+    })
+
+    assert result.choices[0].message.content == "兼容成功"
+    assert chat.kwargs["model"] == "gpt-5.6-sol"
+    assert "gpt-5.6-sol" in client._agent_responses_unavailable_models
+
+
 def test_sync_responses_maps_cache_key_and_usage():
     responses = _SyncResponses()
     client = SimpleNamespace(

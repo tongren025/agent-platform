@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import logging
+import mimetypes
 import uuid
 from pathlib import Path
 
@@ -31,11 +32,22 @@ def generate_image_to_local(
     model: str,
     size: str = "1024x1536",
     quality: str = "medium",
+    reference_urls: list[str] | None = None,
 ) -> dict[str, str]:
-    """调用指定 images 模型生成一张图，下载远端结果并返回永久本地 URL。"""
+    """调用指定图片模型生成或编辑图片，并返回永久本地 URL。
+
+    有参考资产时，OpenRouter 使用 ``input_references``；OpenAI 兼容图片
+    模型使用 images.edit。参考资产必须是平台 ``/uploads/`` URL，避免服务端
+    替模型抓取任意内网地址。
+    """
     clean_prompt = prompt.strip()
     if not clean_prompt:
         raise ValueError("提示词不能为空")
+    clean_references = [
+        str(url).strip()
+        for url in reference_urls or []
+        if str(url or "").strip()
+    ]
 
     if model.lower().startswith("openrouter:"):
         model_id = model.split(":", 1)[1]
@@ -61,20 +73,45 @@ def generate_image_to_local(
             prompt=clean_prompt,
             resolution=resolution,
             aspect_ratio=aspect_ratio,
+            reference_urls=clean_references,
         )
         url = _save_image_bytes(generated["content"], generated["suffix"])
         return {"url": url, "model": model_id}
 
     client, model_id = ai_service.get_client(model)
     try:
-        response = client.images.generate(
-            model=model_id,
-            prompt=clean_prompt,
-            size=size,
-            quality=quality,
-            n=1,
-            timeout=120,
-        )
+        if clean_references:
+            image_files = []
+            for url in clean_references:
+                path = openrouter_media.resolve_upload_path(url)
+                if path is None:
+                    raise ValueError(
+                        "OpenAI 图片参考资产必须是平台 /uploads/ URL"
+                    )
+                media_type = mimetypes.guess_type(path.name)[0] or "image/png"
+                image_files.append((path.name, path.read_bytes(), media_type))
+            response = client.images.edit(
+                model=model_id,
+                image=(
+                    image_files[0]
+                    if len(image_files) == 1
+                    else image_files
+                ),
+                prompt=clean_prompt,
+                size=size,
+                quality=quality,
+                n=1,
+                timeout=120,
+            )
+        else:
+            response = client.images.generate(
+                model=model_id,
+                prompt=clean_prompt,
+                size=size,
+                quality=quality,
+                n=1,
+                timeout=120,
+            )
     except Exception:
         logger.warning("生图失败 model=%s", model_id, exc_info=True)
         raise

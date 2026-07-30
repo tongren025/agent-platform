@@ -80,7 +80,7 @@ class AiProviderBody(BaseModel):
     apiKey: str
     enabled: bool = True
     models: list[dict] = []
-    apiMode: Literal["auto", "responses", "chat"] = "auto"
+    apiMode: Literal["auto", "responses", "chat"] = "responses"
 
 
 class ProviderModelBody(BaseModel):
@@ -242,7 +242,7 @@ def add_ai_provider_model(name: str, body: ProviderModelBody):
             "apiKey": "${OPENROUTER_API_KEY}",
             "enabled": True,
             "models": [],
-            "apiMode": "auto",
+            "apiMode": "responses",
         }
     else:
         existing = ai_service.store.get(provider.name)
