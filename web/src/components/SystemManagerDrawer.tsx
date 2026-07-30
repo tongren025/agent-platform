@@ -245,7 +245,20 @@ export default function SystemManagerDrawer() {
         </div>
       </Tooltip>
       <Drawer
-        title={<Space><RobotOutlined /><span>系统管家</span><Tag color="purple">懂当前页面</Tag></Space>}
+        title={(
+          <Space wrap>
+            <RobotOutlined />
+            <span>系统管家</span>
+            <Tag color="purple">有上下文</Tag>
+            {context?.manager.modelReference && (
+              <Tooltip title={context.manager.modelConfigured ? '已固定专用模型' : '当前回退到系统默认模型'}>
+                <Tag color={context.manager.modelConfigured ? 'blue' : 'orange'}>
+                  {context.manager.modelReference}
+                </Tag>
+              </Tooltip>
+            )}
+          </Space>
+        )}
         extra={
           <Button size="small" onClick={() => {
             localStorage.removeItem(SESSION_KEY);
@@ -267,6 +280,7 @@ export default function SystemManagerDrawer() {
         {context && (
           <div style={{ padding: '12px 16px', borderBottom: '1px solid #eef2f7', background: '#fafbff' }}>
             <Space wrap size={[6, 6]}>
+              <Tag color="blue">连续会话</Tag>
               <Tag>{context.inventory.employees} 员工</Tag>
               <Tag>{context.inventory.skills} Skills</Tag>
               <Tag>{context.inventory.tools} 工具</Tag>

@@ -33,6 +33,8 @@ _GITHUB_RE = re.compile(
     r"(?:/tree/(?P<ref>[^/\s]+)(?:/(?P<path>[^\s?#]+))?)?"
 )
 _JSON_RE = re.compile(r"\{[\s\S]*\}")
+_MCP_ADD_WORDS = ("添加", "安装", "接入", "连接", "add")
+_MCP_RENAME_WORDS = ("改名", "改个名称", "改名称", "改名字", "名称改", "名字改", "rename")
 _PROPOSAL_TTL_SECONDS = 15 * 60
 _MAX_ARCHIVE_BYTES = 10 * 1024 * 1024
 _MAX_ARCHIVE_FILES = 500
@@ -184,6 +186,43 @@ class SystemManagerService:
         self._root = Path(root_dir) if root_dir is not None else BASE_DIR / "data" / "system-manager"
         self._root.mkdir(parents=True, exist_ok=True)
 
+    def _manager_client(self) -> tuple[Any, str, str]:
+        """解析系统管家专用模型；返回客户端、真实模型 ID 和可展示引用。"""
+        if self._ai is None:
+            raise ValueError("系统管家尚未配置可用模型")
+        configured = settings.agent.system_manager_model.strip()
+        if configured:
+            client, model = self._ai.get_client(configured)
+            return client, model, configured
+        client, model = self._ai.get_default_client()
+        provider = str(getattr(client, "_agent_provider_name", "") or "")
+        reference = f"{provider}:{model}" if provider else model
+        return client, model, reference
+
+    def _manager_info(self) -> dict[str, Any]:
+        """返回不含密钥的管家运行信息，让用户知道谁在作答。"""
+        configured = settings.agent.system_manager_model.strip()
+        try:
+            _client, model, reference = self._manager_client()
+            return {
+                "kind": "stateful-management-agent",
+                "model": model,
+                "modelReference": reference,
+                "modelConfigured": bool(configured),
+                "stateful": True,
+                "confirmationRequired": True,
+            }
+        except Exception as exc:
+            return {
+                "kind": "stateful-management-agent",
+                "model": "",
+                "modelReference": configured,
+                "modelConfigured": bool(configured),
+                "stateful": True,
+                "confirmationRequired": True,
+                "error": str(exc),
+            }
+
     @staticmethod
     def _guide_for_path(path: str) -> dict[str, Any]:
         """按最长路由前缀匹配页面说明。"""
@@ -282,6 +321,7 @@ class SystemManagerService:
             # 数据库存储暂不可用时，帮助入口仍应能打开。
             recent_failures = []
         result = {
+            "manager": self._manager_info(),
             "page": self._guide_for_path(page_path),
             "inventory": {
                 "employees": len(self._employees.list_all()),
@@ -389,23 +429,27 @@ class SystemManagerService:
         page_path: str,
         context: dict[str, Any],
         knowledge: list[dict[str, str]],
-    ) -> str | None:
-        """用已配置聊天模型解释复杂问题；模型不能直接执行系统变更。"""
+        *,
+        conversation_history: list[dict[str, Any]] | None = None,
+        session_state: dict[str, Any] | None = None,
+    ) -> tuple[str | None, str | None]:
+        """用专用模型结合历史解释复杂问题；模型不能直接执行系统变更。"""
         if self._ai is None:
-            return None
+            return None, None
         safe_context = {
             "page": context.get("page"),
             "inventory": context.get("inventory"),
             "mcpStatus": context.get("mcpStatus"),
             "recentFailures": context.get("recentFailures"),
             "projectContext": context.get("projectContext"),
+            "manager": context.get("manager"),
         }
         references = [
             {"title": item["title"], "path": item["path"], "excerpt": item["excerpt"]}
             for item in knowledge
         ]
         try:
-            client, model = self._ai.get_default_client()
+            client, model, model_reference = self._manager_client()
             completion = create_model_completion_sync(client, {
                 "model": model,
                 "messages": [
@@ -415,6 +459,8 @@ class SystemManagerService:
                             "你是 Agent Studio 内置系统管家。只依据给定页面状态和产品文档回答，"
                             "先给结论，再给下一步。不得声称已经安装、删除、登录或修改任何资源；"
                             "涉及变更时只说明可以在管家中发起预览并由用户确认。不要编造按钮或运行结果。"
+                            "你必须利用 conversationHistory 和 sessionState 理解“它、这个、刚才那个”等指代；"
+                            "无法唯一定位时直接追问，不得假装知道。"
                         ),
                     },
                     {
@@ -424,6 +470,8 @@ class SystemManagerService:
                             "pagePath": page_path,
                             "systemContext": safe_context,
                             "manualReferences": references,
+                            "conversationHistory": (conversation_history or [])[-16:],
+                            "sessionState": session_state or {},
                         }, ensure_ascii=False),
                     },
                 ],
@@ -433,9 +481,12 @@ class SystemManagerService:
             from app.services.chat_response import extract_chat_content
 
             answer = extract_chat_content(completion)
-            return answer.strip() if answer and answer.strip() else None
+            return (
+                answer.strip() if answer and answer.strip() else None,
+                model_reference,
+            )
         except Exception:
-            return None
+            return None, None
 
     def _audit_path(self) -> Path:
         """系统管家审计日志路径。"""
@@ -659,11 +710,51 @@ class SystemManagerService:
         return payload
 
     @staticmethod
-    def _infer_mcp_config(message: str) -> dict[str, Any] | None:
+    def _extract_requested_name(message: str) -> str | None:
+        """从“名称改成 X / 叫 X / 命名为 X”中提取用户明确给出的显示名。"""
+        patterns = (
+            r"(?:名称|名字)\s*(?:改成|改为|叫做|叫|是|为|[:：])\s*[「『\"']?([^」』\"'\n，。；;]{1,80})",
+            r"(?:改名为|命名为|改成|改为|rename\s+to)\s*[「『\"']?([^」』\"'\n，。；;]{1,80})",
+        )
+        for pattern in patterns:
+            match = re.search(pattern, message, re.IGNORECASE)
+            if match:
+                name = match.group(1).strip(" `「」『』\"'")
+                # 后续配置说明不属于名称。
+                name = re.split(r"\s+(?:需要|使用|采用|通过|并且|然后)\b", name, maxsplit=1)[0].strip()
+                if name:
+                    return name[:80]
+        return None
+
+    @staticmethod
+    def _friendly_mcp_name(raw: str) -> str:
+        """把域名或 npm 包名转换为可读名称，去掉 mcp/server/api 等技术噪声。"""
+        value = urllib.parse.unquote(raw).strip().strip("/")
+        if "/" in value:
+            value = value.rsplit("/", 1)[-1]
+        if value.startswith("@") and "-" not in value:
+            value = value[1:]
+        value = re.sub(r"^(?:mcp[-_.]?server|server[-_.]?mcp|mcp|server)[-_.]?", "", value, flags=re.IGNORECASE)
+        value = re.sub(r"[-_.]?(?:mcp[-_.]?server|server[-_.]?mcp|mcp|server)$", "", value, flags=re.IGNORECASE)
+        tokens = [
+            token
+            for token in re.split(r"[-_.]+", value)
+            if token.lower() not in {"www", "api", "mcp", "server", "service", "com", "cn", "io", "ai", "app"}
+        ]
+        if not tokens:
+            return "Remote MCP"
+        return " ".join(
+            token.upper() if len(token) <= 3 and token.isalpha() else token[:1].upper() + token[1:]
+            for token in tokens
+        )[:80]
+
+    @classmethod
+    def _infer_mcp_config(cls, message: str) -> dict[str, Any] | None:
         """从安装命令或服务 URL 推导 MCP 配置，免填 serverCode、名称和传输字段。"""
         lowered = message.lower()
-        if "mcp" not in lowered or not any(word in lowered for word in ("添加", "安装", "接入", "连接", "add")):
+        if "mcp" not in lowered or not any(word in lowered for word in _MCP_ADD_WORDS):
             return None
+        explicit_name = cls._extract_requested_name(message)
         command_match = re.search(r"\b(npx|uvx|python|node)\s+([^\r\n，。]+)", message, re.IGNORECASE)
         if command_match:
             command = command_match.group(1).lower()
@@ -676,7 +767,7 @@ class SystemManagerService:
             code = re.sub(r"[^a-z0-9-]+", "-", raw_code.lower()).strip("-") or "mcp-server"
             return {
                 "serverCode": code[:64],
-                "name": package,
+                "name": explicit_name or cls._friendly_mcp_name(package),
                 "transportType": "stdio",
                 "command": command,
                 "commandArgs": args,
@@ -684,12 +775,13 @@ class SystemManagerService:
         url_match = re.search(r"https?://[^\s，。]+", message)
         if url_match:
             url = url_match.group(0).rstrip(".,")
-            host = urllib.parse.urlparse(url).hostname or "remote-mcp"
+            parsed = urllib.parse.urlparse(url)
+            host = parsed.hostname or "remote-mcp"
             code = re.sub(r"[^a-z0-9-]+", "-", host.lower()).strip("-")[:64]
             auth_type = "oauth" if any(word in lowered for word in ("oauth", "登录", "授权")) else "none"
             return {
                 "serverCode": code or "remote-mcp",
-                "name": host,
+                "name": explicit_name or cls._friendly_mcp_name(host),
                 "transportType": "streamable_http",
                 "url": url,
                 "authType": auth_type,
@@ -755,6 +847,23 @@ class SystemManagerService:
             raise ValueError("系统管家会话不存在")
         return json.loads(path.read_text(encoding="utf-8"))
 
+    def _load_session_state(
+        self,
+        owner: str,
+        session_id: str,
+    ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        """读取最近对话和结构化焦点；新会话返回空状态。"""
+        path = self._session_path(owner, session_id)
+        if not path.exists():
+            return [], {}
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            messages = data.get("messages") if isinstance(data.get("messages"), list) else []
+            state = data.get("state") if isinstance(data.get("state"), dict) else {}
+            return messages[-32:], state
+        except Exception:
+            return [], {}
+
     def _record_exchange(
         self,
         owner: str,
@@ -762,6 +871,7 @@ class SystemManagerService:
         message: str,
         response: dict[str, Any],
         page_path: str,
+        state_update: dict[str, Any] | None = None,
     ) -> None:
         """原子追加一轮对话；不保存 OAuth code、token 或密钥明文。"""
         path = self._session_path(owner, session_id)
@@ -769,7 +879,12 @@ class SystemManagerService:
         if path.exists():
             data = json.loads(path.read_text(encoding="utf-8"))
         else:
-            data = {"sessionId": session_id, "messages": [], "createdAt": time.time()}
+            data = {
+                "sessionId": session_id,
+                "messages": [],
+                "state": {},
+                "createdAt": time.time(),
+            }
         safe_message = re.sub(
             r'("(?:api[_-]?key|token|secret|password)"\s*:\s*")[^"]+(")',
             r'\1***\2',
@@ -787,10 +902,47 @@ class SystemManagerService:
             },
         ])
         data["messages"] = data["messages"][-200:]
+        if not isinstance(data.get("state"), dict):
+            data["state"] = {}
+        if state_update:
+            data["state"].update(state_update)
         data["updatedAt"] = time.time()
         temp = path.with_suffix(".tmp")
         temp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
         temp.replace(path)
+
+    def _discard_proposal(self, proposal_id: str | None, owner: str) -> None:
+        """使旧草稿提案失效；只处理当前用户自己的提案。"""
+        if not proposal_id:
+            return
+        proposal = self._proposals.get(proposal_id)
+        if proposal is not None and proposal.owner == owner:
+            self._proposals.pop(proposal_id, None)
+        try:
+            path = self._proposal_path(proposal_id)
+            if not path.exists():
+                return
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            if raw.get("owner") == owner:
+                path.unlink(missing_ok=True)
+        except Exception:
+            return
+
+    @staticmethod
+    def _mcp_focus_state(
+        definition: dict[str, Any],
+        proposal_id: str | None = None,
+    ) -> dict[str, Any]:
+        """构造会话中的 MCP 当前焦点，供“它/刚才那个”指代。"""
+        return {
+            "focusedResource": {
+                "type": "mcp",
+                "code": definition.get("serverCode"),
+                "name": definition.get("name"),
+            },
+            "pendingMcpDefinition": definition,
+            "pendingProposalId": proposal_id,
+        }
 
     def chat(
         self,
@@ -804,17 +956,69 @@ class SystemManagerService:
         text = message.strip()
         lower = text.lower()
         active_session_id = session_id or ("sm_" + secrets.token_urlsafe(12))
+        conversation_history, session_state = self._load_session_state(
+            owner,
+            active_session_id,
+        )
         guide = self._guide_for_path(page_path)
+        manager_info = self._manager_info()
         response: dict[str, Any] = {
             "mode": "guide",
             "sources": [{"title": guide["title"], "type": "page"}],
             "suggestions": ["告诉我下一步", "检查系统状态", "解释最近失败"],
             "sessionId": active_session_id,
+            "agent": {
+                **manager_info,
+                "decisionSource": "rules",
+                "contextMessages": len(conversation_history),
+            },
         }
 
-        def finish(result: dict[str, Any]) -> dict[str, Any]:
-            self._record_exchange(owner, active_session_id, text, result, page_path)
+        def finish(
+            result: dict[str, Any],
+            *,
+            state_update: dict[str, Any] | None = None,
+            decision_source: str = "rules",
+        ) -> dict[str, Any]:
+            result["agent"] = {
+                **manager_info,
+                "decisionSource": decision_source,
+                "contextMessages": len(conversation_history),
+            }
+            self._record_exchange(
+                owner,
+                active_session_id,
+                text,
+                result,
+                page_path,
+                state_update=state_update,
+            )
             return result
+
+        asks_model = "模型" in text and any(
+            word in text for word in ("什么", "哪个", "哪一个", "用的", "调用", "是谁")
+        )
+        if asks_model:
+            model_reference = manager_info.get("modelReference") or "当前不可用"
+            configuration_note = (
+                "这是为系统管家单独配置的模型。"
+                if manager_info.get("modelConfigured")
+                else (
+                    "当前没有配置系统管家专用模型，正在跟随平台默认模型；"
+                    "可通过 Agent.SystemManagerModel 固定。"
+                )
+            )
+            response.update({
+                "mode": "diagnose",
+                "answer": (
+                    f"当前系统管家使用：**{model_reference}**。\n\n"
+                    f"{configuration_note}\n\n"
+                    "MCP 安装、改名等管理动作由本地规则解析并生成待确认提案；"
+                    "复杂解释才会调用这个模型。"
+                ),
+                "suggestions": ["查看系统状态", "查看 MCP 列表", "告诉我下一步"],
+            })
+            return finish(response)
 
         github = _GITHUB_RE.search(text)
         if github and any(word in text.lower() for word in ("安装", "导入", "install", "import")):
@@ -871,6 +1075,101 @@ class SystemManagerService:
             })
             return finish(response)
 
+        rename_intent = (
+            "mcp" in lower
+            and any(word in lower for word in _MCP_RENAME_WORDS)
+        ) or (
+            any(word in lower for word in _MCP_RENAME_WORDS)
+            and (session_state.get("focusedResource") or {}).get("type") == "mcp"
+        )
+        if rename_intent and not any(word in lower for word in _MCP_ADD_WORDS):
+            focus = session_state.get("focusedResource") or {}
+            item = self._mentioned_item(text, self._mcps.list_all(), "server_code")
+            if item is None and focus.get("type") == "mcp" and focus.get("code"):
+                item = self._mcps.get(str(focus["code"]))
+            pending_definition = session_state.get("pendingMcpDefinition")
+            if not isinstance(pending_definition, dict):
+                pending_definition = None
+
+            current_name = (
+                getattr(item, "name", "")
+                if item is not None
+                else str((pending_definition or {}).get("name") or focus.get("name") or "")
+            )
+            requested_name = self._extract_requested_name(text)
+            if not requested_name:
+                response.update({
+                    "mode": "manage",
+                    "answer": (
+                        f"可以。当前名称是「{current_name or '未命名 MCP'}」。"
+                        "请直接告诉我新名称，例如：`名字改成 Notion 知识库`。"
+                    ),
+                })
+                return finish(response)
+
+            if item is None and pending_definition is not None:
+                updated_definition = dict(pending_definition)
+                updated_definition["name"] = requested_name
+                self._discard_proposal(
+                    str(session_state.get("pendingProposalId") or ""),
+                    owner,
+                )
+                proposal = self._add_proposal(
+                    "add_mcp",
+                    {"definition": updated_definition},
+                    self._safe_mcp_summary(updated_definition),
+                    owner=owner,
+                )
+                response.update({
+                    "mode": "manage",
+                    "answer": (
+                        f"已把刚才那个 MCP 的名称从「{current_name}」改为"
+                        f"「{requested_name}」。连接地址和登录方式没有变化，请确认新预览。"
+                    ),
+                    "proposal": proposal,
+                })
+                return finish(
+                    response,
+                    state_update=self._mcp_focus_state(
+                        updated_definition,
+                        proposal["proposalId"],
+                    ),
+                )
+
+            if item is None:
+                response.update({
+                    "mode": "manage",
+                    "answer": "我无法唯一确定你指的是哪个 MCP。请说出当前名称或 serverCode。",
+                })
+                return finish(response)
+
+            proposal = self._add_proposal(
+                "rename_mcp",
+                {
+                    "serverCode": item.server_code,
+                    "newName": requested_name,
+                },
+                f"把 MCP「{item.name}」（{item.server_code}）重命名为「{requested_name}」",
+                owner=owner,
+            )
+            response.update({
+                "mode": "manage",
+                "answer": (
+                    f"已定位刚才的 MCP「{item.name}」。这次只修改显示名称，"
+                    "serverCode、连接地址、登录和员工绑定都保持不变。"
+                ),
+                "proposal": proposal,
+            })
+            focused = item.model_dump(by_alias=True, mode="json")
+            focused["name"] = requested_name
+            return finish(
+                response,
+                state_update=self._mcp_focus_state(
+                    focused,
+                    proposal["proposalId"],
+                ),
+            )
+
         if "mcp" in lower and any(word in text for word in ("删除", "移除", "卸载")):
             item = self._mentioned_item(text, self._mcps.list_all(), "server_code")
             if item is None:
@@ -886,7 +1185,16 @@ class SystemManagerService:
                 "answer": "我已生成删除预览。配置会进入变更快照，可从审计记录回滚。",
                 "proposal": proposal,
             })
-            return finish(response)
+            return finish(
+                response,
+                state_update={
+                    "focusedResource": {
+                        "type": "mcp",
+                        "code": item.server_code,
+                        "name": item.name,
+                    },
+                },
+            )
 
         if (
             "mcp" in lower
@@ -903,7 +1211,16 @@ class SystemManagerService:
                 "answer": f"可以。我会打开「{item.name}」的官方授权页，回调后自动交换加密令牌并真实验证连接。",
                 "uiAction": {"kind": "mcp_oauth", "serverCode": item.server_code, "label": "开始登录"},
             })
-            return finish(response)
+            return finish(
+                response,
+                state_update={
+                    "focusedResource": {
+                        "type": "mcp",
+                        "code": item.server_code,
+                        "name": item.name,
+                    },
+                },
+            )
 
         if "mcp" in lower and any(word in text for word in ("测试", "验证", "能不能用")):
             item = self._mentioned_item(text, self._mcps.list_all(), "server_code")
@@ -914,7 +1231,16 @@ class SystemManagerService:
                 "answer": f"已定位 MCP「{item.name}」。点击后会建立真实会话并读取工具列表。",
                 "uiAction": {"kind": "mcp_test", "serverCode": item.server_code, "label": "真实验证"},
             })
-            return finish(response)
+            return finish(
+                response,
+                state_update={
+                    "focusedResource": {
+                        "type": "mcp",
+                        "code": item.server_code,
+                        "name": item.name,
+                    },
+                },
+            )
 
         change_match = re.search(r"change_[A-Za-z0-9_-]{10,100}", text)
         if change_match and "回滚" in text:
@@ -987,10 +1313,21 @@ class SystemManagerService:
             )
             response.update({
                 "mode": "manage",
-                "answer": "MCP 配置格式有效。我已生成变更预览；确认后才会保存。",
+                "answer": (
+                    f"我识别到这是 MCP「{item.name}」，编码为 `{item.server_code}`。"
+                    "连接方式已经解析完成；名称或编码不合适可以直接说"
+                    "“名字改成 …”，确认后才会保存。"
+                ),
                 "proposal": proposal,
             })
-            return finish(response)
+            definition = item.model_dump(by_alias=True, mode="json")
+            return finish(
+                response,
+                state_update=self._mcp_focus_state(
+                    definition,
+                    proposal["proposalId"],
+                ),
+            )
 
         if "mcp" in lower and any(word in lower for word in ("添加", "安装", "接入", "连接")):
             response.update({
@@ -1043,22 +1380,42 @@ class SystemManagerService:
             })
             return finish(response)
 
-        knowledge = self._search_knowledge(text)
-        if knowledge and not any(word in text for word in ("下一步", "怎么用", "如何使用")):
-            model_answer = self._model_answer(text, page_path, context, knowledge)
-            excerpts = "\n\n".join(
-                f"**{item['title']}**\n{item['excerpt']}"
-                for item in knowledge
+        if any(word in text for word in ("下一步", "接下来", "继续做")):
+            steps = "\n".join(
+                f"{index + 1}. {step}"
+                for index, step in enumerate(guide["steps"])
             )
             response.update({
                 "mode": "guide",
-                "answer": model_answer or excerpts,
+                "answer": (
+                    f"你现在在 **{guide['title']}**。{guide['summary']}\n\n"
+                    f"建议下一步：\n{steps}"
+                ),
+                "diagnostics": context,
+            })
+            return finish(response)
+
+        knowledge = self._search_knowledge(text)
+        model_answer, model_reference = self._model_answer(
+            text,
+            page_path,
+            context,
+            knowledge,
+            conversation_history=conversation_history,
+            session_state=session_state,
+        )
+        if model_answer:
+            response.update({
+                "mode": "guide",
+                "answer": model_answer,
                 "sources": [
                     {"title": item["title"], "type": "manual", "path": item["path"]}
                     for item in knowledge
                 ],
             })
-            return finish(response)
+            if model_reference:
+                response["agent"]["modelReference"] = model_reference
+            return finish(response, decision_source="model")
 
         steps = "\n".join(f"{index + 1}. {step}" for index, step in enumerate(guide["steps"]))
         response["answer"] = (
@@ -1105,6 +1462,34 @@ class SystemManagerService:
                 "mcp",
                 saved.server_code,
                 previous.model_dump(by_alias=True, mode="json") if previous else None,
+            )
+            self._write_audit(proposal, "success", message, change_id=change_id)
+            return {
+                "action": proposal.action,
+                "message": message,
+                "resource": saved.model_dump(by_alias=True, mode="json"),
+                "changeId": change_id,
+            }
+        if proposal.action == "rename_mcp":
+            server_code = str(proposal.payload.get("serverCode") or "")
+            new_name = str(proposal.payload.get("newName") or "").strip()
+            item = self._mcps.get(server_code)
+            if item is None:
+                raise ValueError("要重命名的 MCP 已不存在")
+            if not new_name:
+                raise ValueError("MCP 新名称不能为空")
+            before = item.model_dump(by_alias=True, mode="json")
+            saved = self._mcps.save(item.model_copy(update={"name": new_name}))
+            message = (
+                f"MCP「{before.get('name') or server_code}」已重命名为"
+                f"「{saved.name}」，serverCode 保持 `{server_code}`。"
+            )
+            change_id = self._save_change(
+                owner,
+                proposal.action,
+                "mcp",
+                server_code,
+                before,
             )
             self._write_audit(proposal, "success", message, change_id=change_id)
             return {

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from types import SimpleNamespace
 
 import pytest
 
@@ -44,13 +45,14 @@ class _Run:
     error_message: str = "模型返回空内容"
 
 
-def _service(*, mcps=None, runs=None, root_dir=None):
+def _service(*, mcps=None, runs=None, root_dir=None, ai_service=None):
     return SystemManagerService(
         skill_registry=_Registry(),
         mcp_registry=_Registry(mcps),
         tool_registry=_Registry(),
         employee_registry=_Registry(),
         run_store=_RunStore(runs),
+        ai_service=ai_service,
         root_dir=root_dir,
     )
 
@@ -159,6 +161,135 @@ def test_natural_language_mcp_infers_config_without_server_code(tmp_path):
     assert definition["serverCode"] == "example-com"
     assert definition["transportType"] == "streamable_http"
     assert definition["authType"] == "oauth"
+    assert definition["name"] == "Example"
+
+
+def test_initial_mcp_message_respects_explicit_display_name(tmp_path):
+    service = _service(root_dir=tmp_path / "manager")
+
+    reply = service.chat(
+        "帮我添加 MCP：https://mcp.notion.com/mcp，名称叫我的 Notion 知识库，需要 OAuth 登录",
+        "/advanced/tools",
+    )
+    proposal = service._consume_proposal(reply["proposal"]["proposalId"], "local")
+
+    assert proposal.payload["definition"]["name"] == "我的 Notion 知识库"
+    assert "我的 Notion 知识库" in reply["answer"]
+
+
+def test_followup_can_rename_pending_mcp_by_pronoun(tmp_path):
+    service = _service(root_dir=tmp_path / "manager")
+    first = service.chat(
+        "添加 MCP：https://mcp.notion.com/mcp，需要 OAuth 登录",
+        "/advanced/tools",
+        owner="alice",
+    )
+
+    second = service.chat(
+        "把它的名字改成内容知识库",
+        "/advanced/tools",
+        owner="alice",
+        session_id=first["sessionId"],
+    )
+
+    assert second["proposal"]["action"] == "add_mcp"
+    changed = service.confirm(second["proposal"]["proposalId"], owner="alice")
+    assert changed["resource"]["name"] == "内容知识库"
+    with pytest.raises(ValueError, match="不存在|已经执行|已过期"):
+        service.confirm(first["proposal"]["proposalId"], owner="alice")
+
+    session = service.get_session("alice", first["sessionId"])
+    assert session["state"]["focusedResource"]["code"] == "mcp-notion-com"
+    assert session["state"]["focusedResource"]["name"] == "内容知识库"
+
+
+def test_followup_can_rename_installed_mcp_without_changing_code(tmp_path):
+    service = _service(root_dir=tmp_path / "manager")
+    first = service.chat(
+        "添加 MCP：https://mcp.notion.com/mcp",
+        "/advanced/tools",
+        owner="alice",
+    )
+    service.confirm(first["proposal"]["proposalId"], owner="alice")
+
+    rename = service.chat(
+        "名字改成 Notion 正式库",
+        "/advanced/tools",
+        owner="alice",
+        session_id=first["sessionId"],
+    )
+    result = service.confirm(rename["proposal"]["proposalId"], owner="alice")
+
+    assert result["action"] == "rename_mcp"
+    assert result["resource"]["serverCode"] == "mcp-notion-com"
+    assert service._mcps.get("mcp-notion-com").name == "Notion 正式库"
+
+
+class _FakeAiService:
+    def __init__(self):
+        self.calls: list[dict] = []
+        self.client = SimpleNamespace(
+            _agent_provider_name="test-provider",
+            chat=SimpleNamespace(
+                completions=SimpleNamespace(create=self._create),
+            ),
+        )
+
+    def _create(self, **kwargs):
+        self.calls.append(kwargs)
+        return SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(content="我记得上一轮内容。", tool_calls=None),
+                    finish_reason="stop",
+                )
+            ],
+            usage=None,
+        )
+
+    def get_default_client(self):
+        return self.client, "test-model"
+
+    def get_client(self, _model_ref):
+        return self.client, "test-model"
+
+
+def test_model_fallback_receives_real_conversation_history(tmp_path, monkeypatch):
+    from app.config import settings
+
+    monkeypatch.setattr(settings.agent, "system_manager_model", "")
+    ai = _FakeAiService()
+    service = _service(root_dir=tmp_path / "manager", ai_service=ai)
+    first = service.chat("请记住我把这个环境叫做北区", "/settings", owner="alice")
+    second = service.chat(
+        "我刚才怎么称呼这个环境？",
+        "/settings",
+        owner="alice",
+        session_id=first["sessionId"],
+    )
+
+    payload = __import__("json").loads(ai.calls[-1]["messages"][1]["content"])
+    history_text = "\n".join(item["content"] for item in payload["conversationHistory"])
+    assert "北区" in history_text
+    assert second["agent"]["modelReference"] == "test-provider:test-model"
+    assert second["agent"]["decisionSource"] == "model"
+    assert second["agent"]["contextMessages"] == 2
+
+
+def test_manager_reports_actual_model_without_calling_model(tmp_path, monkeypatch):
+    from app.config import settings
+
+    monkeypatch.setattr(settings.agent, "system_manager_model", "")
+    ai = _FakeAiService()
+    service = _service(root_dir=tmp_path / "manager", ai_service=ai)
+
+    reply = service.chat("你调用的什么模型？", "/advanced/tools", owner="alice")
+
+    assert "test-provider:test-model" in reply["answer"]
+    assert "平台默认模型" in reply["answer"]
+    assert reply["agent"]["modelReference"] == "test-provider:test-model"
+    assert reply["agent"]["decisionSource"] == "rules"
+    assert ai.calls == []
 
 
 def test_manager_session_survives_service_restart(tmp_path):

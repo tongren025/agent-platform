@@ -300,6 +300,15 @@ export interface SystemManagerProposal {
 }
 
 export interface SystemManagerContext {
+  manager: {
+    kind: string;
+    model: string;
+    modelReference: string;
+    modelConfigured: boolean;
+    stateful: boolean;
+    confirmationRequired: boolean;
+    error?: string;
+  };
   page: { title: string; summary: string; steps: string[] };
   inventory: { employees: number; skills: number; tools: number; mcpServers: number };
   mcpStatus: {
@@ -326,6 +335,10 @@ export interface SystemManagerReply {
   proposal?: SystemManagerProposal;
   diagnostics?: SystemManagerContext;
   sessionId: string;
+  agent?: SystemManagerContext['manager'] & {
+    decisionSource: 'rules' | 'model';
+    contextMessages: number;
+  };
   uiAction?: { kind: 'mcp_oauth' | 'mcp_test'; serverCode: string; label: string };
 }
 

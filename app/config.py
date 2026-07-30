@@ -44,6 +44,8 @@ class AgentConfig:
     run_record_dir: str = "data/agent-runs"
     admin_api_base_url: str = "http://localhost:5040"
     run_timeout_seconds: int = 180
+    # 系统管家专用模型引用（provider:model）；留空时才回退到第一个可用模型。
+    system_manager_model: str = ""
     shell_execute_enabled: bool = False
     shell_allowed_commands: list[str] = field(default_factory=lambda: [
         "echo", "date", "ls", "dir", "cat", "type", "find",
@@ -135,6 +137,7 @@ def load_settings() -> Settings:
         run_record_dir=agent_raw.get("RunRecordDir", "data/agent-runs"),
         admin_api_base_url=agent_raw.get("AdminApiBaseUrl", "http://localhost:5040"),
         run_timeout_seconds=int(agent_raw.get("RunTimeoutSeconds", 180)),
+        system_manager_model=str(agent_raw.get("SystemManagerModel", "") or "").strip(),
         shell_execute_enabled=shell_raw.get("Enabled", False),
         shell_allowed_commands=shell_raw.get("AllowedCommands", [
             "echo", "date", "ls", "dir", "cat", "type", "find",
