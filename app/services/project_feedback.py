@@ -43,6 +43,18 @@ STAGE_ORDER = {
     "video": 60,
     "final": 70,
 }
+ISSUE_RECOMMENDATION_ORDER = {
+    "source_missing": 0,
+    "production_units_missing": 10,
+    "quality_gate_failed": 20,
+    "manual_review_required": 30,
+    "stage_missing": 40,
+    "image_review_failed": 50,
+    "image_missing": 60,
+    "video_processing": 70,
+    "video_missing": 80,
+    "final_missing": 90,
+}
 
 
 def summarize_project_feedback(
@@ -97,14 +109,18 @@ def summarize_project_feedback(
             ),
         })
 
-    actionable = [item for item in top_issues if item["autoFixableCount"] > 0]
-    actionable.sort(
+    # 全局建议必须遵守生产依赖，不能因为“缺视频”数量更大就越过待确认文本或缺图。
+    # 同一阶段内再优先明确可修的问题，最后才按频次决定。
+    recommendations = list(top_issues)
+    recommendations.sort(
         key=lambda item: (
-            -int(item["autoFixableCount"]),
             STAGE_ORDER.get(str(item["stage"]), 999),
+            ISSUE_RECOMMENDATION_ORDER.get(str(item["code"]), 999),
+            -int(item["autoFixableCount"]),
+            -int(item["count"]),
         )
     )
-    recommended = actionable[0] if actionable else (top_issues[0] if top_issues else None)
+    recommended = recommendations[0] if recommendations else None
 
     resolved = sum(1 for run in runs if run.get("status") == "resolved")
     needs_review = sum(1 for run in runs if run.get("status") == "needs_review")

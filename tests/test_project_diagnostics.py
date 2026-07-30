@@ -325,6 +325,60 @@ def test_feedback_summary_prioritizes_high_frequency_automatic_problem():
     assert feedback["optimization"]["averageScoreGain"] == 15.0
 
 
+def test_feedback_recommendation_respects_stage_dependencies_before_frequency():
+    feedback = summarize_project_feedback(
+        [
+            {
+                "projectId": "dependency-order",
+                "name": "依赖顺序项目",
+                "diagnostics": {
+                    "score": 20,
+                    "blockerCount": 6,
+                    "issues": [
+                        {
+                            "code": "video_missing",
+                            "stage": "video",
+                            "autoFixable": False,
+                        },
+                        {
+                            "code": "video_missing",
+                            "stage": "video",
+                            "autoFixable": False,
+                        },
+                        {
+                            "code": "video_missing",
+                            "stage": "video",
+                            "autoFixable": False,
+                        },
+                        {
+                            "code": "image_missing",
+                            "stage": "image",
+                            "autoFixable": False,
+                        },
+                        {
+                            "code": "image_missing",
+                            "stage": "image",
+                            "autoFixable": False,
+                        },
+                        {
+                            "code": "manual_review_required",
+                            "stage": "script",
+                            "autoFixable": False,
+                        },
+                    ],
+                },
+            },
+        ],
+        [],
+    )
+
+    assert feedback["topIssues"][0]["code"] == "video_missing"
+    assert feedback["recommendedIssueCode"] == "manual_review_required"
+    assert feedback["nextActions"] == [
+        "先人工确认内容；没有失败原因时不要自动重写。"
+    ]
+
+
 def test_aggregate_gc_uses_prompt_order_instead_of_reporting_no_units():
     cards = [
         ProductionCard(
