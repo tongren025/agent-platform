@@ -655,7 +655,10 @@ export default function NomiStudioApp(): JSX.Element {
             <React.Suspense fallback={<GenerationCanvasLoading />}>
               {/* relative 包一层:S2b 计划 overlay 与画布同坐标系,且不喂巨壳 */}
               <div className={cn('relative w-full h-full')}>
-                <GenerationCanvas />
+                <GenerationCanvas
+                  projectId={activeProject?.id ?? null}
+                  projectName={activeProject?.name}
+                />
                 {hasPendingSpendConfirm ? (
                   <React.Suspense fallback={null}>
                     <SpendConfirmDialog />

@@ -22,6 +22,7 @@ type CanvasNavigationStackProps = {
   onFitView: () => void
   onResetView: () => void
   onTidy: () => void
+  allowTidy?: boolean
   onZoomTo: (nextZoom: number) => void
   batchPlanOverlay?: React.ReactNode
 }
@@ -40,6 +41,7 @@ export function CanvasNavigationStack({
   onFitView,
   onResetView,
   onTidy,
+  allowTidy = true,
   onZoomTo,
   batchPlanOverlay,
 }: CanvasNavigationStackProps): JSX.Element {
@@ -102,7 +104,7 @@ export function CanvasNavigationStack({
           aria-label={t('generationCommon.navigation.zoomRatio')}
           onChange={(event) => onZoomTo(Number(event.target.value) / 100)}
         />
-        {!readOnly ? (
+        {!readOnly && allowTidy ? (
           <WorkbenchButton
             aria-label={t('generationCommon.navigation.tidy')}
             title={t('generationCommon.navigation.tidyHint')}

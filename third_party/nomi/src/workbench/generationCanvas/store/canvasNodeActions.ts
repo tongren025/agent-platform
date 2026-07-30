@@ -4,6 +4,7 @@ import { tidyCanvasLayout } from './tidyCanvasLayout'
 import { getDefaultCategoryForNodeKind, type GenerationCanvasNode } from '../model/generationCanvasTypes'
 import { getNodeSize } from '../model/generationNodeKinds'
 import { isShotNumberedNode, nextShotIndex } from '../model/shotNumbering'
+import { withActiveProductionScopeMeta } from '../production/productionScopeStore'
 import { CLIPBOARD_OFFSET, createClipboardNodeId, createNodeId } from './canvasIds'
 import { bumpPersistRevision, isCategoryId, shouldEmitCanvasMutation, shouldPersistCanvasMutation } from './canvasGuards'
 import { getHistoryFlags, pushUndoSnapshot } from '../events/canvasUndoJournal'
@@ -38,6 +39,9 @@ function pushEditBurstBarrier(nodeId: string, state: unknown): void {
 export const createCanvasNodeActions: CanvasSliceCreator<CanvasNodeActions> = (set, get) => ({
   addNode: (input) => {
     const currentState = get()
+    // 生产项目按「集 → 镜头」工作时，任何手动/AI 新建节点都继承当前镜头。
+    // 否则节点创建成功后会立刻掉出当前筛选范围，且后续批量生成无法判断归属。
+    const scopedMeta = withActiveProductionScopeMeta(input.meta)
     // 节点出生必带 categoryId：调用方没给就按 kind 推断（与迁移共用同一映射）。
     // 这是「无分类节点」的总闸——漏传 categoryId 的创建入口曾在下次打开项目时
     // 触发 legacy 迁移 toast 甚至删节点（审计 A4 的入口集）。
@@ -64,10 +68,10 @@ export const createCanvasNodeActions: CanvasSliceCreator<CanvasNodeActions> = (s
     // 镜头编号是出生即分配的存储身份（max+1），之后移动/加无关节点不再改号（审计 A2）。
     const nextNode = {
       ...baseNode,
-      ...(input.meta ? { meta: { ...input.meta } } : {}),
+      ...(scopedMeta ? { meta: { ...scopedMeta } } : {}),
       ...(input.size ? { size: { ...input.size } } : {}),
       categoryId,
-      ...(isShotNumberedNode({ kind: input.kind, categoryId, meta: input.meta })
+      ...(isShotNumberedNode({ kind: input.kind, categoryId, meta: scopedMeta })
         ? { shotIndex: nextShotIndex(currentState.nodes) }
         : {}),
     }

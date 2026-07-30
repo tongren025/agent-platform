@@ -32,6 +32,12 @@ import {
   buildGuidedScriptPrompt,
 } from './guidedProductionPrompts'
 import { guidedEmployeeForStage } from './guidedProductionEmployees'
+import {
+  filterProductionTimeline,
+  isNodeInProductionAgentScope,
+  resolveProductionScope,
+} from '../generationCanvas/production/productionHierarchy'
+import { useProductionScopeStore } from '../generationCanvas/production/productionScopeStore'
 
 function stageTranslationKey(
   stageId: GuidedProductionStageId,
@@ -54,12 +60,30 @@ export default function GuidedProductionBar(): JSX.Element {
   const workbenchDocument = useWorkbenchStore((state) => state.workbenchDocument)
   const storyboardPlan = useWorkbenchStore((state) => state.storyboardPlan)
   const storyboardPlanCommitted = useWorkbenchStore((state) => state.storyboardPlanCommitted)
-  const timeline = useWorkbenchStore((state) => state.timeline)
+  const rawTimeline = useWorkbenchStore((state) => state.timeline)
   const setWorkspaceMode = useWorkbenchStore((state) => state.setWorkspaceMode)
   const setStoryboardEditorOpen = useWorkbenchStore((state) => state.setStoryboardEditorOpen)
   const setCreationAiCollapsed = useWorkbenchStore((state) => state.setCreationAiCollapsed)
-  const nodes = useGenerationCanvasStore((state) => state.nodes)
-  const edges = useGenerationCanvasStore((state) => state.edges)
+  const allNodes = useGenerationCanvasStore((state) => state.nodes)
+  const allEdges = useGenerationCanvasStore((state) => state.edges)
+  const storedProductionScope = useProductionScopeStore((state) => state.activeScope)
+  const activeProductionScope = React.useMemo(
+    () => resolveProductionScope(allNodes, storedProductionScope),
+    [allNodes, storedProductionScope],
+  )
+  const nodes = React.useMemo(
+    () => allNodes.filter((node) => isNodeInProductionAgentScope(node, activeProductionScope)),
+    [activeProductionScope, allNodes],
+  )
+  const nodeIds = React.useMemo(() => new Set(nodes.map((node) => node.id)), [nodes])
+  const edges = React.useMemo(
+    () => allEdges.filter((edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target)),
+    [allEdges, nodeIds],
+  )
+  const timeline = React.useMemo(
+    () => filterProductionTimeline(rawTimeline, allNodes, activeProductionScope),
+    [activeProductionScope, allNodes, rawTimeline],
+  )
   const documentText = React.useMemo(
     () => extractWorkbenchDocumentText(workbenchDocument),
     [workbenchDocument],
@@ -107,7 +131,9 @@ export default function GuidedProductionBar(): JSX.Element {
     const existingSourceIds = new Set(
       workbenchState.timeline.tracks.flatMap((track) => track.clips.map((clip) => clip.sourceNodeId)),
     )
+    const scopedNodeIds = new Set(generationCanvasTools.read_canvas().nodes.map((node) => node.id))
     const videos = canvasState.nodes
+      .filter((node) => scopedNodeIds.has(node.id))
       .filter((node) => node.kind === 'video' && (node.status === 'success' || node.result?.type === 'video'))
       .filter((node) => !existingSourceIds.has(node.id))
       .sort((left, right) => (left.shotIndex ?? Number.MAX_SAFE_INTEGER) - (right.shotIndex ?? Number.MAX_SAFE_INTEGER))

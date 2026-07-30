@@ -11,6 +11,12 @@ const TimelinePanel = lazyWithChunkBoundary(
   () => import('../timeline/TimelinePanel'),
 )
 import { computeTimelineDuration } from '../timeline/timelineMath'
+import { useGenerationCanvasStore } from '../generationCanvas/store/generationCanvasStore'
+import { useProductionScopeStore } from '../generationCanvas/production/productionScopeStore'
+import {
+  filterProductionTimeline,
+  resolveProductionScope,
+} from '../generationCanvas/production/productionHierarchy'
 
 type GenerationWorkspaceProps = {
   canvas: React.ReactNode
@@ -33,7 +39,17 @@ export default function GenerationWorkspace({
   const { t } = useTranslation()
   const width = useWorkbenchStore((s) => s.assistantWidth)
   const setWidth = useWorkbenchStore((s) => s.setAssistantWidth)
-  const timeline = useWorkbenchStore((s) => s.timeline)
+  const rawTimeline = useWorkbenchStore((s) => s.timeline)
+  const productionNodes = useGenerationCanvasStore((state) => state.nodes)
+  const storedProductionScope = useProductionScopeStore((state) => state.activeScope)
+  const activeProductionScope = React.useMemo(
+    () => resolveProductionScope(productionNodes, storedProductionScope),
+    [productionNodes, storedProductionScope],
+  )
+  const timeline = React.useMemo(
+    () => filterProductionTimeline(rawTimeline, productionNodes, activeProductionScope),
+    [activeProductionScope, productionNodes, rawTimeline],
+  )
   const reduceMotion = useReducedMotion()
   const [timelineCollapsed, setTimelineCollapsed] = React.useState(true)
   // 折叠态悬浮把手的真实摘要：段数（含字幕/标题卡）+ 总时长，绝不编造。

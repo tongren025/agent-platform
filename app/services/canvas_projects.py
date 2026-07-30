@@ -48,6 +48,15 @@ BUILTIN_CATEGORIES = [
     },
 ]
 
+PRODUCTION_GROUP_PREFIX = "production-scope-"
+PRODUCTION_GROUP_COLORS = (
+    "#4f7cff",
+    "#8b5cf6",
+    "#0ea5a4",
+    "#e8793e",
+    "#db5a7c",
+)
+
 
 def _read_json(path: Path, default: Any) -> Any:
     try:
@@ -179,6 +188,138 @@ def _card_category(card: dict[str, Any]) -> tuple[str, str]:
     return "shots", "shot-frame"
 
 
+def _scope_number(value: Any, default: int | None = None) -> int | None:
+    try:
+        return int(value) if value is not None and str(value).strip() else default
+    except (TypeError, ValueError):
+        return default
+
+
+def _node_scope(node: dict[str, Any]) -> tuple[int | None, int] | None:
+    meta = node.get("meta")
+    if not isinstance(meta, dict):
+        return None
+    card_id = str(meta.get("productionCardId") or "").strip()
+    if not card_id and meta.get("productionScope") is not True:
+        return None
+    return _scope_number(meta.get("episode")), max(0, _scope_number(meta.get("shotNumber"), 0) or 0)
+
+
+def _scope_group_id(episode: int | None, shot_number: int, category_id: str) -> str:
+    episode_key = "global" if episode is None else f"ep{episode:03d}"
+    shot_key = "overview" if shot_number == 0 else f"g{shot_number:03d}"
+    return f"{PRODUCTION_GROUP_PREFIX}{episode_key}-{shot_key}-{category_id}"
+
+
+def _scope_group_name(episode: int | None, shot_number: int) -> str:
+    if episode is None and shot_number == 0:
+        return "全局资产"
+    episode_label = "未分集" if episode is None else f"EP{episode:02d}"
+    return f"{episode_label} · {'本集资料' if shot_number == 0 else f'G{shot_number}'}"
+
+
+def _build_production_groups(
+    nodes: list[dict[str, Any]],
+    *,
+    created_at: int,
+    excluded_node_ids: set[str] | None = None,
+) -> list[dict[str, Any]]:
+    """按集、镜头、分类建立持久化分组；一个节点只属于一个画布组。"""
+    excluded = excluded_node_ids or set()
+    buckets: dict[tuple[int | None, int, str], list[str]] = {}
+    for node in nodes:
+        node_id = str(node.get("id") or "").strip()
+        scope = _node_scope(node)
+        if not node_id or node_id in excluded or scope is None:
+            continue
+        episode, shot_number = scope
+        category_id = str(node.get("categoryId") or "shots")
+        buckets.setdefault((episode, shot_number, category_id), []).append(node_id)
+
+    groups: list[dict[str, Any]] = []
+    node_to_group: dict[str, str] = {}
+    ordered = sorted(
+        buckets.items(),
+        key=lambda item: (
+            -1 if item[0][0] is None else item[0][0],
+            item[0][1],
+            item[0][2],
+        ),
+    )
+    for group_index, ((episode, shot_number, category_id), node_ids) in enumerate(ordered):
+        group_id = _scope_group_id(episode, shot_number, category_id)
+        groups.append({
+            "id": group_id,
+            "name": _scope_group_name(episode, shot_number),
+            "categoryId": category_id,
+            "nodeIds": node_ids,
+            "color": PRODUCTION_GROUP_COLORS[group_index % len(PRODUCTION_GROUP_COLORS)],
+            "createdAt": created_at,
+            "updatedAt": created_at,
+        })
+        node_to_group.update((node_id, group_id) for node_id in node_ids)
+    for node in nodes:
+        node_id = str(node.get("id") or "")
+        if node_id in node_to_group:
+            node["groupId"] = node_to_group[node_id]
+    return groups
+
+
+def _upgrade_production_hierarchy(record: dict[str, Any], cards: list[dict[str, Any]]) -> bool:
+    """给已导入过的老画布补层级，保留用户节点、用户分组和所有编辑内容。"""
+    payload = record.get("payload")
+    if not isinstance(payload, dict):
+        return False
+    canvas = payload.get("generationCanvas")
+    if not isinstance(canvas, dict):
+        return False
+    nodes = canvas.get("nodes")
+    if not isinstance(nodes, list):
+        return False
+    clean_nodes = [node for node in nodes if isinstance(node, dict)]
+    before = json.dumps({"nodes": clean_nodes, "groups": canvas.get("groups")}, ensure_ascii=False, sort_keys=True)
+
+    cards_by_id = {
+        str(card.get("card_id")): card
+        for card in cards
+        if str(card.get("card_id") or "").strip()
+    }
+    for node in clean_nodes:
+        meta = node.get("meta")
+        if not isinstance(meta, dict):
+            continue
+        card = cards_by_id.get(str(meta.get("productionCardId") or ""))
+        if card is not None:
+            meta["episode"] = card.get("episode")
+            meta["shotNumber"] = card.get("shot_number")
+
+    existing_groups = canvas.get("groups")
+    existing_groups = existing_groups if isinstance(existing_groups, list) else []
+    user_groups = [
+        group
+        for group in existing_groups
+        if isinstance(group, dict)
+        and not str(group.get("id") or "").startswith(PRODUCTION_GROUP_PREFIX)
+    ]
+    user_grouped_ids = {
+        str(node_id)
+        for group in user_groups
+        for node_id in (group.get("nodeIds") or [])
+        if str(node_id)
+    }
+    for node in clean_nodes:
+        if str(node.get("id") or "") not in user_grouped_ids:
+            node.pop("groupId", None)
+    auto_groups = _build_production_groups(
+        clean_nodes,
+        created_at=_epoch_ms(record.get("createdAt")),
+        excluded_node_ids=user_grouped_ids,
+    )
+    canvas["groups"] = [*user_groups, *auto_groups]
+    after = json.dumps({"nodes": clean_nodes, "groups": canvas["groups"]}, ensure_ascii=False, sort_keys=True)
+    return before != after
+
+
 def _result(
     *,
     card_id: str,
@@ -293,14 +434,19 @@ def build_workbench_record(project: dict[str, Any], cards: list[dict[str, Any]])
     validate_key(project_id, label="project_id")
     created_at = _epoch_ms(project.get("created_at"))
     updated_at = _epoch_ms(project.get("updated_at"))
-    rows_by_stage: dict[str, int] = {}
+    rows_by_scope_stage: dict[tuple[int | None, int, str], int] = {}
     nodes: list[dict[str, Any]] = []
     node_by_card_id: dict[str, str] = {}
     card_by_node_id: dict[str, dict[str, Any]] = {}
     for card in cards:
         stage = str(card.get("stage") or "idea")
-        row = rows_by_stage.get(stage, 0)
-        rows_by_stage[stage] = row + 1
+        scope_stage = (
+            _scope_number(card.get("episode")),
+            max(0, _scope_number(card.get("shot_number"), 0) or 0),
+            stage,
+        )
+        row = rows_by_scope_stage.get(scope_stage, 0)
+        rows_by_scope_stage[scope_stage] = row + 1
         node = _card_node(card, row)
         nodes.append(node)
         card_id = str(card.get("card_id") or "")
@@ -337,6 +483,7 @@ def build_workbench_record(project: dict[str, Any], cards: list[dict[str, Any]])
         if part
     )
     thumbnails = _thumbnail_urls(cards)
+    groups = _build_production_groups(nodes, created_at=created_at)
     return {
         "id": project_id,
         "name": str(project.get("name") or project_id),
@@ -359,7 +506,7 @@ def build_workbench_record(project: dict[str, Any], cards: list[dict[str, Any]])
                 "nodes": nodes,
                 "edges": edges,
                 "selectedNodeIds": [],
-                "groups": [],
+                "groups": groups,
             },
             "categories": BUILTIN_CATEGORIES,
             "storyboardPlan": None,
@@ -378,6 +525,11 @@ def read_or_import_project(
     workbench_path = workbench_dir / f"{project_id}.json"
     record = _read_json(workbench_path, None)
     if isinstance(record, dict):
+        if loaded := load_production_project(production_dir, project_id):
+            _, cards = loaded
+            if _upgrade_production_hierarchy(record, cards):
+                workbench_dir.mkdir(parents=True, exist_ok=True)
+                workbench_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), "utf-8")
         return record
     loaded = load_production_project(production_dir, project_id)
     if loaded is None:
@@ -412,6 +564,8 @@ def production_assets(production_dir: Path, project_id: str) -> list[dict[str, A
                         "kind": "production",
                         "contentType": f"{media_type}/*",
                         "productionCardId": card_id,
+                        "episode": card.get("episode"),
+                        "shotNumber": card.get("shot_number"),
                     },
                     "createdAt": updated_at,
                     "updatedAt": updated_at,

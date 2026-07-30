@@ -8,6 +8,11 @@ import {
   sendGenerationNodeToTimeline,
   type SendGenerationNodeToTimelineOptions,
 } from './sendGenerationNodeToTimeline'
+import {
+  filterProductionSnapshot,
+  resolveProductionScope,
+} from '../production/productionHierarchy'
+import { useProductionScopeStore, withActiveProductionScopeMeta } from '../production/productionScopeStore'
 
 export type CreateGenerationNodeToolInput = {
   kind: GenerationNodeKind
@@ -55,7 +60,15 @@ function findNode(nodeId: string): GenerationCanvasNode | null {
 
 export const generationCanvasTools = {
   read_canvas() {
-    return useGenerationCanvasStore.getState().readSnapshot()
+    const state = useGenerationCanvasStore.getState()
+    const activeScope = resolveProductionScope(
+      state.nodes,
+      useProductionScopeStore.getState().activeScope,
+    )
+    return filterProductionSnapshot(
+      state.readSnapshot(),
+      activeScope,
+    )
   },
   read_selected_nodes(): GenerationCanvasNode[] {
     const state = useGenerationCanvasStore.getState()
@@ -64,11 +77,12 @@ export const generationCanvasTools = {
   },
   create_nodes(nodes: CreateGenerationNodeToolInput[]): GenerationCanvasNode[] {
     return nodes.map((node) => {
-      const created = useGenerationCanvasStore.getState().addNode(node)
+      const scopedMeta = withActiveProductionScopeMeta(node.meta)
+      const created = useGenerationCanvasStore.getState().addNode({ ...node, meta: scopedMeta })
       // agent 建议的模型/参数：addNode 走 createGenerationNode 不接 meta，这里用现有 updateNode
       // 补写（初始 meta 为空，整体写入安全）——避开 871 满基线的 store 巨壳。
-      if (node.meta && Object.keys(node.meta).length > 0) {
-        useGenerationCanvasStore.getState().updateNode(created.id, { meta: node.meta })
+      if (scopedMeta && Object.keys(scopedMeta).length > 0) {
+        useGenerationCanvasStore.getState().updateNode(created.id, { meta: scopedMeta })
       }
       return created
     })

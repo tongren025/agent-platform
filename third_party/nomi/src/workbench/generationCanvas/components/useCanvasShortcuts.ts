@@ -3,7 +3,6 @@ import {
   pasteClipboardMediaToGenerationCanvas,
   showClipboardMediaPasteNotes,
 } from '../adapters/clipboardImagePaste'
-import { useGenerationCanvasStore } from '../store/generationCanvasStore'
 
 type CanvasZoomShortcutInput = {
   key: string
@@ -35,6 +34,7 @@ export function useCanvasShortcuts(opts: {
   selectedNodeCount: number
   selectedGroupCount: number
   activeCategoryId: string
+  selectAllNodes: () => void
   /** 只用于清空（Escape）；签名收窄到 null 以兼容任意 ActiveEdge setState。 */
   setActiveEdge: (edge: null) => void
   cancelConnection: () => void
@@ -55,6 +55,7 @@ export function useCanvasShortcuts(opts: {
     selectedNodeCount,
     selectedGroupCount,
     activeCategoryId,
+    selectAllNodes,
     setActiveEdge,
     cancelConnection,
     deleteSelectedNodes,
@@ -123,7 +124,7 @@ export function useCanvasShortcuts(opts: {
       // v0.7.5: Cmd+A 全选当前分类
       if (key === 'a') {
         event.preventDefault()
-        useGenerationCanvasStore.getState().selectAllNodes(activeCategoryId)
+        selectAllNodes()
         return
       }
       if (key === 'c') {
@@ -203,6 +204,7 @@ export function useCanvasShortcuts(opts: {
     redo,
     selectedGroupCount,
     selectedNodeCount,
+    selectAllNodes,
     setActiveEdge,
     stageRef,
     undo,

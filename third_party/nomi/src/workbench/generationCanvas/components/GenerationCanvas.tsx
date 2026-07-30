@@ -52,6 +52,15 @@ import { hasPendingScene3DCameraMoveCapture, hasPendingScene3DStagingCapture } f
 import { lazyWithChunkBoundary } from '../../../ui/chunkBoundary'
 import { useCanvasSelectionDrag } from './useCanvasSelectionDrag'
 import { CanvasSelectionToolbar } from './CanvasSelectionToolbar'
+import { ProductionHierarchyNavigator } from '../production/ProductionHierarchyNavigator'
+import {
+  buildProductionHierarchy,
+  defaultProductionScope,
+  hierarchyContainsScope,
+  isNodeInProductionDisplayScope,
+  productionScopeKey,
+} from '../production/productionHierarchy'
+import { useProductionScopeStore } from '../production/productionScopeStore'
 import '../styles/generationCanvas.css'
 
 const FOCUS_GENERATION_NODE_EVENT = 'nomi-focus-generation-node'
@@ -70,34 +79,62 @@ const MULTI_SELECTION_TOOLBAR_OFFSET = 58
 
 type GenerationCanvasProps = {
   readOnly?: boolean
+  projectId?: string | null
+  projectName?: string
 }
 
-export default function GenerationCanvas({ readOnly = false }: GenerationCanvasProps): JSX.Element {
+export default function GenerationCanvas({
+  readOnly = false,
+  projectId = null,
+  projectName,
+}: GenerationCanvasProps): JSX.Element {
   const { t } = useTranslation()
   const isReady = useGenerationCanvasStore((state) => state.isReady)
   const allNodes = useGenerationCanvasStore((state) => state.nodes)
   const allEdges = useGenerationCanvasStore((state) => state.edges)
   const allGroups = useGenerationCanvasStore((state) => state.groups)
+  const hierarchy = React.useMemo(() => buildProductionHierarchy(allNodes), [allNodes])
+  const storedProductionScope = useProductionScopeStore((state) => state.activeScope)
+  const syncProductionProject = useProductionScopeStore((state) => state.syncProject)
+  const setActiveProductionScope = useProductionScopeStore((state) => state.setActiveScope)
+  const activateProductionNode = useProductionScopeStore((state) => state.activateNode)
+  const activeProductionScope = hierarchy.isProductionProject
+    ? hierarchyContainsScope(hierarchy, storedProductionScope)
+      ? storedProductionScope
+      : defaultProductionScope(hierarchy)
+    : null
+  const activeProductionScopeId = productionScopeKey(activeProductionScope)
   const hasPendingStagingCapture = useGenerationCanvasStore((state) => hasPendingScene3DStagingCapture(state.nodes))
   const hasPendingCameraMoveCapture = useGenerationCanvasStore((state) => hasPendingScene3DCameraMoveCapture(state.nodes))
   const hasBatchPlanPreview = useBatchPlanPreviewStore((state) => Boolean(state.plan))
   const activeCategoryId = useWorkbenchStore((state) => state.activeCategoryId)
   const setActiveCategoryId = useWorkbenchStore((state) => state.setActiveCategoryId)
+  React.useEffect(() => {
+    syncProductionProject(projectId, allNodes)
+  }, [allNodes, projectId, syncProductionProject])
   // Phase E3: filter nodes by active sub-canvas. Nodes with no categoryId
   // fall back to the project default ("shots") so legacy projects keep
   // rendering until E4 migrates them.
   const nodes = React.useMemo(() => {
-    if (!activeCategoryId) return allNodes
-    return allNodes.filter((node) => (node.categoryId || 'shots') === activeCategoryId)
-  }, [allNodes, activeCategoryId])
+    return allNodes.filter((node) => {
+      if (activeCategoryId && (node.categoryId || 'shots') !== activeCategoryId) return false
+      if (!hierarchy.isProductionProject) return true
+      return isNodeInProductionDisplayScope(node, activeProductionScope)
+    })
+  }, [activeCategoryId, activeProductionScope, allNodes, hierarchy.isProductionProject])
   const visibleNodeIds = React.useMemo(() => new Set(nodes.map((n) => n.id)), [nodes])
   const edges = React.useMemo(
     () => allEdges.filter((edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target)),
     [allEdges, visibleNodeIds],
   )
   const groups = React.useMemo(
-    () => allGroups.filter((group) => group.categoryId === activeCategoryId),
-    [activeCategoryId, allGroups],
+    () =>
+      allGroups.filter(
+        (group) =>
+          group.categoryId === activeCategoryId &&
+          group.nodeIds.some((nodeId) => visibleNodeIds.has(nodeId)),
+      ),
+    [activeCategoryId, allGroups, visibleNodeIds],
   )
   const selectedNodeIds = useGenerationCanvasStore((state) => state.selectedNodeIds)
   const addNode = useGenerationCanvasStore((state) => state.addNode)
@@ -194,6 +231,20 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
   // allNodes 的最新值给 drag-connection 等效应读（offset/zoom/stageSize 的 ref 由 useCanvasViewport 提供）。
   const allNodesRef = React.useRef(allNodes)
   allNodesRef.current = allNodes
+  const selectVisibleNodesInRect = React.useCallback(
+    (
+      rect: { x1: number; y1: number; x2: number; y2: number },
+      categoryId?: string,
+      additive?: boolean,
+    ) => {
+      selectNodesInRect(rect, categoryId, additive)
+      const selected = useGenerationCanvasStore
+        .getState()
+        .selectedNodeIds.filter((nodeId) => visibleNodeIds.has(nodeId))
+      selectNodes(selected)
+    },
+    [selectNodes, selectNodesInRect, visibleNodeIds],
+  )
 
   const pointer = useCanvasPointerInteractions({
     readOnly,
@@ -208,7 +259,7 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
     setContextNodeMenu,
     setActiveEdge,
     activeEdgeId,
-    selectNodesInRect,
+    selectNodesInRect: selectVisibleNodesInRect,
   })
   const { isPanning, isSpaceHeld, setViewportTransform, animateViewportTo, zoomAtStagePoint } = pointer
   const { handleGroupFramePointerDown, handleSelectionBoundsPointerDown } = useCanvasSelectionDrag({
@@ -233,6 +284,7 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
         return
       }
       const targetCategoryId = target.categoryId || 'shots'
+      activateProductionNode(target)
       setActiveCategoryId(targetCategoryId)
       selectNode(nodeId)
       setPendingFocusNodeId(nodeId)
@@ -245,7 +297,14 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
         focusFlashTimerRef.current = null
       }
     }
-  }, [selectNode, setActiveCategoryId, t])
+  }, [activateProductionNode, selectNode, setActiveCategoryId, t])
+
+  React.useEffect(() => {
+    if (!hierarchy.isProductionProject || !activeProductionScopeId) return
+    clearSelection()
+    setActiveEdge(null)
+    setPendingFocusNodeId(null)
+  }, [activeProductionScopeId, clearSelection, hierarchy.isProductionProject])
 
   React.useEffect(() => {
     if (!pendingFocusNodeId) return
@@ -466,6 +525,7 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
     selectedNodeCount: selectedNodeIds.length,
     selectedGroupCount: selectedGroupIds.length,
     activeCategoryId,
+    selectAllNodes: () => selectNodes(nodes.map((node) => node.id)),
     setActiveEdge,
     cancelConnection,
     deleteSelectedNodes,
@@ -578,7 +638,16 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
 
   // 项目/分类首次加载时自动适应视图（含「历史视口框不住任何节点」的自愈式适应，
   // 防止图都在视口外、用户误以为「图消失」）。逻辑抽到 useAutoFitOnLoad（防巨壳）。
-  useAutoFitOnLoad({ nodes, activeCategoryId, categoryViewports, fitView, stageRef, zoomRef, offsetRef })
+  useAutoFitOnLoad({
+    nodes,
+    activeCategoryId,
+    viewKey: activeProductionScopeId,
+    categoryViewports,
+    fitView,
+    stageRef,
+    zoomRef,
+    offsetRef,
+  })
 
   // 一次性「请适应视图」信号（落画布等批量加节点场景，见 store.requestCanvasFit）。
   // useAutoFitOnLoad 只在首次加载/切分类触发，加新节点不重跑——这里补「显式动作后揭示新内容」。
@@ -776,6 +845,12 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
           ) : null}
         </div>
         {!readOnly ? <CanvasGestureHint /> : null}
+        <ProductionHierarchyNavigator
+          projectName={projectName}
+          hierarchy={hierarchy}
+          activeScope={activeProductionScope}
+          onSelectScope={setActiveProductionScope}
+        />
         <CanvasNavigationStack
           readOnly={readOnly}
           nodes={nodes}
@@ -790,6 +865,7 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
           onFitView={() => fitView(true)}
           onResetView={() => animateViewportTo(1, { x: 0, y: 0 }, 200)}
           onTidy={() => tidy(stageSize.width / Math.max(1, stageSize.height))}
+          allowTidy={!hierarchy.isProductionProject}
           onZoomTo={handleZoomTo}
           batchPlanOverlay={
             hasBatchPlanPreview ? (

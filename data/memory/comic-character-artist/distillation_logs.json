@@ -1,0 +1,17 @@
+[
+  {
+    "logId": "dist_40bb81122111",
+    "employeeKey": "comic-character-artist",
+    "ranAt": "2026-07-30T13:21:35.374009Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 24,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "openrouter/auto",
+    "durationMs": 9858,
+    "error": "JSON 解析失败: 无 JSON 数组"
+  }
+]

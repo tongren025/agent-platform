@@ -36,15 +36,17 @@ export function anyNodeVisibleInViewport(
 export function useAutoFitOnLoad(params: {
   nodes: GenerationCanvasNode[]
   activeCategoryId: string
+  /** 同一分类下切换生产镜头也要重新判断视口，不能沿用上一镜的位置。 */
+  viewKey?: string
   categoryViewports: Record<string, Viewport | undefined>
   fitView: () => void
   stageRef: React.RefObject<HTMLDivElement | null>
   zoomRef: React.MutableRefObject<number>
   offsetRef: React.MutableRefObject<{ x: number; y: number }>
 }): void {
-  const { nodes, activeCategoryId, categoryViewports, fitView, stageRef, zoomRef, offsetRef } = params
+  const { nodes, activeCategoryId, viewKey = '', categoryViewports, fitView, stageRef, zoomRef, offsetRef } = params
   const autoFitDoneRef = React.useRef(false)
-  React.useEffect(() => { autoFitDoneRef.current = false }, [activeCategoryId])
+  React.useEffect(() => { autoFitDoneRef.current = false }, [activeCategoryId, viewKey])
   React.useEffect(() => {
     if (autoFitDoneRef.current || nodes.length === 0) return
     autoFitDoneRef.current = true

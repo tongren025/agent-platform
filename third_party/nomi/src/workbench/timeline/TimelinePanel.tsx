@@ -1,5 +1,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useGenerationCanvasStore } from '../generationCanvas/store/generationCanvasStore'
+import { useProductionScopeStore } from '../generationCanvas/production/productionScopeStore'
+import {
+  filterProductionTimeline,
+  resolveProductionScope,
+} from '../generationCanvas/production/productionHierarchy'
+import { generationCanvasTools } from '../generationCanvas/agent/generationCanvasTools'
 import {
   IconArrowBackUp,
   IconArrowForwardUp,
@@ -79,7 +86,17 @@ type TimelinePanelProps = {
 
 export default function TimelinePanel({ density = 'compact', regionLabel, actionLabelPrefix, showTextTrack = false, onCollapse }: TimelinePanelProps): JSX.Element {
   const { t } = useTranslation()
-  const timeline = useWorkbenchStore((state) => state.timeline)
+  const rawTimeline = useWorkbenchStore((state) => state.timeline)
+  const productionNodes = useGenerationCanvasStore((state) => state.nodes)
+  const storedProductionScope = useProductionScopeStore((state) => state.activeScope)
+  const activeProductionScope = React.useMemo(
+    () => resolveProductionScope(productionNodes, storedProductionScope),
+    [productionNodes, storedProductionScope],
+  )
+  const timeline = React.useMemo(
+    () => filterProductionTimeline(rawTimeline, productionNodes, activeProductionScope),
+    [activeProductionScope, productionNodes, rawTimeline],
+  )
   const selectedClipIds = useWorkbenchStore((state) => state.selectedTimelineClipIds)
   const selectedTextClipId = useWorkbenchStore((state) => state.selectedTextClipId)
   const removeTimelineTextClip = useWorkbenchStore((state) => state.removeTimelineTextClip)
@@ -111,7 +128,8 @@ export default function TimelinePanel({ density = 'compact', regionLabel, action
   // 用户测的主线诉求——点一下出初剪，手动重排/trim 是之后的微调。
   const handleAiArrange = React.useCallback(() => {
     void import('../generationCanvas/agent/sendStoryboardToTimeline').then(({ arrangeStoryboardToTimeline }) => {
-      const result = arrangeStoryboardToTimeline()
+      const scopedNodeIds = generationCanvasTools.read_canvas().nodes.map((node) => node.id)
+      const result = arrangeStoryboardToTimeline(scopedNodeIds.length ? { nodeIds: scopedNodeIds } : {})
       if (result.sent.length > 0) toast(t('timelineEditor.arranged', { count: result.sent.length }), 'success')
       else if (result.total === 0) toast(t('timelineEditor.noShots'), 'info')
       else toast(t('timelineEditor.alreadyArranged'), 'info')
