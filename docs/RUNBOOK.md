@@ -181,7 +181,7 @@ OpenRouter 配置最小例子：
 | scrape-sources / scrape-history / collected-prompts / learn-sources / learn-history | 自动学习采集 | 定时或手动触发 |
 | ai-providers | 管理端 UI | LLM 供应商配置；API Key 为 Fernet 密文（优先级最高） |
 | .secrets | `AiProviderStore` | 自动生成的供应商加密主密钥；**不进 Git，备份/迁移时必须保留** |
-| production/jiulu-s1..s5 | 制作看板 | **删了不可再生**；每项目 project.json + cards.json + archive/ + uploads/ |
+| production/jiulu-s1..s5 | 制作看板 | **删了不可再生**；每项目 project.json + cards.json + archive/ + uploads/；执行问题驱动返工后另有 optimization-runs.json（最近 100 次） |
 | canvas | 自由画布 | 1.2s 防抖自动保存 |
 | platform | 用户/角色（users.json、roles.json） | 用户端登录鉴权数据 |
 | trends | 趋势雷达 | profile.json（兴趣画像）、seen.json（**已读态，删了会重复推送**） |

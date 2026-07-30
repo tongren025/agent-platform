@@ -5,13 +5,23 @@
 // (季, 集, G单元) 拉成行，把阶段拉成列，缺口一眼可见。
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Table, Tag, Segmented, Space, Typography, Spin, Empty, Tooltip, Badge, Progress, Alert, Button, Drawer, List, Modal, Popconfirm } from 'antd';
+import { Table, Tag, Segmented, Space, Typography, Spin, Empty, Tooltip, Badge, Progress, Alert, Button, Drawer, List, Modal, Popconfirm, Divider } from 'antd';
 import { message } from '../ui';
 import {
   FileTextOutlined, BuildOutlined, PictureOutlined, LockOutlined,
   VideoCameraOutlined, WarningOutlined, InboxOutlined, UndoOutlined,
+  HistoryOutlined, ToolOutlined,
 } from '@ant-design/icons';
-import { api, type MatrixProject, type MatrixRow, type OrphanCard, type ArchivedCard } from '../api';
+import {
+  api,
+  type ArchivedCard,
+  type MatrixProject,
+  type MatrixRow,
+  type OrphanCard,
+  type ProjectDiagnosticIssue,
+  type ProjectDiagnostics,
+  type ProjectOptimizationRun,
+} from '../api';
 import { useResponsive } from '../hooks/useResponsive';
 import { COLORS } from '../theme';
 import ProjectViewNav from '../components/ProjectViewNav';
@@ -59,6 +69,12 @@ export default function ProductionMatrix() {
   const [archiveError, setArchiveError] = useState('');
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [diagnostics, setDiagnostics] = useState<ProjectDiagnostics | null>(null);
+  const [optimizationRuns, setOptimizationRuns] = useState<ProjectOptimizationRun[]>([]);
+  const [diagnosticsLoading, setDiagnosticsLoading] = useState(false);
+  const [diagnosticsError, setDiagnosticsError] = useState('');
+  const [issuesOpen, setIssuesOpen] = useState(false);
+  const [optimizingIssueId, setOptimizingIssueId] = useState('');
 
   const reload = useCallback(async () => {
     const [m, o] = await Promise.all([api.getMatrix(), api.listOrphans()]);
@@ -93,6 +109,30 @@ export default function ProductionMatrix() {
   useEffect(() => {
     if (routePid) setPid(routePid);
   }, [routePid]);
+
+  const loadDiagnostics = useCallback(async (projectId = pid) => {
+    if (!projectId) return;
+    setDiagnosticsLoading(true);
+    setDiagnosticsError('');
+    try {
+      const [report, runs] = await Promise.all([
+        api.getProjectDiagnostics(projectId),
+        api.listProjectOptimizationRuns(projectId, 20),
+      ]);
+      setDiagnostics(report);
+      setOptimizationRuns(runs);
+    } catch {
+      setDiagnostics(null);
+      setOptimizationRuns([]);
+      setDiagnosticsError('项目问题扫描暂时失败，请稍后重试。');
+    } finally {
+      setDiagnosticsLoading(false);
+    }
+  }, [pid]);
+
+  useEffect(() => {
+    void loadDiagnostics();
+  }, [loadDiagnostics]);
 
   const refreshArchive = useCallback(async () => {
     if (!pid) return;
@@ -136,6 +176,56 @@ export default function ProductionMatrix() {
       await Promise.all([reload(), refreshArchive()]);
     } catch (e: any) { message.error('恢复失败: ' + e.message); }
     finally { setBusy(false); }
+  };
+
+  const openManualAction = (issue: ProjectDiagnosticIssue) => {
+    if (issue.action.kind === 'edit_project') {
+      navigate(`/production/${pid}/pipeline`);
+      return;
+    }
+    // 图片、视频、状态同步和成片合成都回到导演主线处理；那里会继续定位到当前项目。
+    navigate(`/studio?project=${pid}`);
+  };
+
+  const runOptimization = async (issue: ProjectDiagnosticIssue) => {
+    setOptimizingIssueId(issue.id);
+    try {
+      const result = await api.optimizeProjectIssue(pid, issue.id);
+      if (result.resolved) {
+        message.success(`已修复，项目健康分 ${result.beforeScore} → ${result.afterScore}`);
+      } else {
+        message.warning(result.summary);
+      }
+      await Promise.all([reload(), loadDiagnostics(pid)]);
+    } catch (error: any) {
+      message.error(error.message || '自动修复失败，请刷新后重试');
+      await loadDiagnostics(pid);
+    } finally {
+      setOptimizingIssueId('');
+    }
+  };
+
+  const handleDiagnosticIssue = (issue: ProjectDiagnosticIssue) => {
+    if (!issue.autoFixable) {
+      openManualAction(issue);
+      return;
+    }
+    Modal.confirm({
+      title: issue.action.label,
+      content: (
+        <div>
+          <Paragraph style={{ marginBottom: 8 }}>{issue.message}</Paragraph>
+          {issue.details.length > 0 && (
+            <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+              本次只返工这个镜头和阶段，已有正确内容不会被批量覆盖。
+            </Paragraph>
+          )}
+        </div>
+      ),
+      okText: '开始定向返工',
+      cancelText: '取消',
+      onOk: () => runOptimization(issue),
+    });
   };
 
   const visible = useMemo(() => {
@@ -255,6 +345,74 @@ export default function ProductionMatrix() {
         </Badge>
       </Space>
 
+      {diagnosticsError ? (
+        <Alert
+          type="error"
+          showIcon
+          style={{ marginBottom: 12 }}
+          message="项目问题扫描失败"
+          description={diagnosticsError}
+          action={<Button size="small" onClick={() => loadDiagnostics(pid)}>重试</Button>}
+        />
+      ) : diagnosticsLoading && !diagnostics ? (
+        <Alert
+          type="info"
+          showIcon
+          style={{ marginBottom: 12 }}
+          message="正在检查真实生产链路…"
+        />
+      ) : diagnostics && (
+        <Alert
+          type={diagnostics.state === 'complete' ? 'success' : 'warning'}
+          showIcon
+          style={{ marginBottom: 12 }}
+          message={
+            <Space wrap>
+              <Text strong>项目健康度 {diagnostics.score} 分</Text>
+              {diagnostics.blockerCount > 0 && (
+                <Tag color="error">{diagnostics.blockerCount} 个阻塞问题</Tag>
+              )}
+              {diagnostics.inProgressCount > 0 && (
+                <Tag color="processing">{diagnostics.inProgressCount} 项生成中</Tag>
+              )}
+            </Space>
+          }
+          description={
+            <div style={{ minWidth: isMobile ? 0 : 420 }}>
+              <Paragraph style={{ margin: '4px 0 8px' }}>{diagnostics.summary}</Paragraph>
+              <Progress
+                percent={diagnostics.score}
+                showInfo={false}
+                size="small"
+                strokeColor={diagnostics.state === 'complete' ? '#52c41a' : COLORS.iris}
+              />
+              {diagnostics.issues[0] && (
+                <Text type="secondary" style={{ fontSize: 12 }}>
+                  首要问题：{diagnostics.issues[0].message}
+                </Text>
+              )}
+            </div>
+          }
+          action={
+            <Space direction={isMobile ? 'vertical' : 'horizontal'}>
+              {diagnostics.issues[0] && diagnostics.issues[0].severity !== 'info' && (
+                <Button
+                  type="primary"
+                  icon={<ToolOutlined />}
+                  loading={optimizingIssueId === diagnostics.issues[0].id}
+                  onClick={() => handleDiagnosticIssue(diagnostics.issues[0])}
+                >
+                  {diagnostics.issues[0].action.label}
+                </Button>
+              )}
+              <Button icon={<WarningOutlined />} onClick={() => setIssuesOpen(true)}>
+                查看问题与记录
+              </Button>
+            </Space>
+          }
+        />
+      )}
+
       {myOrphans.length > 0 && (
         <Alert type="warning" showIcon style={{ marginBottom: 12 }}
           message={`发现 ${myOrphans.length} 张未归类卡片`}
@@ -303,6 +461,116 @@ export default function ProductionMatrix() {
           locale={{ emptyText: filter === 'gap' ? '没有缺少步骤的镜头 🎉' : filter === 'noimg' ? '所有镜头都有图 🎉' : '暂无镜头数据' }}
         />
       </div>
+
+      <Drawer
+        title="问题驱动优化"
+        open={issuesOpen}
+        onClose={() => setIssuesOpen(false)}
+        width={isMobile ? '100%' : 680}
+      >
+        {diagnostics ? (
+          <>
+            <Alert
+              type={diagnostics.state === 'complete' ? 'success' : 'info'}
+              showIcon
+              message={
+                diagnostics.state === 'complete'
+                  ? '当前交付目标已通过全部检查'
+                  : `按优先级列出 ${diagnostics.issues.length} 个问题`
+              }
+              description="自动修复只会替换对应镜头的对应阶段；图片和视频仍需你选择模型后执行。"
+              style={{ marginBottom: 12 }}
+            />
+            <List<ProjectDiagnosticIssue>
+              dataSource={diagnostics.issues}
+              rowKey={issue => issue.id}
+              locale={{ emptyText: '没有待处理问题' }}
+              renderItem={issue => (
+                <List.Item
+                  actions={issue.severity === 'info' ? [] : [
+                    <Button
+                      key="action"
+                      size="small"
+                      type={issue.autoFixable ? 'primary' : 'default'}
+                      loading={optimizingIssueId === issue.id}
+                      onClick={() => handleDiagnosticIssue(issue)}
+                    >
+                      {issue.action.label}
+                    </Button>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={(
+                      <Space size={6} wrap>
+                        <Tag color={
+                          issue.severity === 'blocker'
+                            ? 'error'
+                            : issue.severity === 'warning' ? 'warning' : 'processing'
+                        }>
+                          {issue.severity === 'blocker'
+                            ? '阻塞'
+                            : issue.severity === 'warning' ? '提醒' : '进行中'}
+                        </Tag>
+                        <Tag>{issue.stageLabel}</Tag>
+                        {issue.episode != null && <Tag>EP{String(issue.episode).padStart(2, '0')}</Tag>}
+                        {issue.unit != null && <Tag>G{issue.unit}</Tag>}
+                      </Space>
+                    )}
+                    description={(
+                      <div>
+                        <Paragraph style={{ margin: '4px 0' }}>{issue.message}</Paragraph>
+                        {issue.details.map(detail => (
+                          <Text key={detail} type="secondary" style={{ display: 'block', fontSize: 12 }}>
+                            · {detail}
+                          </Text>
+                        ))}
+                      </div>
+                    )}
+                  />
+                </List.Item>
+              )}
+            />
+
+            <Divider orientation="left"><HistoryOutlined /> 最近优化记录</Divider>
+            <List<ProjectOptimizationRun>
+              size="small"
+              dataSource={optimizationRuns}
+              rowKey={run => run.runId}
+              locale={{ emptyText: '还没有自动修复记录' }}
+              renderItem={run => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={(
+                      <Space size={6} wrap>
+                        <Tag color={
+                          run.status === 'resolved'
+                            ? 'success'
+                            : run.status === 'failed' ? 'error' : 'warning'
+                        }>
+                          {run.status === 'resolved'
+                            ? '已解决'
+                            : run.status === 'failed' ? '失败' : '仍需检查'}
+                        </Tag>
+                        <Text>{run.summary}</Text>
+                      </Space>
+                    )}
+                    description={(
+                      <Text type="secondary" style={{ fontSize: 12 }}>
+                        健康分 {run.beforeScore} → {run.afterScore}
+                        {' · '}
+                        {run.finishedAt.slice(0, 19).replace('T', ' ')}
+                        {run.error ? ` · ${run.error}` : ''}
+                      </Text>
+                    )}
+                  />
+                </List.Item>
+              )}
+            />
+          </>
+        ) : (
+          <Empty description="暂无项目诊断结果" />
+        )}
+      </Drawer>
 
       {/* 未归类卡片：先看清内容再决定归档，绝不静默移动 */}
       <Modal title={`未归类卡片（${myOrphans.length}）`} open={orphanOpen} width={isMobile ? '100%' : 720}

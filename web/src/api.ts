@@ -65,6 +65,78 @@ export interface ArchivedCard {
   archive_reason: string;
 }
 
+/** 项目诊断给出的下一步动作；只有 generate_stage 可由“自动修复”直接执行。 */
+export interface ProjectDiagnosticAction {
+  kind: 'generate_stage' | 'edit_project' | 'open_media' | 'sync_media' | 'compose' | 'done';
+  label: string;
+  targetStage?: string;
+  episode?: number | null;
+  shotNumber?: number | null;
+  mode?: 'append' | 'replace';
+  mediaKind?: 'image' | 'video';
+  cardId?: string;
+}
+
+export interface ProjectDiagnosticIssue {
+  id: string;
+  code: string;
+  severity: 'blocker' | 'warning' | 'info';
+  stage: string;
+  stageLabel: string;
+  episode: number | null;
+  unit: number | null;
+  cardId: string;
+  message: string;
+  details: string[];
+  autoFixable: boolean;
+  action: ProjectDiagnosticAction;
+}
+
+export interface ProjectDiagnostics {
+  status: 'success' | 'warning' | 'error';
+  summary: string;
+  nextActions: string[];
+  artifacts: string[];
+  projectId: string;
+  goal: ProductionGoal;
+  state: 'complete' | 'blocked' | 'attention' | 'running' | 'ready';
+  score: number;
+  totalUnits: number;
+  blockerCount: number;
+  warningCount: number;
+  inProgressCount: number;
+  checks: {
+    key: string;
+    label: string;
+    passed: boolean;
+    total: number;
+    passedCount: number;
+    processingCount?: number;
+  }[];
+  issues: ProjectDiagnosticIssue[];
+  nextAction: ProjectDiagnosticAction;
+}
+
+export interface ProjectOptimizationRun {
+  runId: string;
+  projectId: string;
+  issueId: string;
+  issueCode: string;
+  stage: string;
+  episode: number | null;
+  unit: number | null;
+  status: 'resolved' | 'needs_review' | 'failed';
+  summary: string;
+  beforeScore: number;
+  afterScore: number;
+  generated: number;
+  replaced: number;
+  qualityIssueCount: number;
+  startedAt: string;
+  finishedAt: string;
+  error: string;
+}
+
 export interface TaskInfo {
   job_id: string;
   status: string;
@@ -556,6 +628,29 @@ export const api = {
 
   // 导演 Agent：项目状态、OpenRouter 媒体生产与成片合成
   getDirectorState: (pid: string) => request<any>(`/director/projects/${pid}`),
+  getProjectDiagnostics: (pid: string) =>
+    request<ProjectDiagnostics>(`/director/projects/${pid}/diagnostics`),
+  listProjectOptimizationRuns: (pid: string, limit = 30) =>
+    request<ProjectOptimizationRun[]>(
+      `/director/projects/${pid}/optimization-runs?limit=${limit}`,
+    ),
+  optimizeProjectIssue: (pid: string, issueId: string, extraInstruction = '') =>
+    request<{
+      status: 'success' | 'warning';
+      summary: string;
+      nextActions: string[];
+      artifacts: string[];
+      runId: string;
+      state: 'resolved' | 'needs_review';
+      resolved: boolean;
+      beforeScore: number;
+      afterScore: number;
+      diagnostics: ProjectDiagnostics;
+    }>(`/director/projects/${pid}/optimize`, {
+      method: 'POST',
+      body: JSON.stringify({ issue_id: issueId, extra_instruction: extraInstruction }),
+      timeoutMs: 195_000,
+    }),
   listDirectorMediaModels: (kind: 'image' | 'video') =>
     request<any[]>(`/director/media-models?kind=${kind}`),
   updateDirectorImagePrompt: (pid: string, cardId: string, data: { prompt: string }) =>
