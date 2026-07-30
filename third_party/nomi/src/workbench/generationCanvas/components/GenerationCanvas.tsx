@@ -52,7 +52,6 @@ import { hasPendingScene3DCameraMoveCapture, hasPendingScene3DStagingCapture } f
 import { lazyWithChunkBoundary } from '../../../ui/chunkBoundary'
 import { useCanvasSelectionDrag } from './useCanvasSelectionDrag'
 import { CanvasSelectionToolbar } from './CanvasSelectionToolbar'
-import { ProductionHierarchyNavigator } from '../production/ProductionHierarchyNavigator'
 import {
   buildProductionHierarchy,
   defaultProductionScope,
@@ -61,6 +60,7 @@ import {
   productionScopeKey,
 } from '../production/productionHierarchy'
 import { useProductionScopeStore } from '../production/productionScopeStore'
+import { useProductionDirectorUiStore } from '../production/productionDirectorUiStore'
 import '../styles/generationCanvas.css'
 
 const FOCUS_GENERATION_NODE_EVENT = 'nomi-focus-generation-node'
@@ -86,7 +86,6 @@ type GenerationCanvasProps = {
 export default function GenerationCanvas({
   readOnly = false,
   projectId = null,
-  projectName,
 }: GenerationCanvasProps): JSX.Element {
   const { t } = useTranslation()
   const isReady = useGenerationCanvasStore((state) => state.isReady)
@@ -94,9 +93,10 @@ export default function GenerationCanvas({
   const allEdges = useGenerationCanvasStore((state) => state.edges)
   const allGroups = useGenerationCanvasStore((state) => state.groups)
   const hierarchy = React.useMemo(() => buildProductionHierarchy(allNodes), [allNodes])
+  const productionDirectorMode = useProductionDirectorUiStore((state) => state.mode)
+  const guidedProductionView = hierarchy.isProductionProject && productionDirectorMode === 'guided'
   const storedProductionScope = useProductionScopeStore((state) => state.activeScope)
   const syncProductionProject = useProductionScopeStore((state) => state.syncProject)
-  const setActiveProductionScope = useProductionScopeStore((state) => state.setActiveScope)
   const activateProductionNode = useProductionScopeStore((state) => state.activateNode)
   const activeProductionScope = hierarchy.isProductionProject
     ? hierarchyContainsScope(hierarchy, storedProductionScope)
@@ -690,6 +690,7 @@ export default function GenerationCanvas({
       )}
       aria-label={t('generationCommon.canvas.aria')}
       data-ready={isReady ? 'true' : undefined}
+      data-production-view={guidedProductionView ? 'guided' : hierarchy.isProductionProject ? 'professional' : undefined}
       data-nomi-generation-canvas-import-target={!readOnly ? 'true' : undefined}
     >
       <div className={cn('generation-canvas-v2__main', 'relative w-full h-full min-w-0 min-h-0')}>
@@ -699,7 +700,9 @@ export default function GenerationCanvas({
             {hasPendingCameraMoveCapture ? <CameraMoveCaptureHost /> : null}
           </React.Suspense>
         ) : null}
-        {!readOnly ? <CanvasToolbar getInsertionPosition={getToolbarInsertionPosition} categoryId={activeCategoryId} /> : null}
+        {!readOnly && !guidedProductionView ? (
+          <CanvasToolbar getInsertionPosition={getToolbarInsertionPosition} categoryId={activeCategoryId} />
+        ) : null}
         <div
           className="generation-canvas-v2__stage"
           ref={stageRef}
@@ -844,13 +847,7 @@ export default function GenerationCanvas({
             />
           ) : null}
         </div>
-        {!readOnly ? <CanvasGestureHint /> : null}
-        <ProductionHierarchyNavigator
-          projectName={projectName}
-          hierarchy={hierarchy}
-          activeScope={activeProductionScope}
-          onSelectScope={setActiveProductionScope}
-        />
+        {!readOnly && !guidedProductionView ? <CanvasGestureHint /> : null}
         <CanvasNavigationStack
           readOnly={readOnly}
           nodes={nodes}

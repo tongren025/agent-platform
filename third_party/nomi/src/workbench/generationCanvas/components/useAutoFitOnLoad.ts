@@ -55,8 +55,10 @@ export function useAutoFitOnLoad(params: {
       const shows = rect
         ? anyNodeVisibleInViewport(nodes, zoomRef.current, offsetRef.current, rect.width, rect.height)
         : true // 量不到尺寸时保守：不打扰用户视口
-      if (!categoryViewports[activeCategoryId] || !shows) fitView()
+      // 生产项目切换 G 镜头时必须重新看见这一镜的全貌。不同镜头可能复用了同一分类的
+      // 历史视口；“至少有一个节点可见”并不足以说明构图正确，容易只露出一张巨卡。
+      if (Boolean(viewKey) || !categoryViewports[activeCategoryId] || !shows) fitView()
     }, 350) // 等 DOM 完成一帧渲染
     return () => clearTimeout(tid)
-  }, [nodes, categoryViewports, activeCategoryId, fitView, stageRef, zoomRef, offsetRef])
+  }, [nodes, categoryViewports, activeCategoryId, fitView, stageRef, zoomRef, offsetRef, viewKey])
 }

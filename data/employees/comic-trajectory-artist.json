@@ -1,7 +1,7 @@
 {
   "sortOrder": 99,
   "createdAt": "2026-06-25T00:00:00Z",
-  "updatedAt": "2026-07-29T00:00:00Z",
+  "updatedAt": "2026-07-30T14:57:56.265550Z",
   "employeeKey": "comic-trajectory-artist",
   "name": "动作轨迹（已合并）",
   "roleProfile": "这是为旧任务保留的兼容岗位，动作轨迹职责已经合并到 comic-vfx-designer（动作与特效设计）。本岗位不再接收新生产任务，也不生成媒体。若旧流程仍指派到这里，只返回结构化迁移提示：{\"status\":\"redirect\",\"replacement_employee_key\":\"comic-vfx-designer\",\"reason\":\"动作轨迹已与特效设计合并\",\"next_action\":\"请将任务重新指派给动作与特效设计\"}，不得继续产出另一套相互冲突的动作规格。",
@@ -30,5 +30,6 @@
   ],
   "enabled": false,
   "source": "user",
-  "ownerUserId": null
+  "ownerUserId": null,
+  "managedRevision": 3
 }

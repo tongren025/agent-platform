@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import type { GenerationCanvasNode, GenerationCanvasSnapshot } from '../model/generationCanvasTypes'
 import {
+  adjacentProductionShot,
   buildProductionHierarchy,
   defaultProductionScope,
   filterProductionSnapshot,
   filterProductionTimeline,
+  findProductionShotLocation,
+  flattenProductionShots,
   isNodeInProductionDisplayScope,
   resolveProductionScope,
 } from './productionHierarchy'
@@ -122,5 +125,24 @@ describe('productionHierarchy', () => {
       filterProductionTimeline(timeline, nodes, { kind: 'episode', episode: 1, shotNumber: 0 })
         .tracks[0].clips.map((clip) => clip.sourceNodeId),
     ).toEqual(['g1', 'g2'])
+  })
+
+  it('按全季顺序提供上一镜和下一镜，并能跨集继续', () => {
+    const hierarchy = buildProductionHierarchy([
+      node('ep1-g1', 1, 1),
+      node('ep1-g2', 1, 2),
+      node('ep2-g1', 2, 1),
+    ])
+    const shots = flattenProductionShots(hierarchy)
+    expect(shots.map(({ shot }) => [shot.scope.episode, shot.scope.shotNumber])).toEqual([
+      [1, 1],
+      [1, 2],
+      [2, 1],
+    ])
+    expect(findProductionShotLocation(hierarchy, { kind: 'shot', episode: 1, shotNumber: 2 }))
+      .toMatchObject({ absoluteIndex: 1, episodeIndex: 0, shotIndex: 1 })
+    expect(adjacentProductionShot(hierarchy, { kind: 'shot', episode: 1, shotNumber: 2 }, 1)?.scope)
+      .toEqual({ kind: 'shot', episode: 2, shotNumber: 1 })
+    expect(adjacentProductionShot(hierarchy, { kind: 'shot', episode: 1, shotNumber: 1 }, -1)).toBeNull()
   })
 })

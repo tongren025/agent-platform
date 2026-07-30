@@ -1,7 +1,11 @@
 {
+  "sortOrder": 30,
+  "createdAt": "2026-07-30T14:57:56.272454Z",
+  "updatedAt": "2026-07-30T14:57:56.271603Z",
   "toolCode": "generate_image",
   "name": "生成图片",
+  "bindingCode": null,
   "description": "仅在需要最终图片时调用。使用员工配置的 image_model_id 生成图片；角色、场景和风格母版通过 reference_urls 传入，返回可展示的永久图片 URL。",
   "inputSchema": "{\"type\":\"object\",\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"完整、可直接生图的正向提示词\"},\"reference_urls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"maxItems\":14,\"description\":\"可选的角色、场景、风格母版 /uploads/ URL；按重要性排序\"},\"size\":{\"type\":\"string\",\"enum\":[\"1024x1024\",\"1024x1536\",\"1536x1024\"],\"default\":\"1024x1536\"},\"quality\":{\"type\":\"string\",\"enum\":[\"low\",\"medium\",\"high\",\"auto\"],\"default\":\"medium\"}},\"required\":[\"prompt\"]}",
-  "sortOrder": 30
+  "managedRevision": 3
 }

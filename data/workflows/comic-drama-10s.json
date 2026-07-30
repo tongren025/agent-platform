@@ -1,7 +1,7 @@
 {
   "sortOrder": 0,
-  "createdAt": "2026-06-25T00:00:00.000000Z",
-  "updatedAt": "2026-07-29T00:00:00.000000Z",
+  "createdAt": "2026-06-25T00:00:00Z",
+  "updatedAt": "2026-07-30T14:57:56.282455Z",
   "workflowKey": "comic-drama-10s",
   "name": "漫剧生产流水线（兼容旧入口）",
   "description": "旧工作流键的兼容入口；所有任务转交标准漫剧生产流水线执行。",
@@ -11,14 +11,35 @@
       "nodeKey": "start",
       "type": "start",
       "name": "生产需求",
-      "position": {"x": 40, "y": 240},
+      "position": {
+        "x": 40,
+        "y": 240
+      },
       "config": {
         "inputs": [
-          {"name": "projectBrief", "label": "项目设定 / Art Bible", "required": true},
-          {"name": "episodeBrief", "label": "本集剧情 / 制作需求", "required": true},
-          {"name": "durationSeconds", "label": "目标总时长（秒）", "required": true},
-          {"name": "aspectRatio", "label": "画幅（默认 9:16）"},
-          {"name": "requirements", "label": "额外要求"}
+          {
+            "name": "projectBrief",
+            "label": "项目设定 / Art Bible",
+            "required": true
+          },
+          {
+            "name": "episodeBrief",
+            "label": "本集剧情 / 制作需求",
+            "required": true
+          },
+          {
+            "name": "durationSeconds",
+            "label": "目标总时长（秒）",
+            "required": true
+          },
+          {
+            "name": "aspectRatio",
+            "label": "画幅（默认 9:16）"
+          },
+          {
+            "name": "requirements",
+            "label": "额外要求"
+          }
         ]
       }
     },
@@ -26,7 +47,10 @@
       "nodeKey": "production",
       "type": "sub-workflow",
       "name": "调用标准漫剧生产流水线",
-      "position": {"x": 300, "y": 240},
+      "position": {
+        "x": 300,
+        "y": 240
+      },
       "config": {
         "workflowKey": "comic-drama",
         "inputsTemplate": {
@@ -43,15 +67,31 @@
       "nodeKey": "end",
       "type": "end",
       "name": "生产交付",
-      "position": {"x": 560, "y": 240},
-      "config": {"outputTemplate": "{{production.output}}"}
+      "position": {
+        "x": 560,
+        "y": 240
+      },
+      "config": {
+        "outputTemplate": "{{production.output}}"
+      }
     }
   ],
   "edges": [
-    {"edgeId": "start->production", "source": "start", "target": "production", "sourceHandle": null},
-    {"edgeId": "production->end", "source": "production", "target": "end", "sourceHandle": null}
+    {
+      "edgeId": "start->production",
+      "source": "start",
+      "target": "production",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "production->end",
+      "source": "production",
+      "target": "end",
+      "sourceHandle": null
+    }
   ],
   "enabled": true,
   "ownerUserId": null,
-  "builtinRevision": 2
+  "builtinRevision": 2,
+  "managedRevision": 3
 }

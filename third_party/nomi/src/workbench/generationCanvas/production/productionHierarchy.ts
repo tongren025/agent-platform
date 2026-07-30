@@ -31,6 +31,13 @@ export type ProductionHierarchy = {
   totalShotCount: number
 }
 
+export type ProductionShotLocation = {
+  episodeIndex: number
+  shotIndex: number
+  absoluteIndex: number
+  shot: ProductionShot
+}
+
 function finiteInteger(value: unknown): number | null {
   if (typeof value === 'number' && Number.isFinite(value)) return Math.trunc(value)
   if (typeof value === 'string' && value.trim()) {
@@ -158,6 +165,38 @@ export function hierarchyContainsScope(hierarchy: ProductionHierarchy, scope: Pr
   if (!episode) return false
   if (scope.kind === 'episode') return episode.overviewNodeIds.length > 0
   return episode.shots.some((shot) => shot.scope.shotNumber === scope.shotNumber)
+}
+
+/** 把“集 → 镜头”层级展开成稳定的生产顺序，供上一镜、下一镜与全季进度共用。 */
+export function flattenProductionShots(hierarchy: ProductionHierarchy): ProductionShotLocation[] {
+  let absoluteIndex = 0
+  return hierarchy.episodes.flatMap((episode, episodeIndex) =>
+    episode.shots.map((shot, shotIndex) => ({
+      episodeIndex,
+      shotIndex,
+      absoluteIndex: absoluteIndex++,
+      shot,
+    })),
+  )
+}
+
+export function findProductionShotLocation(
+  hierarchy: ProductionHierarchy,
+  scope: ProductionScope | null,
+): ProductionShotLocation | null {
+  if (scope?.kind !== 'shot') return null
+  return flattenProductionShots(hierarchy).find(({ shot }) => productionScopesEqual(shot.scope, scope)) ?? null
+}
+
+export function adjacentProductionShot(
+  hierarchy: ProductionHierarchy,
+  scope: ProductionScope | null,
+  direction: -1 | 1,
+): ProductionShot | null {
+  const shots = flattenProductionShots(hierarchy)
+  const current = shots.findIndex(({ shot }) => productionScopesEqual(shot.scope, scope))
+  if (current < 0) return null
+  return shots[current + direction]?.shot ?? null
 }
 
 /**

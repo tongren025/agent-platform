@@ -24,6 +24,8 @@ type NomiAppBarProps = {
   onBackToLibrary?: () => void
   onOpenModelCatalog?: () => void
   onRenameProject?: (name: string) => void
+  /** 逐镜新手导演模式只保留项目定位、模型和导出，工作区切换由唯一下一步接管。 */
+  directorMode?: boolean
 }
 
 export default function NomiAppBar({
@@ -33,6 +35,7 @@ export default function NomiAppBar({
   onBackToLibrary,
   onOpenModelCatalog,
   onRenameProject,
+  directorMode = false,
 }: NomiAppBarProps): JSX.Element {
   const { t } = useTranslation()
   const [editingProjectName, setEditingProjectName] = React.useState(false)
@@ -68,6 +71,7 @@ export default function NomiAppBar({
         'max-[700px]:grid-cols-[auto_minmax(0,1fr)_auto] max-[700px]:gap-x-1.5 max-[700px]:px-2',
       )}
       aria-label={t('appBar.workspace')}
+      data-director-mode={directorMode ? 'true' : undefined}
       onDoubleClick={handleWindowTitlebarDoubleClick}
     >
       <div
@@ -188,7 +192,21 @@ export default function NomiAppBar({
       </div>
 
       <div className="app-no-drag">
-        <NomiStepper value={workspaceMode} onChange={onWorkspaceModeChange} />
+        {directorMode ? (
+          <div
+            className={cn(
+              'inline-flex h-8 items-center gap-2 rounded-full border border-nomi-line px-3',
+              'bg-nomi-ink-05 text-caption font-semibold text-nomi-ink-70',
+              'max-[700px]:hidden',
+            )}
+            aria-label={t('generationCommon.director.modeAria')}
+          >
+            <span className="size-1.5 rounded-full bg-nomi-accent" aria-hidden="true" />
+            {t('generationCommon.director.modeTitle')}
+          </div>
+        ) : (
+          <NomiStepper value={workspaceMode} onChange={onWorkspaceModeChange} />
+        )}
       </div>
 
       <div
@@ -205,8 +223,8 @@ export default function NomiAppBar({
         <LanguageMenuButton className="size-[30px]" />
         {/* 上手 4 步引导入口：非 win32 住这里（始终高/不遮画布，4/4 自动消失）。
             win32 已移进 WorkbenchShell 自绘标题栏，本栏不重复渲染——两平台都有家、不丢 mac 清单。 */}
-        {!isWindows ? <OnboardingChecklist /> : null}
-        {!isWindows ? (
+        {!isWindows && !directorMode ? <OnboardingChecklist /> : null}
+        {!isWindows && !directorMode ? (
           <>
             <WorkbenchButton
               className={cn(

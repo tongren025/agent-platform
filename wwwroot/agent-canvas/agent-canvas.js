@@ -1,4 +1,4 @@
-import { cv as a } from "./assets/agentStudioMount-CNVmpr5A.js";
+import { cy as a } from "./assets/agentStudioMount-BaWK4RwX.js";
 export {
   a as mountAgentStudioCanvas
 };

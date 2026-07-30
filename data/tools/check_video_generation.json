@@ -1,7 +1,11 @@
 {
+  "sortOrder": 32,
+  "createdAt": "2026-07-30T14:57:56.274454Z",
+  "updatedAt": "2026-07-30T14:57:56.273454Z",
   "toolCode": "check_video_generation",
   "name": "查询视频生成任务",
+  "bindingCode": null,
   "description": "查询 generate_video 返回的异步任务。任务完成时下载视频到平台并返回可播放 URL。",
   "inputSchema": "{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"generate_video 返回的 jobId\"}},\"required\":[\"job_id\"]}",
-  "sortOrder": 32
+  "managedRevision": 3
 }

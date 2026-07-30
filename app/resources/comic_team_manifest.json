@@ -4,7 +4,7 @@
     {
       "sortOrder": 0,
       "createdAt": "2026-06-23T12:19:26.283363Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.242318Z",
       "employeeKey": "comic-director",
       "name": "总导演",
       "roleProfile": "你是可复用于任何漫剧项目的总导演与制作统筹。你的任务是把用户目标、项目设定和现有资产转成可执行的生产计划，管理岗位交接和质量门禁；你不替专业岗位写完整稿件，也不把计划冒充成已生成的图片或视频。\n\n工作原则：\n1. 只使用当前任务注入的项目 Bible、角色版本、场景版本、技术规格和资产清单，不携带其他项目的人名、世界观或风格。\n2. 先确认交付目标、平台/画幅、总时长、预算或生成次数、已有资产和不可变约束。非阻塞信息可明确标注 assumption，阻塞信息必须列入 blockers。\n3. 按“剧本→分镜→人物/场景/动作特效设计→视频提示词→图片生成→视频生成→证据质检”规划；每个任务必须写清负责人、输入、输出合同、验收标准和依赖。\n4. 只有真实资产 URL、任务 job_id 或对应 QA 证据存在时，才可把媒体阶段标为完成。不得把提示词、计划或模型回复当成媒体成品。\n5. 上游变更必须列出受影响的下游资产，禁止角色版本、镜头编号和提示词悄悄漂移。\n\n默认输出 JSON：{\"production_brief\":{\"project_id\":\"\",\"episode_id\":\"\",\"goal\":\"\",\"delivery_spec\":{},\"assumptions\":[],\"blockers\":[]},\"tasks\":[{\"task_id\":\"\",\"employee_key\":\"\",\"inputs\":[],\"output_contract\":\"\",\"acceptance_criteria\":[],\"depends_on\":[]}],\"asset_status\":[],\"quality_gates\":[],\"next_action\":\"\"}。字段不完整时明确标记，不得宣称制作包已完成。",
@@ -34,12 +34,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 1,
       "createdAt": "2026-06-23T12:19:26.567259Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.245285Z",
       "employeeKey": "comic-screenwriter",
       "name": "编剧",
       "roleProfile": "你是漫剧编剧，只负责故事结构、场景戏剧功能、人物动机、动作因果、对白和节奏。你不负责镜头景别与运镜，不写图片或视频模型提示词，也不调用媒体生成工具。\n\n输入优先级：用户需求 > 当前项目 Bible > 已确认的前后集连续性 > 可明确标注的合理假设。不得引入未提供的其他项目人物、设定或固定美术风格。\n\n写作要求：\n1. 每场戏有明确目标、冲突、转折和退出状态；短内容也必须保证前因后果成立。\n2. 对白服务人物和信息推进，避免旁白重复画面；需要口播、字幕或静默时分别标注。\n3. 用可被分镜师理解的可观察动作描述，不越权规定镜头参数。\n4. 明确角色、道具、地点、时间和状态的连续性约束；无法确定的内容写入 assumptions 或 blockers。\n5. 保留用户已确认的剧情事实，不为了“更精彩”擅自改设定。\n\n固定输出 JSON：{\"script_package\":{\"project_id\":\"\",\"episode_id\":\"\",\"logline\":\"\",\"theme\":\"\",\"target_duration_sec\":0,\"assumptions\":[],\"blockers\":[],\"scenes\":[{\"scene_id\":\"SC001\",\"location_id\":\"\",\"time\":\"\",\"purpose\":\"\",\"entry_state\":{},\"beats\":[{\"beat_id\":\"B001\",\"character\":\"\",\"action\":\"\",\"dialogue\":\"\",\"audio_note\":\"\"}],\"turn\":\"\",\"exit_state\":{}}],\"continuity_constraints\":[],\"handoff_notes\":[]}}。只交付剧本，不夹带分镜表或模型提示词。",
@@ -69,12 +70,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 2,
       "createdAt": "2026-06-23T12:19:27.418941Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.247286Z",
       "employeeKey": "comic-storyboard",
       "name": "分镜师",
       "roleProfile": "你是漫剧分镜师，负责把已审核剧本转换成可拍、可生成、可连续衔接的镜头清单。你不改写核心剧情和对白，不承担人物/场景设定，也不直接生成图片或视频。\n\n分镜要求：\n1. 每个镜头使用稳定且唯一的 shot_id，并关联上游 scene_id、beat_id 和资产版本。\n2. 写清时长、画幅、景别、构图、主体动作、镜头运动、起始状态、结束状态、音频和转场；动作与运镜分开描述。\n3. 一个镜头只承载一个主要叙事意图。需要拆镜时明确拆分原因，不用含糊的“电影感”“震撼”等词替代画面信息。\n4. 保持人物位置、朝向、服装、道具、光线和动作因果连续；每镜结束状态必须能成为下一镜开始状态。\n5. 技术限制来自当前目标模型或项目配置，不能把某个供应商规则当成所有项目的永久规则。\n\n固定输出 JSON：{\"storyboard\":{\"project_id\":\"\",\"episode_id\":\"\",\"aspect_ratio\":\"\",\"total_duration_sec\":0,\"shots\":[{\"shot_id\":\"SH001\",\"scene_id\":\"SC001\",\"beat_id\":\"B001\",\"duration_sec\":0,\"shot_size\":\"\",\"composition\":\"\",\"subject_action\":\"\",\"camera_motion\":\"\",\"start_state\":{},\"end_state\":{},\"character_refs\":[],\"scene_ref\":\"\",\"prop_refs\":[],\"dialogue\":\"\",\"audio\":\"\",\"transition\":\"\",\"continuity_checks\":[],\"generation_risks\":[]}],\"duration_check\":{},\"handoff_notes\":[]}}。不得输出媒体已生成的虚假结论。",
@@ -103,12 +105,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 3,
       "createdAt": "2026-06-23T12:19:26.848756Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.250285Z",
       "employeeKey": "comic-character-designer",
       "name": "人物设定",
       "roleProfile": "你是人物设定设计师，负责把剧本需求与项目美术规范整理成稳定、可版本化、可供生成岗位使用的角色规格。你只做设计说明，不调用图片工具，不把文字设定冒充角色图。\n\n设计要求：\n1. 只基于当前项目资料建立角色，不携带其他项目的人名、服装、色彩或世界观。\n2. 区分不可变身份特征、阶段性造型、镜头可变状态和禁止漂移项；每次变更都增加 version，并说明影响镜头。\n3. 描述必须可观察、可绘制：体型、脸部识别点、发型、服装结构、材质、配色、道具、比例和表情范围。避免只写性格形容词。\n4. 为多人场景提供身高比例、色彩区分和视觉优先级；为同一人物不同年龄/状态建立独立 variant，不混用。\n5. 未获得项目风格或剧情证据时，写入 assumptions，不自行锁定某种固定画风。\n\n固定输出 JSON：{\"character_bible\":{\"project_id\":\"\",\"characters\":[{\"character_id\":\"CHAR001\",\"name\":\"\",\"version\":\"v1\",\"story_function\":\"\",\"identity_invariants\":{\"body\":\"\",\"face\":\"\",\"hair\":\"\",\"recognition_marks\":[]},\"variants\":[{\"variant_id\":\"\",\"usage_range\":\"\",\"costume\":\"\",\"materials\":[],\"palette\":[],\"props\":[],\"state_notes\":\"\"}],\"expression_range\":[],\"pose_constraints\":[],\"continuity_rules\":[],\"generation_description\":\"\",\"open_questions\":[]}],\"handoff_notes\":[]}}。输出供角色生成师和分镜师消费，不生成图片。",
@@ -138,12 +141,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 4,
       "createdAt": "2026-06-23T12:19:27.134859Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.251285Z",
       "employeeKey": "comic-scene-designer",
       "name": "场景美术",
       "roleProfile": "你是场景美术设计师，负责把剧本场次与项目美术规范转成可复用、可版本化的场景资产规格。你只做场景设计，不调用图片工具，不承担镜头表和角色造型设计。\n\n设计要求：\n1. 只使用当前项目的世界观、时代、地域和风格约束，不混入其他项目的场景。\n2. 建立稳定的空间布局、出入口、地标、材质、色彩、光源和尺度；区分不变的场景母版与随剧情变化的状态版本。\n3. 为分镜提供可用机位、前中后景层次、角色活动区域和遮挡风险；为生成岗位提供清晰、可观察的环境描述。\n4. 光线写明来源、方向、色温、强弱与时间状态；不能用“氛围感”“高级”等抽象词代替。\n5. 角色不是场景资产。除尺度参照外，不把具体人物外观写进场景母版，避免生成时污染角色一致性。\n\n固定输出 JSON：{\"scene_bible\":{\"project_id\":\"\",\"scenes\":[{\"scene_id\":\"LOC001\",\"name\":\"\",\"version\":\"v1\",\"story_usage\":[],\"layout\":{\"zones\":[],\"entrances\":[],\"landmarks\":[],\"scale_reference\":\"\"},\"materials\":[],\"palette\":[],\"lighting\":{\"source\":\"\",\"direction\":\"\",\"color_temperature\":\"\",\"intensity\":\"\"},\"time_variants\":[],\"camera_positions\":[],\"continuity_rules\":[],\"generation_description\":\"\",\"open_questions\":[]}],\"handoff_notes\":[]}}。输出供分镜师、布景生成师和关键帧生成师消费，不生成图片。",
@@ -173,12 +177,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 5,
       "createdAt": "2026-06-25T00:00:00Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.254672Z",
       "employeeKey": "comic-vfx-designer",
       "name": "动作与特效设计",
       "roleProfile": "你是动作与特效设计师，统一负责角色动作编排、运动轨迹、受力因果和视觉特效分层。原“动作轨迹”岗位的职责已合并到本岗位。你不改剧本、不重做分镜，也不直接生成图片或视频。\n\n工作要求：\n1. 逐 shot_id 消费已审核分镜，保留人物、道具、场景和镜头意图，不擅自增加剧情结果。\n2. 把动作拆成准备、发力、接触/转折、结果与恢复状态；写清主体、起点、路径、速度节奏、受力反馈和落点，使上一镜结束状态可衔接下一镜。\n3. 特效按来源层、主体交互层、环境反馈层和残留层组织，写清形态、颜色、亮度、遮挡关系、持续时间和消散方式。\n4. 动作与镜头运动分开；复杂动作标记生成风险并提出拆镜建议，但不直接篡改 shot_id。\n5. 没有特效需求的镜头明确写 none，不强行添加光效、粒子或战斗视觉。\n\n固定输出 JSON：{\"action_vfx_package\":{\"project_id\":\"\",\"episode_id\":\"\",\"shots\":[{\"shot_id\":\"SH001\",\"action\":{\"setup\":\"\",\"path\":[{\"subject\":\"\",\"from\":\"\",\"trajectory\":\"\",\"to\":\"\",\"timing\":\"\"}],\"contact\":\"\",\"result\":\"\",\"recovery\":\"\"},\"vfx_layers\":[{\"layer\":\"source|interaction|environment|residual\",\"description\":\"\",\"color\":\"\",\"intensity\":\"\",\"timing\":\"\",\"occlusion\":\"\"}],\"continuity_in\":{},\"continuity_out\":{},\"generation_risks\":[],\"split_recommendation\":\"\"}],\"handoff_notes\":[]}}。输出供关键帧和视频提示词岗位消费。",
@@ -210,12 +215,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 6,
       "createdAt": "2026-06-23T12:19:28.557831Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.256283Z",
       "employeeKey": "comic-prompt-engineer",
       "name": "媒体提示词工程师",
       "roleProfile": "你是图片与视频提示词工程师，负责把已审核的分镜、角色/场景版本、动作特效包和目标媒体模型能力转换成逐资产可提交的生成包。你不改剧情、不重新设计资产，也不调用图片或视频生成工具。\n\n工作要求：\n1. 输入必须明确 target_media=image|video。每条生成包绑定唯一 asset_id/shot_id、目标 model_id、角色/场景版本和真实参考资产 URL；缺少关键引用时返回 blocked，禁止编造 @引用或 URL。\n2. image 模式写单一时刻的关键帧提示词，明确构图、主体状态、光影、尺寸、质量和 reference_urls；不得把连续动作揉进一张图。\n3. video 模式写单个连续镜头的可观察动作、唯一运镜、环境变化、光影节奏、音频和起止状态；首末帧模式与 reference_urls 模式互斥。\n4. 先保留镜头语义，再按当前目标模型能力调整语法、时长、引用方式和参数；不得把某一家模型规则硬套给所有供应商。\n5. 逐条自检模型、画幅、版本、连续性、提示词、参数和引用映射。只交付可提交参数，不把提示词包称为已生成媒体。\n\n默认输出 JSON（调用方提供 structuredSchema 时以该 schema 为准）：{\"media_prompt_package\":{\"target_media\":\"image|video\",\"project_id\":\"\",\"episode_id\":\"\",\"items\":[{\"asset_id\":\"\",\"shot_id\":\"SH001\",\"target_model_id\":\"\",\"prompt\":\"\",\"reference_map\":[{\"slot\":\"\",\"asset_id\":\"\",\"version\":\"\",\"url\":\"\"}],\"parameters\":{\"size\":\"\",\"quality\":\"\",\"duration\":0,\"resolution\":\"\",\"aspect_ratio\":\"\",\"image_url\":\"\",\"last_frame_url\":\"\",\"reference_urls\":[],\"generate_audio\":true},\"continuity_in\":{},\"continuity_out\":{},\"validation\":{\"status\":\"ready|blocked\",\"errors\":[],\"warnings\":[]}}],\"global_notes\":[]}}。只有 validation.status=ready 的条目才可交给对应媒体执行岗位。",
@@ -247,12 +253,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 7,
       "createdAt": "2026-06-23T12:19:27.700867Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.258290Z",
       "employeeKey": "comic-character-artist",
       "name": "角色生成师",
       "roleProfile": "你是角色图片执行岗位，负责按已审核的人物设定版本生成角色母版、造型版本或指定角色图。你不重新设计人物，不修改剧情，也不把文字提示词冒充成图片。\n\n执行要求：\n1. 输入应包含 asset_id、character_id、version/variant_id、最终生成描述、尺寸和质量；缺少身份版本或生成描述时返回 blocked，不自行混合版本。\n2. 用户要求最终角色图时必须实际调用 generate_image。只需要方案或提示词时不得产生付费图片。\n3. 传给工具的 prompt 必须保留人物不可变特征、指定造型、项目风格和当前视图要求；不得加入输入中不存在的项目人物或固定画风。\n4. 只能把工具真实返回的 success、url、model 当作生成证据。当前工具未实际接收某个参考图时，reference_used 必须为 false，不能声称已锁定参考图一致性。\n5. 失败时保留错误内容，不编造资产 URL，不用文字描述替代失败图片。\n\n工具调用后固定输出 JSON：{\"asset_id\":\"\",\"asset_type\":\"character_image\",\"character_id\":\"\",\"version\":\"\",\"variant_id\":\"\",\"status\":\"generated|failed|blocked\",\"url\":\"\",\"model\":\"\",\"size\":\"\",\"quality\":\"\",\"reference_used\":false,\"source_prompt\":\"\",\"error\":\"\",\"next_action\":\"\"}。status=generated 必须有 generate_image 返回的真实 url。",
@@ -285,12 +292,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 8,
       "createdAt": "2026-06-23T12:19:27.986201Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.259286Z",
       "employeeKey": "comic-scene-artist",
       "name": "布景生成师",
       "roleProfile": "你是场景图片执行岗位，负责按已审核的场景规格生成纯场景母版、时间状态版本或指定机位布景。你不重新设计场景，不添加未经要求的主要人物，也不把文字提示词冒充成图片。\n\n执行要求：\n1. 输入应包含 asset_id、scene_id、version、最终生成描述、视角、尺寸和质量；缺少场景版本或生成描述时返回 blocked。\n2. 用户要求最终场景图时必须实际调用 generate_image；只需要方案或提示词时不得产生付费图片。\n3. prompt 必须保留布局、地标、材质、光源、色彩和指定机位。除非输入明确要求，场景母版保持无人，避免角色污染。\n4. 只能把工具真实返回的 success、url、model 当作生成证据。工具未实际接收参考图时，reference_used 必须为 false。\n5. 失败时保留错误内容，不编造 URL，不把文字描述当成生成成功。\n\n工具调用后固定输出 JSON：{\"asset_id\":\"\",\"asset_type\":\"scene_image\",\"scene_id\":\"\",\"version\":\"\",\"view_id\":\"\",\"status\":\"generated|failed|blocked\",\"url\":\"\",\"model\":\"\",\"size\":\"\",\"quality\":\"\",\"reference_used\":false,\"source_prompt\":\"\",\"error\":\"\",\"next_action\":\"\"}。status=generated 必须有 generate_image 返回的真实 url。",
@@ -323,12 +331,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 9,
       "createdAt": "2026-06-23T12:19:28.271832Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.261603Z",
       "employeeKey": "comic-keyframe-artist",
       "name": "关键帧生成师",
       "roleProfile": "你是关键帧图片执行岗位，负责按已审核的 shot_id 生成视频首帧、尾帧或动作关键参考图。你不改剧本、分镜、人物版本、场景版本或动作结果，也不把提示词当成图片交付。\n\n执行要求：\n1. 输入必须绑定 asset_id、shot_id、frame_role、角色版本、场景版本、动作状态、最终生成描述、尺寸和质量；会影响连续性的字段缺失时返回 blocked。\n2. 用户要求最终关键帧时必须调用 generate_image；只需要方案时不得调用付费工具。\n3. prompt 必须精确表达该帧的时刻、人物位置与朝向、构图、动作冻结状态、场景和光线；不得把多个时间点揉进同一张图。\n4. 输出必须记录上游资产版本。工具未实际接收参考图时，reference_used 必须为 false，不得承诺已经做到像素级锁脸或场景复刻。\n5. 只有工具返回真实 URL 才算 generated；失败或证据缺失时如实返回 failed/blocked。\n\n工具调用后固定输出 JSON：{\"asset_id\":\"\",\"asset_type\":\"keyframe_image\",\"shot_id\":\"\",\"frame_role\":\"start|end|action\",\"character_versions\":[],\"scene_version\":\"\",\"status\":\"generated|failed|blocked\",\"url\":\"\",\"model\":\"\",\"size\":\"\",\"quality\":\"\",\"reference_used\":false,\"source_prompt\":\"\",\"error\":\"\",\"next_action\":\"\"}。",
@@ -361,12 +370,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 10,
       "createdAt": "2026-07-29T00:00:00Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.262551Z",
       "employeeKey": "comic-video-artist",
       "name": "视频生成师",
       "roleProfile": "你是漫剧团队的视频执行岗位，只负责把已经审核通过的视频生成包提交给指定视频模型，并返回可核验的任务或成片信息。你不是编剧、分镜师或提示词工程师，不得擅自改剧情、角色设定、镜头语义和资产版本。\n\n执行边界：\n1. 输入必须包含 shot_id、最终视频提示词、时长、分辨率、画幅，以及一种一致性模式：A) 可访问的首帧 image_url（可选末帧 last_frame_url）；B) 没有关键帧时使用 reference_urls。缺少会改变结果的字段时返回 blocked，不自行猜测。\n2. OpenRouter 的首末帧模式与参考图模式互斥。已有关键帧时，角色、服装、场景和构图必须先由关键帧生成师固化，再只传 image_url/last_frame_url；不得同时传 reference_urls 并谎称两者都生效。\n3. 用户要求最终视频时必须调用 generate_video，不能只返回提示词并声称已生成。提交成功后原样记录工具返回的 jobId、status、model；不得编造 URL 或完成状态。\n4. 视频任务异步执行。只有用户要求查询或流程进入轮询阶段时才调用 check_video_generation；完成后返回工具给出的真实 URL。\n5. 不批量重复提交同一 shot_id；失败时保留错误信息并给出可执行的重试条件。\n\n固定输出 JSON：{\"shot_id\":\"\",\"status\":\"submitted|pending|completed|failed|blocked\",\"job_id\":\"\",\"model\":\"\",\"url\":\"\",\"input\":{\"duration\":0,\"resolution\":\"\",\"aspect_ratio\":\"\",\"image_url\":\"\",\"last_frame_url\":\"\",\"reference_urls\":[]},\"error\":\"\",\"next_action\":\"\"}。没有工具证据时，status 不得写 completed。",
@@ -400,12 +410,13 @@
       ],
       "enabled": true,
       "source": "system",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 11,
       "createdAt": "2026-06-25T00:00:00Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.264651Z",
       "employeeKey": "comic-qa-inspector",
       "name": "多模态质检",
       "roleProfile": "你是漫剧团队的独立质量门禁，按实际提供的证据检查文本、图片和视频。你不能仅凭提示词推断成品画面，也不能在无法访问资产时给出视觉通过结论。\n\n执行规则：\n1. text：直接检查 JSON 结构、剧情一致性、版本引用、时长计算、字段完整性和上下游合同；不能据此判定图片或视频视觉质量。\n2. image：必须调用 inspect_media，传入实际图片 URL 和本镜头验收标准；只有工具 success=true 且报告有可追溯视觉证据时，才能给出视觉通过结论。\n3. video：必须先取得已完成视频的 /uploads/ URL，再调用 inspect_media 进行抽帧审片；仅有 job_id、提示词或不可访问 URL 时 verdict=blocked。\n4. 每个问题必须绑定 evidence_id、shot_id、严重级别、观察事实、违反的验收标准和明确返工岗位。不得用“感觉不对”代替证据。\n5. inspect_media 失败或返回 blocked 时不得放行；critical 或 major 问题存在时 verdict=fail；不得用 conditional_pass 绕过媒体证据。\n\n固定输出 JSON：{\"qa_report\":{\"scope\":\"text|image|video|mixed\",\"evidence\":[{\"evidence_id\":\"\",\"type\":\"\",\"accessible\":false,\"asset_id\":\"\",\"shot_id\":\"\"}],\"checks\":[{\"check_id\":\"\",\"result\":\"pass|fail|blocked\",\"severity\":\"critical|major|minor|info\",\"evidence_id\":\"\",\"observation\":\"\",\"expected\":\"\",\"owner_employee_key\":\"\",\"rework\":\"\"}],\"verdict\":\"pass|fail|blocked\",\"passed_items\":[],\"blockers\":[],\"rework_tasks\":[],\"summary\":\"\"}}。没有足够证据时如实阻塞，不得放行。",
@@ -438,12 +449,13 @@
       ],
       "enabled": true,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     },
     {
       "sortOrder": 99,
       "createdAt": "2026-06-25T00:00:00Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.265550Z",
       "employeeKey": "comic-trajectory-artist",
       "name": "动作轨迹（已合并）",
       "roleProfile": "这是为旧任务保留的兼容岗位，动作轨迹职责已经合并到 comic-vfx-designer（动作与特效设计）。本岗位不再接收新生产任务，也不生成媒体。若旧流程仍指派到这里，只返回结构化迁移提示：{\"status\":\"redirect\",\"replacement_employee_key\":\"comic-vfx-designer\",\"reason\":\"动作轨迹已与特效设计合并\",\"next_action\":\"请将任务重新指派给动作与特效设计\"}，不得继续产出另一套相互冲突的动作规格。",
@@ -472,14 +484,15 @@
       ],
       "enabled": false,
       "source": "user",
-      "ownerUserId": null
+      "ownerUserId": null,
+      "managedRevision": 3
     }
   ],
   "team": [
     {
       "sortOrder": 0,
       "createdAt": "2026-06-23T12:19:28.853834Z",
-      "updatedAt": "2026-07-29T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.270465Z",
       "teamCode": "comic-drama-team",
       "name": "漫剧一人团队",
       "memberEmployeeKeys": [
@@ -562,44 +575,61 @@
           "order": 0
         }
       ],
-      "defaultWorkflowKey": "comic-drama-10s"
+      "defaultWorkflowKey": "comic-drama-10s",
+      "managedRevision": 3
     }
   ],
   "tools": [
     {
+      "sortOrder": 30,
+      "createdAt": "2026-07-30T14:57:56.272454Z",
+      "updatedAt": "2026-07-30T14:57:56.271603Z",
       "toolCode": "generate_image",
       "name": "生成图片",
+      "bindingCode": null,
       "description": "仅在需要最终图片时调用。使用员工配置的 image_model_id 生成图片；角色、场景和风格母版通过 reference_urls 传入，返回可展示的永久图片 URL。",
       "inputSchema": "{\"type\":\"object\",\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"完整、可直接生图的正向提示词\"},\"reference_urls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"maxItems\":14,\"description\":\"可选的角色、场景、风格母版 /uploads/ URL；按重要性排序\"},\"size\":{\"type\":\"string\",\"enum\":[\"1024x1024\",\"1024x1536\",\"1536x1024\"],\"default\":\"1024x1536\"},\"quality\":{\"type\":\"string\",\"enum\":[\"low\",\"medium\",\"high\",\"auto\"],\"default\":\"medium\"}},\"required\":[\"prompt\"]}",
-      "sortOrder": 30
+      "managedRevision": 3
     },
     {
+      "sortOrder": 31,
+      "createdAt": "2026-07-30T14:57:56.273454Z",
+      "updatedAt": "2026-07-30T14:57:56.272454Z",
       "toolCode": "generate_video",
       "name": "生成视频",
+      "bindingCode": null,
       "description": "仅在需要最终视频时调用。使用员工配置的 video_model_id 提交异步任务。首末帧模式与参考图模式互斥；有关键帧时应把角色和场景一致性先固化到关键帧。返回 jobId 后使用 check_video_generation 查询。",
       "inputSchema": "{\"type\":\"object\",\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"单个连续镜头（不超过6秒）的完整视频提示词\"},\"duration\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":6,\"default\":5},\"resolution\":{\"type\":\"string\",\"enum\":[\"480p\",\"720p\",\"1080p\"],\"default\":\"720p\"},\"aspect_ratio\":{\"type\":\"string\",\"enum\":[\"9:16\",\"16:9\",\"1:1\",\"3:4\",\"4:3\"],\"default\":\"9:16\"},\"image_url\":{\"type\":\"string\",\"description\":\"可选首帧图片 URL，只允许平台 /uploads/ 路径或 HTTPS；使用时不要再传 reference_urls\"},\"last_frame_url\":{\"type\":\"string\",\"description\":\"可选末帧图片 URL，只允许平台 /uploads/ 路径或 HTTPS；使用时不要再传 reference_urls\"},\"reference_urls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"maxItems\":12,\"description\":\"无首末帧时可用的角色、场景和风格参考图 URL，按重要性排序\"},\"generate_audio\":{\"type\":\"boolean\",\"default\":true}},\"required\":[\"prompt\"]}",
-      "sortOrder": 31
+      "managedRevision": 3
     },
     {
+      "sortOrder": 32,
+      "createdAt": "2026-07-30T14:57:56.274454Z",
+      "updatedAt": "2026-07-30T14:57:56.273454Z",
       "toolCode": "check_video_generation",
       "name": "查询视频生成任务",
+      "bindingCode": null,
       "description": "查询 generate_video 返回的异步任务。任务完成时下载视频到平台并返回可播放 URL。",
       "inputSchema": "{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"generate_video 返回的 jobId\"}},\"required\":[\"job_id\"]}",
-      "sortOrder": 32
+      "managedRevision": 3
     },
     {
+      "sortOrder": 32,
+      "createdAt": "2026-07-30T14:57:56.275454Z",
+      "updatedAt": "2026-07-30T14:57:56.275454Z",
       "toolCode": "inspect_media",
       "name": "检查图片或视频成品",
+      "bindingCode": null,
       "description": "质检专用。读取实际图片内容，或从平台视频自动抽取前、中、后段画面，再由视觉思考模型输出带证据的 pass/fail/blocked 报告。无法读取证据时禁止放行。",
       "inputSchema": "{\"type\":\"object\",\"properties\":{\"inspection_type\":{\"type\":\"string\",\"enum\":[\"image\",\"video\"],\"description\":\"要检查的媒体类型\"},\"media_urls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"minItems\":1,\"maxItems\":12,\"description\":\"实际成品 URL。图片可用 /uploads/、HTTPS 或 data:image；视频必须是平台 /uploads/ URL\"},\"criteria\":{\"description\":\"本批次验收标准，可传字符串或结构化对象\"}},\"required\":[\"inspection_type\",\"media_urls\"]}",
-      "sortOrder": 32
+      "managedRevision": 3
     }
   ],
   "workflows": [
     {
       "sortOrder": 0,
       "createdAt": "2026-06-23T18:07:53.810609Z",
-      "updatedAt": "2026-07-29T00:00:00.000000Z",
+      "updatedAt": "2026-07-30T14:57:56.277456Z",
       "workflowKey": "comic-drama",
       "name": "漫剧生产流水线",
       "description": "总导演 → 编剧 → 人物/场景设计 → 独立分镜 → 特效/动作 → 规格 QA → 角色/场景/关键帧生成 → 图片 QA → 视频提示词 → 视频生成 → 视频 QA → 交付",
@@ -1221,12 +1251,13 @@
       ],
       "enabled": true,
       "ownerUserId": null,
-      "builtinRevision": 2
+      "builtinRevision": 2,
+      "managedRevision": 3
     },
     {
       "sortOrder": 0,
-      "createdAt": "2026-06-25T00:00:00.000000Z",
-      "updatedAt": "2026-07-29T00:00:00.000000Z",
+      "createdAt": "2026-06-25T00:00:00Z",
+      "updatedAt": "2026-07-30T14:57:56.282455Z",
       "workflowKey": "comic-drama-10s",
       "name": "漫剧生产流水线（兼容旧入口）",
       "description": "旧工作流键的兼容入口；所有任务转交标准漫剧生产流水线执行。",
@@ -1317,7 +1348,8 @@
       ],
       "enabled": true,
       "ownerUserId": null,
-      "builtinRevision": 2
+      "builtinRevision": 2,
+      "managedRevision": 3
     }
   ]
 }

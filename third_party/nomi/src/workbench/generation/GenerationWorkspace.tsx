@@ -52,6 +52,14 @@ export default function GenerationWorkspace({
   )
   const reduceMotion = useReducedMotion()
   const [timelineCollapsed, setTimelineCollapsed] = React.useState(true)
+  React.useEffect(() => {
+    const handleTimelineVisibility = (event: Event) => {
+      const detail = (event as CustomEvent<{ expanded?: boolean }>).detail
+      setTimelineCollapsed(detail?.expanded === false)
+    }
+    window.addEventListener('nomi-set-timeline-expanded', handleTimelineVisibility)
+    return () => window.removeEventListener('nomi-set-timeline-expanded', handleTimelineVisibility)
+  }, [])
   // 折叠态悬浮把手的真实摘要：段数（含字幕/标题卡）+ 总时长，绝不编造。
   const timelineSummary = React.useMemo(() => {
     const clipCount =

@@ -1,0 +1,290 @@
+2026-07-30T14:57:56.283455Z [info     ] ������������Ǩ����� revision=3 created=0 updated=20 skipped_owner=0 skipped_revision=0 failed=0
+ÿ�ղɼ�������������
+��ʱ��������ͬ�� @ 02:00
+趋势 AI 报告就绪，模型=openrouter/auto
+趋势简报就绪：6 条(候选 286)
+趋势同步完成：新拉 0 个，跳过 8 个（当天已有），共 8 个 query
+2026-07-30T14:58:18.543560Z [info     ] request                        client=127.0.0.1 elapsed_ms=49.4 method=GET path=/login request_id=14968defe2e44ecaa6c66ab446c8c270 status=200
+2026-07-30T14:58:19.177888Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/assets/index-DvJ52wqb.css request_id=52129288982e4637816016a3f8ef4cc2 status=200
+2026-07-30T14:58:19.256018Z [info     ] request                        client=127.0.0.1 elapsed_ms=85.2 method=GET path=/assets/index-CaEiH7oz.js request_id=75cdcd377c674e46bd285082bbb875fd status=200
+2026-07-30T14:58:25.941726Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.2 method=GET path=/assets/useInputHabit-oe11P4CK.js request_id=3ccb58fb63cc48af8a6bd8d752befb18 status=200
+2026-07-30T14:58:25.950726Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.3 method=GET path=/assets/UserLogin-Dp_eyBGZ.js request_id=cd2febd074894ff5895b4876d06a19df status=200
+2026-07-30T14:58:25.958726Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.8 method=GET path=/assets/UserOutlined-CL-nYYIw.js request_id=24804740dccf496eb7881a0718e55dfb status=200
+2026-07-30T14:58:25.966727Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.0 method=GET path=/assets/LockOutlined-CuHMLmr2.js request_id=6d2db7d0a3db4f26a1e058d84459bfa4 status=200
+2026-07-30T14:58:25.982728Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.4 method=GET path=/favicon.svg request_id=d04c7f9dd4bf420996e7b10ac1e7faff status=200
+2026-07-30T14:58:26.033729Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/login-bg.png request_id=d3371dc088e04b5c8373d3ffd1560ea8 status=200
+2026-07-30T14:58:26.240044Z [info     ] request                        client=127.0.0.1 elapsed_ms=83.6 method=POST path=/api/v1/agentapp/auth/login request_id=544b07a9f7d74179b742c6ad1c6bf4b9 status=200
+2026-07-30T14:58:26.252043Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/auth/check request_id=0840f97577024ccc9563becce52f122f status=200
+2026-07-30T14:58:26.279045Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/auth/check request_id=2c715a4d974f48d2946db4e51596a53d status=200
+2026-07-30T14:58:26.364923Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.6 method=GET path=/assets/PlusOutlined-BHLzvoJj.js request_id=2881053e9ae34a4f93c3cf6c82f97e8e status=200
+2026-07-30T14:58:26.373047Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.4 method=GET path=/assets/CalendarOutlined-C0LlVM2Q.js request_id=c5029a758cbd4b8684d07783e7e9bce4 status=200
+2026-07-30T14:58:26.379926Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.4 method=GET path=/assets/Dashboard-DeP4kbk2.js request_id=1110584e1aab47e79c5a799c2ae887ce status=200
+2026-07-30T14:58:26.388922Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.1 method=GET path=/assets/ReloadOutlined-BSOGGru1.js request_id=196c03b246a0472ca42dc4cca4b486c7 status=200
+2026-07-30T14:58:26.395923Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.7 method=GET path=/assets/ExclamationCircleOutlined-Djl1md6H.js request_id=1424b76700cd4e8382357a1be4db3c37 status=200
+2026-07-30T14:58:26.416987Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.4 method=GET path=/assets/Dashboard-Bqe1cOCs.css request_id=e9262995f3454bd8b1853e41d066784a status=200
+2026-07-30T14:58:26.437859Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.1 method=GET path=/assets/index-CzhrGdKd.js request_id=8bc49e26d9274dacbbf78d7c28ac8e9e status=200
+2026-07-30T14:58:26.447033Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.1 method=GET path=/assets/progress-DqMgbI1-.js request_id=a6851a6d603a403ab1aaa7680320e889 status=200
+2026-07-30T14:58:26.454399Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.3 method=GET path=/assets/ArrowRightOutlined-D1JddZ-H.js request_id=661666ec96fe40a08019d9b4f1ee8f0c status=200
+2026-07-30T14:58:26.461403Z [info     ] request                        client=127.0.0.1 elapsed_ms=49.6 method=GET path=/assets/index-Dft7n8P1.js request_id=a4aec683127e4ee388135a208601809a status=200
+2026-07-30T14:58:26.482049Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.2 method=GET path=/assets/EllipsisOutlined-CdspNtMd.js request_id=766affe8d2624be391775d0fbb0ba836 status=200
+2026-07-30T14:58:26.491112Z [info     ] request                        client=127.0.0.1 elapsed_ms=17.3 method=GET path=/assets/Overflow-CcPwYKM2.js request_id=f3e6e6ce0ee14302a6c7334f8d8fa1a5 status=200
+2026-07-30T14:58:26.499047Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.2 method=GET path=/assets/ThunderboltOutlined-CMAI02qa.js request_id=c74a1f9904474a039f6a5905fc87f62d status=200
+2026-07-30T14:58:26.688172Z [info     ] request                        client=127.0.0.1 elapsed_ms=159.1 method=GET path=/api/v1/agentapp/production/projects request_id=9fcb214ff9244580a62f7ea436178295 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+2026-07-30T14:58:27.403274Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/assets/CanvasHub-DcOb-2LY.js request_id=b83d56fc37fa4e3a98603e3823713ef4 status=200
+2026-07-30T14:58:27.421219Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/agent-canvas/agent-canvas.js request_id=b7509217d9fd43b48df29cb762e9a302 status=200
+2026-07-30T14:58:27.458308Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/agent-canvas/assets/agentStudioMount-CNVmpr5A.js request_id=8a767c7c99f34390845af38f5d71bcc2 status=200
+2026-07-30T14:58:27.568306Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.9 method=GET path=/agent-canvas/tailwind.generated.css request_id=ec615c09471f4887be2c059aa890a918 status=200
+2026-07-30T14:58:27.577361Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.5 method=GET path=/agent-canvas/agent-canvas.css request_id=e3301e88ddc04400bb8bcabfd1606904 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+2026-07-30T14:58:28.137276Z [info     ] request                        client=127.0.0.1 elapsed_ms=313.7 method=GET path=/api/v1/agentapp/canvas/workbench/projects request_id=4112414c8a3b446cbbee720d258323fd status=200
+2026-07-30T14:58:28.185279Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.5 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png request_id=a307649791c5420f9d7691450b461321 status=404
+2026-07-30T14:58:28.199280Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.4 method=GET path=/api/v1/agentapp/production/resource/漫剧/_打包整理/九陆纪元_全量资料包_20260623_214430/03_公共美术参考/九大陆场景图/九大陆场景图_总览.jpg request_id=fd0a68a55a5b4ea3befb1f9811c802c6 status=200
+2026-07-30T14:58:28.212373Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.2 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_三个月前赤脚伤痕弱小版.png request_id=3b3b4ac06fec4331bfe1ed551015256d status=200
+2026-07-30T14:58:28.222440Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.8 method=GET path=/api/v1/agentapp/production/resource/production/tiexin-s1/assets/characters/details/R1_shenyao_face_front_candidate_v5.png request_id=35354e4625014269a15b85d99c7ea01e status=200
+2026-07-30T14:58:28.231459Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.3 method=GET path=/uploads/canvas/img_auto_660e3ca2-636f-4a1e-954c-5fa5922319df.png request_id=d6dcd438ba254b868e5464f0c8a00e03 status=200
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:58:28.349347Z [info     ] request                        client=127.0.0.1 elapsed_ms=2026.0 method=GET path=/api/v1/agentapp/tasks request_id=7293c2af0a8f4a15bc251964db8ee922 status=200
+2026-07-30T14:58:28.366294Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/apple-touch-icon.png request_id=c622a7fc4a164be7b1c22bbddf386625 status=200
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:58:28.728811Z [info     ] request                        client=127.0.0.1 elapsed_ms=2028.7 method=GET path=/api/v1/agentapp/tasks request_id=87db864d9bec40e28db9dac7f95b2fcd status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:58:33.380030Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=87d33ff1fd224920b565f16492836ea5 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:58:38.399694Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=332fc51a7ff14c4aaa63b0d056e1182f status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:58:43.426709Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/tasks request_id=8a20a37dc97641a7a0d8bee2a202e3df status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:58:48.454005Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=4363528bdf8740e2a335b7ea448757e3 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:58:53.475934Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/api/v1/agentapp/tasks request_id=4e9f0e3bd44d4a5985a7d5af56726c99 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:58:58.496982Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/api/v1/agentapp/tasks request_id=cd2de72289a549bb8d9ee7ecc0252f56 status=200
+2026-07-30T14:59:02.343273Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/agent-canvas/assets/projectPersistenceService-DEwKg9Zy.js request_id=c9b5a88c24c0471284ac9e0b8d7ba9c3 status=200
+2026-07-30T14:59:02.741987Z [info     ] request                        client=127.0.0.1 elapsed_ms=387.1 method=GET path=/api/v1/agentapp/canvas/workbench/projects/jiulu-s1 request_id=d628ce5326d04d9eb7f39e32aaa92f09 status=200
+2026-07-30T14:59:02.943434Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/agent-canvas/assets/WorkbenchShell-DZU7yoGD.js request_id=7a035f0ec8bf4a638913346c5282f5d3 status=200
+2026-07-30T14:59:02.970460Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.3 method=GET path=/agent-canvas/assets/IconDownload-BuoLeJCl.js request_id=91d353c0b6dc41299e19719bae2bd5c0 status=200
+2026-07-30T14:59:02.988429Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.8 method=GET path=/agent-canvas/assets/IconChevronRight-CLEQFfP4.js request_id=9c93af6aa1b0407e8e999bd5684090c1 status=200
+2026-07-30T14:59:02.997431Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.7 method=GET path=/agent-canvas/assets/IconListCheck-DeRV0Fax.js request_id=8bc0bf7855e043ce9bf8c1e992651d8b status=200
+2026-07-30T14:59:03.004430Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.8 method=GET path=/agent-canvas/assets/IconMap-fvu29d96.js request_id=1e293dbfc9814c169c09a378ba0fac31 status=200
+2026-07-30T14:59:03.012431Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.0 method=GET path=/agent-canvas/assets/guidedProductionEvents-DEr6wcqn.js request_id=c1b6d610a5a54f859f5f401aec505caf status=200
+2026-07-30T14:59:03.020575Z [info     ] request                        client=127.0.0.1 elapsed_ms=54.6 method=GET path=/agent-canvas/assets/journeyTourActivity-Br4kxmhH.js request_id=6ea1b556fe1f49be802ab85fde4ee977 status=200
+2026-07-30T14:59:03.046575Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.1 method=GET path=/agent-canvas/assets/IconCircleCheck-DEgDFGrF.js request_id=5d84731638d845c1aff1bf868fd7f680 status=200
+2026-07-30T14:59:03.067574Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.7 method=GET path=/agent-canvas/assets/IconBooks-BifYVK5i.js request_id=e81ab84e71f247ed8a512c17856cf6df status=200
+2026-07-30T14:59:03.075606Z [info     ] request                        client=127.0.0.1 elapsed_ms=39.2 method=GET path=/agent-canvas/assets/IconBulb-aTW65K6s.js request_id=a2264b389bc74f9c898de08988d9a826 status=200
+2026-07-30T14:59:03.083574Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.7 method=GET path=/agent-canvas/assets/IconFolder-BTaPDGgk.js request_id=28650008950d42a2916f3aa972eae926 status=200
+2026-07-30T14:59:03.091574Z [info     ] request                        client=127.0.0.1 elapsed_ms=44.7 method=GET path=/agent-canvas/assets/IconArrowRight-Cfql7j81.js request_id=3637c2d05f034b48b0d16505bac9cf49 status=200
+2026-07-30T14:59:03.098577Z [info     ] request                        client=127.0.0.1 elapsed_ms=52.9 method=GET path=/agent-canvas/assets/IconLayoutSidebarLeftExpand-DJ9bj-gv.js request_id=1232bbc251784c8d8aaf84c3995a9c64 status=200
+2026-07-30T14:59:03.117575Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.4 method=GET path=/agent-canvas/assets/generationCanvasTools-dJicdKdF.js request_id=4cec06e8118c40af814aad7841a7fdc1 status=200
+2026-07-30T14:59:03.138576Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.3 method=GET path=/agent-canvas/assets/use-resolved-styles-api-eG5ZIsuu.js request_id=e1172cb7a2b4422b8b59bd10742c2606 status=200
+2026-07-30T14:59:03.146574Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.8 method=GET path=/agent-canvas/assets/get-auto-contrast-value-BGSSZ1GD.js request_id=d90bcbc6a1ab4258b5c2b01d2bf3dc29 status=200
+2026-07-30T14:59:03.194577Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/agent-canvas/assets/referenceUrl-Chs-socL.js request_id=752d664eee8a4abe9182a73e71f7c549 status=200
+2026-07-30T14:59:03.257354Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/agent-canvas/assets/GenerationWorkspace-D-aMGGxa.js request_id=78c170f667974318a70769c301804b4c status=200
+2026-07-30T14:59:03.298276Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.2 method=GET path=/agent-canvas/assets/GenerationCanvas-D2IGLe-I.js request_id=e3fedfc3cf864315a1d5d5a4903a2799 status=200
+2026-07-30T14:59:03.322274Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.7 method=GET path=/agent-canvas/assets/CanvasAssistantEntry-_oHTpI4l.js request_id=32f0180ac3ca4e5ba6bd99d6285bba9c status=200
+2026-07-30T14:59:03.351273Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.2 method=GET path=/agent-canvas/assets/workbenchActions-CyvMFzKN.js request_id=dc1fc2664a384297887a43aff9e7fec3 status=200
+2026-07-30T14:59:03.371305Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.2 method=GET path=/agent-canvas/assets/IconBrush-AmvsOyry.js request_id=90e6909022a4448d8886f41732cc661a status=200
+2026-07-30T14:59:03.379276Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.3 method=GET path=/agent-canvas/assets/IconLayoutGrid-BKwdi4Q9.js request_id=fc4e5b6ed9b44883939af060bc8735b0 status=200
+2026-07-30T14:59:03.387298Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.8 method=GET path=/agent-canvas/assets/IconCube-2M7jFala.js request_id=f5bb2172c2294f879c5e8c0337dca455 status=200
+2026-07-30T14:59:03.395277Z [info     ] request                        client=127.0.0.1 elapsed_ms=52.5 method=GET path=/agent-canvas/assets/IconUser-wL0NTmPJ.js request_id=9d278639fbf547fab5b5724222cf0205 status=200
+2026-07-30T14:59:03.403274Z [info     ] request                        client=127.0.0.1 elapsed_ms=59.2 method=GET path=/agent-canvas/assets/IconVideo-DPV9jhPl.js request_id=082108980b6a4834b09df81620e4a322 status=200
+2026-07-30T14:59:03.437303Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.6 method=GET path=/agent-canvas/assets/workspaceFileDrag-CNxBSF4X.js request_id=9c85f500515d4b16ac53840992bf0cf1 status=200
+2026-07-30T14:59:03.466353Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.9 method=GET path=/agent-canvas/assets/globalAssetPopoverEvents-CLJ2XYFb.js request_id=18c6b3affdb0430f8c502e71c7ce2ab0 status=200
+2026-07-30T14:59:03.473316Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.4 method=GET path=/agent-canvas/assets/batchPlanPreview-CPQ8pj8b.js request_id=633e52f0062940aa955b1e619c6c7ef0 status=200
+2026-07-30T14:59:03.482317Z [info     ] request                        client=127.0.0.1 elapsed_ms=59.0 method=GET path=/agent-canvas/assets/assetLibraryDrag-DG98WJrf.js request_id=93c503bbfdcd42a68762935b923a312a status=200
+2026-07-30T14:59:03.489320Z [info     ] request                        client=127.0.0.1 elapsed_ms=63.4 method=GET path=/agent-canvas/assets/completeNodeConnection-DQd8BFaW.js request_id=41fbe8265a7c49e5b5a06b8cc181a560 status=200
+2026-07-30T14:59:03.498607Z [info     ] request                        client=127.0.0.1 elapsed_ms=63.6 method=GET path=/agent-canvas/assets/IconEyeOff-PtaUPS1D.js request_id=84ad8a3b8ac14447a045ea6aae0f762f status=200
+2026-07-30T14:59:03.532320Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.6 method=GET path=/agent-canvas/assets/IconRotate-CHGxiTtk.js request_id=b49c3e2fa00a4bf1867243f53a96bf45 status=200
+2026-07-30T14:59:03.550320Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.9 method=GET path=/agent-canvas/assets/IconScissors-r5vp4ZOV.js request_id=8ea2f41d92ec434abd7fecbcdbeeb4a2 status=200
+2026-07-30T14:59:03.559318Z [info     ] request                        client=127.0.0.1 elapsed_ms=42.1 method=GET path=/agent-canvas/assets/IconFolderPlus-1CH_U9TH.js request_id=20fdd1bea1c24196878e019402f404e4 status=200
+2026-07-30T14:59:03.566573Z [info     ] request                        client=127.0.0.1 elapsed_ms=47.8 method=GET path=/agent-canvas/assets/IconChevronLeft-bLDZJkvA.js request_id=87ef859ac2564068a09e93d89e3700ba status=200
+2026-07-30T14:59:03.575571Z [info     ] request                        client=127.0.0.1 elapsed_ms=54.9 method=GET path=/agent-canvas/assets/IconStack2-CibuWees.js request_id=58dd2c3a9d784b399a9ef833de205500 status=200
+2026-07-30T14:59:03.597573Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.9 method=GET path=/agent-canvas/assets/referenceSlots-D48nKDE9.js request_id=679721393a8c43619c5a8277c10f829f status=200
+2026-07-30T14:59:03.624601Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.6 method=GET path=/agent-canvas/assets/showInfoToast-BcLblzGY.js request_id=ae89da2ea0a94bb6990fbc007b3f325a status=200
+2026-07-30T14:59:03.633572Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.8 method=GET path=/agent-canvas/assets/generationRunController-C10j09Ce.js request_id=9487c14c64ba49a6980ba2daa843f4af status=200
+2026-07-30T14:59:03.672578Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/agent-canvas/assets/BaseGenerationNode-kQ__YZ6E.js request_id=10cde2a1a0f842a6b3a2103333425c70 status=200
+2026-07-30T14:59:03.711574Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.0 method=GET path=/agent-canvas/assets/IconCopy-VPKUSagN.js request_id=03576983de014a3ca92c0815d72b661f status=200
+2026-07-30T14:59:03.722573Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.4 method=GET path=/agent-canvas/assets/IconFileText-BlBVfV7M.js request_id=5b49a409472a423d959f628d808b1db1 status=200
+2026-07-30T14:59:03.730601Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.7 method=GET path=/agent-canvas/assets/useNodeRelationships-Bzp5Fz9A.js request_id=f88efe8544aa40598c316d8f8526b45f status=200
+2026-07-30T14:59:03.738576Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.9 method=GET path=/agent-canvas/assets/IconUpload-DrSri4Rl.js request_id=0ce3776f592e4825bb962fe7ab20a7b0 status=200
+2026-07-30T14:59:03.746574Z [info     ] request                        client=127.0.0.1 elapsed_ms=44.5 method=GET path=/agent-canvas/assets/IconMinimize-xbLAyzBA.js request_id=4e2a4177634a4774949a039bc26645d9 status=200
+2026-07-30T14:59:03.783575Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.8 method=GET path=/agent-canvas/assets/IconPlayerPause-cuTVApY6.js request_id=e858b492c5da40998b80ba4a2e231556 status=200
+2026-07-30T14:59:03.792611Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.9 method=GET path=/agent-canvas/assets/IconTypography-C84iNosJ.js request_id=26ae4678e0dd49fbb284d21e377661af status=200
+2026-07-30T14:59:03.801574Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.5 method=GET path=/agent-canvas/assets/scene3dConstants-DlRfsgmW.js request_id=5611b9da8e224356b8acb1dd6b812137 status=200
+2026-07-30T14:59:03.809585Z [info     ] request                        client=127.0.0.1 elapsed_ms=39.5 method=GET path=/agent-canvas/assets/IconWand-BLxHPrCS.js request_id=1cca93c3cc7d4bd89b0d2b996a0235eb status=200
+2026-07-30T14:59:03.818575Z [info     ] request                        client=127.0.0.1 elapsed_ms=44.5 method=GET path=/agent-canvas/assets/IconCamera-CZnnBLIP.js request_id=f916909095bb4b458c944f740e3f4499 status=200
+2026-07-30T14:59:03.845614Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.4 method=GET path=/agent-canvas/assets/IconPhotoPlus-CNJsyvDy.js request_id=de97797836724a9b9fb8df213f1ee841 status=200
+2026-07-30T14:59:03.865576Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.2 method=GET path=/agent-canvas/assets/timelineDragPayload-BKtrqhVN.js request_id=cb5c07a519f3482bb1c51744666c2b85 status=200
+2026-07-30T14:59:03.873573Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.8 method=GET path=/agent-canvas/assets/IconRefresh-DHHu7gaL.js request_id=252727058e014587bfe724cd2c607f54 status=200
+2026-07-30T14:59:03.957601Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/agent-canvas/assets/TextDocumentNode-Kgx4nVto.js request_id=bc50eca577cd465d8dced180d41166f6 status=200
+2026-07-30T14:59:03.976650Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.9 method=GET path=/agent-canvas/assets/index-BSSQ9IJj.js request_id=4fdb03464a5d4649a371b12188b45a8b status=200
+2026-07-30T14:59:03.998628Z [info     ] request                        client=127.0.0.1 elapsed_ms=23.8 method=GET path=/agent-canvas/assets/richTextActions-yZCl9Siq.js request_id=2c170a2912c148f48a70e206d63176e7 status=200
+2026-07-30T14:59:04.020398Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.2 method=GET path=/agent-canvas/assets/IconArrowBackUp-D-qc5obn.js request_id=bd5a83c06eff435fa3f9c2498fbdcf8d status=200
+2026-07-30T14:59:04.037448Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.5 method=GET path=/agent-canvas/assets/IconList-ANkEJO92.js request_id=1ddb0f519e35499285fdad0aed85ab17 status=200
+2026-07-30T14:59:04.045397Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.6 method=GET path=/agent-canvas/assets/IconArrowForwardUp-ExEanhAb.js request_id=b9fc9618807f420bae9d37011b270af9 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:05.565462Z [info     ] request                        client=127.0.0.1 elapsed_ms=2036.4 method=GET path=/api/v1/agentapp/tasks request_id=3fa3c4d54ee2408d8404096e365ac6bb status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:10.590107Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/api/v1/agentapp/tasks request_id=2df2979feafc4409bcb32b6ac53e4fb9 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:15.614097Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=72108e54dd584cc88a93814fe30343f1 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:20.635667Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/tasks request_id=5608fff32edf429d817a245f38a2f1c6 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:25.663087Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/tasks request_id=1c391f9e0d064786b4a08e8ee68446a0 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:30.677229Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=3c2bc0b5c6f7427faf9036ec54ab4e25 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:37.694225Z [info     ] request                        client=127.0.0.1 elapsed_ms=2003.9 method=GET path=/api/v1/agentapp/tasks request_id=5dcbb4b089c2414aaeb5e207ac57f13b status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:42.709124Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=2b7233eaad0d4db3b182918f2fdbe42f status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:47.737950Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/api/v1/agentapp/tasks request_id=915fb6aa99fc4e26817f41b830437792 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:52.751999Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/api/v1/agentapp/tasks request_id=e78541e7315d4803980842b83cdcaba6 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T14:59:57.765212Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=b7ad7d03f8fd40ec8a4cb9d7842d4c2d status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:02.788190Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/tasks request_id=91593238e9f74afe9865dd74e9e11d77 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:09.826010Z [info     ] request                        client=127.0.0.1 elapsed_ms=2022.2 method=GET path=/api/v1/agentapp/tasks request_id=59b5d8398795474ca644b7b07ac5ec94 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:14.848295Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=caa0e0c392d44e0d8c8d79fb8ae3a77e status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:19.871125Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/tasks request_id=f444f1eaceb44bccbe8cb96e3f0c19c7 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:24.897204Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/tasks request_id=cd9181a47bef488d8e3e4675176f4caa status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:29.918091Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/tasks request_id=e8de5b8bdb8743b087b4dac0d076151a status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:34.930409Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/tasks request_id=f6c4d6f464f2430bbbdd67f540d01200 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:41.944767Z [info     ] request                        client=127.0.0.1 elapsed_ms=1999.7 method=GET path=/api/v1/agentapp/tasks request_id=c75a1af48bab42dabfeafdabf8d22b83 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:46.962403Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=9d55759b4e7a4f2bb3561a78672fa499 status=200
+2026-07-30T15:00:49.001113Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/login request_id=6fe9bbf71ea54634b6dccad8c5c26dfc status=200
+2026-07-30T15:00:49.040391Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/assets/index-CaEiH7oz.js request_id=1c3880eab285438fb9158ea94b87035b status=200
+2026-07-30T15:00:49.053394Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.4 method=GET path=/assets/index-DvJ52wqb.css request_id=626abf62975c491aa1cd8e75ac251947 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:51.982734Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=7cdadff692c84b46ae23d6af88d645b2 status=200
+2026-07-30T15:00:55.964845Z [info     ] request                        client=127.0.0.1 elapsed_ms=89.4 method=GET path=/assets/UserLogin-Dp_eyBGZ.js request_id=eb61e95b5532405ca6165647b0419574 status=200
+2026-07-30T15:00:55.973815Z [info     ] request                        client=127.0.0.1 elapsed_ms=95.8 method=GET path=/assets/useInputHabit-oe11P4CK.js request_id=fe06d93a291149868f4fcd8df0e84565 status=200
+2026-07-30T15:00:55.982814Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.8 method=GET path=/assets/UserOutlined-CL-nYYIw.js request_id=385de7f0dfc84ac295445026b811d2c5 status=200
+2026-07-30T15:00:55.990815Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.8 method=GET path=/assets/LockOutlined-CuHMLmr2.js request_id=0d39a0f33804413ead30086bdb62fbe2 status=200
+2026-07-30T15:00:55.998814Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.0 method=GET path=/favicon.svg request_id=033b71201dfd495182808fe4635961e5 status=200
+2026-07-30T15:00:56.062311Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/login-bg.png request_id=2a111606bc004487ab60b98241bec67f status=200
+2026-07-30T15:00:56.306313Z [info     ] request                        client=127.0.0.1 elapsed_ms=88.7 method=POST path=/api/v1/agentapp/auth/login request_id=455fd4d167474e4497ad90b57314da9d status=200
+2026-07-30T15:00:56.320341Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.4 method=GET path=/api/v1/agentapp/auth/check request_id=ecd59beef0c7400287dc4f2a41857d70 status=200
+2026-07-30T15:00:56.362344Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.5 method=GET path=/api/v1/agentapp/auth/check request_id=10a4ddcca87e4f44b8c793fa55535019 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:56.407313Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.3 method=GET path=/api/v1/agentapp/tasks request_id=a8eed4c60368498cbf7f7cc8f0fde314 status=200
+2026-07-30T15:00:56.442312Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.1 method=GET path=/assets/Dashboard-DeP4kbk2.js request_id=01a00113494c48a7abdbec7cc82841e4 status=200
+2026-07-30T15:00:56.459312Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.7 method=GET path=/assets/ExclamationCircleOutlined-Djl1md6H.js request_id=b45bbb5047374582b9092b03b6d01b79 status=200
+2026-07-30T15:00:56.467340Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.1 method=GET path=/assets/CalendarOutlined-C0LlVM2Q.js request_id=42c68a631c93489bbc438eb3c486729b status=200
+2026-07-30T15:00:56.476312Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.6 method=GET path=/assets/PlusOutlined-BHLzvoJj.js request_id=687939154cb246e7a0ad3d399f5e0a30 status=200
+2026-07-30T15:00:56.483907Z [info     ] request                        client=127.0.0.1 elapsed_ms=56.0 method=GET path=/assets/ReloadOutlined-BSOGGru1.js request_id=4bb26c8baa83495fa8ff67f4d73e415f status=200
+2026-07-30T15:00:56.491907Z [info     ] request                        client=127.0.0.1 elapsed_ms=54.1 method=GET path=/assets/progress-DqMgbI1-.js request_id=4de5e647f1c845bdba516eff04e72c8e status=200
+2026-07-30T15:00:56.514876Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.4 method=GET path=/assets/index-CzhrGdKd.js request_id=378617b18ae04070a44ea28762e6c8cb status=200
+2026-07-30T15:00:56.537590Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.9 method=GET path=/assets/Dashboard-Bqe1cOCs.css request_id=61c7ed26f35d48fbaa8c75b8d5eadef2 status=200
+2026-07-30T15:00:56.545699Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.8 method=GET path=/assets/ArrowRightOutlined-D1JddZ-H.js request_id=efde9674197041a3bfdb82760af5a201 status=200
+2026-07-30T15:00:56.552947Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.0 method=GET path=/assets/EllipsisOutlined-CdspNtMd.js request_id=497ac74f863541e1bb9295e52469ac1f status=200
+2026-07-30T15:00:56.562592Z [info     ] request                        client=127.0.0.1 elapsed_ms=50.5 method=GET path=/assets/Overflow-CcPwYKM2.js request_id=4c3d33d2c872472c9e439caf120600ee status=200
+2026-07-30T15:00:56.570610Z [info     ] request                        client=127.0.0.1 elapsed_ms=64.6 method=GET path=/assets/index-Dft7n8P1.js request_id=508bdcd4f9ef478cac1b51784399768d status=200
+2026-07-30T15:00:56.586590Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.6 method=GET path=/assets/ThunderboltOutlined-CMAI02qa.js request_id=76a91f3d6bc044ca8f81e41a850643e1 status=200
+2026-07-30T15:00:56.786658Z [info     ] request                        client=127.0.0.1 elapsed_ms=169.4 method=GET path=/api/v1/agentapp/production/projects request_id=e622be579f4047b1a549e8e67e6c798c status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:56.828657Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.7 method=GET path=/api/v1/agentapp/tasks request_id=ff6cb45bb3c74edfa30f77bcbd747994 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:00:56.997662Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/tasks request_id=b3e6c4a8c14f4159ba732ccc148b5ecc status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:01.455578Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=0aecf3ec0e0d48ed8baecceeaa72af83 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:02.016867Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/tasks request_id=47838e9f487a4863993fe3db0a9845b1 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:06.470152Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=0fedc86f2a564a22b12e331ed47a541a status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:07.040281Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=0510d8c1a0e243b18ebf2f50b28f049a status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:11.485915Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=18a5cd10c7834e038973a651613a9cb3 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:14.085220Z [info     ] request                        client=127.0.0.1 elapsed_ms=2019.6 method=GET path=/api/v1/agentapp/tasks request_id=3359bbd991f14bf7a58095ee697b8551 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:16.501450Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/api/v1/agentapp/tasks request_id=4b65b31c4cb94e2bac0082f7f55f63c5 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:19.115027Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=ceaccb5394124d0eaf6e9584763c3875 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:21.515095Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/tasks request_id=16f86d58edc94ecebd1b83f36d099a33 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:24.134893Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/api/v1/agentapp/tasks request_id=a39d84624f7f4ba39956a208d058e7d3 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:26.540039Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.3 method=GET path=/api/v1/agentapp/tasks request_id=4316f20e7ce94efe8a638f2ebc7607e4 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:29.157449Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.8 method=GET path=/api/v1/agentapp/tasks request_id=f9d85b1f89b14cf5a8c06bd21ea84414 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:31.572037Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/api/v1/agentapp/tasks request_id=b34aba09aedf45b390f08aa3633c99ab status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:34.179090Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.1 method=GET path=/api/v1/agentapp/tasks request_id=ca07354f9b3e450081b6c0a8335654fa status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:36.598713Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/api/v1/agentapp/tasks request_id=f1b92d75c44a4db5997b99b67d2a684b status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:39.198904Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.2 method=GET path=/api/v1/agentapp/tasks request_id=dfe7f64d20fe414a983dfbb3bdd3d059 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:41.620511Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/tasks request_id=97b5841e5e694eabadb6bc3ea02552ad status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:46.252983Z [info     ] request                        client=127.0.0.1 elapsed_ms=2030.2 method=GET path=/api/v1/agentapp/tasks request_id=d456bf370c47411286d81ccc5ecaa2e4 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:46.648482Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/api/v1/agentapp/tasks request_id=dc260bbcf53244ccbbae90a0591c09dd status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:51.274498Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/api/v1/agentapp/tasks request_id=705aaa3d8ef644a4b75091991d3b53ec status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:51.680248Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.7 method=GET path=/api/v1/agentapp/tasks request_id=f374cc851baf473f95d598e98c67c045 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:56.290574Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=872c705f62014484954f17db4ee26d38 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:01:56.719403Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.5 method=GET path=/api/v1/agentapp/tasks request_id=5a82432e083d4859afc3d3047135e64e status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:01.318277Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/tasks request_id=221cdbbf7a8c41ca80705b555e3109ea status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:01.744590Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/api/v1/agentapp/tasks request_id=77d649cdb8954b41b668b3678d1d9ad3 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:06.349225Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.5 method=GET path=/api/v1/agentapp/tasks request_id=ed1a2e2381e44bd0ae107194e3a0517b status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:06.763851Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/api/v1/agentapp/tasks request_id=afc7fe6ad2f34b5aa067b6bddcb1d28f status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:11.378514Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=49af506832084a13a0012e4b0c639527 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:11.786503Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/api/v1/agentapp/tasks request_id=16f047dcb7ff4561931af8bd176ee26e status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:18.402749Z [info     ] request                        client=127.0.0.1 elapsed_ms=2008.3 method=GET path=/api/v1/agentapp/tasks request_id=402c8118814141dba57b805f46bee9ff status=200
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:18.825744Z [info     ] request                        client=127.0.0.1 elapsed_ms=2023.4 method=GET path=/api/v1/agentapp/tasks request_id=bd3ea176e53847c5ad647b76cbab29d3 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:23.423762Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/api/v1/agentapp/tasks request_id=046fc69f53124512b01bd7538aadb3dc status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:23.848898Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.1 method=GET path=/api/v1/agentapp/tasks request_id=a78d00fefe4f4f9cae88536dda695a8b status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:28.450404Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/api/v1/agentapp/tasks request_id=87599c1058aa4e3887ba53a6fb7a4465 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:28.875609Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/api/v1/agentapp/tasks request_id=7b99c4905cc04d749989ad702197d77c status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:33.476176Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/api/v1/agentapp/tasks request_id=79148b6e64c44b6e82b3218e3ada7433 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T15:02:33.897419Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/api/v1/agentapp/tasks request_id=885387a7abe14847866f32e5102c4742 status=200

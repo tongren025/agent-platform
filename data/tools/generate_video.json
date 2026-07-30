@@ -1,7 +1,11 @@
 {
+  "sortOrder": 31,
+  "createdAt": "2026-07-30T14:57:56.273454Z",
+  "updatedAt": "2026-07-30T14:57:56.272454Z",
   "toolCode": "generate_video",
   "name": "生成视频",
+  "bindingCode": null,
   "description": "仅在需要最终视频时调用。使用员工配置的 video_model_id 提交异步任务。首末帧模式与参考图模式互斥；有关键帧时应把角色和场景一致性先固化到关键帧。返回 jobId 后使用 check_video_generation 查询。",
   "inputSchema": "{\"type\":\"object\",\"properties\":{\"prompt\":{\"type\":\"string\",\"description\":\"单个连续镜头（不超过6秒）的完整视频提示词\"},\"duration\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":6,\"default\":5},\"resolution\":{\"type\":\"string\",\"enum\":[\"480p\",\"720p\",\"1080p\"],\"default\":\"720p\"},\"aspect_ratio\":{\"type\":\"string\",\"enum\":[\"9:16\",\"16:9\",\"1:1\",\"3:4\",\"4:3\"],\"default\":\"9:16\"},\"image_url\":{\"type\":\"string\",\"description\":\"可选首帧图片 URL，只允许平台 /uploads/ 路径或 HTTPS；使用时不要再传 reference_urls\"},\"last_frame_url\":{\"type\":\"string\",\"description\":\"可选末帧图片 URL，只允许平台 /uploads/ 路径或 HTTPS；使用时不要再传 reference_urls\"},\"reference_urls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"maxItems\":12,\"description\":\"无首末帧时可用的角色、场景和风格参考图 URL，按重要性排序\"},\"generate_audio\":{\"type\":\"boolean\",\"default\":true}},\"required\":[\"prompt\"]}",
-  "sortOrder": 31
+  "managedRevision": 3
 }

@@ -18,6 +18,15 @@ import { WindowControls } from "../ui/app-shell/WindowControls";
 import { handleWindowTitlebarDoubleClick } from "../ui/app-shell/windowTitlebarDoubleClick";
 import { OnboardingChecklist } from "./onboarding/OnboardingChecklist";
 import GuidedProductionBar from "./onboarding/GuidedProductionBar";
+import ProductionDirectorBar from "./generationCanvas/production/ProductionDirectorBar";
+import { ProductionHierarchyNavigator } from "./generationCanvas/production/ProductionHierarchyNavigator";
+import { useGenerationCanvasStore } from "./generationCanvas/store/generationCanvasStore";
+import {
+    buildProductionHierarchy,
+    resolveProductionScope,
+} from "./generationCanvas/production/productionHierarchy";
+import { useProductionScopeStore } from "./generationCanvas/production/productionScopeStore";
+import { useProductionDirectorUiStore } from "./generationCanvas/production/productionDirectorUiStore";
 
 // 工作区懒加载走容错域（审计 A5）：单个工作区 chunk 失败不拖死其余工作区。
 const CreationWorkspace = lazyWithChunkBoundary(
@@ -140,11 +149,40 @@ export default function WorkbenchShell({
         (state) => state.setWorkspaceMode,
     );
     const categories = useWorkbenchStore((state) => state.categories);
+    const setActiveCategoryId = useWorkbenchStore((state) => state.setActiveCategoryId);
+    const productionNodes = useGenerationCanvasStore((state) => state.nodes);
+    const productionHierarchy = React.useMemo(
+        () => buildProductionHierarchy(productionNodes),
+        [productionNodes],
+    );
+    const storedProductionScope = useProductionScopeStore((state) => state.activeScope);
+    const syncProductionProject = useProductionScopeStore((state) => state.syncProject);
+    const setActiveProductionScope = useProductionScopeStore((state) => state.setActiveScope);
+    const activeProductionScope = React.useMemo(
+        () => resolveProductionScope(productionNodes, storedProductionScope),
+        [productionNodes, storedProductionScope],
+    );
+    const directorMode = useProductionDirectorUiStore((state) => state.mode);
+    const directoryOpen = useProductionDirectorUiStore((state) => state.directoryOpen);
+    const setDirectoryOpen = useProductionDirectorUiStore((state) => state.setDirectoryOpen);
+    const isProductionProject = productionHierarchy.isProductionProject;
+    const guidedDirectorMode = isProductionProject && directorMode === "guided";
+    const rawTimeline = useWorkbenchStore((state) => state.timeline);
+    const timelineSourceNodeIds = React.useMemo(
+        () => new Set(
+            rawTimeline.tracks.flatMap((track) => track.clips.map((clip) => clip.sourceNodeId)),
+        ),
+        [rawTimeline.tracks],
+    );
     const [mountedWorkspaceModes, setMountedWorkspaceModes] = React.useState<
         WorkspaceMode[]
     >(() => [workspaceMode]);
     const [aboutOpen, setAboutOpen] = React.useState(false);
     const brandRef = React.useRef<HTMLButtonElement | null>(null);
+
+    React.useEffect(() => {
+        syncProductionProject(projectId ?? null, productionNodes);
+    }, [productionNodes, projectId, syncProductionProject]);
 
     // 仅 win32 自绘标题栏：mac/Linux 保持原生窗口 chrome，不渲染 windowbar（P4 通用·按平台分流）。
     const isWindows = window.nomiDesktop?.platform === "win32";
@@ -225,9 +263,11 @@ export default function WorkbenchShell({
                         data-window-drag-region="true"
                         aria-hidden="true"
                     />
-                    <div className="app-no-drag relative z-[2] inline-flex h-full items-center pt-0.5 pb-0.5">
-                        <OnboardingChecklist />
-                    </div>
+                    {!guidedDirectorMode ? (
+                        <div className="app-no-drag relative z-[2] inline-flex h-full items-center pt-0.5 pb-0.5">
+                            <OnboardingChecklist />
+                        </div>
+                    ) : null}
                     <div
                         className={cn(
                             "app-no-drag relative z-[2] inline-flex h-full items-center gap-1 pt-0.5 pb-0.5",
@@ -261,8 +301,13 @@ export default function WorkbenchShell({
                 onBackToLibrary={onBackToLibrary}
                 onOpenModelCatalog={onOpenModelCatalog}
                 onRenameProject={onRenameProject}
+                directorMode={guidedDirectorMode}
             />
-            <GuidedProductionBar />
+            {isProductionProject ? (
+                <ProductionDirectorBar projectName={projectName} />
+            ) : (
+                <GuidedProductionBar />
+            )}
 
             {/* 左侧面板重做: 分类导航 + 文件树统一收进 ProjectExplorerSidebar 的双 Tab。
           创作模式是纯文稿写作，不挂项目资源树（仅生成/预览显示）。 */}
@@ -272,7 +317,21 @@ export default function WorkbenchShell({
                     "relative min-w-0 min-h-0 overflow-hidden flex flex-1",
                 )}>
                 {/* 文件树只在生成区显示：创作是纯文稿、预览/剪辑是回看时间轴，都不需要左侧资源树。 */}
-                {workspaceMode === "generation" ? (
+                {workspaceMode === "generation" && guidedDirectorMode && directoryOpen ? (
+                    <ProductionHierarchyNavigator
+                        projectName={projectName}
+                        hierarchy={productionHierarchy}
+                        nodes={productionNodes}
+                        timelineSourceNodeIds={timelineSourceNodeIds}
+                        activeScope={activeProductionScope}
+                        onSelectScope={(scope) => {
+                            setActiveCategoryId("shots");
+                            setActiveProductionScope(scope);
+                        }}
+                        onClose={() => setDirectoryOpen(false)}
+                    />
+                ) : null}
+                {workspaceMode === "generation" && !guidedDirectorMode ? (
                     <ProjectExplorerSidebar projectId={projectId ?? null} categories={categories} />
                 ) : null}
                 <div className='flex-1 min-w-0 min-h-0 relative'>

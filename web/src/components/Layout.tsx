@@ -88,6 +88,7 @@ export default function Layout() {
     || location.pathname === '/workbench'
     || location.pathname.startsWith('/production')
     || location.pathname === '/canvas';
+  const isImmersiveCanvas = location.pathname === '/canvas';
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 900px)');
@@ -126,7 +127,8 @@ export default function Layout() {
     };
   }, [drawerOpen, isMobile]);
 
-  const navCollapsed = isMobile ? false : (collapsed || isNarrow);
+  // 画布内部已有项目/集/镜头目录，外层主导航固定收成图标栏，避免双侧栏挤掉创作区。
+  const navCollapsed = isMobile ? false : (isImmersiveCanvas || collapsed || isNarrow);
   const siderWidth = navCollapsed ? 64 : 240;
 
   // 按当前用户权限过滤导航;整段为空的分组连标题和“高级功能”开关一起隐藏。
@@ -395,7 +397,7 @@ export default function Layout() {
             borderTop: '1px solid rgba(255,255,255,0.06)',
             color: 'rgba(255,255,255,0.72)', fontSize: 14,
             transition: 'color 0.15s', flexShrink: 0,
-            visibility: (isNarrow || isMobile) ? 'hidden' : 'visible',
+            visibility: (isNarrow || isMobile || isImmersiveCanvas) ? 'hidden' : 'visible',
             border: 0, width: '100%', background: 'transparent',
           }}
           onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.95)'; }}
@@ -416,7 +418,13 @@ export default function Layout() {
         minHeight: isMobile ? 'calc(100vh - 52px)' : '100vh',
         overflowX: 'hidden',
       }}>
-        <div style={{ padding: pageIsWorkspace ? (isMobile ? '6px' : isNarrow ? '8px' : '14px') : (isMobile ? '12px' : isNarrow ? '16px' : '28px'), minWidth: 0 }}>
+        <div style={{
+          padding: pageIsWorkspace ? (isMobile ? '6px' : isImmersiveCanvas ? '6px' : isNarrow ? '8px' : '14px') : (isMobile ? '12px' : isNarrow ? '16px' : '28px'),
+          minWidth: 0,
+          height: isImmersiveCanvas ? (isMobile ? 'calc(100dvh - 52px)' : '100dvh') : undefined,
+          boxSizing: 'border-box',
+          overflow: isImmersiveCanvas ? 'hidden' : undefined,
+        }}>
           {advancedRouteContext && (
             <nav aria-label="当前位置" style={{ marginBottom: isMobile ? 12 : 18, overflowX: 'auto', whiteSpace: 'nowrap' }}>
               <ol style={{
