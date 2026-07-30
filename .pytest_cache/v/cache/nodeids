@@ -362,6 +362,7 @@
   "tests/test_system_manager.py::test_manager_session_survives_service_restart",
   "tests/test_system_manager.py::test_mcp_change_can_be_rolled_back",
   "tests/test_system_manager.py::test_mcp_chat_requires_confirmation_and_never_accepts_literal_secret",
+  "tests/test_system_manager.py::test_mcp_test_api_returns_clear_gateway_timeout",
   "tests/test_system_manager.py::test_model_fallback_receives_real_conversation_history",
   "tests/test_system_manager.py::test_natural_language_mcp_infers_config_without_server_code",
   "tests/test_system_manager.py::test_oauth_token_storage_is_encrypted",

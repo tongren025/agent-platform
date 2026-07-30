@@ -1,8 +1,8 @@
 """MCP 运行时桥接回归测试：覆盖可选加载、缓存、命名与故障隔离。"""
 from __future__ import annotations
 
-import json
 import asyncio
+import json
 import sys
 from contextlib import asynccontextmanager
 from types import SimpleNamespace

@@ -176,7 +176,7 @@ def test_mcp_test_api_returns_clear_gateway_timeout(app_client, tmp_path, monkey
     )
 
     assert response.status_code == 504
-    assert "已自动终止" in response.json()["detail"]
+    assert "已自动终止" in response.json()["message"]
     health = (
         tmp_path / "manager" / "mcp-health" / "hanging.json"
     ).read_text(encoding="utf-8")
