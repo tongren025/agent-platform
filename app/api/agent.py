@@ -209,6 +209,8 @@ async def _execute_agent_run(
         cancelled=agent_result.cancelled,
         error_message=agent_result.error_message,
         token_usage=agent_result.token_usage,
+        model_ids=agent_result.model_ids,
+        elapsed_milliseconds=agent_result.elapsed_milliseconds,
         traces=agent_result.traces,
         active_scopes=agent_result.active_scopes,
         auto_invoke_count=agent_result.auto_invoke_count,

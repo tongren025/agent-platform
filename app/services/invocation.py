@@ -228,6 +228,7 @@ async def run_invocation(
     elif result.first_token_ms is not None:
         result.first_token_ms += preflight_ms
     elapsed_ms = int((time.monotonic() - total_started_at) * 1000)
+    result.elapsed_milliseconds = elapsed_ms
 
     # 6. 组织会话：复用旧会话或新建，追加本轮 user / assistant 消息
     now = datetime.now(timezone.utc)
@@ -269,7 +270,11 @@ async def run_invocation(
         pt = result.token_usage.prompt_tokens if result.token_usage else 0
         ct = result.token_usage.completion_tokens if result.token_usage else 0
         requested_model_id = (snapshot.default_model_policy or {}).get("model_id", "")
-        model_id = result.resolved_model or requested_model_id
+        model_id = (
+            result.model_ids[-1]
+            if result.model_ids
+            else result.resolved_model or requested_model_id
+        )
         cost = estimate_cost(model_id, pt, ct)
         agent_run_store.save_run(AgentRunRecord(
             run_id=run_id,

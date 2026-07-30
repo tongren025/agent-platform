@@ -10,7 +10,8 @@ import {
   FileTextOutlined, EditOutlined,
   CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, DownloadOutlined,
 } from '@ant-design/icons';
-import { api } from '../api';
+import { api, type VisualQualityRatings } from '../api';
+import VisualQualityReviewModal from '../components/VisualQualityReviewModal';
 import { readInputHabit, writeInputHabit } from '../hooks/useInputHabit';
 import { thumbUrl, onImageError } from '../media';
 import { COLORS } from '../theme';
@@ -63,6 +64,10 @@ const REJECT_REASONS: { key: string; name: string }[] = [
   { key: 'composition_mismatch', name: '构图不符分镜' },
   { key: 'lighting_wrong', name: '光影错误' },
   { key: 'anatomy_broken', name: '结构崩坏' },
+  { key: 'scene_drift', name: '场景漂移' },
+  { key: 'style_drift', name: '画风漂移' },
+  { key: 'continuity_break', name: '前后镜不连续' },
+  { key: 'text_artifact', name: '文字或符号错误' },
   { key: 'other', name: '其他' },
 ];
 
@@ -146,6 +151,7 @@ export default function EpisodeDetail() {
   const [imageGenerating, setImageGenerating] = useState(false);
   const [referencePackCard, setReferencePackCard] = useState<CardItem | null>(null);
   const [reviewSaving, setReviewSaving] = useState(false);
+  const [qualityTarget, setQualityTarget] = useState<{ card: CardItem; image: string } | null>(null);
   const [rejectTarget, setRejectTarget] = useState<{ card: CardItem; image: string } | null>(null);
   const [rejectReason, setRejectReason] = useState('tone_off');
   const [rejectNote, setRejectNote] = useState('');
@@ -240,7 +246,7 @@ export default function EpisodeDetail() {
       await api.generateCardImage(pid, imageCard.card_id, {
         model: imageModel, prompt: imagePrompt, size: '1024x1536',
       });
-      message.success('新图片已生成并保留为一个新版本');
+      message.success('新候选已生成；精品验收通过前不会替换当前生产图');
       setImageCard(null);
       await loadData();
     } catch (e: any) { message.error(e.message); }
@@ -248,20 +254,34 @@ export default function EpisodeDetail() {
   };
 
   const setActiveImage = async (card: CardItem, url: string) => {
+    if (!pid) return;
     try {
-      await api.updateCard(card.card_id, { metadata: { ...card.metadata, active_image: url } });
-      message.success('已设为当前版本');
+      await api.activateImageCandidate(pid, card.card_id, url);
+      message.success('已采用这个通过精品验收的候选');
       await loadData();
     } catch (e: any) { message.error(e.message); }
   };
 
-  const passImage = async (card: CardItem, image: string) => {
-    if (!pid) return;
+  const passImage = async (
+    card: CardItem,
+    image: string,
+    ratings: VisualQualityRatings,
+  ) => {
+    if (!pid || reviewSaving) return;
+    setReviewSaving(true);
     try {
-      await api.reviewCardImage(pid, card.card_id, { verdict: 'pass', image });
-      message.success('已标记通过');
+      const active = (card.metadata?.active_image || card.images[0]) === image;
+      await api.reviewCardImage(pid, card.card_id, {
+        verdict: 'pass',
+        image,
+        ratings,
+        promote: active,
+      });
+      message.success(active ? '当前版本已通过精品验收' : '候选已通过，可手动采用');
+      setQualityTarget(null);
       await loadData();
     } catch (e: any) { message.error(e.message); }
+    finally { setReviewSaving(false); }
   };
 
   const submitReject = async () => {
@@ -730,6 +750,7 @@ export default function EpisodeDetail() {
                               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                                 {card.images.map((url, i) => {
                                   const active = (card.metadata?.active_image || card.images[0]) === url;
+                                  const verdict = lastVerdictOf(card, url);
                                   return (
                                     <div key={url || i} style={{ position: 'relative' }}>
                                       <Image src={thumbUrl(url, 256)} preview={{ src: url }} loading="lazy"
@@ -737,27 +758,24 @@ export default function EpisodeDetail() {
                                         style={{ objectFit: 'cover', borderRadius: 8, border: active ? '3px solid #52c41a' : '1px solid #eee' }}
                                         fallback="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iIGZpbGw9IiNjY2MiIGZvbnQtc2l6ZT0iMTIiPuWbvueJh+WKoOi9veWksei0pTwvdGV4dD48L3N2Zz4=" />
                                       <Button size="small" type={active ? 'primary' : 'default'}
+                                        disabled={!active && verdict !== 'pass'}
+                                        title={!active && verdict !== 'pass' ? '先完成精品验收' : undefined}
                                         onClick={() => !active && setActiveImage(card, url)}
                                         style={{ width: 120, marginTop: 4 }}>
                                         {active ? '当前版本' : '设为当前'}
                                       </Button>
-                                      {(() => {
-                                        const verdict = lastVerdictOf(card, url);
-                                        return (
-                                          <Space.Compact style={{ width: 120, marginTop: 4 }}>
-                                            <Button size="small" style={{ width: 60, color: verdict === 'pass' ? '#52c41a' : undefined }}
-                                              icon={verdict === 'pass' ? <CheckCircleOutlined /> : undefined}
-                                              onClick={() => passImage(card, url)}>
-                                              通过
-                                            </Button>
-                                            <Button size="small" danger={verdict === 'reject'} style={{ width: 60 }}
-                                              icon={verdict === 'reject' ? <CloseCircleOutlined /> : undefined}
-                                              onClick={() => setRejectTarget({ card, image: url })}>
-                                              废弃
-                                            </Button>
-                                          </Space.Compact>
-                                        );
-                                      })()}
+                                      <Space.Compact style={{ width: 120, marginTop: 4 }}>
+                                        <Button size="small" style={{ width: 72, color: verdict === 'pass' ? '#52c41a' : undefined }}
+                                          icon={verdict === 'pass' ? <CheckCircleOutlined /> : undefined}
+                                          onClick={() => setQualityTarget({ card, image: url })}>
+                                          精品验收
+                                        </Button>
+                                        <Button size="small" danger={verdict === 'reject'} style={{ width: 48 }}
+                                          icon={verdict === 'reject' ? <CloseCircleOutlined /> : undefined}
+                                          onClick={() => setRejectTarget({ card, image: url })}>
+                                          废弃
+                                        </Button>
+                                      </Space.Compact>
                                     </div>
                                   );
                                 })}
@@ -790,6 +808,21 @@ export default function EpisodeDetail() {
           return <Tabs items={tabItems} defaultActiveKey={tabItems[0]?.key} />;
         })()}
       </Drawer>
+
+      <VisualQualityReviewModal
+        open={Boolean(qualityTarget)}
+        image={qualityTarget?.image || ''}
+        title={qualityTarget ? `精品验收 · ${qualityTarget.card.title}` : '精品验收'}
+        busy={reviewSaving}
+        onCancel={() => {
+          if (!reviewSaving) setQualityTarget(null);
+        }}
+        onSubmit={ratings => {
+          if (qualityTarget) {
+            return passImage(qualityTarget.card, qualityTarget.image, ratings);
+          }
+        }}
+      />
 
       <Modal title="废弃这张图——废在哪？" open={!!rejectTarget}
         onCancel={() => setRejectTarget(null)} onOk={submitReject}

@@ -107,6 +107,8 @@ class AgentLoopOptions:
     prompt_cache_scope: str = ""
     prompt_cache_key: str | None = None
     telemetry: LlmCallTelemetry = field(default_factory=LlmCallTelemetry)
+    # 每次真正拿到有效回复的模型，供上层准确展示主模型/降级链路。
+    used_models: list[str] = field(default_factory=list, init=False)
 
 
 @dataclass
@@ -254,6 +256,8 @@ async def _create_with_retry(
                         getattr(normalized, "transport", "")
                         or preferred_api(a_client, model)
                     )
+                    if model not in options.used_models:
+                        options.used_models.append(model)
                     return response
 
                 finish_reason = str(choice.finish_reason or "unknown")

@@ -151,3 +151,195 @@ def test_review_stats_aggregate_reasons(review_env):
     assert top["name"] == "基调偏差"
     assert top["count"] == 2
     assert data["by_episode"]["1"] == {"passed": 1, "rejected": 3}
+
+
+def test_quality_profile_and_structured_visual_review(review_env):
+    """精品验收量表来自后端；关键维度不达标时不能伪装成通过。"""
+    client, pid, (cid, _) = review_env
+    profile = client.get("/api/v1/agentapp/production/quality-profile")
+    assert profile.status_code == 200, profile.text
+    image_profile = profile.json()["data"]["image"]
+    video_profile = profile.json()["data"]["video"]
+    final_profile = profile.json()["data"]["final"]
+    assert image_profile["minimumScore"] == 80
+    assert video_profile["minimumScore"] == 85
+    assert final_profile["minimumScore"] == 88
+    assert video_profile["version"] == "video-v1"
+    assert final_profile["version"] == "final-v1"
+    assert [item["key"] for item in image_profile["dimensions"]] == [
+        "identity_consistency",
+        "composition_accuracy",
+        "scene_consistency",
+        "style_fidelity",
+        "technical_integrity",
+    ]
+
+    endpoint = f"/api/v1/agentapp/production/projects/{pid}/cards/{cid}/review"
+    failed = client.post(endpoint, json={
+        "verdict": "pass",
+        "ratings": {
+            "identity_consistency": 3,
+            "composition_accuracy": 5,
+            "scene_consistency": 5,
+            "style_fidelity": 5,
+            "technical_integrity": 5,
+        },
+    })
+    assert failed.status_code == 400
+    assert "角色一致性" in failed.json()["message"]
+
+    passed = client.post(endpoint, json={
+        "verdict": "pass",
+        "ratings": {
+            "identity_consistency": 5,
+            "composition_accuracy": 4,
+            "scene_consistency": 4,
+            "style_fidelity": 4,
+            "technical_integrity": 4,
+        },
+    })
+    assert passed.status_code == 200, passed.text
+    quality = passed.json()["data"]["metadata"]["image_reviews"][-1]["quality"]
+    assert quality["passed"] is True
+    assert quality["score"] == 86.0
+    assert quality["version"] == "visual-v1"
+
+
+def test_review_and_activate_non_current_candidate(review_env):
+    """历史候选可独立评分；未采用的候选不打断当前版本，通过后才允许晋级。"""
+    client, pid, _ = review_env
+    created = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards",
+        json={
+            "stage": "img_prompt",
+            "title": "G3 候选比较",
+            "content": "x",
+            "episode": 1,
+            "shot_number": 3,
+            "images": ["/uploads/candidate-a.png", "/uploads/candidate-b.png"],
+            "metadata": {
+                "active_image": "/uploads/candidate-a.png",
+                "image_candidates": [{
+                    "image": "/uploads/candidate-b.png",
+                    "review_required": True,
+                }],
+            },
+            "status": "done",
+        },
+    )
+    assert created.status_code == 200, created.text
+    card_id = created.json()["data"]["card_id"]
+    bypass = client.put(
+        f"/api/v1/agentapp/production/cards/{card_id}",
+        json={
+            "metadata": {
+                "active_image": "/uploads/candidate-b.png",
+            },
+        },
+    )
+    assert bypass.status_code == 409
+    assert "质量验收" in bypass.json()["message"]
+    reviewed = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}/review",
+        json={
+            "verdict": "pass",
+            "image": "/uploads/candidate-b.png",
+            "promote": False,
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 4,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert reviewed.status_code == 200, reviewed.text
+    card = reviewed.json()["data"]
+    assert card["metadata"]["active_image"] == "/uploads/candidate-a.png"
+    assert card["status"] == "done"
+
+    activated = client.post(
+        (
+            f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}"
+            "/image-candidates/activate"
+        ),
+        json={"image": "/uploads/candidate-b.png"},
+    )
+    assert activated.status_code == 200, activated.text
+    assert activated.json()["data"]["metadata"]["active_image"] == "/uploads/candidate-b.png"
+    assert activated.json()["data"]["metadata"]["review_verdict"] == "pass"
+
+
+def test_video_candidate_requires_structured_review(review_env):
+    """新镜头视频不能靠改 status 绕过，关键项和总分都必须达标。"""
+    client, pid, _ = review_env
+    video = "/uploads/shot-candidate.mp4"
+    created = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards",
+        json={
+            "stage": "vid_prompt",
+            "title": "G4 视频候选",
+            "content": "x",
+            "episode": 1,
+            "shot_number": 4,
+            "videos": [video],
+            "metadata": {
+                "active_video": video,
+                "video_candidates": [{
+                    "video": video,
+                    "review_required": True,
+                    "kind": "video",
+                }],
+            },
+            "status": "review",
+        },
+    )
+    assert created.status_code == 200, created.text
+    card_id = created.json()["data"]["card_id"]
+
+    bypass = client.put(
+        f"/api/v1/agentapp/production/cards/{card_id}",
+        json={"status": "done"},
+    )
+    assert bypass.status_code == 409
+    assert "视频未通过精品验收" in bypass.json()["message"]
+
+    endpoint = (
+        f"/api/v1/agentapp/production/projects/{pid}/cards/"
+        f"{card_id}/video-review"
+    )
+    low_score = client.post(endpoint, json={
+        "verdict": "pass",
+        "video": video,
+        "ratings": {
+            "identity_stability": 3,
+            "motion_integrity": 5,
+            "shot_fidelity": 5,
+            "temporal_continuity": 5,
+            "audio_dialogue": 5,
+            "technical_integrity": 5,
+        },
+    })
+    assert low_score.status_code == 400
+    assert "角色稳定性" in low_score.json()["message"]
+
+    passed = client.post(endpoint, json={
+        "verdict": "pass",
+        "video": video,
+        "ratings": {
+            "identity_stability": 5,
+            "motion_integrity": 5,
+            "shot_fidelity": 4,
+            "temporal_continuity": 4,
+            "audio_dialogue": 4,
+            "technical_integrity": 4,
+        },
+    })
+    assert passed.status_code == 200, passed.text
+    card = passed.json()["data"]
+    assert card["status"] == "done"
+    quality = card["metadata"]["video_reviews"][-1]["quality"]
+    assert quality["version"] == "video-v1"
+    assert quality["score"] == 89.0
+    assert quality["passed"] is True

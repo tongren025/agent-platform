@@ -4,6 +4,7 @@ import {
   ClockCircleOutlined,
   FileTextOutlined,
   FolderOpenOutlined,
+  PauseCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
 import type {
@@ -18,16 +19,19 @@ interface Props {
   workspace: DeepAgentWorkspace | null;
   loading: boolean;
   error: string;
+  runActive?: boolean;
   onRetry: () => void;
   onOpenFile: (file: DeepAgentWorkspaceFile) => void;
 }
 
-function todoPresentation(status: string) {
+function todoPresentation(status: string, runActive: boolean) {
   if (status === 'completed') {
     return { color: 'success', label: '完成', icon: <CheckCircleOutlined /> };
   }
   if (status === 'in_progress') {
-    return { color: 'processing', label: '进行中', icon: <SyncOutlined spin /> };
+    return runActive
+      ? { color: 'processing', label: '执行中', icon: <SyncOutlined spin /> }
+      : { color: 'warning', label: '待继续', icon: <PauseCircleOutlined /> };
   }
   return { color: 'default', label: '待处理', icon: <ClockCircleOutlined /> };
 }
@@ -41,9 +45,12 @@ export default function DeepAgentWorkspacePanel({
   workspace,
   loading,
   error,
+  runActive = false,
   onRetry,
   onOpenFile,
 }: Props) {
+  const completedCount = workspace?.todos.filter(todo => todo.status === 'completed').length ?? 0;
+
   return (
     <section aria-label="DeepAgent 工作区" style={{ padding: '14px 16px', borderBottom: `1px solid ${COLORS.border}` }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
@@ -78,7 +85,9 @@ export default function DeepAgentWorkspacePanel({
           )}
           {workspace.status !== 'warning' && (
             <Text type="secondary" style={{ display: 'block', fontSize: 12, marginBottom: 10 }}>
-              {workspace.summary}
+              {workspace.todos.length > 0
+                ? `${completedCount}/${workspace.todos.length} 项完成 · ${workspace.files.length} 个工作文件`
+                : workspace.summary}
             </Text>
           )}
 
@@ -87,7 +96,7 @@ export default function DeepAgentWorkspacePanel({
               <Text style={{ display: 'block', fontSize: 12, marginBottom: 6 }}>待办</Text>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {workspace.todos.map((todo, index) => {
-                  const presentation = todoPresentation(todo.status);
+                  const presentation = todoPresentation(todo.status, runActive);
                   return (
                     <div key={`${todo.content}-${index}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
                       <Tag color={presentation.color} icon={presentation.icon} style={{ margin: 0, fontSize: 10, flexShrink: 0 }}>

@@ -74,6 +74,8 @@ class AgentRunResponse(BaseModel):
     cancelled: bool = False
     error_message: Optional[str] = Field(None, alias="errorMessage")
     token_usage: Optional[AgentTokenUsage] = Field(None, alias="tokenUsage")
+    model_ids: list[str] = Field(default_factory=list, alias="modelIds")
+    elapsed_milliseconds: int = Field(0, alias="elapsedMilliseconds")
     traces: list[AgentInvocationTrace] = Field(default_factory=list)
     active_scopes: list[str] = Field(default_factory=list, alias="activeScopes")
     compiled_system_prompt: Optional[str] = Field(None, alias="compiledSystemPrompt")

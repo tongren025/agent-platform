@@ -195,6 +195,8 @@ def test_run_endpoint_uses_client_run_id_and_clears_control(app_client, monkeypa
             run_id=run_id,
             assistant_message="完成",
             session_id="ses_endpoint",
+            model_ids=["provider/model-precise"],
+            elapsed_milliseconds=1234,
         )
 
     monkeypatch.setattr(agent_api, "run_invocation", fake_run_invocation)
@@ -213,6 +215,8 @@ def test_run_endpoint_uses_client_run_id_and_clears_control(app_client, monkeypa
     assert payload["runId"] == run_id
     assert payload["cancelled"] is False
     assert payload["assistantMessage"] == "完成"
+    assert payload["modelIds"] == ["provider/model-precise"]
+    assert payload["elapsedMilliseconds"] == 1234
     assert active_run_control.get(run_id) is None
 
 

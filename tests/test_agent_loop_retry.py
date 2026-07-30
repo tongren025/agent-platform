@@ -127,6 +127,7 @@ async def test_falls_back_to_secondary_model():
     result = await _create_with_retry(client, {}, True, opts, iteration=1)
     assert result is _OK
     assert create.models == ["primary", "primary", "backup"]  # 主模型试满后降级
+    assert opts.used_models == ["backup"]
 
 
 async def test_falls_back_to_cross_provider_client():
@@ -138,6 +139,7 @@ async def test_falls_back_to_cross_provider_client():
     assert result is _OK
     assert p_create.models == ["primary", "primary"]      # 主 client 试满
     assert b_create.models == ["backup-model"]            # 降级到备用 client
+    assert opts.used_models == ["backup-model"]
 
 
 async def test_empty_length_response_skips_retry_and_falls_back():

@@ -5,10 +5,11 @@ import {
 import {
   CheckOutlined, CloseOutlined, EditOutlined, PictureOutlined, ReloadOutlined,
 } from '@ant-design/icons';
-import { api } from '../api';
+import { api, type VisualQualityRatings } from '../api';
 import { useInputHabit } from '../hooks/useInputHabit';
 import { message } from '../ui';
 import { useResponsive } from '../hooks/useResponsive';
+import VisualQualityReviewModal from './VisualQualityReviewModal';
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -28,6 +29,30 @@ const REVIEW_REASON_OPTIONS = [
   { value: 'composition_mismatch', label: '构图不符分镜' },
   { value: 'lighting_wrong', label: '光影错误' },
   { value: 'anatomy_broken', label: '结构崩坏' },
+  { value: 'scene_drift', label: '场景漂移' },
+  { value: 'style_drift', label: '画风漂移' },
+  { value: 'continuity_break', label: '前后镜不连续' },
+  { value: 'text_artifact', label: '文字或符号错误' },
+  { value: 'other', label: '其他' },
+];
+
+const VIDEO_REVIEW_REASON_OPTIONS = [
+  { value: 'identity_drift', label: '角色闪变或走形' },
+  { value: 'motion_broken', label: '动作断裂或穿模' },
+  { value: 'shot_mismatch', label: '运镜或节奏不符' },
+  { value: 'continuity_break', label: '首尾帧无法衔接' },
+  { value: 'audio_sync', label: '对白口型或声音不同步' },
+  { value: 'visual_artifact', label: '闪烁、重影或异常文字' },
+  { value: 'other', label: '其他' },
+];
+
+const FINAL_REVIEW_REASON_OPTIONS = [
+  { value: 'narrative_gap', label: '叙事信息缺失' },
+  { value: 'visual_discontinuity', label: '跨镜视觉不连续' },
+  { value: 'pacing_issue', label: '节奏拖沓或跳切' },
+  { value: 'audio_mix', label: '声音层次或响度异常' },
+  { value: 'dialogue_issue', label: '对白、口型或字幕错误' },
+  { value: 'delivery_error', label: '画幅、编码或完整播放异常' },
   { value: 'other', label: '其他' },
 ];
 
@@ -75,17 +100,45 @@ export default function CardDetailDrawer({
   const [generating, setGenerating] = useState(false);
 
   const [reviewBusy, setReviewBusy] = useState(false);
+  const [qualityReviewOpen, setQualityReviewOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [adopting, setAdopting] = useState(false);
   const [rejectMode, setRejectMode] = useState(false);
   const [rejectReason, setRejectReason] = useInputHabit('director.review-reason', 'tone_off');
   const [rejectNote, setRejectNote] = useState('');
+  const [selectedVideo, setSelectedVideo] = useState('');
+  const [videoQualityReviewOpen, setVideoQualityReviewOpen] = useState(false);
+  const [videoRejectMode, setVideoRejectMode] = useState(false);
+  const [videoRejectReason, setVideoRejectReason] = useState('');
+  const [videoRejectNote, setVideoRejectNote] = useState('');
 
   const canEditPrompt = card ? IMAGE_EDITABLE_STAGES.has(card.stage) : false;
   const currentPrompt = card?.prompts?.[0] || card?.content || '';
-  const currentImage = card?.metadata?.active_image || card?.images?.slice(-1)[0] || '';
+  const activeImage = card?.metadata?.active_image || card?.images?.slice(-1)[0] || '';
+  const currentImage = selectedImage || activeImage;
   const reviews: any[] = (card?.metadata?.image_reviews || []).filter(
     (r: any) => String(r.image || '') === currentImage,
   );
   const latestReview = reviews.length ? reviews[reviews.length - 1] : null;
+  const activeVideo = card?.metadata?.active_video || card?.videos?.slice(-1)[0] || '';
+  const currentVideo = selectedVideo || activeVideo;
+  const videoReviews: any[] = (card?.metadata?.video_reviews || []).filter(
+    (r: any) => String(r.video || '') === currentVideo,
+  );
+  const latestVideoReview = videoReviews.length
+    ? videoReviews[videoReviews.length - 1]
+    : null;
+  const videoQualityKind = card?.stage === 'final' ? 'final' : 'video';
+  const canReviewVideo = Boolean(
+    card && ['vid_prompt', 'vid_gen', 'final'].includes(card.stage),
+  );
+
+  useEffect(() => {
+    if (open) {
+      setSelectedImage(activeImage);
+      setSelectedVideo(activeVideo);
+    }
+  }, [activeImage, activeVideo, card?.card_id, open]);
 
   useEffect(() => {
     if (!mediaModels?.length) return;
@@ -100,9 +153,17 @@ export default function CardDetailDrawer({
     setSaving(false);
     setGenerating(false);
     setReviewBusy(false);
+    setQualityReviewOpen(false);
+    setSelectedImage('');
+    setAdopting(false);
     setRejectMode(false);
     setRejectReason('tone_off');
     setRejectNote('');
+    setSelectedVideo('');
+    setVideoQualityReviewOpen(false);
+    setVideoRejectMode(false);
+    setVideoRejectReason('');
+    setVideoRejectNote('');
   }, []);
 
   const handleClose = () => {
@@ -145,7 +206,7 @@ export default function CardDetailDrawer({
         prompt: currentPrompt,
         resolution: '1K',
       });
-      message.success('图片已重新生成');
+      message.success('新候选已生成，验收通过前不会替换当前生产图');
       onCardUpdated();
     } catch (error: any) {
       message.error(error.message || '生成失败');
@@ -154,7 +215,10 @@ export default function CardDetailDrawer({
     }
   };
 
-  const submitReview = async (verdict: 'pass' | 'reject') => {
+  const submitReview = async (
+    verdict: 'pass' | 'reject',
+    ratings?: VisualQualityRatings,
+  ) => {
     if (!card || !currentImage || reviewBusy) return;
     if (verdict === 'reject' && !rejectReason) return;
     setReviewBusy(true);
@@ -162,9 +226,12 @@ export default function CardDetailDrawer({
       await api.reviewCardImage(projectId, card.card_id, {
         verdict,
         image: currentImage,
+        promote: currentImage === activeImage,
+        ...(ratings ? { ratings } : {}),
         ...(verdict === 'reject' ? { reason: rejectReason, note: rejectNote.trim() } : {}),
       });
       message.success(verdict === 'pass' ? '已通过' : '已退回');
+      if (verdict === 'pass') setQualityReviewOpen(false);
       setRejectMode(false);
       setRejectReason('tone_off');
       setRejectNote('');
@@ -176,12 +243,71 @@ export default function CardDetailDrawer({
     }
   };
 
+  const activateCandidate = async () => {
+    if (!card || !currentImage || currentImage === activeImage || adopting) return;
+    setAdopting(true);
+    try {
+      await api.activateImageCandidate(projectId, card.card_id, currentImage);
+      message.success('已采用这个通过验收的候选；旧图和旧视频仍保留在历史中');
+      onCardUpdated();
+    } catch (error: any) {
+      message.error(error.message || '采用候选失败');
+    } finally {
+      setAdopting(false);
+    }
+  };
+
+  const submitVideoReview = async (
+    verdict: 'pass' | 'reject',
+    ratings?: VisualQualityRatings,
+  ) => {
+    if (!card || !currentVideo || reviewBusy) return;
+    if (verdict === 'reject' && !videoRejectReason) return;
+    setReviewBusy(true);
+    try {
+      await api.reviewCardVideo(projectId, card.card_id, {
+        verdict,
+        video: currentVideo,
+        promote: currentVideo === activeVideo,
+        ...(ratings ? { ratings } : {}),
+        ...(verdict === 'reject'
+          ? { reason: videoRejectReason, note: videoRejectNote.trim() }
+          : {}),
+      });
+      message.success(verdict === 'pass' ? '视频已通过精品验收' : '视频已退回');
+      setVideoQualityReviewOpen(false);
+      setVideoRejectMode(false);
+      setVideoRejectReason('');
+      setVideoRejectNote('');
+      onCardUpdated();
+    } catch (error: any) {
+      message.error(error.message || '视频验收提交失败');
+    } finally {
+      setReviewBusy(false);
+    }
+  };
+
+  const activateVideoCandidate = async () => {
+    if (!card || !currentVideo || currentVideo === activeVideo || adopting) return;
+    setAdopting(true);
+    try {
+      await api.activateVideoCandidate(projectId, card.card_id, currentVideo);
+      message.success('已采用这个通过验收的视频候选');
+      onCardUpdated();
+    } catch (error: any) {
+      message.error(error.message || '采用视频候选失败');
+    } finally {
+      setAdopting(false);
+    }
+  };
+
   if (!card) return null;
 
   const promptDirty = draft.trim() !== currentPrompt.trim();
-  const busy = saving || generating || reviewBusy;
+  const busy = saving || generating || reviewBusy || adopting;
 
   return (
+    <>
     <Drawer
       open={open}
       onClose={handleClose}
@@ -208,7 +334,17 @@ export default function CardDetailDrawer({
         {/* 图片预览 */}
         {currentImage ? (
           <div>
-            <Text type="secondary" style={{ fontSize: 12, marginBottom: 6, display: 'block' }}>当前图片</Text>
+            <Space style={{ marginBottom: 6 }}>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                {currentImage === activeImage ? '当前采用版本' : '待比较候选'}
+              </Text>
+              {currentImage !== activeImage && <Tag color="gold">未采用</Tag>}
+              {latestReview?.quality?.score != null && (
+                <Tag color={latestReview.quality.passed ? 'success' : 'warning'}>
+                  精品分 {latestReview.quality.score}
+                </Tag>
+              )}
+            </Space>
             <Image
               src={currentImage}
               alt={card.title}
@@ -226,7 +362,26 @@ export default function CardDetailDrawer({
                     {latestReview.note ? ` — ${latestReview.note}` : ''}
                   </Text>
                 )}
+                {latestReview.quality?.summary && (
+                  <div>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {latestReview.quality.summary}
+                    </Text>
+                  </div>
+                )}
               </div>
+            )}
+            {currentImage !== activeImage && latestReview?.verdict === 'pass' && (
+              <Button
+                type="primary"
+                size="small"
+                loading={adopting}
+                disabled={busy}
+                onClick={activateCandidate}
+                style={{ marginTop: 10 }}
+              >
+                采用这个通过版本
+              </Button>
             )}
           </div>
         ) : card.images?.length === 0 && canEditPrompt ? (
@@ -236,22 +391,149 @@ export default function CardDetailDrawer({
           </div>
         ) : null}
 
-        {/* 历史图片 */}
+        {/* 图片候选 */}
         {card.images.length > 1 && (
           <div>
-            <Text type="secondary" style={{ fontSize: 12, marginBottom: 6, display: 'block' }}>历史图片 ({card.images.length})</Text>
+            <Text type="secondary" style={{ fontSize: 12, marginBottom: 6, display: 'block' }}>
+              图片候选 ({card.images.length}) · 点击比较后再验收
+            </Text>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              {card.images.map((url, i) => (
-                <Image
-                  key={i}
-                  src={url}
-                  alt={`版本 ${i + 1}`}
-                  width={64}
-                  height={64}
-                  style={{ borderRadius: 6, objectFit: 'cover', border: url === currentImage ? '2px solid #6366f1' : '2px solid transparent' }}
-                />
-              ))}
+              {card.images.map((url, i) => {
+                const candidateReviews = (card.metadata?.image_reviews || []).filter(
+                  (review: any) => String(review.image || '') === url,
+                );
+                const candidateReview = candidateReviews.slice(-1)[0];
+                return (
+                  <button
+                    key={url || i}
+                    type="button"
+                    onClick={() => setSelectedImage(url)}
+                    aria-label={`查看图片候选 ${i + 1}`}
+                    style={{
+                      border: url === currentImage ? '2px solid #6366f1' : '2px solid transparent',
+                      borderRadius: 8,
+                      padding: 2,
+                      background: '#fff',
+                      cursor: 'pointer',
+                      position: 'relative',
+                    }}
+                  >
+                    <img
+                      src={url}
+                      alt={`候选 ${i + 1}`}
+                      width={64}
+                      height={64}
+                      style={{ borderRadius: 5, objectFit: 'cover', display: 'block' }}
+                    />
+                    {url === activeImage && (
+                      <span style={{
+                        position: 'absolute',
+                        left: 3,
+                        bottom: 3,
+                        borderRadius: 4,
+                        padding: '1px 4px',
+                        background: '#16a34a',
+                        color: '#fff',
+                        fontSize: 10,
+                      }}>
+                        当前
+                      </span>
+                    )}
+                    {candidateReview?.quality?.score != null && (
+                      <span style={{
+                        position: 'absolute',
+                        right: 3,
+                        top: 3,
+                        borderRadius: 4,
+                        padding: '1px 4px',
+                        background: 'rgba(15,23,42,.82)',
+                        color: '#fff',
+                        fontSize: 10,
+                      }}>
+                        {candidateReview.quality.score}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
+          </div>
+        )}
+
+        {/* 视频候选与验收 */}
+        {currentVideo && (
+          <div>
+            <Space style={{ marginBottom: 6 }}>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                {currentVideo === activeVideo ? '当前视频版本' : '待比较视频候选'}
+              </Text>
+              {currentVideo !== activeVideo && <Tag color="gold">未采用</Tag>}
+              {latestVideoReview?.quality?.score != null && (
+                <Tag color={latestVideoReview.quality.passed ? 'success' : 'warning'}>
+                  精品分 {latestVideoReview.quality.score}
+                </Tag>
+              )}
+            </Space>
+            <video
+              src={currentVideo}
+              controls
+              playsInline
+              aria-label={card.stage === 'final' ? '整集成片候选' : '镜头视频候选'}
+              style={{ width: '100%', maxHeight: 360, borderRadius: 8, background: '#000' }}
+            />
+            {latestVideoReview && (
+              <div style={{ marginTop: 8 }}>
+                <Tag color={latestVideoReview.verdict === 'pass' ? 'success' : 'error'}>
+                  {latestVideoReview.verdict === 'pass' ? '已通过' : '已退回'}
+                </Tag>
+                {latestVideoReview.note && (
+                  <Text type="secondary" style={{ fontSize: 12 }}>
+                    {latestVideoReview.note}
+                  </Text>
+                )}
+              </div>
+            )}
+            {currentVideo !== activeVideo && latestVideoReview?.verdict === 'pass' && (
+              <Button
+                type="primary"
+                size="small"
+                loading={adopting}
+                disabled={busy}
+                onClick={activateVideoCandidate}
+                style={{ marginTop: 10 }}
+              >
+                采用这个通过版本
+              </Button>
+            )}
+          </div>
+        )}
+
+        {card.videos.length > 1 && (
+          <div>
+            <Text type="secondary" style={{ fontSize: 12, marginBottom: 6, display: 'block' }}>
+              视频候选 ({card.videos.length}) · 选择后完整播放再评分
+            </Text>
+            <Space wrap>
+              {card.videos.map((url, index) => {
+                const candidateReview = (card.metadata?.video_reviews || [])
+                  .filter((review: any) => String(review.video || '') === url)
+                  .slice(-1)[0];
+                return (
+                  <Button
+                    key={url || index}
+                    size="small"
+                    type={url === currentVideo ? 'primary' : 'default'}
+                    onClick={() => setSelectedVideo(url)}
+                  >
+                    候选 {index + 1}
+                    {url === activeVideo ? ' · 当前' : ''}
+                    {candidateReview?.quality?.score != null
+                      ? ` · ${candidateReview.quality.score}分`
+                      : ''}
+                  </Button>
+                );
+              })}
+            </Space>
           </div>
         )}
 
@@ -351,9 +633,9 @@ export default function CardDetailDrawer({
                   type={latestReview?.verdict === 'pass' ? 'primary' : 'default'}
                   loading={reviewBusy}
                   disabled={busy}
-                  onClick={() => submitReview('pass')}
+                  onClick={() => setQualityReviewOpen(true)}
                 >
-                  通过
+                  精品验收
                 </Button>
                 <Button
                   danger icon={<CloseOutlined />}
@@ -395,7 +677,100 @@ export default function CardDetailDrawer({
             )}
           </div>
         )}
+
+        {currentVideo && canReviewVideo && (
+          <div>
+            <Text type="secondary" style={{ fontSize: 12, marginBottom: 6, display: 'block' }}>
+              {card.stage === 'final' ? '整集交付验收' : '镜头视频精品验收'}
+            </Text>
+            {!videoRejectMode ? (
+              <Space>
+                <Button
+                  icon={<CheckOutlined />}
+                  type={latestVideoReview?.verdict === 'pass' ? 'primary' : 'default'}
+                  loading={reviewBusy}
+                  disabled={busy}
+                  onClick={() => setVideoQualityReviewOpen(true)}
+                >
+                  精品验收
+                </Button>
+                <Button
+                  danger
+                  icon={<CloseOutlined />}
+                  disabled={busy}
+                  onClick={() => setVideoRejectMode(true)}
+                >
+                  退回
+                </Button>
+              </Space>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: '#fff7ed', padding: 12, borderRadius: 8 }}>
+                <Select
+                  placeholder="选择退回原因"
+                  value={videoRejectReason || undefined}
+                  options={card.stage === 'final'
+                    ? FINAL_REVIEW_REASON_OPTIONS
+                    : VIDEO_REVIEW_REASON_OPTIONS}
+                  onChange={setVideoRejectReason}
+                />
+                <TextArea
+                  value={videoRejectNote}
+                  maxLength={500}
+                  autoSize={{ minRows: 2, maxRows: 4 }}
+                  placeholder="记录具体时间点和问题，方便下一轮定向返工"
+                  onChange={event => setVideoRejectNote(event.target.value)}
+                />
+                <Space>
+                  <Button
+                    danger
+                    type="primary"
+                    size="small"
+                    loading={reviewBusy}
+                    disabled={!videoRejectReason}
+                    onClick={() => submitVideoReview('reject')}
+                  >
+                    确认退回
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      setVideoRejectMode(false);
+                      setVideoRejectReason('');
+                      setVideoRejectNote('');
+                    }}
+                  >
+                    取消
+                  </Button>
+                </Space>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </Drawer>
+    <VisualQualityReviewModal
+      open={qualityReviewOpen}
+      image={currentImage}
+      title={card ? `精品验收 · ${card.title || '图片候选'}` : '精品验收'}
+      busy={reviewBusy}
+      onCancel={() => {
+        if (!reviewBusy) setQualityReviewOpen(false);
+      }}
+      onSubmit={ratings => submitReview('pass', ratings)}
+    />
+    <VisualQualityReviewModal
+      open={videoQualityReviewOpen}
+      video={currentVideo}
+      kind={videoQualityKind}
+      title={card
+        ? `${card.stage === 'final' ? '整集成片' : '镜头视频'}精品验收 · ${card.title}`
+        : '视频精品验收'}
+      busy={reviewBusy}
+      onCancel={() => {
+        if (!reviewBusy) setVideoQualityReviewOpen(false);
+      }}
+      onSubmit={ratings => submitVideoReview('pass', ratings)}
+    />
+    </>
   );
 }

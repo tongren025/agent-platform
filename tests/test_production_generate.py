@@ -322,7 +322,7 @@ def test_shot_scoped_replace_only_touches_current_unit(prod_env):
 
 
 def test_card_edit_updates_negative_prompt_and_immediate_image_versions(prod_env, monkeypatch):
-    """单卡编辑可保存负向词；立即生图追加版本而不覆盖旧图，并记录当前版本。"""
+    """单卡生图追加待验收候选，不覆盖已有生产图；通过后才能采用。"""
     client, _ = prod_env
     pid = _create_project_with_cards(client)
     created = client.post(
@@ -349,8 +349,33 @@ def test_card_edit_updates_negative_prompt_and_immediate_image_versions(prod_env
     assert response.status_code == 200
     card = response.json()["data"]["card"]
     assert card["images"] == ["/uploads/canvas/old.png", "/uploads/canvas/new.png"]
-    assert card["metadata"]["active_image"] == "/uploads/canvas/new.png"
+    assert card["metadata"]["active_image"] == "/uploads/canvas/old.png"
     assert card["metadata"]["last_image_prompt"] == "用户主提示词"
+    candidate = card["metadata"]["image_candidates"][-1]
+    assert candidate["image"] == "/uploads/canvas/new.png"
+    assert candidate["review_required"] is True
+
+    simple_pass = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}/review",
+        json={"verdict": "pass", "image": "/uploads/canvas/new.png"},
+    )
+    assert simple_pass.status_code == 400
+    quality_pass = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}/review",
+        json={
+            "verdict": "pass",
+            "image": "/uploads/canvas/new.png",
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 4,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert quality_pass.status_code == 200, quality_pass.text
+    assert quality_pass.json()["data"]["metadata"]["active_image"] == "/uploads/canvas/new.png"
 
 
 def test_split_legacy_storyboard_into_one_card_per_subshot(prod_env):
