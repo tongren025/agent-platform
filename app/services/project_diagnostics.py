@@ -151,8 +151,18 @@ def _active_card(
             if card.episode == episode
             and card.shot_number == unit
             and card.stage == stage
+            and not (stage == "img_prompt" and _is_end_frame_lock(card))
         ),
         None,
+    )
+
+
+def _is_end_frame_lock(card: ProductionCard) -> bool:
+    """识别 FLF 末帧锁；它是附属资产，不能单独建立一个 G 生产单元。"""
+    title = card.title.strip().lower()
+    return card.stage == "img_prompt" and (
+        "末帧" in title
+        or "flf" in title
     )
 
 
@@ -165,6 +175,7 @@ def production_unit_keys(
             (card.episode, card.shot_number)
             for card in cards
             if card.stage in SPEC_STAGES and card.shot_number > 0
+            and not _is_end_frame_lock(card)
         },
         key=lambda item: (-1 if item[0] is None else item[0], item[1]),
     )
@@ -273,7 +284,9 @@ def _aggregate_card(cards: list[ProductionCard], stage: str) -> ProductionCard |
         (
             card
             for card in reversed(cards)
-            if card.stage == stage and (card.content.strip() or card.prompts)
+            if card.stage == stage
+            and not _is_end_frame_lock(card)
+            and (card.content.strip() or card.prompts)
         ),
         None,
     )

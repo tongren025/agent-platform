@@ -72,6 +72,16 @@ def test_asset_cards_do_not_create_fake_production_units():
     )
 
 
+def test_end_frame_lock_does_not_create_a_production_unit():
+    flf = _card("img_prompt", unit=6)
+    flf.title = "G6末帧锁（FLF）"
+
+    report = diagnose_project(_project("images"), [flf])
+
+    assert report["totalUnits"] == 0
+    assert report["issues"][0]["code"] == "production_units_missing"
+
+
 def test_goal_scope_does_not_report_unrequested_video_work():
     cards = [
         _card("script"),
