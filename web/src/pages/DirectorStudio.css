@@ -1342,6 +1342,16 @@
   text-align: right;
 }
 
+.director-media-batch {
+  display: grid;
+  gap: 8px;
+}
+
+.director-media-batch > .ant-typography {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 .director-deerflow {
   width: fit-content;
   display: flex;
