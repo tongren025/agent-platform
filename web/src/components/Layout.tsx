@@ -42,7 +42,7 @@ const navSections: NavSection[] = [
   {
     title: '开始工作',
     items: [
-      { key: '/dashboard', icon: <DashboardOutlined />, label: '今日工作' },
+      { key: '/dashboard', icon: <DashboardOutlined />, label: '今日制作' },
       { key: '/studio', icon: <PlaySquareOutlined />, label: '快速制作', perm: 'production:manage' },
       { key: '/production', icon: <VideoCameraOutlined />, label: '我的项目', perm: 'production:manage' },
       { key: '/canvas', icon: <ExpandOutlined />, label: '画布中心', perm: 'production:manage' },
@@ -271,7 +271,8 @@ export default function Layout() {
             aria-controls="primary-navigation"
             onClick={() => setDrawerOpen(value => !value)}
             style={{
-              background: 'none', border: 0, color: '#fff', fontSize: 20, cursor: 'pointer', padding: 4,
+              width: 40, height: 40, background: 'none', border: 0, color: '#fff',
+              fontSize: 20, cursor: 'pointer', padding: 0, marginLeft: -8,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
             {drawerOpen ? <CloseOutlined /> : <MenuOutlined />}

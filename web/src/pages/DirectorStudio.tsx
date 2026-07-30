@@ -1063,6 +1063,17 @@ export default function DirectorStudio() {
       return false;
     }
   }, [finalMediaUrl]);
+  const completedStageCount = state?.stages.filter(stage => stagePercent(stage) === 100).length || 0;
+  const suggestedStageIndex = state?.stages.findIndex(stage => (
+    stage.key === state.nextAction.stage || stage.key === state.nextAction.kind
+  )) ?? -1;
+  const currentStepIndex = state
+    ? Math.max(0, suggestedStageIndex >= 0
+      ? suggestedStageIndex
+      : Math.min(completedStageCount, state.stages.length - 1))
+    : 0;
+  const currentStepNumber = String(currentStepIndex + 1).padStart(2, '0');
+  const totalStepNumber = String(state?.stages.length || 7).padStart(2, '0');
 
   const startMediaBatch = () => {
     if (!state || !projectId || !mediaKind || !mediaModel || !selectedPendingShots.length) return;
@@ -1156,9 +1167,9 @@ export default function DirectorStudio() {
           <div className="director-brand-lockup">
             <span className="director-reel-mark"><VideoCameraOutlined /></span>
             <div>
-              <Text className="director-eyebrow">一步一步完成漫剧</Text>
+              <Text className="director-eyebrow">AI PRODUCTION DESK · 新手友好</Text>
               <Title id="director-title" level={1}>快速制作</Title>
-              <p>先选交付目标，再按推荐步骤完成剧本、分镜、镜头图和成片</p>
+              <p>只看当前一步，系统会带你完成剧本、分镜、镜头图和成片</p>
             </div>
           </div>
           <div className="director-header-actions">
@@ -1228,7 +1239,7 @@ export default function DirectorStudio() {
                   percent={state.overallProgress}
                   size={isMobile ? 112 : 138}
                   strokeWidth={5}
-                  strokeColor="#e3a84f"
+                  strokeColor={{ '0%': '#a78bfa', '100%': '#60a5fa' }}
                   trailColor="rgba(255,255,255,0.1)"
                   format={percent => <span className="director-progress-number">{percent}<small>%</small></span>}
                 />
@@ -1247,16 +1258,24 @@ export default function DirectorStudio() {
       {state && (
         <>
           <section className="director-action-band">
-            <div className="director-action-index">下一步<br /><strong>01</strong></div>
+            <div className="director-action-index">
+              <span>NEXT STEP</span>
+              <div><strong>{currentStepNumber}</strong><small>/ {totalStepNumber}</small></div>
+            </div>
             <div className="director-action-copy">
               <span className="director-action-label">当前目标 · {PRODUCTION_GOALS[productionGoal].label}</span>
               <strong>{goalReached ? '本次目标已完成' : state.nextAction.label}</strong>
               <span>{goalReached
                 ? PRODUCTION_GOALS[productionGoal].description
-                : state.nextAction.count > 0 ? `${state.nextAction.count} 项等待推进` : '制作链路已推进至当前节点'}</span>
+                : state.nextAction.count > 0
+                  ? `${state.nextAction.count} 项等待推进，完成后系统会自动进入下一步`
+                  : '制作链路已推进至当前节点，按右侧按钮继续'}</span>
               {state.finalStale && (
                 <span className="director-stale-note">旧成片已过期，完成镜头视频后可重新合成。</span>
               )}
+              <div className="director-action-progress" aria-label={`整体制作进度 ${state.overallProgress}%`}>
+                <i style={{ width: `${state.overallProgress}%` }} />
+              </div>
             </div>
             <div className="director-action-buttons">
               <Select<ProductionGoal>
@@ -1292,7 +1311,7 @@ export default function DirectorStudio() {
                 </Button>
               )}
               <Tooltip title="打开高级制作看板">
-                <Button icon={<FolderOpenOutlined />} onClick={() => navigate(`/production/${projectId}`)}>高级看板</Button>
+                <Button icon={<FolderOpenOutlined />} onClick={() => navigate(`/production/${projectId}`)}>高级模式</Button>
               </Tooltip>
             </div>
           </section>
@@ -1300,11 +1319,11 @@ export default function DirectorStudio() {
           <section className="director-pipeline-section" aria-labelledby="director-pipeline-title">
             <div className="director-section-heading">
               <div>
-                <Text className="director-section-kicker">制作步骤</Text>
-                <Title id="director-pipeline-title" level={3}>制作进程</Title>
+                <Text className="director-section-kicker">PRODUCTION PIPELINE</Text>
+                <Title id="director-pipeline-title" level={3}>从创意到成片</Title>
               </div>
               <span className="director-stage-summary">
-                {state.stages.filter(stage => stagePercent(stage) === 100).length} / {state.stages.length} 个步骤
+                已完成 {completedStageCount} / {state.stages.length} 个步骤
               </span>
             </div>
             <div className="director-pipeline" aria-label="生产阶段">
@@ -1565,9 +1584,9 @@ export default function DirectorStudio() {
         </>
       )}
 
-      <a className="director-deerflow" href="https://deerflow.tech" target="_blank" rel="noreferrer">
-        <span /> Created by Deerflow
-      </a>
+      <div className="director-signature" aria-label="Agent Studio 创作生产线">
+        <span /> Agent Studio Creative Pipeline
+      </div>
 
       <Modal
         open={createOpen}

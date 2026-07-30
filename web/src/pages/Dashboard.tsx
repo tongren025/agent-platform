@@ -1,15 +1,17 @@
 // 总览页：以“继续制作、当前阻塞、下一步行动”为核心，而非罗列系统资源数量。
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Button, Card, Col, Empty, Progress, Result, Row, Skeleton, Space, Statistic, Tag, Tooltip, Typography } from 'antd';
+import { Alert, Button, Card, Empty, Progress, Result, Skeleton, Space, Tag, Tooltip, Typography } from 'antd';
 import {
   ArrowRightOutlined, CheckCircleOutlined, CloudSyncOutlined, ExclamationCircleOutlined,
   MessageOutlined, PlusOutlined, PushpinFilled, PushpinOutlined, ReloadOutlined, VideoCameraOutlined,
+  CalendarOutlined, ThunderboltOutlined, AppstoreOutlined, AimOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useResponsive } from '../hooks/useResponsive';
 import { api, type TaskInfo } from '../api';
 import { COLORS } from '../theme';
 import { hasPerm } from '../userAuth';
+import './Dashboard.css';
 
 const { Text, Title } = Typography;
 
@@ -94,6 +96,12 @@ export default function Dashboard() {
   const runningTasks = tasks.filter(t => ['queued', 'in_progress', 'deferred'].includes(t.status));
   const failedTasks = tasks.filter(t => t.status === 'complete' && t.result && !t.result.success);
   const totalBlockers = projects.reduce((sum, p) => sum + (p.stats?.readiness?.blockers || 0), 0);
+  const totalDelivered = projects.reduce((sum, p) => sum + (p.stats?.readiness?.delivered || 0), 0);
+  const todayLabel = new Intl.DateTimeFormat('zh-CN', {
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+  }).format(new Date());
   const primaryLabel = primary?.pinned
     ? '团队置顶项目'
     : (primary?.stats?.readiness?.blockers || 0) > 0
@@ -129,35 +137,41 @@ export default function Dashboard() {
     }
   };
 
-  if (loading) return <div style={{ maxWidth: 1280 }} role="status" aria-live="polite" aria-label="正在加载今日工作">
+  if (loading) return <div className="today-page today-loading" role="status" aria-live="polite" aria-label="正在加载今日制作">
     <Skeleton active paragraph={{ rows: 12 }} />
   </div>;
   if (error) return <Result status="error" title="总览暂时无法加载" subTitle={error}
     extra={<Button type="primary" icon={<ReloadOutlined />} onClick={load}>重新加载</Button>} />;
 
   return (
-    <main style={{ maxWidth: 1280, margin: '0 auto' }} aria-labelledby="dashboard-title">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-        <div>
-          <Text type="secondary">创作工作台</Text>
-          <Title id="dashboard-title" level={2} style={{ margin: '4px 0 6px' }}>今天继续把故事做完</Title>
-          <Text type="secondary">从最重要的项目开始，下一步已经替你整理好了。</Text>
+    <main className="today-page" aria-labelledby="dashboard-title">
+      <header className="today-header">
+        <div className="today-title-lockup">
+          <span className="today-kicker">CREATIVE OPERATIONS</span>
+          <Title id="dashboard-title" level={1}>今日制作</Title>
+          <p>把最重要的故事继续推向交付，下一步已经为你排好。</p>
         </div>
-        <Space>
-          {canUseWorkbench && <Button icon={<MessageOutlined />} onClick={() => navigate('/workbench')}>找数字员工</Button>}
-          {canManageProduction && <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/studio')}>快速开始</Button>}
-        </Space>
-      </div>
+        <div className="today-header-side">
+          <span className="today-date"><CalendarOutlined /> {todayLabel}</span>
+          <div className="today-header-actions">
+            {canUseWorkbench && <Button className="today-ghost-button" icon={<MessageOutlined />} onClick={() => navigate('/workbench')}>召唤员工</Button>}
+            {canManageProduction && <Button className="today-create-button" type="primary" icon={<PlusOutlined />} onClick={() => navigate('/studio')}>开始新制作</Button>}
+          </div>
+        </div>
+      </header>
 
       {actionError && <Alert role="alert" showIcon closable message={actionError}
-        onClose={() => setActionError('')} style={{ marginBottom: 16 }} />}
+        onClose={() => setActionError('')} className="today-alert" />}
 
       {primary ? (
-        <Card style={{ borderRadius: 18, marginBottom: 22, overflow: 'hidden' }} styles={{ body: { padding: 0 } }}>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.45fr 1fr' }}>
-            <div style={{ padding: isMobile ? '20px 16px' : '30px 34px', background: 'linear-gradient(135deg, #312e81, #6366f1)', color: '#fff' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-                <Text style={{ color: 'rgba(255,255,255,.78)' }}>{primaryLabel}</Text>
+        <section className="today-hero" aria-labelledby="today-primary-project">
+          <div className="today-hero-grid" aria-hidden="true" />
+          <div className="today-project-focus">
+            <div className="today-focus-topline">
+              <span className="today-live-label"><i /> {primaryLabel}</span>
+              <div className="today-focus-tools">
+                <span>{primary.aspect_ratio || '16:9'}</span>
+                <span>{primary.episode_count || 1} 集</span>
                 {canManageProduction && <Tooltip title={primary.pinned ? '取消置顶' : '置顶到今日工作'}>
                   <Button
                     type="text"
@@ -166,54 +180,103 @@ export default function Dashboard() {
                     aria-pressed={Boolean(primary.pinned)}
                     loading={pinningIds.has(primary.project_id)}
                     onClick={() => togglePin(primary)}
-                    style={{ color: '#fff', minWidth: 32, minHeight: 32 }}
+                    className="today-pin-button"
                   />
                 </Tooltip>}
               </div>
-              <Title level={3} style={{ color: '#fff', margin: '8px 0 4px' }}>{primary.name}</Title>
-              <div style={{ color: 'rgba(255,255,255,.72)', marginBottom: 24 }}>{primary.description || '暂无项目简介'}</div>
-              {primary.production_goal && <Tag color="geekblue" style={{ marginBottom: 18 }}>
-                {GOAL_LABELS[primary.production_goal]}
-              </Tag>}
-              <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 18, flexWrap: 'wrap' }}>
-                <Progress type="circle" percent={readiness.overall_progress} size={78}
-                  strokeColor="#a7f3d0" trailColor="rgba(255,255,255,.15)" format={p => <span style={{ color: '#fff' }}>{p}%</span>} />
-                <div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,.6)' }}>下一步</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, margin: '4px 0 12px' }}>{humanizeNextAction(readiness.next_action)}</div>
-                  <Button onClick={() => navigate(`/studio?project=${encodeURIComponent(primary.project_id)}`)}>继续制作 <ArrowRightOutlined /></Button>
-                </div>
-              </div>
             </div>
-            <div style={{ padding: isMobile ? '20px 16px' : '28px 30px' }}>
-              <Title level={5} style={{ marginTop: 0 }}>交付就绪度</Title>
-              {[
-                ['规格齐全', readiness.spec_ready, readiness.units, '#6366f1'],
-                ['已出图', readiness.with_image, readiness.units, '#10b981'],
-                ['已成视频', readiness.with_video, readiness.units, '#f59e0b'],
-                ['已交付', readiness.delivered, readiness.units, '#ef4444'],
-              ].map(([label, value, total, color]) => <div key={String(label)} style={{ marginTop: 13 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}><Text>{label}</Text><Text type="secondary">{value}/{total}</Text></div>
-                <Progress percent={Number(total) ? Math.round(Number(value) / Number(total) * 100) : 0} showInfo={false} strokeColor={String(color)} size="small" />
-              </div>)}
+            <div className="today-project-number" aria-hidden="true">01</div>
+            <Title id="today-primary-project" level={2}>{primary.name}</Title>
+            <p className="today-project-description">{primary.description || '继续完善这个故事，从当前进度推进到可交付成片。'}</p>
+            <div className="today-project-tags">
+              {primary.production_goal && <span className="today-goal-chip"><AimOutlined /> {GOAL_LABELS[primary.production_goal]}</span>}
+              {readiness.blockers > 0 && <span className="today-warning-chip"><ExclamationCircleOutlined /> {readiness.blockers} 项待处理</span>}
+            </div>
+
+            <div className="today-next-step">
+              <div className="today-progress-orbit">
+                <Progress
+                  type="circle"
+                  percent={readiness.overall_progress}
+                  size={isMobile ? 76 : 88}
+                  strokeWidth={5}
+                  strokeColor={{ '0%': '#a78bfa', '100%': '#60a5fa' }}
+                  trailColor="rgba(255,255,255,.1)"
+                  format={percent => <span>{percent}<small>%</small></span>}
+                  aria-label={`${primary.name} 完成度 ${readiness.overall_progress}%`}
+                />
+              </div>
+              <div className="today-next-copy">
+                <span>系统推荐下一步</span>
+                <strong>{humanizeNextAction(readiness.next_action)}</strong>
+                <p>从这里继续，不需要重新寻找上次做到哪里。</p>
+              </div>
+              <Button
+                className="today-continue-button"
+                type="primary"
+                onClick={() => navigate(`/studio?project=${encodeURIComponent(primary.project_id)}`)}
+              >
+                继续制作 <ArrowRightOutlined />
+              </Button>
             </div>
           </div>
-        </Card>
+
+          <aside className="today-readiness" aria-label="当前项目交付就绪度">
+            <div className="today-readiness-heading">
+              <div>
+                <span className="today-panel-kicker">DELIVERY RADAR</span>
+                <strong>交付就绪度</strong>
+              </div>
+              <span className="today-readiness-score">{readiness.overall_progress}<small>%</small></span>
+            </div>
+            <div className="today-readiness-list">
+              {[
+                { key: 'spec', label: '规格齐全', value: readiness.spec_ready, total: readiness.units, color: '#8b5cf6' },
+                { key: 'image', label: '镜头出图', value: readiness.with_image, total: readiness.units, color: '#3b82f6' },
+                { key: 'video', label: '镜头视频', value: readiness.with_video, total: readiness.units, color: '#06b6d4' },
+                { key: 'delivery', label: '确认交付', value: readiness.delivered, total: readiness.units, color: '#34d399' },
+              ].map(metric => {
+                const percent = metric.total ? Math.round(metric.value / metric.total * 100) : 0;
+                return <div key={metric.key} className="today-readiness-item">
+                  <div>
+                    <span><i style={{ background: metric.color }} />{metric.label}</span>
+                    <strong>{metric.value}<small> / {metric.total}</small></strong>
+                  </div>
+                  <Progress
+                    percent={percent}
+                    showInfo={false}
+                    strokeColor={metric.color}
+                    trailColor="rgba(148,163,184,.16)"
+                    size="small"
+                    aria-label={`${metric.label} ${metric.value}/${metric.total}`}
+                  />
+                </div>;
+              })}
+            </div>
+            <div className="today-readiness-foot">
+              <span><VideoCameraOutlined /> {readiness.units} 个制作镜头</span>
+              <span className={readiness.blockers ? 'has-risk' : ''}>
+                {readiness.blockers ? `${readiness.blockers} 项风险` : '链路正常'}
+              </span>
+            </div>
+          </aside>
+        </section>
       ) : canManageProduction ? (
-        <Card title="三步做出第 1 集" style={{ marginBottom: 22 }}>
-          <Empty image={<img src="/empty-create.svg" alt="" width={160} />} description="还没有制作项目">
-            <ol style={{ textAlign: 'left', maxWidth: 360, margin: '18px auto 22px', paddingLeft: 24, lineHeight: 2 }}>
-              <li>
-                <Text strong>先选择这次要做到哪一步</Text>
-                <div><Text type="secondary">文字分镜、镜头图片或完整成片</Text></div>
-              </li>
-              <li>粘贴故事素材，让导演员工生成分镜</li>
-              <li>按推荐步骤推进到目标并确认交付</li>
-            </ol>
-            <Button type="primary" onClick={() => navigate('/studio')}>开始并选择目标</Button>
-          </Empty>
-        </Card>
-      ) : <Card style={{ marginBottom: 22 }}>
+        <section className="today-empty-hero">
+          <div className="today-empty-art" aria-hidden="true"><PlusOutlined /></div>
+          <div>
+            <span className="today-kicker">YOUR FIRST PRODUCTION</span>
+            <Title level={2}>从一句创意，开始第一部作品</Title>
+            <p>选择交付目标，数字员工会带你完成剧本、分镜、镜头图片和视频。</p>
+          </div>
+          <ol className="today-empty-steps">
+            <li><span>01</span><div><strong>选择目标</strong><small>文字分镜、镜头图片或完整成片</small></div></li>
+            <li><span>02</span><div><strong>交给员工</strong><small>粘贴素材，由导演员工拆解制作</small></div></li>
+            <li><span>03</span><div><strong>逐步交付</strong><small>按推荐步骤确认每一个关键结果</small></div></li>
+          </ol>
+          <Button className="today-create-button" type="primary" icon={<ArrowRightOutlined />} onClick={() => navigate('/studio')}>开始第一部作品</Button>
+        </section>
+      ) : <Card className="today-permission-card">
         <Result
           status="info"
           title="当前账号没有制作权限"
@@ -221,70 +284,95 @@ export default function Dashboard() {
         />
       </Card>}
 
-      {(canManageProduction && totalBlockers > 0 || failedTasks.length > 0) && <Alert role="status" aria-live="polite" showIcon type="warning" style={{ marginBottom: 22 }}
-        message="有事项需要处理"
-        description={`${canManageProduction && totalBlockers ? `${totalBlockers} 个镜头的制作信息不完整。` : ''}${failedTasks.length ? ` ${failedTasks.length} 个后台任务执行失败。` : ''}`}
-        action={<Space>{blockedProject && <Button size="small" onClick={() => navigate(`/production/${blockedProject.project_id}/matrix`)}>检查缺失环节</Button>}{failedTasks.length > 0 && <Button size="small" onClick={() => navigate('/tasks')}>查看任务</Button>}</Space>} />}
+      <section className="today-stat-strip" aria-label="制作概况">
+        <div><span className="today-stat-icon is-violet"><AppstoreOutlined /></span><p><small>制作项目</small><strong>{projects.length}</strong><em>个项目</em></p></div>
+        <div><span className="today-stat-icon is-blue"><CloudSyncOutlined /></span><p><small>正在运行</small><strong>{runningTasks.length}</strong><em>项任务</em></p></div>
+        <div><span className={`today-stat-icon ${totalBlockers ? 'is-amber' : 'is-green'}`}><ExclamationCircleOutlined /></span><p><small>制作风险</small><strong>{totalBlockers}</strong><em>项待处理</em></p></div>
+        <div><span className="today-stat-icon is-green"><CheckCircleOutlined /></span><p><small>累计交付</small><strong>{totalDelivered}</strong><em>个镜头</em></p></div>
+      </section>
 
-      <Row gutter={18}>
-        {canManageProduction && <Col xs={24} md={16}>
-          <Card title={<span><VideoCameraOutlined /> 重点项目</span>} extra={hasPerm('production:manage') && <Button type="link" onClick={() => navigate('/production')}>查看全部</Button>}>
-            {sortedProjects.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : sortedProjects.slice(0, 4).map(p => {
-              const r = p.stats?.readiness;
-              return <div key={p.project_id} style={{
-                borderBottom: '1px solid #f0f0f5', padding: '8px 0',
-                display: 'grid', gridTemplateColumns: '1fr 40px', gap: 4, alignItems: 'center',
-              }}>
-                <button type="button" onClick={() => navigate(`/production/${p.project_id}`)} style={{
-                  width: '100%', border: 0, background: 'transparent', padding: '6px 4px',
-                  display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 220px 24px',
-                  gap: isMobile ? 8 : 16, alignItems: 'center', textAlign: 'left', cursor: 'pointer',
-                }}>
-                  <div>
-                    <Text strong>{p.name}</Text>
-                    {p.production_goal && <Tag bordered={false} style={{ marginInlineStart: 8 }}>{GOAL_LABELS[p.production_goal].replace('目标：', '')}</Tag>}
-                    <div><Text type="secondary" style={{ fontSize: 12 }}>{humanizeNextAction(r?.next_action)}</Text></div>
+      {(canManageProduction && totalBlockers > 0 || failedTasks.length > 0) && <div className="today-attention" role="status" aria-live="polite">
+        <span className="today-attention-icon"><ExclamationCircleOutlined /></span>
+        <div>
+          <strong>有事项需要你确认</strong>
+          <p>{`${canManageProduction && totalBlockers ? `${totalBlockers} 个镜头的制作信息不完整。` : ''}${failedTasks.length ? ` ${failedTasks.length} 个后台任务执行失败。` : ''}`}</p>
+        </div>
+        <Space wrap>
+          {blockedProject && <Button onClick={() => navigate(`/production/${blockedProject.project_id}/matrix`)}>检查缺失环节</Button>}
+          {failedTasks.length > 0 && <Button onClick={() => navigate('/tasks')}>查看任务</Button>}
+        </Space>
+      </div>}
+
+      <section className={`today-lower-grid ${!canManageProduction ? 'is-single' : ''}`}>
+        {canManageProduction && <div className="today-panel today-project-panel">
+          <div className="today-panel-heading">
+            <div><span className="today-panel-kicker">ACTIVE PRODUCTIONS</span><Title level={3}>重点项目</Title></div>
+            <Button type="text" onClick={() => navigate('/production')}>查看全部 <ArrowRightOutlined /></Button>
+          </div>
+          <div className="today-project-list">
+            {sortedProjects.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : sortedProjects.slice(0, 4).map((project, index) => {
+              const projectReadiness = project.stats?.readiness;
+              const progress = projectReadiness?.overall_progress || 0;
+              return <article key={project.project_id} className="today-project-row">
+                <button type="button" className="today-project-open" onClick={() => navigate(`/production/${project.project_id}`)}>
+                  <span className="today-row-index">{String(index + 1).padStart(2, '0')}</span>
+                  <div className="today-row-copy">
+                    <div>
+                      <strong>{project.name}</strong>
+                      {project.production_goal && <Tag bordered={false}>{GOAL_LABELS[project.production_goal].replace('目标：', '')}</Tag>}
+                    </div>
+                    <span>{humanizeNextAction(projectReadiness?.next_action)}</span>
                   </div>
-                  <Progress percent={r?.overall_progress || 0} size="small" strokeColor={COLORS.iris}
-                    aria-label={`${p.name} 完成度 ${r?.overall_progress || 0}%`} />
-                  {!isMobile && <ArrowRightOutlined aria-hidden style={{ color: COLORS.slate }} />}
+                  <div className="today-row-progress">
+                    <span>{progress}%</span>
+                    <Progress percent={progress} showInfo={false} strokeColor={COLORS.iris} trailColor="#edf0f7" size="small" aria-label={`${project.name} 完成度 ${progress}%`} />
+                  </div>
+                  {!isMobile && <ArrowRightOutlined className="today-row-arrow" aria-hidden />}
                 </button>
-                <Tooltip title={p.pinned ? '取消置顶' : '置顶'}>
+                <Tooltip title={project.pinned ? '取消置顶' : '置顶'}>
                   <Button
+                    className="today-row-pin"
                     type="text"
-                    icon={p.pinned ? <PushpinFilled /> : <PushpinOutlined />}
-                    aria-label={`${p.pinned ? '取消置顶' : '置顶'}项目：${p.name}`}
-                    aria-pressed={Boolean(p.pinned)}
-                    loading={pinningIds.has(p.project_id)}
-                    onClick={() => togglePin(p)}
-                    style={{ minWidth: 32, minHeight: 32 }}
+                    icon={project.pinned ? <PushpinFilled /> : <PushpinOutlined />}
+                    aria-label={`${project.pinned ? '取消置顶' : '置顶'}项目：${project.name}`}
+                    aria-pressed={Boolean(project.pinned)}
+                    loading={pinningIds.has(project.project_id)}
+                    onClick={() => togglePin(project)}
                   />
                 </Tooltip>
-              </div>;
+              </article>;
             })}
-          </Card>
-        </Col>}
-        {canUseWorkbench && <Col xs={24} md={canManageProduction ? 8 : 24}>
-          <Card title={<span><CloudSyncOutlined /> 后台任务</span>} aria-live="polite"
-            extra={<Button type="link" onClick={() => navigate('/tasks')}>任务中心</Button>}>
-            <Row gutter={12}>
-              <Col span={12}><Statistic title="进行中" value={runningTasks.length} prefix={<CloudSyncOutlined />} /></Col>
-              <Col span={12}><Statistic title="失败" value={failedTasks.length} valueStyle={failedTasks.length ? { color: COLORS.rose } : undefined} prefix={failedTasks.length ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />} /></Col>
-            </Row>
-            <div style={{ marginTop: 22 }}>
-              {tasksUnavailable ? <Alert
-                showIcon
-                type="info"
-                message="任务状态暂时无法获取"
-                description="项目制作不受影响，可以稍后重试。"
-                action={<Button size="small" onClick={load}>重试</Button>}
-              /> : runningTasks.length ? runningTasks.slice(0, 3).map(t => <div key={t.job_id} style={{ marginBottom: 10 }}>
-                <Text ellipsis style={{ maxWidth: '100%' }}>{t.user_input || t.employee_key || t.job_id}</Text><br /><Tag color="processing">{t.status === 'queued' ? '排队中' : '执行中'}</Tag>
-              </div>) : <Text type="secondary">当前没有正在执行的任务</Text>}
-            </div>
-          </Card>
-        </Col>}
-      </Row>
+          </div>
+        </div>}
+
+        {canUseWorkbench && <aside className="today-panel today-task-panel" aria-live="polite">
+          <div className="today-panel-heading">
+            <div><span className="today-panel-kicker">AGENT ACTIVITY</span><Title level={3}>员工任务</Title></div>
+            <Button type="text" onClick={() => navigate('/tasks')}>任务中心</Button>
+          </div>
+          <div className="today-task-summary">
+            <div><span className="is-running"><CloudSyncOutlined /></span><p><small>进行中</small><strong>{runningTasks.length}</strong></p></div>
+            <div><span className={failedTasks.length ? 'is-failed' : 'is-ok'}>{failedTasks.length ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />}</span><p><small>需处理</small><strong>{failedTasks.length}</strong></p></div>
+          </div>
+          <div className="today-task-feed">
+            {tasksUnavailable ? <Alert
+              showIcon
+              type="info"
+              message="任务状态暂时无法获取"
+              description="项目制作不受影响，可以稍后重试。"
+              action={<Button size="small" onClick={load}>重试</Button>}
+            /> : runningTasks.length ? runningTasks.slice(0, 3).map(task => <div key={task.job_id} className="today-task-item">
+              <span className="today-task-pulse" />
+              <div><Text ellipsis>{task.user_input || task.employee_key || task.job_id}</Text><small>{task.status === 'queued' ? '正在排队' : '员工处理中'}</small></div>
+              <Tag bordered={false} color="processing">{task.status === 'queued' ? '排队' : '运行'}</Tag>
+            </div>) : <div className="today-task-empty">
+              <span><ThunderboltOutlined /></span>
+              <strong>当前队列空闲</strong>
+              <p>新的员工任务会实时出现在这里。</p>
+            </div>}
+          </div>
+        </aside>}
+      </section>
     </main>
   );
 }

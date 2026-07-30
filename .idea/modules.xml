@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/agent.iml" filepath="$PROJECT_DIR$/.idea/agent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/yuxi.iml" filepath="$PROJECT_DIR$/.idea/yuxi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/yuxi-cli.iml" filepath="$PROJECT_DIR$/.idea/yuxi-cli.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/yuxi-workspace.iml" filepath="$PROJECT_DIR$/.idea/yuxi-workspace.iml" />
     </modules>
   </component>
 </project>
