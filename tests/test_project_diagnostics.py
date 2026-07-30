@@ -134,6 +134,46 @@ def test_goal_scope_does_not_report_unrequested_video_work():
     }
 
 
+def test_new_image_candidate_requires_precision_review_before_delivery():
+    """新质量链路图片不能仅凭文件存在就计为完成；旧项目图片仍保持兼容。"""
+    image = "/quality-candidate.png"
+    image_card = _card(
+        "img_prompt",
+        status="review",
+        images=[image],
+        metadata={
+            "active_image": image,
+            "image_candidates": [{
+                "image": image,
+                "review_required": True,
+            }],
+        },
+    )
+    cards = [_card("script"), _card("storyboard"), image_card]
+
+    pending = diagnose_project(_project("images"), cards)
+    issue = next(
+        item
+        for item in pending["issues"]
+        if item["code"] == "image_quality_review_required"
+    )
+    assert issue["action"]["kind"] == "review_card"
+    assert issue["acceptanceCriteria"] == [
+        "角色一致性和分镜符合度均不低于 4/5",
+        "其他视觉维度均不低于 3/5，综合分不低于 80/100",
+    ]
+
+    image_card.status = "done"
+    image_card.metadata["image_reviews"] = [{
+        "image": image,
+        "verdict": "pass",
+        "quality": {"passed": True, "score": 88.0},
+    }]
+    approved = diagnose_project(_project("images"), cards)
+    assert approved["state"] == "complete"
+    assert approved["score"] == 100
+
+
 def test_quality_failure_becomes_first_action_before_expensive_media():
     cards = [
         _card("script"),

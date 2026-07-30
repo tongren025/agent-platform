@@ -31,8 +31,11 @@ from app.services.invocation import run_invocation
 from app.services.image_generation import generate_image_to_local
 from app.services.inbox_ingest import parse_inbox_filename, resolve_inbox_target
 from app.services.production_quality import (
+    build_image_repair_prompt,
     evaluate_production_draft,
     evaluate_visual_quality,
+    image_is_approved,
+    image_requires_precision_review,
     visual_quality_profile,
 )
 
@@ -1205,7 +1208,15 @@ def update_card(card_id: str, req: UpdateCardReq):
                 if "videos" in provided:
                     c.videos = req.videos or []
                 if "metadata" in provided:
-                    c.metadata = req.metadata or {}
+                    next_metadata = req.metadata or {}
+                    previous_active = str(c.metadata.get("active_image") or "")
+                    next_active = str(next_metadata.get("active_image") or "")
+                    if next_active and next_active != previous_active:
+                        raise HTTPException(
+                            409,
+                            "切换当前图片必须使用候选采用操作，并先完成质量验收",
+                        )
+                    c.metadata = next_metadata
                 if "status" in provided and req.status is not None:
                     c.status = req.status
                 if "assignee" in provided:
@@ -1698,6 +1709,15 @@ def review_card_image(pid: str, card_id: str, req: ReviewCardImageReq):
         known_images = {str(item) for item in card.images}
         if image != current_image and image not in known_images:
             raise HTTPException(409, "候选图片已变化，请刷新后重新评审")
+        known_candidates = {
+            str(item.get("image") or "")
+            for item in (card.metadata.get("image_candidates") or [])
+        }
+        if image != current_image and image not in known_candidates:
+            raise HTTPException(409, "历史图片不能重新评审；请先生成或登记为质量候选")
+        requires_precision = image_requires_precision_review(card.metadata, image)
+        if req.verdict == "pass" and requires_precision and not req.ratings:
+            raise HTTPException(400, "新生成候选必须完成五维精品评分后才能通过")
         quality: dict[str, Any] = {}
         if req.ratings:
             try:
@@ -1790,6 +1810,10 @@ def activate_image_candidate(
         ]
         if not reviews or reviews[-1].get("verdict") != "pass":
             raise HTTPException(409, "候选图片必须先通过人工验收才能采用")
+        if image_requires_precision_review(card.metadata, image):
+            quality = reviews[-1].get("quality") or {}
+            if quality.get("passed") is not True:
+                raise HTTPException(409, "新生成候选必须达到精品评分门槛才能采用")
         card.metadata = {
             **card.metadata,
             "active_image": image,
@@ -2206,7 +2230,7 @@ class GenerateCardImageReq(BaseModel):
 
 @router.post("/projects/{pid}/cards/{card_id}/generate-image")
 def generate_card_image(pid: str, card_id: str, req: GenerateCardImageReq):
-    """为图片提示词或故事板卡立即生成新版本，保留旧图并把新 URL 设为当前版本。"""
+    """生成待验收候选；已有通过版本时不自动替换当前生产图。"""
     with _project_lock(pid):
         _load_project(pid)
         cards = _load_cards(pid)
@@ -2223,8 +2247,12 @@ def generate_card_image(pid: str, card_id: str, req: GenerateCardImageReq):
         )
         if not prompt:
             raise HTTPException(400, "卡片没有可用提示词")
+        generation_prompt = build_image_repair_prompt(
+            prompt,
+            list(card.metadata.get("image_reviews") or []),
+        )
     try:
-        result = generate_image_to_local(prompt, req.model, req.size)
+        result = generate_image_to_local(generation_prompt, req.model, req.size)
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
     except Exception as exc:
@@ -2250,13 +2278,43 @@ def generate_card_image(pid: str, card_id: str, req: GenerateCardImageReq):
         if applied:
             if result["url"] not in card.images:
                 card.images.append(result["url"])
+            existing_approved = image_is_approved(
+                card.metadata,
+                card.status,
+                existing_active_image,
+            )
+            candidates = list(card.metadata.get("image_candidates") or [])
+            candidates = [
+                item
+                for item in candidates
+                if str(item.get("image") or "") != result["url"]
+            ]
+            candidates.append({
+                "image": result["url"],
+                "model": result["model"],
+                "base_prompt": prompt,
+                "generation_prompt": generation_prompt,
+                "created_at": _now(),
+                "verdict": "",
+                "quality_score": None,
+                "review_required": True,
+            })
+            active_image = (
+                existing_active_image
+                if existing_active_image and existing_approved
+                else result["url"]
+            )
             card.metadata = {
                 **card.metadata,
-                "active_image": result["url"],
+                "active_image": active_image,
+                "image_candidates": candidates[-20:],
                 "last_image_model": result["model"],
                 "last_image_prompt": prompt,
+                "last_image_generation_prompt": generation_prompt,
             }
-            card.status = "done"
+            if active_image == result["url"]:
+                card.metadata["review_verdict"] = ""
+                card.status = "review"
         else:
             late_results = list(card.metadata.get("late_image_results") or [])
             late_results.append({
@@ -2279,6 +2337,8 @@ def generate_card_image(pid: str, card_id: str, req: GenerateCardImageReq):
             "card": card.model_dump(),
             "applied": applied,
             "stale": not applied,
+            "qualityFeedbackApplied": generation_prompt != prompt,
+            "candidateUrl": result.get("url") or "",
         },
     }
 

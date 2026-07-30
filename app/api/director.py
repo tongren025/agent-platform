@@ -36,7 +36,11 @@ from app.services.project_optimization import (
     list_optimization_runs,
     optimization_control,
 )
-from app.services.production_quality import build_image_repair_prompt
+from app.services.production_quality import (
+    build_image_repair_prompt,
+    image_is_approved,
+    image_requires_precision_review,
+)
 
 
 router = APIRouter(prefix="/api/v1/agentapp/director", tags=["director"])
@@ -117,10 +121,16 @@ def _director_state(project_id: str) -> dict:
                 or generated_image_prompt == current_image_prompt
             )
         latest_image_review = _current_image_review(image_card, image_url)
-        image_review_count = 1 if image_card and image_card.status == "review" else 0
-        image_ready = bool(image_url) and image_inputs_match and image_review_count == 0 and (
-            latest_image_review.get("verdict") != "reject"
+        image_quality_required = bool(
+            image_card
+            and image_requires_precision_review(image_card.metadata, image_url)
         )
+        image_approved = bool(
+            image_card
+            and image_is_approved(image_card.metadata, image_card.status, image_url)
+        )
+        image_review_count = int(bool(image_url) and not image_approved)
+        image_ready = bool(image_url) and image_inputs_match and image_approved
         if image_ready:
             image_done += 1
         image_review_total += image_review_count
@@ -183,6 +193,9 @@ def _director_state(project_id: str) -> dict:
             "imageReviewVerdict": str(latest_image_review.get("verdict") or ""),
             "imageReviewReason": str(latest_image_review.get("reason") or ""),
             "imageReviewNote": str(latest_image_review.get("note") or ""),
+            "imageQualityRequired": image_quality_required,
+            "imageQualityScore": (latest_image_review.get("quality") or {}).get("score"),
+            "imageQualityPassed": (latest_image_review.get("quality") or {}).get("passed"),
         })
 
     final_candidate = next((card for card in reversed(cards) if card.stage == "final" and card.videos), None)
@@ -661,6 +674,11 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
         if applied:
             if result["url"] not in card.images:
                 card.images.append(result["url"])
+            existing_approved = image_is_approved(
+                card.metadata,
+                card.status,
+                existing_active_image,
+            )
             candidates = list(card.metadata.get("image_candidates") or [])
             candidates = [
                 item
@@ -675,17 +693,25 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
                 "created_at": _now(),
                 "verdict": "",
                 "quality_score": None,
+                "review_required": True,
             })
+            active_image = (
+                existing_active_image
+                if existing_active_image and existing_approved
+                else result["url"]
+            )
             card.metadata = {
                 **card.metadata,
-                "active_image": result["url"],
+                "active_image": active_image,
                 "image_candidates": candidates[-20:],
                 "last_image_model": result["model"],
                 "last_image_prompt": prompt,
                 "last_image_generation_prompt": generation_prompt,
                 "last_image_usage": result.get("usage") or {},
             }
-            card.status = "done"
+            if active_image == result["url"]:
+                card.metadata["review_verdict"] = ""
+                card.status = "review"
         else:
             late_results = list(card.metadata.get("late_image_results") or [])
             late_results.append({
@@ -749,14 +775,14 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         if req.image_url and req.image_url != current_image_url:
             raise HTTPException(409, "镜头图片已变化，请刷新后使用当前版本提交视频")
         image_review = _current_image_review(image_card, current_image_url)
-        if (
-            image_card is not None
-            and (
-                image_card.status == "review"
-                or image_review.get("verdict") == "reject"
-            )
+        if image_card is None or not image_is_approved(
+            image_card.metadata,
+            image_card.status,
+            current_image_url,
         ):
-            raise HTTPException(409, "当前镜头图片待返工，请修改并通过后再提交视频")
+            if image_review.get("verdict") == "reject":
+                raise HTTPException(409, "当前镜头图片待返工，请修改并通过后再提交视频")
+            raise HTTPException(409, "当前镜头图片必须完成精品评分并通过后才能提交视频")
         image_url = current_image_url
         aspect_ratio = req.aspect_ratio or project.aspect_ratio
         submission_started_at = _now()
@@ -791,12 +817,14 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
             or _card_for(cards, card.episode, card.shot_number, "storyboard")
         )
         current_image_url = _active_image_url(image_card)
-        current_image_review = _current_image_review(image_card, current_image_url)
         image_approved = (
             bool(current_image_url)
             and image_card is not None
-            and image_card.status != "review"
-            and current_image_review.get("verdict") != "reject"
+            and image_is_approved(
+                image_card.metadata,
+                image_card.status,
+                current_image_url,
+            )
         )
         current_job = card.metadata.get("openrouter_video_job") or {}
         newer_job_exists = (

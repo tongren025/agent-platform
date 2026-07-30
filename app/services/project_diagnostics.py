@@ -10,6 +10,10 @@ import json
 from typing import Any, Optional
 
 from app.models.production import ProductionCard, ProductionProject
+from app.services.production_quality import (
+    image_is_approved,
+    image_requires_precision_review,
+)
 
 
 SPEC_STAGES = ("script", "storyboard", "img_prompt", "vid_prompt")
@@ -265,6 +269,24 @@ def _current_image_review(card: ProductionCard | None, image: str) -> dict[str, 
     return reviews[-1] if reviews else {}
 
 
+def _approved_image_count(card: ProductionCard) -> int:
+    """旧聚合卡按历史数量兼容；新候选只统计真正通过精品验收的图片。"""
+    precision_images = [
+        image
+        for image in card.images
+        if image_requires_precision_review(card.metadata, str(image))
+    ]
+    if not precision_images:
+        return len(card.images)
+    legacy_count = len(card.images) - len(precision_images)
+    precision_count = sum(
+        1
+        for image in precision_images
+        if image_is_approved(card.metadata, card.status, str(image))
+    )
+    return legacy_count + precision_count
+
+
 def _video_state(card: ProductionCard | None, image: str) -> tuple[bool, bool]:
     """返回 (已完成, 处理中)，并拒绝把旧图片/旧提示词产生的视频算作当前版本。"""
     if card is None:
@@ -438,7 +460,7 @@ def _diagnose_aggregate_project(
             if card.stage not in {"idea", "setting", "design"}
         ]
         available = min(
-            max((len(card.images) for card in visual_cards), default=0),
+            max((_approved_image_count(card) for card in visual_cards), default=0),
             expected,
         )
         checks.append({
@@ -765,6 +787,10 @@ def diagnose_project(
                 image_card = prompt_card or _active_card(cards, episode, unit, "storyboard")
                 image = _active_image(image_card)
                 review = _current_image_review(image_card, image)
+                image_approved = bool(
+                    image_card
+                    and image_is_approved(image_card.metadata, image_card.status, image)
+                )
                 if not image:
                     issues.append(_issue(
                         code="image_missing",
@@ -780,9 +806,7 @@ def diagnose_project(
                             "cardId": image_card.card_id if image_card else "",
                         },
                     ))
-                elif review.get("verdict") == "reject" or (
-                    image_card is not None and image_card.status == "review"
-                ):
+                elif review.get("verdict") == "reject":
                     reason = str(review.get("reason") or "人工审核未通过")
                     note = str(review.get("note") or "").strip()
                     issues.append(_issue(
@@ -799,6 +823,32 @@ def diagnose_project(
                             "label": "修改提示词并重新生图",
                             "cardId": image_card.card_id if image_card else "",
                         },
+                    ))
+                elif not image_approved:
+                    quality = review.get("quality") or {}
+                    score = quality.get("score")
+                    details = (
+                        [f"当前综合评分：{score} / 100"]
+                        if score is not None
+                        else []
+                    )
+                    issues.append(_issue(
+                        code="image_quality_review_required",
+                        stage="image",
+                        episode=episode,
+                        unit=unit,
+                        card=image_card,
+                        message=f"{_slot_label(episode, unit)} 的当前图片尚未通过精品五维验收。",
+                        details=details,
+                        acceptance_criteria=[
+                            "角色一致性和分镜符合度均不低于 4/5",
+                            "其他视觉维度均不低于 3/5，综合分不低于 80/100",
+                        ],
+                        action=_review_action(
+                            card=image_card,
+                            episode=episode,
+                            unit=unit,
+                        ),
                     ))
                 else:
                     passed += 1

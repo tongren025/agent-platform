@@ -13,7 +13,8 @@ import {
   ArrowUpOutlined, ArrowDownOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { api, type ProductionGoal } from '../api';
+import { api, type ProductionGoal, type VisualQualityRatings } from '../api';
+import VisualQualityReviewModal from '../components/VisualQualityReviewModal';
 import { message } from '../ui';
 import { readInputHabit, useInputHabit, writeInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
@@ -64,6 +65,9 @@ interface ShotState {
   durationSeconds: number;
   reviewCount: number;
   imageReviewVerdict?: 'pass' | 'reject' | '';
+  imageQualityRequired?: boolean;
+  imageQualityScore?: number | null;
+  imageQualityPassed?: boolean | null;
   imageStale?: boolean;
   videoStale?: boolean;
 }
@@ -122,6 +126,10 @@ const REVIEW_REASON_OPTIONS = [
   { value: 'composition_mismatch', label: '构图不符分镜' },
   { value: 'lighting_wrong', label: '光影错误' },
   { value: 'anatomy_broken', label: '结构崩坏' },
+  { value: 'scene_drift', label: '场景漂移' },
+  { value: 'style_drift', label: '画风漂移' },
+  { value: 'continuity_break', label: '前后镜不连续' },
+  { value: 'text_artifact', label: '文字或符号错误' },
   { value: 'other', label: '其他' },
 ];
 
@@ -291,6 +299,7 @@ export default function DirectorStudio() {
   const [promptBusy, setPromptBusy] = useState<Record<string, boolean>>({});
   const [cardMediaBusy, setCardMediaBusy] = useState<Record<string, MediaKind>>({});
   const [reviewBusy, setReviewBusy] = useState<Record<string, boolean>>({});
+  const [qualityReviewTargetCardId, setQualityReviewTargetCardId] = useState('');
   const [rejectTargetCardId, setRejectTargetCardId] = useState('');
   const [rejectReason, setRejectReason] = useState('');
   const [rejectNote, setRejectNote] = useState('');
@@ -343,6 +352,7 @@ export default function DirectorStudio() {
     setMediaTargetCardId('');
     setEditingPromptCardId('');
     setPromptDrafts({});
+    setQualityReviewTargetCardId('');
     setRejectTargetCardId('');
     setRejectReason('');
     setRejectNote('');
@@ -885,6 +895,7 @@ export default function DirectorStudio() {
     verdict: 'pass' | 'reject',
     reason = '',
     note = '',
+    ratings?: VisualQualityRatings,
   ) => {
     const cardId = shot.imageCardId;
     if (!cardId || !shot.imageUrl || reviewBusy[cardId]) return;
@@ -893,10 +904,14 @@ export default function DirectorStudio() {
       await api.reviewCardImage(projectId, cardId, {
         verdict,
         image: shot.imageUrl,
+        ...(ratings ? { ratings } : {}),
         ...(verdict === 'reject' ? { reason, note: note.trim() } : {}),
       });
       await loadState(projectId, true);
       message.success(verdict === 'pass' ? `镜头 G${shot.unit} 已通过` : `镜头 G${shot.unit} 已退回`);
+      if (verdict === 'pass') {
+        setQualityReviewTargetCardId('');
+      }
       if (verdict === 'reject') {
         setRejectTargetCardId('');
         setRejectReason('');
@@ -1054,6 +1069,9 @@ export default function DirectorStudio() {
       }));
   }, [pendingShots.length]);
   const rejectTarget = state?.shots.find(shot => shot.imageCardId === rejectTargetCardId);
+  const qualityReviewTarget = state?.shots.find(
+    shot => shot.imageCardId === qualityReviewTargetCardId,
+  );
   const finalMediaUrl = safeMediaUrl(state?.finalUrl || '');
   const finalMediaIsCrossOrigin = useMemo(() => {
     if (!finalMediaUrl) return false;
@@ -1397,7 +1415,14 @@ export default function DirectorStudio() {
                   const generatingImage = cardMediaBusy[shot.imageCardId] === 'image';
                   const generatingVideo = cardMediaBusy[shot.videoCardId] === 'video';
                   const reviewing = Boolean(reviewBusy[shot.imageCardId]);
-                  const imageNeedsRework = shot.reviewCount > 0 || shot.imageReviewVerdict === 'reject';
+                  const imageNeedsReview = Boolean(
+                    shot.imageQualityRequired && shot.imageQualityPassed !== true,
+                  );
+                  const imageNeedsRework = (
+                    shot.reviewCount > 0
+                    || shot.imageReviewVerdict === 'reject'
+                    || imageNeedsReview
+                  );
                   return (
                     <article key={`${shot.episode ?? 'global'}-${shot.unit}`} className="director-shot-card">
                       <div className="director-shot-media">
@@ -1507,7 +1532,9 @@ export default function DirectorStudio() {
                               !shot.imageUrl || shot.imageStale
                                 ? '先按最新提示词生成这张镜头图片'
                                 : imageNeedsRework
-                                  ? '当前图片待返工，修改并通过后再生成视频'
+                                  ? imageNeedsReview
+                                    ? '当前图片必须完成精品五维验收后才能生成视频'
+                                    : '当前图片待返工，修改并通过后再生成视频'
                                   : ''
                             }>
                               <span>
@@ -1535,9 +1562,11 @@ export default function DirectorStudio() {
                                 icon={<CheckOutlined />}
                                 loading={reviewing}
                                 disabled={savingPrompt || generatingImage}
-                                onClick={() => void submitReview(shot, 'pass')}
+                                onClick={() => setQualityReviewTargetCardId(shot.imageCardId)}
                               >
-                                通过
+                                {shot.imageQualityPassed
+                                  ? `已通过 ${shot.imageQualityScore ?? ''}`
+                                  : '精品验收'}
                               </Button>
                               <Button
                                 size="small"
@@ -1618,6 +1647,28 @@ export default function DirectorStudio() {
           </div>
         </div>
       </Modal>
+
+      <VisualQualityReviewModal
+        open={Boolean(qualityReviewTarget)}
+        image={qualityReviewTarget?.imageUrl || ''}
+        title={qualityReviewTarget ? `精品验收 · G${qualityReviewTarget.unit}` : '精品验收'}
+        busy={Boolean(
+          qualityReviewTarget
+          && reviewBusy[qualityReviewTarget.imageCardId]
+        )}
+        onCancel={() => {
+          if (
+            qualityReviewTarget
+            && reviewBusy[qualityReviewTarget.imageCardId]
+          ) return;
+          setQualityReviewTargetCardId('');
+        }}
+        onSubmit={async ratings => {
+          if (qualityReviewTarget) {
+            await submitReview(qualityReviewTarget, 'pass', '', '', ratings);
+          }
+        }}
+      />
 
       <Modal
         open={reorderOpen}

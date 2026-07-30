@@ -223,6 +223,25 @@ export interface ProjectVersion {
   };
 }
 
+export interface VisualQualityDimension {
+  key: string;
+  label: string;
+  description: string;
+  weight: number;
+  critical: boolean;
+}
+
+export interface VisualQualityProfile {
+  version: string;
+  minimumScore: number;
+  minimumRating: number;
+  criticalMinimumRating: number;
+  ratingScale: { min: number; max: number };
+  dimensions: VisualQualityDimension[];
+}
+
+export type VisualQualityRatings = Record<string, number>;
+
 export interface ProjectComment {
   id: string;
   project_id: string;
@@ -649,9 +668,27 @@ export const api = {
     request<{ split: number; source_card_id: string; cards: any[] }>(
       `/production/projects/${pid}/cards/${cardId}/split-storyboard`, { method: 'POST' },
     ),
-  /** 两键评审：对卡片某张图记一次通过/废弃；废弃必带枚举 reason。 */
-  reviewCardImage: (pid: string, cardId: string, data: { verdict: 'pass' | 'reject'; image?: string; reason?: string; note?: string }) =>
+  /** 图片评审：新生成候选通过时必须提交后端量表返回的五维评分。 */
+  reviewCardImage: (pid: string, cardId: string, data: {
+    verdict: 'pass' | 'reject';
+    image?: string;
+    reason?: string;
+    note?: string;
+    ratings?: VisualQualityRatings;
+    promote?: boolean;
+  }) =>
     request<any>(`/production/projects/${pid}/cards/${cardId}/review`, { method: 'POST', body: JSON.stringify(data) }),
+  getProductionQualityProfile: () =>
+    request<{
+      profile: 'precision';
+      image: VisualQualityProfile;
+      reject_reasons: { key: string; name: string }[];
+    }>('/production/quality-profile'),
+  activateImageCandidate: (pid: string, cardId: string, image: string) =>
+    request<any>(`/production/projects/${pid}/cards/${cardId}/image-candidates/activate`, {
+      method: 'POST',
+      body: JSON.stringify({ image }),
+    }),
   /** 收件箱批量回填：拖入多个文件，按文件名规则自动分拣挂到对应生产卡。 */
   inboxUpload: async (pid: string, files: File[], defaultEpisode?: number) => {
     const form = new FormData();

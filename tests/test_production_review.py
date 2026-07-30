@@ -211,12 +211,28 @@ def test_review_and_activate_non_current_candidate(review_env):
             "episode": 1,
             "shot_number": 3,
             "images": ["/uploads/candidate-a.png", "/uploads/candidate-b.png"],
-            "metadata": {"active_image": "/uploads/candidate-a.png"},
+            "metadata": {
+                "active_image": "/uploads/candidate-a.png",
+                "image_candidates": [{
+                    "image": "/uploads/candidate-b.png",
+                    "review_required": True,
+                }],
+            },
             "status": "done",
         },
     )
     assert created.status_code == 200, created.text
     card_id = created.json()["data"]["card_id"]
+    bypass = client.put(
+        f"/api/v1/agentapp/production/cards/{card_id}",
+        json={
+            "metadata": {
+                "active_image": "/uploads/candidate-b.png",
+            },
+        },
+    )
+    assert bypass.status_code == 409
+    assert "质量验收" in bypass.json()["message"]
     reviewed = client.post(
         f"/api/v1/agentapp/production/projects/{pid}/cards/{card_id}/review",
         json={

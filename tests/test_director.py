@@ -141,7 +141,7 @@ def test_update_image_prompt_rejects_blank_and_non_image_card(director_env):
 
 
 def test_image_video_and_compose_flow(director_env):
-    """单镜从图片到异步视频再到 FFmpeg 成片会持续回填同一项目。"""
+    """新图片必须精品验收；通过后才能进入视频和 FFmpeg 成片。"""
     client = director_env
     pid, card_ids = _create_gc(client)
 
@@ -151,6 +151,28 @@ def test_image_video_and_compose_flow(director_env):
     )
     assert image_response.status_code == 200
     assert image_response.json()["data"]["card"]["images"]
+    first_image = image_response.json()["data"]["url"]
+    pending_video = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['vid_prompt']}/video",
+        json={"model": "demo/video", "duration": 4, "aspect_ratio": "9:16"},
+    )
+    assert pending_video.status_code == 409
+    assert "精品评分" in pending_video.json()["message"]
+    approved_image = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_ids['img_prompt']}/review",
+        json={
+            "verdict": "pass",
+            "image": first_image,
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 4,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert approved_image.status_code == 200, approved_image.text
 
     video_response = client.post(
         f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['vid_prompt']}/video",
@@ -197,18 +219,58 @@ def test_image_video_and_compose_flow(director_env):
     assert rejected_state["finalStale"] is True
     approve = client.post(
         f"/api/v1/agentapp/production/projects/{pid}/cards/{card_ids['img_prompt']}/review",
-        json={"verdict": "pass", "image": data["state"]["shots"][0]["imageUrl"]},
+        json={
+            "verdict": "pass",
+            "image": data["state"]["shots"][0]["imageUrl"],
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 4,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
     )
     assert approve.status_code == 200
     approved_state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
     assert approved_state["finalUrl"].endswith("/final.mp4")
 
-    # 重做首帧后，旧视频和旧成片不能继续冒充当前交付版本。
+    # 重做首帧先只产生候选；未验收前不能覆盖已通过的生产图。
     regenerate = client.post(
         f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['img_prompt']}/image",
         json={"model": "demo/image", "aspect_ratio": "9:16"},
     )
     assert regenerate.status_code == 200
+    candidate = regenerate.json()["data"]["url"]
+    preserved_state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
+    assert preserved_state["shots"][0]["imageUrl"] != candidate
+    assert preserved_state["shots"][0]["videoUrl"].endswith("/shot.mp4")
+    assert preserved_state["finalUrl"].endswith("/final.mp4")
+
+    reviewed_candidate = client.post(
+        f"/api/v1/agentapp/production/projects/{pid}/cards/{card_ids['img_prompt']}/review",
+        json={
+            "verdict": "pass",
+            "image": candidate,
+            "promote": False,
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 5,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert reviewed_candidate.status_code == 200, reviewed_candidate.text
+    activated = client.post(
+        (
+            f"/api/v1/agentapp/production/projects/{pid}/cards/{card_ids['img_prompt']}"
+            "/image-candidates/activate"
+        ),
+        json={"image": candidate},
+    )
+    assert activated.status_code == 200, activated.text
     stale_state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
     assert stale_state["shots"][0]["videoUrl"] == ""
     assert stale_state["shots"][0]["videoStale"] is True

@@ -180,6 +180,60 @@ def build_image_repair_prompt(base_prompt: str, reviews: list[Mapping[str, Any]]
     )
 
 
+def latest_image_review(
+    metadata: Mapping[str, Any],
+    image: str,
+) -> Mapping[str, Any]:
+    """取指定图片的最后一次评审，保证历史版本的结论不会串到当前候选。"""
+    reviews = [
+        item
+        for item in (metadata.get("image_reviews") or [])
+        if str(item.get("image") or "") == image
+    ]
+    return reviews[-1] if reviews else {}
+
+
+def image_candidate(
+    metadata: Mapping[str, Any],
+    image: str,
+) -> Mapping[str, Any]:
+    """取图片候选元数据；旧项目没有候选记录时返回空映射。"""
+    return next(
+        (
+            item
+            for item in (metadata.get("image_candidates") or [])
+            if str(item.get("image") or "") == image
+        ),
+        {},
+    )
+
+
+def image_requires_precision_review(
+    metadata: Mapping[str, Any],
+    image: str,
+) -> bool:
+    """只有新质量链路生成的媒体强制五维评分，旧项目不会被批量判废。"""
+    return bool(image_candidate(metadata, image).get("review_required"))
+
+
+def image_is_approved(
+    metadata: Mapping[str, Any],
+    status: str,
+    image: str,
+) -> bool:
+    """判断图片是否可进入视频阶段，兼容旧项目并严格约束新候选。"""
+    if not image:
+        return False
+    review = latest_image_review(metadata, image)
+    if image_requires_precision_review(metadata, image):
+        quality = review.get("quality") or {}
+        return (
+            review.get("verdict") == "pass"
+            and quality.get("passed") is True
+        )
+    return status != "review" and review.get("verdict") != "reject"
+
+
 def evaluate_production_draft(stage: str, title: str, content: str, prompts: list[str]) -> list[dict]:
     """检查 AI 草稿是否可直接生产，返回带 code/message 的问题列表。
 
