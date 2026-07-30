@@ -310,13 +310,13 @@ export default function ProductionMatrix() {
   }
 
   return (
-    <div style={{ padding: isMobile ? 8 : 16, height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+    <main style={{ padding: isMobile ? 8 : 16, height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <div style={{
         display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
         gap: 12, flexWrap: 'wrap',
       }}>
         <div>
-          <Title level={4} style={{ margin: '0 0 4px' }}>完整性检查</Title>
+          <Title level={3} style={{ margin: '0 0 4px' }}>完整性检查</Title>
           <Text type="secondary" style={{ fontSize: 12 }}>
             按集和镜头检查剧本、分镜、提示词、图片与视频，缺少哪一步一眼可见。
           </Text>
@@ -391,10 +391,28 @@ export default function ProductionMatrix() {
                   首要问题：{diagnostics.issues[0].message}
                 </Text>
               )}
+              {isMobile && (
+                <Space direction="vertical" style={{ width: '100%', marginTop: 12 }}>
+                  {diagnostics.issues[0] && diagnostics.issues[0].severity !== 'info' && (
+                    <Button
+                      block
+                      type="primary"
+                      icon={<ToolOutlined />}
+                      loading={optimizingIssueId === diagnostics.issues[0].id}
+                      onClick={() => handleDiagnosticIssue(diagnostics.issues[0])}
+                    >
+                      {diagnostics.issues[0].action.label}
+                    </Button>
+                  )}
+                  <Button block icon={<WarningOutlined />} onClick={() => setIssuesOpen(true)}>
+                    查看问题与记录
+                  </Button>
+                </Space>
+              )}
             </div>
           }
-          action={
-            <Space direction={isMobile ? 'vertical' : 'horizontal'}>
+          action={!isMobile ? (
+            <Space>
               {diagnostics.issues[0] && diagnostics.issues[0].severity !== 'info' && (
                 <Button
                   type="primary"
@@ -409,7 +427,7 @@ export default function ProductionMatrix() {
                 查看问题与记录
               </Button>
             </Space>
-          }
+          ) : undefined}
         />
       )}
 
@@ -653,6 +671,6 @@ export default function ProductionMatrix() {
             )} />
         )}
       </Drawer>
-    </div>
+    </main>
   );
 }
