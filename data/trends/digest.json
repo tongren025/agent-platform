@@ -1,17 +1,29 @@
 {
-  "generatedAt": "2026-07-30T12:06:02.888424",
+  "generatedAt": "2026-07-31T02:01:26.209294",
   "model": "openrouter/auto",
   "picks": [
+    {
+      "id": "github:n8n-io/n8n",
+      "source": "GitHub",
+      "title": "n8n-io/n8n",
+      "url": "https://github.com/n8n-io/n8n",
+      "detail": "Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations.",
+      "metrics": "198714⭐, TypeScript",
+      "domain": "topic:mcp",
+      "verdict": "用可视化节点把采集、生成、发布和通知串成自动化流水线，适合做创作生产线编排。",
+      "why": "他需要把视频生成、知识库、Agent 任务和外部工具接起来，n8n 很适合做中枢。",
+      "score": 10
+    },
     {
       "id": "github:obra/superpowers",
       "source": "GitHub",
       "title": "obra/superpowers",
       "url": "https://github.com/obra/superpowers",
       "detail": "An agentic skills framework & software development methodology that works.",
-      "metrics": "263404⭐, Shell",
+      "metrics": "263865⭐, Shell",
       "domain": "agent skill",
-      "verdict": "把可复用的 agent skill 和开发方法论组织成一套工作流，方便直接套进 Claude Code / 编程助手的日常任务里。",
-      "why": "他在自建数字员工平台，最需要能复用的技能框架而不是零散提示词。",
+      "verdict": "把 Agent 拆成可复用的技能模块和工作方法，适合拿来搭建你自己的创作与自动化流程。",
+      "why": "他在自建数字员工/Agent 平台，这类技能框架能直接借鉴到工作流设计与复用。",
       "score": 9
     },
     {
@@ -20,10 +32,10 @@
       "title": "affaan-m/ECC",
       "url": "https://github.com/affaan-m/ECC",
       "detail": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-      "metrics": "235695⭐, JavaScript",
+      "metrics": "236110⭐, JavaScript",
       "domain": "agent skill",
-      "verdict": "把技能、记忆、安全与研究流程打包成一套代码层面的助手优化系统，适合拿来改造自己的 agent 工作台。",
-      "why": "它正好覆盖他关心的 Agent 框架、长程执行和记忆管理。",
+      "verdict": "提供一套面向 Claude Code 等工具的技能、记忆和安全优化壳子，适合提升 Agent 的执行稳定性。",
+      "why": "他关注长程任务执行、记忆与可复用方法论，这正对上平台工程需求。",
       "score": 9
     },
     {
@@ -32,10 +44,22 @@
       "title": "anthropics/skills",
       "url": "https://github.com/anthropics/skills",
       "detail": "Public repository for Agent Skills",
-      "metrics": "165086⭐, Python",
+      "metrics": "165242⭐, Python",
       "domain": "agent skill",
-      "verdict": "直接提供 Agent Skills 的官方实现思路，能拿来参考技能组织方式和任务拆分范式。",
-      "why": "他明确关注可复用的 Skill / 方法论，这类官方技能库最贴近需求。",
+      "verdict": "直接提供 Agent Skills 的官方实现思路，可用来设计可插拔的任务能力层。",
+      "why": "他在做数字员工平台，Skills 机制能帮助把提示词能力产品化和模块化。",
+      "score": 8
+    },
+    {
+      "id": "github:firecrawl/firecrawl",
+      "source": "GitHub",
+      "title": "firecrawl/firecrawl",
+      "url": "https://github.com/firecrawl/firecrawl",
+      "detail": "The API to search, scrape, and interact with the web at scale. 🔥",
+      "metrics": "158262⭐, TypeScript",
+      "domain": "LLM",
+      "verdict": "把网页抓取、结构化提取和批量采集做成 API，适合喂给 RAG 和情报筛选流程。",
+      "why": "他会用知识库和长期记忆来支撑创作与 Agent，稳定抓取网页是基础能力。",
       "score": 8
     },
     {
@@ -44,36 +68,12 @@
       "title": "browser-use/browser-use",
       "url": "https://github.com/browser-use/browser-use",
       "detail": "🌐 Make websites accessible for AI agents. Automate tasks online with ease.",
-      "metrics": "107249⭐, Python",
+      "metrics": "107317⭐, Python",
       "domain": "AI agent",
-      "verdict": "让 AI 直接操控网页完成检索、填表和操作，适合做自动化采集、发布和素材搬运。",
-      "why": "他要做数字员工与内容生产流水线，网页自动化是高频刚需。",
-      "score": 8
-    },
-    {
-      "id": "github:harry0703/MoneyPrinterTurbo",
-      "source": "GitHub",
-      "title": "harry0703/MoneyPrinterTurbo",
-      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
-      "detail": "利用 AI 大模型和自动化工作流，根据主题或关键词一键生成高清短视频。Generate HD short videos from a topic or keyword with an automated AI workflow.",
-      "metrics": "100414⭐, Python",
-      "domain": "LLM",
-      "verdict": "把选题到脚本、分镜、配音和成片串成自动化短视频工厂，可直接参考其竖屏短内容生产链路。",
-      "why": "它和他的一人制作竖屏漫剧的目标高度一致，能借鉴视频生成工作流。",
-      "score": 8
-    },
-    {
-      "id": "github:Graphify-Labs/graphify",
-      "source": "GitHub",
-      "title": "Graphify-Labs/graphify",
-      "url": "https://github.com/Graphify-Labs/graphify",
-      "detail": "Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained,",
-      "metrics": "98567⭐, Python",
-      "domain": "claude skill",
-      "verdict": "把代码库、文档和配置转成可查询知识图谱，方便给 agent 做长期记忆和项目知识检索。",
-      "why": "他在做 Agent 平台和知识库，这种可解释的结构化检索很适合长期记忆层。",
+      "verdict": "让 Agent 直接操控浏览器完成网页操作，适合自动化登录、采集和站点内任务。",
+      "why": "他的平台需要真实网页环境下的长程执行能力，这类浏览器代理很实用。",
       "score": 8
     }
   ],
-  "candidateCount": 286
+  "candidateCount": 287
 }

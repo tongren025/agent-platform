@@ -1955,3 +1955,61 @@ Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直�
 任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
 2026-07-30T18:01:16.474198Z [info     ] request                        client=127.0.0.1 elapsed_ms=2028.5 method=GET path=/api/v1/agentapp/tasks request_id=eddfcd3a665d4dd2a37210e50b0f8000 status=200
 HTTP Request: POST https://openrouter.ai/api/v1/responses "HTTP/1.1 200 OK"
+趋势 AI 报告生成失败
+Traceback (most recent call last):
+  File "D:\P\agent\app\services\scheduler.py", line 223, in _run
+    report = await generate_analysis(force=pulled > 0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\P\agent\app\api\skills.py", line 343, in generate_analysis
+    report = json.loads(raw[start:end])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yuanju\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 354, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Expecting ',' delimiter: line 13 column 6 (char 528)
+HTTP Request: POST https://openrouter.ai/api/v1/responses "HTTP/1.1 200 OK"
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:01:21.501886Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.2 method=GET path=/api/v1/agentapp/tasks request_id=5d4b9041aaf84544ad31b1c1b77abdc1 status=200
+趋势简报就绪：6 条(候选 287)
+清理旧趋势产出：删除 8 份，释放 301.6 KB
+趋势同步完成：新拉 8 个，跳过 0 个（当天已有），共 8 个 query
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:01:26.555296Z [info     ] request                        client=127.0.0.1 elapsed_ms=8.7 method=GET path=/api/v1/agentapp/tasks request_id=43e6ea6aade34489ac2f3cffed58f337 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:01:31.741970Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.7 method=GET path=/api/v1/agentapp/tasks request_id=737e8a39dd2946f5ada8884d73687136 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:01:37.091991Z [info     ] request                        client=127.0.0.1 elapsed_ms=177.9 method=GET path=/api/v1/agentapp/tasks request_id=3297d8129274415e8eaf060e51a54568 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:01:42.454978Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/api/v1/agentapp/tasks request_id=73c99735eb91472daa390cb827056e08 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:01:49.564977Z [info     ] request                        client=127.0.0.1 elapsed_ms=2020.2 method=GET path=/api/v1/agentapp/tasks request_id=2aaf1ac0d3824d4781bba241aa049ea1 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:01:54.581895Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/tasks request_id=be6ecdabcb1847a2b30e5717f7a47edd status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:01:59.604942Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=6a3d224ab3594b18a64216aade2bab80 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:02:04.621520Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=4c6696b66f774f278e82c69d4ef525f8 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:02:09.651417Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/api/v1/agentapp/tasks request_id=067afffe9e3f40c9a9bdcb46d2bcf861 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:02:14.675689Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.8 method=GET path=/api/v1/agentapp/tasks request_id=f4508fca5f1442afa22cb7fa9f681d5f status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:02:21.697768Z [info     ] request                        client=127.0.0.1 elapsed_ms=2009.3 method=GET path=/api/v1/agentapp/tasks request_id=2811829fda4342d9a6c06dc9a0bbdd82 status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:02:26.724011Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=1fbc0022c70e419785fbac6d44c7174e status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:02:31.744967Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/tasks request_id=4ed2792ff36a42f5a2c43553b736654b status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:02:36.762135Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/api/v1/agentapp/tasks request_id=4b2759c5759b4d6f8d31fdca77490d1a status=200
+任务列表降级为空：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T18:02:41.780154Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/tasks request_id=4320c5991ecc4c60a2732f77622543dc status=200
