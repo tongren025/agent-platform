@@ -5796,7 +5796,9 @@
     "shot_number": 1,
     "prompts": [],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/jiulu_s1_e08_u1_v1.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
@@ -5879,7 +5881,9 @@
     "shot_number": 2,
     "prompts": [],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/jiulu_s1_e08_u2_v1.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
@@ -5962,7 +5966,9 @@
     "shot_number": 3,
     "prompts": [],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/jiulu_s1_e08_u3_v1.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
@@ -6045,7 +6051,9 @@
     "shot_number": 4,
     "prompts": [],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/jiulu_s1_e08_u4_v1.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
@@ -6128,7 +6136,9 @@
     "shot_number": 5,
     "prompts": [],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/jiulu_s1_e08_u5_v1.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
@@ -6211,7 +6221,9 @@
     "shot_number": 6,
     "prompts": [],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/jiulu_s1_e08_u6_v1.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
@@ -6247,7 +6259,9 @@
     "shot_number": 3,
     "prompts": [],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/jiulu_s1_e08_u3_end_v1.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
@@ -6265,7 +6279,9 @@
     "shot_number": 6,
     "prompts": [],
     "negative_prompts": [],
-    "images": [],
+    "images": [
+      "/uploads/canvas/jiulu_s1_e08_u6_end_v1.png"
+    ],
     "videos": [],
     "metadata": {},
     "status": "done",
