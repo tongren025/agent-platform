@@ -21,6 +21,7 @@ import {
   type ProjectDiagnosticIssue,
   type ProjectDiagnostics,
   type ProjectFeedback,
+  type ProjectFeedbackIssue,
   type ProjectOptimizationRun,
 } from '../api';
 import { useResponsive } from '../hooks/useResponsive';
@@ -78,6 +79,7 @@ export default function ProductionMatrix() {
   const [diagnosticsError, setDiagnosticsError] = useState('');
   const [issuesOpen, setIssuesOpen] = useState(false);
   const [issueFilter, setIssueFilter] = useState<IssueFilter>('priority');
+  const [issueCodeFilter, setIssueCodeFilter] = useState('');
   const [optimizingIssueId, setOptimizingIssueId] = useState('');
 
   const reload = useCallback(async () => {
@@ -274,6 +276,22 @@ export default function ProductionMatrix() {
     });
   };
 
+  const openFeedbackIssue = (item: ProjectFeedbackIssue) => {
+    const currentProjectHasIssue = diagnostics?.projectId === pid && diagnostics.issues.some(
+      issue => issue.code === item.code,
+    );
+    const targetProjectId = currentProjectHasIssue
+      ? pid
+      : ((item.projectIds || [])[0] || pid);
+    setIssueCodeFilter(item.code);
+    setIssueFilter('priority');
+    setIssuesOpen(true);
+    if (targetProjectId && targetProjectId !== pid) {
+      setPid(targetProjectId);
+      navigate(`/production/${targetProjectId}/matrix`);
+    }
+  };
+
   const visible = useMemo(() => {
     let r = rows.filter(x => x.project_id === pid);
     if (filter === 'gap') r = r.filter(x => x.missing.length > 0);
@@ -297,18 +315,40 @@ export default function ProductionMatrix() {
 
   const issueView = useMemo(() => {
     const issues = diagnostics?.issues || [];
-    const automatic = issues.filter(issue => issue.autoFixable);
-    const manual = issues.filter(issue => !issue.autoFixable && issue.severity !== 'info');
+    const scoped = issueCodeFilter
+      ? issues.filter(issue => issue.code === issueCodeFilter)
+      : issues;
+    const automatic = scoped.filter(issue => issue.autoFixable);
+    const manual = scoped.filter(issue => !issue.autoFixable && issue.severity !== 'info');
     const selected = issueFilter === 'automatic'
       ? automatic
-      : issueFilter === 'manual' ? manual : issues;
+      : issueFilter === 'manual' ? manual : scoped;
     return {
       automaticCount: automatic.length,
       manualCount: manual.length,
       total: selected.length,
       visible: selected.slice(0, 50),
     };
-  }, [diagnostics, issueFilter]);
+  }, [diagnostics, issueCodeFilter, issueFilter]);
+
+  const visibleFeedbackIssues = useMemo(() => {
+    if (!feedback) return [];
+    const recommended = feedback.topIssues.find(
+      item => item.code === feedback.recommendedIssueCode,
+    );
+    return [
+      ...(recommended ? [recommended] : []),
+      ...feedback.topIssues,
+    ].filter(
+      (item, index, items) => items.findIndex(
+        candidate => candidate.code === item.code,
+      ) === index,
+    ).slice(0, 3);
+  }, [feedback]);
+
+  const issueCodeLabel = feedback?.topIssues.find(
+    item => item.code === issueCodeFilter,
+  )?.label || issueCodeFilter;
 
   const columns = [
     {
@@ -388,6 +428,7 @@ export default function ProductionMatrix() {
       <Space style={{ margin: isMobile ? '8px 0 6px' : '14px 0 10px', flexWrap: 'wrap' }} wrap>
         <Segmented value={pid} onChange={v => {
           const nextPid = v as string;
+          setIssueCodeFilter('');
           setPid(nextPid);
           navigate(`/production/${nextPid}/matrix`);
         }}
@@ -570,9 +611,21 @@ export default function ProductionMatrix() {
                   <div>
                     <Paragraph style={{ margin: '4px 0 8px' }}>{feedback.summary}</Paragraph>
                     <Space size={[4, 4]} wrap>
-                      {feedback.topIssues.slice(0, 3).map(item => (
+                      {visibleFeedbackIssues.map(item => (
                         <Tooltip key={item.code} title={item.recommendation}>
-                          <Tag color={item.code === feedback.recommendedIssueCode ? 'processing' : 'default'}>
+                          <Tag
+                            color={item.code === feedback.recommendedIssueCode ? 'processing' : 'default'}
+                            role="button"
+                            tabIndex={0}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => openFeedbackIssue(item)}
+                            onKeyDown={event => {
+                              if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                openFeedbackIssue(item);
+                              }
+                            }}
+                          >
                             {item.label} {item.count}
                           </Tag>
                         </Tooltip>
@@ -601,6 +654,18 @@ export default function ProductionMatrix() {
               style={{ marginBottom: 12 }}
             />
             <Divider orientation="left"><WarningOutlined /> 当前项目问题</Divider>
+            {issueCodeFilter && (
+              <Space size={6} style={{ marginBottom: 8 }} wrap>
+                <Text type="secondary" style={{ fontSize: 12 }}>当前只看</Text>
+                <Tag
+                  color="processing"
+                  closable
+                  onClose={() => setIssueCodeFilter('')}
+                >
+                  {issueCodeLabel}
+                </Tag>
+              </Space>
+            )}
             <Segmented
               block
               value={issueFilter}

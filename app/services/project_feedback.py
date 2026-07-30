@@ -92,6 +92,14 @@ def summarize_project_feedback(
                 issue_auto[code] += 1
 
     total_issues = sum(issue_count.values())
+    projects_by_priority = sorted(
+        project_summaries,
+        key=lambda item: (
+            int(item["score"]),
+            -int(item["blockerCount"]),
+            str(item["name"]),
+        ),
+    )
     top_issues = []
     for code, count in issue_count.most_common():
         dominant_stage = issue_stages[code].most_common(1)[0][0]
@@ -103,6 +111,11 @@ def summarize_project_feedback(
             "projectCount": len(issue_projects[code]),
             "stage": dominant_stage,
             "autoFixableCount": issue_auto[code],
+            "projectIds": [
+                item["projectId"]
+                for item in projects_by_priority
+                if item["projectId"] in issue_projects[code]
+            ],
             "recommendation": ISSUE_RECOMMENDATIONS.get(
                 code,
                 "打开具体问题后按当前诊断说明处理。",
@@ -138,14 +151,7 @@ def summarize_project_feedback(
         "successRate": round(resolved / len(runs) * 100) if runs else None,
         "averageScoreGain": round(sum(gains) / len(gains), 1) if gains else None,
     }
-    lowest_projects = sorted(
-        project_summaries,
-        key=lambda item: (
-            int(item["score"]),
-            -int(item["blockerCount"]),
-            str(item["name"]),
-        ),
-    )[:5]
+    lowest_projects = projects_by_priority[:5]
     average_score = (
         round(sum(item["score"] for item in project_summaries) / len(project_summaries))
         if project_summaries

@@ -321,6 +321,16 @@ def test_feedback_summary_prioritizes_high_frequency_automatic_problem():
     assert feedback["projectCount"] == 2
     assert feedback["issueCount"] == 4
     assert feedback["recommendedIssueCode"] == "stage_missing"
+    assert next(
+        item["projectIds"]
+        for item in feedback["topIssues"]
+        if item["code"] == "stage_missing"
+    ) == ["a"]
+    assert next(
+        item["projectIds"]
+        for item in feedback["topIssues"]
+        if item["code"] == "video_missing"
+    ) == ["a", "b"]
     assert feedback["optimization"]["successRate"] == 50
     assert feedback["optimization"]["averageScoreGain"] == 15.0
 

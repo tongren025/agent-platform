@@ -156,6 +156,7 @@ export interface ProjectFeedbackIssue {
   projectCount: number;
   stage: string;
   autoFixableCount: number;
+  projectIds: string[];
   recommendation: string;
 }
 
