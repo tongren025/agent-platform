@@ -5,6 +5,32 @@
 
 ---
 
+## [2026-07-30] feat: 真实项目诊断与问题驱动优化闭环
+
+- 新增项目诊断服务，按项目交付目标检查创意素材、逐镜规格、图片、视频和成片，
+  返回健康分、阻塞问题、稳定问题 ID 与唯一下一动作；旧聚合式 GC 会读取
+  `prompt_order/shot_count` 等元数据，不误报“没有生产单元”。
+- 导演主线接入质量阻塞：静态质量门禁失败或待审核的剧本/分镜/提示词必须先定向
+  返工，不再仅凭卡片存在继续进入昂贵的图片/视频生成。
+- 新增 `GET /director/projects/{id}/diagnostics`、
+  `POST /director/projects/{id}/optimize` 和
+  `GET /director/projects/{id}/optimization-runs`；自动修复一次只替换一个问题槽位，
+  同项目并发运行返回可重试提示。
+- 完整性检查页升级为问题驱动优化中心，展示健康分、首要问题、逐项修复入口和
+  修复前后记录；图片/视频仍回到导演页选择模型，不会后台静默消费额度。
+- 默认把最近 100 次修复写入项目目录 `optimization-runs.json`，使用原子 JSON 写入，
+  不依赖 PostgreSQL 或 Redis。
+- 新增真实项目端到端 dry-run：从创意连续补齐结构化剧本、分镜和画面提示，最终
+  停在需要用户选择图片模型的费用边界；同时覆盖聚合 GC、旧/新卡版本选择、质量
+  返工和非自动媒体问题。
+
+**影响面**：新增生产诊断/优化服务、3 个导演 API、导演页和完整性检查页交互；
+新增可选项目级 JSON 运行记录，无数据库表、环境变量或部署配置迁移，不删除或改写
+现有项目数据。详细口径见
+[docs/REAL_PROJECT_OPTIMIZATION.md](REAL_PROJECT_OPTIMIZATION.md)。
+
+---
+
 ## [2026-07-30] feat: AgentRun 进程内安全停止
 
 - 迁入 Yuxi AgentRun cancel signal 与安全生命周期边界：客户端发送前生成稳定

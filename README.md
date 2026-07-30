@@ -95,6 +95,7 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 ### 快速制作（`/studio`）
 - **先选交付目标** — 建项时可选择“完成文字分镜 / 生成镜头图片 / 制作完整成片”；页面只推动当前目标所需步骤，达到目标后明确停止，并可随时继续制作成片
 - **一条生产主线** — 新建创意后只显示剧本、分镜、画面提示、图片、视频提示、视频、成片七步进度，并根据真实素材缺口给出唯一下一步；原制作看板保留为高级下钻
+- **质量问题先于昂贵生成** — 剧本、分镜或提示词未通过静态门禁/人工审核时，导演页会先给出定向返工动作，不会仅因“卡片存在”继续生图或生视频；返工只替换对应镜头和阶段
 - **OpenRouter 原生媒体生成** — 实时读取 OpenRouter 专用图片/视频模型目录；图片直接落地项目素材目录，视频按异步任务提交、轮询并自动回填到对应 G 镜头
 - **明确费用确认** — 批量生图/生视频前展示模型、镜头数量与 OpenRouter 价格信息，必须再次确认才会提交，不会因打开页面或刷新而消耗额度
 - **镜头审片与成片** — 同页预览每个 G 的剧本、首帧、视频与审核状态；全部镜头就绪后调用本机 FFmpeg 统一画幅并按顺序合成 MP4 预览
@@ -112,7 +113,7 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 - **文字设定与视觉设计分离** — 先定义角色场景的文字设定（身份层/装备层/可变层），再做视觉三视图和概念图
 - **AI 逐阶段生成** — 每个阶段可一键 AI 生成；按集生成（上下文=本集卡片+全局资产），默认追加落卡，替换模式只清同阶段**同集**旧卡片；G1/G2 标题会自动归入对应生成单元
 - **素材图片服务** — 内置资源文件 API，直接在卡片中预览已有的角色三视图、场景图、道具图；支持 `?w=64|128|256|512` 服务端 WebP 缩略图（磁盘缓存、按源文件 mtime 失效、fail-open 回退原图）
-- **完整性检查**（`/production/:pid/matrix`，兼容旧 `/production/matrix`）— 行=G 生成单元，列=剧本/分镜/首帧/末帧锁/视频提示词/图/视频；断链红叉、只看断链/没图筛选、出图进度、点行下钻单集；孤儿卡（挂在不存在单元上的卡）告警 + 归档区（`data/production/<pid>/archive/` 一卡一文件，不删除、可恢复）
+- **完整性检查与问题驱动优化**（`/production/:pid/matrix`，兼容旧 `/production/matrix`）— 行=G 生成单元，列=剧本/分镜/首帧/末帧锁/视频提示词/图/视频；顶部按当前交付目标显示项目健康分、首要阻塞和可执行动作。文本规格问题可定向返工，图片/视频仍要求用户选择模型；修复前后健康分与失败原因写入项目 JSON 历史
 - **提示词批量导出** — 单集详情页「导出提示词」把整集头部 + 各 G 单元首帧/末帧/视频提示词按生成顺序拼成 markdown，一键下载并复制，对接小云雀/即梦等外部生成端
 - **镜头级返工台** — 单集详情页可直接编辑某个 G 的剧本、分镜、正向/负向提示词，并只重新生成该 G 的指定阶段；图片提示词卡可立即调用已启用的 images 模型生图，新图作为版本追加且可切换当前版本，不覆盖旧图
 - **两键评审** — 每张图一键「通过/废弃」，废弃必选原因（基调偏差/角色走形/构图不符分镜/光影错误/结构崩坏）；单集页顶部实时聚合废弃原因分布，直接提示「废弃主因 X，优先修它」——靶向修复替代整批重做（视觉资产验收规矩见 [docs/VISUAL_ASSET_ROLES.md](docs/VISUAL_ASSET_ROLES.md)）
@@ -161,6 +162,7 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 | [scripts/README.md](scripts/README.md) | 全部 31 个脚本的清单:用途/跑法/一次性还是可复用/是否破坏性 |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | **未来一年目标与方向**:KPI、季度计划、优化项、欠账、机会与不做清单 |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统怎么运转的（分层 + 6 条核心数据流）、**想改 X 去哪个文件**速查表 |
+| [docs/REAL_PROJECT_OPTIMIZATION.md](docs/REAL_PROJECT_OPTIMIZATION.md) | **怎么用真实项目持续优化**：健康分、问题优先级、定向返工、安全边界和当前项目基线 |
 | [docs/MULTIMODAL_EMPLOYEES.md](docs/MULTIMODAL_EMPLOYEES.md) | 数字员工该选哪个思考/图片/视频模型，三类模型如何路由，以及当前能力边界 |
 | [docs/MODULE_INDEX.md](docs/MODULE_INDEX.md) | 全部 160+ 模块的一句话职责索引（自动生成：`python -m scripts.gen_module_index`） |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | 每次改动的动机 / 变更点 / 影响面 |

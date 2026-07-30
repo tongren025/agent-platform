@@ -1,24 +1,34 @@
 """导演 Agent API：把剧本、图片、视频与成片收束为一条可执行主线。"""
 from __future__ import annotations
 
+import json
 import uuid
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.api.common import ok, validate_key
 from app.api.production import (
+    GenerateReq,
     _create_project_snapshot,
     _load_cards,
     _load_project,
     _now,
+    _proj_dir,
     _project_lock,
     _save_cards,
     _save_project,
+    generate_stage,
 )
 from app.models.production import ProductionCard, ProductionProject
 from app.services import openrouter_media
+from app.services.project_diagnostics import diagnose_project
+from app.services.project_optimization import (
+    append_optimization_run,
+    list_optimization_runs,
+    optimization_control,
+)
 
 
 router = APIRouter(prefix="/api/v1/agentapp/director", tags=["director"])
@@ -53,6 +63,7 @@ def _active_image_url(card: ProductionCard | None) -> str:
 def _director_state(project_id: str) -> dict:
     project = _load_project(project_id)
     cards = _load_cards(project_id)
+    diagnostics = diagnose_project(project, cards)
     unit_keys = _unit_keys(cards)
     total = len(unit_keys)
 
@@ -198,6 +209,20 @@ def _director_state(project_id: str) -> dict:
         elif final_card is None:
             next_action = {"kind": "compose", "stage": "final", "label": "合成成片预览", "count": video_done}
 
+    # 质量门禁失败必须先返工，不能仅凭“卡片存在”继续推进到昂贵的图片/视频生成。
+    first_issue = diagnostics["issues"][0] if diagnostics["issues"] else None
+    if first_issue and first_issue["code"] in {
+        "quality_gate_failed",
+        "manual_review_required",
+    }:
+        next_action = {
+            "kind": "optimize",
+            "stage": first_issue["stage"],
+            "label": first_issue["action"]["label"],
+            "count": 1,
+            "issueId": first_issue["id"],
+        }
+
     progress_parts = [
         counts["script"] / total if total else 0,
         counts["storyboard"] / total if total else 0,
@@ -224,6 +249,13 @@ def _director_state(project_id: str) -> dict:
             str(final_card.metadata.get("active_video") or final_card.videos[-1])
             if final_card else ""
         ),
+        "diagnostics": {
+            "state": diagnostics["state"],
+            "score": diagnostics["score"],
+            "summary": diagnostics["summary"],
+            "blockerCount": diagnostics["blockerCount"],
+            "warningCount": diagnostics["warningCount"],
+        },
     }
 
 
@@ -232,6 +264,167 @@ def get_director_state(project_id: str):
     """返回总制片视角的项目进度、镜头与下一步动作。"""
     validate_key(project_id, label="project_id")
     return ok(_director_state(project_id))
+
+
+class OptimizeProjectReq(BaseModel):
+    """按当前诊断问题定向返工；一次只处理一个问题，避免大范围覆盖。"""
+
+    issue_id: str = Field(min_length=1, max_length=64)
+    extra_instruction: str = Field(default="", max_length=4000)
+
+
+@router.get("/projects/{project_id}/diagnostics")
+def get_project_diagnostics(project_id: str):
+    """只读扫描项目，返回健康分、阻塞问题和下一条可执行动作。"""
+    validate_key(project_id, label="project_id")
+    project = _load_project(project_id)
+    cards = _load_cards(project_id)
+    return ok(diagnose_project(project, cards))
+
+
+@router.get("/projects/{project_id}/optimization-runs")
+def get_project_optimization_runs(
+    project_id: str,
+    limit: int = Query(30, ge=1, le=100),
+):
+    """返回最近的问题修复记录，展示修复前后健康分和失败原因。"""
+    validate_key(project_id, label="project_id")
+    _load_project(project_id)
+    try:
+        runs = list_optimization_runs(_proj_dir(project_id), limit)
+    except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        raise HTTPException(500, f"优化记录读取失败: {exc}") from exc
+    return ok(runs)
+
+
+@router.post("/projects/{project_id}/optimize")
+async def optimize_project(project_id: str, req: OptimizeProjectReq):
+    """按诊断问题调用现有阶段生成器定向返工，并记录优化前后结果。
+
+    只允许处理诊断明确标记为 autoFixable 的规格问题；生图、生视频仍要求用户在
+    导演页选择模型，避免后台静默产生费用。
+    """
+    validate_key(project_id, label="project_id")
+    if not req.issue_id.strip():
+        raise HTTPException(400, "issue_id 不能为空")
+    if not optimization_control.begin(project_id):
+        raise HTTPException(409, "该项目已有修复任务在运行，请等待完成后刷新；如长时间无变化再重试。")
+
+    started_at = _now()
+    run_id = uuid.uuid4().hex[:12]
+    issue: dict | None = None
+    before: dict | None = None
+    try:
+        project = _load_project(project_id)
+        cards = _load_cards(project_id)
+        before = diagnose_project(project, cards)
+        issue = next(
+            (item for item in before["issues"] if item["id"] == req.issue_id),
+            None,
+        )
+        if issue is None:
+            raise HTTPException(409, "这个问题已经变化或解决，请刷新检查结果后再操作。")
+        action = issue["action"]
+        if not issue["autoFixable"] or action.get("kind") != "generate_stage":
+            raise HTTPException(
+                409,
+                f"“{issue['message']}”需要人工选择模型或补充素材，不能自动执行。"
+                f"下一步：{action.get('label', '返回导演页处理')}。",
+            )
+
+        problem_details = "；".join([issue["message"], *issue.get("details", [])])
+        extra_instruction = (
+            "这是一次问题驱动的定向返工。只修复下面列出的问题，"
+            "保留已经正确的剧情事实、角色设定、镜头编号和上下游引用：\n"
+            f"{problem_details}"
+        )
+        if req.extra_instruction.strip():
+            extra_instruction += f"\n用户补充要求：{req.extra_instruction.strip()}"
+
+        generation = await generate_stage(
+            project_id,
+            GenerateReq(
+                target_stage=action["targetStage"],
+                episode=action.get("episode"),
+                shot_number=action.get("shotNumber"),
+                mode=action.get("mode", "replace"),
+                extra_instruction=extra_instruction,
+            ),
+        )
+        generated = generation["data"]
+        after_project = _load_project(project_id)
+        after = diagnose_project(after_project, _load_cards(project_id))
+        unresolved = any(item["id"] == issue["id"] for item in after["issues"])
+        status = "needs_review" if unresolved else "resolved"
+        summary = (
+            "返工结果仍未通过检查，请查看新的问题说明。"
+            if unresolved
+            else f"已修复：{issue['message']}"
+        )
+        record = {
+            "runId": run_id,
+            "projectId": project_id,
+            "issueId": issue["id"],
+            "issueCode": issue["code"],
+            "stage": issue["stage"],
+            "episode": issue["episode"],
+            "unit": issue["unit"],
+            "status": status,
+            "summary": summary,
+            "beforeScore": before["score"],
+            "afterScore": after["score"],
+            "generated": generated.get("generated", 0),
+            "replaced": generated.get("replaced", 0),
+            "qualityIssueCount": generated.get("quality_issue_count", 0),
+            "startedAt": started_at,
+            "finishedAt": _now(),
+            "error": "",
+        }
+        append_optimization_run(_proj_dir(project_id), record)
+        return ok({
+            "status": "warning" if unresolved else "success",
+            "summary": summary,
+            "nextActions": after["nextActions"],
+            "artifacts": [
+                *after["artifacts"],
+                f"data/production/{project_id}/optimization-runs.json",
+            ],
+            "runId": run_id,
+            "state": status,
+            "resolved": not unresolved,
+            "beforeScore": before["score"],
+            "afterScore": after["score"],
+            "generation": generated,
+            "diagnostics": after,
+        })
+    except Exception as exc:
+        error = str(exc.detail) if isinstance(exc, HTTPException) else str(exc)
+        record = {
+            "runId": run_id,
+            "projectId": project_id,
+            "issueId": issue["id"] if issue else req.issue_id,
+            "issueCode": issue["code"] if issue else "",
+            "stage": issue["stage"] if issue else "",
+            "episode": issue["episode"] if issue else None,
+            "unit": issue["unit"] if issue else None,
+            "status": "failed",
+            "summary": "自动修复失败，项目内容保持在可恢复状态。",
+            "beforeScore": before["score"] if before else 0,
+            "afterScore": before["score"] if before else 0,
+            "generated": 0,
+            "replaced": 0,
+            "qualityIssueCount": 0,
+            "startedAt": started_at,
+            "finishedAt": _now(),
+            "error": error,
+        }
+        try:
+            append_optimization_run(_proj_dir(project_id), record)
+        except Exception:
+            pass
+        raise
+    finally:
+        optimization_control.finish(project_id)
 
 
 @router.get("/media-models")

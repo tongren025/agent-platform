@@ -74,11 +74,18 @@ interface DirectorState {
   shots: ShotState[];
   totalUnits: number;
   overallProgress: number;
-  nextAction: { kind: string; stage: string; label: string; count: number };
+  nextAction: { kind: string; stage: string; label: string; count: number; issueId?: string };
   reviewCount: number;
   activeJobs: number;
   finalUrl: string;
   finalStale?: boolean;
+  diagnostics?: {
+    state: string;
+    score: number;
+    summary: string;
+    blockerCount: number;
+    warningCount: number;
+  };
 }
 
 interface ProjectVersion {
@@ -909,6 +916,23 @@ export default function DirectorStudio() {
   const runNext = async () => {
     if (!state || !projectId || goalReached) return;
     const next = state.nextAction;
+    if (next.kind === 'optimize' && next.issueId) {
+      setBusy(`optimize-${next.stage}`);
+      try {
+        const result = await api.optimizeProjectIssue(projectId, next.issueId);
+        if (result.resolved) {
+          message.success(`${next.label}完成，健康分 ${result.beforeScore} → ${result.afterScore}`);
+        } else {
+          message.warning(result.summary);
+        }
+        await loadState(projectId, true);
+      } catch (error: any) {
+        message.error(error.message || '定向返工失败，请刷新后重试');
+      } finally {
+        setBusy('');
+      }
+      return;
+    }
     if (next.kind === 'image' || next.kind === 'video') {
       await openMedia(next.kind);
       return;
