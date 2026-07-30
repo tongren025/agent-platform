@@ -58,3 +58,18 @@ def test_tasks_api_route_registered(app_client):
         json={"employee_key": "test", "user_input": "hi"},
     )
     assert resp.status_code in (200, 409, 500, 503)
+
+
+def test_tasks_list_degrades_to_empty_without_redis(app_client, monkeypatch):
+    """Redis 是可选能力：后台任务摘要轮询不能干扰单机 JSON/MD 主流程。"""
+    queue = importlib.import_module("app.core.queue")
+
+    async def unavailable_pool():
+        raise queue.QueueUnavailable("测试环境未配置 Redis")
+
+    monkeypatch.setattr(queue, "get_pool", unavailable_pool)
+
+    resp = app_client.get("/api/v1/agentapp/tasks?limit=50")
+
+    assert resp.status_code == 200
+    assert resp.json()["data"] == []

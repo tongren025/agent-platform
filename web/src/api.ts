@@ -67,7 +67,7 @@ export interface ArchivedCard {
 
 /** 项目诊断给出的下一步动作；只有 generate_stage 可由“自动修复”直接执行。 */
 export interface ProjectDiagnosticAction {
-  kind: 'generate_stage' | 'edit_project' | 'open_media' | 'sync_media' | 'compose' | 'done';
+  kind: 'generate_stage' | 'edit_project' | 'review_card' | 'open_media' | 'sync_media' | 'compose' | 'done';
   label: string;
   targetStage?: string;
   episode?: number | null;
@@ -88,6 +88,8 @@ export interface ProjectDiagnosticIssue {
   cardId: string;
   message: string;
   details: string[];
+  detailCodes: string[];
+  acceptanceCriteria: string[];
   autoFixable: boolean;
   action: ProjectDiagnosticAction;
 }
@@ -105,6 +107,12 @@ export interface ProjectDiagnostics {
   blockerCount: number;
   warningCount: number;
   inProgressCount: number;
+  scoreBreakdown: {
+    key: 'content' | 'prompt' | 'media' | 'delivery';
+    label: string;
+    score: number;
+    weight: number;
+  }[];
   checks: {
     key: string;
     label: string;
@@ -112,6 +120,9 @@ export interface ProjectDiagnostics {
     total: number;
     passedCount: number;
     processingCount?: number;
+    weight: number;
+    completion: number;
+    weightedScore: number;
   }[];
   issues: ProjectDiagnosticIssue[];
   nextAction: ProjectDiagnosticAction;
@@ -135,6 +146,50 @@ export interface ProjectOptimizationRun {
   startedAt: string;
   finishedAt: string;
   error: string;
+}
+
+export interface ProjectFeedbackIssue {
+  code: string;
+  label: string;
+  count: number;
+  share: number;
+  projectCount: number;
+  stage: string;
+  autoFixableCount: number;
+  projectIds: string[];
+  recommendation: string;
+}
+
+export interface ProjectFeedback {
+  status: 'success' | 'warning' | 'error';
+  summary: string;
+  nextActions: string[];
+  artifacts: string[];
+  projectCount: number;
+  averageScore: number;
+  issueCount: number;
+  autoFixableCount: number;
+  manualActionCount: number;
+  topIssues: ProjectFeedbackIssue[];
+  topStages: { stage: string; count: number }[];
+  lowestProjects: {
+    projectId: string;
+    name: string;
+    score: number;
+    blockerCount: number;
+    issueCount: number;
+    topIssueCode: string;
+  }[];
+  optimization: {
+    total: number;
+    resolved: number;
+    needsReview: number;
+    failed: number;
+    successRate: number | null;
+    averageScoreGain: number | null;
+  };
+  recommendedIssueCode: string;
+  skippedProjectCount: number;
 }
 
 export interface TaskInfo {
@@ -804,6 +859,8 @@ export const api = {
   getDirectorState: (pid: string) => request<any>(`/director/projects/${pid}`),
   getProjectDiagnostics: (pid: string) =>
     request<ProjectDiagnostics>(`/director/projects/${pid}/diagnostics`),
+  getProjectFeedback: () =>
+    request<ProjectFeedback>('/director/feedback'),
   listProjectOptimizationRuns: (pid: string, limit = 30) =>
     request<ProjectOptimizationRun[]>(
       `/director/projects/${pid}/optimization-runs?limit=${limit}`,

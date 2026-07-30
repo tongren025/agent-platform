@@ -12,6 +12,66 @@ from pathlib import Path
 from typing import Any
 
 
+QUALITY_REPAIR_GUIDANCE = {
+    "storyboard_fields_missing": "逐项补齐门禁指出的生产字段，不得用同义的抽象概括代替字段值。",
+    "abstract_visual": "把抽象情绪或氛围改写为可见的身体动作、物体变化和空间关系。",
+    "negative_language": "删除正向提示词里的“不要、避免、禁止、无”等负向表达，只保留希望出现的内容。",
+    "visual_noise_risk": "减少裂纹、颗粒、碎石、尘埃等高频细节，确保主体和动作是第一视觉层级。",
+    "unstable_motion": "把快速、剧烈或多重运动改为单一、缓慢、可稳定生成的连续动作。",
+    "segment_too_long": "把连续生成段拆成多个不超过 6 秒的子段，每张卡只保留一个连续动作。",
+}
+
+
+def build_repair_instruction(
+    issue: dict[str, Any],
+    user_instruction: str = "",
+) -> str:
+    """把诊断问题转成范围明确、可按静态门禁验收的返工提示。"""
+    stage = str(issue.get("stage") or "")
+    episode = issue.get("episode")
+    unit = issue.get("unit")
+    scope = "当前聚合内容"
+    if episode is not None:
+        scope = f"EP{int(episode):02d}"
+    if unit is not None:
+        scope += f" / G{int(unit)}"
+
+    problem_lines = [
+        str(issue.get("message") or "").strip(),
+        *[
+            str(detail).strip()
+            for detail in (issue.get("details") or [])
+            if str(detail).strip()
+        ],
+    ]
+    guidance = [
+        QUALITY_REPAIR_GUIDANCE[code]
+        for code in (issue.get("detailCodes") or [])
+        if code in QUALITY_REPAIR_GUIDANCE
+    ]
+    acceptance = [
+        str(item).strip()
+        for item in (issue.get("acceptanceCriteria") or [])
+        if str(item).strip()
+    ]
+
+    sections = [
+        "这是一次问题驱动的定向返工。",
+        f"返工范围：{scope} 的 {stage} 阶段。",
+        "唯一目标：修复下面列出的诊断问题；不要扩写无关镜头，不要改动已经正确的剧情事实、"
+        "角色设定、镜头编号、时间顺序和上下游引用。",
+        "诊断问题：\n" + "\n".join(f"- {line}" for line in problem_lines if line),
+    ]
+    if guidance:
+        sections.append("针对性修改要求：\n" + "\n".join(f"- {line}" for line in guidance))
+    if acceptance:
+        sections.append("输出前逐项自检：\n" + "\n".join(f"- {line}" for line in acceptance))
+    sections.append("只输出当前阶段要求的最终结构化结果，不解释修改过程。")
+    if user_instruction.strip():
+        sections.append(f"用户补充要求：{user_instruction.strip()}")
+    return "\n\n".join(sections)
+
+
 class ProjectOptimizationControl:
     """同一项目一次只允许一个自动修复，避免重复覆盖同一生产槽位。"""
 

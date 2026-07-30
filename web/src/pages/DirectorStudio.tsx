@@ -283,6 +283,7 @@ export default function DirectorStudio() {
   const [mediaModels, setMediaModels] = useState<MediaModel[]>([]);
   const [mediaModel, setMediaModel] = useState('');
   const [modelLoading, setModelLoading] = useState(false);
+  const [mediaBatchSize, setMediaBatchSize] = useState(3);
   const [batchProgress, setBatchProgress] = useState({ done: 0, total: 0 });
   const [mediaTargetCardId, setMediaTargetCardId] = useState('');
   const [editingPromptCardId, setEditingPromptCardId] = useState('');
@@ -795,6 +796,7 @@ export default function DirectorStudio() {
     }
     setMediaKind(kind);
     setMediaTargetCardId(shot ? (kind === 'image' ? shot.imageCardId : shot.videoCardId) : '');
+    setMediaBatchSize(3);
     setModelLoading(true);
     setMediaModels([]);
     const rememberedModel = readInputHabit(`director.media-model.${kind}`, '');
@@ -916,6 +918,10 @@ export default function DirectorStudio() {
   const runNext = async () => {
     if (!state || !projectId || goalReached) return;
     const next = state.nextAction;
+    if (next.kind === 'review') {
+      navigate(`/production/${projectId}/matrix`);
+      return;
+    }
     if (next.kind === 'optimize' && next.issueId) {
       setBusy(`optimize-${next.stage}`);
       try {
@@ -1023,12 +1029,30 @@ export default function DirectorStudio() {
         shot.videoCardId
         && shot.imageUrl
         && !shot.imageStale
+        && shot.reviewCount === 0
+        && shot.imageReviewVerdict !== 'reject'
         && (!shot.videoUrl || shot.videoStale)
         && !(shot.videoJob && ACTIVE_VIDEO_STATUSES.has(shot.videoJob.status)),
       ));
   }, [state, mediaKind, mediaTargetCardId]);
 
   const selectedModel = mediaModels.find(model => model.id === mediaModel);
+  const selectedPendingShots = useMemo(() => (
+    mediaTargetCardId
+      ? pendingShots
+      : pendingShots.slice(0, Math.min(mediaBatchSize, pendingShots.length))
+  ), [mediaBatchSize, mediaTargetCardId, pendingShots]);
+  const batchSizeOptions = useMemo(() => {
+    const total = pendingShots.length;
+    if (!total) return [];
+    return [...new Set([1, 3, 5, 10, total])]
+      .filter(size => size <= total)
+      .sort((left, right) => left - right)
+      .map(size => ({
+        value: size,
+        label: size === total ? `全部 ${total}` : `${size} 个`,
+      }));
+  }, [pendingShots.length]);
   const rejectTarget = state?.shots.find(shot => shot.imageCardId === rejectTargetCardId);
   const finalMediaUrl = safeMediaUrl(state?.finalUrl || '');
   const finalMediaIsCrossOrigin = useMemo(() => {
@@ -1041,10 +1065,10 @@ export default function DirectorStudio() {
   }, [finalMediaUrl]);
 
   const startMediaBatch = () => {
-    if (!state || !projectId || !mediaKind || !mediaModel || !pendingShots.length) return;
+    if (!state || !projectId || !mediaKind || !mediaModel || !selectedPendingShots.length) return;
     const requestedKind = mediaKind;
     const requestedModel = mediaModel;
-    const requestedShots = [...pendingShots];
+    const requestedShots = [...selectedPendingShots];
     const requestedTargetCardId = mediaTargetCardId;
     const singleShot = Boolean(requestedTargetCardId);
     Modal.confirm({
@@ -1373,6 +1397,7 @@ export default function DirectorStudio() {
                   const generatingImage = cardMediaBusy[shot.imageCardId] === 'image';
                   const generatingVideo = cardMediaBusy[shot.videoCardId] === 'video';
                   const reviewing = Boolean(reviewBusy[shot.imageCardId]);
+                  const imageNeedsRework = shot.reviewCount > 0 || shot.imageReviewVerdict === 'reject';
                   return (
                     <article key={`${shot.episode ?? 'global'}-${shot.unit}`} className="director-shot-card">
                       <div className="director-shot-media">
@@ -1478,13 +1503,19 @@ export default function DirectorStudio() {
                             </Tooltip>
                           )}
                           {shot.videoCardId && (
-                            <Tooltip title={!shot.imageUrl || shot.imageStale ? '先按最新提示词生成这张镜头图片' : ''}>
+                            <Tooltip title={
+                              !shot.imageUrl || shot.imageStale
+                                ? '先按最新提示词生成这张镜头图片'
+                                : imageNeedsRework
+                                  ? '当前图片待返工，修改并通过后再生成视频'
+                                  : ''
+                            }>
                               <span>
                                 <Button
                                   size="small"
                                   icon={<VideoCameraOutlined />}
                                   loading={generatingVideo || jobActive}
-                                  disabled={!shot.imageUrl || shot.imageStale || jobActive}
+                                  disabled={!shot.imageUrl || shot.imageStale || imageNeedsRework || jobActive}
                                   onClick={() => void openMedia('video', shot)}
                                 >
                                   {shot.videoStale
@@ -1837,9 +1868,11 @@ export default function DirectorStudio() {
           : mediaKind === 'image' ? '生成镜头图片' : '生成镜头视频'}
         okText={mediaTargetCardId
           ? mediaKind === 'image' ? '重新生成图片' : '提交这个视频'
-          : mediaKind === 'image' ? '生成图片' : '提交视频任务'}
+          : mediaKind === 'image'
+            ? `先生成 ${selectedPendingShots.length} 张`
+            : `先提交 ${selectedPendingShots.length} 个`}
         cancelText="取消"
-        okButtonProps={{ disabled: !mediaModel || pendingShots.length === 0 }}
+        okButtonProps={{ disabled: !mediaModel || selectedPendingShots.length === 0 }}
         confirmLoading={busy.startsWith('batch-') || Boolean(mediaTargetCardId && cardMediaBusy[mediaTargetCardId])}
         onOk={startMediaBatch}
         onCancel={() => {
@@ -1853,9 +1886,24 @@ export default function DirectorStudio() {
           <div className="director-media-summary">
             <strong>{mediaTargetCardId && pendingShots[0]
               ? `镜头 G${pendingShots[0].unit}`
-              : `${pendingShots.length} 个待生成镜头`}</strong>
+              : `${pendingShots.length} 个待生成 · 本次 ${selectedPendingShots.length} 个`}</strong>
             <span>{mediaKind === 'image' ? '1K · 项目画幅' : '720p · 首帧转视频 · 同步音频'}</span>
           </div>
+          {!mediaTargetCardId && pendingShots.length > 0 && (
+            <div className="director-media-batch">
+              <label>本次生成数量</label>
+              <Segmented
+                block
+                value={Math.min(mediaBatchSize, pendingShots.length)}
+                onChange={value => setMediaBatchSize(Number(value))}
+                options={batchSizeOptions}
+                aria-label="选择本次生成的镜头数量"
+              />
+              <Text type="secondary">
+                默认先做 3 个小样，审核角色、构图和风格后再扩大批量；选择“全部”会一次提交所有待办。
+              </Text>
+            </div>
+          )}
           <label>OpenRouter 模型</label>
           {mediaKind === 'image' && mediaModels.length > 0 && !mediaModels.some(model => model.isFree) && (
             <div className="director-media-warning">

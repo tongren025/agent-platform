@@ -8,6 +8,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from app.api import production as production_api
 from app.api.common import ok, validate_key
 from app.api.production import (
     GenerateReq,
@@ -23,9 +24,15 @@ from app.api.production import (
 )
 from app.models.production import ProductionCard, ProductionProject
 from app.services import openrouter_media
-from app.services.project_diagnostics import diagnose_project
+from app.services.project_diagnostics import (
+    active_card_for_unit,
+    diagnose_project,
+    production_unit_keys,
+)
+from app.services.project_feedback import summarize_project_feedback
 from app.services.project_optimization import (
     append_optimization_run,
+    build_repair_instruction,
     list_optimization_runs,
     optimization_control,
 )
@@ -38,17 +45,13 @@ READY_VIDEO_STATUSES = {"completed", "complete", "succeeded"}
 
 
 def _unit_keys(cards: list[ProductionCard]) -> list[tuple[Optional[int], int]]:
-    return sorted(
-        {(card.episode, card.shot_number) for card in cards if card.shot_number > 0},
-        key=lambda item: (-1 if item[0] is None else item[0], item[1]),
-    )
+    """导演主线与诊断共用同一生产单元口径。"""
+    return production_unit_keys(cards)
 
 
 def _card_for(cards: list[ProductionCard], episode: Optional[int], unit: int, stage: str) -> ProductionCard | None:
-    return next((
-        card for card in cards
-        if card.episode == episode and card.shot_number == unit and card.stage == stage
-    ), None)
+    """按逻辑 G 单元取卡，兼容集级剧本和子镜头分镜。"""
+    return active_card_for_unit(cards, episode, unit, stage)
 
 
 def _active_image_url(card: ProductionCard | None) -> str:
@@ -58,6 +61,21 @@ def _active_image_url(card: ProductionCard | None) -> str:
     if "active_image" in card.metadata:
         return str(card.metadata.get("active_image") or "")
     return str(card.images[-1]) if card.images else ""
+
+
+def _current_image_review(
+    card: ProductionCard | None,
+    image_url: str,
+) -> dict:
+    """取当前图片最后一次审核；历史图片的结论不能污染新版本。"""
+    if card is None or not image_url:
+        return {}
+    reviews = [
+        review
+        for review in (card.metadata.get("image_reviews") or [])
+        if str(review.get("image") or "") == image_url
+    ]
+    return reviews[-1] if reviews else {}
 
 
 def _director_state(project_id: str) -> dict:
@@ -97,11 +115,7 @@ def _director_state(project_id: str) -> dict:
                 or not current_image_prompt
                 or generated_image_prompt == current_image_prompt
             )
-        image_reviews = [
-            review for review in ((image_card.metadata.get("image_reviews") or []) if image_card else [])
-            if str(review.get("image") or "") == image_url
-        ]
-        latest_image_review = image_reviews[-1] if image_reviews else {}
+        latest_image_review = _current_image_review(image_card, image_url)
         image_review_count = 1 if image_card and image_card.status == "review" else 0
         image_ready = bool(image_url) and image_inputs_match and image_review_count == 0 and (
             latest_image_review.get("verdict") != "reject"
@@ -211,12 +225,17 @@ def _director_state(project_id: str) -> dict:
 
     # 质量门禁失败必须先返工，不能仅凭“卡片存在”继续推进到昂贵的图片/视频生成。
     first_issue = diagnostics["issues"][0] if diagnostics["issues"] else None
-    if first_issue and first_issue["code"] in {
-        "quality_gate_failed",
-        "manual_review_required",
-    }:
+    if first_issue and first_issue["code"] == "quality_gate_failed":
         next_action = {
             "kind": "optimize",
+            "stage": first_issue["stage"],
+            "label": first_issue["action"]["label"],
+            "count": 1,
+            "issueId": first_issue["id"],
+        }
+    elif first_issue and first_issue["action"]["kind"] == "review_card":
+        next_action = {
+            "kind": "review",
             "stage": first_issue["stage"],
             "label": first_issue["action"]["label"],
             "count": 1,
@@ -297,6 +316,35 @@ def get_project_optimization_runs(
     return ok(runs)
 
 
+@router.get("/feedback")
+def get_project_feedback():
+    """聚合全部 JSON 项目的高频问题、低分项目和真实修复成功率。"""
+    projects: list[dict] = []
+    runs: list[dict] = []
+    skipped = 0
+    if production_api.DATA_DIR.exists():
+        for directory in sorted(production_api.DATA_DIR.iterdir()):
+            if not (directory / "project.json").exists():
+                continue
+            try:
+                project = _load_project(directory.name)
+                diagnostics = diagnose_project(
+                    project,
+                    _load_cards(project.project_id),
+                )
+                projects.append({
+                    "projectId": project.project_id,
+                    "name": project.name,
+                    "diagnostics": diagnostics,
+                })
+                runs.extend(list_optimization_runs(directory, 100))
+            except (OSError, ValueError, TypeError, json.JSONDecodeError):
+                skipped += 1
+    feedback = summarize_project_feedback(projects, runs)
+    feedback["skippedProjectCount"] = skipped
+    return ok(feedback)
+
+
 @router.post("/projects/{project_id}/optimize")
 async def optimize_project(project_id: str, req: OptimizeProjectReq):
     """按诊断问题调用现有阶段生成器定向返工，并记录优化前后结果。
@@ -332,14 +380,10 @@ async def optimize_project(project_id: str, req: OptimizeProjectReq):
                 f"下一步：{action.get('label', '返回导演页处理')}。",
             )
 
-        problem_details = "；".join([issue["message"], *issue.get("details", [])])
-        extra_instruction = (
-            "这是一次问题驱动的定向返工。只修复下面列出的问题，"
-            "保留已经正确的剧情事实、角色设定、镜头编号和上下游引用：\n"
-            f"{problem_details}"
+        extra_instruction = build_repair_instruction(
+            issue,
+            req.extra_instruction,
         )
-        if req.extra_instruction.strip():
-            extra_instruction += f"\n用户补充要求：{req.extra_instruction.strip()}"
 
         generation = await generate_stage(
             project_id,
@@ -672,17 +716,25 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         if not prompt:
             raise HTTPException(400, "镜头没有视频提示词")
 
-        image_url = req.image_url
-        if not image_url:
-            image_card = next((
-                item for item in cards
-                if item.episode == card.episode
-                and item.shot_number == card.shot_number
-                and item.stage in ("img_prompt", "storyboard")
-                and item.images
-            ), None)
-            if image_card:
-                image_url = _active_image_url(image_card)
+        image_card = (
+            _card_for(cards, card.episode, card.shot_number, "img_prompt")
+            or _card_for(cards, card.episode, card.shot_number, "storyboard")
+        )
+        current_image_url = _active_image_url(image_card)
+        if not current_image_url:
+            raise HTTPException(400, "请先生成当前镜头图片，再提交视频")
+        if req.image_url and req.image_url != current_image_url:
+            raise HTTPException(409, "镜头图片已变化，请刷新后使用当前版本提交视频")
+        image_review = _current_image_review(image_card, current_image_url)
+        if (
+            image_card is not None
+            and (
+                image_card.status == "review"
+                or image_review.get("verdict") == "reject"
+            )
+        ):
+            raise HTTPException(409, "当前镜头图片待返工，请修改并通过后再提交视频")
+        image_url = current_image_url
         aspect_ratio = req.aspect_ratio or project.aspect_ratio
         submission_started_at = _now()
     try:
@@ -711,20 +763,25 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
             if card.prompts
             else card.content.strip()
         )
-        image_card = next((
-            item for item in cards
-            if item.episode == card.episode
-            and item.shot_number == card.shot_number
-            and item.stage in ("img_prompt", "storyboard")
-            and item.images
-        ), None)
+        image_card = (
+            _card_for(cards, card.episode, card.shot_number, "img_prompt")
+            or _card_for(cards, card.episode, card.shot_number, "storyboard")
+        )
         current_image_url = _active_image_url(image_card)
+        current_image_review = _current_image_review(image_card, current_image_url)
+        image_approved = (
+            bool(current_image_url)
+            and image_card is not None
+            and image_card.status != "review"
+            and current_image_review.get("verdict") != "reject"
+        )
         current_job = card.metadata.get("openrouter_video_job") or {}
         newer_job_exists = (
             str(current_job.get("submittedAt") or "") > submission_started_at
         )
         inputs_match = (
             current_prompt == prompt
+            and image_approved
             and (
                 not image_url
                 or not current_image_url

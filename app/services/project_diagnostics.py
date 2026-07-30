@@ -27,6 +27,56 @@ GOAL_REQUIREMENTS = {
     "images": ("script", "storyboard", "img_prompt", "image"),
     "final": (*SPEC_STAGES, "image", "video", "final"),
 }
+# 健康分按交付价值加权，而不是按卡片数量平均。否则大型项目少一条成片只扣
+# 0.1 分，四舍五入后甚至会显示 100 分。
+GOAL_SCORE_WEIGHTS = {
+    "storyboard": {
+        "source": 10,
+        "script": 35,
+        "storyboard": 55,
+    },
+    "images": {
+        "source": 5,
+        "script": 15,
+        "storyboard": 20,
+        "img_prompt": 20,
+        "image": 40,
+    },
+    "final": {
+        "source": 5,
+        "script": 10,
+        "storyboard": 15,
+        "img_prompt": 10,
+        "image": 20,
+        "vid_prompt": 10,
+        "video": 20,
+        "final": 10,
+    },
+}
+SCORE_GROUPS = (
+    ("content", "内容规格", ("source", "script", "storyboard", "production_units")),
+    ("prompt", "模型提示", ("img_prompt", "vid_prompt")),
+    ("media", "媒体资产", ("image", "video")),
+    ("delivery", "交付成片", ("final",)),
+)
+STAGE_ACCEPTANCE_CRITERIA = {
+    "script": [
+        "镜头或 G 单元编号、时间范围和可见动作明确",
+        "剧情事实、角色关系和上下游引用保持不变",
+    ],
+    "storyboard": [
+        "画面内容、角色动作、景别运镜、光影、时长和承接信息齐全",
+        "只使用可直接绘制的名词和动作，单个连续生成段不超过 6 秒",
+    ],
+    "img_prompt": [
+        "一条提示词只描述一个主体、一个明确动作和一套光影构图",
+        "只写希望出现的内容，不混入负向措辞或过量纹理粒子",
+    ],
+    "vid_prompt": [
+        "一张卡只描述一个不超过 6 秒的连续动作",
+        "角色动作与唯一运镜分开描述，不使用快速或剧烈运动词",
+    ],
+}
 STAGE_ORDER = {
     "source": 0,
     "script": 10,
@@ -62,6 +112,8 @@ def _issue(
     card: ProductionCard | None = None,
     severity: str = "blocker",
     details: list[str] | None = None,
+    detail_codes: list[str] | None = None,
+    acceptance_criteria: list[str] | None = None,
 ) -> dict[str, Any]:
     return {
         "id": _issue_id(code, stage, episode, unit),
@@ -74,9 +126,83 @@ def _issue(
         "cardId": card.card_id if card else "",
         "message": message,
         "details": details or [],
+        "detailCodes": detail_codes or [],
+        "acceptanceCriteria": (
+            acceptance_criteria
+            if acceptance_criteria is not None
+            else STAGE_ACCEPTANCE_CRITERIA.get(stage, [])
+        ),
         "autoFixable": action.get("kind") == "generate_stage",
         "action": action,
     }
+
+
+def _logical_unit(card: ProductionCard) -> int:
+    """把不同存储粒度的卡片归一到 G 单元。
+
+    历史项目会把逐镜分镜按 S1/S2/S3 分卡保存，但图片/视频提示按 G1/G2
+    保存。此时 `shot_number` 是子镜头序号，`unit_number/g_unit` 才是共同主键。
+    """
+    unit_number = _positive_int(card.metadata.get("unit_number"))
+    if unit_number:
+        return unit_number
+    g_unit = str(card.metadata.get("g_unit") or "").strip().upper()
+    if g_unit.startswith("G"):
+        parsed = _positive_int(g_unit[1:])
+        if parsed:
+            return parsed
+    return card.shot_number if card.shot_number > 0 else 0
+
+
+def _active_cards(
+    cards: list[ProductionCard],
+    episode: Optional[int],
+    unit: int,
+    stage: str,
+) -> list[ProductionCard]:
+    """取 G 单元内各物理子槽位的最新卡片，避免旧返工版本遮住新版本。"""
+    result: list[ProductionCard] = []
+    seen_slots: set[int] = set()
+    for card in reversed(cards):
+        if (
+            card.episode != episode
+            or card.stage != stage
+            or _logical_unit(card) != unit
+            or (stage == "img_prompt" and _is_end_frame_lock(card))
+            or card.shot_number in seen_slots
+        ):
+            continue
+        seen_slots.add(card.shot_number)
+        result.append(card)
+
+    # 连续剧常把整集剧本保存在 shot_number=0 的一张卡里；它覆盖该集所有 G，
+    # 不能强迫用户复制成几十张内容相同的剧本卡。
+    if not result and stage == "script":
+        episode_script = next(
+            (
+                card
+                for card in reversed(cards)
+                if card.episode == episode
+                and card.stage == "script"
+                and card.shot_number == 0
+                and (card.content.strip() or card.prompts)
+            ),
+            None,
+        )
+        if episode_script is not None:
+            result.append(episode_script)
+    return result
+
+
+def active_card_for_unit(
+    cards: list[ProductionCard],
+    episode: Optional[int],
+    unit: int,
+    stage: str,
+) -> ProductionCard | None:
+    """返回 G 单元内可供导演主线展示和执行的最新代表卡。"""
+    active_cards = _active_cards(cards, episode, unit, stage)
+    return active_cards[0] if active_cards else None
 
 
 def _active_card(
@@ -85,16 +211,38 @@ def _active_card(
     unit: int,
     stage: str,
 ) -> ProductionCard | None:
-    """取同一生产槽位最后写入的卡片，避免旧返工卡遮住新版本。"""
-    return next(
-        (
-            card
-            for card in reversed(cards)
-            if card.episode == episode
-            and card.shot_number == unit
-            and card.stage == stage
-        ),
-        None,
+    """内部兼容入口；逐单元媒体检查只需要一张代表卡。"""
+    return active_card_for_unit(cards, episode, unit, stage)
+
+
+def _is_end_frame_lock(card: ProductionCard) -> bool:
+    """识别 FLF 末帧锁；它是附属资产，不能单独建立一个 G 生产单元。"""
+    title = card.title.strip().lower()
+    return card.stage == "img_prompt" and (
+        "末帧" in title
+        or "flf" in title
+    )
+
+
+def production_unit_keys(
+    cards: list[ProductionCard],
+) -> list[tuple[Optional[int], int]]:
+    """从逐镜规格卡识别 G 单元，同时兼容集级剧本与子镜头分镜。"""
+    keys = {
+        (card.episode, _logical_unit(card))
+        for card in cards
+        if card.stage in SPEC_STAGES
+        and _logical_unit(card) > 0
+        and not _is_end_frame_lock(card)
+    }
+    for card in cards:
+        if card.stage != "script" or card.shot_number != 0:
+            continue
+        for unit in range(1, _positive_int(card.metadata.get("g_count")) + 1):
+            keys.add((card.episode, unit))
+    return sorted(
+        keys,
+        key=lambda item: (-1 if item[0] is None else item[0], item[1]),
     )
 
 
@@ -153,6 +301,22 @@ def _generate_action(
     }
 
 
+def _review_action(
+    *,
+    card: ProductionCard,
+    episode: Optional[int],
+    unit: Optional[int],
+) -> dict[str, Any]:
+    """返回人工确认动作；没有失败原因的 review 卡不能擅自重写。"""
+    return {
+        "kind": "review_card",
+        "label": "打开内容并确认",
+        "cardId": card.card_id,
+        "episode": episode,
+        "shotNumber": unit,
+    }
+
+
 def _slot_label(episode: Optional[int], unit: Optional[int]) -> str:
     episode_label = "全局" if episode is None else f"EP{episode:02d}"
     return episode_label if unit is None else f"{episode_label} / G{unit}"
@@ -170,6 +334,8 @@ def _aggregate_expected_units(cards: list[ProductionCard]) -> int:
     """识别旧项目里“整支预告聚合在一张卡”的镜头总数。"""
     expected = 0
     for card in cards:
+        if card.stage not in SPEC_STAGES:
+            continue
         order = card.metadata.get("prompt_order")
         if isinstance(order, list):
             expected = max(expected, len(order))
@@ -183,7 +349,9 @@ def _aggregate_card(cards: list[ProductionCard], stage: str) -> ProductionCard |
         (
             card
             for card in reversed(cards)
-            if card.stage == stage and (card.content.strip() or card.prompts)
+            if card.stage == stage
+            and not _is_end_frame_lock(card)
+            and (card.content.strip() or card.prompts)
         ),
         None,
     )
@@ -229,6 +397,11 @@ def _diagnose_aggregate_project(
                         str(item.get("message") or item.get("code") or "未知质量问题")
                         for item in gate_issues
                     ],
+                    detail_codes=[
+                        str(item.get("code") or "")
+                        for item in gate_issues
+                        if item.get("code")
+                    ],
                     action=_generate_action(
                         stage,
                         episode=None,
@@ -244,12 +417,10 @@ def _diagnose_aggregate_project(
                     stage=stage,
                     card=card,
                     message=f"聚合项目的{STAGE_LABELS[stage]}仍在待审核状态。",
-                    action=_generate_action(
-                        stage,
+                    action=_review_action(
+                        card=card,
                         episode=None,
                         unit=None,
-                        mode="replace",
-                        label=f"按审核意见返工{STAGE_LABELS[stage]}",
                     ),
                 ))
         checks.append({
@@ -369,6 +540,45 @@ def _sort_issues(issues: list[dict[str, Any]]) -> list[dict[str, Any]]:
     )
 
 
+def _score_checks(
+    goal: str,
+    checks: list[dict[str, Any]],
+) -> tuple[int, list[dict[str, Any]]]:
+    """按目标阶段计算可解释健康分，并把每项权重写回检查结果。"""
+    check_keys = {str(check["key"]) for check in checks}
+    if "production_units" in check_keys:
+        # 还没建立生产主键时，不能用尚不存在的数百张卡片稀释问题。
+        weights = {"source": 10, "production_units": 90}
+    else:
+        weights = GOAL_SCORE_WEIGHTS.get(goal, GOAL_SCORE_WEIGHTS["final"])
+
+    for check in checks:
+        total = max(0, int(check["total"]))
+        passed = max(0, min(int(check["passedCount"]), total))
+        completion = passed / total if total else 0
+        weight = int(weights.get(str(check["key"]), 0))
+        check["weight"] = weight
+        check["completion"] = round(completion * 100)
+        check["weightedScore"] = round(completion * weight, 1)
+
+    breakdown: list[dict[str, Any]] = []
+    for group_key, label, keys in SCORE_GROUPS:
+        group_checks = [check for check in checks if check["key"] in keys]
+        weight = sum(int(check["weight"]) for check in group_checks)
+        if weight <= 0:
+            continue
+        score = round(sum(float(check["weightedScore"]) for check in group_checks), 1)
+        breakdown.append({
+            "key": group_key,
+            "label": label,
+            "score": score,
+            "weight": weight,
+        })
+
+    score = round(sum(float(check["weightedScore"]) for check in checks))
+    return max(0, min(score, 100)), breakdown
+
+
 def diagnose_project(
     project: ProductionProject,
     cards: list[ProductionCard],
@@ -379,14 +589,7 @@ def diagnose_project(
     """
     goal = project.production_goal
     requirements = GOAL_REQUIREMENTS.get(goal, GOAL_REQUIREMENTS["final"])
-    unit_keys = sorted(
-        {
-            (card.episode, card.shot_number)
-            for card in cards
-            if card.shot_number > 0
-        },
-        key=lambda item: (-1 if item[0] is None else item[0], item[1]),
-    )
+    unit_keys = production_unit_keys(cards)
     aggregate_units = _aggregate_expected_units(cards) if not unit_keys else 0
     issues: list[dict[str, Any]] = []
     checks: list[dict[str, Any]] = []
@@ -458,8 +661,8 @@ def diagnose_project(
                 continue
             passed = 0
             for episode, unit in unit_keys:
-                card = _active_card(cards, episode, unit, stage)
-                if card is None:
+                stage_cards = _active_cards(cards, episode, unit, stage)
+                if not stage_cards:
                     issues.append(_issue(
                         code="stage_missing",
                         stage=stage,
@@ -476,9 +679,21 @@ def diagnose_project(
                     ))
                     continue
 
-                gate = card.metadata.get("quality_gate") or {}
-                gate_issues = gate.get("issues") or []
-                if gate.get("passed") is False or gate_issues:
+                failed_card = next(
+                    (
+                        candidate
+                        for candidate in stage_cards
+                        if (
+                            (candidate.metadata.get("quality_gate") or {}).get("passed")
+                            is False
+                            or (candidate.metadata.get("quality_gate") or {}).get("issues")
+                        )
+                    ),
+                    None,
+                )
+                if failed_card is not None:
+                    gate = failed_card.metadata.get("quality_gate") or {}
+                    gate_issues = gate.get("issues") or []
                     detail_messages = [
                         str(item.get("message") or item.get("code") or "未知质量问题")
                         for item in gate_issues
@@ -488,9 +703,14 @@ def diagnose_project(
                         stage=stage,
                         episode=episode,
                         unit=unit,
-                        card=card,
+                        card=failed_card,
                         message=f"{_slot_label(episode, unit)} 的{STAGE_LABELS[stage]}未通过质量门禁。",
                         details=detail_messages,
+                        detail_codes=[
+                            str(item.get("code") or "")
+                            for item in gate_issues
+                            if item.get("code")
+                        ],
                         action=_generate_action(
                             stage,
                             episode=episode,
@@ -502,22 +722,30 @@ def diagnose_project(
                     continue
 
                 # 图片被人工退回时，提示词本身仍可能合格；交给图片检查生成精准问题。
-                image = _active_image(card) if stage == "img_prompt" else ""
-                review = _current_image_review(card, image)
-                if card.status == "review" and review.get("verdict") != "reject":
+                review_card = next(
+                    (
+                        candidate
+                        for candidate in stage_cards
+                        if candidate.status == "review"
+                        and _current_image_review(
+                            candidate,
+                            _active_image(candidate) if stage == "img_prompt" else "",
+                        ).get("verdict") != "reject"
+                    ),
+                    None,
+                )
+                if review_card is not None:
                     issues.append(_issue(
                         code="manual_review_required",
                         stage=stage,
                         episode=episode,
                         unit=unit,
-                        card=card,
+                        card=review_card,
                         message=f"{_slot_label(episode, unit)} 的{STAGE_LABELS[stage]}仍在待审核状态。",
-                        action=_generate_action(
-                            stage,
+                        action=_review_action(
+                            card=review_card,
                             episode=episode,
                             unit=unit,
-                            mode="replace",
-                            label=f"按审核意见返工{STAGE_LABELS[stage]}",
                         ),
                     ))
                     continue
@@ -669,7 +897,7 @@ def diagnose_project(
     issues = _sort_issues(issues)
     total_checks = sum(int(check["total"]) for check in checks)
     passed_checks = sum(int(check["passedCount"]) for check in checks)
-    score = round(passed_checks / total_checks * 100) if total_checks else 0
+    score, score_breakdown = _score_checks(goal, checks)
     blockers = sum(1 for issue in issues if issue["severity"] == "blocker")
     warnings = sum(1 for issue in issues if issue["severity"] == "warning")
     in_progress = sum(1 for issue in issues if issue["severity"] == "info")
@@ -707,6 +935,7 @@ def diagnose_project(
         "goal": goal,
         "state": state,
         "score": score,
+        "scoreBreakdown": score_breakdown,
         "totalUnits": len(unit_keys) or aggregate_units,
         "blockerCount": blockers,
         "warningCount": warnings,

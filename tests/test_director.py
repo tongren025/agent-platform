@@ -185,6 +185,12 @@ def test_image_video_and_compose_flow(director_env):
         },
     )
     assert reject.status_code == 200
+    rejected_video = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['vid_prompt']}/video",
+        json={"model": "demo/video", "duration": 4, "aspect_ratio": "9:16"},
+    )
+    assert rejected_video.status_code == 409
+    assert "待返工" in rejected_video.json()["message"]
     rejected_state = client.get(f"/api/v1/agentapp/director/projects/{pid}").json()["data"]
     assert rejected_state["nextAction"]["kind"] == "image"
     assert rejected_state["finalUrl"] == ""
@@ -211,3 +217,21 @@ def test_image_video_and_compose_flow(director_env):
     assert stale_state["nextAction"]["kind"] == "video"
     blocked_compose = client.post(f"/api/v1/agentapp/director/projects/{pid}/compose")
     assert blocked_compose.status_code == 400
+
+
+def test_video_submission_requires_current_project_image(director_env):
+    client = director_env
+    pid, card_ids = _create_gc(client)
+
+    response = client.post(
+        f"/api/v1/agentapp/director/projects/{pid}/cards/{card_ids['vid_prompt']}/video",
+        json={
+            "model": "demo/video",
+            "duration": 4,
+            "aspect_ratio": "9:16",
+            "image_url": "https://example.com/untracked.png",
+        },
+    )
+
+    assert response.status_code == 400
+    assert "先生成当前镜头图片" in response.json()["message"]
