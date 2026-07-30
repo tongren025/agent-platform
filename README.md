@@ -345,6 +345,7 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
       "endpoint": "https://your-openai-compatible-endpoint/",
       "apiKey": "sk-your-api-key-here",
       "enabled": "true",
+      "apiMode": "auto",
       "models": [
         {
           "modelName": "gpt-4o",
@@ -357,7 +358,13 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 }
 ```
 
-> 支持任何兼容 OpenAI Chat Completions API 的服务（OpenAI、Azure OpenAI、各类国产大模型网关等）。
+> `apiMode` 可取 `auto`（默认）、`responses` 或 `chat`。`auto` 会让 GPT-5/o 系列优先
+> 直连 Responses API，并发送稳定的 `prompt_cache_key`、消费原生流式事件；仅当供应商
+> 明确不支持 `/v1/responses` 时，当前进程才记忆该结果并自动降级到 Chat Completions。
+> 其他模型默认使用兼容性更广的 Chat Completions。设置页和独立管理端均可修改该选项。
+>
+> 支持兼容 OpenAI Responses API 或 Chat Completions API 的服务（OpenAI、Azure OpenAI、
+> OpenRouter 及各类兼容网关）。
 > `apiKey` 也可以写成环境变量占位符（如 `"${OPENROUTER_API_KEY}"`），真实密钥放 `.env` 或系统环境变量。
 
 OpenRouter 示例：

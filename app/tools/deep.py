@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from app.config import settings
 from app.models.conversation import PendingApprovalDetail
 from app.services.chat_response import normalize_chat_completion
+from app.services.model_transport import create_model_completion_sync
 from app.tools.base import ToolContext, register_handler
 
 logger = logging.getLogger(__name__)
@@ -419,13 +420,13 @@ class TaskHandler:
 
         for iteration in range(max_iterations):
             try:
-                response = client.chat.completions.create(
-                    model=model_name,
-                    messages=messages,
-                    tools=openai_tools if openai_tools else None,
-                    temperature=0.3,
-                    max_tokens=2048,
-                )
+                response = create_model_completion_sync(client, {
+                    "model": model_name,
+                    "messages": messages,
+                    "tools": openai_tools if openai_tools else None,
+                    "temperature": 0.3,
+                    "max_tokens": 2048,
+                })
             except Exception as exc:
                 logger.exception("Sub-agent LLM call failed at iteration %d", iteration)
                 return json.dumps({
@@ -440,7 +441,21 @@ class TaskHandler:
                 final_text = assistant_msg.content or ""
                 break
 
-            messages.append(assistant_msg.model_dump())
+            messages.append({
+                "role": "assistant",
+                "content": assistant_msg.content or "",
+                "tool_calls": [
+                    {
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {
+                            "name": tc.function.name,
+                            "arguments": tc.function.arguments,
+                        },
+                    }
+                    for tc in assistant_msg.tool_calls
+                ],
+            })
 
             for tc in assistant_msg.tool_calls:
                 fn_name = tc.function.name

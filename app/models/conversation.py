@@ -50,6 +50,7 @@ class AgentTokenUsage(BaseModel):
     prompt_tokens: int = Field(0, alias="promptTokens")
     completion_tokens: int = Field(0, alias="completionTokens")
     total_tokens: int = Field(0, alias="totalTokens")
+    cached_prompt_tokens: int = Field(0, alias="cachedPromptTokens")
 
     model_config = {"populate_by_name": True}
 
@@ -80,6 +81,7 @@ class AgentRunResponse(BaseModel):
     session_id: Optional[str] = Field(None, alias="sessionId")
     pending_approval: Optional[PendingApprovalDetail] = Field(None, alias="pendingApproval")
     delegation_stack: Optional[list[str]] = Field(None, alias="delegationStack")
+    model_transport: str = Field("", alias="modelTransport")
 
     model_config = {"populate_by_name": True}
 

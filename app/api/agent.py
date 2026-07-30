@@ -215,6 +215,7 @@ async def _execute_agent_run(
         session_id=agent_result.session_id,
         pending_approval=agent_result.pending_approval,
         delegation_stack=agent_result.delegation_stack,
+        model_transport=agent_result.transport,
     )
     return _ok(response.model_dump(by_alias=True, mode="json"))
 

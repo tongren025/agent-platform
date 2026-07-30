@@ -91,6 +91,7 @@ export interface AdminProvider {
   enabled: boolean;
   models: { modelId?: string; modelName?: string }[];
   managed: boolean;
+  apiMode?: 'auto' | 'responses' | 'chat';
 }
 
 export interface TestResult {
@@ -98,6 +99,7 @@ export interface TestResult {
   model?: string;
   reply?: string;
   error?: string;
+  transport?: string;
 }
 
 export const adminApi = {
@@ -130,9 +132,9 @@ export const adminApi = {
 
   // AI 服务商
   listProviders: () => request<AdminProvider[]>('/providers'),
-  saveProvider: (data: { name: string; endpoint: string; apiKey: string; enabled?: boolean; models?: unknown[] }) =>
+  saveProvider: (data: { name: string; endpoint: string; apiKey: string; enabled?: boolean; models?: unknown[]; apiMode?: 'auto' | 'responses' | 'chat' }) =>
     request<AdminProvider>('/providers', { method: 'POST', body: JSON.stringify(data) }),
-  updateProvider: (name: string, data: { name: string; endpoint: string; apiKey?: string; enabled?: boolean; models?: unknown[] }) =>
+  updateProvider: (name: string, data: { name: string; endpoint: string; apiKey?: string; enabled?: boolean; models?: unknown[]; apiMode?: 'auto' | 'responses' | 'chat' }) =>
     request<AdminProvider>(`/providers/${encodeURIComponent(name)}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteProvider: (name: string) =>
     request<boolean>(`/providers/${encodeURIComponent(name)}`, { method: 'DELETE' }),

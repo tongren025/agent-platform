@@ -18,6 +18,7 @@ from pathlib import Path
 from app.config import BASE_DIR
 from app.models.distillation import DistillationAction, DistillationLog
 from app.services.chat_response import extract_chat_content
+from app.services.model_transport import create_model_completion_sync
 
 logger = logging.getLogger(__name__)
 
@@ -187,15 +188,15 @@ async def run_distillation(employee_key: str) -> DistillationLog:
     try:
         import asyncio
         resp = await asyncio.to_thread(
-            lambda: client.chat.completions.create(
-                model=model,
-                messages=[
+            lambda: create_model_completion_sync(client, {
+                "model": model,
+                "messages": [
                     {"role": "system", "content": "你是记忆蒸馏引擎。只返回 JSON 数组，不要解释。"},
                     {"role": "user", "content": prompt},
                 ],
-                temperature=0.2,
-                max_tokens=3000,
-            )
+                "temperature": 0.2,
+                "max_tokens": 3000,
+            })
         )
         raw = extract_chat_content(resp) or "[]"
     except Exception as exc:

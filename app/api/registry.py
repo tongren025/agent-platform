@@ -38,6 +38,7 @@ from app.core.model_capabilities import (
     unqualified_model_id,
     validate_employee_model_routes,
 )
+from app.services.model_transport import create_model_completion_sync
 from app.services.chat_response import extract_chat_content
 
 router = APIRouter(prefix="/api/v1/agentapp/registry")
@@ -366,15 +367,15 @@ role_request_json: {role_request_json}
         if resolved_chat is None:
             raise ValueError("没有已启用的聊天模型")
         client, resolved_model, selected_model_ref = resolved_chat
-        response = client.chat.completions.create(
-            model=resolved_model,
-            messages=[
+        response = create_model_completion_sync(client, {
+            "model": resolved_model,
+            "messages": [
                 {"role": "system", "content": "你擅长设计可执行、边界清晰的 AI Agent 系统提示词。"},
                 {"role": "user", "content": prompt},
             ],
-            temperature=0.2,
-            max_tokens=3000,
-        )
+            "temperature": 0.2,
+            "max_tokens": 3000,
+        })
         generated = _extract_employee_draft(extract_chat_content(response))
     except Exception:
         _logger.warning("智能员工草稿生成调用失败，使用本地可靠兜底", exc_info=True)

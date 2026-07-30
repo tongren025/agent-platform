@@ -41,6 +41,7 @@ interface AiProvider {
   enabled: boolean;
   models: AiModel[];
   managed?: boolean;
+  apiMode?: 'auto' | 'responses' | 'chat';
 }
 
 export default function Settings() {
@@ -86,7 +87,7 @@ export default function Settings() {
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
-    const vals = { name: '', endpoint: '', apiKey: '', enabled: true, models: [{ modelName: '', modelId: '', timeoutMinutes: 10 }] };
+    const vals = { name: '', endpoint: '', apiKey: '', enabled: true, apiMode: 'auto', models: [{ modelName: '', modelId: '', timeoutMinutes: 10 }] };
     setPendingFormValues(vals);
     setModalOpen(true);
   };
@@ -99,6 +100,7 @@ export default function Settings() {
       endpoint: provider.endpoint,
       apiKey: '',
       enabled: provider.enabled,
+      apiMode: provider.apiMode || 'auto',
       models: provider.models?.length
         ? provider.models.map(m => ({ modelName: m.modelName, modelId: m.modelId, timeoutMinutes: m.timeoutMinutes || 10 }))
         : [{ modelName: '', modelId: '', timeoutMinutes: 10 }],
@@ -270,6 +272,11 @@ export default function Settings() {
                 <Descriptions.Item label="模型数量">
                   <Tag color="blue">{p.models?.length ?? 0}</Tag>
                 </Descriptions.Item>
+                <Descriptions.Item label="调用协议">
+                  <Tag color={p.apiMode === 'chat' ? 'default' : 'purple'}>
+                    {p.apiMode === 'responses' ? 'Responses（强制）' : p.apiMode === 'chat' ? 'Chat（兼容）' : 'Responses 优先'}
+                  </Tag>
+                </Descriptions.Item>
               </Descriptions>
               {p.models && p.models.length > 0 && (
                 <Table
@@ -363,6 +370,19 @@ export default function Settings() {
             extra={editing?.managed ? '留空表示不修改服务器上已加密保存的 Key' : 'Key 只发送到服务器并加密保存，不会由接口回传'}
           >
             <Input.Password placeholder={editing?.managed ? '留空保持原 Key' : '输入 API Key'} visibilityToggle />
+          </Form.Item>
+          <Form.Item
+            label="模型调用协议"
+            name="apiMode"
+            extra="推荐“Responses 优先”：GPT-5/o 系列直接走 /v1/responses，自动启用真流式和提示词缓存；供应商明确不支持时才降级 Chat。"
+          >
+            <Select
+              options={[
+                { value: 'auto', label: 'Responses 优先（推荐，自动兼容）' },
+                { value: 'responses', label: '强制 Responses API' },
+                { value: 'chat', label: '强制 Chat Completions' },
+              ]}
+            />
           </Form.Item>
           <Form.Item label="启用" name="enabled" valuePropName="checked">
             <Switch />

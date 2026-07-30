@@ -286,6 +286,7 @@ class AiProviderStore:
                 api_key=resolve_secret(d.get("apiKey", "")),
                 enabled=d.get("enabled", True),
                 models=d.get("models", []),
+                api_mode=str(d.get("apiMode", "auto") or "auto").lower(),
             ))
         return configs
 
@@ -307,7 +308,7 @@ class AIService:
         # OpenAI SDK 客户端内部维护 HTTP 连接池。按供应商复用客户端，避免每次
         # 对话重复建立 TCP/TLS 连接；配置变化会形成新 key，不会复用旧凭据。
         self._client_cache: dict[
-            tuple[str, str, str, bool],
+            tuple[str, str, str, bool, str],
             openai.OpenAI | openai.AsyncOpenAI,
         ] = {}
         self._client_cache_lock = Lock()
@@ -364,6 +365,7 @@ class AIService:
             provider.endpoint.strip(),
             provider.api_key,
             async_client,
+            provider.api_mode,
         )
         with self._client_cache_lock:
             cached = self._client_cache.get(cache_key)
@@ -374,6 +376,10 @@ class AIService:
                 base_url=provider.endpoint.strip(),
                 api_key=provider.api_key,
             )
+            # 网络协议策略跟随复用的 SDK 客户端，运行时适配层据此选择
+            # /v1/responses 或 /v1/chat/completions。
+            client._agent_api_mode = provider.api_mode
+            client._agent_provider_name = provider.name
             # 单进程通常只有少量供应商；仍设置上限，防止频繁改配置无限积累旧 client。
             if len(self._client_cache) >= 32:
                 self._client_cache.pop(next(iter(self._client_cache)))

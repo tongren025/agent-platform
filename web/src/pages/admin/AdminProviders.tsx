@@ -1,6 +1,6 @@
 // 管理端 AI 供应商治理：供应商 CRUD 与连通性测试。
 import { useEffect, useState } from 'react';
-import { Table, Tag, Space, Button, Modal, Form, Input, Switch, Spin, Popconfirm, Card, Row, Col } from 'antd';
+import { Table, Tag, Space, Button, Modal, Form, Input, Switch, Spin, Popconfirm, Card, Row, Col, Select } from 'antd';
 import { message } from '../../ui';
 import {
   PlusOutlined, ApiOutlined, CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined,
@@ -34,7 +34,7 @@ export default function AdminProviders() {
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
-    form.setFieldsValue({ enabled: true, models: [{ modelId: '' }] });
+    form.setFieldsValue({ enabled: true, apiMode: 'auto', models: [{ modelId: '' }] });
     setOpen(true);
   };
 
@@ -45,6 +45,7 @@ export default function AdminProviders() {
       endpoint: record.endpoint,
       apiKey: '',
       enabled: record.enabled,
+      apiMode: record.apiMode || 'auto',
       models: record.models?.length ? record.models.map((m) => ({ modelId: m.modelId || m.modelName || '' })) : [{ modelId: '' }],
     });
     setOpen(true);
@@ -63,6 +64,7 @@ export default function AdminProviders() {
           endpoint: values.endpoint,
           apiKey: values.apiKey || '',
           enabled: values.enabled,
+          apiMode: values.apiMode,
           models,
         });
         message.success('更新成功');
@@ -72,6 +74,7 @@ export default function AdminProviders() {
           endpoint: values.endpoint,
           apiKey: values.apiKey || '',
           enabled: values.enabled,
+          apiMode: values.apiMode,
           models,
         });
         message.success('创建成功');
@@ -164,6 +167,16 @@ export default function AdminProviders() {
         ) : (
           <span style={{ color: COLORS.slate }}>无模型</span>
         ),
+    },
+    {
+      title: '协议',
+      dataIndex: 'apiMode',
+      key: 'apiMode',
+      render: (v: AdminProvider['apiMode']) => (
+        <Tag color={v === 'chat' ? 'default' : 'purple'}>
+          {v === 'responses' ? 'Responses' : v === 'chat' ? 'Chat' : 'Responses 优先'}
+        </Tag>
+      ),
     },
     {
       title: '来源',
@@ -314,6 +327,19 @@ export default function AdminProviders() {
             extra={editing?.managed ? '留空保持服务器上已加密保存的 Key 不变' : 'Key 仅发送到服务器并加密保存，不会回传到浏览器'}
           >
             <Input.Password placeholder={editing?.managed ? '留空保持原 Key 不变' : '输入 API Key'} />
+          </Form.Item>
+          <Form.Item
+            label="模型调用协议"
+            name="apiMode"
+            extra="推荐 Responses 优先；仅在供应商明确不兼容时自动回退 Chat。"
+          >
+            <Select
+              options={[
+                { value: 'auto', label: 'Responses 优先（推荐）' },
+                { value: 'responses', label: '强制 Responses API' },
+                { value: 'chat', label: '强制 Chat Completions' },
+              ]}
+            />
           </Form.Item>
           <Form.Item label="启用" name="enabled" valuePropName="checked">
             <Switch />

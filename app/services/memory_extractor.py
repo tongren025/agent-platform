@@ -18,6 +18,7 @@ from app.models.memory_types import (
     SemanticMemory,
 )
 from app.services.chat_response import extract_chat_content
+from app.services.model_transport import create_model_completion_sync
 
 logger = logging.getLogger(__name__)
 
@@ -100,15 +101,15 @@ async def extract_memories(
         return None
 
     try:
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[
+        resp = create_model_completion_sync(client, {
+            "model": model,
+            "messages": [
                 {"role": "system", "content": _EXTRACTION_PROMPT},
                 {"role": "user", "content": f"以下是对话历史：\n\n{conversation_text}"},
             ],
-            temperature=0.3,
-            max_tokens=2000,
-        )
+            "temperature": 0.3,
+            "max_tokens": 2000,
+        })
         raw = extract_chat_content(resp)
     except Exception as exc:
         logger.warning("记忆提取 LLM 调用失败: %s", exc)

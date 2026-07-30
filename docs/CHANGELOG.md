@@ -5,6 +5,28 @@
 
 ---
 
+## [2026-07-30] perf: Responses API 优先、原生流式与提示词缓存
+
+- 模型网络层新增 Responses / Chat 双协议适配：GPT-5 与 o 系列默认直接请求
+  `/v1/responses`，不再先进入 `/v1/chat/completions` 再由上游转换；供应商可选择
+  `auto`、`responses` 或 `chat`，自动模式仅在明确不兼容时记忆并降级。
+- Responses 请求把稳定系统提示词放入 `instructions`，工具声明转换为扁平 function
+  结构，并为同一员工、系统提示词和工具前缀生成匿名稳定 `prompt_cache_key`；响应中的
+  `cached_tokens` 会计入 `cachedPromptTokens`，客户端可直接判断缓存是否命中。
+- 流式运行改为消费 `response.output_text.delta` 与 `response.completed` 原生事件，
+  同时重建工具调用和最终 token 用量；供应商不支持 Responses 时继续使用既有 Chat
+  真流式，前端 NDJSON 契约不变。
+- 员工、团队、画布、Deep Agent 子代理、系统管家、记忆提取/蒸馏、自我进化、趋势、
+  Skill 分析和员工草稿生成全部通过统一模型传输层，避免后台任务继续绕过新协议。
+- 用户设置页和独立管理端新增“Responses 优先 / 强制 Responses / 强制 Chat”选择，
+  供应商连通测试按同一协议策略执行并返回实际 transport。
+
+**影响面**：新增 `app/services/model_transport.py` 与供应商字段 `apiMode`；Agent 运行
+响应新增 `modelTransport`，token 用量新增 `cachedPromptTokens`。旧供应商配置缺省按
+`auto` 读取，旧 Chat-only 网关可自动降级，无数据库迁移、无新增必填环境变量。
+
+---
+
 ## [2026-07-30] perf: 模型调用真实流式与画布卡顿治理
 
 - 工作台和画布助手新增 NDJSON 真流式输出，模型生成一个文本增量就立即显示；最终

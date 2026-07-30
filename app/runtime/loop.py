@@ -12,19 +12,22 @@
 from __future__ import annotations
 
 import asyncio
-import inspect
 import json
 import logging
 import random
 import time
 from dataclasses import dataclass, field
-from types import SimpleNamespace
 from typing import Awaitable, Callable, Optional
 
 import openai
 
 from app.models.conversation import AgentInvocationTrace, PendingApprovalDetail
 from app.services.chat_response import normalize_chat_completion
+from app.services.model_transport import (
+    build_prompt_cache_key,
+    create_model_completion,
+    preferred_api,
+)
 
 SyncOrAsyncClient = openai.OpenAI | openai.AsyncOpenAI
 
@@ -70,6 +73,8 @@ class LlmCallTelemetry:
     llm_elapsed_ms: int = 0
     first_token_ms: int | None = None
     resolved_model: str = ""
+    cached_prompt_tokens: int = 0
+    transport: str = ""
 
 
 @dataclass
@@ -93,11 +98,14 @@ class AgentLoopOptions:
     tool_result_transform: Optional[Callable[[str, str], str]] = None
     # AgentRun 控制面注入的轻量取消检查；只在模型/工具安全边界读取。
     should_cancel: Optional[Callable[[], bool]] = None
-    # 设置后启用真正的 Chat Completions 流式消费；回调参数为（本次增量，当前完整文本）。
+    # 设置后启用真正的 Responses/Chat 流式消费；回调参数为（本次增量，当前完整文本）。
     on_text_delta: Optional[
         Callable[[str, str], Awaitable[None] | None]
     ] = None
     reasoning_effort: Optional[str] = None
+    # 同一员工 + 同一稳定系统前缀复用缓存路由，不包含用户输入。
+    prompt_cache_scope: str = ""
+    prompt_cache_key: str | None = None
     telemetry: LlmCallTelemetry = field(default_factory=LlmCallTelemetry)
 
 
@@ -119,6 +127,8 @@ class AgentLoopResult:
     retry_count: int = 0
     llm_elapsed_ms: int = 0
     first_token_ms: int | None = None
+    cached_prompt_tokens: int = 0
+    transport: str = ""
 
 
 def _cancel_requested(options: AgentLoopOptions) -> bool:
@@ -172,160 +182,16 @@ async def _create_completion(
     create_kwargs: dict,
     is_async: bool,
     on_text_delta: Optional[Callable[[str, str], Awaitable[None] | None]] = None,
+    prompt_cache_key: str | None = None,
 ):
-    """执行一次 completion；配置回调时消费流，否则返回完整响应。"""
-    started_at = time.monotonic()
-    if on_text_delta is not None:
-        response, first_token_ms = await _create_streaming_completion(
-            client,
-            create_kwargs,
-            is_async,
-            on_text_delta,
-            started_at,
-        )
-        return response, first_token_ms
-    if is_async:
-        response = await client.chat.completions.create(**create_kwargs)
-    else:
-        response = await asyncio.get_running_loop().run_in_executor(
-            None, lambda: client.chat.completions.create(**create_kwargs)
-        )
-    return response, int((time.monotonic() - started_at) * 1000)
-
-
-def _stream_next(iterator):
-    """在线程中安全读取同步 stream；用二元组避免 StopIteration 穿过 Future。"""
-    try:
-        return True, next(iterator)
-    except StopIteration:
-        return False, None
-
-
-def _delta_text(delta) -> str:
-    """兼容字符串与多内容块两种流式 delta.content。"""
-    content = getattr(delta, "content", None)
-    if isinstance(content, str):
-        return content
-    if isinstance(content, list):
-        parts: list[str] = []
-        for item in content:
-            text = getattr(item, "text", None)
-            if isinstance(text, str):
-                parts.append(text)
-            elif isinstance(item, dict) and isinstance(item.get("text"), str):
-                parts.append(item["text"])
-        return "".join(parts)
-    return ""
-
-
-async def _emit_text_delta(
-    callback: Callable[[str, str], Awaitable[None] | None],
-    delta: str,
-    text: str,
-) -> None:
-    """调用流式回调；展示层故障不应让模型请求重试并产生重复内容。"""
-    try:
-        value = callback(delta, text)
-        if inspect.isawaitable(value):
-            await value
-    except Exception:
-        logger.warning("LLM 流式回调失败，继续完成模型请求", exc_info=True)
-
-
-async def _create_streaming_completion(
-    client: SyncOrAsyncClient,
-    create_kwargs: dict,
-    is_async: bool,
-    on_text_delta: Callable[[str, str], Awaitable[None] | None],
-    started_at: float,
-):
-    """消费 OpenAI 兼容流并重建 loop 可继续处理的完整响应。"""
-    stream_kwargs = dict(create_kwargs, stream=True)
-    if is_async:
-        stream = await client.chat.completions.create(**stream_kwargs)
-        async def _chunks():
-            async for chunk in stream:
-                yield chunk
-    else:
-        stream = await asyncio.get_running_loop().run_in_executor(
-            None, lambda: client.chat.completions.create(**stream_kwargs)
-        )
-
-        async def _chunks():
-            iterator = iter(stream)
-            while True:
-                has_item, chunk = await asyncio.to_thread(_stream_next, iterator)
-                if not has_item:
-                    return
-                yield chunk
-
-    text_parts: list[str] = []
-    tool_parts: dict[int, dict] = {}
-    finish_reason = "stop"
-    usage = None
-    first_token_ms: int | None = None
-
-    async for chunk in _chunks():
-        chunk_usage = getattr(chunk, "usage", None)
-        if chunk_usage is not None:
-            usage = chunk_usage
-        choices = getattr(chunk, "choices", None) or []
-        for choice in choices:
-            if getattr(choice, "finish_reason", None):
-                finish_reason = choice.finish_reason
-            delta = getattr(choice, "delta", None)
-            if delta is None:
-                continue
-            piece = _delta_text(delta)
-            if piece:
-                text_parts.append(piece)
-                full_text = "".join(text_parts)
-                if first_token_ms is None:
-                    first_token_ms = int((time.monotonic() - started_at) * 1000)
-                await _emit_text_delta(on_text_delta, piece, full_text)
-            for tool_delta in getattr(delta, "tool_calls", None) or []:
-                index = int(getattr(tool_delta, "index", 0) or 0)
-                target = tool_parts.setdefault(index, {
-                    "id": "",
-                    "type": "function",
-                    "name": "",
-                    "arguments": "",
-                })
-                target["id"] += str(getattr(tool_delta, "id", "") or "")
-                target["type"] = str(
-                    getattr(tool_delta, "type", "") or target["type"]
-                )
-                function = getattr(tool_delta, "function", None)
-                if function is not None:
-                    target["name"] += str(getattr(function, "name", "") or "")
-                    target["arguments"] += str(
-                        getattr(function, "arguments", "") or ""
-                    )
-
-    tool_calls = [
-        SimpleNamespace(
-            id=value["id"] or f"call_{index}",
-            type=value["type"],
-            function=SimpleNamespace(
-                name=value["name"],
-                arguments=value["arguments"],
-            ),
-        )
-        for index, value in sorted(tool_parts.items())
-    ]
-    return SimpleNamespace(
-        choices=[
-            SimpleNamespace(
-                message=SimpleNamespace(
-                    role="assistant",
-                    content="".join(text_parts),
-                    tool_calls=tool_calls or None,
-                ),
-                finish_reason=finish_reason,
-            )
-        ],
-        usage=usage,
-    ), first_token_ms
+    """执行一次双协议 completion；Responses 优先策略由供应商客户端携带。"""
+    return await create_model_completion(
+        client,
+        create_kwargs,
+        is_async=is_async,
+        callback=on_text_delta,
+        prompt_cache_key=prompt_cache_key,
+    )
 
 
 async def _create_with_retry(
@@ -373,6 +239,7 @@ async def _create_with_retry(
                     create_kwargs,
                     a_is_async,
                     options.on_text_delta,
+                    options.prompt_cache_key,
                 )
                 normalized = normalize_chat_completion(response)
                 if not normalized.choices:
@@ -383,6 +250,10 @@ async def _create_with_retry(
                     if options.telemetry.first_token_ms is None:
                         options.telemetry.first_token_ms = first_token_ms
                     options.telemetry.resolved_model = model
+                    options.telemetry.transport = str(
+                        getattr(normalized, "transport", "")
+                        or preferred_api(a_client, model)
+                    )
                     return response
 
                 finish_reason = str(choice.finish_reason or "unknown")
@@ -467,6 +338,13 @@ async def run_agent_loop(
     messages.append({"role": "user", "content": user_message})
 
     openai_tools = _build_openai_tools(tools) if tools else []
+    if not options.prompt_cache_key:
+        options.prompt_cache_key = build_prompt_cache_key(
+            model=options.model,
+            system_prompt=system_prompt,
+            tools=openai_tools,
+            scope=options.prompt_cache_scope,
+        )
     handler_map: dict[str, ToolHandler] = {h.name: h for h in tools}
 
     is_async = isinstance(client, openai.AsyncOpenAI)
@@ -506,6 +384,10 @@ async def run_agent_loop(
         if response.usage:
             result.prompt_tokens += response.usage.prompt_tokens or 0
             result.completion_tokens += response.usage.completion_tokens or 0
+            details = getattr(response.usage, "prompt_tokens_details", None)
+            cached_tokens = int(getattr(details, "cached_tokens", 0) or 0)
+            result.cached_prompt_tokens += cached_tokens
+            options.telemetry.cached_prompt_tokens += cached_tokens
 
         # 模型请求期间收到停止信号时，保留已产生的 token 统计，但不执行它提出的工具。
         if _cancel_requested(options):
@@ -654,4 +536,6 @@ async def run_agent_loop(
     result.retry_count = options.telemetry.retry_count
     result.llm_elapsed_ms = options.telemetry.llm_elapsed_ms
     result.first_token_ms = options.telemetry.first_token_ms
+    result.cached_prompt_tokens = options.telemetry.cached_prompt_tokens
+    result.transport = options.telemetry.transport
     return result

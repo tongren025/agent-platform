@@ -17,6 +17,7 @@ from pydantic import BaseModel
 from app.api.common import ok as _ok
 from app.config import BASE_DIR
 from app.services.chat_response import extract_chat_content
+from app.services.model_transport import create_model_completion_sync
 
 router = APIRouter(prefix="/api/v1/agentapp/skills", tags=["skills"])
 
@@ -323,15 +324,15 @@ async def generate_analysis(force: bool = False) -> dict:
 
     prompt = _ANALYSIS_PROMPT.format(data_summary=summary)
     resp = await asyncio.to_thread(
-        lambda: client.chat.completions.create(
-            model=model,
-            messages=[
+        lambda: create_model_completion_sync(client, {
+            "model": model,
+            "messages": [
                 {"role": "system", "content": "你是 AI 行业分析师。只返回 JSON，不要解释。"},
                 {"role": "user", "content": prompt},
             ],
-            temperature=0.3,
-            max_tokens=4000,
-        )
+            "temperature": 0.3,
+            "max_tokens": 4000,
+        })
     )
     raw = extract_chat_content(resp) or "{}"
 

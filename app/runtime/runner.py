@@ -54,6 +54,8 @@ class AgentRunResult:
     retry_count: int = 0
     llm_elapsed_ms: int = 0
     first_token_ms: int | None = None
+    cached_prompt_tokens: int = 0
+    transport: str = ""
 
 
 def _parse_schema(raw: Optional[str]) -> dict:
@@ -233,6 +235,7 @@ async def run_agent(
         reasoning_effort=(
             str(model_policy.get("reasoning_effort", "")).strip() or None
         ),
+        prompt_cache_scope=employee_key,
         tool_result_transform=(
             lambda tool_name, content: compact_tool_result(
                 tool_name,
@@ -290,12 +293,15 @@ async def run_agent(
     run_result.retry_count = loop_result.retry_count
     run_result.llm_elapsed_ms = loop_result.llm_elapsed_ms
     run_result.first_token_ms = loop_result.first_token_ms
+    run_result.cached_prompt_tokens = loop_result.cached_prompt_tokens
+    run_result.transport = loop_result.transport
 
     if loop_result.prompt_tokens or loop_result.completion_tokens:
         run_result.token_usage = AgentTokenUsage(
             prompt_tokens=loop_result.prompt_tokens,
             completion_tokens=loop_result.completion_tokens,
             total_tokens=loop_result.prompt_tokens + loop_result.completion_tokens,
+            cached_prompt_tokens=loop_result.cached_prompt_tokens,
         )
 
     if shared_deep_state is not None:

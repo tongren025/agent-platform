@@ -23,6 +23,7 @@ import httpx
 
 from app.models.scrape import CollectedPrompt
 from app.services.chat_response import extract_chat_content
+from app.services.model_transport import create_model_completion_sync
 
 logger = logging.getLogger(__name__)
 
@@ -393,12 +394,12 @@ async def scrape_and_summarize(
 {truncated}"""
 
     client, model_id = ai_service.get_default_client()
-    resp = client.chat.completions.create(
-        model=model_id,
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3,
-        max_tokens=4000,
-    )
+    resp = create_model_completion_sync(client, {
+        "model": model_id,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.3,
+        "max_tokens": 4000,
+    })
     raw = extract_chat_content(resp)
 
     import json as _json

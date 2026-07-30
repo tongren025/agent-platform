@@ -19,12 +19,15 @@ load_dotenv(BASE_DIR / ".env")
 
 @dataclass
 class AiModelConfig:
-    """一个 AI 供应商接入点（appsettings 的 aiModels 数组项）——endpoint + key + 旗下模型列表。"""
+    """一个 AI 供应商接入点（endpoint + key + 模型列表 + 调用协议策略）。"""
     name: str
     endpoint: str
     api_key: str
     enabled: bool
     models: list[dict]
+    # auto：GPT-5/o 系列优先 Responses，不兼容时记忆并降级 Chat；
+    # responses/chat：强制使用对应协议。
+    api_mode: str = "auto"
 
 
 @dataclass
@@ -165,6 +168,7 @@ def load_settings() -> Settings:
             api_key=resolve_secret(m["apiKey"]),
             enabled=str(m.get("enabled", "true")).lower() == "true",
             models=m.get("models", []),
+            api_mode=str(m.get("apiMode", "auto") or "auto").lower(),
         ))
 
     return Settings(

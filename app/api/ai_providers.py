@@ -13,6 +13,7 @@ import openai
 import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from typing import Literal
 
 from app.api.common import BAD_KEY_RE, ok as _ok
 from app.config import resolve_secret, settings
@@ -20,6 +21,10 @@ from app.dependencies import ai_service
 from app.services.chat_response import (
     extract_chat_content,
     select_chat_completion_model,
+)
+from app.services.model_transport import (
+    build_prompt_cache_key,
+    create_model_completion_sync,
 )
 
 router = APIRouter(prefix="/api/v1/agentapp/agent")
@@ -75,6 +80,7 @@ class AiProviderBody(BaseModel):
     apiKey: str
     enabled: bool = True
     models: list[dict] = []
+    apiMode: Literal["auto", "responses", "chat"] = "auto"
 
 
 class ProviderModelBody(BaseModel):
@@ -98,6 +104,7 @@ def list_ai_providers():
             "apiKey": p.api_key,
             "enabled": p.enabled,
             "models": p.models,
+            "apiMode": p.api_mode,
         }, managed=managed is not None))
     return _ok(result)
 
@@ -235,6 +242,7 @@ def add_ai_provider_model(name: str, body: ProviderModelBody):
             "apiKey": "${OPENROUTER_API_KEY}",
             "enabled": True,
             "models": [],
+            "apiMode": "auto",
         }
     else:
         existing = ai_service.store.get(provider.name)
@@ -244,6 +252,7 @@ def add_ai_provider_model(name: str, body: ProviderModelBody):
             "apiKey": "${OPENROUTER_API_KEY}" if provider.name.lower() == "openrouter" else provider.api_key,
             "enabled": provider.enabled,
             "models": list(provider.models),
+            "apiMode": provider.api_mode,
         }
 
     models = list(data.get("models") or [])
@@ -301,6 +310,7 @@ def sync_ai_provider_gpt_models(name: str):
         "apiKey": provider.api_key,
         "enabled": provider.enabled,
         "models": list(provider.models),
+        "apiMode": provider.api_mode,
     }
     previous_by_id = {
         str(model.get("modelId") or model.get("modelName")): model
@@ -354,8 +364,9 @@ def get_ai_provider(name: str):
                     "name": p.name,
                     "endpoint": p.endpoint,
                     "apiKey": p.api_key,
-                    "enabled": p.enabled,
-                    "models": p.models,
+            "enabled": p.enabled,
+            "models": p.models,
+            "apiMode": p.api_mode,
                 }, managed=False))
         raise HTTPException(status_code=404, detail=f"Provider not found: {name}")
     return _ok(_safe_provider_data(data, managed=True))
@@ -374,6 +385,7 @@ def save_ai_provider(body: AiProviderBody):
         "apiKey": body.apiKey,
         "enabled": body.enabled,
         "models": body.models,
+        "apiMode": body.apiMode,
     }
     saved = ai_service.store.save(data)
     return _ok(_safe_provider_data(saved, managed=True))
@@ -396,6 +408,7 @@ def update_ai_provider(name: str, body: AiProviderBody):
         "apiKey": api_key,
         "enabled": body.enabled,
         "models": body.models,
+        "apiMode": body.apiMode,
     }
     saved = ai_service.store.save(data)
     return _ok(_safe_provider_data(saved, managed=True))
@@ -434,16 +447,24 @@ def test_ai_provider(name: str):
         })
     try:
         client = openai.OpenAI(base_url=provider.endpoint, api_key=provider.api_key)
-        resp = client.chat.completions.create(
+        client._agent_api_mode = provider.api_mode
+        messages = [{"role": "user", "content": "hi"}]
+        resp = create_model_completion_sync(client, {
+            "model": model_id,
+            "messages": messages,
+            "max_tokens": 5,
+            "timeout": 15,
+        }, prompt_cache_key=build_prompt_cache_key(
             model=model_id,
-            messages=[{"role": "user", "content": "hi"}],
-            max_tokens=5,
-            timeout=15,
-        )
+            system_prompt="",
+            tools=[],
+            scope=f"provider-test:{provider.name}",
+        ))
         return _ok({
             "success": True,
             "model": model_id,
             "reply": extract_chat_content(resp),
+            "transport": str(getattr(resp, "transport", "chat") or "chat"),
         })
     except Exception as exc:
         return _ok({"success": False, "model": model_id, "error": str(exc)})

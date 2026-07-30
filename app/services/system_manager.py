@@ -25,6 +25,7 @@ from typing import Any
 from app.config import BASE_DIR, settings
 from app.models.registry import McpServerDefinition
 from app.services.skill_packages import load_skill_package
+from app.services.model_transport import create_model_completion_sync
 
 
 _GITHUB_RE = re.compile(
@@ -405,9 +406,9 @@ class SystemManagerService:
         ]
         try:
             client, model = self._ai.get_default_client()
-            completion = client.chat.completions.create(
-                model=model,
-                messages=[
+            completion = create_model_completion_sync(client, {
+                "model": model,
+                "messages": [
                     {
                         "role": "system",
                         "content": (
@@ -426,9 +427,9 @@ class SystemManagerService:
                         }, ensure_ascii=False),
                     },
                 ],
-                temperature=0.2,
-                max_tokens=1200,
-            )
+                "temperature": 0.2,
+                "max_tokens": 1200,
+            })
             from app.services.chat_response import extract_chat_content
 
             answer = extract_chat_content(completion)

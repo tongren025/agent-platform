@@ -29,6 +29,11 @@ from app.dependencies import ai_service
 from app.services.image_generation import generate_image_to_local
 from app.services import canvas_catalog, canvas_projects, canvas_prompts, openrouter_media
 from app.services.chat_response import extract_chat_content
+from app.services.model_transport import (
+    build_prompt_cache_key,
+    create_model_completion,
+    create_model_completion_sync,
+)
 from app.models.conversation import AgentRunRequest
 from app.models.production import STAGES, STAGE_INSTRUCTIONS
 from app.runtime.loop import AgentLoopOptions, run_agent_loop
@@ -593,13 +598,32 @@ async def _execute_workbench_agent(req: WorkbenchAgentReq, *, on_text_delta=None
                 )
                 if reasoning_effort:
                     create_kwargs["reasoning_effort"] = reasoning_effort
-                response = await client.chat.completions.create(**create_kwargs)
+                response, _ = await create_model_completion(
+                    client,
+                    create_kwargs,
+                    is_async=True,
+                    prompt_cache_key=build_prompt_cache_key(
+                        model=actual_model,
+                        system_prompt=system_prompt,
+                        tools=[],
+                        scope=f"canvas:{skill_key}",
+                    ),
+                )
                 raw_text = extract_chat_content(response)
                 usage_raw = getattr(response, "usage", None)
                 usage = (
                     usage_raw.model_dump()
                     if hasattr(usage_raw, "model_dump")
-                    else usage_raw if isinstance(usage_raw, dict) else None
+                    else usage_raw if isinstance(usage_raw, dict)
+                    else {
+                        "promptTokens": int(getattr(usage_raw, "prompt_tokens", 0) or 0),
+                        "completionTokens": int(getattr(usage_raw, "completion_tokens", 0) or 0),
+                        "cachedPromptTokens": int(getattr(
+                            getattr(usage_raw, "prompt_tokens_details", None),
+                            "cached_tokens",
+                            0,
+                        ) or 0),
+                    } if usage_raw is not None else None
                 )
             else:
                 loop_result = await run_agent_loop(
@@ -627,6 +651,7 @@ async def _execute_workbench_agent(req: WorkbenchAgentReq, *, on_text_delta=None
                     "totalTokens": (
                         loop_result.prompt_tokens + loop_result.completion_tokens
                     ),
+                    "cachedPromptTokens": loop_result.cached_prompt_tokens,
                 }
             session_id = req.session_id
         try:
@@ -877,11 +902,11 @@ def run_workbench_task(req: WorkbenchTaskReq):
                 content = result.assistant_message or ""
             else:
                 client, actual_model = ai_service.get_client(f"{req.vendor}:{model}")
-                response = client.chat.completions.create(
-                    model=actual_model,
-                    messages=[{"role": "user", "content": prompt}],
-                    timeout=120,
-                )
+                response = create_model_completion_sync(client, {
+                    "model": actual_model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "timeout": 120,
+                })
                 content = extract_chat_content(response)
             return ok({
                 "id": task_id,
