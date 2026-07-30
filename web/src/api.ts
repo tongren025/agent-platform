@@ -449,6 +449,8 @@ export const api = {
     request<any[]>(`/scrape/sources/${encodeURIComponent(code)}/prompts?limit=${limit}`),
   listScrapeHistory: (code: string) =>
     request<any[]>(`/scrape/sources/${encodeURIComponent(code)}/history`),
+  getCanvasPromptLearning: (limit = 100) =>
+    request<any>(`/canvas/workbench/prompt-learning?limit=${limit}`),
 
   // 定时文章学习
   listLearnSources: () => request<any[]>('/scrape/learn-sources'),

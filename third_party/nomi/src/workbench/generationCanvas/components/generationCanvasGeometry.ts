@@ -17,10 +17,20 @@ const WHEEL_PAGE_HEIGHT = 800
 const GROUP_BOX_PADDING = 24
 const GROUP_BOX_LABEL_HEIGHT = 28
 
+// 所有入口共用同一缩放边界。此前“适应视图”可把大项目缩到 1%，
+// 但滚轮/按钮最低只允许 20%，导致节点虽已挂载却几乎无法点击。
+export const MIN_CANVAS_ZOOM = 0.2
+export const MAX_CANVAS_ZOOM = 3
+
 export type WheelZoomEvent = Pick<WheelEvent, 'deltaMode' | 'deltaY'>
 
 export function clampNumber(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value))
+}
+
+export function clampCanvasZoom(value: number): number {
+  if (!Number.isFinite(value)) return 1
+  return clampNumber(value, MIN_CANVAS_ZOOM, MAX_CANVAS_ZOOM)
 }
 
 export function getWheelZoomFactor(event: WheelZoomEvent): number {

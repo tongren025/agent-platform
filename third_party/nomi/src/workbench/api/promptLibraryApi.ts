@@ -53,6 +53,21 @@ async function platformPromptRequest<T>(path = '', init?: RequestInit): Promise<
   return envelope.data
 }
 
+async function platformBuiltinPromptRequest(): Promise<unknown[]> {
+  const token = window.localStorage.getItem('user_token')
+  const response = await fetch('/api/v1/agentapp/canvas/workbench/prompts', {
+    headers: {
+      Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  })
+  const envelope = await response.json() as PlatformEnvelope<unknown[]>
+  if (!response.ok || envelope.code !== 200 || !Array.isArray(envelope.data)) {
+    throw new Error(envelope.message || `平台内置提示词请求失败（${response.status}）`)
+  }
+  return envelope.data
+}
+
 function toPrompt(raw: unknown): LibraryPrompt | null {
   if (!raw || typeof raw !== 'object') return null
   const r = raw as Record<string, unknown>
@@ -86,8 +101,8 @@ export async function fetchPromptLibrary(): Promise<LibraryPrompt[]> {
   const desktop = getDesktopBridge()
   if (!desktop?.promptLibrary) {
     if (!isPlatformWebRuntime()) throw new Error('prompt library requires a browser or Electron runtime')
-    // 平台没有伪造“官方精选”；个人库由 fetchUserPrompts 读取账号级常用指令。
-    return []
+    const rows = await platformBuiltinPromptRequest()
+    return rows.map(toPrompt).filter((prompt): prompt is LibraryPrompt => prompt !== null)
   }
   const res = await desktop.promptLibrary.list()
   if (!res?.ok || !Array.isArray(res.prompts)) return []

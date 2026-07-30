@@ -17,6 +17,7 @@ export function FloatingToolbarShell({ ariaLabel, children }: { ariaLabel: strin
   return (
     <div
       className={cn(
+        'generation-canvas-v2-node__floating-toolbar',
         'absolute left-1/2 bottom-[calc(100%+16px)] z-[12]',
         'inline-flex items-center gap-1 min-h-9 px-1.5 py-1',
         'border border-nomi-line rounded-nomi',

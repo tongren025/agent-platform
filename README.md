@@ -124,8 +124,10 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ### 短剧无限画布（`/canvas`）
 - **完整短剧工作台** — `/canvas` 直接挂载由 `third_party/nomi/` 源码编译出的 React 模块，包含项目库、创作助手、无限生成画布、素材/提示词/技能库、分镜计划、多轨时间线、预览导出与 3D 导演；不是 iframe、独立 HTML 或外链应用
-- **平台数字员工** — 画布助手的文本能力目录直接读取 `/registry/employees`；选择某个员工后，以该员工的 `employeeKey` 调用现有 `/agent/run`，继续使用平台角色、知识、Skill、工具、MCP 与模型路由
-- **平台媒体模型** — 图片/视频节点只读取平台 OpenRouter 媒体模型目录；图片走统一落图服务，视频走平台异步提交和轮询，画布不保存或使用上游供应商密钥
+- **平台数字员工** — 画布助手的文本能力目录直接读取 `/registry/employees`；选择某个员工后，通过 `/canvas/workbench/agent` 以该员工的 `employeeKey` 调用现有运行时，继续使用平台角色、知识、Skill、工具、MCP 与模型路由
+- **平台媒体模型** — 已连接的官方 OpenRouter 供应商实时提供该账号可用的图片/视频模型目录，并使用短时缓存抵御上游抖动；图片走统一落图服务，视频走平台异步提交和轮询，画布不保存或使用上游供应商密钥
+- **提示词与学习闭环** — 人物、场景、图片分镜、视频分镜和图生视频节点内置平台化专业提示词；被用户采纳的生成或优化结果会写入账号级提示词学习记录和现有长期记忆，供后续员工复用
+- **大型项目性能** — 画布自动修复历史异常缩放，只挂载当前视区附近节点；低缩放点击轻量节点会自动聚焦，数百节点的制作项目也不会在首屏一次生成全部节点 DOM
 - **平台项目持久化** — 完整工作台项目由 `/canvas/workbench/projects` 保存到 `data/canvas/workbench/`；浏览器 localStorage 只作同步缓存，服务端记录是重新登录和换浏览器后的恢复来源
 - **主站同源模块** — 源码入口为 `third_party/nomi/src/agentStudioMount.tsx`，产物为 `web/public/agent-canvas/agent-canvas.js`；主站 `CanvasHub` 在同一 DOM、同一登录态下加载并负责卸载
 - **品牌与许可证** — 产品界面使用 Agent Studio 品牌，不展示上游 Logo、官网、更新器或模型配置；`third_party/nomi/LICENSE` 和 `NOTICE.agent-platform.md` 保留 Apache-2.0 许可证、上游归属和本项目修改说明

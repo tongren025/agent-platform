@@ -148,5 +148,15 @@
     "llmModel": "",
     "durationMs": 15,
     "error": null
+  },
+  {
+    "logId": "evo_a90aaa15a837",
+    "employeeKey": "comic-storyboard",
+    "ranAt": "2026-07-30T04:04:39.762506Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
   }
 ]

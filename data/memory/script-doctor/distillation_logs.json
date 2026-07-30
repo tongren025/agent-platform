@@ -1011,5 +1011,24 @@
     "llmModel": "",
     "durationMs": 0,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_fc15b62df94b",
+    "employeeKey": "script-doctor",
+    "ranAt": "2026-07-30T04:04:36.505004Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 0,
+      "procedural": 0
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 0,
+      "procedural_count": 0
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 3358,
+    "error": null
   }
 ]

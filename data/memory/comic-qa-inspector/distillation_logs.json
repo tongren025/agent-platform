@@ -1632,5 +1632,142 @@
     "llmModel": "",
     "durationMs": 16,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_9814a4784ff7",
+    "employeeKey": "comic-qa-inspector",
+    "ranAt": "2026-07-30T04:04:39.378631Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-qa-inspector_register_law",
+        "mergeIntoId": "duanju_spine_20260630_comic-qa-inspector_law",
+        "newContent": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别这些电影美术手艺只是工具,必须服从短剧节奏,不是目的。\n\n【九陆纪元·register铁律·最高优先级】全程高燃、高格调门槛、起点即天花板。无拉跨、无卡拉米——'贴地无脸/样本视角/体温/一个少年一块石头'那套小人物文艺分镜全部作废。主角苍霖开局即强者:懒散欠揍、世界树觉醒者、力量地貌/城市尺度,不是泥里被打的弱者。反天选是魂但埋线不点破(力量是自己爬来的,1秒闪回足矣)。每集=一个大场面set-piece+一个反转(以为A其实B)+一个钩子;1秒剪辑,约60刀/90秒,战斗段0.5秒。爽点=抬手改写一座城。",
+        "newImportance": null,
+        "reason": "两条记忆都强调了短剧的高节奏、高信息密度和以事件驱动的叙事方式，'jiulu_gaoran_pivot_20260709_comic-qa-inspector_register_law' 提供了具体的“九陆纪元”IP风格要求，可以整合到总的短剧准则中，作为该准则在特定IP下的具体体现。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_04_no_grid_keyframe",
+        "mergeIntoId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "newContent": "【质检红线与交付标准（最高优先级）】\n1. 交付包标准目录：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告。缺任一目录或关键文件（含 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场，以及每镜必须具备的 image/motion prompt、映射关系、正向约束后缀、R编号、口型字幕行）一律判定为返工。\n2. 红线清单：①缺风格锚点句②缺正向后缀③出现快速/fast（应改用缓慢/轻微/小幅度/逐渐/平稳，优先慢速连续小动作）④角色DNA被改写⑤无@引用⑥无R编号⑦单段超6秒（超过则角色变形，10s拆≥2段, 15s拆≥3段, 用[00:00-00:05]格式）⑧多运镜叠加⑨运镜没中英双写⑩负向提示词（Seedance 2.0不读负向，必须转正向表述，如：画面干净无遮挡/无描边/无墨线/无草稿线/无文字水印，移除 rough storyboard、ink、sketch 等暗示词，保持角色一致性，服装不漂移）⑪缺口型字幕行。同时检查：脏图、黑线、粗描边、角色/服装漂移、动作逻辑错乱、场景方向矛盾。\n\n宫格或多面板只可作为内部时序参考，不可作为正片关键图；正片关键图优先单张干净行动图，避免分格线和脏线。",
+        "newImportance": null,
+        "reason": "两条记忆都涉及图像质量和交付标准，'seed_comic-qa-inspector_sem_04_no_grid_keyframe' 强调了关键帧的呈现形式（避免宫格、脏线），这可以作为 'learn_consolidation_20260630_comic-qa-inspector_sem_05' 中关于交付标准和红线清单的补充，特别是关于“脏图”、“黑线”、“粗描边”等负向提示词的转正向表述，与避免脏线的要求一致。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-qa-inspector_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆是短剧制作的最高准则，统管一切，重要性应为最高优先级1.0。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_sem_05",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了质检红线和交付标准，是确保项目质量的关键，重要性应为最高优先级1.0。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-qa-inspector_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了特定IP“九陆纪元”的最高优先级铁律，与短剧准则同等重要，应调整为1.0。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_02_style_core",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆定义了视觉核心风格，虽然重要，但优先级略低于短剧准则和质检标准。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-qa-inspector_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.97,
+        "reason": "该记忆关于关键图的质量要求，虽然重要，但优先级略低于视觉风格和AI一致性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-qa-inspector_ai_consistency_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该记忆提供了AI角色一致性的硬解法，对于保证角色在不同镜头间的连贯性至关重要，重要性应提高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.93,
+        "reason": "该经验记忆处理了制作包内容缺失的问题，虽然成功避免了无法接入工具，但其重要性略低于核心的质检规则和风格要求。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该经验记忆处理了'快速'禁用词的问题，直接关系到动作流畅度和避免运动模糊，重要性较高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-qa-inspector_epi_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该经验记忆处理了负向提示词转正向的问题，直接关系到生成图像质量，重要性较高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "seed_comic-qa-inspector_proc_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该行为记忆强调了检查动作连续性的重要性，这是保证画面逻辑的关键，置信度很高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-qa-inspector_proc_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该行为记忆详细描述了质检执行流程和核心理念，是确保团队可靠性的关键，置信度和重要性应为最高。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 6,
+      "episodic": 3,
+      "procedural": 2
+    },
+    "afterCounts": {
+      "semantic_count": 4,
+      "episodic_count": 3,
+      "procedural_count": 2
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 8671,
+    "error": null
   }
 ]

@@ -127,33 +127,50 @@ export async function openDesktopAgentsChatStream(
       const token = window.localStorage.getItem('user_token')
       const platformPayload = payload as AgentsChatRequestDto & {
         agentModelKey?: string
+        agentVendorKey?: string
         projectId?: string
       }
-      // 上游把“文本模型”放在 agentModelKey；在 Agent Studio Web 里它就是数字员工 key。
-      // 这样两个助手面板中的员工下拉选择会直接决定 /agent/run 的 employeeKey。
-      let employeeKey = platformPayload.agentModelKey
-        || window.localStorage.getItem('canvas.employee')
-        || ''
-      if (employeeKey) window.localStorage.setItem('canvas.employee', employeeKey)
-      if (!employeeKey) {
+      let modelKey = platformPayload.agentModelKey || ''
+      let vendorKey = platformPayload.agentVendorKey || ''
+      if (!modelKey) {
+        modelKey = window.localStorage.getItem('canvas.employee') || ''
+        if (modelKey) vendorKey = 'platform-employee'
+      }
+      if (!modelKey) {
         const employeesResponse = await fetch('/api/v1/agentapp/registry/employees', {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         })
         const employeesPayload = await employeesResponse.json() as { data?: Array<Record<string, unknown>> }
         const first = employeesPayload.data?.[0]
-        employeeKey = String(first?.employeeKey || first?.employee_key || '')
+        modelKey = String(first?.employeeKey || first?.employee_key || '')
+        vendorKey = 'platform-employee'
       }
-      if (!employeeKey) throw new Error('请先在数字员工页面创建员工')
-      const response = await fetch('/api/v1/agentapp/agent/run', {
+      if (!modelKey) throw new Error('请先配置一个数字员工或文本模型')
+      vendorKey = vendorKey || 'platform-employee'
+      if (vendorKey === 'platform-employee') {
+        window.localStorage.setItem('canvas.employee', modelKey)
+      }
+      const chatContext = payload.chatContext && typeof payload.chatContext === 'object'
+        ? payload.chatContext as Record<string, unknown>
+        : {}
+      const skill = chatContext.skill && typeof chatContext.skill === 'object'
+        ? chatContext.skill as Record<string, unknown>
+        : {}
+      const response = await fetch('/api/v1/agentapp/canvas/workbench/agent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
-          employeeKey,
-          userInput: [payload.systemPrompt, payload.prompt].filter(Boolean).join('\n\n'),
+          vendor: vendorKey,
+          modelKey,
+          skillKey: String(skill.key || 'workbench.generation.canvas-planner'),
+          skillName: String(skill.name || ''),
+          prompt: payload.prompt,
+          systemPrompt: payload.systemPrompt || '',
           sessionId: payload.sessionKey || `canvas-${platformPayload.projectId || payload.canvasProjectId || 'default'}`,
+          projectId: platformPayload.projectId || payload.canvasProjectId || '',
         }),
       })
       const envelope = await response.json() as { code?: number; data?: Record<string, unknown>; message?: string }
@@ -168,12 +185,47 @@ export async function openDesktopAgentsChatStream(
         || envelope.data.content
         || '',
       )
+      const rawToolCalls = Array.isArray(envelope.data.toolCalls) ? envelope.data.toolCalls : []
+      const toolCalls: Array<{ toolCallId: string; toolName: string; args: unknown }> = []
+      rawToolCalls.forEach((item, index) => {
+        if (!item || typeof item !== 'object') return
+        const call = item as Record<string, unknown>
+        const toolName = String(call.toolName || call.name || '')
+        if (!toolName) return
+        toolCalls.push({
+          toolCallId: String(call.toolCallId || `platform-tool-${Date.now()}-${index}`),
+          toolName,
+          args: call.args ?? call.arguments ?? {},
+        })
+      })
       const requestId = `platform-${Date.now()}`
       handlers.onEvent({ event: 'initial', data: { requestId } })
-      handlers.onEvent({ event: 'content', data: { delta: text, text } })
+      if (text) handlers.onEvent({ event: 'content', data: { delta: text, text } })
+      for (const call of toolCalls) {
+        handlers.onEvent({
+          event: 'tool-call',
+          data: {
+            sessionId: payload.sessionKey || requestId,
+            toolCallId: call.toolCallId,
+            toolName: call.toolName,
+            args: call.args,
+          },
+        })
+      }
+      handlers.onEvent({ event: 'step-finish', data: { finishReason: toolCalls.length ? 'tool-calls' : 'stop' } })
       handlers.onEvent({
         event: 'result',
-        data: { response: { id: requestId, text, raw: envelope.data, toolCalls: [], artifacts: [] } },
+        data: {
+          response: {
+            id: requestId,
+            text,
+            raw: envelope.data,
+            toolCalls,
+            artifacts: [],
+            usage: coerceAgentUsage(envelope.data.usage),
+            finishReason: toolCalls.length ? 'tool-calls' : 'stop',
+          },
+        },
       })
       handlers.onEvent({ event: 'done', data: { reason: 'finished' } })
     } catch (error: unknown) {

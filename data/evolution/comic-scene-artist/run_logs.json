@@ -148,5 +148,15 @@
     "llmModel": "",
     "durationMs": 15,
     "error": null
+  },
+  {
+    "logId": "evo_24aa1cb68e03",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-30T04:04:39.776417Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
   }
 ]

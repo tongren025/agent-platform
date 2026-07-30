@@ -7,8 +7,8 @@
     "confidence": 0.95,
     "activationCount": 0,
     "sourceSession": "learn_consolidation_20260630",
-    "createdAt": "2026-06-30T11:44:56.150698+00:00",
-    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-07-30T04:04:42.302397Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-scene-artist_proc_02",
@@ -18,8 +18,8 @@
     "confidence": 0.93,
     "activationCount": 0,
     "sourceSession": "learn_consolidation_20260630",
-    "createdAt": "2026-06-30T11:44:56.150698+00:00",
-    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-07-30T04:04:42.304343Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-scene-artist_proc_03",
@@ -29,7 +29,7 @@
     "confidence": 0.93,
     "activationCount": 0,
     "sourceSession": "learn_consolidation_20260630",
-    "createdAt": "2026-06-30T11:44:56.150698+00:00",
-    "updatedAt": "2026-06-30T11:44:56.150698+00:00"
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "updatedAt": "2026-07-30T04:04:42.306299Z"
   }
 ]

@@ -10,6 +10,7 @@ import { IconX } from '@tabler/icons-react'
 import { cn } from '../../../utils/cn'
 import { NomiLogoMark, WorkbenchButton } from '../../../design'
 import { getTextBrain } from '../../api/promptLibraryApi'
+import { recordAcceptedCanvasPrompts } from '../../api/promptLearningApi'
 import { runWorkbenchTextTaskStream } from '../../api/taskApi'
 import { useGenerationCanvasStore } from '../store/generationCanvasStore'
 import type { GenerationCanvasNode } from '../model/generationCanvasTypes'
@@ -91,10 +92,15 @@ export function NodePromptOptimizer({ node, isVideo }: { node: GenerationCanvasN
   const apply = React.useCallback(() => {
     if (!result) return
     useGenerationCanvasStore.getState().updateNode(node.id, { prompt: result })
+    void recordAcceptedCanvasPrompts([{
+      kind: 'prompt_refine',
+      title: node.title || (isVideo ? '视频提示词优化' : '图片提示词优化'),
+      prompt: result,
+    }]).catch(() => undefined)
     setOpen(false)
     setIdea('')
     reset()
-  }, [result, node.id, reset])
+  }, [result, node.id, node.title, isVideo, reset])
 
   const toggle = React.useCallback(() => {
     if (running) {

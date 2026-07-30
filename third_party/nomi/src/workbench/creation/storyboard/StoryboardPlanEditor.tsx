@@ -8,6 +8,7 @@ import { useGenerationCanvasStore } from '../../generationCanvas/store/generatio
 import { resolveStoryboardImageDefault, resolveStoryboardVideoDefault } from '../../generationCanvas/agent/availableModels'
 import { useModelOptionsState } from '../../../config/useModelOptions'
 import { storyboardPlanToCreateNodesArgs } from '../../generationCanvas/agent/storyboardPlan'
+import { recordAcceptedCanvasPrompts } from '../../api/promptLearningApi'
 import {
   addAnchor,
   addShot,
@@ -93,6 +94,18 @@ export default function StoryboardPlanEditor(): JSX.Element | null {
       await applyCanvasToolCall('create_canvas_nodes', args)
       // 不再即焚:方案保留、转「已落画布」、收起编辑器 → 卡片留在对话流可回看/再编辑。
       commitStoryboardPlan()
+      void recordAcceptedCanvasPrompts([
+        {
+          kind: 'storyboard',
+          title: plan.title,
+          prompt: JSON.stringify(plan),
+        },
+        ...plan.shots.map((shot) => ({
+          kind: shot.shotKind === 'video' ? 'video_prompt' as const : 'image_prompt' as const,
+          title: `${plan.title} · 镜头 ${shot.index}`,
+          prompt: shot.prompt,
+        })),
+      ]).catch(() => undefined)
       setWorkspaceMode('generation')
       // 揭示新落的镜头：请画布平滑 fit 一次。否则新节点落在已加载画布的视口外，
       // 用户点完「确认落画布」看着像「没反应」（useAutoFitOnLoad 只在首次加载/切分类触发）。

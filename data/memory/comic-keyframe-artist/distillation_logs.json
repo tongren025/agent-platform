@@ -414,5 +414,196 @@
     "llmModel": "",
     "durationMs": 30,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_bf8a27ef0977",
+    "employeeKey": "comic-keyframe-artist",
+    "ranAt": "2026-07-30T04:04:35.911753Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_sem_04",
+        "mergeIntoId": "learn_consolidation_20260630_comic-keyframe-artist_sem_05",
+        "newContent": "风格锚点句(所有提示词必带)：干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边。正向约束后缀(每条提示词结尾必带)：画面干净无描边/无墨线/无裂纹/无草稿线/无脏黑边/无死黑阴影/无文字水印/保持角色一致性/服装不漂移/保持面部一致/无变形/无拉伸/面部清晰/人体结构正常/动作自然流畅/画面稳定/竖屏9:16/电影质感。",
+        "newImportance": null,
+        "reason": "两条记忆都定义了提示词的约束性内容，一条是风格锚点，一条是正向约束后缀，内容高度相关且互补，合并后可形成更完整的提示词构建规则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_sem_07",
+        "mergeIntoId": "learn_consolidation_20260630_comic-keyframe-artist_sem_06",
+        "newContent": "@引用系统：@图片1=R3苍霖母版(所有镜头必引)/@视频1=风格锁定视频(最强风格锚)/@音频1-3=配音BGM。总计≤12素材,最优4-5个。关键句「画风动作严格对齐@视频1的风格」。关键帧=每镜首帧,是图生视频的起点,必须景别/构图/角色位置/光影一次到位,@图片1锁角色@场景母版锁背景。",
+        "newImportance": null,
+        "reason": "两条记忆都涉及提示词中的引用和关键帧的生成方式，内容高度相关，合并后可以更清晰地描述如何构建包含引用和关键帧的提示词。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-keyframe-artist_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了作品的核心风格和主角设定，优先级最高，应保持1.0的重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-keyframe-artist_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了短剧的核心制作法则，优先级极高，应保持与最高优先级相当的重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_sem_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该记忆详细描述了主角苍霖的三个阶段的外观变化，是角色设定的核心信息，重要性应略高于一般场景或技术记忆。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-keyframe-artist_realm_spectacle_lock",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该记忆定义了不同大陆的视觉母题，是世界观设定的重要组成部分，重要性应略高于一般场景或技术记忆。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_sem_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.96,
+        "reason": "该记忆定义了7个核心场景的视觉特征，是场景设定的重要依据，重要性应保持较高水平。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_ai_consistency_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.96,
+        "reason": "该记忆提供了解决AI角色漂移问题的硬解法，是关键的技术性记忆，重要性应保持较高水平。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该记忆详细描述了景别与情绪的对应关系及运镜规则，是镜头语言的重要指导，重要性应保持较高水平。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "布光准则虽然重要，但其重要性应略低于核心的风格、角色、场景和AI一致性等记忆，调整至0.8。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep_20260630_comic-keyframe-artist_animation12_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "动画12原则的实操应用对AI生成视频有指导意义，但其重要性应略低于核心的风格、角色、场景和AI一致性等记忆，调整至0.8。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-keyframe-artist_expression_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "表情刻画是细节，重要性应低于整体风格和角色设定，调整至0.7。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-keyframe-artist_env_layer_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.7,
+        "reason": "环境纵深和构图构建是重要的视觉技巧，但其重要性应低于核心的风格、角色、场景和AI一致性等记忆，调整至0.7。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "pro_canon_wiki_20260630_comic-keyframe-artist_montage_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.6,
+        "reason": "蒙太奇理论是基础知识，但其在AI生成视频中的直接应用可能不如具体的技术和风格指导，重要性调整至0.6。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该经验记忆记录了一次成功的关键帧输出，且成功评分高，应提高其重要性以供未来参考。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_epi_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.92,
+        "reason": "该经验记忆记录了一次成功的景别和构图输出，且成功评分高，应提高其重要性以供未来参考。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_proc_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该规则是关于生成关键帧参考图的核心流程，置信度高且直接关系到AI一致性，应提高其重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_proc_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.96,
+        "reason": "该规则强调景别和构图与分镜表的匹配，是关键帧生成的关键环节，置信度高，应保持较高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-keyframe-artist_proc_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.94,
+        "reason": "该规则描述了批量生成和优选关键帧的方法，是工业化流程的重要组成部分，置信度高，应保持较高重要性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 16,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 14,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 9936,
+    "error": null
   }
 ]

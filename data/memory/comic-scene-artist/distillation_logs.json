@@ -396,5 +396,124 @@
     "llmModel": "",
     "durationMs": 16,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_0a61625ba623",
+    "employeeKey": "comic-scene-artist",
+    "ranAt": "2026-07-30T04:04:36.770896Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_04",
+        "mergeIntoId": "learn_consolidation_20260630_comic-scene-artist_sem_05",
+        "newContent": "风格锚点句(所有提示词必带)：干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边。正向约束后缀(每条提示词结尾必带)：画面干净无描边/无墨线/无裂纹/无草稿线/无脏黑边/无死黑阴影/无文字水印/保持角色一致性/服装不漂移/保持面部一致/无变形/无拉伸/面部清晰/人体结构正常/动作自然流畅/画面稳定/竖屏9:16/电影质感。",
+        "newImportance": null,
+        "reason": "两条记忆都属于提示词的约束性内容，且内容高度相关，可以合并为关于提示词格式和约束的统一记忆。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "pro_craft_deep2_20260630_comic-scene-artist_env_layer_02",
+        "mergeIntoId": "pro_craft_deep2_20260630_comic-scene-artist_env_layer_01",
+        "newContent": "【构图与空间纵深原则】1.分层造深：环境分前景(最深暗)、中景(主焦点最亮)、背景(少细节低对比柔色)三层，利用对比和边缘清晰度分离。2.透视应用：一点透视汇于焦点；视平线决定视角；利用大气透视（近鲜明、远失色）实现'远山无皴远水无波'。3.构图引导：基础采用三分法，利用三角轴或斜线引导视线流动。4.光影组织：光影应被组织成'有情感的组合'强化主题。每个画面只定一个'压过一切的注意元素'(靠形状/颜色/光)——没有明确焦点观众视线就散。（来源:CreativeBloq环境艺术）",
+        "newImportance": null,
+        "reason": "两条记忆都属于构图和空间处理的原则，内容高度相关，可以合并为关于构图和空间纵深的统一记忆。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-scene-artist_register_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆是关于'九陆纪元'世界观设定的核心规则，优先级最高，应保持最高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-scene-artist_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆是关于短剧制作的最高准则，统管一切，优先级极高，应保持最高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "该记忆定义了核心场景的视觉元素，是重要的基础信息，保持高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-scene-artist_realm_spectacle_lock",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.97,
+        "reason": "该记忆定义了各大陆的视觉母题，是重要的世界观设定，保持高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该记忆关于色彩体系与叙事决策，是重要的视觉指导，保持高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.85,
+        "reason": "该记忆关于光影与情绪的映射及实操要求，虽然重要，但其重要性略低于核心场景和色彩体系，适当调整。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_proc_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.95,
+        "reason": "该规则是关于场景一致性的重要指导，保持高置信度。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_proc_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.93,
+        "reason": "该规则是关于角色和背景分层生成的关键流程，保持高置信度。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-scene-artist_proc_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.93,
+        "reason": "该规则是关于提示词后缀的约束，对最终画面质量有直接影响，保持高置信度。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 11,
+      "episodic": 2,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 2,
+      "procedural_count": 3
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 5547,
+    "error": null
   }
 ]

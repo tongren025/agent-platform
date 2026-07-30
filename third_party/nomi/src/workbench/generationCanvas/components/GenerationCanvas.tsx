@@ -37,6 +37,7 @@ import { useNodeAppearTracking } from './useNodeAppearTracking'
 import { useTidyCanvas } from './useTidyCanvas'
 import {
   centerNodeOffset,
+  clampCanvasZoom,
   clampNumber,
   getCanvasGroupBoxes,
   getNodeSize,
@@ -456,7 +457,7 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
   }, [offsetRef, setViewportTransform, stageRef, zoomAtStagePoint])
   const handleZoomByStep = React.useCallback((direction: -1 | 1) => {
     const factor = direction > 0 ? 1.1 : 1 / 1.1
-    handleZoomTo(clampNumber((zoomRef.current || 1) * factor, 0.2, 3))
+    handleZoomTo(clampCanvasZoom((zoomRef.current || 1) * factor))
   }, [handleZoomTo, zoomRef])
 
   useCanvasShortcuts({
@@ -560,7 +561,7 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
     const maxY = Math.max(...nodes.map((n) => n.position.y + getNodeSize(n).height))
     const contentW = maxX - minX + padding * 2
     const contentH = maxY - minY + padding * 2
-    const nextZoom = Math.min(1.2, Math.min(rect.width / contentW, rect.height / contentH))
+    const nextZoom = clampCanvasZoom(Math.min(1.2, Math.min(rect.width / contentW, rect.height / contentH)))
     const nextOffset = {
       x: (rect.width - contentW * nextZoom) / 2 - (minX - padding) * nextZoom,
       y: (rect.height - contentH * nextZoom) / 2 - (minY - padding) * nextZoom,
@@ -600,8 +601,13 @@ export default function GenerationCanvas({ readOnly = false }: GenerationCanvasP
     (nodeId: string, additive: boolean) => {
       if (readOnly) return
       selectNode(nodeId, additive)
+      if (additive || zoomRef.current >= 0.55) return
+      const node = nodeById.get(nodeId)
+      if (!node) return
+      const targetZoom = 0.72
+      animateViewportTo(targetZoom, centerNodeOffset(node, stageSizeRef.current, targetZoom), 160)
     },
-    [readOnly, selectNode],
+    [animateViewportTo, nodeById, readOnly, selectNode, stageSizeRef, zoomRef],
   )
 
   // E.2C-13: 删除 viewType 分支。5 个分类全部走同一画布底座。

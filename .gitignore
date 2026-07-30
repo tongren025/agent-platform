@@ -7,4 +7,7 @@ _tok.txt
 *_tok.txt
 data/.secrets/
 
+# 本地 Git worktree 是另一个检出目录，不是可部署文件；其中代码应先形成提交再合并。
+.worktrees/
+
 # 其余运行数据、备份、日志、构建产物、依赖与缓存均同步到私有远程仓库。

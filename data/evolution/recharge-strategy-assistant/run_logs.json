@@ -1,15 +1,5 @@
 [
   {
-    "logId": "evo_0de360e6f273",
-    "employeeKey": "recharge-strategy-assistant",
-    "ranAt": "2026-07-01T14:07:17.222198Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 266,
-    "error": null
-  },
-  {
     "logId": "evo_642a6998864d",
     "employeeKey": "recharge-strategy-assistant",
     "ranAt": "2026-07-02T03:14:25.150437Z",
@@ -497,6 +487,16 @@
     "insightsGenerated": 0,
     "llmModel": "",
     "durationMs": 219,
+    "error": null
+  },
+  {
+    "logId": "evo_62d765dbd2fe",
+    "employeeKey": "recharge-strategy-assistant",
+    "ranAt": "2026-07-30T04:04:39.747416Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
     "error": null
   }
 ]
