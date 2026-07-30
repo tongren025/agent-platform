@@ -1,0 +1,1 @@
+import{r as s,a2 as f,b3 as C,b4 as V}from"./index-BeA5wZrz.js";const x=(r,i,l)=>{var t,a;const{variant:u,[r]:e}=s.useContext(f),o=s.useContext(C),c=e==null?void 0:e.variant;let n;typeof i<"u"?n=i:l===!1?n="borderless":n=(a=(t=o??c)!==null&&t!==void 0?t:u)!==null&&a!==void 0?a:"outlined";const d=V.includes(n);return[n,d]};export{x as u};
