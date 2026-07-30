@@ -52,8 +52,7 @@
 
 **影响面**：新增生产诊断/优化服务、3 个导演 API、导演页和完整性检查页交互；
 新增可选项目级 JSON 运行记录，无数据库表、环境变量或部署配置迁移，不删除或改写
-现有项目数据。详细口径见
-[docs/REAL_PROJECT_OPTIMIZATION.md](REAL_PROJECT_OPTIMIZATION.md)。
+现有项目数据。
 
 ---
 
