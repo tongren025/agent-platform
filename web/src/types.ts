@@ -144,6 +144,8 @@ export interface AgentRunResponse {
   cancelled: boolean;
   errorMessage: string | null;
   tokenUsage: { promptTokens: number; completionTokens: number; totalTokens: number } | null;
+  modelIds: string[];
+  elapsedMilliseconds: number;
   traces: { toolName: string; arguments: string | null; result: string | null; success: boolean }[];
   sessionId: string | null;
   pendingApproval: { description: string; actionType: string } | null;

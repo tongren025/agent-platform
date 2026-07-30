@@ -42,6 +42,8 @@ class AgentRunResult:
     cancelled: bool = False
     error_message: Optional[str] = None
     token_usage: Optional[AgentTokenUsage] = None
+    model_ids: list[str] = field(default_factory=list)
+    elapsed_milliseconds: int = 0
     traces: list[AgentInvocationTrace] = field(default_factory=list)
     active_scopes: list[str] = field(default_factory=list)
     auto_invoke_count: int = 0
@@ -254,6 +256,7 @@ async def run_agent(
         logger.error("Agent loop failed for %s: %s", employee_key, exc)
         run_result.success = False
         run_result.error_message = f"代理循环执行失败: {exc}"
+        run_result.model_ids = list(options.used_models)
         if shared_deep_state is not None:
             run_result.deep_state_checkpoint = shared_deep_state.to_checkpoint()
         return run_result
@@ -271,6 +274,7 @@ async def run_agent(
     elif not loop_result.success:
         run_result.error_message = final_text or "AI 生成失败"
     run_result.traces = loop_result.traces
+    run_result.model_ids = list(options.used_models)
     run_result.auto_invoke_count = loop_result.iterations
     run_result.pending_approval = loop_result.pending_approval
 

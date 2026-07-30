@@ -174,6 +174,7 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
         run_id=run_id,
     )
     elapsed_ms = int((time.monotonic() - _t0) * 1000)
+    result.elapsed_milliseconds = elapsed_ms
 
     # 6. 组织会话：复用旧会话或新建，追加本轮 user / assistant 消息
     now = datetime.now(timezone.utc)
@@ -214,7 +215,8 @@ async def run_invocation(request: AgentRunRequest) -> AgentRunResult:
     try:
         pt = result.token_usage.prompt_tokens if result.token_usage else 0
         ct = result.token_usage.completion_tokens if result.token_usage else 0
-        model_id = (snapshot.default_model_policy or {}).get("model_id", "")
+        configured_model_id = (snapshot.default_model_policy or {}).get("model_id", "")
+        model_id = result.model_ids[-1] if result.model_ids else configured_model_id
         cost = estimate_cost(model_id, pt, ct)
         agent_run_store.save_run(AgentRunRecord(
             run_id=run_id,

@@ -5,14 +5,25 @@ export function useResponsive() {
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches,
   );
+  const [isCompact, setIsCompact] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 1180px)').matches,
+  );
 
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)');
-    const sync = () => setIsMobile(mq.matches);
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    const compactQuery = window.matchMedia('(max-width: 1180px)');
+    const sync = () => {
+      setIsMobile(mobileQuery.matches);
+      setIsCompact(compactQuery.matches);
+    };
     sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
+    mobileQuery.addEventListener('change', sync);
+    compactQuery.addEventListener('change', sync);
+    return () => {
+      mobileQuery.removeEventListener('change', sync);
+      compactQuery.removeEventListener('change', sync);
+    };
   }, []);
 
-  return { isMobile };
+  return { isMobile, isCompact };
 }

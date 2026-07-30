@@ -62,11 +62,69 @@ body {
 .wb-session-item:hover {
   background: #f8f9fc !important;
 }
+.wb-session-main:focus-visible,
+.wb-artifact-button:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
 .wb-bubble-ai:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
 }
-.wb-msg-row:hover .wb-msg-actions {
-  opacity: 1 !important;
+.wb-detail-row {
+  display: grid;
+  grid-template-columns: minmax(76px, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 12px;
+}
+.wb-detail-row > span {
+  color: #64748b;
+}
+.wb-detail-row > strong {
+  color: #334155;
+  font-weight: 600;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wb-detail-row > strong.wb-detail-value-wrap {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+.wb-artifact-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #e8ecf4;
+  border-radius: 10px;
+  background: #fff;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.wb-artifact-button:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .wb-root {
+    border-radius: 10px !important;
+  }
+  .wb-chat-meta {
+    max-width: calc(100vw - 150px);
+  }
+  .wb-msg-actions {
+    max-width: 100%;
+  }
 }
 
 /* ── Markdown in chat bubbles ── */

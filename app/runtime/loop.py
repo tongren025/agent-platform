@@ -80,6 +80,8 @@ class AgentLoopOptions:
     tool_result_transform: Optional[Callable[[str, str], str]] = None
     # AgentRun 控制面注入的轻量取消检查；只在模型/工具安全边界读取。
     should_cancel: Optional[Callable[[], bool]] = None
+    # 每次真正拿到有效回复的模型，供上层准确展示主模型/降级链路。
+    used_models: list[str] = field(default_factory=list, init=False)
 
 
 @dataclass
@@ -191,6 +193,8 @@ async def _create_with_retry(
                 choice = normalized.choices[0]
                 content = str(choice.message.content or "").strip()
                 if content or choice.message.tool_calls:
+                    if model not in options.used_models:
+                        options.used_models.append(model)
                     return response
 
                 finish_reason = str(choice.finish_reason or "unknown")

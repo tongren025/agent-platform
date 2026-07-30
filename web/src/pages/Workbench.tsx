@@ -1,17 +1,18 @@
 // 工作台：与数字员工/团队对话的主界面，含会话管理、附件、产出物与审批。
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { Alert, Badge, Button, Collapse, Divider, Drawer, Empty, Image, Input, List, Modal, Popconfirm, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Upload } from 'antd';
+import { Alert, Badge, Button, Divider, Drawer, Empty, Image, Input, List, Modal, Popconfirm, Radio, Select, Space, Spin, Tag, Tooltip, Typography, Upload } from 'antd';
 import { message } from '../ui';
 import {
   CopyOutlined, CheckOutlined,
   DeleteOutlined, FileTextOutlined, InboxOutlined, RobotOutlined,
   SendOutlined, TeamOutlined, UserOutlined, PaperClipOutlined,
-  PictureOutlined, CloseCircleFilled, FileOutlined,
-  ExpandOutlined, CompressOutlined, BugOutlined,
-  ReloadOutlined, StopOutlined, FolderOpenOutlined,
+  PictureOutlined, FileOutlined,
+  CompressOutlined, BugOutlined,
+  StopOutlined,
   EditOutlined, PlusOutlined, BookOutlined,
+  MenuFoldOutlined, MenuUnfoldOutlined, ProfileOutlined,
 } from '@ant-design/icons';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
 import ReactMarkdown from 'react-markdown';
@@ -38,6 +39,9 @@ interface ChatMessage {
   content: string;
   timestamp: string;
   tokenUsage?: { promptTokens: number; completionTokens: number; totalTokens: number } | null;
+  modelIds?: string[];
+  elapsedMilliseconds?: number;
+  runId?: string | null;
   traces?: { toolName: string; arguments: string | null; result: string | null; success: boolean }[];
   attachments?: ChatAttachment[];
 }
@@ -74,6 +78,20 @@ function firstLine(text?: string | null, max = 80) {
   const raw = (text || '').split('\n').find((l) => l.trim()) || '';
   const clean = raw.replace(/[#*_`>-]/g, '').trim();
   return clean.length > max ? clean.slice(0, max) + '...' : clean;
+}
+
+function policyValue(policy: Record<string, unknown> | undefined, ...keys: string[]) {
+  for (const key of keys) {
+    const value = policy?.[key];
+    if (typeof value === 'string' && value.trim()) return value.trim();
+  }
+  return '';
+}
+
+function formatDuration(milliseconds?: number) {
+  if (milliseconds == null || milliseconds < 0) return '';
+  if (milliseconds < 1000) return `${milliseconds} ms`;
+  return `${(milliseconds / 1000).toFixed(milliseconds < 10_000 ? 1 : 0)} 秒`;
 }
 
 function createRunId() {
@@ -185,13 +203,16 @@ export default function Workbench() {
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
   const [stoppingRun, setStoppingRun] = useState(false);
   const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [conversationLoading, setConversationLoading] = useState(false);
   const [sessionsError, setSessionsError] = useState('');
   const [targetsLoading, setTargetsLoading] = useState(true);
   const [targetsError, setTargetsError] = useState('');
   const [showArchived, setShowArchived] = useInputHabit('workbench.show-archived', false);
   const [pendingFiles, setPendingFiles] = useState<ChatAttachment[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [rightCollapsed, setRightCollapsed] = useInputHabit('workbench.right-collapsed', false);
+  const [leftCollapsed, setLeftCollapsed] = useInputHabit('workbench.left-collapsed', false);
+  const [rightCollapsed, setRightCollapsed] = useInputHabit('workbench.right-collapsed-v2', true);
+  const [quickPromptsExpanded, setQuickPromptsExpanded] = useState(false);
   const [traceDrawerOpen, setTraceDrawerOpen] = useState(false);
   const [activeTraces, setActiveTraces] = useState<ChatMessage['traces']>([]);
   const [quickPrompts, setQuickPrompts] = useState<QuickPrompt[]>([]);
@@ -206,9 +227,10 @@ export default function Workbench() {
   const composerRef = useRef<any>(null);
   const quickPromptRequestRef = useRef(0);
   const workspaceRequestRef = useRef(0);
+  const conversationRequestRef = useRef(0);
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const { isMobile } = useResponsive();
+  const { isMobile, isCompact } = useResponsive();
+  const detailsInDrawer = isMobile || isCompact;
 
   const loadTargets = useCallback(async () => {
     setTargetsLoading(true);
@@ -333,17 +355,47 @@ export default function Workbench() {
     if (!k) { setSearchParams({}, { replace: true }); return; }
     setSearchParams(m === 'team' ? { team: k } : { employee: k }, { replace: true });
   };
-  const handleModeChange = (m: TargetMode) => { setMode(m); setSelectedKey(''); setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace(); updateRoute(m, ''); };
-  const handleSelectTarget = (k: string) => { setSelectedKey(k); setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace(); updateRoute(mode, k); };
-  const handleNewChat = () => { setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace(); };
+  const handleModeChange = (m: TargetMode) => {
+    conversationRequestRef.current += 1;
+    setConversationLoading(false);
+    setMode(m); setSelectedKey(''); setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace(); updateRoute(m, '');
+  };
+  const handleSelectTarget = (k: string) => {
+    conversationRequestRef.current += 1;
+    setConversationLoading(false);
+    setSelectedKey(k); setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace(); updateRoute(mode, k);
+  };
+  const handleNewChat = () => {
+    conversationRequestRef.current += 1;
+    setConversationLoading(false);
+    setSessionId(null); setMessages([]); setArtifacts([]); setPendingFiles([]); clearWorkspace();
+  };
 
-  const handleLoadSession = (s: SessionItem) => {
+  const applySession = (s: SessionItem) => {
     setSessionId(s.sessionId);
     setMessages((s.messages || []).map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content, timestamp: m.timestamp })));
     setArtifacts(s.artifacts || []);
     setPendingFiles([]);
+  };
+
+  const handleLoadSession = async (s: SessionItem) => {
+    const requestId = ++conversationRequestRef.current;
+    applySession(s);
     clearWorkspace();
     void loadWorkspace(s.sessionId);
+    setConversationLoading(true);
+    try {
+      const detail = await api.getSession(s.sessionId);
+      if (requestId !== conversationRequestRef.current) return;
+      applySession(detail);
+      setSessions(prev => prev.map(item => item.sessionId === detail.sessionId ? detail : item));
+    } catch {
+      if (requestId === conversationRequestRef.current) {
+        message.warning('会话详情暂时无法刷新，已显示本地列表中的内容。');
+      }
+    } finally {
+      if (requestId === conversationRequestRef.current) setConversationLoading(false);
+    }
   };
 
   const handleArchiveSession = async (sid: string, archived: boolean) => {
@@ -451,7 +503,11 @@ export default function Workbench() {
 
       const assistantMsg: ChatMessage = {
         role: 'assistant', content: res.assistantMessage, timestamp: new Date().toISOString(),
-        tokenUsage: res.tokenUsage, traces: res.traces?.length ? res.traces : undefined,
+        tokenUsage: res.tokenUsage,
+        modelIds: res.modelIds,
+        elapsedMilliseconds: res.elapsedMilliseconds,
+        runId: res.runId,
+        traces: res.traces?.length ? res.traces : undefined,
       };
       setMessages((prev) => [...prev, assistantMsg]);
       if (res.cancelled) message.info('当前运行已安全停止。');
@@ -574,12 +630,118 @@ export default function Workbench() {
     [quickPrompts, mode, selectedKey],
   );
 
-  const rightWidth = rightCollapsed ? 0 : 320;
+  const activeSession = sessions.find(session => session.sessionId === sessionId);
+  const firstUserMessage = messages.find(item => item.role === 'user');
+  const conversationTitle = activeSession?.title
+    || (firstUserMessage ? firstLine(firstUserMessage.content, 36) : '')
+    || '新会话';
+  const runtimeEmployee = mode === 'team' ? leader : selectedEmployee;
+  const configuredModelId = policyValue(runtimeEmployee?.defaultModelPolicy, 'model_id', 'modelId');
+  const runtimeLabel = mode === 'team'
+    ? '团队编排'
+    : runtimeEmployee?.deepAgent ? 'DeepAgent' : '标准 Agent';
+  const rightWidth = rightCollapsed ? 0 : 336;
   const hasWorkspacePanel = !!sessionId && (
     workspaceLoading
     || !!workspaceError
     || workspace?.checkpointVersion != null
     || workspace?.status === 'warning'
+  );
+  const detailCount = artifacts.length + (workspace?.files.length || 0);
+  const renderInspectorContent = () => (
+    <>
+      <section aria-labelledby="workbench-context-heading" style={{ padding: '18px 16px', borderBottom: `1px solid ${COLORS.border}` }}>
+        <Text id="workbench-context-heading" strong style={{ fontSize: 13, color: '#334155', marginBottom: 10, display: 'block' }}>
+          当前对象
+        </Text>
+        {mode === 'team' ? (
+          <>
+            <Text style={{ fontSize: 12, color: COLORS.slate, display: 'block', marginBottom: 10 }}>
+              {selectedTeam?.description || '团队会话由负责人统一回应，也可以通过 @ 指定成员参与。'}
+            </Text>
+            <div className="wb-detail-row">
+              <span>负责人</span>
+              <strong>{leader?.name || '未设置'}</strong>
+            </div>
+            <div className="wb-detail-row">
+              <span>运行方式</span>
+              <strong>{runtimeLabel}</strong>
+            </div>
+            {configuredModelId && (
+              <div className="wb-detail-row">
+                <span>配置模型</span>
+                <strong className="wb-detail-value-wrap" title={configuredModelId}>{configuredModelId}</strong>
+              </div>
+            )}
+            <div style={{ fontSize: 12, color: COLORS.slate, margin: '12px 0 6px' }}>成员</div>
+            <Space size={4} wrap>{teamMembers.map((employee) => <Tag key={employee.employeeKey}>{employee.name}</Tag>)}</Space>
+          </>
+        ) : selectedEmployee ? (
+          <>
+            <Paragraph style={{ fontSize: 12, color: COLORS.slate, marginBottom: 10 }}>
+              {firstLine(selectedEmployee.roleProfile) || '暂无角色说明'}
+            </Paragraph>
+            <div className="wb-detail-row">
+              <span>运行方式</span>
+              <strong>{runtimeLabel}</strong>
+            </div>
+            <div className="wb-detail-row">
+              <span>配置模型</span>
+              <strong className="wb-detail-value-wrap" title={configuredModelId || '未配置'}>{configuredModelId || '未配置'}</strong>
+            </div>
+            <div className="wb-detail-row">
+              <span>已接入能力</span>
+              <strong>
+                {(selectedEmployee.skillRefs?.length || 0) + (selectedEmployee.toolRefs?.length || 0) + (selectedEmployee.mcpServerRefs?.length || 0)}
+              </strong>
+            </div>
+            <Space size={4} wrap style={{ marginTop: 10 }}>
+              {(selectedEmployee.tags || []).map((tag) => <Tag key={tag} style={{ fontSize: 11 }}>{tag}</Tag>)}
+              {selectedEmployee.hasKnowledgeBase && <Tag color="green" style={{ fontSize: 11 }}>知识库</Tag>}
+            </Space>
+          </>
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="选择对象后查看" style={{ marginTop: 20 }} />
+        )}
+      </section>
+
+      {hasWorkspacePanel && (
+        <DeepAgentWorkspacePanel
+          workspace={workspace}
+          loading={workspaceLoading}
+          error={workspaceError}
+          runActive={loading}
+          onRetry={() => sessionId && void loadWorkspace(sessionId)}
+          onOpenFile={openWorkspaceFile}
+        />
+      )}
+
+      <section aria-labelledby="workbench-artifacts-heading" style={{ padding: '14px 16px' }}>
+        <Text id="workbench-artifacts-heading" strong style={{ fontSize: 13, color: '#334155', marginBottom: 8, display: 'block' }}>
+          产出物 {artifacts.length > 0 && <Badge count={artifacts.length} style={{ backgroundColor: COLORS.iris, marginLeft: 6 }} />}
+        </Text>
+        {artifacts.length === 0 ? (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="本次会话还没有可独立查看的产出物" style={{ marginTop: 20 }} />
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {artifacts.map((artifact) => (
+              <button
+                key={artifact.artifactId}
+                type="button"
+                className="wb-artifact-button"
+                onClick={() => { setActiveArtifact(artifact); setArtifactOpen(true); }}
+              >
+                <FileTextOutlined style={{ color: COLORS.iris, fontSize: 14 }} />
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: 'block', fontSize: 13, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{artifact.title}</span>
+                  <span style={{ display: 'block', marginTop: 2, color: COLORS.slate, fontSize: 11 }}>{artifact.kind} · {formatTime(artifact.createdAt)}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
+    </>
   );
 
   return (
@@ -588,36 +750,7 @@ export default function Workbench() {
       flexDirection: 'column',
       height: isMobile ? 'calc(100dvh - 16px)' : 'calc(100vh - 56px)',
       minHeight: 0,
-      gap: isMobile ? 6 : 10,
     }}>
-      <section
-        aria-label="工作台用途说明"
-        style={{
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          alignItems: isMobile ? 'stretch' : 'center',
-          justifyContent: 'space-between',
-          gap: isMobile ? 4 : 16,
-          padding: isMobile ? '8px 10px' : '9px 14px',
-          borderRadius: 12,
-          border: `1px solid ${COLORS.border}`,
-          background: '#fff',
-          flexShrink: 0,
-        }}
-      >
-        <div style={{ minWidth: 0 }}>
-          <Text strong style={{ display: 'block', color: '#1e293b' }}>找数字员工处理通用任务</Text>
-          <Text type="secondary" style={{ fontSize: 12 }}>
-            {isMobile
-              ? '在手机上也能聊；制作漫剧请切到「快速制作」。'
-              : '制作之外的事，也可以找数字员工帮忙——翻译、调研、写文案或处理其他日常工作。'}
-          </Text>
-        </div>
-        <Button type="link" size="small" onClick={() => navigate('/studio')} style={{ flexShrink: 0, paddingInline: 4 }}>
-          要制作漫剧？去快速制作
-        </Button>
-      </section>
-
       <div className="wb-root" style={{
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
@@ -630,16 +763,51 @@ export default function Workbench() {
       }}>
 
       {/* ── Left: selector + sessions ── */}
-      <div className="wb-left" style={{
-        width: isMobile ? '100%' : 260,
+      <aside id="workbench-conversations" aria-label="员工与会话" className="wb-left" style={{
+        width: isMobile ? '100%' : leftCollapsed ? 56 : 260,
         flexShrink: 0,
         background: '#fff',
         borderRight: isMobile ? 'none' : `1px solid ${COLORS.border}`,
         borderBottom: isMobile ? `1px solid ${COLORS.border}` : 'none',
         display: 'flex',
         flexDirection: 'column',
+        transition: 'width .2s ease',
       }}>
+        {!isMobile && leftCollapsed ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '10px 8px' }}>
+            <Tooltip title="展开员工与会话" placement="right">
+              <Button
+                type="text"
+                icon={<MenuUnfoldOutlined />}
+                aria-label="展开员工与会话"
+                aria-expanded={false}
+                aria-controls="workbench-conversations"
+                onClick={() => setLeftCollapsed(false)}
+              />
+            </Tooltip>
+            <Tooltip title="新会话" placement="right">
+              <Button type="text" icon={<PlusOutlined />} aria-label="新会话" disabled={!targetReady} onClick={handleNewChat} />
+            </Tooltip>
+          </div>
+        ) : (
+          <>
         <div style={{ padding: isMobile ? '8px 10px' : '16px 14px 12px', borderBottom: isMobile ? 'none' : `1px solid ${COLORS.border}` }}>
+          {!isMobile && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <Text strong style={{ color: '#334155', fontSize: 13 }}>员工与会话</Text>
+              <Tooltip title="收起员工与会话">
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<MenuFoldOutlined />}
+                  aria-label="收起员工与会话"
+                  aria-expanded={true}
+                  aria-controls="workbench-conversations"
+                  onClick={() => setLeftCollapsed(true)}
+                />
+              </Tooltip>
+            </div>
+          )}
           {targetsLoading && (
             <div role="status" aria-live="polite" style={{ textAlign: 'center', marginBottom: 10 }}>
               <Spin size="small" /> <Text type="secondary" style={{ fontSize: 12 }}>正在加载可选对象…</Text>
@@ -660,8 +828,17 @@ export default function Workbench() {
             <Radio.Button value="team" style={{ flex: 1, textAlign: 'center', fontSize: 13 }}><TeamOutlined /> 团队</Radio.Button>
           </Radio.Group>
           <div style={{ display: 'flex', gap: 6 }}>
-            <Select style={{ flex: 1, minWidth: 0 }} placeholder={mode === 'team' ? '选择团队' : '选择数字员工'} value={selectedKey || undefined} onChange={handleSelectTarget} options={targetOptions} showSearch optionFilterProp="label" />
-            <Button onClick={handleNewChat} disabled={!targetReady} style={{ borderRadius: 8, fontWeight: 500, flexShrink: 0 }}>+ 新会话</Button>
+            <Select
+              aria-label={mode === 'team' ? '当前团队' : '当前数字员工'}
+              style={{ flex: 1, minWidth: 0 }}
+              placeholder={mode === 'team' ? '选择团队' : '选择数字员工'}
+              value={selectedKey || undefined}
+              onChange={handleSelectTarget}
+              options={targetOptions}
+              showSearch
+              optionFilterProp="label"
+            />
+            <Button icon={<PlusOutlined />} onClick={handleNewChat} disabled={!targetReady} style={{ borderRadius: 8, fontWeight: 500, flexShrink: 0 }}>新会话</Button>
           </div>
         </div>
 
@@ -690,22 +867,23 @@ export default function Workbench() {
               const isActive = s.sessionId === sessionId;
               const preview = s.title || s.messages?.[0]?.content?.slice(0, 50) || '(空会话)';
               return (
-                <div key={s.sessionId} className="wb-session-item" onClick={() => handleLoadSession(s)}
-                  role="button" tabIndex={0}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      handleLoadSession(s);
-                    }
-                  }}
-                  style={{ padding: '10px 12px', borderRadius: 10, cursor: 'pointer', marginBottom: 4, background: isActive ? `${COLORS.iris}0c` : 'transparent', border: isActive ? `1px solid ${COLORS.iris}30` : '1px solid transparent', transition: 'all .15s' }}>
-                  <div style={{ fontSize: 13, fontWeight: isActive ? 600 : 400, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{preview}</div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-                    <Text type="secondary" style={{ fontSize: 11 }}>{formatTime(s.lastActiveAt || s.createdAt)}</Text>
+                <div key={s.sessionId} className="wb-session-item"
+                  style={{ padding: '8px 8px 6px', borderRadius: 10, marginBottom: 4, background: isActive ? `${COLORS.iris}0c` : 'transparent', border: isActive ? `1px solid ${COLORS.iris}30` : '1px solid transparent', transition: 'all .15s' }}>
+                  <button
+                    type="button"
+                    className="wb-session-main"
+                    aria-current={isActive ? 'page' : undefined}
+                    onClick={() => void handleLoadSession(s)}
+                    style={{ display: 'block', width: '100%', border: 0, padding: '2px 60px 2px 4px', background: 'transparent', cursor: 'pointer', textAlign: 'left', color: 'inherit' }}
+                  >
+                    <span style={{ display: 'block', fontSize: 13, fontWeight: isActive ? 600 : 400, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{preview}</span>
+                    <span style={{ display: 'block', marginTop: 4, fontSize: 11, color: COLORS.slate }}>{formatTime(s.lastActiveAt || s.createdAt)}</span>
+                  </button>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: -28 }}>
                     <Space size={2}>
-                      <Button type="text" size="small" icon={<InboxOutlined />} aria-label={s.archived ? '恢复会话' : '归档会话'} style={{ fontSize: 12, width: 24, height: 24 }} onClick={(e) => { e.stopPropagation(); handleArchiveSession(s.sessionId, !s.archived); }} />
-                      <Popconfirm title="确定删除？" onConfirm={(e) => { e?.stopPropagation(); handleDeleteSession(s.sessionId); }} okText="删除" cancelText="取消">
-                        <Button type="text" size="small" danger icon={<DeleteOutlined />} aria-label="删除会话" style={{ fontSize: 12, width: 24, height: 24 }} onClick={(e) => e.stopPropagation()} />
+                      <Button type="text" size="small" icon={<InboxOutlined />} aria-label={s.archived ? `恢复会话：${preview}` : `归档会话：${preview}`} style={{ fontSize: 12, width: 28, height: 28 }} onClick={() => handleArchiveSession(s.sessionId, !s.archived)} />
+                      <Popconfirm title="确定删除？" onConfirm={() => handleDeleteSession(s.sessionId)} okText="删除" cancelText="取消">
+                        <Button type="text" size="small" danger icon={<DeleteOutlined />} aria-label={`删除会话：${preview}`} style={{ fontSize: 12, width: 28, height: 28 }} />
                       </Popconfirm>
                     </Space>
                   </div>
@@ -713,13 +891,15 @@ export default function Workbench() {
               );
             })}
         </div>
-      </div>
+          </>
+        )}
+      </aside>
 
       {/* ── Center: chat ── */}
-      <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', background: COLORS.canvas }}>
+      <main aria-label="当前对话" style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', background: COLORS.canvas }}>
         {/* Chat header */}
-        <div style={{
-          minHeight: isMobile ? 48 : 56,
+        <header style={{
+          minHeight: isMobile ? 56 : 68,
           background: '#fff',
           borderBottom: `1px solid ${COLORS.border}`,
           display: 'flex',
@@ -728,33 +908,42 @@ export default function Workbench() {
           padding: isMobile ? '6px 10px' : '0 20px',
           flexShrink: 0,
         }}>
-          <Space size={12}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 12, minWidth: 0 }}>
             <div style={{ width: 36, height: 36, borderRadius: 10, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
               {mode === 'team' ? <TeamOutlined /> : <RobotOutlined />}
             </div>
-            <div>
-              <div style={{ fontWeight: 600, fontSize: 15, color: '#1e293b', lineHeight: 1.3 }}>{targetName || '选择会话对象'}</div>
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                {mode === 'team' ? `${teamMembers.length} 名成员${leader ? ` · 负责人 ${leader.name}` : ''}` : selectedEmployee?.employeeKey || ''}
-              </Text>
+            <div style={{ minWidth: 0 }}>
+              <div title={conversationTitle} style={{ fontWeight: 650, fontSize: 15, color: '#1e293b', lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {targetReady ? conversationTitle : '选择对话对象'}
+              </div>
+              <div className="wb-chat-meta" style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3, minWidth: 0, overflow: 'hidden' }}>
+                {targetName && <span style={{ fontSize: 12, color: COLORS.slate, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{targetName}</span>}
+                {targetReady && <Tag color={runtimeEmployee?.deepAgent ? 'purple' : undefined} style={{ margin: 0, fontSize: 10, lineHeight: '20px', flexShrink: 0 }}>{runtimeLabel}</Tag>}
+                {configuredModelId && !isMobile && (
+                  <Tag title={`员工配置模型：${configuredModelId}`} style={{ margin: 0, fontSize: 10, lineHeight: '20px', maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    配置模型 · {configuredModelId}
+                  </Tag>
+                )}
+              </div>
             </div>
-          </Space>
+          </div>
           <Space size={8}>
-            {sessionId && <Tag style={{ fontSize: 11, borderRadius: 6 }}>{sessionId.slice(0, 8)}</Tag>}
-            {isMobile && hasWorkspacePanel && (
-              <Button
-                type="text"
-                size="small"
-                icon={<FolderOpenOutlined />}
-                aria-label="查看 DeepAgent 工作区"
-                onClick={() => setWorkspaceDrawerOpen(true)}
-              />
-            )}
-            {!isMobile && <Tooltip title={rightCollapsed ? '展开面板' : '收起面板'}>
-              <Button type="text" size="small" icon={rightCollapsed ? <ExpandOutlined /> : <CompressOutlined />} aria-label={rightCollapsed ? '展开辅助面板' : '收起辅助面板'} onClick={() => setRightCollapsed(!rightCollapsed)} />
-            </Tooltip>}
+            {conversationLoading && <Spin size="small" aria-label="正在刷新完整会话" />}
+            {sessionId && !isMobile && <Tag title={sessionId} style={{ fontSize: 11, borderRadius: 6, margin: 0 }}>{sessionId.slice(0, 12)}</Tag>}
+            <Button
+              type={rightCollapsed || detailsInDrawer ? 'default' : 'primary'}
+              ghost={!rightCollapsed && !detailsInDrawer}
+              size="small"
+              icon={rightCollapsed || detailsInDrawer ? <ProfileOutlined /> : <CompressOutlined />}
+              aria-label={detailsInDrawer ? '打开工作详情' : rightCollapsed ? '展开工作详情' : '收起工作详情'}
+              aria-expanded={detailsInDrawer ? workspaceDrawerOpen : !rightCollapsed}
+              aria-controls={detailsInDrawer ? 'workbench-details-drawer' : 'workbench-details'}
+              onClick={() => detailsInDrawer ? setWorkspaceDrawerOpen(true) : setRightCollapsed(!rightCollapsed)}
+            >
+              {!isMobile && <>工作详情{detailCount > 0 ? ` ${detailCount}` : ''}</>}
+            </Button>
           </Space>
-        </div>
+        </header>
 
         {/* Messages */}
         <div style={{ flex: 1, overflow: 'auto', padding: isMobile ? '12px 10px' : '24px 28px' }}>
@@ -777,13 +966,16 @@ export default function Workbench() {
               {messages.map((msg, i) => {
                 const isUser = msg.role === 'user';
                 return (
-                  <div key={i} className="wb-msg-row" style={{ display: 'flex', marginBottom: 20, justifyContent: isUser ? 'flex-end' : 'flex-start', gap: 10 }}>
+                  <article key={i} aria-label={isUser ? '你的消息' : `${targetName || '数字员工'}的回复`} className="wb-msg-row" style={{ display: 'flex', marginBottom: 20, justifyContent: isUser ? 'flex-end' : 'flex-start', gap: 10 }}>
                     {!isUser && (
-                      <div style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>
+                      <div aria-hidden="true" style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>
                         <RobotOutlined />
                       </div>
                     )}
                     <div style={{ maxWidth: isMobile ? '86%' : '72%', minWidth: 60 }}>
+                      <div style={{ margin: '0 4px 5px', textAlign: isUser ? 'right' : 'left', fontSize: 11, color: COLORS.slate }}>
+                        {isUser ? '你' : targetName || '数字员工'}
+                      </div>
                       <div className={isUser ? 'wb-bubble-user' : 'wb-bubble-ai'} style={{
                         padding: '12px 16px', fontSize: 14, lineHeight: 1.7, wordBreak: 'break-word',
                         borderRadius: isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
@@ -810,11 +1002,23 @@ export default function Workbench() {
                       )}
                       {/* Action bar for AI messages */}
                       {!isUser && (
-                        <div className="wb-msg-actions" style={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 4, opacity: 0, transition: 'opacity .15s' }}>
+                        <div className="wb-msg-actions" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 4, minHeight: 28, marginTop: 5, color: COLORS.slate }}>
                           <CopyBtn text={msg.content} />
+                          {msg.modelIds && msg.modelIds.length > 0 && (
+                            <Tooltip title="本次请求实际使用的模型；箭头表示发生过降级">
+                              <Text style={{ fontSize: 11, color: COLORS.slate }}>
+                                模型 {msg.modelIds.join(' → ')}
+                              </Text>
+                            </Tooltip>
+                          )}
+                          {msg.elapsedMilliseconds != null && (
+                            <Text style={{ fontSize: 11, color: COLORS.slate }}>
+                              · {formatDuration(msg.elapsedMilliseconds)}
+                            </Text>
+                          )}
                           {msg.tokenUsage && (
-                            <Text type="secondary" style={{ fontSize: 11, marginLeft: 4 }}>
-                              本次模型用量 {msg.tokenUsage.totalTokens}
+                            <Text style={{ fontSize: 11, color: COLORS.slate }}>
+                              · {msg.tokenUsage.totalTokens} tokens
                             </Text>
                           )}
                           {msg.traces && msg.traces.length > 0 && (
@@ -828,11 +1032,11 @@ export default function Workbench() {
                       )}
                     </div>
                     {isUser && (
-                      <div style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, background: `${COLORS.iris}18`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>
+                      <div aria-hidden="true" style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, background: `${COLORS.iris}18`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>
                         <UserOutlined />
                       </div>
                     )}
-                  </div>
+                  </article>
                 );
               })}
               {loading && (
@@ -861,68 +1065,62 @@ export default function Workbench() {
               ))}
             </Space>
           )}
-          {/* 常用指令：点击即插入当前光标位置，仍可继续补充上下文。 */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            marginBottom: 8,
-            minWidth: 0,
-            overflowX: 'auto',
-            paddingBottom: 1,
-          }}>
-            <Text type="secondary" style={{ fontSize: 12, whiteSpace: 'nowrap' }}>
-              <BookOutlined /> 常用指令
-            </Text>
-            {quickPromptsLoading ? (
-              <Spin size="small" />
-            ) : applicableQuickPrompts.length > 0 ? (
-              applicableQuickPrompts.slice(0, isMobile ? 4 : 8).map(prompt => (
-                <Tooltip key={prompt.id} title={prompt.content}>
-                  <Button
-                    size="small"
-                    type="dashed"
-                    onClick={() => insertQuickPrompt(prompt)}
-                    style={{ flexShrink: 0, maxWidth: isMobile ? 130 : 180, overflow: 'hidden', textOverflow: 'ellipsis' }}
-                  >
-                    {prompt.title}
-                  </Button>
-                </Tooltip>
-              ))
-            ) : (
-              <Text type="secondary" style={{ fontSize: 11, whiteSpace: 'nowrap' }}>还没有保存</Text>
-            )}
+          {/* 常用指令是辅助能力，默认收起，避免挤占主输入区。 */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: quickPromptsExpanded ? 6 : 4 }}>
             <Button
               size="small"
               type="text"
-              icon={<PlusOutlined />}
-              disabled={!inputValue.trim()}
-              onClick={openNewQuickPrompt}
-              style={{ flexShrink: 0 }}
+              icon={<BookOutlined />}
+              aria-expanded={quickPromptsExpanded}
+              aria-controls="workbench-quick-prompts"
+              onClick={() => setQuickPromptsExpanded(value => !value)}
             >
-              保存当前
+              常用指令{applicableQuickPrompts.length > 0 ? ` ${applicableQuickPrompts.length}` : ''}
             </Button>
-            <Button
-              size="small"
-              type="link"
-              onClick={() => {
-                setEditingQuickPromptId(null);
-                setQuickPromptForm({ title: '', content: '', employee_key: mode === 'employee' ? selectedKey : '' });
-                setQuickPromptOpen(true);
-              }}
-              style={{ flexShrink: 0 }}
-            >
-              管理
-            </Button>
+            {inputValue.trim() && (
+              <Button size="small" type="text" icon={<PlusOutlined />} onClick={openNewQuickPrompt}>
+                保存当前输入
+              </Button>
+            )}
           </div>
-          {quickPromptsError && (
-            <Alert
-              type="warning"
-              showIcon
-              message={quickPromptsError}
-              action={<Button size="small" onClick={loadQuickPrompts}>重试</Button>}
-              style={{ marginBottom: 8, padding: '5px 8px' }}
-            />
+          {quickPromptsExpanded && (
+            <div id="workbench-quick-prompts" style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, minWidth: 0, overflowX: 'auto', padding: '7px 8px', borderRadius: 8, background: '#f8fafc' }}>
+              {quickPromptsLoading ? (
+                <Spin size="small" />
+              ) : quickPromptsError ? (
+                <>
+                  <Text style={{ fontSize: 11, color: '#b45309', whiteSpace: 'nowrap' }}>{quickPromptsError}</Text>
+                  <Button size="small" onClick={loadQuickPrompts}>重试</Button>
+                </>
+              ) : applicableQuickPrompts.length > 0 ? (
+                applicableQuickPrompts.slice(0, isMobile ? 4 : 8).map(prompt => (
+                  <Tooltip key={prompt.id} title={prompt.content}>
+                    <Button
+                      size="small"
+                      type="dashed"
+                      onClick={() => insertQuickPrompt(prompt)}
+                      style={{ flexShrink: 0, maxWidth: isMobile ? 130 : 180, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
+                      {prompt.title}
+                    </Button>
+                  </Tooltip>
+                ))
+              ) : (
+                <Text style={{ fontSize: 11, color: COLORS.slate, whiteSpace: 'nowrap' }}>还没有保存的指令</Text>
+              )}
+              <Button
+                size="small"
+                type="link"
+                onClick={() => {
+                  setEditingQuickPromptId(null);
+                  setQuickPromptForm({ title: '', content: '', employee_key: mode === 'employee' ? selectedKey : '' });
+                  setQuickPromptOpen(true);
+                }}
+                style={{ flexShrink: 0 }}
+              >
+                管理
+              </Button>
+            </div>
           )}
           {/* Pending files */}
           {pendingFiles.length > 0 && (
@@ -942,6 +1140,7 @@ export default function Workbench() {
             </Upload>
             <TextArea
               ref={composerRef}
+              aria-label="发送给数字员工的消息"
               value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={handleKeyDown}
               placeholder={targetReady ? '输入消息，Enter 发送，Shift+Enter 换行' : '请先选择对象'}
               autoSize={{ minRows: 1, maxRows: 5 }} disabled={!targetReady || loading}
@@ -967,74 +1166,24 @@ export default function Workbench() {
             )}
           </div>
         </div>
-      </div>
+      </main>
 
       {/* ── Right: context + artifacts ── */}
-      <div style={{ width: rightWidth, flexShrink: 0, background: '#fff', borderLeft: `1px solid ${COLORS.border}`, overflow: 'auto', transition: 'width .2s', display: isMobile || rightCollapsed ? 'none' : 'block' }}>
-        {/* Context */}
-        <div style={{ padding: '18px 16px', borderBottom: `1px solid ${COLORS.border}` }}>
-          <Text strong style={{ fontSize: 13, color: COLORS.slate, marginBottom: 10, display: 'block' }}>上下文</Text>
-          {mode === 'team' ? (
-            <>
-              <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 10 }}>
-                团队会话由负责人统一回应，可通过 @ 指定成员参与。
-              </Text>
-              <div style={{ fontSize: 12, color: COLORS.slate, marginBottom: 6 }}>负责人</div>
-              {leader ? <Tag color="purple">{leader.name}</Tag> : <Text type="secondary" style={{ fontSize: 12 }}>未设置</Text>}
-              <div style={{ fontSize: 12, color: COLORS.slate, margin: '12px 0 6px' }}>成员</div>
-              <Space size={4} wrap>{teamMembers.map((e) => <Tag key={e.employeeKey}>{e.name}</Tag>)}</Space>
-            </>
-          ) : selectedEmployee ? (
-            <>
-              <Paragraph type="secondary" style={{ fontSize: 12, marginBottom: 8 }}>{firstLine(selectedEmployee.roleProfile) || '暂无描述'}</Paragraph>
-              <Space size={4} wrap>
-                {(selectedEmployee.tags || []).map((t) => <Tag key={t} style={{ fontSize: 11 }}>{t}</Tag>)}
-                {selectedEmployee.hasKnowledgeBase && <Tag color="green" style={{ fontSize: 11 }}>知识库</Tag>}
-                {selectedEmployee.deepAgent && <Tag color="purple" style={{ fontSize: 11 }}>DeepAgent</Tag>}
-              </Space>
-            </>
-          ) : (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="选择对象后查看" style={{ marginTop: 20 }} />
-          )}
-        </div>
-
-        {hasWorkspacePanel && (
-          <DeepAgentWorkspacePanel
-            workspace={workspace}
-            loading={workspaceLoading}
-            error={workspaceError}
-            onRetry={() => sessionId && void loadWorkspace(sessionId)}
-            onOpenFile={openWorkspaceFile}
-          />
-        )}
-
-        {/* Artifacts */}
-        <div style={{ padding: '14px 16px' }}>
-          <Text strong style={{ fontSize: 13, color: COLORS.slate, marginBottom: 8, display: 'block' }}>
-            产出物 {artifacts.length > 0 && <Badge count={artifacts.length} style={{ backgroundColor: COLORS.iris, marginLeft: 6 }} />}
-          </Text>
-          {artifacts.length === 0 ? (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="AI 回复中的代码块和长文档会自动收集" style={{ marginTop: 20 }} />
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {artifacts.map((a) => (
-                <div key={a.artifactId} onClick={() => { setActiveArtifact(a); setArtifactOpen(true); }}
-                  style={{ padding: '10px 12px', borderRadius: 10, cursor: 'pointer', border: `1px solid ${COLORS.border}`, transition: 'background .15s' }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = '#f8f9fc'; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = ''; }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <FileTextOutlined style={{ color: COLORS.iris, fontSize: 14 }} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.title}</div>
-                      <Text type="secondary" style={{ fontSize: 11 }}>{a.kind} · {formatTime(a.createdAt)}</Text>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      <aside
+        id="workbench-details"
+        aria-label="工作详情"
+        style={{
+          width: rightWidth,
+          flexShrink: 0,
+          background: '#fff',
+          borderLeft: rightCollapsed ? 'none' : `1px solid ${COLORS.border}`,
+          overflow: 'auto',
+          transition: 'width .2s ease',
+          display: detailsInDrawer || rightCollapsed ? 'none' : 'block',
+        }}
+      >
+        {renderInspectorContent()}
+      </aside>
 
       <Modal
         title={editingQuickPromptId ? '编辑常用指令' : '管理常用指令'}
@@ -1161,32 +1310,28 @@ export default function Workbench() {
       </Modal>
 
       {/* Artifact drawer */}
-      <Drawer title={activeArtifact?.title || '产出物'} open={artifactOpen} onClose={() => setArtifactOpen(false)} width={720}>
+      <Drawer title={activeArtifact?.title || '产出物'} open={artifactOpen} onClose={() => setArtifactOpen(false)} width={isMobile ? '100vw' : 720}>
         <div className="wb-markdown" style={{ background: '#f8fafc', border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 20 }}>
           <ReactMarkdown components={mdComponents}>{cleanLatex(activeArtifact?.content || '')}</ReactMarkdown>
         </div>
       </Drawer>
 
       <Drawer
-        title="DeepAgent 工作区"
+        title="工作详情"
         open={workspaceDrawerOpen}
         onClose={() => setWorkspaceDrawerOpen(false)}
-        width={isMobile ? '100%' : 420}
+        width={isMobile ? '100vw' : 420}
       >
-        <DeepAgentWorkspacePanel
-          workspace={workspace}
-          loading={workspaceLoading}
-          error={workspaceError}
-          onRetry={() => sessionId && void loadWorkspace(sessionId)}
-          onOpenFile={openWorkspaceFile}
-        />
+        <div id="workbench-details-drawer">
+          {renderInspectorContent()}
+        </div>
       </Drawer>
 
       <Drawer
         title={activeWorkspaceFile?.path || '工作区文件'}
         open={workspaceFileOpen}
         onClose={() => setWorkspaceFileOpen(false)}
-        width={isMobile ? '100%' : 720}
+        width={isMobile ? '100vw' : 720}
         extra={activeWorkspaceFile ? <CopyBtn text={activeWorkspaceFile.content} /> : null}
       >
         {workspaceFileLoading ? (
@@ -1209,7 +1354,7 @@ export default function Workbench() {
       </Drawer>
 
       {/* Trace debug drawer */}
-      <Drawer title="执行详情" open={traceDrawerOpen} onClose={() => setTraceDrawerOpen(false)} width={640}>
+      <Drawer title="执行详情" open={traceDrawerOpen} onClose={() => setTraceDrawerOpen(false)} width={isMobile ? '100vw' : 640}>
         {(activeTraces || []).length === 0 ? <Empty description="无调用记录" /> : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {(activeTraces || []).map((t, i) => (
