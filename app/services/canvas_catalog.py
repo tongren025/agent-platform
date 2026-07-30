@@ -9,7 +9,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from time import monotonic
 from typing import Any
+from urllib.parse import urlparse
 
 from app.config import resolve_secret
 from app.core.model_capabilities import (
@@ -18,8 +20,11 @@ from app.core.model_capabilities import (
     is_video_generation_model_id,
 )
 from app.dependencies import ai_service, employee_registry
+from app.services import openrouter_media
 
 SUPPORTED_CANVAS_MODEL_KINDS = {"text", "image", "video"}
+_MEDIA_CATALOG_TTL_SECONDS = 300.0
+_media_catalog_cache: dict[tuple[str, str], tuple[float, list[dict[str, Any]]]] = {}
 
 
 def _now() -> str:
@@ -87,6 +92,36 @@ def _provider_available(provider: Any) -> bool:
         and str(provider.endpoint or "").strip()
         and str(provider.api_key or "").strip()
     )
+
+
+def _is_connected_openrouter(provider: Any) -> bool:
+    """只扩展用户已连接的官方 OpenRouter 媒体目录，不猜测其它供应商能力。"""
+    try:
+        host = (urlparse(str(provider.endpoint or "")).hostname or "").lower()
+    except ValueError:
+        return False
+    return (
+        str(provider.name or "").strip().lower() == "openrouter"
+        and (host == "openrouter.ai" or host.endswith(".openrouter.ai"))
+        and _provider_available(provider)
+    )
+
+
+def _connected_openrouter_media_models(kind: str, provider: Any) -> list[dict[str, Any]]:
+    """读取已连接 OpenRouter 的真实媒体目录，并用短缓存避免每次开下拉都访问网络。"""
+    cache_key = (kind, str(provider.endpoint or "").rstrip("/"))
+    now = monotonic()
+    cached = _media_catalog_cache.get(cache_key)
+    if cached is not None and now - cached[0] < _MEDIA_CATALOG_TTL_SECONDS:
+        return cached[1]
+    try:
+        rows = openrouter_media.list_media_models(kind)
+    except Exception:
+        # 上游瞬时异常时优先使用过期快照；没有快照再回退到显式模型/员工策略。
+        return cached[1] if cached is not None else []
+    normalized = [dict(row) for row in rows if isinstance(row, dict)]
+    _media_catalog_cache[cache_key] = (now, normalized)
+    return normalized
 
 
 def list_canvas_vendors() -> list[dict[str, Any]]:
@@ -242,6 +277,39 @@ def list_canvas_models(kind: str) -> list[dict[str, Any]]:
                     "supportedAspectRatios": model.get("supportedAspectRatios") or [],
                 },
             ))
+
+        # OpenRouter 的图片/视频是该账号连接后实时可用的专用目录，不在聊天模型白名单里。
+        # 将真实目录并入画布，既不会冒充本地模型，也不会让已经配置好 OpenRouter 的用户
+        # 在图片节点看到“没有可用模型”。
+        if kind in {"image", "video"} and _is_connected_openrouter(provider):
+            for model in _connected_openrouter_media_models(kind, provider):
+                model_id = str(model.get("id") or "").strip()
+                if not model_id:
+                    continue
+                identity = (provider.name.lower(), model_id.lower())
+                if identity in seen:
+                    continue
+                seen.add(identity)
+                rows.append(_catalog_row(
+                    vendor_key=provider.name,
+                    model_key=model_id,
+                    label=str(model.get("name") or model_id),
+                    kind=kind,
+                    enabled=True,
+                    meta={
+                        "source": "connected-provider-catalog",
+                        "providerName": provider.name,
+                        "configured": True,
+                        "recommended": bool(model.get("recommended")),
+                        "recommendationReason": str(model.get("recommendationReason") or ""),
+                        "isFree": bool(model.get("isFree")),
+                        "inputModalities": model.get("inputModalities") or ["text"],
+                        "outputModalities": model.get("outputModalities") or [kind],
+                        "supportedParameters": model.get("supportedParameters") or {},
+                        "supportedResolutions": model.get("supportedResolutions") or [],
+                        "supportedAspectRatios": model.get("supportedAspectRatios") or [],
+                    },
+                ))
 
     if kind in {"image", "video"}:
         policy_key = f"{kind}_model_id"

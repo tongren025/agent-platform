@@ -1,79 +1,5 @@
 [
   {
-    "logId": "dist_1eb5faf5c1e9",
-    "employeeKey": "comic-trajectory-artist",
-    "ranAt": "2026-07-01T03:05:37.421349Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_shot_size_emotion_01",
-        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_01",
-        "newContent": "景别×情绪：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。特写剥离环境直推角色内心，大远景强化孤独感。每镜只一个运镜,中英双写。",
-        "newImportance": null,
-        "reason": "两条记忆均在讨论景别与情绪的对应关系，前者为具体参数，后者为理论支撑，合并可增强实用性。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-trajectory-artist_camera_emotion_01",
-        "mergeIntoId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
-        "newContent": "运镜情绪组合拳:dolly in+浅景深=世界只剩这个(用于角色顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。",
-        "newImportance": null,
-        "reason": "两者均涉及运镜(Dolly/Crane等)与具体情绪的映射，合并可将理论应用到具体组合拳中。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "procedural",
-        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_proc_02",
-        "mergeIntoId": "seed_comic-trajectory-artist_proc_02",
-        "newContent": "动作描述先写受力来源，再写身体部位级动作链，最后写结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇，以避免Seedance产生运动模糊。",
-        "newImportance": null,
-        "reason": "两条记忆均关于动作描述的规范，一条强调力学因果，一条强调AI生成稳定性，合并后形成完整的动作撰写标准。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "虽然是基础理论，但在短剧高节奏环境下，蒙太奇的逻辑是构建叙事的核心，重要性应高于一般的知识点。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_02",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "同上，提升蒙太奇相关知识的权重以指导剪辑节奏。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_canon_wiki_20260630_comic-trajectory-artist_montage_03",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.7,
-        "reason": "同上，提升蒙太奇相关知识的权重以指导剪辑节奏。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 24,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 22,
-      "episodic_count": 3,
-      "procedural_count": 4
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 16750,
-    "error": null
-  },
-  {
     "logId": "dist_fe2aa4de6a51",
     "employeeKey": "comic-trajectory-artist",
     "ranAt": "2026-07-01T03:10:03.023296Z",
@@ -1654,5 +1580,97 @@
     "llmModel": "",
     "durationMs": 30,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_f2603175fd12",
+    "employeeKey": "comic-trajectory-artist",
+    "ranAt": "2026-07-30T04:04:38.843087Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_sem_03",
+        "mergeIntoId": "seed_comic-trajectory-artist_proc_01",
+        "newContent": "轨迹说明表必须逐镜头列角色起点、终点、攻击线、闪避线、压制线、镜头运动线和因果说明。动作描述需遵循：先写受力来源 → 身体部位级动作链 → 结果；优先慢速连续小动作，严禁使用「快速/剧烈/夸张」等词汇以避免Seedance运动模糊。每镜只标一个运镜,中英双写如『缓慢推进(dolly in)』,并提供机位高度/焦段/速度/角度参数。且镜头运动必须说明服务目的（如压迫、跟随、揭示空间、强调受击或制造转场），以避免视频晃动或无目的乱动。景别×情绪与运镜库：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。【情绪递进】：从较松的中景起步，逐步换成越来越大的特写来堆叠情绪强度，而非直接怼脸。常用20运镜包括:dolly in/out,zoom in/out,tracking,truck,arc,crane up/down,boom,pan,tilt,dutch angle,360 orbit,static,handheld,whip pan,bird's eye,low angle。【核心区分】：dolly(物理移动)产生视差纵深、zoom(变焦)是空间压缩，情绪完全不同不可混用；tracking平行跟随制造'与角色同行'的沉浸感。运镜情绪组合拳:dolly in+浅景深=世界只剩这个(顿悟/恐惧/决心)/crane down+雨=命运降临/static+寂静=最痛没声音/tracking+背影=你跟不上/whip pan=时空转换/dutch angle+底光=世界崩塌。拉镜(pull out)用于给语境、强调孤立渺小。【核心约束】：镜头运动和角色动作必须分开描述，严禁混写；每镜仅限一个运镜，且必须中英双写。禁止使用「快速/fast」等词汇以避免运动模糊，改用「缓慢/轻微/小幅度/逐渐/平稳」，优先慢速连续小动作。",
+        "newImportance": null,
+        "reason": "记忆'learn_consolidation_20260630_comic-trajectory-artist_sem_03'（运镜库）与'seed_comic-trajectory-artist_proc_01'（动作与镜头规范）在内容上高度重叠，都涉及镜头运动的规范、描述方式及目的。将运镜库的细节信息整合到更具操作性的流程规范中，形成更全面的动作与镜头指导。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-trajectory-artist_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆是短剧制作的最高优先级准则，统管一切，应保持最高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_02_style_core",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆定义了视觉风格核心，对整体作品质量至关重要，应提高其重要性以匹配其他核心准则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_07_magic_trajectory",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆关于动作与轨迹的连续性原则，是实现高质量动作镜头的基础，应提高其重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-trajectory-artist_sem_04_no_grid_keyframe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆关于关键图质量标准，直接影响最终画面呈现效果，应提高其重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-trajectory-artist_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.96,
+        "reason": "该经验记忆展示了成功的动作设计和镜头跟随，对理解动作轨迹和镜头结合有指导意义，应提高其重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-trajectory-artist_epi_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.96,
+        "reason": "该经验记忆展示了成功的压迫感和受力方向的表达，对动作设计和镜头语言有价值，应提高其重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-trajectory-artist_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.96,
+        "reason": "该经验记忆展示了运镜在表现飞行自由感和角色不变形方面的成功应用，对镜头运用有指导意义，应提高其重要性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 5,
+      "episodic": 3,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 5,
+      "episodic_count": 3,
+      "procedural_count": 1
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 6282,
+    "error": null
   }
 ]

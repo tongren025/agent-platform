@@ -3,6 +3,16 @@
     "sourceCode": "jimeng-daily",
     "status": "success",
     "fetchedCount": 20,
+    "newCount": 5,
+    "totalCount": 207,
+    "message": "抓取 20 条，新增 5 条，累计 207 条。",
+    "startedAt": "2026-07-30T04:04:35.593207Z",
+    "finishedAt": "2026-07-30T04:04:40.942307Z"
+  },
+  {
+    "sourceCode": "jimeng-daily",
+    "status": "success",
+    "fetchedCount": 20,
     "newCount": 8,
     "totalCount": 202,
     "message": "抓取 20 条，新增 8 条，累计 202 条。",

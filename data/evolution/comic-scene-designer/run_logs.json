@@ -1,15 +1,5 @@
 [
   {
-    "logId": "evo_ce2a549f65f2",
-    "employeeKey": "comic-scene-designer",
-    "ranAt": "2026-07-01T03:10:58.559542Z",
-    "sessionsAnalyzed": 0,
-    "insightsGenerated": 0,
-    "llmModel": "",
-    "durationMs": 16,
-    "error": null
-  },
-  {
     "logId": "evo_71a05798b1ec",
     "employeeKey": "comic-scene-designer",
     "ranAt": "2026-07-01T14:07:28.679085Z",
@@ -493,6 +483,16 @@
     "logId": "evo_e5ffe2177279",
     "employeeKey": "comic-scene-designer",
     "ranAt": "2026-07-28T20:00:16.945358Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 15,
+    "error": null
+  },
+  {
+    "logId": "evo_c9d2674c2bc1",
+    "employeeKey": "comic-scene-designer",
+    "ranAt": "2026-07-30T04:04:39.814564Z",
     "sessionsAnalyzed": 0,
     "insightsGenerated": 0,
     "llmModel": "",

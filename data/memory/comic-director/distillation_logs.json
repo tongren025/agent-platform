@@ -1,61 +1,5 @@
 [
   {
-    "logId": "dist_18592015b7dc",
-    "employeeKey": "comic-director",
-    "ranAt": "2026-07-01T03:08:18.041795Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-director_microdrama_01",
-        "mergeIntoId": "duanju_spine_20260630_comic-director_law",
-        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧(单集60-90s)，核心目标是'把观众锁到下一集'。节奏=信息/反转密度：前3-5秒必须有情绪炸点/冲突抓人，每1-2秒砸一个新事件/反转/钩子/嘴替台词，单句台词≤10字，一集15-25个事件beat。Beat Engine结构：Hook(0-15秒爆点)→Friction(15-60秒真实肢体/言语冲突，禁止纯内心戏)。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎)，开口即钩子，结尾5秒必须有反转或悬念钩子。战斗场景用仙侠三段式：蓄力(2-3s)→爆发(3-5s)→余韵(2-3s),必须指定特效类型。构图/色彩/布光/运镜/景别等电影美术手艺必须服从短剧节奏。",
-        "newImportance": null,
-        "reason": "两条记忆均关于短剧节奏与钩子设计，前者为核心准则，后者提供了具体的Beat Engine结构，合并可增强执行精度。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-director_ai_consistency_01",
-        "mergeIntoId": "pro_craft_deep_20260630_comic-director_ai_consistency_02",
-        "newContent": "AI角色漂移根因在于每个clip独立生成且解读不一。保一致性的硬解法：先备3-5张参考图(正面+3/4侧+全身服装+道具单独)做成转面母版，提示词只写动作和环境、不再重抄角色外貌——由参考图负责长相。（来源:AI Magicx/neolemon/Artlist一致性工作流）",
-        "newImportance": null,
-        "reason": "一条是问题定义，一条是解决方案，合并为“问题+对策”的完整知识点。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "episodic",
-        "targetId": "seed_comic-director_epi_01",
-        "mergeIntoId": "learn_consolidation_20260630_comic-director_epi_01",
-        "newContent": "Observation: 用户指令模糊（如只说“做EP01第1段”或“做EP08”且未给情绪定位）。Action: 自动补齐段落brief（钩子、交付目录、各角色任务、情绪锚点如EP08=决然离开、嘴替台词等），并要求编剧先拆镜头。Result: 团队成员围绕同一情绪和制作目标工作，质检一次通过，避免散写。",
-        "newImportance": null,
-        "reason": "两条经验记忆均关于“用户指令模糊时的自动补齐机制”，逻辑一致，合并可提升经验泛化能力。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-director_storyboard_craft_01",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.8,
-        "reason": "分镜基础理论在实际AI视频生产中虽重要，但优先级低于资产锁死和一致性控制，适当提升以匹配其在专业工作流中的地位。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 22,
-      "episodic": 3,
-      "procedural": 5
-    },
-    "afterCounts": {
-      "semantic_count": 20,
-      "episodic_count": 3,
-      "procedural_count": 5
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 17015,
-    "error": null
-  },
-  {
     "logId": "dist_21891c168927",
     "employeeKey": "comic-director",
     "ranAt": "2026-07-01T03:08:59.990562Z",
@@ -1807,5 +1751,160 @@
     "llmModel": "",
     "durationMs": 31,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_fff14a03f669",
+    "employeeKey": "comic-director",
+    "ranAt": "2026-07-30T04:04:37.102414Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_08_director_review",
+        "mergeIntoId": "pro_craft_deep_20260630_comic-director_ai_consistency_02",
+        "newContent": "总导演审稿与生产硬规则：1.禁止词(夸张/高速/快速/fast/剧烈/激烈)；2.不读负向提示词,只用正向约束词(如：画面干净无描边,无墨线,无裂纹,无草稿线,无脏黑边,无死黑阴影,无文字水印,保持角色一致性,服装不漂移)；3.每段≤6秒(超过角色变形)；4.镜头运动和角色动作分开描述，每镜仅一个运镜(中英双写)；5.八层框架:素材声明→镜头标签→景别主体→动作→运镜→光影→音频→全局收尾；6.光影描述是质量ROI最高元素；7.音效用「音效：」前缀标注；8.重点检查：动作因果、角色漂移、场景方向、特效干净度、轨迹线、R编号、口型与字幕行、文件完整性。AI角色漂移根因在于每个clip独立生成且解读不一。保一致性的硬解法：1. 建立转面母版：备3-5张参考图(正面+3/4侧+全身服装+道具单独)，提示词仅描述动作和环境，由参考图负责长相；2. 运动控制：锁首帧+尾帧(first/end frame)控制运动起止，配合锁定风格和稳定布光，确保跨镜一致性。（来源:AI Magicx/neolemon/Artlist/Kittl AI一致性工作流）",
+        "newImportance": null,
+        "reason": "两条记忆都涉及AI一致性问题及解决方案，'seed_comic-director_sem_08_director_review' 侧重于审稿规则和流程，'pro_craft_deep_20260630_comic-director_ai_consistency_02' 侧重于AI角色漂移的根因和具体解决方案（转面母版、运动控制）。将后者关于AI一致性的具体解决方案融入前者，形成更全面的审稿与一致性保障规则。"
+      },
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_03_delivery_tree",
+        "mergeIntoId": "seed_comic-director_sem_05_toolchain",
+        "newContent": "总导演工作流与交付标准：1.【前置锁基准】Step 0必须完成角色母版图(@图片锚定)、风格视频(@视频1)及10个核心场景锁定，否则禁止进入生成阶段；2.【任务委派】定义本段钩子、情绪曲线、风险和交付目录；委派时必须提供上游材料、输出文件名、验收标准和失败条件，严禁模糊指令；3.【交付目录】10秒制作包标准：00_交付说明、01_剧本提示词、02_人物图、03_场景图、04_轨迹图、05_特效图与特效说明、06_视频提示词、07_质检报告；4.【执行顺序】依次分派编剧、人物、场景、特效、轨迹、视频提示词、质检。comic-drama-tool 的落地链路需要 images/sceneXX.png、clips/clipXX.mp4、script_hq.json scenes、TTS台词、字幕、BGM与转场；提示词输出要能映射到这些文件。",
+        "newImportance": null,
+        "reason": "两条记忆都描述了工作流和交付标准，'seed_comic-director_sem_03_delivery_tree' 侧重于整体工作流、任务委派和交付目录，'seed_comic-director_sem_05_toolchain' 侧重于工具链的输入输出映射。将工具链的输入输出要求整合到交付标准中，使工作流描述更完整。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "duanju_spine_20260630_comic-director_law",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.99,
+        "reason": "该记忆包含短剧制作的核心法则，如节奏、剪辑、格调、结构等，是指导创作的关键，重要性应与世界观设定同等或略高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_world_opening_device",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆定义了九陆纪元的开场世界观和招牌奇观，是整个IP的基础，重要性应最高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "seed_comic-director_sem_02_style_core",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.97,
+        "reason": "视觉风格是重要组成部分，但相较于世界观和制作法则，其优先级略低。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_03",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.97,
+        "reason": "核心场景是视觉呈现的重要元素，但其重要性应略低于整体风格和制作法则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "learn_consolidation_20260630_comic-director_sem_05",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.98,
+        "reason": "第一季的故事结构和情绪曲线是叙事的核心，其重要性应较高，仅次于世界观和制作法则。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "jiulu_gaoran_pivot_20260709_comic-director_gaoran_shot_rule",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该规则直接解决了用户反馈的“贴地无脸小场面”问题，并明确了开场必须宏大，是基于用户痛点的关键规则，置信度应提高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-director_proc_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该规则强调了情绪锚点、制作说明、任务拆分和严格审稿的重要性，是保证制作质量的关键流程，置信度较高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "learn_consolidation_20260630_comic-director_proc_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "跨集复用资产的规则是保证一致性的重要手段，置信度较高。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该经验展示了通过自动补齐Brief来提升团队协作效率的成功案例，成功率高，应略微提升。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "seed_comic-director_epi_02",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该经验展示了通过镜头编号拆分来解决并行产出冲突的有效方法，成功率高，应略微提升。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "learn_consolidation_20260630_comic-director_epi_01",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该经验展示了通过自动补齐情绪定位来确保下游产出一致性的成功案例，成功率高，应略微提升。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "jiulu_ep1_gaoran_20260709_comic-director",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该经验是关于EP1的成功创作，虽然成功率高，但相较于流程优化类的经验，其普适性略低，故略微提升。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "episodic",
+        "targetId": "jiulu_s1_gaoran_complete_20260709_comic-director",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": null,
+        "reason": "该经验是关于第一季完整创作的成功案例，虽然成功率高，但相较于流程优化类的经验，其普适性略低，故略微提升。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 11,
+      "episodic": 5,
+      "procedural": 3
+    },
+    "afterCounts": {
+      "semantic_count": 9,
+      "episodic_count": 5,
+      "procedural_count": 3
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 7516,
+    "error": null
   }
 ]

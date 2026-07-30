@@ -9,186 +9,162 @@
     "accessCount": 0,
     "createdAt": "2026-07-09T08:02:22.673580Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-09T08:02:22.673580Z"
+    "updatedAt": "2026-07-30T04:04:45.827728Z"
   },
   {
     "memoryId": "duanju_spine_20260630_comic-keyframe-artist_law",
     "employeeKey": "comic-keyframe-artist",
     "content": "【短剧第一准则·最高优先级,统管一切】你做的是高节奏竖屏短剧,不是电影。节奏=信息/反转密度:每1-2秒砸一个新事件/反转/钩子/嘴替台词,绝不靠氛围或漂亮镜头撑时间。剪辑beat 1-2秒(Seedance生成源片4-5s,之后在剪映剪碎),开口即钩子,硬切悬念收尾,一集15-25个事件beat。构图/色彩/布光/运镜/景别这些电影美术手艺只是工具,必须服从短剧节奏,不是目的。",
     "category": "shortdrama_law",
-    "importance": 0.99,
+    "importance": 1.0,
     "sourceSession": "duanju_spine_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T23:30:00Z",
     "lastAccessed": null,
-    "updatedAt": "2026-06-30T23:30:00Z"
+    "updatedAt": "2026-07-30T04:04:45.828728Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_sem_01",
     "employeeKey": "comic-keyframe-artist",
     "content": "R3苍霖三阶段：EP01-03早期=16岁少年/黑色短碎发凌乱/左脸颊竖向旧伤疤/偏瘦有韧劲/深褐近黑瞳孔/破烂灰褐麻布短衣/赤脚/胸口布条绑龙骨碎片；EP04-08中期=同上+旧毯子当披风；EP09-10后期=深灰龙翼披风龙鳞纹/粗绳项链挂龙骨碎片/不再赤脚。每镜必完整复述。",
     "category": "character",
-    "importance": 0.97,
+    "importance": 0.98,
     "sourceSession": "learn_consolidation_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T11:44:56.150698Z",
     "lastAccessed": null,
-    "updatedAt": "2026-06-30T11:44:56.150698Z"
+    "updatedAt": "2026-07-30T04:04:45.829873Z"
   },
   {
     "memoryId": "jiulu_gaoran_pivot_20260709_comic-keyframe-artist_realm_spectacle_lock",
     "employeeKey": "comic-keyframe-artist",
     "content": "【九陆纪元·各陆招牌大场面·锁死不串台】烬龙陆=熔浆龙焰/龙骨废墟山峦/巨龙(禁止赛博元素);星圣陆=魔法阵连接整座浮空城/碎星环坠落/星轨炮;青霄陆=赛博朋克火箭炮/机械穹顶/数据洪流/净化光束扫城;潮生陆=海啸卷城/百米浪墙/充潮;归墟陆=虫潮遮天蔽日。每块大陆一个视觉母题即卖点,提示词必须写出尺度(城市/地貌级)+体积光+粒子+冲击波。别把大陆的招牌混用。",
     "category": "knowledge",
-    "importance": 0.97,
+    "importance": 0.98,
     "sourceSession": "jiulu_gaoran_pivot_20260709",
     "accessCount": 0,
     "createdAt": "2026-07-09T08:02:22.848350Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-09T08:02:22.848350Z"
+    "updatedAt": "2026-07-30T04:04:45.831728Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_sem_02",
     "employeeKey": "comic-keyframe-artist",
     "content": "7核心场景：scene01废巷(暖色午后散射光)/scene02废矿坑(30米深,碎片蓝光+裂缝金绿光丝)/scene03矿洞口(半明半暗过渡)/scene04矿洞深处(全黑只有碎片光)/scene05世界树遗迹(枯根迷宫,金绿光脉,体积光)/scene06悬崖(断崖云海,日落暖橙侧光)/cloud云海(金色无边际,阳光穿云体积光)。",
     "category": "scene",
-    "importance": 0.95,
+    "importance": 0.96,
     "sourceSession": "learn_consolidation_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T11:44:56.150698Z",
     "lastAccessed": null,
-    "updatedAt": "2026-06-30T11:44:56.150698Z"
+    "updatedAt": "2026-07-30T04:04:45.832728Z"
   },
   {
     "memoryId": "pro_craft_deep_20260630_comic-keyframe-artist_ai_consistency_01",
     "employeeKey": "comic-keyframe-artist",
     "content": "AI角色漂移根因在于每个clip独立生成且解读不同。硬解法：1.先备3-5张参考图（正面+3/4侧+全身服装+道具）做成转面母版，提示词仅描述动作和环境，由参考图负责长相；2.锁首帧+尾帧(first/end frame)控制运动起止，配合锁定风格和稳定布光，确保跨镜一致性。",
     "category": "craft",
-    "importance": 0.95,
+    "importance": 0.96,
     "sourceSession": "pro_craft_deep_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:34:27.366500Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-14T19:00:34.568380Z"
-  },
-  {
-    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_sem_04",
-    "employeeKey": "comic-keyframe-artist",
-    "content": "风格锚点句(所有提示词必带)：干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边。",
-    "category": "style",
-    "importance": 0.94,
-    "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
-    "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
-    "updatedAt": "2026-06-30T11:44:56.150698Z"
-  },
-  {
-    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_sem_05",
-    "employeeKey": "comic-keyframe-artist",
-    "content": "正向约束后缀(每条提示词结尾必带)：画面干净无描边/无墨线/无裂纹/无草稿线/无脏黑边/无死黑阴影/无文字水印/保持角色一致性/服装不漂移/保持面部一致/无变形/无拉伸/面部清晰/人体结构正常/动作自然流畅/画面稳定/竖屏9:16/电影质感。",
-    "category": "quality",
-    "importance": 0.94,
-    "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
-    "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
-    "updatedAt": "2026-06-30T11:44:56.150698Z"
-  },
-  {
-    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_sem_07",
-    "employeeKey": "comic-keyframe-artist",
-    "content": "关键帧=每镜首帧,是图生视频的起点,必须景别/构图/角色位置/光影一次到位,@图片1锁角色@场景母版锁背景。",
-    "category": "prompt",
-    "importance": 0.94,
-    "sourceSession": "learn_consolidation_20260630",
-    "accessCount": 0,
-    "createdAt": "2026-06-30T11:44:56.150698Z",
-    "lastAccessed": null,
-    "updatedAt": "2026-06-30T11:44:56.150698Z"
+    "updatedAt": "2026-07-30T04:04:45.833727Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_sem_03",
     "employeeKey": "comic-keyframe-artist",
     "content": "景别×情绪：大远景=渺小/孤独(crane down)/远景=格局(tracking)/全景=客观建立(static)/中景=对话日常(dolly in)/近景=情绪(dolly in)/特写=高情绪(static+震动)/微距=奇观(dolly in)。情绪递进应从中景起步，逐步切换至特写以堆叠强度，而非直接怼脸。每镜只一个运镜,中英双写。",
     "category": "camera",
-    "importance": 0.93,
+    "importance": 0.95,
     "sourceSession": "learn_consolidation_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T11:44:56.150698Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-14T19:00:34.549992Z"
+    "updatedAt": "2026-07-30T04:04:45.834727Z"
+  },
+  {
+    "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_sem_05",
+    "employeeKey": "comic-keyframe-artist",
+    "content": "风格锚点句(所有提示词必带)：干净半写实东方幻想漫剧插画，电影级高特效动作关键帧，柔和漫射光，清晰主体，低描边。正向约束后缀(每条提示词结尾必带)：画面干净无描边/无墨线/无裂纹/无草稿线/无脏黑边/无死黑阴影/无文字水印/保持角色一致性/服装不漂移/保持面部一致/无变形/无拉伸/面部清晰/人体结构正常/动作自然流畅/画面稳定/竖屏9:16/电影质感。",
+    "category": "quality",
+    "importance": 0.94,
+    "sourceSession": "learn_consolidation_20260630",
+    "accessCount": 0,
+    "createdAt": "2026-06-30T11:44:56.150698Z",
+    "lastAccessed": null,
+    "updatedAt": "2026-07-30T04:04:45.820727Z"
   },
   {
     "memoryId": "learn_consolidation_20260630_comic-keyframe-artist_sem_06",
     "employeeKey": "comic-keyframe-artist",
-    "content": "@引用系统：@图片1=R3苍霖母版(所有镜头必引)/@视频1=风格锁定视频(最强风格锚)/@音频1-3=配音BGM。总计≤12素材,最优4-5个。关键句「画风动作严格对齐@视频1的风格」。",
+    "content": "@引用系统：@图片1=R3苍霖母版(所有镜头必引)/@视频1=风格锁定视频(最强风格锚)/@音频1-3=配音BGM。总计≤12素材,最优4-5个。关键句「画风动作严格对齐@视频1的风格」。关键帧=每镜首帧,是图生视频的起点,必须景别/构图/角色位置/光影一次到位,@图片1锁角色@场景母版锁背景。",
     "category": "prompt",
     "importance": 0.93,
     "sourceSession": "learn_consolidation_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T11:44:56.150698Z",
     "lastAccessed": null,
-    "updatedAt": "2026-06-30T11:44:56.150698Z"
+    "updatedAt": "2026-07-30T04:04:45.824758Z"
   },
   {
     "memoryId": "pro_craft_deep_20260630_comic-keyframe-artist_lighting_03",
     "employeeKey": "comic-keyframe-artist",
     "content": "布光核心准则：提示词必须包含'位置+高度+强度比'三要素（如主光侧面30-45°且高于眼平线，辅光对侧强度50-75%，轮廓光后上方分离）。压迫/戏剧场景首选伦勃朗光（标志：暗侧脸颊下方一个宽不过眼、长不过鼻的三角光斑）。光的方向决定脸部塑形与情绪。（来源:StudioBinder布光指南）",
     "category": "craft",
-    "importance": 0.7,
+    "importance": 0.8,
     "sourceSession": "pro_craft_deep_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:34:27.366500Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-15T19:00:37.577796Z"
+    "updatedAt": "2026-07-30T04:04:45.836728Z"
   },
   {
     "memoryId": "pro_craft_deep_20260630_comic-keyframe-artist_animation12_01",
     "employeeKey": "comic-keyframe-artist",
     "content": "动画12原则实操：1.挤压拉伸需遵循体积守恒（变宽必变矮），确保重量感；2.Timing（帧数）决定速度，AI视频中慢速连续小动作更稳，不易变形；3.运动走弧线而非直线，且必须包含预备动作(Anticipation)与缓入缓出，避免机器人感。",
     "category": "craft",
-    "importance": 0.7,
+    "importance": 0.8,
     "sourceSession": "pro_craft_deep_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:34:27.366500Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-15T19:00:37.612382Z"
+    "updatedAt": "2026-07-30T04:04:45.837727Z"
   },
   {
     "memoryId": "pro_craft_deep2_20260630_comic-keyframe-artist_expression_01",
     "employeeKey": "comic-keyframe-artist",
     "content": "表情刻画准则：眉/眼/嘴三大件承担核心情绪，先定三者再加细节。六大普世情绪有固定组合（如怒=眉锁下压+抿唇），必须确保在1/12秒内一眼可读。",
     "category": "craft",
-    "importance": 0.55,
+    "importance": 0.7,
     "sourceSession": "pro_craft_deep2_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:40:38.660400Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-13T19:00:47.165774Z"
+    "updatedAt": "2026-07-30T04:04:45.838730Z"
   },
   {
     "memoryId": "pro_craft_deep2_20260630_comic-keyframe-artist_env_layer_01",
     "employeeKey": "comic-keyframe-artist",
     "content": "环境纵深与构图构建：1.分层法：前景（最深暗）、中景（主焦点最亮）、背景（低对比柔色/空气透视）；2.构图原则：三分法（主体置于交点），利用三角轴或斜线引导视线；3.视觉锚点：每幅画面必须仅设定一个由形状/颜色/光引导的‘压过一切的注意元素’，光影应组织成‘有情感的组合’而非平均打亮，防止视线分散。",
     "category": "craft",
-    "importance": 0.55,
+    "importance": 0.7,
     "sourceSession": "pro_craft_deep2_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:40:38.660400Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-15T19:00:37.589290Z"
+    "updatedAt": "2026-07-30T04:04:45.840732Z"
   },
   {
     "memoryId": "pro_canon_wiki_20260630_comic-keyframe-artist_montage_01",
     "employeeKey": "comic-keyframe-artist",
     "content": "蒙太奇核心：通过组合不同镜头产生'第三种动作'（库里肖夫效应），分镜意义在于镜间关系。利用交叉剪辑呈现多线索同步，或用创造性地理拼凑空间关联。剪辑是创造时空的主要手段。（来源:维基百科·蒙太奇）",
     "category": "knowledge",
-    "importance": 0.55,
+    "importance": 0.6,
     "sourceSession": "pro_canon_wiki_20260630",
     "accessCount": 0,
     "createdAt": "2026-06-30T12:28:25.765700Z",
     "lastAccessed": null,
-    "updatedAt": "2026-07-13T11:55:52.713490Z"
+    "updatedAt": "2026-07-30T04:04:45.842728Z"
   }
 ]

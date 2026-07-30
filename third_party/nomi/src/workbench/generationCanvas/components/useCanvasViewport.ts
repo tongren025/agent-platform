@@ -1,6 +1,11 @@
 import React from 'react'
 import { useWorkbenchStore } from '../../workbenchStore'
-import { createInitialViewport, getNodeSize } from './generationCanvasGeometry'
+import {
+  MAX_CANVAS_ZOOM,
+  MIN_CANVAS_ZOOM,
+  createInitialViewport,
+  getNodeSize,
+} from './generationCanvasGeometry'
 import type { GenerationCanvasNode } from '../model/generationCanvasTypes'
 
 // 从 GenerationCanvas（顶死 800 行的 god-component）抽出的视口 + 虚拟化子系统：
@@ -11,6 +16,25 @@ import type { GenerationCanvasNode } from '../model/generationCanvasTypes'
 // （扩 VIRTUALIZATION_BUFFER_PX 边距）相交的节点；低于阈值渲染全部，小项目零额外开销。
 const VIRTUALIZATION_THRESHOLD = 50
 const VIRTUALIZATION_BUFFER_PX = 400
+
+type CanvasViewport = { zoom: number; offset: { x: number; y: number } }
+
+export function restoreSupportedCanvasViewport(
+  remembered: CanvasViewport | undefined,
+  fallback: CanvasViewport,
+): CanvasViewport {
+  if (
+    !remembered ||
+    !Number.isFinite(remembered.zoom) ||
+    remembered.zoom < MIN_CANVAS_ZOOM ||
+    remembered.zoom > MAX_CANVAS_ZOOM ||
+    !Number.isFinite(remembered.offset.x) ||
+    !Number.isFinite(remembered.offset.y)
+  ) {
+    return fallback
+  }
+  return remembered
+}
 
 export function getVisibleCanvasNodesForRender(params: {
   nodes: GenerationCanvasNode[]
@@ -42,7 +66,7 @@ export function useCanvasViewport(activeCategoryId: string, nodes: GenerationCan
   // Phase E3: each graph-canvas category preserves its own zoom + offset
   const seedViewport = React.useMemo(() => {
     const remembered = categoryViewports[activeCategoryId]
-    return remembered || initialViewport
+    return restoreSupportedCanvasViewport(remembered, initialViewport)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategoryId])
   const [viewport, setViewport] = React.useState(() => ({
@@ -55,7 +79,7 @@ export function useCanvasViewport(activeCategoryId: string, nodes: GenerationCan
   React.useEffect(() => {
     if (lastCategoryRef.current === activeCategoryId) return
     rememberCategoryViewport(lastCategoryRef.current, { zoom, offset }) // save outgoing
-    const next = categoryViewports[activeCategoryId] || initialViewport // load incoming
+    const next = restoreSupportedCanvasViewport(categoryViewports[activeCategoryId], initialViewport) // load outgoing or repair legacy 1% viewport
     setViewport({ zoom: next.zoom, offset: next.offset })
     lastCategoryRef.current = activeCategoryId
     // eslint-disable-next-line react-hooks/exhaustive-deps

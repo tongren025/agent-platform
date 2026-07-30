@@ -87,3 +87,30 @@ def test_catalog_does_not_invent_unconfigured_public_models(monkeypatch):
         "openai/gpt-image-2",
         "image",
     ) is None
+
+
+def test_catalog_lists_real_media_models_from_connected_openrouter(monkeypatch):
+    provider = _provider("openrouter", [{"modelId": "openrouter/free"}])
+    provider.endpoint = "https://openrouter.ai/api/v1"
+    monkeypatch.setattr(canvas_catalog.ai_service, "list_all_providers", lambda: [provider])
+    monkeypatch.setattr(canvas_catalog.employee_registry, "list_all", lambda: [])
+    monkeypatch.setattr(
+        canvas_catalog.openrouter_media,
+        "list_media_models",
+        lambda kind: [{
+            "id": "openai/gpt-image-2",
+            "name": "OpenAI: GPT Image 2",
+            "kind": kind,
+            "inputModalities": ["text", "image"],
+            "outputModalities": ["image"],
+            "recommended": False,
+        }],
+    )
+    canvas_catalog._media_catalog_cache.clear()
+
+    rows = canvas_catalog.list_canvas_models("image")
+
+    assert [(row["vendorKey"], row["modelKey"]) for row in rows] == [
+        ("openrouter", "openai/gpt-image-2"),
+    ]
+    assert rows[0]["meta"]["source"] == "connected-provider-catalog"

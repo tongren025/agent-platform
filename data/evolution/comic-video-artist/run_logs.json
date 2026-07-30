@@ -8,5 +8,15 @@
     "llmModel": "",
     "durationMs": 16,
     "error": null
+  },
+  {
+    "logId": "evo_24fa47dd6ece",
+    "employeeKey": "comic-video-artist",
+    "ranAt": "2026-07-30T04:04:39.854616Z",
+    "sessionsAnalyzed": 0,
+    "insightsGenerated": 0,
+    "llmModel": "",
+    "durationMs": 0,
+    "error": null
   }
 ]

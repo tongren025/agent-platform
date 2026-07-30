@@ -529,7 +529,7 @@ export default function NodeGenerationComposer({ node, visualSize }: Props): JSX
           : spaceBelow < neededScreenHeight && spaceAbove > spaceBelow,
       )
       // 工具条也恒定屏幕尺寸（counter-scaled）→ 实测其屏幕高换回节点坐标（/zoom）+ 它距节点的 18px。
-      const toolbarEl = nodeEl.querySelector('.generation-canvas-v2-node__panorama-toolbar')
+      const toolbarEl = nodeEl.querySelector('.generation-canvas-v2-node__floating-toolbar')
       const toolbarScreenH = toolbarEl ? toolbarEl.getBoundingClientRect().height : 0
       setAboveClearance(toolbarScreenH > 0 ? toolbarScreenH / (canvasZoom || 1) + 18 : 0)
       // 横向夹取：卡净 scale=1（画布 scale(zoom)×卡 counter-scale(1/zoom)）→ 屏幕宽 = offsetWidth。

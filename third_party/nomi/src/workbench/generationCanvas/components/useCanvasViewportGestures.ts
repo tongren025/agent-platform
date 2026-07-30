@@ -6,7 +6,7 @@
 // 同时托管视口变换原语（scheduleOffset / setViewportTransform / zoomAtStagePoint），
 // 平移与离散缩放都走 rAF 批处理，消除快速输入的多次 setState 抖动。
 import React from 'react'
-import { clampNumber, getWheelZoomFactor } from './generationCanvasGeometry'
+import { clampCanvasZoom, getWheelZoomFactor } from './generationCanvasGeometry'
 import { findScrollableAncestor } from './canvasScroll'
 
 type Offset = { x: number; y: number }
@@ -305,7 +305,7 @@ export function useCanvasViewportGestures({
     setContextNodeMenu(null)
     if (!stageRef.current) return
     const rect = stageRef.current.getBoundingClientRect()
-    const nextZoom = clampNumber(zoomRef.current * getWheelZoomFactor(event), 0.2, 3)
+    const nextZoom = clampCanvasZoom(zoomRef.current * getWheelZoomFactor(event))
     zoomAtStagePoint(nextZoom, { x: event.clientX - rect.left, y: event.clientY - rect.top })
   }, [offsetRef, scheduleOffset, setContextNodeMenu, stageRef, zoomAtStagePoint, zoomRef])
 

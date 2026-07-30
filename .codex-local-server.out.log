@@ -1,0 +1,250 @@
+ÿ�ղɼ�������������
+��ʱ��������ͬ�� @ 02:00
+趋势 AI 报告就绪，模型=openrouter/auto
+趋势简报就绪：6 条(候选 286)
+趋势同步完成：新拉 0 个，跳过 8 个（当天已有），共 8 个 query
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:28:30.757473Z [info     ] request                        client=127.0.0.1 elapsed_ms=2031.8 method=GET path=/api/v1/agentapp/tasks request_id=e229ab03c1294bc4a03619a3d43254f7 status=503
+2026-07-30T04:28:37.508759Z [info     ] request                        client=127.0.0.1 elapsed_ms=44.3 method=GET path=/canvas request_id=8e56228c84074b80b711519bc391a76e status=200
+2026-07-30T04:28:37.527741Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.0 method=GET path=/assets/index-BrXUN1mq.js request_id=c0a9fd7f008d45ab893d773a61a7bf6b status=304
+2026-07-30T04:28:37.559474Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.4 method=GET path=/assets/index-DH1lgv_e.css request_id=7f5b224e08c94d7d92d4e7f529fa0812 status=304
+2026-07-30T04:28:37.614281Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/api/v1/agentapp/auth/check request_id=1b6378b796d54a6a8ea215ce3357ee22 status=200
+2026-07-30T04:28:37.634161Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.2 method=GET path=/assets/CanvasHub-DA6a9umr.js request_id=94c643ba8a6e4df8a220d39fd7b63ab5 status=304
+2026-07-30T04:28:37.650593Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.7 method=GET path=/assets/index-D1u5SFsN.js request_id=38ebc43df8eb44c3ba2ac8b83b75a2ea status=304
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:28:37.671072Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.4 method=GET path=/api/v1/agentapp/tasks request_id=42a998063d974579a8b389877e0f4f76 status=503
+2026-07-30T04:28:37.679073Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.9 method=GET path=/agent-canvas/agent-canvas.js request_id=0092152a85fa458c93f57a6f1fed0bbd status=200
+2026-07-30T04:28:37.690333Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/agent-canvas/assets/agentStudioMount-BETFoJ1A.js request_id=76138bf061444f5eb9d19158efac4a52 status=200
+2026-07-30T04:28:37.734914Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/agent-canvas/agent-canvas.css request_id=812c760078cd4a319e283485d7735eae status=200
+2026-07-30T04:28:37.749916Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/agent-canvas/assets/projectPersistenceService-CTVVWwT6.js request_id=fdbf9f3cb0df4af99d55d9194f4aa5c9 status=200
+2026-07-30T04:28:37.978217Z [info     ] request                        client=127.0.0.1 elapsed_ms=172.9 method=GET path=/api/v1/agentapp/canvas/workbench/projects/tiexin-s1 request_id=dd5d972520e348bd8a666b47bd5de886 status=200
+2026-07-30T04:28:38.039132Z [info     ] request                        client=127.0.0.1 elapsed_ms=280.4 method=GET path=/api/v1/agentapp/canvas/workbench/projects request_id=ea52f58fd2ad40c0b7c6cbaab834998e status=200
+2026-07-30T04:28:38.099130Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/agent-canvas/assets/WorkbenchShell-BrpHIUJs.js request_id=6271b3d0f74c4d61b1cb1257d7f48c24 status=200
+2026-07-30T04:28:38.115130Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.2 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png request_id=98abe9dd1c6b47bca04068aa975b005e status=404
+2026-07-30T04:28:38.205131Z [info     ] request                        client=127.0.0.1 elapsed_ms=69.9 method=GET path=/agent-canvas/assets/IconDownload-B9vMwfWs.js request_id=87ede19772134a88961e106348bf5858 status=200
+2026-07-30T04:28:38.214135Z [info     ] request                        client=127.0.0.1 elapsed_ms=75.3 method=GET path=/agent-canvas/assets/IconChevronRight-Bx82dLzG.js request_id=ac7f1d5c6a22401a8ead4ec303b792ae status=200
+2026-07-30T04:28:38.222133Z [info     ] request                        client=127.0.0.1 elapsed_ms=81.3 method=GET path=/agent-canvas/assets/IconListCheck-JL4P-cnm.js request_id=c134de71dcda462f9f3af386d35c65a2 status=200
+2026-07-30T04:28:38.230132Z [info     ] request                        client=127.0.0.1 elapsed_ms=87.2 method=GET path=/agent-canvas/assets/IconMap-DnhxZc_n.js request_id=90096180ddba49bb9337a52ca77adcea status=200
+2026-07-30T04:28:38.238162Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.7 method=GET path=/agent-canvas/assets/status-CHPjK1py.js request_id=64ed500a80974824b3ca0762d0a73faf status=200
+2026-07-30T04:28:38.246177Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.3 method=GET path=/agent-canvas/assets/journeyTourActivity-B83mr1IT.js request_id=0994aa9dfc8b4a5a82dd633c7845bbcf status=200
+2026-07-30T04:28:38.268133Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.5 method=GET path=/agent-canvas/assets/IconCircleCheck-Dplc9KNm.js request_id=73fb6ef68e3e4588a8eb7a2444ced3bf status=200
+2026-07-30T04:28:38.278331Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.3 method=GET path=/agent-canvas/assets/IconBooks-B0U66BSo.js request_id=ee16979c05e74376b62d89ce53d37305 status=200
+2026-07-30T04:28:38.285133Z [info     ] request                        client=127.0.0.1 elapsed_ms=24.8 method=GET path=/agent-canvas/assets/IconBulb-DEa53I3D.js request_id=3990647c35654a0ca715f037a52f00a1 status=200
+2026-07-30T04:28:38.294239Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.3 method=GET path=/agent-canvas/assets/IconFolder-BlT3D66S.js request_id=ba43ee11fc28441b85272fb00b62d3e2 status=200
+2026-07-30T04:28:38.301134Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.0 method=GET path=/agent-canvas/assets/use-resolved-styles-api-BUT2eW7T.js request_id=1c0c405a6ba84d80acd1067ad399f540 status=200
+2026-07-30T04:28:38.309241Z [info     ] request                        client=127.0.0.1 elapsed_ms=42.6 method=GET path=/agent-canvas/assets/IconLayoutSidebarLeftExpand-C6bDxzW8.js request_id=f8bd151767404293b924b64ab5d8c263 status=200
+2026-07-30T04:28:38.323135Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.4 method=GET path=/agent-canvas/assets/get-auto-contrast-value-BGSSZ1GD.js request_id=f8c903d94e2c47ffa02424ca8bd3f1b8 status=200
+2026-07-30T04:28:38.342135Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/agent-canvas/assets/GenerationWorkspace-BgXmtlWo.js request_id=0ce8150ceeb045129fe6be9c7a348586 status=200
+2026-07-30T04:28:38.355136Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/agent-canvas/assets/IconChevronUp-BxF_HETT.js request_id=26b0ba8896864dd6b46908f25ef54b74 status=200
+2026-07-30T04:28:38.378136Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.8 method=GET path=/agent-canvas/assets/GenerationCanvas-DvAGqGVQ.js request_id=4deea5e8cb7d457f90b58bbb2e4f91e5 status=200
+2026-07-30T04:28:38.401330Z [info     ] request                        client=127.0.0.1 elapsed_ms=26.1 method=GET path=/agent-canvas/assets/CanvasAssistantEntry-BN9i513-.js request_id=d9c603b4498c4e8e9a5d1e30c2263968 status=200
+2026-07-30T04:28:38.425138Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.5 method=GET path=/agent-canvas/assets/workbenchActions-BMiY4nsj.js request_id=39c4ab78ddb64b7c9a56f63713edc339 status=200
+2026-07-30T04:28:38.451140Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.2 method=GET path=/agent-canvas/assets/IconLayoutGrid-S68A8ia-.js request_id=4f8d37f22f484552be3b28e736bba462 status=200
+2026-07-30T04:28:38.458139Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.1 method=GET path=/agent-canvas/assets/IconUser-ahdfPT3r.js request_id=030510a786bb4df7a98f2aa7387643bf status=200
+2026-07-30T04:28:38.465138Z [info     ] request                        client=127.0.0.1 elapsed_ms=48.4 method=GET path=/agent-canvas/assets/IconCube-y1PRP-b1.js request_id=3c80072f4b394417b7d0a5b07e27dd91 status=200
+2026-07-30T04:28:38.473178Z [info     ] request                        client=127.0.0.1 elapsed_ms=53.8 method=GET path=/agent-canvas/assets/IconVideo-OMm7_0Ys.js request_id=9f43beebd3524754a9061682ab3fe116 status=200
+2026-07-30T04:28:38.480139Z [info     ] request                        client=127.0.0.1 elapsed_ms=64.1 method=GET path=/agent-canvas/assets/IconBrush-BgbdxzA1.js request_id=c8bc6756cfdd40228a8d1b4b21532d56 status=200
+2026-07-30T04:28:38.504140Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.8 method=GET path=/agent-canvas/assets/workspaceFileDrag-CNxBSF4X.js request_id=8bcd047340e243299f6f106193433b3a status=200
+2026-07-30T04:28:38.526140Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.5 method=GET path=/agent-canvas/assets/batchPlanPreview-MHoFuemr.js request_id=af7b19682791411a9390a8dcf7a92642 status=200
+2026-07-30T04:28:38.533140Z [info     ] request                        client=127.0.0.1 elapsed_ms=39.2 method=GET path=/agent-canvas/assets/assetLibraryDrag-DG98WJrf.js request_id=cbaddbf56d8e4308a1375a6b8799e594 status=200
+2026-07-30T04:28:38.541140Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.3 method=GET path=/agent-canvas/assets/completeNodeConnection-Dda5eyVF.js request_id=9bb2c49910ae4292a78d0590744b047e status=200
+2026-07-30T04:28:38.548141Z [info     ] request                        client=127.0.0.1 elapsed_ms=53.6 method=GET path=/agent-canvas/assets/globalAssetPopoverEvents-CLJ2XYFb.js request_id=6859efe87c48470692c6ba4192ce8c4b status=200
+2026-07-30T04:28:38.556141Z [info     ] request                        client=127.0.0.1 elapsed_ms=53.5 method=GET path=/agent-canvas/assets/IconEyeOff-DDJ1eUcj.js request_id=63a30e69f8e9488bbd6aa35d4082dcec status=200
+2026-07-30T04:28:38.580142Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.7 method=GET path=/agent-canvas/assets/IconRotate-B13bdwDu.js request_id=20dcbccc368f4caf92f9bfe94ac5d5d2 status=200
+2026-07-30T04:28:38.601230Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.4 method=GET path=/agent-canvas/assets/IconScissors--lPc3wr2.js request_id=d209cba63e6a4bbeaf93ea79cb091d61 status=200
+2026-07-30T04:28:38.610338Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.8 method=GET path=/agent-canvas/assets/referenceSlots-DggLdGZy.js request_id=d480593a27994ec385d25c71909320b2 status=200
+2026-07-30T04:28:38.617554Z [info     ] request                        client=127.0.0.1 elapsed_ms=44.5 method=GET path=/agent-canvas/assets/IconFolderPlus-DUMORchS.js request_id=4342d31520c048c08d4c4c63ef5257a8 status=200
+2026-07-30T04:28:38.624155Z [info     ] request                        client=127.0.0.1 elapsed_ms=50.6 method=GET path=/agent-canvas/assets/showInfoToast-BO7qO6Cl.js request_id=cd3b890c676d46a79107d716f774070f status=200
+2026-07-30T04:28:38.632297Z [info     ] request                        client=127.0.0.1 elapsed_ms=57.3 method=GET path=/agent-canvas/assets/generationRunController-BQl0clEC.js request_id=d3a0730f19014f2c93872a663757fc0e status=200
+2026-07-30T04:28:38.646365Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/agent-canvas/assets/referenceUrl-Chs-socL.js request_id=9bd05982389142feb118d702794f0759 status=200
+2026-07-30T04:28:38.691475Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.5 method=GET path=/agent-canvas/assets/BaseGenerationNode-Dv-3JT0z.js request_id=06d088d01a3f491db4cf691912d5a23c status=200
+2026-07-30T04:28:38.714696Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.0 method=GET path=/agent-canvas/assets/IconCopy-CGYErNpg.js request_id=a97912d96f7249ada7c0c56c41481a94 status=200
+2026-07-30T04:28:38.736477Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.4 method=GET path=/agent-canvas/assets/IconMinimize-BDJ07cyY.js request_id=3a1ececbf9184a1190b7f3d061038b58 status=200
+2026-07-30T04:28:38.743564Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.5 method=GET path=/agent-canvas/assets/IconUpload-1C5yonie.js request_id=71c86fa2de394b2891e36c26c14af0c4 status=200
+2026-07-30T04:28:38.751856Z [info     ] request                        client=127.0.0.1 elapsed_ms=44.3 method=GET path=/agent-canvas/assets/useNodeRelationships-Gs_XA04I.js request_id=bd751ff947da45a380cdfe838acc0b76 status=200
+2026-07-30T04:28:38.758620Z [info     ] request                        client=127.0.0.1 elapsed_ms=50.4 method=GET path=/agent-canvas/assets/IconPlayerPause-Bog2IQxD.js request_id=c85e7f82248d4c6ebb0ee40b59bb99fb status=200
+2026-07-30T04:28:38.766622Z [info     ] request                        client=127.0.0.1 elapsed_ms=58.0 method=GET path=/agent-canvas/assets/IconFileText-B2WWxWC-.js request_id=ed6eb55bbd84431988e55f1d28820334 status=200
+2026-07-30T04:28:38.787622Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.7 method=GET path=/agent-canvas/assets/IconTypography-DmqQTdAN.js request_id=32e56924edba47848b7f09a87dafccef status=200
+2026-07-30T04:28:38.811429Z [info     ] request                        client=127.0.0.1 elapsed_ms=31.1 method=GET path=/agent-canvas/assets/IconPhotoPlus-D_T928F2.js request_id=8f3a5300c2e14a32b072936e2edcf63a status=200
+2026-07-30T04:28:38.818047Z [info     ] request                        client=127.0.0.1 elapsed_ms=39.6 method=GET path=/agent-canvas/assets/IconWand-DffQdFNI.js request_id=5e76eb8345574c44a784727ce742a61c status=200
+2026-07-30T04:28:38.826047Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.6 method=GET path=/agent-canvas/assets/scene3dConstants-DlRfsgmW.js request_id=ec7e07a0e25a44888449a4e41914ad60 status=200
+2026-07-30T04:28:38.834047Z [info     ] request                        client=127.0.0.1 elapsed_ms=53.9 method=GET path=/agent-canvas/assets/IconCamera-DKSVwL_O.js request_id=1cc3c63079534cbabf793257cb4b2384 status=200
+2026-07-30T04:28:38.841187Z [info     ] request                        client=127.0.0.1 elapsed_ms=60.0 method=GET path=/agent-canvas/assets/timelineDragPayload-CPSduC7F.js request_id=fff6736f7c844b5b895e4c65bfe5c47b status=200
+2026-07-30T04:28:38.854242Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.9 method=GET path=/agent-canvas/assets/IconRefresh-BdsjT2dM.js request_id=87eae615d9d34420b243625385f1067e status=200
+2026-07-30T04:28:38.908366Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/agent-canvas/assets/TextDocumentNode-DrrsWByr.js request_id=aae1ff496c894c389669e5372e9f573f status=200
+2026-07-30T04:28:38.923338Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.3 method=GET path=/agent-canvas/assets/index-ClRJ4Wcj.js request_id=ec12d98983e8484b9397145d6e9a7df8 status=200
+2026-07-30T04:28:38.931395Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.1 method=GET path=/agent-canvas/assets/richTextActions-DL6uLG91.js request_id=23c2db140b5545d1b8ae1477282972d3 status=200
+2026-07-30T04:28:38.947503Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.9 method=GET path=/agent-canvas/assets/IconArrowBackUp-3edk5wb2.js request_id=c3ad3807116e4dc2bf769dbabc19e2b9 status=200
+2026-07-30T04:28:38.955340Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.8 method=GET path=/agent-canvas/assets/IconList-Ck30-l0i.js request_id=5f38403cb21b4da88e071345323baff0 status=200
+2026-07-30T04:28:38.962339Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.5 method=GET path=/agent-canvas/assets/IconArrowForwardUp-DAyoehe7.js request_id=c992ffbd3c7c43a4a1fb61a1ef187bbc status=200
+HTTP Request: GET https://openrouter.ai/api/v1/images/models "HTTP/1.1 200 OK"
+HTTP Request: GET https://openrouter.ai/api/v1/models?output_modalities=image "HTTP/1.1 200 OK"
+2026-07-30T04:28:42.428778Z [info     ] request                        client=127.0.0.1 elapsed_ms=1578.6 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=75f343426e994818bc1fef74fa0d8d8b status=200
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:28:47.690871Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/api/v1/agentapp/tasks request_id=f2a1afc4927648329bb492cd7255645e status=503
+2026-07-30T04:28:55.827239Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.6 method=GET path=/agent-canvas/assets/NodeGenerationComposer-Zz_sK5GQ.js request_id=70ae1ce666f049c780d1adbb074c91e3 status=200
+2026-07-30T04:28:55.872015Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.4 method=GET path=/agent-canvas/assets/useDedupedModelSelect-DLGp5vkS.js request_id=6263bffcd0e14893a48f75896e58e41a status=200
+2026-07-30T04:28:55.884017Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.4 method=GET path=/agent-canvas/assets/modelCatalogCache-Dq0F3nGg.js request_id=6d7b644dedba45508fcc338a680ce83c status=200
+2026-07-30T04:28:55.903042Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.2 method=GET path=/agent-canvas/assets/useAssetPool-w5-1IKkU.js request_id=27917c5369d1432794a75214f81b462d status=200
+2026-07-30T04:28:55.912274Z [info     ] request                        client=127.0.0.1 elapsed_ms=48.7 method=GET path=/agent-canvas/assets/forms-nPKDz12P.js request_id=35af1f4cb8bb4e21913c9bdbe5d6e21e status=200
+2026-07-30T04:28:55.922016Z [info     ] request                        client=127.0.0.1 elapsed_ms=55.1 method=GET path=/agent-canvas/assets/NomiSelect-BDcdbcxo.js request_id=241bb5cdfe4e433482c6f6be365f5014 status=200
+2026-07-30T04:28:55.931018Z [info     ] request                        client=127.0.0.1 elapsed_ms=60.9 method=GET path=/agent-canvas/assets/IconLock-BcRffWk6.js request_id=5a62b92b2e4b46d6a9534e5ff746a0e2 status=200
+2026-07-30T04:28:55.953446Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.9 method=GET path=/agent-canvas/assets/IconZoomOut-C3xSO3sb.js request_id=3ff10a5744f64377aa340cf81bb04d3c status=200
+2026-07-30T04:28:55.980445Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.9 method=GET path=/agent-canvas/assets/cameraMoveReferenceNode-whyhgftP.js request_id=746c6ae30f7c4b11bc0ee21fdf5fb9cd status=200
+2026-07-30T04:28:55.990180Z [info     ] request                        client=127.0.0.1 elapsed_ms=43.2 method=GET path=/agent-canvas/assets/cameraMoveVocab-CkwMRCGZ.js request_id=6ef49cd1e75f49a9882e609f5e203a95 status=200
+2026-07-30T04:28:56.001638Z [info     ] request                        client=127.0.0.1 elapsed_ms=48.7 method=GET path=/agent-canvas/assets/promptLearningApi-BrQPLH7G.js request_id=fb38aeb559314ed990275d130c147b51 status=200
+2026-07-30T04:28:56.011449Z [info     ] request                        client=127.0.0.1 elapsed_ms=21.8 method=GET path=/agent-canvas/assets/IconPlayerPlayFilled-DbpAtLEA.js request_id=9b7ec11309d24f1f96e2d44e56800dcf status=200
+2026-07-30T04:28:56.043449Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.8 method=GET path=/agent-canvas/assets/trajectoryLayout-C-zuYPdh.js request_id=b0a734b2d9d04ba58f507b3c35f55c43 status=200
+2026-07-30T04:28:56.051450Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.9 method=GET path=/agent-canvas/assets/stagingVocab-CtNMad_q.js request_id=33110b31679542798fb86e56e6614b55 status=200
+2026-07-30T04:28:56.060449Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.4 method=GET path=/agent-canvas/assets/scene3dPropSpecs-CT7N5sBG.js request_id=ba319f9428c94754ab6cb0027d91a142 status=200
+2026-07-30T04:28:56.068762Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.8 method=GET path=/agent-canvas/assets/cameraMovePreset-CF7nKvIN.js request_id=5359fc899d78485ea5aeec22563fd017 status=200
+2026-07-30T04:28:56.076452Z [info     ] request                        client=127.0.0.1 elapsed_ms=43.3 method=GET path=/agent-canvas/assets/scene3dSceneTemplates-DjnNjh9W.js request_id=46a9251c914a4fcbaefa10f6f0273e1b status=200
+2026-07-30T04:28:56.085452Z [info     ] request                        client=127.0.0.1 elapsed_ms=54.6 method=GET path=/agent-canvas/assets/scene3dSerializer-CA8L6Op6.js request_id=1cb818c33e1e495f8f48fb9cf5767a76 status=200
+2026-07-30T04:28:56.100451Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/agent-canvas/assets/sendGenerationNodeToTimeline-B9MYeNFw.js request_id=ffea3ad953af4b91a0cf37df95cf83fa status=200
+2026-07-30T04:28:56.151451Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.1 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=79e0279cbbdb4b01851bca8d76d7ce95 status=200
+2026-07-30T04:28:56.168454Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.0 method=GET path=/api/v1/agentapp/canvas/workbench/vendors request_id=3ac90701ed264064bbb0f30a46ebebc1 status=200
+2026-07-30T04:28:56.207453Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.4 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=1701a29b4a094fc98bdec5db0c042023 status=200
+2026-07-30T04:28:56.220456Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.9 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=faacf09fe6534aa98f8d02696f309c57 status=200
+2026-07-30T04:28:56.844448Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/api/v1/agentapp/production/resource/production/tiexin-s1/assets/characters/R3_hanshaoqing_face_v3.png request_id=3e296408be9c42f3b8863c30f2d31525 status=200
+HTTP Request: GET https://openrouter.ai/api/v1/videos/models "HTTP/1.1 200 OK"
+2026-07-30T04:28:56.954325Z [info     ] request                        client=127.0.0.1 elapsed_ms=765.4 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=e4e5f12084bb44cc96b37b74f32b02e3 status=200
+2026-07-30T04:28:56.969328Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.3 method=GET path=/api/v1/agentapp/canvas/workbench/vendors request_id=a433ddfe94ce448e8edeb73b28912625 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:29:09.736090Z [info     ] request                        client=127.0.0.1 elapsed_ms=2018.9 method=GET path=/api/v1/agentapp/tasks request_id=e02dfee0282046de83afeb5133563e3b status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:29:51.772265Z [info     ] request                        client=127.0.0.1 elapsed_ms=2017.7 method=GET path=/api/v1/agentapp/tasks request_id=27cc182377464fafb2eb99ecf4150f6c status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:30:53.808743Z [info     ] request                        client=127.0.0.1 elapsed_ms=2010.5 method=GET path=/api/v1/agentapp/tasks request_id=56a076af45e047258d6c562cbf5f9541 status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:31:55.858707Z [info     ] request                        client=127.0.0.1 elapsed_ms=2021.2 method=GET path=/api/v1/agentapp/tasks request_id=9479ce215446431aa8a86a800a26a8f9 status=503
+2026-07-30T04:32:36.914362Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.1 method=GET path=/canvas request_id=b670b6c0d57d4db5a76b4d4e2a746b6c status=200
+2026-07-30T04:32:36.936684Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.0 method=GET path=/assets/index-BrXUN1mq.js request_id=70344f1ecfdf4a6c842bbd65c4402c30 status=200
+2026-07-30T04:32:36.952716Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.0 method=GET path=/assets/index-DH1lgv_e.css request_id=efc3d76e943b43e6bbf36ca36df4a93d status=200
+2026-07-30T04:32:36.998688Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.0 method=GET path=/api/v1/agentapp/auth/check request_id=a6bb996435ae4005ae59ffbd62f36a8f status=200
+2026-07-30T04:32:37.018687Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.0 method=GET path=/assets/index-D1u5SFsN.js request_id=8936132a576f4e4cacad97424dde7449 status=200
+2026-07-30T04:32:37.044729Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.1 method=GET path=/assets/CanvasHub-DA6a9umr.js request_id=9c863c23dee943a584c86dd664bb9f01 status=200
+2026-07-30T04:32:37.065624Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.6 method=GET path=/agent-canvas/agent-canvas.js request_id=16a61ceb4bad4a39af4c2046cf52c388 status=200
+2026-07-30T04:32:37.083168Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.8 method=GET path=/agent-canvas/assets/agentStudioMount-CP7x4OcS.js request_id=41a697413e7544da99cd4dca3c339ff5 status=200
+2026-07-30T04:32:37.196373Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/agent-canvas/agent-canvas.css request_id=fe4c2b7669eb46d8bc55a8e6cd2f50d1 status=200
+2026-07-30T04:32:37.232369Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.8 method=GET path=/agent-canvas/assets/projectPersistenceService-Cvp_rjC5.js request_id=d5ba11f4a19b42bda567e8b363d2c110 status=200
+2026-07-30T04:32:37.484587Z [info     ] request                        client=127.0.0.1 elapsed_ms=177.0 method=GET path=/api/v1/agentapp/canvas/workbench/projects/tiexin-s1 request_id=9f13226b725547b781ee0fe2ff7ee384 status=200
+2026-07-30T04:32:37.615734Z [info     ] request                        client=127.0.0.1 elapsed_ms=354.4 method=GET path=/api/v1/agentapp/canvas/workbench/projects request_id=35ab37f110244df9b09f0d0ab349756d status=200
+2026-07-30T04:32:37.707899Z [info     ] request                        client=127.0.0.1 elapsed_ms=4.2 method=GET path=/agent-canvas/assets/WorkbenchShell-BtJcPaI0.js request_id=b588d7f671c849938d1a2b0a5bcf9afe status=200
+2026-07-30T04:32:37.725924Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.6 method=GET path=/api/v1/agentapp/production/resource/漫剧/output/characters/苍霖_三视图_龙族荒地开胸狂暴版.png request_id=618bb928a9b944dfa5995d9b54b99b49 status=404
+2026-07-30T04:32:37.751927Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.6 method=GET path=/agent-canvas/assets/IconDownload-B_d95R-W.js request_id=b80929d0d0094fa39b98352ee432d369 status=200
+2026-07-30T04:32:37.768897Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.9 method=GET path=/agent-canvas/assets/journeyTourActivity-DIC_QYyH.js request_id=20df5979bbab43c79e81c952a0cabe3b status=200
+2026-07-30T04:32:37.777897Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.4 method=GET path=/agent-canvas/assets/IconChevronRight-CtUKyzdC.js request_id=4d641875b9644c1a879f32387c2868c6 status=200
+2026-07-30T04:32:37.785897Z [info     ] request                        client=127.0.0.1 elapsed_ms=41.3 method=GET path=/agent-canvas/assets/IconListCheck-CFf1m1LT.js request_id=066e1c0272d04327ae9c3353e6bc6969 status=200
+2026-07-30T04:32:37.793477Z [info     ] request                        client=127.0.0.1 elapsed_ms=46.2 method=GET path=/agent-canvas/assets/IconMap-CH7C_OlU.js request_id=6b0a2f68a0a84c74b17d3e361604a234 status=200
+2026-07-30T04:32:37.813478Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.8 method=GET path=/agent-canvas/assets/status-9wamfhUt.js request_id=e7089a2800b5496db90fba90696c4834 status=200
+2026-07-30T04:32:37.866317Z [info     ] request                        client=127.0.0.1 elapsed_ms=59.8 method=GET path=/agent-canvas/assets/IconCircleCheck-Dnc8OOno.js request_id=d039aa40821444ab9a6a7834eb09fef3 status=200
+2026-07-30T04:32:37.898256Z [info     ] request                        client=127.0.0.1 elapsed_ms=87.5 method=GET path=/agent-canvas/assets/IconBulb-BWat85of.js request_id=1824f7d66a5f47019d1d13092ba402a9 status=200
+2026-07-30T04:32:37.926156Z [info     ] request                        client=127.0.0.1 elapsed_ms=116.7 method=GET path=/agent-canvas/assets/IconBooks-BoYEosdB.js request_id=924597ed06154304afe9651b96532508 status=200
+2026-07-30T04:32:37.950123Z [info     ] request                        client=127.0.0.1 elapsed_ms=92.1 method=GET path=/agent-canvas/assets/IconFolder-Bfpt7hn2.js request_id=ec3096dcadfa4ff7a7db20c1f587d4d9 status=200
+2026-07-30T04:32:37.970124Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.2 method=GET path=/agent-canvas/assets/use-resolved-styles-api-Cpd4wlDG.js request_id=f613944be5b54daf9e407bf8d191c2ae status=200
+2026-07-30T04:32:37.994409Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.1 method=GET path=/agent-canvas/assets/IconLayoutSidebarLeftExpand-DwPi7ZuN.js request_id=d3f1546d7dec4f4b81c6ca9782a41ccd status=200
+2026-07-30T04:32:38.002808Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.7 method=GET path=/agent-canvas/assets/get-auto-contrast-value-BGSSZ1GD.js request_id=8f0071bcbb6f473695f4017ba21bf4f8 status=200
+2026-07-30T04:32:38.026809Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.7 method=GET path=/agent-canvas/assets/GenerationWorkspace-DIej5guE.js request_id=af9dd559ccdb412fa78be14dc05c34a8 status=200
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+2026-07-30T04:32:38.051188Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.7 method=GET path=/agent-canvas/assets/IconChevronUp-DpfuedBz.js request_id=3f301f53f1f74132a28275abd41a00e1 status=200
+2026-07-30T04:32:38.068614Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.7 method=GET path=/agent-canvas/assets/GenerationCanvas-BFSJFb-l.js request_id=62e278c1bafb4b519ab4be258dda0cd7 status=200
+2026-07-30T04:32:38.076614Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.4 method=GET path=/agent-canvas/assets/CanvasAssistantEntry-DWuve-j5.js request_id=096d4781cf34423eb485ac932be396b7 status=200
+2026-07-30T04:32:38.097366Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.7 method=GET path=/agent-canvas/assets/workbenchActions-CjZ4Rby5.js request_id=b5b2d174ebdf4b2a9f24b29ed2fbb3b1 status=200
+2026-07-30T04:32:38.120560Z [info     ] request                        client=127.0.0.1 elapsed_ms=29.2 method=GET path=/agent-canvas/assets/IconUser-DkJ2iwmb.js request_id=8cb105833c0a4ac89b8b5242bfa7a6b8 status=200
+2026-07-30T04:32:38.127701Z [info     ] request                        client=127.0.0.1 elapsed_ms=37.2 method=GET path=/agent-canvas/assets/IconCube-DC-33uAh.js request_id=c3cee2f286f1446a8362df5d13563239 status=200
+2026-07-30T04:32:38.134863Z [info     ] request                        client=127.0.0.1 elapsed_ms=44.9 method=GET path=/agent-canvas/assets/IconBrush-DBKyGj8B.js request_id=acdc28f0511349b1a29c0a8fb7221282 status=200
+2026-07-30T04:32:38.141863Z [info     ] request                        client=127.0.0.1 elapsed_ms=50.8 method=GET path=/agent-canvas/assets/IconLayoutGrid-CwMPbHRu.js request_id=8a7b5e41ab6842c1956f5124b6d99fd0 status=200
+2026-07-30T04:32:38.166443Z [info     ] request                        client=127.0.0.1 elapsed_ms=15.1 method=GET path=/agent-canvas/assets/IconVideo-Wpl4-gzk.js request_id=bb4d6d75bf0940b6a71683aaa49074c8 status=200
+2026-07-30T04:32:38.176842Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.0 method=GET path=/agent-canvas/assets/assetLibraryDrag-DG98WJrf.js request_id=7f2d9b07945b4a63baeabecc84da210f status=200
+2026-07-30T04:32:38.183841Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.7 method=GET path=/agent-canvas/assets/workspaceFileDrag-CNxBSF4X.js request_id=7b02d1d65b2a4f5d8311a2e67c4104d6 status=200
+2026-07-30T04:32:38.191265Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.3 method=GET path=/agent-canvas/assets/globalAssetPopoverEvents-CLJ2XYFb.js request_id=dbc5688fa76247478e7a349af2c82abb status=200
+2026-07-30T04:32:38.199266Z [info     ] request                        client=127.0.0.1 elapsed_ms=36.8 method=GET path=/agent-canvas/assets/completeNodeConnection-BuM2IE4e.js request_id=b9f656a40dfc42f98007af9c2e272837 status=200
+2026-07-30T04:32:38.220267Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.1 method=GET path=/agent-canvas/assets/batchPlanPreview-CZirgCW1.js request_id=0e129a689fd64435a3d0443707c661e0 status=200
+2026-07-30T04:32:38.248881Z [info     ] request                        client=127.0.0.1 elapsed_ms=34.5 method=GET path=/agent-canvas/assets/IconEyeOff-XiSaC8lN.js request_id=343e6095d72e4c318936f555d0a7ee77 status=200
+2026-07-30T04:32:38.255243Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.4 method=GET path=/agent-canvas/assets/IconRotate-DUNnU0pY.js request_id=c1b9122c58ad4b04beba145cb2b73d4e status=200
+2026-07-30T04:32:38.262247Z [info     ] request                        client=127.0.0.1 elapsed_ms=47.0 method=GET path=/agent-canvas/assets/IconScissors-VNkQOTb7.js request_id=5967acd5ac944f14acf48db5f46202a9 status=200
+2026-07-30T04:32:38.270249Z [info     ] request                        client=127.0.0.1 elapsed_ms=52.7 method=GET path=/agent-canvas/assets/IconFolderPlus-Cb3P486B.js request_id=13456be411e74258b7a2f151d0398fec status=200
+2026-07-30T04:32:38.285721Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.2 method=GET path=/agent-canvas/assets/referenceSlots-lwV8_4-H.js request_id=d13b4f99fc99470bb7d847d43a835574 status=200
+2026-07-30T04:32:38.294133Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.3 method=GET path=/agent-canvas/assets/showInfoToast-C4is9fNf.js request_id=e5e786b9a3574a569805711b11ffae8c status=200
+2026-07-30T04:32:38.301132Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.6 method=GET path=/agent-canvas/assets/generationRunController-4Pt1AKO0.js request_id=e474ba57c2ce41e2ac6ea2883ec44ff4 status=200
+2026-07-30T04:32:38.313597Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.1 method=GET path=/agent-canvas/assets/referenceUrl-Chs-socL.js request_id=87f4526633d14679a54f2176b8421cf7 status=200
+2026-07-30T04:32:38.366700Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.4 method=GET path=/agent-canvas/assets/BaseGenerationNode-B7EsPiNy.js request_id=265639fc754e44d3a960fc96c4f33844 status=200
+2026-07-30T04:32:38.399635Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.2 method=GET path=/agent-canvas/assets/IconCopy-Cd9CnWkO.js request_id=57aad80effc048bf8c7e46b5171979bc status=200
+2026-07-30T04:32:38.430380Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.5 method=GET path=/agent-canvas/assets/IconUpload-DmrP3tXj.js request_id=1f294cb8d28348a8a465d06fb1a0f4c2 status=200
+2026-07-30T04:32:38.436900Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.8 method=GET path=/agent-canvas/assets/IconMinimize-D2SXVB4y.js request_id=fd4eb6e4bcfa4b6d8df651e18014c3e7 status=200
+2026-07-30T04:32:38.443900Z [info     ] request                        client=127.0.0.1 elapsed_ms=50.9 method=GET path=/agent-canvas/assets/IconFileText-p_q-aR1a.js request_id=3483ae46adad49c7b8b4bf3fdfe8c72b status=200
+2026-07-30T04:32:38.450900Z [info     ] request                        client=127.0.0.1 elapsed_ms=58.4 method=GET path=/agent-canvas/assets/useNodeRelationships-BtePOYPZ.js request_id=f1170f7059164f62a702e16cc5fa3d63 status=200
+2026-07-30T04:32:38.471018Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.0 method=GET path=/agent-canvas/assets/IconPlayerPause-DEimfs_g.js request_id=db4d51bfeaa240b3b7bd13705270759e status=200
+2026-07-30T04:32:38.479694Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.1 method=GET path=/agent-canvas/assets/IconTypography-B5ArapUk.js request_id=4078499d46b24d4e88e33d1662936ac9 status=200
+2026-07-30T04:32:38.487695Z [info     ] request                        client=127.0.0.1 elapsed_ms=22.0 method=GET path=/agent-canvas/assets/scene3dConstants-DlRfsgmW.js request_id=ee1113c67f984c9581531ae096192867 status=200
+2026-07-30T04:32:38.496072Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.9 method=GET path=/agent-canvas/assets/IconCamera-Dilr_-7o.js request_id=c36378c5cfd5491e8cd67ea6fcbc8c04 status=200
+2026-07-30T04:32:38.504072Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.9 method=GET path=/agent-canvas/assets/IconWand-Dv2yC9eQ.js request_id=4e6489ad83e344cb89fa05de339dd160 status=200
+2026-07-30T04:32:38.519489Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.0 method=GET path=/agent-canvas/assets/IconPhotoPlus-DGFgAY4Y.js request_id=4096ded3817049ca820699a11b20121d status=200
+2026-07-30T04:32:38.528487Z [info     ] request                        client=127.0.0.1 elapsed_ms=12.5 method=GET path=/agent-canvas/assets/timelineDragPayload-DS39KKFz.js request_id=b2498262c7994550810c72419159eb5c status=200
+2026-07-30T04:32:38.535789Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.5 method=GET path=/agent-canvas/assets/IconRefresh-CyWW0ZCa.js request_id=a314c16a88b04a2bb81fd911ec320068 status=200
+2026-07-30T04:32:38.601064Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.9 method=GET path=/agent-canvas/assets/TextDocumentNode-Drg87XN6.js request_id=6671eab1e56e4e6f92ecf0a9d338807c status=200
+2026-07-30T04:32:38.618844Z [info     ] request                        client=127.0.0.1 elapsed_ms=3.9 method=GET path=/agent-canvas/assets/index-lCOLy7AU.js request_id=8dca14737c9b4fc3ae30a7a4a0182160 status=200
+2026-07-30T04:32:38.650055Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.3 method=GET path=/agent-canvas/assets/richTextActions-CZ_aGjwQ.js request_id=4fe766d41aeb4ac4982fa083508b8331 status=200
+2026-07-30T04:32:38.668055Z [info     ] request                        client=127.0.0.1 elapsed_ms=7.3 method=GET path=/agent-canvas/assets/IconArrowBackUp-VZnuMI2L.js request_id=ecf2ff1ab0a146ce8b501e0db039f1cd status=200
+2026-07-30T04:32:38.678056Z [info     ] request                        client=127.0.0.1 elapsed_ms=13.8 method=GET path=/agent-canvas/assets/IconArrowForwardUp-CA6M3-Gj.js request_id=16ced8a80ac94e58b13a62fdb73de3d3 status=200
+2026-07-30T04:32:38.685288Z [info     ] request                        client=127.0.0.1 elapsed_ms=20.6 method=GET path=/agent-canvas/assets/IconList-B_KVsv6p.js request_id=4adcc66354d34c00ad70d4fba6729f09 status=200
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:32:39.071040Z [info     ] request                        client=127.0.0.1 elapsed_ms=2009.4 method=GET path=/api/v1/agentapp/tasks request_id=1769cb2741db47928e611aca1b5a18b9 status=503
+2026-07-30T04:32:40.848791Z [info     ] request                        client=127.0.0.1 elapsed_ms=2.2 method=GET path=/agent-canvas/assets/NodeGenerationComposer-CmY6tx7o.js request_id=ee0e0f80eefd438f8a6f98fc7a368587 status=200
+2026-07-30T04:32:40.904788Z [info     ] request                        client=127.0.0.1 elapsed_ms=14.4 method=GET path=/agent-canvas/assets/useDedupedModelSelect-BmXmeFtL.js request_id=853f2490717745f8b4efa44ea11c432f status=200
+2026-07-30T04:32:40.914758Z [info     ] request                        client=127.0.0.1 elapsed_ms=19.7 method=GET path=/agent-canvas/assets/forms-CyiX33Nh.js request_id=dbc7b571d9df423d8a6d09f2be10077d status=200
+2026-07-30T04:32:40.924790Z [info     ] request                        client=127.0.0.1 elapsed_ms=30.6 method=GET path=/agent-canvas/assets/useAssetPool-G6BjyCpz.js request_id=8c80021ac21a4fac9af2db87c1d1ee2c status=200
+2026-07-30T04:32:40.932792Z [info     ] request                        client=127.0.0.1 elapsed_ms=40.0 method=GET path=/agent-canvas/assets/modelCatalogCache-CwAFTyKw.js request_id=24e03433124a449eaeae8718759f9e00 status=200
+2026-07-30T04:32:40.940759Z [info     ] request                        client=127.0.0.1 elapsed_ms=45.3 method=GET path=/agent-canvas/assets/NomiSelect-l9fMiLNK.js request_id=ecf73b8465df4069be9b35acfbe83c9b status=200
+2026-07-30T04:32:40.947791Z [info     ] request                        client=127.0.0.1 elapsed_ms=51.0 method=GET path=/agent-canvas/assets/IconLock-D_vbMy_u.js request_id=a9f9483f6a614733a9e4f4451b5fb95d status=200
+2026-07-30T04:32:40.970762Z [info     ] request                        client=127.0.0.1 elapsed_ms=11.0 method=GET path=/agent-canvas/assets/IconZoomOut-rfymdD9r.js request_id=bd1d9bc1adf34ceeb630b07b28eb7b75 status=200
+2026-07-30T04:32:40.989760Z [info     ] request                        client=127.0.0.1 elapsed_ms=28.4 method=GET path=/agent-canvas/assets/cameraMoveVocab-CkwMRCGZ.js request_id=d424b76127cc4d21a67e8e0e903c1efb status=200
+2026-07-30T04:32:40.998792Z [info     ] request                        client=127.0.0.1 elapsed_ms=35.4 method=GET path=/agent-canvas/assets/promptLearningApi-CtoVWXNr.js request_id=4a522e87732b4321ba3db10449a45e7b status=200
+2026-07-30T04:32:41.005793Z [info     ] request                        client=127.0.0.1 elapsed_ms=43.7 method=GET path=/agent-canvas/assets/cameraMoveReferenceNode-Dm-88cuB.js request_id=534092f60e194009bd887fbef9d24f17 status=200
+2026-07-30T04:32:41.015800Z [info     ] request                        client=127.0.0.1 elapsed_ms=27.7 method=GET path=/agent-canvas/assets/IconPlayerPlayFilled-D5omMmaP.js request_id=fdd63edd798a4772a991e66af18d6432 status=200
+2026-07-30T04:32:41.035794Z [info     ] request                        client=127.0.0.1 elapsed_ms=9.8 method=GET path=/agent-canvas/assets/stagingVocab-CtNMad_q.js request_id=9413031380354e538cf13261cec545d1 status=200
+2026-07-30T04:32:41.046793Z [info     ] request                        client=127.0.0.1 elapsed_ms=18.1 method=GET path=/agent-canvas/assets/cameraMovePreset-CF7nKvIN.js request_id=c69b7cad48b5466c96d00c41c26791bf status=200
+2026-07-30T04:32:41.053790Z [info     ] request                        client=127.0.0.1 elapsed_ms=25.1 method=GET path=/agent-canvas/assets/scene3dSerializer-CA8L6Op6.js request_id=a6fb86a68fcc415cb310cd125a36d8e2 status=200
+2026-07-30T04:32:41.061793Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.5 method=GET path=/agent-canvas/assets/trajectoryLayout-ROrP_lkV.js request_id=df78a100d87f40108b2251191ed949da status=200
+2026-07-30T04:32:41.068798Z [info     ] request                        client=127.0.0.1 elapsed_ms=38.5 method=GET path=/agent-canvas/assets/scene3dPropSpecs-CT7N5sBG.js request_id=020a005025434ae4aad061b602aed6b5 status=200
+2026-07-30T04:32:41.078202Z [info     ] request                        client=127.0.0.1 elapsed_ms=32.8 method=GET path=/agent-canvas/assets/scene3dSceneTemplates-DjnNjh9W.js request_id=0dfaf3de3559478a9ac62437c2eb209e status=200
+2026-07-30T04:32:41.091205Z [info     ] request                        client=127.0.0.1 elapsed_ms=1.9 method=GET path=/agent-canvas/assets/sendGenerationNodeToTimeline-C8REKlYM.js request_id=228bda9c84df4873aea15eda0bfed289 status=200
+2026-07-30T04:32:41.128341Z [info     ] request                        client=127.0.0.1 elapsed_ms=10.2 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=f5cc93f402c04f168f2ae14871a953f6 status=200
+2026-07-30T04:32:41.147014Z [info     ] request                        client=127.0.0.1 elapsed_ms=5.8 method=GET path=/api/v1/agentapp/canvas/workbench/vendors request_id=0b4f1f1237b84ce1b1ac53e0a3e669f2 status=200
+2026-07-30T04:32:41.192983Z [info     ] request                        client=127.0.0.1 elapsed_ms=16.4 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=499b9ac7db2747399c85a19e613f869b status=200
+2026-07-30T04:32:41.211985Z [info     ] request                        client=127.0.0.1 elapsed_ms=33.0 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=0e9a581c021f431fbac47579ee01a275 status=200
+2026-07-30T04:32:41.219984Z [info     ] request                        client=127.0.0.1 elapsed_ms=42.0 method=GET path=/api/v1/agentapp/canvas/workbench/models request_id=9ac1af54f71d484ba6ee14cd6d761b26 status=200
+2026-07-30T04:32:41.242985Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.3 method=GET path=/api/v1/agentapp/canvas/workbench/vendors request_id=256660b8a2fe44019acedfc89a311d78 status=200
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:32:49.105032Z [info     ] request                        client=127.0.0.1 elapsed_ms=6.5 method=GET path=/api/v1/agentapp/tasks request_id=f3e4545e8ba844839faa4236421562bf status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:33:11.122377Z [info     ] request                        client=127.0.0.1 elapsed_ms=1975.4 method=GET path=/api/v1/agentapp/tasks request_id=cc7b944f88ad4dba8ed509ed90ddd428 status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:33:53.181796Z [info     ] request                        client=127.0.0.1 elapsed_ms=2030.9 method=GET path=/api/v1/agentapp/tasks request_id=caf40a52b340459f8feb0d62787511d9 status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:34:55.203583Z [info     ] request                        client=127.0.0.1 elapsed_ms=2007.0 method=GET path=/api/v1/agentapp/tasks request_id=3c206014942d4bc7ad3036650608deda status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:35:57.251689Z [info     ] request                        client=127.0.0.1 elapsed_ms=2008.1 method=GET path=/api/v1/agentapp/tasks request_id=32c23a4aebb44bdab739aacc67fd8707 status=503
+redis connection error 127.0.0.1:6379 TimeoutError Timeout connecting to server, 1 retries remaining...
+Redis 连接失败（redis://127.0.0.1:6379/0），异步队列在 30 秒内直接拒绝请求：Timeout connecting to server
+查询任务列表失败：异步任务队列未启动（Redis 未连接），请启动 Redis 后重试
+2026-07-30T04:36:59.274467Z [info     ] request                        client=127.0.0.1 elapsed_ms=1999.4 method=GET path=/api/v1/agentapp/tasks request_id=6f27f32c0a5b4004859f8e3e494a9340 status=503

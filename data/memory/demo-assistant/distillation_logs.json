@@ -1,34 +1,5 @@
 [
   {
-    "logId": "dist_8ad1770c6c2f",
-    "employeeKey": "demo-assistant",
-    "ranAt": "2026-07-01T03:09:12.012509Z",
-    "actions": [
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_3dbb51e63cbe",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 1.0,
-        "reason": "经验记忆 mem_f9c130a07c89 的高成功率验证了该语义偏好的准确性，维持最高权重。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 1,
-      "episodic": 1,
-      "procedural": 1
-    },
-    "afterCounts": {
-      "semantic_count": 1,
-      "episodic_count": 1,
-      "procedural_count": 1
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 2000,
-    "error": null
-  },
-  {
     "logId": "dist_33dcc90ba167",
     "employeeKey": "demo-assistant",
     "ranAt": "2026-07-01T03:10:45.994225Z",
@@ -1303,5 +1274,52 @@
     "llmModel": "",
     "durationMs": 0,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_838d2e535f32",
+    "employeeKey": "demo-assistant",
+    "ranAt": "2026-07-30T04:04:37.390868Z",
+    "actions": [
+      {
+        "action": "merge",
+        "memory_type": "semantic",
+        "targetId": "mem_f9c130a07c89",
+        "mergeIntoId": "mem_3dbb51e63cbe",
+        "newContent": "用户偏好电影感的视觉风格和暖色调画面。在产品宣传短视频场景下，经实践验证（成功率0.9），使用“电影感+慢镜头+暖色调”的提示词组合可获得极高满意度。",
+        "newImportance": null,
+        "reason": "经验记忆 mem_f9c130a07c89 描述了用户制作产品宣传短视频的成功经验，其内容与语义记忆 mem_3dbb51e63cbe 高度重合，后者已包含该经验的总结和成功率，可将经验记忆合并至语义记忆中，保留更精炼的总结。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "semantic",
+        "targetId": "mem_3dbb51e63cbe",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 1.0,
+        "reason": "该记忆包含用户明确的偏好和经过验证的有效提示词组合，成功率高，价值极高，应保持最高重要性。"
+      },
+      {
+        "action": "adjust",
+        "memory_type": "procedural",
+        "targetId": "mem_cf146eef1f65",
+        "mergeIntoId": null,
+        "newContent": null,
+        "newImportance": 0.8,
+        "reason": "该行为记忆提供了在特定平台（即梦）上使用中文提示词的优势，虽然置信度为0.7，但考虑到平台特性和潜在的效率提升，适当提高其重要性以增加被激活的可能性。"
+      }
+    ],
+    "beforeCounts": {
+      "semantic": 1,
+      "episodic": 1,
+      "procedural": 1
+    },
+    "afterCounts": {
+      "semantic_count": 1,
+      "episodic_count": 1,
+      "procedural_count": 1
+    },
+    "llmModel": "openrouter/auto",
+    "durationMs": 2812,
+    "error": null
   }
 ]

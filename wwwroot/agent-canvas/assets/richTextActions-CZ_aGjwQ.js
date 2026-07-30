@@ -1,0 +1,106 @@
+import { aR as r, S as c, c8 as i, bX as s } from "./agentStudioMount-CP7x4OcS.js";
+import { I as x } from "./IconArrowBackUp-VZnuMI2L.js";
+import { I as C } from "./IconArrowForwardUp-CA6M3-Gj.js";
+import { I as A } from "./IconList-B_KVsv6p.js";
+import { u as I, i as _, g as S } from "./index-lCOLy7AU.js";
+import { m as R } from "./generationRunController-4Pt1AKO0.js";
+const N = [["path", { d: "M6 15h15", key: "svg-0" }], ["path", { d: "M21 19h-15", key: "svg-1" }], ["path", { d: "M15 11h6", key: "svg-2" }], ["path", { d: "M21 7h-6", key: "svg-3" }], ["path", { d: "M9 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2", key: "svg-4" }], ["path", { d: "M3 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2", key: "svg-5" }]], j = r("outline", "blockquote", "Blockquote", N);
+const z = [["path", { d: "M7 5h6a3.5 3.5 0 0 1 0 7h-6l0 -7", key: "svg-0" }], ["path", { d: "M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7", key: "svg-1" }]], E = r("outline", "bold", "Bold", z);
+const T = [["path", { d: "M19 18v-8l-2 2", key: "svg-0" }], ["path", { d: "M4 6v12", key: "svg-1" }], ["path", { d: "M12 6v12", key: "svg-2" }], ["path", { d: "M11 18h2", key: "svg-3" }], ["path", { d: "M3 18h2", key: "svg-4" }], ["path", { d: "M4 12h8", key: "svg-5" }], ["path", { d: "M3 6h2", key: "svg-6" }], ["path", { d: "M11 6h2", key: "svg-7" }]], B = r("outline", "h-1", "H1", T);
+const L = [["path", { d: "M17 12a2 2 0 1 1 4 0c0 .591 -.417 1.318 -.816 1.858l-3.184 4.143l4 0", key: "svg-0" }], ["path", { d: "M4 6v12", key: "svg-1" }], ["path", { d: "M12 6v12", key: "svg-2" }], ["path", { d: "M11 18h2", key: "svg-3" }], ["path", { d: "M3 18h2", key: "svg-4" }], ["path", { d: "M4 12h8", key: "svg-5" }], ["path", { d: "M3 6h2", key: "svg-6" }], ["path", { d: "M11 6h2", key: "svg-7" }]], q = r("outline", "h-2", "H2", L);
+const w = [["path", { d: "M11 5l6 0", key: "svg-0" }], ["path", { d: "M7 19l6 0", key: "svg-1" }], ["path", { d: "M14 5l-4 14", key: "svg-2" }]], H = r("outline", "italic", "Italic", w);
+const $ = [["path", { d: "M11 6h9", key: "svg-0" }], ["path", { d: "M11 12h9", key: "svg-1" }], ["path", { d: "M12 18h8", key: "svg-2" }], ["path", { d: "M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4", key: "svg-3" }], ["path", { d: "M6 10v-6l-2 2", key: "svg-4" }]], J = r("outline", "list-numbers", "ListNumbers", $);
+function l(e) {
+  return !!(e && !e.isDestroyed);
+}
+function b(e) {
+  const { from: a, to: d, empty: u } = e.state.selection;
+  return u || a === d ? "" : e.state.doc.textBetween(a, d, `
+`).trim();
+}
+function G(e) {
+  const { content: a, placeholder: d, editable: u = !0, onChange: g, onSelectionChange: v } = e, y = c.useRef(g), M = c.useRef(v);
+  c.useEffect(() => {
+    y.current = g;
+  }, [g]), c.useEffect(() => {
+    M.current = v;
+  }, [v]);
+  const f = c.useRef(""), t = I(
+    {
+      editable: u,
+      extensions: [_, S.configure({ placeholder: d ?? "" })],
+      content: a,
+      editorProps: { attributes: { class: "workbench-editor__content" } },
+      onUpdate: ({ editor: o }) => {
+        const n = o.getJSON();
+        f.current = JSON.stringify(n), y.current?.(n);
+      },
+      onSelectionUpdate: ({ editor: o }) => {
+        M.current?.(b(o));
+      }
+    },
+    [d]
+  );
+  c.useEffect(() => {
+    if (!l(t)) return;
+    const o = JSON.stringify(a);
+    if (!o || o === f.current) return;
+    const n = t.state.selection;
+    if (f.current = o, t.commands.setContent(a), t.isFocused) {
+      const h = t.state.doc.content.size;
+      t.commands.setTextSelection({
+        from: Math.min(n.from, h),
+        to: Math.min(n.to, h)
+      });
+    }
+  }, [t, a]), c.useEffect(() => {
+    l(t) && t.setEditable(u);
+  }, [t, u]);
+  const m = c.useMemo(() => {
+    const o = (n, h) => {
+      if (!l(t)) return;
+      const p = R(n);
+      if (!p.length) return;
+      const k = t.chain().focus();
+      if (h === "append") {
+        k.setTextSelection(t.state.doc.content.size).insertContent(p).run();
+        return;
+      }
+      if (h === "replace") {
+        k.deleteSelection().insertContent(p).run();
+        return;
+      }
+      k.insertContent(p).run();
+    };
+    return {
+      readFullText: () => l(t) ? t.getText({ blockSeparator: `
+` }).trim() : "",
+      readSelectionText: () => l(t) ? b(t) : "",
+      insertAtCursor: (n) => o(n, "insert"),
+      replaceSelection: (n) => o(n, "replace"),
+      appendToEnd: (n) => o(n, "append")
+    };
+  }, [t]);
+  return { editor: t, tools: m };
+}
+function K(e) {
+  return l(e) ? [
+    { id: "bold", label: s.t("creationAi.selection.bold"), icon: /* @__PURE__ */ i.jsx(E, { size: 15 }), active: e.isActive("bold"), onClick: () => e.chain().focus().toggleBold().run() },
+    { id: "italic", label: s.t("creationAi.selection.italic"), icon: /* @__PURE__ */ i.jsx(H, { size: 15 }), active: e.isActive("italic"), onClick: () => e.chain().focus().toggleItalic().run() },
+    { id: "h1", label: s.t("creationAi.selection.heading1"), icon: /* @__PURE__ */ i.jsx(B, { size: 16 }), active: e.isActive("heading", { level: 1 }), onClick: () => e.chain().focus().toggleHeading({ level: 1 }).run() },
+    { id: "h2", label: s.t("creationAi.selection.heading2"), icon: /* @__PURE__ */ i.jsx(q, { size: 16 }), active: e.isActive("heading", { level: 2 }), onClick: () => e.chain().focus().toggleHeading({ level: 2 }).run() },
+    { id: "bullet-list", label: s.t("creationAi.selection.bulletList"), icon: /* @__PURE__ */ i.jsx(A, { size: 15 }), active: e.isActive("bulletList"), onClick: () => e.chain().focus().toggleBulletList().run() },
+    { id: "ordered-list", label: s.t("creationAi.selection.orderedList"), icon: /* @__PURE__ */ i.jsx(J, { size: 15 }), active: e.isActive("orderedList"), onClick: () => e.chain().focus().toggleOrderedList().run() },
+    { id: "blockquote", label: s.t("creationAi.selection.blockquote"), icon: /* @__PURE__ */ i.jsx(j, { size: 15 }), active: e.isActive("blockquote"), onClick: () => e.chain().focus().toggleBlockquote().run() },
+    { id: "undo", label: s.t("creationAi.selection.undo"), icon: /* @__PURE__ */ i.jsx(x, { size: 15 }), disabled: !e.can().undo(), onClick: () => e.chain().focus().undo().run() },
+    { id: "redo", label: s.t("creationAi.selection.redo"), icon: /* @__PURE__ */ i.jsx(C, { size: 15 }), disabled: !e.can().redo(), onClick: () => e.chain().focus().redo().run() }
+  ] : [];
+}
+export {
+  E as I,
+  B as a,
+  q as b,
+  H as c,
+  K as d,
+  G as u
+};

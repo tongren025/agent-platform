@@ -10,6 +10,7 @@
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import uuid
 from datetime import datetime, timezone
@@ -24,7 +25,7 @@ from app.config import BASE_DIR
 from app.core.logging import get_logger
 from app.dependencies import ai_service
 from app.services.image_generation import generate_image_to_local
-from app.services import canvas_catalog, canvas_projects, openrouter_media
+from app.services import canvas_catalog, canvas_projects, canvas_prompts, openrouter_media
 from app.services.chat_response import extract_chat_content
 from app.models.conversation import AgentRunRequest
 from app.models.production import STAGES, STAGE_INSTRUCTIONS
@@ -482,6 +483,165 @@ def list_workbench_models(kind: str = Query("image", pattern="^(text|image|video
         raise HTTPException(500, f"读取平台 {kind} 模型失败: {exc}") from exc
 
 
+@router.get("/workbench/prompts")
+def list_workbench_prompts():
+    """返回 Agent Studio 内置的人物、场景和分镜专业提示词资产。"""
+    return ok(canvas_prompts.list_prompt_catalog())
+
+
+class WorkbenchAgentReq(BaseModel):
+    """Web 画布 Agent 请求：保留技能、所选员工/模型和项目会话。"""
+
+    vendor: str = "platform-employee"
+    model_key: str = Field("", alias="modelKey")
+    skill_key: str = Field("", alias="skillKey")
+    skill_name: str = Field("", alias="skillName")
+    prompt: str
+    system_prompt: str = Field("", alias="systemPrompt")
+    session_id: str | None = Field(None, alias="sessionId")
+    project_id: str = Field("", alias="projectId")
+
+    model_config = {"populate_by_name": True}
+
+
+def _format_workbench_model_catalog() -> str:
+    """给分镜规划师提供真实可用模型键，禁止它凭空编造模型。"""
+    lines: list[str] = []
+    for kind in ("image", "video"):
+        try:
+            rows = canvas_catalog.list_canvas_models(kind)
+        except Exception:
+            rows = []
+        enabled = [
+            f"{row['vendorKey']}:{row['modelKey']}（{row['labelZh']}）"
+            for row in rows
+            if row.get("enabled")
+        ]
+        if enabled:
+            lines.append(f"{kind}: " + "；".join(enabled))
+    return "\n".join(lines)
+
+
+@router.post("/workbench/agent")
+async def run_workbench_agent(req: WorkbenchAgentReq):
+    """运行带专业 skill 的画布 Agent，并恢复 Web 端需要的结构化工具调用。
+
+    桌面版由 Electron Agent Runtime 注入 SKILL.md 和 tool-call 事件；Web 版没有该
+    运行时，因此这里用同一方法论和显式 JSON 契约补齐，避免只返回一段“会说不会做”
+    的文字。
+    """
+    model_key = req.model_key.strip()
+    prompt = req.prompt.strip()
+    skill_key = req.skill_key.strip() or "workbench.generation.canvas-planner"
+    if not model_key:
+        raise HTTPException(400, "请选择画布助手使用的数字员工或文本模型")
+    if not prompt:
+        raise HTTPException(400, "画布助手输入不能为空")
+    if canvas_catalog.find_canvas_model(req.vendor, model_key, "text") is None:
+        raise HTTPException(400, f"文本模型未在平台启用目录中: {req.vendor}:{model_key}")
+
+    system_prompt = canvas_prompts.build_agent_system_prompt(
+        skill_key,
+        frontend_system_prompt=req.system_prompt,
+        model_catalog=_format_workbench_model_catalog(),
+    )
+    try:
+        if req.vendor == "platform-employee":
+            result = await run_invocation(AgentRunRequest(
+                employeeKey=model_key,
+                userInput=f"{system_prompt}\n\n用户任务：\n{prompt}",
+                sessionId=req.session_id,
+            ))
+            if not result.success:
+                raise HTTPException(502, result.error_message or "画布数字员工执行失败")
+            raw_text = result.assistant_message or ""
+            session_id = result.session_id
+            usage = result.token_usage.model_dump(by_alias=True) if result.token_usage else None
+        else:
+            client, actual_model = ai_service.get_client(f"{req.vendor}:{model_key}")
+            response = client.chat.completions.create(
+                model=actual_model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": prompt},
+                ],
+                timeout=180,
+            )
+            raw_text = extract_chat_content(response)
+            session_id = req.session_id
+            usage_raw = getattr(response, "usage", None)
+            usage = (
+                usage_raw.model_dump()
+                if hasattr(usage_raw, "model_dump")
+                else usage_raw if isinstance(usage_raw, dict) else None
+            )
+        try:
+            parsed = canvas_prompts.parse_agent_response(skill_key, raw_text)
+        except ValueError:
+            family = canvas_prompts.skill_family(skill_key)
+            if family in {"storyboard", "fixation"}:
+                raise
+            parsed = {"assistantMessage": raw_text.strip(), "toolCalls": []}
+    except HTTPException:
+        raise
+    except ValueError as exc:
+        raise HTTPException(502, f"画布助手返回格式不完整: {exc}") from exc
+    except Exception as exc:
+        logger.warning(
+            "画布 Agent 失败 skill=%s model=%s:%s: %s",
+            skill_key,
+            req.vendor,
+            model_key,
+            exc,
+        )
+        raise HTTPException(502, f"画布助手执行失败: {exc}") from exc
+
+    return ok({
+        **parsed,
+        "sessionId": session_id,
+        "usage": usage,
+        "skillKey": skill_key,
+        "model": {"vendor": req.vendor, "modelKey": model_key},
+    })
+
+
+class PromptLearningItem(BaseModel):
+    """一条用户已确认采用的画布提示词。"""
+
+    kind: str = "image_prompt"
+    title: str = ""
+    prompt: str
+
+
+class PromptLearningReq(BaseModel):
+    """画布采用后学习请求。"""
+
+    project_id: str = Field("", alias="projectId")
+    employee_key: str = Field("", alias="employeeKey")
+    items: list[PromptLearningItem] = Field(default_factory=list)
+
+    model_config = {"populate_by_name": True}
+
+
+@router.get("/workbench/prompt-learning")
+def get_workbench_prompt_learning(limit: int = Query(100, ge=1, le=300)):
+    """列出内置方法论和用户确认过的画布提示词案例。"""
+    return ok(canvas_prompts.prompt_learning_overview(limit))
+
+
+@router.post("/workbench/prompt-learning")
+def learn_workbench_prompts(req: PromptLearningReq):
+    """把用户确认采用的提示词沉淀到案例库和对应员工长期记忆。"""
+    if not req.items:
+        raise HTTPException(400, "没有可学习的提示词")
+    result = canvas_prompts.record_accepted_prompts(
+        project_id=req.project_id,
+        employee_key=req.employee_key,
+        items=[item.model_dump() for item in req.items],
+    )
+    return ok(result)
+
+
 class WorkbenchTaskReq(BaseModel):
     """完整工作台的通用媒体任务请求。"""
 
@@ -522,13 +682,22 @@ def run_workbench_task(req: WorkbenchTaskReq):
         )
     try:
         if req.kind in ("chat", "prompt_refine"):
-            client, actual_model = ai_service.get_client(f"{req.vendor}:{model}")
-            response = client.chat.completions.create(
-                model=actual_model,
-                messages=[{"role": "user", "content": prompt}],
-                timeout=120,
-            )
-            content = extract_chat_content(response)
+            if req.vendor == "platform-employee":
+                result = asyncio.run(run_invocation(AgentRunRequest(
+                    employeeKey=model,
+                    userInput=prompt,
+                )))
+                if not result.success:
+                    raise HTTPException(502, result.error_message or "画布文本员工执行失败")
+                content = result.assistant_message or ""
+            else:
+                client, actual_model = ai_service.get_client(f"{req.vendor}:{model}")
+                response = client.chat.completions.create(
+                    model=actual_model,
+                    messages=[{"role": "user", "content": prompt}],
+                    timeout=120,
+                )
+                content = extract_chat_content(response)
             return ok({
                 "id": task_id,
                 "kind": req.kind,

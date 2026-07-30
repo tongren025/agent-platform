@@ -1,13 +1,14 @@
 // 参考资料统一入口：按资料类型聚合优秀提示词与专业文章，旧功能仍按需懒加载。
 import { lazy, Suspense } from 'react';
-import { ReadOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, ReadOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Spin, Tabs, Typography } from 'antd';
 import { useSearchParams } from 'react-router-dom';
 
 const AutoLearn = lazy(() => import('./AutoLearn'));
 const ArticleLearn = lazy(() => import('./ArticleLearn'));
+const CanvasPromptLearning = lazy(() => import('./CanvasPromptLearning'));
 
-type LearningTab = 'prompts' | 'articles';
+type LearningTab = 'prompts' | 'canvas' | 'articles';
 
 function PageLoading() {
   return (
@@ -23,7 +24,11 @@ function PageLoading() {
 export default function LearningCenter() {
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedTab = searchParams.get('tab');
-  const activeTab: LearningTab = requestedTab === 'articles' ? 'articles' : 'prompts';
+  const activeTab: LearningTab = requestedTab === 'articles'
+    ? 'articles'
+    : requestedTab === 'canvas'
+      ? 'canvas'
+      : 'prompts';
 
   const switchTab = (tab: string) => {
     const next = new URLSearchParams(searchParams);
@@ -50,6 +55,15 @@ export default function LearningCenter() {
             children: (
               <Suspense fallback={<PageLoading />}>
                 <AutoLearn embedded />
+              </Suspense>
+            ),
+          },
+          {
+            key: 'canvas',
+            label: <span><ExperimentOutlined />画布提示词学习</span>,
+            children: (
+              <Suspense fallback={<PageLoading />}>
+                <CanvasPromptLearning />
               </Suspense>
             ),
           },

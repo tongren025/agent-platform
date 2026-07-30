@@ -9,6 +9,7 @@ import {
   type ToolCallEvent,
 } from '../agent/generationCanvasAgentClient'
 import { workbenchSessionKey } from '../../ai/workbenchAgentRunner'
+import { recordAcceptedCanvasPrompts } from '../../api/promptLearningApi'
 import { startNewConversation } from '../../ai/conversationPersistence'
 import { clearWorkbenchAgentSession } from '../../../api/desktopClient'
 import { generationCanvasTools } from '../agent/generationCanvasTools'
@@ -320,6 +321,30 @@ export default function CanvasAssistantPanel({
         )
         if (outcome.status === 'committed') {
           toolActionCount += steps.length
+          const acceptedPrompts = steps.flatMap((step) => {
+            if (step.toolName !== 'create_canvas_nodes') return []
+            const args = step.effectiveArgs as Record<string, unknown>
+            if (!Array.isArray(args.nodes)) return []
+            return (args.nodes as Record<string, unknown>[]).flatMap((node) => {
+              const prompt = typeof node.prompt === 'string' ? node.prompt.trim() : ''
+              if (!prompt) return []
+              const kind = node.kind === 'character'
+                ? 'character' as const
+                : node.kind === 'scene'
+                  ? 'scene' as const
+                  : node.kind === 'video'
+                    ? 'video_prompt' as const
+                    : 'image_prompt' as const
+              return [{
+                kind,
+                title: typeof node.title === 'string' ? node.title : '',
+                prompt,
+              }]
+            })
+          })
+          if (acceptedPrompts.length > 0) {
+            void recordAcceptedCanvasPrompts(acceptedPrompts).catch(() => undefined)
+          }
           // 时序内联:卡片锚定到本轮「卡前气泡」(入队时记在 pending call 上),committed/对账卡同源。
           const cardAnchorId = items.map((item) => item.call.anchorMessageId).find(Boolean) ?? null
           // S6-3 对账(N12):执行 ≠ 批准 → 弹偏差卡(per-field diff+一键整笔撤销);一致则零可见。

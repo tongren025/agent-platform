@@ -1,61 +1,5 @@
 [
   {
-    "logId": "dist_d87f50a753b6",
-    "employeeKey": "comic-screenwriter",
-    "ranAt": "2026-07-01T03:06:38.582513Z",
-    "actions": [
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep2_20260630_comic-screenwriter_microdrama_01",
-        "mergeIntoId": "duanju_spine_20260630_comic-screenwriter_law",
-        "newContent": "【短剧第一准则·最高优先级】你做的是高节奏竖屏短剧，不是电影。节奏=信息/反转密度：每1-2秒砸一个新事件/反转/钩子/嘴替台词。核心硬规则：①前3-5秒必须有情绪炸点、视觉冲击或冲突抓人(算法关键)；②单句台词≤10字，单镜头1-2秒，单段≤6秒(防止角色变形)；③剪辑beat 1-2秒(Seedance源片4-5s，后在剪映剪碎)；④每集15-25个事件beat，总长1-3分钟；⑤结尾5秒必须有反转或悬念钩子；⑥不要连续3个同景别，节奏如呼吸：紧-松-紧紧-松-紧紧紧-大松。时间码格式[00:00-00:05]。构图/色彩/运镜等美术手艺必须服从短剧节奏。Beat Engine逻辑：Hook(0-15秒爆点)→Friction(15-60秒真实肢体/言语冲突而非内心戏)。一切都服从'把观众锁到下一集'这一个目标。",
-        "newImportance": null,
-        "reason": "两条记忆均关于短剧节奏与Hook逻辑，前者是具体法则，后者是Beat Engine模型，合并后形成完整的短剧创作方法论。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "semantic",
-        "targetId": "pro_craft_deep_20260630_comic-screenwriter_shot_size_emotion_02",
-        "mergeIntoId": "pro_craft_deep_20260630_comic-screenwriter_shot_size_emotion_01",
-        "newContent": "景别即情绪距离：特写剥离环境直推角色内心、强化戏剧；大远景让人渺小孤独；中景兼顾表情与身体语言。情绪递进手法：从较松的中景起步，逐步换成越来越大的特写来堆叠情绪强度，而不是一上来就怼脸。（来源:StudioBinder/Adobe景别指南）",
-        "newImportance": null,
-        "reason": "两条记忆均讨论景别与情绪的关系，一个定义距离，一个定义递进，逻辑高度统一。"
-      },
-      {
-        "action": "merge",
-        "memory_type": "procedural",
-        "targetId": "mem_4203ce8b1db1",
-        "mergeIntoId": "seed_comic-screenwriter_proc_01",
-        "newContent": "写每个镜头时必须按秒拆解，先写可见动作，再写表情和声音；台词不超过10字，情绪最重的点用寂静(去掉BGM和音效只留台词)。视觉描述必须具体到可画出（如：将'他很难过'改为'他攥紧拳头，指甲陷入掌心'）。禁止先写抽象情绪或大纲式概述。自检机制：每个场景必须有明确冲突，无冲突即无戏剧，应直接删除。Rationale: 下游只能生成可见画面，抽象情绪无法生产，短台词与寂静适配竖屏，爆款差距在于按秒拆解的执行力与冲突驱动。",
-        "newImportance": null,
-        "reason": "将场景冲突的自检逻辑合并入具体的镜头拆解执行流程中，增强操作闭环。"
-      },
-      {
-        "action": "adjust",
-        "memory_type": "semantic",
-        "targetId": "mem_f6264eeedcb5",
-        "mergeIntoId": null,
-        "newContent": null,
-        "newImportance": 0.5,
-        "reason": "该记忆讨论的是传统电影/长剧的三幕结构，与当前员工核心的'高节奏竖屏短剧'（duanju_spine_law）在节奏上存在潜在冲突，降低权重以防止干扰短剧创作。"
-      }
-    ],
-    "beforeCounts": {
-      "semantic": 23,
-      "episodic": 6,
-      "procedural": 8
-    },
-    "afterCounts": {
-      "semantic_count": 21,
-      "episodic_count": 6,
-      "procedural_count": 7
-    },
-    "llmModel": "Gemma-4-31B-IT-NVFP4",
-    "durationMs": 17968,
-    "error": null
-  },
-  {
     "logId": "dist_30fe1dfa6a7e",
     "employeeKey": "comic-screenwriter",
     "ranAt": "2026-07-01T03:08:37.054385Z",
@@ -2095,5 +2039,20 @@
     "llmModel": "",
     "durationMs": 45,
     "error": "无法获取 AI 客户端: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable."
+  },
+  {
+    "logId": "dist_51ad0be43ffe",
+    "employeeKey": "comic-screenwriter",
+    "ranAt": "2026-07-30T04:04:37.683419Z",
+    "actions": [],
+    "beforeCounts": {
+      "semantic": 15,
+      "episodic": 8,
+      "procedural": 3
+    },
+    "afterCounts": {},
+    "llmModel": "openrouter/auto",
+    "durationMs": 13030,
+    "error": "JSON 解析失败: Unterminated string starting at: line 7 column 20 (char 222)"
   }
 ]

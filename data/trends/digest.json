@@ -1,30 +1,42 @@
 {
-  "generatedAt": "2026-07-16T11:02:49.711535",
-  "model": "Gemma-4-31B-IT-NVFP4",
+  "generatedAt": "2026-07-30T12:06:02.888424",
+  "model": "openrouter/auto",
   "picks": [
-    {
-      "id": "github:punkpeye/awesome-mcp-servers",
-      "source": "GitHub",
-      "title": "punkpeye/awesome-mcp-servers",
-      "url": "https://github.com/punkpeye/awesome-mcp-servers",
-      "detail": "A collection of MCP servers.",
-      "metrics": "90827⭐",
-      "domain": "topic:mcp",
-      "verdict": "MCP 协议服务器资源集合，可快速扩展 Agent 的外部工具能力。",
-      "why": "直接命中其关注的 MCP 协议，有助于其自建 Agent 平台的工具集成。",
-      "score": 10
-    },
     {
       "id": "github:obra/superpowers",
       "source": "GitHub",
       "title": "obra/superpowers",
       "url": "https://github.com/obra/superpowers",
       "detail": "An agentic skills framework & software development methodology that works.",
-      "metrics": "255448⭐, Shell",
+      "metrics": "263404⭐, Shell",
       "domain": "agent skill",
-      "verdict": "一套 Agent 技能框架与软件开发方法论，侧重于可复用的 Skill 构建。",
-      "why": "符合其对 Agent 框架及可复用 Skill/方法论的关注。",
+      "verdict": "把可复用的 agent skill 和开发方法论组织成一套工作流，方便直接套进 Claude Code / 编程助手的日常任务里。",
+      "why": "他在自建数字员工平台，最需要能复用的技能框架而不是零散提示词。",
       "score": 9
+    },
+    {
+      "id": "github:affaan-m/ECC",
+      "source": "GitHub",
+      "title": "affaan-m/ECC",
+      "url": "https://github.com/affaan-m/ECC",
+      "detail": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+      "metrics": "235695⭐, JavaScript",
+      "domain": "agent skill",
+      "verdict": "把技能、记忆、安全与研究流程打包成一套代码层面的助手优化系统，适合拿来改造自己的 agent 工作台。",
+      "why": "它正好覆盖他关心的 Agent 框架、长程执行和记忆管理。",
+      "score": 9
+    },
+    {
+      "id": "github:anthropics/skills",
+      "source": "GitHub",
+      "title": "anthropics/skills",
+      "url": "https://github.com/anthropics/skills",
+      "detail": "Public repository for Agent Skills",
+      "metrics": "165086⭐, Python",
+      "domain": "agent skill",
+      "verdict": "直接提供 Agent Skills 的官方实现思路，能拿来参考技能组织方式和任务拆分范式。",
+      "why": "他明确关注可复用的 Skill / 方法论，这类官方技能库最贴近需求。",
+      "score": 8
     },
     {
       "id": "github:browser-use/browser-use",
@@ -32,48 +44,36 @@
       "title": "browser-use/browser-use",
       "url": "https://github.com/browser-use/browser-use",
       "detail": "🌐 Make websites accessible for AI agents. Automate tasks online with ease.",
-      "metrics": "104931⭐, Python",
+      "metrics": "107249⭐, Python",
       "domain": "AI agent",
-      "verdict": "让 AI Agent 能够操作浏览器的库，实现网页端任务自动化。",
-      "why": "为其 Agent 平台提供长程任务执行（Web 自动化）的工程实现。",
-      "score": 9
-    },
-    {
-      "id": "github:langgenius/dify",
-      "source": "GitHub",
-      "title": "langgenius/dify",
-      "url": "https://github.com/langgenius/dify",
-      "detail": "Production-ready platform for agentic workflow development.",
-      "metrics": "148980⭐, TypeScript",
-      "domain": "topic:mcp",
-      "verdict": "生产级 Agent 工作流开发平台，支持可视化编排与 RAG 集成。",
-      "why": "与其自建 Agent 平台的功能需求高度重合，可参考其工作流实现。",
+      "verdict": "让 AI 直接操控网页完成检索、填表和操作，适合做自动化采集、发布和素材搬运。",
+      "why": "他要做数字员工与内容生产流水线，网页自动化是高频刚需。",
       "score": 8
     },
     {
-      "id": "github:x1xhlol/system-prompts-and-models-of-ai-tools",
+      "id": "github:harry0703/MoneyPrinterTurbo",
       "source": "GitHub",
-      "title": "x1xhlol/system-prompts-and-models-of-ai-tools",
-      "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
-      "detail": "FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, Leap.new, Lovable, Manus, NotionAI, Orchids.app, Perplexity, Poke, Qoder, Replit, Same.dev, Trae, Traycer AI, VSCode Agent, Warp.de",
-      "metrics": "141962⭐",
-      "domain": "AI agent",
-      "verdict": "主流 AI 编程助手（Cursor, Claude Code 等）的系统提示词汇总。",
-      "why": "提供顶尖 Agent 的提示词工程参考，有助于优化其自身的 Skill 设计。",
+      "title": "harry0703/MoneyPrinterTurbo",
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "detail": "利用 AI 大模型和自动化工作流，根据主题或关键词一键生成高清短视频。Generate HD short videos from a topic or keyword with an automated AI workflow.",
+      "metrics": "100414⭐, Python",
+      "domain": "LLM",
+      "verdict": "把选题到脚本、分镜、配音和成片串成自动化短视频工厂，可直接参考其竖屏短内容生产链路。",
+      "why": "它和他的一人制作竖屏漫剧的目标高度一致，能借鉴视频生成工作流。",
       "score": 8
     },
     {
-      "id": "github:multica-ai/andrej-karpathy-skills",
+      "id": "github:Graphify-Labs/graphify",
       "source": "GitHub",
-      "title": "multica-ai/andrej-karpathy-skills",
-      "url": "https://github.com/multica-ai/andrej-karpathy-skills",
-      "detail": "A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's observations on LLM coding pitfalls.",
-      "metrics": "192863⭐",
+      "title": "Graphify-Labs/graphify",
+      "url": "https://github.com/Graphify-Labs/graphify",
+      "detail": "Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained,",
+      "metrics": "98567⭐, Python",
       "domain": "claude skill",
-      "verdict": "基于 Karpathy 经验优化的 Claude Code 行为引导文件。",
-      "why": "属于高质量的提示词工程与 LLM 行为调优实践。",
-      "score": 7
+      "verdict": "把代码库、文档和配置转成可查询知识图谱，方便给 agent 做长期记忆和项目知识检索。",
+      "why": "他在做 Agent 平台和知识库，这种可解释的结构化检索很适合长期记忆层。",
+      "score": 8
     }
   ],
-  "candidateCount": 288
+  "candidateCount": 286
 }
