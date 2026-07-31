@@ -2,6 +2,9 @@
 
 [English](README.en.md) | 简体中文
 
+📖 **第一次使用？** 阅读 [Agent Studio 系统使用手册](docs/USER_GUIDE.md)，或登录后从
+“获得帮助 → 系统使用手册”打开站内图文版。
+
 **AI-powered anime/manga production pipeline — from script to final cut.**
 
 An open-source multi-agent platform for AI-driven short-form anime (漫剧) production. Features a 10-stage production kanban (script → character/scene design → storyboard → image prompts → video prompts → generation → final cut), DIFY-style visual workflow engine, and multi-agent collaboration with delegated task execution.

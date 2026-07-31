@@ -11,6 +11,7 @@ import { useResponsive } from '../hooks/useResponsive';
 import { api, type TaskInfo } from '../api';
 import { COLORS } from '../theme';
 import { hasPerm } from '../userAuth';
+import HelpHint from '../components/HelpHint';
 import './Dashboard.css';
 
 const { Text, Title } = Typography;
@@ -148,7 +149,13 @@ export default function Dashboard() {
       <header className="today-header">
         <div className="today-title-lockup">
           <span className="today-kicker">CREATIVE OPERATIONS</span>
-          <Title id="dashboard-title" level={1}>今日制作</Title>
+          <div className="today-title-row">
+            <Title id="dashboard-title" level={1}>今日制作</Title>
+            <HelpHint
+              title="今日制作是什么？"
+              content="系统把最需要继续的项目、当前风险和唯一下一步集中到这里。新手通常只需要点击“继续制作”。"
+            />
+          </div>
           <p>把最重要的故事继续推向交付，下一步已经为你排好。</p>
         </div>
         <div className="today-header-side">
@@ -207,7 +214,14 @@ export default function Dashboard() {
                 />
               </div>
               <div className="today-next-copy">
-                <span>系统推荐下一步</span>
+                <span>
+                  系统推荐下一步
+                  <HelpHint
+                    tone="dark"
+                    title="为什么推荐这一步？"
+                    content="系统根据剧本、人物、场景、分镜、图片和视频的真实完成情况，选择当前最早缺失的生产环节。"
+                  />
+                </span>
                 <strong>{humanizeNextAction(readiness.next_action)}</strong>
                 <p>从这里继续，不需要重新寻找上次做到哪里。</p>
               </div>
@@ -225,7 +239,14 @@ export default function Dashboard() {
             <div className="today-readiness-heading">
               <div>
                 <span className="today-panel-kicker">DELIVERY RADAR</span>
-                <strong>交付就绪度</strong>
+                <strong>
+                  交付就绪度
+                  <HelpHint
+                    tone="dark"
+                    title="交付就绪度怎么算？"
+                    content="按镜头检查制作规格、镜头图片、镜头视频和最终确认。它表示完成程度，不代表模型画面质量评分。"
+                  />
+                </strong>
               </div>
               <span className="today-readiness-score">{readiness.overall_progress}<small>%</small></span>
             </div>

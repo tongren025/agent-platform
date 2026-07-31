@@ -39,6 +39,7 @@ const AdminProviders = lazy(() => import('./pages/admin/AdminProviders'));
 const UserLogin = lazy(() => import('./pages/UserLogin'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const McpOAuthCallback = lazy(() => import('./pages/McpOAuthCallback'));
+const UserGuide = lazy(() => import('./pages/UserGuide'));
 
 export default function App() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/studio" element={<DirectorStudio />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/guide" element={<UserGuide />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/templates" element={<Templates />} />
           <Route path="/tools" element={<Tools />} />

@@ -7,11 +7,11 @@
   "scheduleTime": "09:00",
   "maxItems": 40,
   "enabled": true,
-  "lastRunAt": "2026-07-30T04:04:40.942307Z",
+  "lastRunAt": "2026-07-31T01:40:11.749964Z",
   "lastStatus": "success",
-  "lastMessage": "抓取 20 条，新增 5 条，累计 207 条。",
-  "lastNewCount": 5,
-  "totalCollected": 207,
+  "lastMessage": "抓取 20 条，新增 2 条，累计 209 条。",
+  "lastNewCount": 2,
+  "totalCollected": 209,
   "createdAt": "2026-06-23T05:02:04.768229Z",
-  "updatedAt": "2026-07-30T04:04:40.942307Z"
+  "updatedAt": "2026-07-31T01:40:11.749964Z"
 }

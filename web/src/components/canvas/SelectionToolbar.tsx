@@ -1,3 +1,4 @@
+// 画布节点多选浮动操作栏组件：支持批量组合、锁定、复制与删除
 import { Button, Divider, Select, Tooltip } from 'antd';
 import {
   CopyOutlined, DeleteOutlined, GroupOutlined, LockOutlined, UnlockOutlined,

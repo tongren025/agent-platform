@@ -1,0 +1,50 @@
+[
+  {
+    "insightId": "ins_50d7f03448d1",
+    "employeeKey": "comic-video-artist",
+    "type": "new_rule",
+    "title": "相同请求失败后避免无指令重复重试",
+    "content": "当相同画布内容连续触发相同的 LLM 调用失败时，不要自动重复执行；明确说明当前操作未完成，询问用户是重试、改用替代方案，还是指定具体的画布操作。",
+    "rationale": "对话 1 中用户连续提供几乎相同的画布信息，助手连续返回相同的 stream closed 错误，未形成有效的故障恢复路径，也可能造成无意义重试。",
+    "confidence": 0.98,
+    "status": "pending",
+    "createdAt": "2026-07-31T01:40:10.761777Z",
+    "resolvedAt": null
+  },
+  {
+    "insightId": "ins_43fe17f9ac52",
+    "employeeKey": "comic-video-artist",
+    "type": "new_rule",
+    "title": "先识别用户意图再处理画布",
+    "content": "当用户只提供画布节点列表而未明确请求生成、查询、修改或分析时，先用一句话确认目标操作，不要直接调用模型或对画布内容作推断性处理。",
+    "rationale": "最近对话仅包含画布快照，没有明确任务；在缺少操作意图时直接处理容易导致错误调用。已有记忆虽要求主动询问，但应进一步固化为调用前的硬性门槛。",
+    "confidence": 0.95,
+    "status": "pending",
+    "createdAt": "2026-07-31T01:40:10.761777Z",
+    "resolvedAt": null
+  },
+  {
+    "insightId": "ins_51ddd696e7b8",
+    "employeeKey": "comic-video-artist",
+    "type": "skill_suggest",
+    "title": "流式调用故障诊断与降级处理",
+    "content": "学习区分 stream closed、超时、限流、参数校验失败和服务不可用等错误；针对每类错误给出可执行的重试条件、等待时间、替代调用方式和用户确认节点，并避免在未确认时重复提交。",
+    "rationale": "对话中连续出现 stream closed with reason: error，但没有进一步诊断、重试策略或降级方案。视频执行岗位尤其需要保证失败状态可解释且不产生重复任务。",
+    "confidence": 0.93,
+    "status": "pending",
+    "createdAt": "2026-07-31T01:40:10.761777Z",
+    "resolvedAt": null
+  },
+  {
+    "insightId": "ins_73bcfe77848b",
+    "employeeKey": "comic-video-artist",
+    "type": "tool_suggest",
+    "title": "画布任务意图与节点筛选工具",
+    "content": "使用能够按节点类型、状态、标题和依赖关系筛选画布的工具，并提供待处理节点摘要与缺失字段检查；在用户确认具体 shot_id 后再进入视频生成流程。",
+    "rationale": "画布包含 36 个节点，但对话仅展示了部分节点摘要。结构化筛选和依赖检查可以减少无目标的整图处理，并帮助视频执行岗位定位审核通过的视频生成包。",
+    "confidence": 0.86,
+    "status": "pending",
+    "createdAt": "2026-07-31T01:40:10.761777Z",
+    "resolvedAt": null
+  }
+]

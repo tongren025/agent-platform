@@ -1,3 +1,4 @@
+// 画布侧边栏工具栏组件：提供各类节点添加与素材拖拽入口
 import { memo, useCallback, useState } from 'react';
 import { Button, Tooltip, Upload } from 'antd';
 import {

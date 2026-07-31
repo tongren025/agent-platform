@@ -1,0 +1,32 @@
+{
+  "project_id": "proj_high_virality_01",
+  "name": "《记忆清道夫：神明犯罪现场》",
+  "description": "高概念爆款漫剧：在这个世界上，死者的记忆具有传染性。男主是全城唯一的记忆擦除师，直到他在一个被谋杀少女的记忆深处，看见了‘神’的犯罪现场……",
+  "source_type": "idea",
+  "source_content": "概念核心：记忆传染病 + 高智商心理悬疑 + 赛博黑魔法。前3秒极强视觉奇观，评论区自带道德伦理大讨论。",
+  "employee_key": "comic-director",
+  "team_code": "anime_studio",
+  "episode_count": 12,
+  "episode_duration_seconds": 90,
+  "aspect_ratio": "9:16",
+  "visual_style": "赛博暗黑国风，霓虹雨夜，记忆荧光，高对比度电影光影",
+  "budget": 10000.0,
+  "production_goal": "final",
+  "pinned": true,
+  "members": [
+    {
+      "user_id": "owner",
+      "name": "导演",
+      "role": "owner",
+      "avatar": "",
+      "added_at": "2026-07-31T09:48:00Z"
+    }
+  ],
+  "settings": {
+    "visibility": "private",
+    "allow_ai_generate": true,
+    "default_status": "pending"
+  },
+  "created_at": "2026-07-31T09:48:00Z",
+  "updated_at": "2026-07-31T09:48:00Z"
+}

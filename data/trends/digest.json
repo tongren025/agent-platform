@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31T03:15:56.518101",
+  "generatedAt": "2026-07-31T09:41:32.339146",
   "model": "openrouter/auto",
   "picks": [
     {
@@ -8,22 +8,10 @@
       "title": "obra/superpowers",
       "url": "https://github.com/obra/superpowers",
       "detail": "An agentic skills framework & software development methodology that works.",
-      "metrics": "263894⭐, Shell",
+      "metrics": "263985⭐, Shell",
       "domain": "AI coding",
-      "verdict": "一个 Agentic Skills 框架和软件开发方法论。",
-      "why": "直接关联 Agent 框架和可复用的 Skill。",
-      "score": 9
-    },
-    {
-      "id": "github:mattpocock/skills",
-      "source": "GitHub",
-      "title": "mattpocock/skills",
-      "url": "https://github.com/mattpocock/skills",
-      "detail": "Skills for Real Engineers. Straight from my .agents directory.",
-      "metrics": "196067⭐, Shell",
-      "domain": "agent skill",
-      "verdict": "面向工程师的 Skills 集合，来自个人 .agents 目录。",
-      "why": "直接关联可复用的 Skill 和 Agent 工程实践。",
+      "verdict": "提供可组合的 Agent Skills 与软件开发方法，可用于把复杂创作和平台开发任务拆成可复用、可验证的执行流程。",
+      "why": "适合将《九陆纪元》的编剧、分镜、提示词、素材整理和代码开发流程沉淀为数字员工技能。",
       "score": 9
     },
     {
@@ -32,24 +20,60 @@
       "title": "affaan-m/ECC",
       "url": "https://github.com/affaan-m/ECC",
       "detail": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
-      "metrics": "236131⭐, JavaScript",
+      "metrics": "236243⭐, JavaScript",
       "domain": "LLM",
-      "verdict": "一个 Agent Harness 性能优化系统，支持 Skills, instincts, memory, security。",
-      "why": "与 Agent 框架、长程任务执行和 Agent 的记忆能力相关。",
-      "score": 8
+      "verdict": "提供面向 Claude Code、Codex 等智能编程代理的技能、记忆、安全和研究优先工作流，可用于提升长程任务执行质量。",
+      "why": "能直接借鉴其 Agent harness、记忆和性能优化机制，增强自建数字员工平台的稳定性与持续执行能力。",
+      "score": 9
     },
     {
-      "id": "github:n8n-io/n8n",
+      "id": "github:NousResearch/hermes-agent",
       "source": "GitHub",
-      "title": "n8n-io/n8n",
-      "url": "https://github.com/n8n-io/n8n",
-      "detail": "Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations.",
-      "metrics": "198718⭐, TypeScript",
-      "domain": "AI coding",
-      "verdict": "一个工作流自动化平台，内置 AI 能力，支持可视化构建和自定义代码。",
-      "why": "虽然不是直接的 Agent 框架，但其工作流自动化能力和 AI 集成对内容生成有辅助作用。",
-      "score": 6
+      "title": "NousResearch/hermes-agent",
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "detail": "The agent that grows with you",
+      "metrics": "222903⭐, Python",
+      "domain": "LLM",
+      "verdict": "提供能够积累用户偏好、经验和上下文的个人化 Agent，可用于实现具备长期记忆和持续成长能力的数字员工。",
+      "why": "与他关注的长期记忆、数字员工和长程任务执行高度匹配，可作为个人 Agent 平台的实现参考。",
+      "score": 9
+    },
+    {
+      "id": "github:anthropics/skills",
+      "source": "GitHub",
+      "title": "anthropics/skills",
+      "url": "https://github.com/anthropics/skills",
+      "detail": "Public repository for Agent Skills",
+      "metrics": "165279⭐, Python",
+      "domain": "agent skill",
+      "verdict": "提供标准化的 Agent Skills 实现与示例，可用于定义模型调用工具、文件处理和专业任务的可复用能力模块。",
+      "why": "适合把剧本创作、角色设定、分镜生成、提示词编排等内容生产能力封装成可复用 Skill。",
+      "score": 9
+    },
+    {
+      "id": "github:langgenius/dify",
+      "source": "GitHub",
+      "title": "langgenius/dify",
+      "url": "https://github.com/langgenius/dify",
+      "detail": "Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack.",
+      "metrics": "150843⭐, TypeScript",
+      "domain": "LLM",
+      "verdict": "提供可视化的 Agent 工作流、RAG 管道和多模型工具编排，可用于快速搭建带知识库和工具调用的数字员工。",
+      "why": "能同时覆盖他的 Agent 平台、知识库、RAG 和工作流编排需求，并支持自托管迭代。",
+      "score": 9
+    },
+    {
+      "id": "github:harry0703/MoneyPrinterTurbo",
+      "source": "GitHub",
+      "title": "harry0703/MoneyPrinterTurbo",
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "detail": "利用 AI 大模型和自动化工作流，根据主题或关键词一键生成高清短视频。Generate HD short videos from a topic or keyword with an automated AI workflow.",
+      "metrics": "100671⭐, Python",
+      "domain": "LLM",
+      "verdict": "把选题或关键词转化为脚本、素材、配音和成片的自动化短视频流水线，可用于快速生成短视频内容。",
+      "why": "直接贴合竖屏 AI 漫剧和短剧生产，可拆解其自动化流程并改造成《九陆纪元》的内容制作工作流。",
+      "score": 9
     }
   ],
-  "candidateCount": 287
+  "candidateCount": 288
 }

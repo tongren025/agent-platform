@@ -45,6 +45,12 @@
   min-width: 0;
 }
 
+.today-title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .today-kicker,
 .today-panel-kicker {
   color: #765cf2;
@@ -60,6 +66,12 @@
   font-weight: 750 !important;
   line-height: 1.08 !important;
   letter-spacing: -0.045em;
+}
+
+.today-next-copy > span:first-child,
+.today-readiness-heading > div > strong {
+  display: flex;
+  align-items: center;
 }
 
 .today-title-lockup p {

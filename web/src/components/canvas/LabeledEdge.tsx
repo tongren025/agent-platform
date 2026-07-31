@@ -1,3 +1,4 @@
+// 画布带标签自定义连线组件：支持连线文本标注与样式渲染
 import { memo, useCallback, useContext, useState } from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, getSmoothStepPath, getStraightPath, type EdgeProps } from 'reactflow';
 import { CanvasCtx } from './CanvasNodes';

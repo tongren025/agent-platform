@@ -1,3 +1,4 @@
+// 无限画布中心页面：挂载 Agent Studio 无限生成画布组件
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Button, Spin } from 'antd';
 

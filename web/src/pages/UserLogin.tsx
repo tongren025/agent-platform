@@ -2,16 +2,26 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Input } from 'antd';
+import {
+  ArrowRightOutlined,
+  CheckCircleFilled,
+  LockOutlined,
+  SafetyCertificateOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { message } from '../ui';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { COLORS } from '../theme';
 import { userAuth } from '../userAuth';
 import { useInputHabit } from '../hooks/useInputHabit';
-import { useResponsive } from '../hooks/useResponsive';
+import './UserLogin.css';
+
+const CAPABILITIES = [
+  ['精准编排', '把复杂任务拆成可执行流程'],
+  ['质量优先', '用评审与反馈持续校准结果'],
+  ['全程可见', '过程、文件与产出都有迹可循'],
+];
 
 export default function UserLogin() {
   const navigate = useNavigate();
-  const { isMobile } = useResponsive();
   const [username, setUsername] = useInputHabit('login.username', '');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,13 +29,14 @@ export default function UserLogin() {
 
   const submit = async () => {
     setError('');
-    if (!username || !password) {
+    if (!username.trim() || !password) {
       setError('请输入用户名和密码');
       return;
     }
+
     setLoading(true);
     try {
-      await userAuth.login(username, password);
+      await userAuth.login(username.trim(), password);
       message.success('登录成功');
       navigate('/', { replace: true });
     } catch (e: any) {
@@ -36,66 +47,143 @@ export default function UserLogin() {
   };
 
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        width: '100vw',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: `linear-gradient(135deg, ${COLORS.ink} 0%, ${COLORS.inkLight} 100%)`,
-        backgroundImage: 'url(/login-bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <form
-        onSubmit={(event) => { event.preventDefault(); submit(); }}
-        style={{
-          width: isMobile ? '100%' : 380,
-          maxWidth: 380,
-          background: COLORS.white,
-          borderRadius: isMobile ? 12 : 18,
-          padding: isMobile ? '24px 16px' : '40px 36px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
-          margin: isMobile ? '0 16px' : undefined,
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <img src="/favicon.svg" alt="Agent Studio" width={52} height={52} style={{ borderRadius: 14, margin: '0 auto 14px', display: 'block', boxShadow: '0 4px 16px rgba(99,102,241,0.4)' }} />
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: COLORS.slateDark, margin: 0 }}>Agent Studio</h1>
-          <div style={{ fontSize: 13, color: COLORS.slate, marginTop: 4 }}>登录以继续使用</div>
-        </div>
+    <main className="login-page">
+      <div className="login-page__aurora login-page__aurora--one" aria-hidden="true" />
+      <div className="login-page__aurora login-page__aurora--two" aria-hidden="true" />
 
-        {error && <Alert role="alert" showIcon type="error" message={error} style={{ marginBottom: 16 }} />}
-        <label htmlFor="login-username" style={{ display: 'block', marginBottom: 6, color: COLORS.slateDark }}>用户名</label>
-        <Input
-          id="login-username"
-          name="username"
-          autoComplete="username"
-          size="large"
-          prefix={<UserOutlined style={{ color: COLORS.slate }} />}
-          placeholder="用户名"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{ marginBottom: 14 }}
-        />
-        <label htmlFor="login-password" style={{ display: 'block', marginBottom: 6, color: COLORS.slateDark }}>密码</label>
-        <Input.Password
-          id="login-password"
-          name="password"
-          autoComplete="current-password"
-          size="large"
-          prefix={<LockOutlined style={{ color: COLORS.slate }} />}
-          placeholder="密码"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ marginBottom: 22 }}
-        />
-        <Button htmlType="submit" type="primary" size="large" block loading={loading}>
-          登录
-        </Button>
-      </form>
+      <div className="login-shell">
+        <section className="login-story" aria-labelledby="login-brand-title">
+          <div className="login-brand">
+            <span className="login-brand__mark">
+              <img src="/favicon.svg" alt="" width={34} height={34} />
+            </span>
+            <span>
+              <strong>Agent Studio</strong>
+              <small>AI PRODUCTION OS</small>
+            </span>
+          </div>
+
+          <div className="login-story__content">
+            <span className="login-story__eyebrow">
+              <span className="login-story__pulse" />
+              你的数字团队已就绪
+            </span>
+            <h1 id="login-brand-title">
+              把创意，交给一支
+              <span>会协作的数字团队。</span>
+            </h1>
+            <p>
+              从想法、研究到生产与交付，让每位数字员工在同一个工作台里理解目标、协同执行、持续优化。
+            </p>
+
+            <div className="login-capabilities" aria-label="平台能力">
+              {CAPABILITIES.map(([title, description]) => (
+                <div className="login-capability" key={title}>
+                  <CheckCircleFilled />
+                  <span>
+                    <strong>{title}</strong>
+                    <small>{description}</small>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="login-story__footer">
+            <span><i /> 单人创作工作区</span>
+            <span>专注你的每一次高质量产出</span>
+          </div>
+        </section>
+
+        <section className="login-panel" aria-labelledby="login-title">
+          <div className="login-panel__mobile-brand">
+            <img src="/favicon.svg" alt="" width={38} height={38} />
+            <span><strong>Agent Studio</strong><small>AI PRODUCTION OS</small></span>
+          </div>
+
+          <form
+            className="login-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void submit();
+            }}
+          >
+            <div className="login-form__header">
+              <span className="login-form__eyebrow">WELCOME BACK</span>
+              <h2 id="login-title">登录工作台</h2>
+              <p>继续推进你的项目和数字员工任务</p>
+            </div>
+
+            {error && (
+              <Alert
+                className="login-form__error"
+                role="alert"
+                showIcon
+                type="error"
+                message={error}
+              />
+            )}
+
+            <div className="login-field">
+              <label htmlFor="login-username">用户名</label>
+              <Input
+                id="login-username"
+                name="username"
+                autoComplete="username"
+                autoFocus
+                size="large"
+                prefix={<UserOutlined />}
+                placeholder="请输入用户名"
+                value={username}
+                onChange={(event) => {
+                  setUsername(event.target.value);
+                  if (error) setError('');
+                }}
+              />
+            </div>
+
+            <div className="login-field">
+              <label htmlFor="login-password">密码</label>
+              <Input.Password
+                id="login-password"
+                name="password"
+                autoComplete="current-password"
+                size="large"
+                prefix={<LockOutlined />}
+                placeholder="请输入密码"
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  if (error) setError('');
+                }}
+              />
+            </div>
+
+            <Button
+              className="login-submit"
+              htmlType="submit"
+              type="primary"
+              size="large"
+              block
+              loading={loading}
+            >
+              {!loading && (
+                <>
+                  <span>进入工作台</span>
+                  <ArrowRightOutlined />
+                </>
+              )}
+            </Button>
+
+            <p className="login-form__security">
+              <SafetyCertificateOutlined />
+              凭证仅用于验证当前工作台身份
+            </p>
+          </form>
+
+          <p className="login-panel__copyright">© 2026 Agent Studio · Creative AI Platform</p>
+        </section>
+      </div>
     </main>
   );
 }

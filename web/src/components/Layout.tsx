@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Tooltip } from 'antd';
 import {
+  BookOutlined,
   DashboardOutlined,
   TeamOutlined,
   MessageOutlined,
@@ -27,6 +28,7 @@ import { COLORS } from '../theme';
 import { hasPerm, userAuth } from '../userAuth';
 import TaskCompletionNotifier from './TaskCompletionNotifier';
 import SystemManagerDrawer from './SystemManagerDrawer';
+import UserHelpCenter from './UserHelpCenter';
 
 // perm 为空的条目所有登录用户可见;有 perm 的按角色权限显隐(与后端中间件的映射一致)
 type NavItem = {
@@ -51,11 +53,20 @@ const navSections: NavSection[] = [
   {
     title: '获得帮助',
     items: [
+      { key: '/guide', icon: <BookOutlined />, label: '系统使用手册' },
       { key: '/workbench', icon: <MessageOutlined />, label: '找数字员工帮忙', perm: 'workbench:use' },
       { key: '/employees', icon: <TeamOutlined />, label: '管理数字员工', perm: 'employee:manage' },
     ],
   },
 ];
+
+const guideTargetByRoute: Record<string, string> = {
+  '/studio': 'quick-production',
+  '/production': 'projects',
+  '/canvas': 'canvas',
+  '/workbench': 'employees',
+  '/guide': 'manual',
+};
 
 // 高级能力不再逐页平铺；每个入口先回答“要完成什么任务”，再在能力中心内选具体工具。
 const advancedNavSections: NavSection[] = [
@@ -199,6 +210,7 @@ export default function Layout() {
             type="button"
             aria-label={item.label}
             aria-current={isActive ? 'page' : undefined}
+            data-user-guide={guideTargetByRoute[item.key]}
             key={item.key}
             onClick={() => handleNav(item.key)}
             style={{
@@ -258,9 +270,14 @@ export default function Layout() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100vw', overflowX: 'hidden' }}>
       <TaskCompletionNotifier />
       <SystemManagerDrawer />
+      <UserHelpCenter
+        isMobile={isMobile}
+        onMobileGuideOpen={() => setDrawerOpen(true)}
+        onMobileGuideClose={() => setDrawerOpen(false)}
+      />
       {/* Mobile header */}
       {isMobile && (
-        <div style={{
+        <div data-user-guide="brand" style={{
           height: 52, display: 'flex', alignItems: 'center', padding: '0 16px',
           background: COLORS.ink, position: 'sticky', top: 0, zIndex: 101,
           gap: 12, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)',
@@ -315,7 +332,7 @@ export default function Layout() {
         }}
       >
         {/* Brand — hidden on mobile (shown in header) */}
-        {!isMobile && <div style={{
+        {!isMobile && <div data-user-guide="brand" style={{
           height: 64, display: 'flex', alignItems: 'center',
           justifyContent: navCollapsed ? 'center' : 'flex-start',
           padding: navCollapsed ? '0' : '0 20px',

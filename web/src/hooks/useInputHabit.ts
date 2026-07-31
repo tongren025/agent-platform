@@ -1,3 +1,4 @@
+// 用户输入习惯与快捷键偏好持久化 Hook
 import { useEffect, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 

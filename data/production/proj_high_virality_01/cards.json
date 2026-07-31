@@ -1,0 +1,122 @@
+[
+  {
+    "card_id": "card_script_ep01",
+    "project_id": "proj_high_virality_01",
+    "stage": "script",
+    "title": "EP01《神明的犯罪现场》成片级剧本",
+    "content": "### 镜头拆分表 成片级\n| G单元 | 生成子段 | 时间码 | 景别机位 | 可见动作 | 台词/旁白 | 情绪 | 运镜 | 音效 | 光影 |\n|---|---|---|---|---|---|---|---|---|---|\n| G1 | G1-A | 00:00-00:03 | 大特写/俯冲 | 少女眼眶流出紫色荧光液体，液体中浮现倒计时数字 | 旁白：在这个城市，死人的记忆会变成传染病。 | 惊悚 | 快速推进 | 脑电波刺耳鸣响 | 霓虹紫与死寂黑 |\n| G1 | G1-B | 00:03-00:06 | 特写 | 男主顾林戴上黑金防污染面具，手指刺入少女额头 | 顾林：而我是全城唯一的解剖师。 | 冷酷 | 侧向平移 | 机械面具闭锁音 | 冰蓝冷光 |\n| G2 | G2-A | 00:06-00:12 | 中景 | 记忆走展开，少女记忆深处浮现一个巨大的金光神明，双手沾满鲜血 | 旁白：直到今天，我在一个被杀少女的脑海里，看到了‘神’。 | 震撼 | 仰角慢升 | 神圣宏大的低音重响 | 耀眼金光与极暗阴影 |\n\n---\n\n### G1 单元 记忆溢出 [00:00-00:06]\n雨夜废墟，被谋杀的少女斜靠在墙边。眼眶中流出荧光紫色的记忆体。男主顾林冷静戴上限制面具，用银针刺入记忆核，阻断传染。\n\n---\n\n### G2 单元 神明现场 [00:06-00:15]\n记忆走廊展开，金光神明悬浮在半空，正将一把由星光凝聚的利刃刺穿少女的心脏。神明缓缓转过头，隔着记忆记忆层，盯住了正处于记忆视角中的顾林！",
+    "episode": 1,
+    "shot_number": 0,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 0,
+      "audit_status": "approved"
+    },
+    "status": "completed",
+    "assignee": "comic-screenwriter",
+    "created_at": "2026-07-31T09:48:00Z",
+    "updated_at": "2026-07-31T09:48:00Z"
+  },
+  {
+    "card_id": "card_setting_gu_lin",
+    "project_id": "proj_high_virality_01",
+    "stage": "setting",
+    "title": "角色设定：顾林 (Gu Lin)",
+    "content": "### 顾林 (记忆擦除师 / 22岁)\n- **外观**：黑短发，右眼戴着单眼黑金防污染透镜，身穿暗灰高领风衣。手持两根30公分长的金属擦除银针。\n- **性格**：高度理性、冷酷、厌世，但内心极度重视‘真相’。他自己的记忆有一半已被擦除。\n- **核心设定**：他可以通过银针直接读写死者记忆，但每次读取都会承受死者的痛苦感官。",
+    "episode": null,
+    "shot_number": 0,
+    "prompts": [
+      "赛博国风男主顾林，黑短发，单眼黑金科技透镜，暗灰高领风衣，手中拿着发光金属银针，霓虹雨夜背景，极高画质"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "asset_type": "character",
+      "asset_id": "char_gu_lin",
+      "version": "v1",
+      "audit_status": "approved"
+    },
+    "status": "completed",
+    "assignee": "comic-character-designer",
+    "created_at": "2026-07-31T09:48:00Z",
+    "updated_at": "2026-07-31T09:48:00Z"
+  },
+  {
+    "card_id": "card_storyboard_g1_s1",
+    "project_id": "proj_high_virality_01",
+    "stage": "storyboard",
+    "title": "G1-S1 雨夜记忆传染 故事板",
+    "content": "1. **画面内容**：雨夜巷口，死去少女靠在砖墙上，眼眶流出紫色荧光液体，液体在空中凝成倒计时数字[00:03]。\n2. **角色动作**：少女头部微倾，眼眶液体不断向外溢出飘散。\n3. **景别 + 运镜**：特写，缓慢推进 (Dolly in)。\n4. **光影**：雨夜极暗背景，主体受紫色荧光主光打亮。\n5. **时长**：3秒。\n6. **承接**：一只戴黑皮手套的手（顾林）从镜头左侧伸手遮住视线。",
+    "episode": 1,
+    "shot_number": 1,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "subshot": "G1-S1",
+      "duration_seconds": 3,
+      "reference_roles": ["苏眠"],
+      "audit_status": "approved"
+    },
+    "status": "completed",
+    "assignee": "comic-storyboard",
+    "created_at": "2026-07-31T09:48:00Z",
+    "updated_at": "2026-07-31T09:48:00Z"
+  },
+  {
+    "card_id": "card_img_prompt_g1_s1",
+    "project_id": "proj_high_virality_01",
+    "stage": "img_prompt",
+    "title": "G1-S1 画面提示词 (首帧)",
+    "content": "赛博暗黑国风风格，霓虹雨夜巷口，死去的美丽东方少女靠在湿漉漉的黑色砖墙边，眼眶中流出璀璨的紫蓝色荧光液体，液体在空气中飘散成悬浮的光点，雨水挂在脸颊上，特写镜头，深邃冷酷光影，极致细节，8k分辨率",
+    "episode": 1,
+    "shot_number": 1,
+    "prompts": [
+      "赛博暗黑国风风格，霓虹雨夜巷口，死去的美丽东方少女靠在湿漉漉的黑色砖墙边，眼眶中流出璀璨的紫蓝色荧光液体，液体在空气中飘散成悬浮的光点，雨水挂在脸颊上，特写镜头，深邃冷酷光影，极致细节，8k分辨率"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "time_range": "00:00-00:03",
+      "audit_status": "approved"
+    },
+    "status": "completed",
+    "assignee": "comic-prompt-engineer",
+    "created_at": "2026-07-31T09:48:00Z",
+    "updated_at": "2026-07-31T09:48:00Z"
+  },
+  {
+    "card_id": "card_vid_prompt_g1_s1",
+    "project_id": "proj_high_virality_01",
+    "stage": "vid_prompt",
+    "title": "G1-A 视频提示词 (3秒)",
+    "content": "参考图1为雨夜少女。雨水从少女脸上滑落，眼眶中的紫色荧光液体如烟雾般向上飘散，镜头缓慢向前推进特写，霓虹雨夜光影闪烁，动作自然流畅，3秒，高质感漫剧",
+    "episode": 1,
+    "shot_number": 1,
+    "prompts": [
+      "参考图1为雨夜少女。雨水从少女脸上滑落，眼眶中的紫色荧光液体如烟雾般向上飘散，镜头缓慢向前推进特写，霓虹雨夜光影闪烁，动作自然流畅，3秒，高质感漫剧"
+    ],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "unit_number": 1,
+      "subsegment": "G1-A",
+      "duration_seconds": 3,
+      "flf": false,
+      "audit_status": "approved"
+    },
+    "status": "completed",
+    "assignee": "comic-video-artist",
+    "created_at": "2026-07-31T09:48:00Z",
+    "updated_at": "2026-07-31T09:48:00Z"
+  }
+]

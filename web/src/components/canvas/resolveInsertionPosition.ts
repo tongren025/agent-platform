@@ -1,3 +1,4 @@
+// 画布新节点插入位置计算与落点避让规划
 /** Agent Studio 原生节点落点规划：按行寻找离锚点最近的空位。 */
 import type { Node } from 'reactflow';
 

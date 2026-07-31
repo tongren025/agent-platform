@@ -15,6 +15,7 @@ import {
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api, type ProductionGoal, type VisualQualityRatings } from '../api';
 import VisualQualityReviewModal from '../components/VisualQualityReviewModal';
+import HelpHint from '../components/HelpHint';
 import { message } from '../ui';
 import { readInputHabit, useInputHabit, writeInputHabit } from '../hooks/useInputHabit';
 import { useResponsive } from '../hooks/useResponsive';
@@ -1313,7 +1314,14 @@ export default function DirectorStudio() {
             <span className="director-reel-mark"><VideoCameraOutlined /></span>
             <div>
               <Text className="director-eyebrow">AI PRODUCTION DESK · 新手友好</Text>
-              <Title id="director-title" level={1}>快速制作</Title>
+              <div className="director-title-row">
+                <Title id="director-title" level={1}>快速制作</Title>
+                <HelpHint
+                  tone="dark"
+                  title="快速制作怎么用？"
+                  content="创建项目后只处理页面突出显示的“当前下一步”。系统会按专业顺序完成剧本、视觉资产、分镜、镜头图、视频和成片。"
+                />
+              </div>
               <p>只看当前一步，系统会带你完成剧本、分镜、镜头图和成片</p>
             </div>
           </div>
@@ -1388,7 +1396,14 @@ export default function DirectorStudio() {
                   trailColor="rgba(255,255,255,0.1)"
                   format={percent => <span className="director-progress-number">{percent}<small>%</small></span>}
                 />
-                <span>制作进度</span>
+                <span className="director-progress-label">
+                  制作进度
+                  <HelpHint
+                    tone="dark"
+                    title="制作进度"
+                    content="根据当前项目所有镜头已经具备的规格、图片、视频和审核状态计算。"
+                  />
+                </span>
               </div>
               <div className="director-vital-list">
                 <div><strong>{state.totalUnits}</strong><span>镜头总数</span></div>
@@ -1408,7 +1423,13 @@ export default function DirectorStudio() {
               <div><strong>{currentStepNumber}</strong><small>/ {totalStepNumber}</small></div>
             </div>
             <div className="director-action-copy">
-              <span className="director-action-label">当前目标 · {PRODUCTION_GOALS[productionGoal].label}</span>
+              <span className="director-action-label">
+                当前目标 · {PRODUCTION_GOALS[productionGoal].label}
+                <HelpHint
+                  title="当前目标与下一步"
+                  content="目标决定做到哪一层；下一步是为了达到该目标，目前最早缺少的生产环节。切换目标不会删除已有内容。"
+                />
+              </span>
               <strong>{goalReached ? '本次目标已完成' : state.nextAction.label}</strong>
               <span>{goalReached
                 ? PRODUCTION_GOALS[productionGoal].description

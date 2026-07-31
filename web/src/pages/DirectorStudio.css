@@ -215,6 +215,21 @@
   color: #a7f3d0;
 }
 
+.director-title-row,
+.director-progress-label,
+.director-action-label {
+  display: flex;
+  align-items: center;
+}
+
+.director-title-row {
+  gap: 4px;
+}
+
+.director-progress-label {
+  justify-content: center;
+}
+
 .director-project-copy h2 {
   max-width: 760px;
   margin: 12px 0 8px !important;

@@ -1,3 +1,4 @@
+// 生产卡片详情抽屉组件：支持版本切换、提示词微调、媒体预览与单卡返工
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button, Drawer, Empty, Image, Input, Select, Space, Spin, Tag, Tooltip, Typography,

@@ -1,3 +1,4 @@
+// 画布提示词学习与采纳记录追溯页面组件
 import { useEffect, useMemo, useState } from 'react';
 import {
   Alert,

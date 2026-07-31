@@ -1,3 +1,4 @@
+// 响应式布局与移动端断点检测 Hook
 import { useEffect, useState } from 'react';
 
 export function useResponsive() {

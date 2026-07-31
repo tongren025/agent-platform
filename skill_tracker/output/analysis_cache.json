@@ -1,43 +1,53 @@
 {
-  "summary": "AI 领域，特别是 Agent 和 LLM 技术，正经历爆发式增长。开发者社区对构建智能 Agent、优化 LLM 应用以及提升编程效率展现出极大热情。Agent Skills 和 Claude Skills 作为核心能力，吸引了大量关注和创新。Python 依然是主导语言，但 JavaScript 和 TypeScript 在 Agent 和工作流自动化领域表现活跃。整体趋势表明，AI Agent 的能力边界正在不断拓展，应用场景日益丰富。",
+  "summary": "AI 开源生态正从模型能力竞争转向 Agent 工程化竞争。Agent Skills、代码智能体、MCP 工具连接、知识图谱与工作流平台增长显著，Python 仍占主导，JavaScript/TypeScript 在应用层快速扩张。",
   "hot_tracks": [
     {
-      "name": "AI Agent",
-      "description": "构建和部署能够自主执行任务的智能体，涵盖技能框架、自主研究和工作流自动化。",
-      "representative_repos": [
-        "obra/superpowers",
-        "NousResearch/hermes-agent",
-        "langflow-ai/langflow"
-      ],
-      "heat_score": 10
-    },
-    {
-      "name": "Agent Skills & Claude Skills",
-      "description": "专注于提升 AI Agent 的特定能力，包括代码生成、设计、研究等，Claude Skills 尤为突出。",
+      "name": "Agent Skills 与智能体运行时",
+      "description": "通过可复用技能、记忆、行为规范和方法论提升智能体的稳定性、专业性与持续执行能力。",
       "representative_repos": [
         "obra/superpowers",
         "affaan-m/ECC",
         "mattpocock/skills"
       ],
+      "heat_score": 10
+    },
+    {
+      "name": "AI 编程与代码智能体",
+      "description": "代码生成正在升级为具备规划、工具调用、代码审查、测试和成本优化能力的端到端开发智能体。",
+      "representative_repos": [
+        "obra/superpowers",
+        "JuliusBrussee/caveman",
+        "n8n-io/n8n"
+      ],
+      "heat_score": 10
+    },
+    {
+      "name": "MCP 与工具连接生态",
+      "description": "模型上下文协议及相关工具层成为连接模型、企业数据、外部服务和自动化工作流的重要基础设施。",
+      "representative_repos": [
+        "affaan-m/ECC",
+        "n8n-io/n8n",
+        "Panniantong/Agent-Reach"
+      ],
       "heat_score": 9
     },
     {
-      "name": "LLM 应用开发",
-      "description": "围绕大型语言模型（LLM）的开发和优化，包括模型部署、性能提升和应用构建。",
+      "name": "知识图谱、记忆与上下文工程",
+      "description": "项目开始将代码库、文档、数据库和长期记忆结构化，以增强检索、推理、任务连续性与个性化能力。",
       "representative_repos": [
-        "affaan-m/ECC",
-        "NousResearch/hermes-agent",
-        "ollama/ollama"
+        "Graphify-Labs/graphify",
+        "MemPalace/mempalace",
+        "NousResearch/hermes-agent"
       ],
-      "heat_score": 8
+      "heat_score": 9
     },
     {
-      "name": "AI Coding Tools",
-      "description": "利用 AI 辅助软件开发，包括代码生成、自动化和提升开发者效率的工具。",
+      "name": "低代码 Agent 工作流与生成式应用",
+      "description": "可视化编排、RAG、模型接入和部署能力持续融合，推动企业快速构建可运营的 AI 应用。",
       "representative_repos": [
-        "obra/superpowers",
-        "n8n-io/n8n",
-        "DietrichGebert/ponytail"
+        "langflow-ai/langflow",
+        "langgenius/dify",
+        "langchain-ai/langchain"
       ],
       "heat_score": 8
     }
@@ -45,58 +55,63 @@
   "rising_stars": [
     {
       "repo_name": "DietrichGebert/ponytail",
-      "reason": "以极高的日增长星数（1893⭐/天）迅速崛起，专注于让 AI Agent 具备“懒惰高级开发者”的思维模式，在 AI Coding 领域表现抢眼。",
-      "growth_metric": "1893⭐/天"
-    },
-    {
-      "repo_name": "karpathy/autoresearch",
-      "reason": "作为新晋高增长项目，日增长星数达到 634⭐，表明社区对 AI 自主研究和探索能力的项目高度关注。",
-      "growth_metric": "634⭐/天"
+      "reason": "以低成本、高效率的代码智能体技能切入，兼具 AI coding、Agent 和 LLM 多领域热度。",
+      "growth_metric": "约1885⭐/天，总星标约92417"
     },
     {
       "repo_name": "Graphify-Labs/graphify",
-      "reason": "在 LLM、Claude Skill 和 Topic:mcp 领域均有显著的日增长星数（838⭐/天），显示其在代码库理解和查询方面的创新潜力。",
-      "growth_metric": "838⭐/天"
+      "reason": "将代码库、文档、SQL、配置和 PDF 转化为可查询知识图谱，契合上下文工程和 MCP 生态需求。",
+      "growth_metric": "约837⭐/天，总星标约99150；近期约448⭐/天"
     },
     {
       "repo_name": "mattpocock/skills",
-      "reason": "在 Agent Skill 和 Skill 领域均展现出极高的日增长星数（1106⭐/天），表明开发者对可复用、工程化的 AI Skills 需求旺盛。",
-      "growth_metric": "1106⭐/天"
+      "reason": "面向真实工程师提供可复用 Agent Skills，体现技能模块化和开发流程标准化趋势。",
+      "growth_metric": "约1105⭐/天，总星标约196331；近期新增264⭐"
+    },
+    {
+      "repo_name": "JuliusBrussee/caveman",
+      "reason": "通过精简提示和技能设计降低 Claude Code 的 Token 消耗，满足开发者对成本与性能优化的需求。",
+      "growth_metric": "约805⭐/天，总星标约94664"
+    },
+    {
+      "repo_name": "Panniantong/Agent-Reach",
+      "reason": "聚焦 Agent 对外部信息与服务的访问能力，反映工具调用、数据获取和智能体连接层的快速发展。",
+      "growth_metric": "约401⭐/天，总星标约62962；近期新增97⭐"
     }
   ],
   "tech_shifts": [
     {
-      "title": "Agentic Workflow 自动化与集成",
-      "description": "从单一的 AI Agent 功能，转向构建更复杂的 Agentic Workflow 和 RAG Pipeline，强调模型和工具的集成能力，如 langflow-ai/langflow 和 langgenius/dify 所体现的趋势。"
+      "title": "从通用聊天模型转向可执行的 Agent 系统",
+      "description": "项目竞争重点由单轮问答和模型调用，转向技能、记忆、规划、工具使用、反馈闭环及软件开发方法论。"
     },
     {
-      "title": "AI 辅助编程的专业化与效率提升",
-      "description": "AI Coding 领域不再局限于基础代码生成，而是向更专业的方向发展，例如提升代码质量、模拟特定开发者风格（如 DietrichGebert/ponytail），以及优化 Token 使用效率（如 JuliusBrussee/caveman）。"
+      "title": "从提示词调优转向上下文与技能工程",
+      "description": "CLAUDE.md、Agent Skills、知识图谱和长期记忆成为提升模型可靠性的关键工程资产，提示词正在被模块化、结构化和可复用化。"
     },
     {
-      "title": "LLM 应用的性能优化与定制化",
-      "description": "开发者不仅关注 LLM 的基础能力，更注重其性能优化（如 affaan-m/ECC）和特定场景下的行为调优（如 multica-ai/andrej-karpathy-skills），以满足更精细化的应用需求。"
+      "title": "从独立应用转向开放工具协议与工作流平台",
+      "description": "MCP、n8n、Dify、Langflow 等项目推动模型与数据、软件服务及自动化流程互联，AI 应用开发逐步平台化和生态化。"
     }
   ],
   "language_insights": {
-    "dominant": "Python",
-    "rising": "TypeScript",
-    "insight": "Python 在 AI 核心模型和 Agent 框架中占据主导，而 TypeScript 在工作流自动化和 Web 端 AI 应用中快速增长。"
+    "dominant": "Python（96个项目）",
+    "rising": "JavaScript（46个项目）与 TypeScript（36个项目）",
+    "insight": "Python 继续主导模型、Agent 和数据处理层，而 JavaScript/TypeScript 在交互界面、代码智能体、工作流和 MCP 应用层快速增强。"
   },
   "recommendations": [
     {
-      "title": "强化 Agent 的可组合性与可扩展性",
-      "content": "开发者应专注于提供模块化、易于组合的 Agent Skills 和工具，支持用户构建复杂的 Agentic Workflow，并易于集成第三方服务。"
+      "title": "优先建设可复用的技能与工具体系",
+      "content": "将核心能力拆分为标准化 Skills、工具接口和任务模板，支持组合、版本管理、权限控制与跨模型迁移，避免产品依赖单一提示词。"
     },
     {
-      "title": "关注 AI 辅助编程的深度集成",
-      "content": "在 AI 创作工具中，应深入集成到开发者的现有工作流，提供更智能的代码补全、重构、测试生成等功能，并支持多种编程语言和框架。"
+      "title": "把上下文管理和可观测性作为基础设施",
+      "content": "完善代码库索引、知识图谱、长期记忆、检索质量评估、Token 成本监控和任务回放能力，提升 Agent 在复杂任务中的稳定性与可调试性。"
     },
     {
-      "title": "提供灵活的 LLM 集成与优化选项",
-      "content": "平台应支持接入多种 LLM 模型，并提供性能调优、成本控制、Prompt 工程等高级功能，满足不同应用场景下的需求。"
+      "title": "采用开放协议并强化跨平台集成",
+      "content": "积极兼容 MCP 等工具协议，同时提供 Python 与 TypeScript SDK、主流模型适配和企业系统连接能力，扩大生态覆盖并降低部署门槛。"
     }
   ],
-  "generatedAt": "2026-07-31T03:15:53.806384",
+  "generatedAt": "2026-07-31T09:41:23.777493",
   "model": "openrouter/auto"
 }

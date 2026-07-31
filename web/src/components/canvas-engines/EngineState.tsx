@@ -1,3 +1,4 @@
+// 画布引擎加载与异常状态展示组件
 import { Alert, Button, Space, Spin, Typography } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 
