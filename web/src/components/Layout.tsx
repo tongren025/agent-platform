@@ -24,11 +24,11 @@ import {
   findAdvancedRouteContext,
   matchesRoute,
 } from '../advancedNavigation';
-import { COLORS } from '../theme';
 import { hasPerm, userAuth } from '../userAuth';
 import TaskCompletionNotifier from './TaskCompletionNotifier';
 import SystemManagerDrawer from './SystemManagerDrawer';
 import UserHelpCenter from './UserHelpCenter';
+import './Layout.css';
 
 // perm 为空的条目所有登录用户可见;有 perm 的按角色权限显隐(与后端中间件的映射一致)
 type NavItem = {
@@ -185,22 +185,14 @@ export default function Layout() {
   };
 
   const renderSections = (sections: NavSection[]) => sections.map((section, si) => (
-    <div key={`${section.title || 'section'}-${si}`} style={{ marginBottom: 8 }}>
+    <div className="app-nav-section" key={`${section.title || 'section'}-${si}`}>
       {section.title && !navCollapsed && (
-        <div style={{
-          fontSize: 10, fontWeight: 600, textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          color: 'rgba(255,255,255,0.68)',
-          padding: '10px 12px 6px',
-        }}>
+        <div className="app-nav-section__title">
           {section.title}
         </div>
       )}
       {section.title && navCollapsed && (
-        <div style={{
-          height: 1, background: 'rgba(255,255,255,0.06)',
-          margin: '8px 6px',
-        }} />
+        <div className="app-nav-section__divider" />
       )}
 
       {section.items.map(item => {
@@ -213,45 +205,17 @@ export default function Layout() {
             data-user-guide={guideTargetByRoute[item.key]}
             key={item.key}
             onClick={() => handleNav(item.key)}
-            style={{
-              display: 'flex', alignItems: 'center',
-              gap: 12, padding: navCollapsed ? '10px 0' : '10px 12px',
-              justifyContent: navCollapsed ? 'center' : 'flex-start',
-              borderRadius: 10, cursor: 'pointer',
-              marginBottom: 2, minHeight: 40,
-              transition: 'all 0.15s',
-              background: isActive ? 'rgba(99,102,241,0.15)' : 'transparent',
-              color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
-              fontWeight: isActive ? 600 : 400,
-              position: 'relative',
-              border: 0, width: '100%', fontFamily: 'inherit', textAlign: 'left',
-            }}
-            onMouseEnter={event => {
-              if (!isActive) {
-                event.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                event.currentTarget.style.color = 'rgba(255,255,255,0.8)';
-              }
-            }}
-            onMouseLeave={event => {
-              if (!isActive) {
-                event.currentTarget.style.background = 'transparent';
-                event.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-              }
-            }}
+            className={[
+              'app-nav-item',
+              isActive ? 'is-active' : '',
+              navCollapsed ? 'is-collapsed' : '',
+            ].filter(Boolean).join(' ')}
           >
             {isActive && (
-              <span aria-hidden="true" style={{
-                position: 'absolute', left: navCollapsed ? '50%' : -12, top: navCollapsed ? 'auto' : '50%',
-                bottom: navCollapsed ? -2 : 'auto',
-                transform: navCollapsed ? 'translateX(-50%)' : 'translateY(-50%)',
-                width: navCollapsed ? 20 : 3,
-                height: navCollapsed ? 3 : 20,
-                borderRadius: 2,
-                background: COLORS.iris,
-              }} />
+              <span aria-hidden="true" className="app-nav-item__marker" />
             )}
-            <span aria-hidden="true" style={{ fontSize: 16 }}>{item.icon}</span>
-            {!navCollapsed && <span style={{ fontSize: 14 }}>{item.label}</span>}
+            <span aria-hidden="true" className="app-nav-item__icon">{item.icon}</span>
+            {!navCollapsed && <span className="app-nav-item__label">{item.label}</span>}
           </button>
         );
 
@@ -267,7 +231,7 @@ export default function Layout() {
   ));
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100vw', overflowX: 'hidden' }}>
+    <div className={`app-shell${isMobile ? ' is-mobile' : ''}`}>
       <TaskCompletionNotifier />
       <SystemManagerDrawer />
       <UserHelpCenter
@@ -277,11 +241,7 @@ export default function Layout() {
       />
       {/* Mobile header */}
       {isMobile && (
-        <div data-user-guide="brand" style={{
-          height: 52, display: 'flex', alignItems: 'center', padding: '0 16px',
-          background: COLORS.ink, position: 'sticky', top: 0, zIndex: 101,
-          gap: 12, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)',
-        }}>
+        <header data-user-guide="brand" className="app-mobile-header">
           <button
             type="button"
             ref={mobileMenuButtonRef}
@@ -289,16 +249,14 @@ export default function Layout() {
             aria-expanded={drawerOpen}
             aria-controls="primary-navigation"
             onClick={() => setDrawerOpen(value => !value)}
-            style={{
-              width: 40, height: 40, background: 'none', border: 0, color: '#fff',
-              fontSize: 20, cursor: 'pointer', padding: 0, marginLeft: -8,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
+            className="app-mobile-menu"
+          >
             {drawerOpen ? <CloseOutlined /> : <MenuOutlined />}
           </button>
-          <img src="/favicon.svg" alt="Agent Studio" width={28} height={28} style={{ borderRadius: 8 }} />
-          <div style={{ color: '#fff', fontWeight: 700, fontSize: 15 }}>Agent Studio</div>
-        </div>
+          <img src="/favicon.svg" alt="" width={28} height={28} className="app-brand__logo" />
+          <div className="app-mobile-brand">Agent Studio</div>
+          <span className="app-mobile-context">创作工作台</span>
+        </header>
       )}
 
       {/* Backdrop */}
@@ -306,10 +264,7 @@ export default function Layout() {
         <button type="button" aria-label="关闭导航" onClick={() => {
           setDrawerOpen(false);
           window.requestAnimationFrame(() => mobileMenuButtonRef.current?.focus());
-        }} style={{
-          position: 'fixed', inset: 0, top: 52, background: 'rgba(0,0,0,0.5)',
-          zIndex: 199, transition: 'opacity 0.2s', border: 0, padding: 0,
-        }} />
+        }} className="app-nav-backdrop" />
       )}
 
       {/* Sidebar */}
@@ -317,43 +272,43 @@ export default function Layout() {
         ref={sidebarRef}
         aria-label="主导航"
         aria-hidden={isMobile && !drawerOpen}
+        className={[
+          'app-sidebar',
+          navCollapsed ? 'is-collapsed' : '',
+          isMobile ? 'is-mobile' : '',
+          drawerOpen ? 'is-open' : '',
+        ].filter(Boolean).join(' ')}
         style={{
           width: isMobile ? 260 : siderWidth,
-          background: `linear-gradient(180deg, ${COLORS.inkLight} 0%, ${COLORS.ink} 100%)`,
-          borderRight: '1px solid rgba(255,255,255,0.04)',
-          overflow: 'hidden auto',
-          position: 'fixed',
           left: isMobile ? (drawerOpen ? 0 : -260) : 0,
           top: isMobile ? 52 : 0, bottom: 0,
-          zIndex: isMobile ? 200 : 100,
-          transition: isMobile ? 'left 0.25s ease' : 'width 0.2s',
           visibility: isMobile && !drawerOpen ? 'hidden' : 'visible',
-          display: 'flex', flexDirection: 'column',
         }}
       >
         {/* Brand — hidden on mobile (shown in header) */}
-        {!isMobile && <div data-user-guide="brand" style={{
-          height: 64, display: 'flex', alignItems: 'center',
-          justifyContent: navCollapsed ? 'center' : 'flex-start',
-          padding: navCollapsed ? '0' : '0 20px',
-          gap: 10, flexShrink: 0,
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-        }}>
-          <img src="/favicon.svg" alt="Agent Studio" width={34} height={34} style={{ borderRadius: 10, flexShrink: 0 }} />
+        {!isMobile && <div
+          data-user-guide="brand"
+          className={`app-brand${navCollapsed ? ' is-collapsed' : ''}`}
+        >
+          <img src="/favicon.svg" alt="" width={34} height={34} className="app-brand__logo" />
           {!navCollapsed && (
-            <div>
-              <div style={{ color: '#fff', fontWeight: 700, fontSize: 16, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+            <div className="app-brand__copy">
+              <div className="app-brand__name">
                 Agent Studio
               </div>
-              <div style={{ color: 'rgba(255,255,255,0.68)', fontSize: 10, fontWeight: 500 }}>
-                Creative AI Platform
+              <div className="app-brand__caption">
+                AI Production OS
               </div>
             </div>
           )}
         </div>}
 
         {/* Navigation */}
-        <nav id="primary-navigation" aria-label="功能导航" style={{ flex: 1, padding: navCollapsed ? '12px 8px' : '12px 12px' }}>
+        <nav
+          id="primary-navigation"
+          aria-label="功能导航"
+          className={`app-navigation${navCollapsed ? ' is-collapsed' : ''}`}
+        >
           {renderSections(displayedMainSections)}
           {hasAdvancedNavigation && (
             <div id="advanced-navigation" hidden={!advancedVisible}>
@@ -368,17 +323,10 @@ export default function Layout() {
           aria-expanded={advancedVisible}
           aria-controls="advanced-navigation"
           onClick={() => setAdvancedVisible(value => !value)}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 10,
-            justifyContent: navCollapsed ? 'center' : 'flex-start',
-            padding: navCollapsed ? '11px 0' : '11px 24px',
-            cursor: 'pointer', color: 'rgba(255,255,255,0.72)', fontSize: 13,
-            border: 0, borderTop: '1px solid rgba(255,255,255,0.06)',
-            width: '100%', background: 'transparent', fontFamily: 'inherit',
-          }}
+          className={`app-sidebar-action${navCollapsed ? ' is-collapsed' : ''}`}
         >
           <ControlOutlined />
-          {!navCollapsed && <><span style={{ flex: 1, textAlign: 'left' }}>高级功能</span>{advancedVisible ? <UpOutlined /> : <DownOutlined />}</>}
+          {!navCollapsed && <><span>高级功能</span>{advancedVisible ? <UpOutlined /> : <DownOutlined />}</>}
         </button>}
 
         {/* Logout */}
@@ -386,20 +334,9 @@ export default function Layout() {
           type="button"
           aria-label="退出登录"
           onClick={logout}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 12,
-            justifyContent: navCollapsed ? 'center' : 'flex-start',
-            padding: navCollapsed ? '12px 0' : '12px 24px',
-            cursor: 'pointer',
-            borderTop: '1px solid rgba(255,255,255,0.06)',
-            color: 'rgba(255,255,255,0.72)', fontSize: 13,
-            transition: 'color 0.15s', flexShrink: 0,
-            border: 0, width: '100%', background: 'transparent', fontFamily: 'inherit',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.color = COLORS.rose; }}
-          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.72)'; }}
+          className={`app-sidebar-action app-sidebar-action--logout${navCollapsed ? ' is-collapsed' : ''}`}
         >
-          <LogoutOutlined style={{ fontSize: 15 }} />
+          <LogoutOutlined />
           {!navCollapsed && <span>退出登录</span>}
         </button>
 
@@ -408,62 +345,39 @@ export default function Layout() {
           type="button"
           aria-label={collapsed ? '展开导航' : '折叠导航'}
           onClick={() => setCollapsed(!collapsed)}
+          className="app-sidebar-collapse"
           style={{
-            padding: '14px 0', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', cursor: 'pointer',
-            borderTop: '1px solid rgba(255,255,255,0.06)',
-            color: 'rgba(255,255,255,0.72)', fontSize: 14,
-            transition: 'color 0.15s', flexShrink: 0,
             visibility: (isNarrow || isMobile || isImmersiveCanvas) ? 'hidden' : 'visible',
-            border: 0, width: '100%', background: 'transparent',
           }}
-          onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.95)'; }}
-          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.72)'; }}
         >
           {collapsed ? <RightOutlined /> : <LeftOutlined />}
         </button>
       </aside>
 
       {/* Main content */}
-      <div style={{
+      <div className="app-main" style={{
         marginLeft: isMobile ? 0 : siderWidth,
-        flex: 1,
         width: isMobile ? '100vw' : `calc(100vw - ${siderWidth}px)`,
-        minWidth: 0,
         transition: isMobile ? 'none' : 'margin-left 0.2s',
-        background: COLORS.canvas,
         minHeight: isMobile ? 'calc(100vh - 52px)' : '100vh',
-        overflowX: 'hidden',
       }}>
-        <div style={{
+        <div className={`app-content${pageIsWorkspace ? ' is-workspace' : ''}${isImmersiveCanvas ? ' is-canvas' : ''}`} style={{
           padding: pageIsWorkspace ? (isMobile ? '6px' : isImmersiveCanvas ? '6px' : isNarrow ? '8px' : '14px') : (isMobile ? '12px' : isNarrow ? '16px' : '28px'),
-          minWidth: 0,
           height: isImmersiveCanvas ? (isMobile ? 'calc(100dvh - 52px)' : '100dvh') : undefined,
-          boxSizing: 'border-box',
           overflow: isImmersiveCanvas ? 'hidden' : undefined,
         }}>
           {advancedRouteContext && (
-            <nav aria-label="当前位置" style={{ marginBottom: isMobile ? 12 : 18, overflowX: 'auto', whiteSpace: 'nowrap' }}>
-              <ol style={{
-                alignItems: 'center',
-                display: 'flex',
-                gap: 8,
-                listStyle: 'none',
-                margin: 0,
-                minWidth: 'max-content',
-                padding: 0,
-                color: '#64748b',
-                fontSize: 13,
-              }}>
-                <li><Link to="/dashboard" style={{ color: '#64748b' }}>今日工作</Link></li>
-                <li aria-hidden="true" style={{ color: '#94a3b8' }}>›</li>
+            <nav aria-label="当前位置" className="app-breadcrumb" style={{ marginBottom: isMobile ? 12 : 18 }}>
+              <ol>
+                <li><Link to="/dashboard">今日工作</Link></li>
+                <li aria-hidden="true">›</li>
                 <li>
-                  <Link to={advancedRouteContext.section.path} style={{ color: '#64748b' }}>
+                  <Link to={advancedRouteContext.section.path}>
                     {advancedRouteContext.section.title}
                   </Link>
                 </li>
-                <li aria-hidden="true" style={{ color: '#94a3b8' }}>›</li>
-                <li aria-current="page" style={{ color: '#334155', fontWeight: 600 }}>
+                <li aria-hidden="true">›</li>
+                <li aria-current="page">
                   {advancedRouteContext.task.title}
                 </li>
               </ol>

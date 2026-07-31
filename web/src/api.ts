@@ -705,10 +705,26 @@ export const api = {
       '/agent/upload', { method: 'POST', body: form },
     );
   },
-  runAgent: (data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string; runId?: string }) =>
+  runAgent: (data: {
+    employeeKey: string;
+    userInput: string;
+    sessionId?: string;
+    extraContext?: string;
+    transientContext?: string;
+    structuredSchemaJson?: string;
+    runId?: string;
+  }) =>
     request<AgentRunResponse>('/agent/run', { method: 'POST', body: JSON.stringify(data) }),
   runAgentStream: (
-    data: { employeeKey: string; userInput: string; sessionId?: string; extraContext?: string; runId?: string },
+    data: {
+      employeeKey: string;
+      userInput: string;
+      sessionId?: string;
+      extraContext?: string;
+      transientContext?: string;
+      structuredSchemaJson?: string;
+      runId?: string;
+    },
     handlers?: AgentStreamHandlers,
   ) => streamAgentRun('/agent/run-stream', data, handlers),
   listSessions: (employeeKey: string, limit = 20, includeArchived = false) =>

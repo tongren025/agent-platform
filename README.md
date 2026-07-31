@@ -5,6 +5,10 @@
 📖 **第一次使用？** 阅读 [Agent Studio 系统使用手册](docs/USER_GUIDE.md)，或登录后从
 “获得帮助 → 系统使用手册”打开站内图文版。
 
+📱 **手机灵感随手拍**：手机登录后会自动进入 `/mobile`，用一句灵感与总导演连续对话，
+按“文字阶段 → 当前镜头画面 → 当前镜头视频 → 成片”一次推进一步；电脑端继续承担多集
+漫剧、完整资产和时间线精修。
+
 **AI-powered anime/manga production pipeline — from script to final cut.**
 
 An open-source multi-agent platform for AI-driven short-form anime (漫剧) production. Features a 10-stage production kanban (script → character/scene design → storyboard → image prompts → video prompts → generation → final cut), DIFY-style visual workflow engine, and multi-agent collaboration with delegated task execution.

@@ -28,6 +28,7 @@ import {
   type SystemManagerProposal,
 } from '../api';
 import { message } from '../ui';
+import './SystemManagerDrawer.css';
 
 type ConversationMessage = {
   id: string;
@@ -236,19 +237,14 @@ export default function SystemManagerDrawer() {
   return (
     <>
       <Tooltip title="系统管家：教我使用、检查问题、管理能力" placement="left">
-        <div style={{ position: 'fixed', right: 24, bottom: 24, zIndex: 180 }}>
+        <div className="system-manager-trigger">
           <Badge count={unhealthyCount} size="small">
             <Button
-              type="primary"
               shape="circle"
               aria-label="打开系统管家"
               icon={<CustomerServiceOutlined />}
               onClick={() => setOpen(true)}
-              style={{
-                width: 52,
-                height: 52,
-                boxShadow: '0 12px 28px rgba(79,70,229,.32)',
-              }}
+              className="system-manager-trigger__button"
             />
           </Badge>
         </div>
@@ -258,7 +254,7 @@ export default function SystemManagerDrawer() {
           <Space wrap>
             <RobotOutlined />
             <span>系统管家</span>
-            <Tag color="purple">有上下文</Tag>
+            <Tag className="system-manager-context-tag">有上下文</Tag>
             {context?.manager.modelReference && (
               <Tooltip title={context.manager.modelConfigured ? '已固定专用模型' : '当前回退到系统默认模型'}>
                 <Tag color={context.manager.modelConfigured ? 'blue' : 'orange'}>
@@ -285,12 +281,13 @@ export default function SystemManagerDrawer() {
         open={open}
         onClose={() => setOpen(false)}
         width="min(480px, 100vw)"
+        className="system-manager-drawer"
         styles={{ body: { padding: 0, display: 'flex', flexDirection: 'column' } }}
       >
         {context && (
-          <div style={{ padding: '12px 16px', borderBottom: '1px solid #eef2f7', background: '#fafbff' }}>
+          <div className="system-manager-context">
             <Space wrap size={[6, 6]}>
-              <Tag color="blue">连续会话</Tag>
+              <Tag className="system-manager-context-tag">连续会话</Tag>
               <Tag>{context.inventory.employees} 员工</Tag>
               <Tag>{context.inventory.skills} Skills</Tag>
               <Tag>{context.inventory.tools} 工具</Tag>
@@ -358,8 +355,8 @@ export default function SystemManagerDrawer() {
                 padding: '10px 12px',
                 whiteSpace: 'pre-wrap',
                 lineHeight: 1.65,
-                background: item.role === 'user' ? '#6366f1' : '#f1f5f9',
-                color: item.role === 'user' ? '#fff' : '#1e293b',
+                background: item.role === 'user' ? '#806146' : '#f1eee8',
+                color: item.role === 'user' ? '#fff' : '#302f2a',
               }}>
                 {item.content}
                 {item.proposal && (
@@ -414,7 +411,7 @@ export default function SystemManagerDrawer() {
           <div ref={messageEndRef} />
         </div>
 
-        <div style={{ padding: '10px 16px 16px', borderTop: '1px solid #eef2f7', background: '#fff' }}>
+        <div className="system-manager-composer">
           <Space wrap size={[6, 6]} style={{ marginBottom: 10 }}>
             {starterQuestions.map(question => (
               <Button key={question} size="small" onClick={() => void send(question)}>{question}</Button>

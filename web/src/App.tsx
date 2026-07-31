@@ -40,6 +40,13 @@ const UserLogin = lazy(() => import('./pages/UserLogin'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const McpOAuthCallback = lazy(() => import('./pages/McpOAuthCallback'));
 const UserGuide = lazy(() => import('./pages/UserGuide'));
+const MobileCreator = lazy(() => import('./pages/MobileCreator'));
+
+function ResponsiveLanding() {
+  const isPhone = typeof window !== 'undefined'
+    && window.matchMedia('(max-width: 768px)').matches;
+  return <Navigate to={isPhone ? '/mobile' : '/dashboard'} replace />;
+}
 
 export default function App() {
   return (
@@ -48,7 +55,8 @@ export default function App() {
       <Route path="/login" element={<UserLogin />} />
       <Route element={<UserAuthGuard />}>
         <Route element={<Layout />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<ResponsiveLanding />} />
+          <Route path="/mobile" element={<MobileCreator />} />
           <Route path="/studio" element={<DirectorStudio />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/guide" element={<UserGuide />} />

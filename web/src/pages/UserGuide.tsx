@@ -9,6 +9,7 @@ import {
   CheckCircleOutlined,
   CompassOutlined,
   ExperimentOutlined,
+  MobileOutlined,
   PlayCircleOutlined,
   QuestionCircleOutlined,
   RobotOutlined,
@@ -48,8 +49,31 @@ export default function UserGuide() {
 
   const sections = useMemo<GuideSection[]>(() => [
     {
+      id: 'mobile',
+      title: '手机模式：灵感随手拍',
+      summary: '手机只保留轻制作：说一个想法，一次完成一个下一步。',
+      keywords: '手机 移动端 灵感 随手拍 热门 短视频 语音 竖屏 小制作',
+      content: (
+        <>
+          <ol className="guide-numbered-list">
+            <li><strong>说出灵感</strong><span>输入或语音说一句话，不需要先懂剧本、分镜和提示词。</span></li>
+            <li><strong>和导演聊清楚</strong><span>导演每次只问一个关键问题，并帮你补前三秒钩子、冲突和结尾记忆点。</span></li>
+            <li><strong>确认开拍</strong><span>选 15 或 30 秒竖屏视频，点击“按这个方向开拍”。系统自动建立真实项目。</span></li>
+            <li><strong>看一眼，再继续</strong><span>系统按镜头逐个生成。满意才进入下一步，不满意只重做当前画面或视频。</span></li>
+          </ol>
+          <div className="guide-callout">
+            <MobileOutlined />
+            <p><strong>手机负责小制作，电脑负责大制作。</strong>手机适合随时记灵感、和导演讨论、做 15–30 秒短片；多集漫剧、复杂人物资产和精细时间线请回到电脑继续。</p>
+          </div>
+          <Button type="primary" icon={<MobileOutlined />} onClick={() => navigate('/mobile')}>
+            打开灵感随手拍
+          </Button>
+        </>
+      ),
+    },
+    {
       id: 'start',
-      title: '第一次使用：3 分钟开始',
+      title: '电脑端：3 分钟开始',
       summary: '不知道从哪里开始，就只做这四步。',
       keywords: '开始 新手 一句话 快速制作 创建 项目 下一步',
       content: (
@@ -90,7 +114,8 @@ export default function UserGuide() {
       summary: '找不到功能时，先看这张页面地图。',
       keywords: '今日制作 快速制作 我的项目 画布 员工 工作台 页面 导航',
       content: (
-        <div className="guide-page-map">
+          <div className="guide-page-map">
+          <div><MobileOutlined /><span><strong>灵感随手拍</strong><small>手机轻制作入口，聊天定方向，一次只生成一个镜头。</small></span></div>
           <div><CompassOutlined /><span><strong>今日制作</strong><small>查看最重要的项目、风险和系统推荐下一步。</small></span></div>
           <div><PlayCircleOutlined /><span><strong>快速制作</strong><small>新人主入口，从一句话沿单一路径做到成片。</small></span></div>
           <div><BookOutlined /><span><strong>我的项目</strong><small>打开已有作品，继续上次未完成的集和镜头。</small></span></div>
@@ -196,8 +221,11 @@ export default function UserGuide() {
           <Title id="user-guide-title" level={1}>系统使用手册</Title>
           <Paragraph>从一句想法到一集成片：先告诉你现在按哪里，再解释背后的专业流程。</Paragraph>
           <div className="user-guide-actions">
-            <Button type="primary" icon={<PlayCircleOutlined />} onClick={() => navigate('/studio')}>
-              开始第一个项目
+            <Button type="primary" icon={<MobileOutlined />} onClick={() => navigate('/mobile')}>
+              手机随手拍
+            </Button>
+            <Button icon={<PlayCircleOutlined />} onClick={() => navigate('/studio')}>
+              电脑做完整项目
             </Button>
             <Button icon={<CompassOutlined />} onClick={replayGuide}>重新播放新手引导</Button>
           </div>

@@ -265,7 +265,7 @@ export default function Memory() {
                   <Statistic
                     title="语义记忆（事实/偏好）"
                     value={stats?.semantic_count ?? 0}
-                    prefix={<BulbOutlined style={{ color: '#1890ff' }} />}
+                    prefix={<BulbOutlined style={{ color: '#806146' }} />}
                     suffix="条"
                   />
                 </Card>

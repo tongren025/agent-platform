@@ -57,7 +57,8 @@ export default function UserHelpCenter({
     const startFromEvent = () => startGuide();
     window.addEventListener(START_USER_GUIDE_EVENT, startFromEvent);
     const timer = window.setTimeout(() => {
-      if (!localStorage.getItem(GUIDE_STORAGE_KEY)) startGuide();
+      // 手机轻制作有自己的四步引导，避免两个弹层首次进入时互相遮挡。
+      if (window.location.pathname !== '/mobile' && !localStorage.getItem(GUIDE_STORAGE_KEY)) startGuide();
     }, 900);
     return () => {
       window.clearTimeout(timer);

@@ -176,7 +176,7 @@ export const StoryboardNode = memo(function StoryboardNode({ id, data, selected 
       <div style={{ width: 4, minHeight: '100%', background: '#6366f1', borderRadius: '12px 0 0 12px', flexShrink: 0 }} />
       <div style={{ flex: 1, padding: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-          <Tag color="#6366f1" style={{ margin: 0, fontSize: 10, lineHeight: '16px' }}>分镜</Tag>
+          <Tag color="#806146" style={{ margin: 0, fontSize: 10, lineHeight: '16px' }}>分镜</Tag>
           <Input className="nodrag" value={data.shotNumber || ''} placeholder="G1"
             onChange={(e) => actions.updateNodeData(id, { shotNumber: e.target.value })}
             size="small" variant="borderless" style={{ width: 50, fontSize: 13, fontWeight: 700, padding: 0 }}

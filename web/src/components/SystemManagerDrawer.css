@@ -1,0 +1,76 @@
+.system-manager-trigger {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 180;
+}
+
+.system-manager-trigger__button.ant-btn {
+  width: 52px;
+  height: 52px;
+  color: #6f4f35;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(128, 97, 70, 0.16);
+  box-shadow:
+    0 14px 34px rgba(58, 48, 37, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+}
+
+.system-manager-trigger__button.ant-btn:hover {
+  color: #fff !important;
+  background: linear-gradient(135deg, #806146, #674932) !important;
+  border-color: transparent !important;
+  box-shadow: 0 16px 38px rgba(85, 61, 40, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+.system-manager-trigger__button.ant-btn:focus-visible {
+  outline: 3px solid rgba(128, 97, 70, 0.35);
+  outline-offset: 3px;
+}
+
+.system-manager-context {
+  padding: 12px 16px;
+  background: #faf8f4;
+  border-bottom: 1px solid #e8e3db;
+}
+
+.system-manager-context-tag.ant-tag {
+  color: #6f4f35;
+  background: #eee7de;
+  border-color: #dfd1c2;
+}
+
+.system-manager-composer {
+  padding: 10px 16px 16px;
+  background: #fff;
+  border-top: 1px solid #e8e3db;
+}
+
+.system-manager-drawer .ant-drawer-header {
+  background: #fcfbf8;
+  border-bottom-color: #e8e3db;
+}
+
+.system-manager-drawer .ant-drawer-content {
+  background: #fffefa;
+}
+
+@media (max-width: 768px) {
+  .system-manager-trigger {
+    right: 18px;
+    bottom: 20px;
+  }
+
+  .system-manager-trigger__button.ant-btn {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .system-manager-trigger__button.ant-btn {
+    transition: none;
+  }
+}

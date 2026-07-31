@@ -15,26 +15,26 @@
 }
 
 .help-hint-button.is-light {
-  color: #7567c9;
-  background: #f0edff;
+  color: #78583e;
+  background: #eee7de;
 }
 
 .help-hint-button.is-dark {
-  color: #d9d2ff;
-  background: rgba(167, 139, 250, .16);
+  color: #eadfce;
+  background: rgba(176, 144, 110, .18);
 }
 
 .help-hint-button:hover,
 .help-hint-button:focus-visible {
   color: #fff;
-  background: #7161e8;
+  background: #806146;
   transform: translateY(-1px);
 }
 
 .help-hint-button:focus-visible,
 .global-help-trigger:focus-visible,
 .user-help-destinations button:focus-visible {
-  outline: 3px solid rgba(96, 165, 250, .55);
+  outline: 3px solid rgba(128, 97, 70, .42);
   outline-offset: 2px;
 }
 
@@ -66,11 +66,11 @@
   bottom: 88px;
   z-index: 181;
   padding: 0 14px;
-  color: #5648b8;
+  color: #6f4f35;
   background: rgba(255, 255, 255, .96);
-  border: 1px solid rgba(112, 96, 214, .16);
+  border: 1px solid rgba(128, 97, 70, .16);
   border-radius: 999px;
-  box-shadow: 0 12px 30px rgba(39, 43, 83, .18);
+  box-shadow: 0 12px 30px rgba(58, 48, 37, .14);
   cursor: pointer;
   font-family: inherit;
   font-size: 13px;
@@ -80,7 +80,7 @@
 
 .global-help-trigger:hover {
   color: #fff;
-  background: linear-gradient(135deg, #7864e9, #4f8cf5);
+  background: linear-gradient(135deg, #806146, #674932);
   transform: translateY(-2px);
 }
 
@@ -90,21 +90,21 @@
 
 .user-help-drawer .ant-drawer-body {
   padding: 18px;
-  background: #f7f8fc;
+  background: #f6f4ef;
 }
 
 .user-help-welcome,
 .user-help-section {
   padding: 20px;
   background: #fff;
-  border: 1px solid #e8eaf2;
+  border: 1px solid #e4e0d8;
   border-radius: 18px;
-  box-shadow: 0 12px 30px rgba(39, 43, 83, .05);
+  box-shadow: 0 12px 30px rgba(48, 44, 35, .045);
 }
 
 .user-help-welcome {
   background:
-    radial-gradient(circle at 100% 0, rgba(124, 92, 255, .15), transparent 34%),
+    radial-gradient(circle at 100% 0, rgba(146, 111, 77, .13), transparent 34%),
     #fff;
 }
 
@@ -114,7 +114,7 @@
 }
 
 .user-help-kicker {
-  color: #7159df;
+  color: #806146;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .14em;
@@ -149,7 +149,7 @@
   place-items: center;
   flex: 0 0 26px;
   color: #fff;
-  background: #7562e8;
+  background: #806146;
   border-radius: 9px;
   font-size: 12px;
   font-weight: 800;
@@ -178,20 +178,20 @@
   padding: 10px 13px;
   text-align: left;
   color: #252b42;
-  background: #fafaff;
-  border: 1px solid #e7e7f3;
+  background: #fcfbf8;
+  border: 1px solid #e6e1d9;
   border-radius: 13px;
   cursor: pointer;
   font-family: inherit;
 }
 
 .user-help-destinations button:hover {
-  background: #f1efff;
-  border-color: #cfc7ff;
+  background: #f3eee7;
+  border-color: #d8c7b5;
 }
 
 .user-help-destinations button > .anticon {
-  color: #7462df;
+  color: #806146;
   font-size: 18px;
 }
 
@@ -211,8 +211,8 @@
   margin-top: 14px;
   padding: 14px 16px;
   color: #4c5570;
-  background: #eef7ff;
-  border: 1px solid #dbeafe;
+  background: #eef2ed;
+  border: 1px solid #dbe5dc;
   border-radius: 14px;
   font-size: 12px;
   line-height: 1.6;
@@ -220,7 +220,7 @@
 
 .user-help-tip .anticon {
   margin-top: 3px;
-  color: #3b82f6;
+  color: #647c68;
 }
 
 @media (max-width: 768px) {

@@ -826,7 +826,7 @@
   font-size: 12px;
 }
 
-.today-task-summary span.is-running { color: #3b82f6; background: #eaf2ff; }
+.today-task-summary span.is-running { color: #6a765f; background: #e9eee7; }
 .today-task-summary span.is-failed { color: #e11d48; background: #fff0f3; }
 .today-task-summary span.is-ok { color: #059669; background: #e8fbf3; }
 
@@ -866,7 +866,7 @@
   width: 6px;
   height: 6px;
   flex: 0 0 6px;
-  background: #60a5fa;
+  background: #806146;
   border-radius: 50%;
   box-shadow: 0 0 0 4px #eaf2ff;
 }
@@ -1115,5 +1115,338 @@
 
   .today-create-button.ant-btn-primary:hover {
     transform: none;
+  }
+}
+
+/* 2026-07 暖中性色视觉系统：降低色块重量，让首页更接近创作编辑台而非监控后台。 */
+.today-page {
+  --today-ink: #25251f;
+  --today-ink-soft: #3f3e38;
+  --today-violet: #806146;
+  --today-blue: #8b765d;
+  --today-cyan: #7a8a79;
+  --today-green: #647c68;
+  --today-paper: #f6f4ef;
+  --today-border: #e4e0d8;
+  color: #2f2e29;
+}
+
+.today-kicker,
+.today-panel-kicker {
+  color: #8a6749;
+}
+
+.today-title-lockup h1 {
+  color: #25251f !important;
+  font-family: Georgia, 'Songti SC', 'STSong', serif;
+  font-weight: 700 !important;
+  letter-spacing: -0.035em;
+}
+
+.today-title-lockup p,
+.today-date {
+  color: #858177;
+}
+
+.today-ghost-button.ant-btn {
+  color: #57544d;
+  background: rgba(255, 255, 255, 0.68);
+  border-color: rgba(74, 69, 59, 0.12);
+  box-shadow: none;
+}
+
+.today-ghost-button.ant-btn:hover {
+  color: #4f3825 !important;
+  background: #fff !important;
+  border-color: rgba(128, 97, 70, 0.24) !important;
+}
+
+.today-create-button.ant-btn-primary,
+.today-continue-button.ant-btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, #806146, #674932);
+  border: 0;
+  box-shadow: 0 10px 24px rgba(85, 61, 40, 0.16);
+}
+
+.today-create-button.ant-btn-primary:hover,
+.today-continue-button.ant-btn-primary:hover {
+  background: linear-gradient(135deg, #8c6c50, #715038) !important;
+}
+
+.today-hero {
+  min-height: 368px;
+  color: #25251f;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(164, 132, 94, 0.12), transparent 32%),
+    linear-gradient(135deg, #fffefa 0%, #faf7f1 56%, #f2ece3 100%);
+  border: 1px solid rgba(74, 69, 59, 0.1);
+  box-shadow:
+    0 24px 60px rgba(48, 44, 35, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.today-hero::before {
+  border-color: rgba(128, 97, 70, 0.1);
+  box-shadow:
+    0 0 0 46px rgba(128, 97, 70, 0.018),
+    0 0 0 92px rgba(128, 97, 70, 0.012);
+}
+
+.today-hero-grid {
+  opacity: 0.23;
+  background-image:
+    linear-gradient(rgba(90, 79, 66, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 79, 66, 0.055) 1px, transparent 1px);
+  mask-image: linear-gradient(90deg, black, transparent 78%);
+}
+
+.today-live-label {
+  color: #777168;
+}
+
+.today-live-label i {
+  background: #6f886f;
+  box-shadow: 0 0 0 5px rgba(100, 124, 104, 0.1);
+}
+
+.today-focus-tools > span {
+  color: #827c72;
+  background: rgba(255, 255, 255, 0.58);
+  border-color: rgba(74, 69, 59, 0.09);
+}
+
+.today-pin-button.ant-btn {
+  color: #756c62;
+  background: rgba(255, 255, 255, 0.58);
+  border-color: rgba(74, 69, 59, 0.09);
+}
+
+.today-pin-button.ant-btn:hover {
+  color: #6f4f35 !important;
+  background: #eee7de !important;
+}
+
+.today-project-number {
+  color: rgba(70, 61, 51, 0.04);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.today-project-focus h2 {
+  color: #25251f !important;
+  font-family: Georgia, 'Songti SC', 'STSong', serif;
+  font-weight: 700 !important;
+}
+
+.today-project-description {
+  color: #77736b;
+}
+
+.today-goal-chip {
+  color: #684a33;
+  background: rgba(128, 97, 70, 0.1);
+  border-color: rgba(128, 97, 70, 0.16);
+}
+
+.today-warning-chip {
+  color: #8a6431;
+  background: rgba(178, 126, 55, 0.09);
+  border-color: rgba(178, 126, 55, 0.16);
+}
+
+.today-next-step {
+  border-top-color: rgba(74, 69, 59, 0.1);
+}
+
+.today-progress-orbit .ant-progress-text {
+  color: #332f29 !important;
+}
+
+.today-progress-orbit .ant-progress-text small {
+  color: #8a6749;
+}
+
+.today-progress-orbit .ant-progress-circle-trail {
+  stroke: rgba(128, 97, 70, 0.1);
+}
+
+.today-next-copy > span {
+  color: #969085;
+}
+
+.today-next-copy strong {
+  color: #302e29;
+}
+
+.today-next-copy p {
+  color: #8b867d;
+}
+
+.today-readiness {
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.78), rgba(239, 232, 222, 0.86));
+  border-color: rgba(92, 79, 65, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 16px 36px rgba(70, 59, 46, 0.055);
+}
+
+.today-readiness-heading {
+  border-bottom-color: rgba(74, 69, 59, 0.09);
+}
+
+.today-readiness .today-panel-kicker {
+  color: #947052;
+}
+
+.today-readiness-heading strong,
+.today-readiness-score {
+  color: #302e29;
+}
+
+.today-readiness-score small {
+  color: #8a6749;
+}
+
+.today-readiness-item span {
+  color: #777168;
+}
+
+.today-readiness-item strong {
+  color: #37342e;
+}
+
+.today-readiness-item strong small,
+.today-readiness-foot {
+  color: #948e84;
+}
+
+.today-readiness .ant-progress-inner {
+  background: rgba(94, 82, 69, 0.1);
+}
+
+.today-readiness-foot {
+  border-top-color: rgba(74, 69, 59, 0.09);
+}
+
+.today-readiness-foot span:last-child {
+  color: #657a68;
+}
+
+.today-readiness-foot span.has-risk {
+  color: #a06c35;
+}
+
+.today-empty-hero {
+  color: #25251f;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(151, 119, 83, 0.13), transparent 30%),
+    linear-gradient(135deg, #fffefa, #f1ebe1);
+  border: 1px solid rgba(74, 69, 59, 0.1);
+  box-shadow: 0 24px 60px rgba(48, 44, 35, 0.07);
+}
+
+.today-empty-art {
+  color: #76563c;
+  background: #ece3d7;
+  border-color: rgba(128, 97, 70, 0.16);
+}
+
+.today-empty-hero h2 {
+  color: #25251f !important;
+  font-family: Georgia, 'Songti SC', 'STSong', serif;
+}
+
+.today-empty-hero p {
+  color: #777168;
+}
+
+.today-stat-strip,
+.today-panel {
+  background: rgba(255, 255, 255, 0.74);
+  border-color: rgba(74, 69, 59, 0.09);
+  box-shadow: 0 12px 36px rgba(48, 44, 35, 0.045);
+  backdrop-filter: blur(16px);
+}
+
+.today-stat-strip > div:not(:last-child) {
+  border-right-color: rgba(74, 69, 59, 0.08);
+}
+
+.today-stat-icon.is-violet,
+.today-stat-icon.is-blue {
+  color: #7d5c40;
+  background: #eee6dc;
+}
+
+.today-stat-icon.is-green {
+  color: #5f7563;
+  background: #e8efe9;
+}
+
+.today-stat-icon.is-amber {
+  color: #9b6931;
+  background: #f5ecdc;
+}
+
+.today-panel-kicker {
+  letter-spacing: 0.15em;
+}
+
+.today-project-row,
+.today-task-summary,
+.today-task-item {
+  border-color: rgba(74, 69, 59, 0.08);
+}
+
+.today-row-copy strong {
+  color: #34322d;
+}
+
+.today-row-copy .ant-tag {
+  color: #72543b;
+  background: #eee7de;
+}
+
+.today-project-open:hover,
+.today-project-row:focus-within {
+  background: #faf7f1;
+}
+
+.today-row-index,
+.today-row-arrow {
+  color: #9d8a76;
+}
+
+.today-row-pin.ant-btn {
+  color: #8d8378;
+}
+
+.today-row-pin.ant-btn:hover {
+  color: #6f4f35 !important;
+  background: #eee7de !important;
+}
+
+.today-task-item .ant-tag {
+  color: #5f7563;
+  background: #e8efe9;
+}
+
+.today-task-item .ant-typography {
+  color: #45423c;
+}
+
+.today-task-empty > span {
+  color: #75553c;
+  background: #eee6dc;
+}
+
+.today-page :where(button, a):focus-visible {
+  outline-color: rgba(128, 97, 70, 0.62) !important;
+}
+
+@media (max-width: 900px) {
+  .today-readiness {
+    margin: 0 16px 16px;
   }
 }

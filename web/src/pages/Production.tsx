@@ -47,7 +47,7 @@ const STAGE_ICONS: Record<string, React.ReactNode> = {
 const STATUS_MAP: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   pending: { label: '待制作', color: '#faad14', icon: <ClockCircleOutlined /> },
   done: { label: '已完成', color: '#52c41a', icon: <CheckCircleOutlined /> },
-  review: { label: '审核中', color: '#1890ff', icon: <ExclamationCircleOutlined /> },
+  review: { label: '审核中', color: '#806146', icon: <ExclamationCircleOutlined /> },
 };
 
 const ROLE_MAP: Record<string, { label: string; color: string }> = {
@@ -138,7 +138,7 @@ function StageProgress({ total, done }: { total: number; done: number }) {
       <div style={{ width: '100%', height: 3, background: '#e8e8e8', borderRadius: 2, marginTop: 6, overflow: 'hidden' }}>
         <div style={{
           width: `${pct}%`, height: '100%', borderRadius: 2,
-          background: pct === 100 ? '#52c41a' : pct > 0 ? '#1890ff' : 'transparent',
+          background: pct === 100 ? '#647c68' : pct > 0 ? '#806146' : 'transparent',
           transition: 'width .3s',
         }} />
       </div>

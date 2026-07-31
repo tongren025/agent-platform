@@ -1392,7 +1392,7 @@ export default function DirectorStudio() {
                   percent={state.overallProgress}
                   size={isMobile ? 112 : 138}
                   strokeWidth={5}
-                  strokeColor={{ '0%': '#a78bfa', '100%': '#60a5fa' }}
+                  strokeColor={{ '0%': '#a48466', '100%': '#718070' }}
                   trailColor="rgba(255,255,255,0.1)"
                   format={percent => <span className="director-progress-number">{percent}<small>%</small></span>}
                 />

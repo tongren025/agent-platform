@@ -5,7 +5,7 @@
   --director-surface: rgba(255, 255, 255, 0.92);
   --director-amber: #8b5cf6;
   --director-amber-soft: #f0edff;
-  --director-teal: #3b82f6;
+  --director-teal: #718070;
   --director-line: #e5e8f1;
   --director-muted: #778196;
   max-width: 1500px;
@@ -195,7 +195,7 @@
 
 .director-new-button.ant-btn:hover {
   color: #fff !important;
-  background: linear-gradient(135deg, #8b5cf6, #4f8cff) !important;
+  background: linear-gradient(135deg, #806146, #667465) !important;
   border-color: transparent !important;
 }
 
@@ -343,7 +343,7 @@
 
 .director-command-deck .director-empty .ant-btn-primary {
   color: #fff;
-  background: linear-gradient(135deg, #8b5cf6, #4f8cff);
+  background: linear-gradient(135deg, #806146, #667465);
   border: 0;
 }
 
@@ -435,7 +435,7 @@
 .director-action-progress i {
   height: 100%;
   display: block;
-  background: linear-gradient(90deg, #8b5cf6, #4f8cff);
+  background: linear-gradient(90deg, #806146, #667465);
   border-radius: inherit;
   transition: width 300ms ease;
 }
@@ -454,7 +454,7 @@
 
 .director-action-primary.ant-btn-primary {
   color: #fff;
-  background: linear-gradient(135deg, #7958ed, #4f84f5);
+  background: linear-gradient(135deg, #806146, #667465);
   border: 0;
   box-shadow: 0 9px 22px rgba(89, 76, 213, 0.24);
 }
@@ -585,7 +585,7 @@
 
 .director-stage.is-complete .director-stage-icon {
   color: #fff;
-  background: linear-gradient(145deg, #4f8cff, #6b70f5);
+  background: linear-gradient(145deg, #667465, #806146);
   border-color: transparent;
   box-shadow: 0 6px 15px rgba(79, 132, 245, 0.2);
 }
@@ -603,7 +603,7 @@
 }
 
 .director-stage.is-target {
-  box-shadow: inset 0 -3px 0 #4f8cff;
+  box-shadow: inset 0 -3px 0 #806146;
 }
 
 .director-stage.is-active.is-target {
@@ -678,7 +678,7 @@
   gap: 7px;
   padding: 7px 14px;
   color: #fff;
-  background: linear-gradient(135deg, #7958ed, #4f84f5);
+  background: linear-gradient(135deg, #806146, #667465);
   border: 1px solid transparent;
   border-radius: 8px;
   font-size: 14px;

@@ -207,7 +207,7 @@ export default function Dashboard() {
                   percent={readiness.overall_progress}
                   size={isMobile ? 76 : 88}
                   strokeWidth={5}
-                  strokeColor={{ '0%': '#a78bfa', '100%': '#60a5fa' }}
+                  strokeColor={{ '0%': '#a48466', '100%': '#718070' }}
                   trailColor="rgba(255,255,255,.1)"
                   format={percent => <span>{percent}<small>%</small></span>}
                   aria-label={`${primary.name} 完成度 ${readiness.overall_progress}%`}
@@ -252,10 +252,10 @@ export default function Dashboard() {
             </div>
             <div className="today-readiness-list">
               {[
-                { key: 'spec', label: '规格齐全', value: readiness.spec_ready, total: readiness.units, color: '#8b5cf6' },
-                { key: 'image', label: '镜头出图', value: readiness.with_image, total: readiness.units, color: '#3b82f6' },
-                { key: 'video', label: '镜头视频', value: readiness.with_video, total: readiness.units, color: '#06b6d4' },
-                { key: 'delivery', label: '确认交付', value: readiness.delivered, total: readiness.units, color: '#34d399' },
+                { key: 'spec', label: '规格齐全', value: readiness.spec_ready, total: readiness.units, color: '#9a7b55' },
+                { key: 'image', label: '镜头出图', value: readiness.with_image, total: readiness.units, color: '#7a6551' },
+                { key: 'video', label: '镜头视频', value: readiness.with_video, total: readiness.units, color: '#718070' },
+                { key: 'delivery', label: '确认交付', value: readiness.delivered, total: readiness.units, color: '#647c68' },
               ].map(metric => {
                 const percent = metric.total ? Math.round(metric.value / metric.total * 100) : 0;
                 return <div key={metric.key} className="today-readiness-item">
@@ -385,7 +385,7 @@ export default function Dashboard() {
             /> : runningTasks.length ? runningTasks.slice(0, 3).map(task => <div key={task.job_id} className="today-task-item">
               <span className="today-task-pulse" />
               <div><Text ellipsis>{task.user_input || task.employee_key || task.job_id}</Text><small>{task.status === 'queued' ? '正在排队' : '员工处理中'}</small></div>
-              <Tag bordered={false} color="processing">{task.status === 'queued' ? '排队' : '运行'}</Tag>
+              <Tag bordered={false}>{task.status === 'queued' ? '排队' : '运行'}</Tag>
             </div>) : <div className="today-task-empty">
               <span><ThunderboltOutlined /></span>
               <strong>当前队列空闲</strong>
