@@ -30,6 +30,8 @@ import {
 import { message } from '../ui';
 import './SystemManagerDrawer.css';
 
+export const OPEN_SYSTEM_MANAGER_EVENT = 'agent-studio:open-system-manager';
+
 type ConversationMessage = {
   id: string;
   role: 'assistant' | 'user';
@@ -100,6 +102,12 @@ export default function SystemManagerDrawer() {
     if (open) void loadContext();
     // 路由变化后重新读取页面上下文，但保留本次对话。
   }, [open, pagePath]);
+
+  useEffect(() => {
+    const openManager = () => setOpen(true);
+    window.addEventListener(OPEN_SYSTEM_MANAGER_EVENT, openManager);
+    return () => window.removeEventListener(OPEN_SYSTEM_MANAGER_EVENT, openManager);
+  }, []);
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -237,7 +245,7 @@ export default function SystemManagerDrawer() {
   return (
     <>
       <Tooltip title="系统管家：教我使用、检查问题、管理能力" placement="left">
-        <div className="system-manager-trigger">
+        <div className={`system-manager-trigger${location.pathname === '/workbench' ? ' is-hidden-on-workbench' : ''}`}>
           <Badge count={unhealthyCount} size="small">
             <Button
               shape="circle"

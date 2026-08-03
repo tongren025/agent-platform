@@ -11,6 +11,7 @@ import {
   StopOutlined,
   EditOutlined, PlusOutlined, BookOutlined,
   MenuFoldOutlined, MenuUnfoldOutlined, ProfileOutlined,
+  CustomerServiceOutlined, QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
 import { useInputHabit } from '../hooks/useInputHabit';
@@ -19,7 +20,10 @@ import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import { api } from '../api';
 import { COLORS } from '../theme';
+import './Workbench.css';
 import DeepAgentWorkspacePanel from '../components/DeepAgentWorkspacePanel';
+import { OPEN_USER_HELP_EVENT } from '../components/UserHelpCenter';
+import { OPEN_SYSTEM_MANAGER_EVENT } from '../components/SystemManagerDrawer';
 import type {
   AgentRunResponse,
   ConversationArtifact,
@@ -35,9 +39,15 @@ const { TextArea } = Input;
 const { Text, Paragraph } = Typography;
 
 interface ChatMessage {
+  clientId: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
+  status?: 'complete' | 'pending' | 'streaming' | 'failed' | 'cancelled';
+  error?: string;
+  requestText?: string;
+  requestMessageId?: string;
+  requestAttachments?: ChatAttachment[];
   tokenUsage?: { promptTokens: number; completionTokens: number; totalTokens: number } | null;
   modelIds?: string[];
   elapsedMilliseconds?: number;
@@ -99,6 +109,13 @@ function createRunId() {
     ? globalThis.crypto.randomUUID().replace(/-/g, '')
     : `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
   return `run_${randomPart.slice(0, 16).padEnd(16, '0')}`;
+}
+
+function createClientMessageId(prefix: 'user' | 'assistant') {
+  const randomPart = typeof globalThis.crypto?.randomUUID === 'function'
+    ? globalThis.crypto.randomUUID().replace(/-/g, '')
+    : `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
+  return `${prefix}_${randomPart.slice(0, 16)}`;
 }
 
 function CopyBtn({ text }: { text: string }) {
@@ -222,8 +239,8 @@ export default function Workbench() {
   const [quickPromptSaving, setQuickPromptSaving] = useState(false);
   const [editingQuickPromptId, setEditingQuickPromptId] = useState<string | null>(null);
   const [quickPromptForm, setQuickPromptForm] = useState({ title: '', content: '', employee_key: '' });
-  const abortRef = useRef<AbortController | null>(null);
-  const msgEndRef = useRef<HTMLDivElement>(null);
+  const requestInFlightRef = useRef(false);
+  const messageViewportRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<any>(null);
   const quickPromptRequestRef = useRef(0);
   const workspaceRequestRef = useRef(0);
@@ -322,7 +339,18 @@ export default function Workbench() {
   };
 
   useEffect(() => { refreshSessions(); }, [mode, selectedKey]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { msgEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  const scrollMessageIntoView = (messageId: string, behavior: ScrollBehavior = 'smooth') => {
+    window.requestAnimationFrame(() => {
+      document.getElementById(`wb-message-${messageId}`)?.scrollIntoView({ behavior, block: 'start' });
+    });
+  };
+
+  const scrollConversationToBottom = () => {
+    window.requestAnimationFrame(() => {
+      const viewport = messageViewportRef.current;
+      if (viewport) viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'auto' });
+    });
+  };
 
   const clearWorkspace = () => {
     workspaceRequestRef.current += 1;
@@ -373,9 +401,16 @@ export default function Workbench() {
 
   const applySession = (s: SessionItem) => {
     setSessionId(s.sessionId);
-    setMessages((s.messages || []).map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content, timestamp: m.timestamp })));
+    setMessages((s.messages || []).map((m, index) => ({
+      clientId: `${s.sessionId}-${index}`,
+      role: m.role as 'user' | 'assistant',
+      content: m.content,
+      timestamp: m.timestamp,
+      status: 'complete',
+    })));
     setArtifacts(s.artifacts || []);
     setPendingFiles([]);
+    scrollConversationToBottom();
   };
 
   const handleLoadSession = async (s: SessionItem) => {
@@ -457,30 +492,73 @@ export default function Workbench() {
 
   const removePendingFile = (fileId: string) => setPendingFiles((prev) => prev.filter((f) => f.fileId !== fileId));
 
-  const handleSend = async () => {
-    const text = inputValue.trim();
-    if ((!text && pendingFiles.length === 0) || !targetReady || loading) return;
-
+  const buildExtraContext = (files: ChatAttachment[]) => {
     let extraContext = '';
-    if (pendingFiles.length > 0) {
-      const parts = pendingFiles.map((f) => {
+    if (files.length > 0) {
+      const parts = files.map((f) => {
         if (f.isImage) return `[用户上传了图片: ${f.fileName}，链接: ${f.url}]`;
         if (f.textContent) return `[用户上传了文件: ${f.fileName}]\n\`\`\`\n${f.textContent.slice(0, 8000)}\n\`\`\``;
         return `[用户上传了文件: ${f.fileName}，链接: ${f.url}]`;
       });
       extraContext = parts.join('\n\n');
     }
+    return extraContext;
+  };
 
-    const displayContent = text + (pendingFiles.length > 0 ? '\n' + pendingFiles.map((f) => `📎 ${f.fileName}`).join('\n') : '');
-    const userMsg: ChatMessage = { role: 'user', content: displayContent, timestamp: new Date().toISOString(), attachments: [...pendingFiles] };
-    setMessages((prev) => [...prev, userMsg]);
-    setInputValue('');
-    const filesToSend = [...pendingFiles];
-    setPendingFiles([]);
+  const runMessageRequest = async ({
+    text,
+    files,
+    requestMessageId,
+    assistantMessageId,
+    appendUser,
+  }: {
+    text: string;
+    files: ChatAttachment[];
+    requestMessageId: string;
+    assistantMessageId: string;
+    appendUser: boolean;
+  }) => {
+    if ((!text && files.length === 0) || !targetReady || requestInFlightRef.current) return;
+    requestInFlightRef.current = true;
+
+    const extraContext = buildExtraContext(files);
+    const displayContent = text + (files.length > 0 ? '\n' + files.map((f) => `📎 ${f.fileName}`).join('\n') : '');
+    const now = new Date().toISOString();
+    const assistantPlaceholder: ChatMessage = {
+      clientId: assistantMessageId,
+      role: 'assistant',
+      content: '',
+      timestamp: now,
+      status: 'pending',
+      requestText: text,
+      requestMessageId,
+      requestAttachments: [...files],
+    };
+
+    setMessages((prev) => {
+      if (!appendUser) {
+        return prev.map((item) => item.clientId === assistantMessageId ? assistantPlaceholder : item);
+      }
+      const userMsg: ChatMessage = {
+        clientId: requestMessageId,
+        role: 'user',
+        content: displayContent,
+        timestamp: now,
+        status: 'complete',
+        attachments: [...files],
+      };
+      return [...prev, userMsg, assistantPlaceholder];
+    });
+
+    if (appendUser) {
+      setInputValue('');
+      setPendingFiles([]);
+    }
+    scrollMessageIntoView(requestMessageId);
+
     setLoading(true);
     setStoppingRun(false);
     const runId = createRunId();
-    const streamMessageTimestamp = new Date().toISOString();
     setActiveRunId(runId);
 
     try {
@@ -492,22 +570,12 @@ export default function Workbench() {
       };
       if (extraContext) payload.extraContext = extraContext;
 
-      const updateStreamingMessage = (content: string) => {
-        setMessages((prev) => {
-          const index = prev.findIndex(
-            (item) => item.timestamp === streamMessageTimestamp,
-          );
-          if (index < 0) {
-            return [...prev, {
-              role: 'assistant',
-              content,
-              timestamp: streamMessageTimestamp,
-            }];
-          }
-          const next = [...prev];
-          next[index] = { ...next[index], content };
-          return next;
-        });
+      const updateStreamingMessage = (delta: string, content: string) => {
+        setMessages((prev) => prev.map((item) => {
+          if (item.clientId !== assistantMessageId) return item;
+          const nextContent = content || `${item.content}${delta}`;
+          return { ...item, content: nextContent, status: 'streaming', error: undefined };
+        }));
       };
       const res: AgentRunResponse = mode === 'team'
         ? await api.runTeamStream({
@@ -516,37 +584,66 @@ export default function Workbench() {
             sessionId: sessionId || undefined,
             extraContext: extraContext || undefined,
             runId,
-          }, { onContent: (_delta, currentText) => updateStreamingMessage(currentText) })
+          }, { onContent: updateStreamingMessage })
         : await api.runAgentStream(
             payload,
-            { onContent: (_delta, currentText) => updateStreamingMessage(currentText) },
+            { onContent: updateStreamingMessage },
           );
 
       const assistantMsg: ChatMessage = {
+        clientId: assistantMessageId,
         role: 'assistant', content: res.assistantMessage, timestamp: new Date().toISOString(),
+        status: res.cancelled ? 'cancelled' : 'complete',
+        requestText: text,
+        requestMessageId,
+        requestAttachments: [...files],
         tokenUsage: res.tokenUsage,
         modelIds: res.modelIds,
         elapsedMilliseconds: res.elapsedMilliseconds,
         runId: res.runId,
         traces: res.traces?.length ? res.traces : undefined,
       };
-      setMessages((prev) => {
-        const index = prev.findIndex(
-          (item) => item.timestamp === streamMessageTimestamp,
-        );
-        if (index < 0) return [...prev, assistantMsg];
-        const next = [...prev];
-        next[index] = assistantMsg;
-        return next;
-      });
+      setMessages((prev) => prev.map((item) => item.clientId === assistantMessageId ? assistantMsg : item));
       if (res.cancelled) message.info('当前运行已安全停止。');
       if (res.sessionId) { setSessionId(res.sessionId); hydrateSession(res.sessionId); }
-    } catch (e: any) { message.error(e.message); }
+    } catch (e: any) {
+      const errorText = e?.message || '回复生成失败，请稍后重试。';
+      setMessages((prev) => prev.map((item) => item.clientId === assistantMessageId ? {
+        ...item,
+        status: 'failed',
+        error: errorText,
+      } : item));
+    }
     finally {
+      requestInFlightRef.current = false;
       setLoading(false);
       setActiveRunId(null);
       setStoppingRun(false);
     }
+  };
+
+  const handleSend = async () => {
+    const text = inputValue.trim();
+    const files = [...pendingFiles];
+    if ((!text && files.length === 0) || !targetReady || loading) return;
+    await runMessageRequest({
+      text,
+      files,
+      requestMessageId: createClientMessageId('user'),
+      assistantMessageId: createClientMessageId('assistant'),
+      appendUser: true,
+    });
+  };
+
+  const handleRetryMessage = async (msg: ChatMessage) => {
+    if (loading || msg.role !== 'assistant' || !msg.requestMessageId) return;
+    await runMessageRequest({
+      text: msg.requestText || '',
+      files: msg.requestAttachments || [],
+      requestMessageId: msg.requestMessageId,
+      assistantMessageId: msg.clientId,
+      appendUser: false,
+    });
   };
 
   const handleStopRun = async () => {
@@ -777,7 +874,11 @@ export default function Workbench() {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      height: isMobile ? 'calc(100dvh - 16px)' : 'calc(100vh - 56px)',
+      height: isMobile
+        ? 'calc(100dvh - 68px)'
+        : isCompact
+          ? 'calc(100dvh - 16px)'
+          : 'calc(100dvh - 28px)',
       minHeight: 0,
     }}>
       <div className="wb-root" style={{
@@ -793,7 +894,7 @@ export default function Workbench() {
 
       {/* ── Left: selector + sessions ── */}
       <aside id="workbench-conversations" aria-label="员工与会话" className="wb-left" style={{
-        width: isMobile ? '100%' : leftCollapsed ? 56 : 260,
+        width: isMobile ? '100%' : leftCollapsed ? 52 : 236,
         flexShrink: 0,
         background: '#fff',
         borderRight: isMobile ? 'none' : `1px solid ${COLORS.border}`,
@@ -925,9 +1026,9 @@ export default function Workbench() {
       </aside>
 
       {/* ── Center: chat ── */}
-      <main aria-label="当前对话" style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', background: COLORS.canvas }}>
+      <main aria-label="当前对话" className="wb-chat-main" style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', background: COLORS.canvas }}>
         {/* Chat header */}
-        <header style={{
+        <header className="wb-chat-header" style={{
           minHeight: isMobile ? 56 : 68,
           background: '#fff',
           borderBottom: `1px solid ${COLORS.border}`,
@@ -938,7 +1039,7 @@ export default function Workbench() {
           flexShrink: 0,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 12, minWidth: 0 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
+            <div className="wb-target-avatar" style={{ width: 36, height: 36, borderRadius: 10, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
               {mode === 'team' ? <TeamOutlined /> : <RobotOutlined />}
             </div>
             <div style={{ minWidth: 0 }}>
@@ -946,19 +1047,33 @@ export default function Workbench() {
                 {targetReady ? conversationTitle : '选择对话对象'}
               </div>
               <div className="wb-chat-meta" style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3, minWidth: 0, overflow: 'hidden' }}>
+                {targetReady && <span className="wb-availability-dot" aria-hidden="true" />}
                 {targetName && <span style={{ fontSize: 12, color: COLORS.slate, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{targetName}</span>}
-                {targetReady && <Tag color={runtimeEmployee?.deepAgent ? 'purple' : undefined} style={{ margin: 0, fontSize: 10, lineHeight: '20px', flexShrink: 0 }}>{runtimeLabel}</Tag>}
-                {configuredModelId && !isMobile && (
-                  <Tag title={`员工配置模型：${configuredModelId}`} style={{ margin: 0, fontSize: 10, lineHeight: '20px', maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    配置模型 · {configuredModelId}
-                  </Tag>
-                )}
+                {targetReady && <span className="wb-runtime-label">{runtimeLabel}</span>}
               </div>
             </div>
           </div>
           <Space size={8}>
             {conversationLoading && <Spin size="small" aria-label="正在刷新完整会话" />}
-            {sessionId && !isMobile && <Tag title={sessionId} style={{ fontSize: 11, borderRadius: 6, margin: 0 }}>{sessionId.slice(0, 12)}</Tag>}
+            <Tooltip title="帮助与新手指引">
+              <Button
+                type="text"
+                size="small"
+                icon={<QuestionCircleOutlined />}
+                aria-label="打开帮助与新手指引"
+                data-user-guide="help-trigger"
+                onClick={() => window.dispatchEvent(new Event(OPEN_USER_HELP_EVENT))}
+              />
+            </Tooltip>
+            <Tooltip title="系统管家：检查当前页面或运行问题">
+              <Button
+                type="text"
+                size="small"
+                icon={<CustomerServiceOutlined />}
+                aria-label="打开系统管家"
+                onClick={() => window.dispatchEvent(new Event(OPEN_SYSTEM_MANAGER_EVENT))}
+              />
+            </Tooltip>
             <Button
               type={rightCollapsed || detailsInDrawer ? 'default' : 'primary'}
               ghost={!rightCollapsed && !detailsInDrawer}
@@ -975,7 +1090,11 @@ export default function Workbench() {
         </header>
 
         {/* Messages */}
-        <div style={{ flex: 1, overflow: 'auto', padding: isMobile ? '12px 10px' : '24px 28px' }}>
+        <div
+          ref={messageViewportRef}
+          className="wb-message-viewport"
+          style={{ flex: 1, overflow: 'auto', padding: isMobile ? '12px 10px' : '24px 28px' }}
+        >
           {!targetReady ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
               <Empty image={<img src="/empty-connect.svg" alt="" width={160} />} description={mode === 'team' ? '选择一个团队开始协作' : '选择一个数字员工开始对话'} />
@@ -995,15 +1114,23 @@ export default function Workbench() {
               {messages.map((msg, i) => {
                 const isUser = msg.role === 'user';
                 return (
-                  <article key={i} aria-label={isUser ? '你的消息' : `${targetName || '数字员工'}的回复`} className="wb-msg-row" style={{ display: 'flex', marginBottom: 20, justifyContent: isUser ? 'flex-end' : 'flex-start', gap: 10 }}>
+                  <article
+                    id={`wb-message-${msg.clientId}`}
+                    key={msg.clientId || i}
+                    aria-label={isUser ? '你的消息' : `${targetName || '数字员工'}的回复`}
+                    className={`wb-msg-row ${isUser ? 'is-user' : 'is-assistant'} is-${msg.status || 'complete'}`}
+                    style={{ display: 'flex', marginBottom: 22, justifyContent: isUser ? 'flex-end' : 'flex-start', gap: 10 }}
+                  >
                     {!isUser && (
                       <div aria-hidden="true" style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>
                         <RobotOutlined />
                       </div>
                     )}
-                    <div style={{ maxWidth: isMobile ? '86%' : '72%', minWidth: 60 }}>
-                      <div style={{ margin: '0 4px 5px', textAlign: isUser ? 'right' : 'left', fontSize: 11, color: COLORS.slate }}>
-                        {isUser ? '你' : targetName || '数字员工'}
+                    <div className="wb-message-content" style={{ maxWidth: isMobile ? '86%' : '72%', minWidth: 60 }}>
+                      <div className="wb-message-label" style={{ margin: '0 4px 5px', textAlign: isUser ? 'right' : 'left', fontSize: 11, color: COLORS.slate }}>
+                        <span>{isUser ? '你' : targetName || '数字员工'}</span>
+                        <span aria-hidden="true"> · </span>
+                        <time dateTime={msg.timestamp}>{formatTime(msg.timestamp)}</time>
                       </div>
                       <div className={isUser ? 'wb-bubble-user' : 'wb-bubble-ai'} style={{
                         padding: '12px 16px', fontSize: 14, lineHeight: 1.7, wordBreak: 'break-word',
@@ -1015,10 +1142,26 @@ export default function Workbench() {
                       }}>
                         {isUser ? (
                           <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+                        ) : msg.status === 'pending' && !msg.content ? (
+                          <div className="wb-thinking" role="status" aria-live="polite">
+                            <span className="wb-thinking-dots" aria-hidden="true"><i /><i /><i /></span>
+                            <span>正在理解你的任务</span>
+                          </div>
                         ) : (
-                          <div className="wb-markdown"><ReactMarkdown components={mdComponents}>{cleanLatex(msg.content)}</ReactMarkdown></div>
+                          <div className={`wb-markdown${msg.status === 'streaming' ? ' is-streaming' : ''}`}>
+                            <ReactMarkdown components={mdComponents}>{cleanLatex(msg.content)}</ReactMarkdown>
+                            {msg.status === 'streaming' && <span className="wb-stream-caret" aria-label="正在生成" />}
+                          </div>
                         )}
                       </div>
+                      {msg.status === 'failed' && (
+                        <div className="wb-inline-error" role="alert">
+                          <span>{msg.error || '回复生成失败，你的消息仍然保留。'}</span>
+                          <Button size="small" onClick={() => void handleRetryMessage(msg)} disabled={loading}>
+                            重新生成
+                          </Button>
+                        </div>
+                      )}
                       {/* Attachments with image preview */}
                       {msg.attachments && msg.attachments.length > 0 && (
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8, justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
@@ -1032,7 +1175,10 @@ export default function Workbench() {
                       {/* Action bar for AI messages */}
                       {!isUser && (
                         <div className="wb-msg-actions" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 4, minHeight: 28, marginTop: 5, color: COLORS.slate }}>
-                          <CopyBtn text={msg.content} />
+                          {!!msg.content && msg.status !== 'pending' && msg.status !== 'streaming' && <CopyBtn text={msg.content} />}
+                          {msg.status === 'pending' && <Text className="wb-live-status">正在准备</Text>}
+                          {msg.status === 'streaming' && <Text className="wb-live-status"><span className="wb-live-dot" /> 正在生成</Text>}
+                          {msg.status === 'cancelled' && <Text className="wb-cancelled-status">已停止</Text>}
                           {msg.modelIds && msg.modelIds.length > 0 && (
                             <Tooltip title="本次请求实际使用的模型；箭头表示发生过降级">
                               <Text style={{ fontSize: 11, color: COLORS.slate }}>
@@ -1060,31 +1206,16 @@ export default function Workbench() {
                         </div>
                       )}
                     </div>
-                    {isUser && (
-                      <div aria-hidden="true" style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, background: `${COLORS.iris}18`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>
-                        <UserOutlined />
-                      </div>
-                    )}
                   </article>
                 );
               })}
-              {loading && (
-                <div role="status" aria-live="polite" style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 10, background: `${COLORS.iris}10`, color: COLORS.iris, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><RobotOutlined /></div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ padding: '12px 16px', background: '#fff', borderRadius: '16px 16px 16px 4px', border: `1px solid ${COLORS.border}` }}>
-                      <Spin size="small" /> <Text type="secondary" style={{ marginLeft: 6, fontSize: 13 }}>思考中...</Text>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {loading && <div className="wb-stream-space" aria-hidden="true" />}
             </>
           )}
-          <div ref={msgEndRef} />
         </div>
 
         {/* Input area */}
-        <div style={{ padding: isMobile ? '8px 8px 10px' : '12px 20px 16px', background: '#fff', borderTop: `1px solid ${COLORS.border}`, flexShrink: 0 }}>
+        <div className="wb-composer-panel" style={{ padding: isMobile ? '8px 8px 10px' : '12px 20px 16px', background: '#fff', borderTop: `1px solid ${COLORS.border}`, flexShrink: 0 }}>
           {/* @ mentions for team */}
           {mode === 'team' && teamMembers.length > 0 && (
             <Space size={4} wrap style={{ marginBottom: 8 }}>
@@ -1171,14 +1302,15 @@ export default function Workbench() {
               ref={composerRef}
               aria-label="发送给数字员工的消息"
               value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={handleKeyDown}
-              placeholder={targetReady ? '输入消息，Enter 发送，Shift+Enter 换行' : '请先选择对象'}
-              autoSize={{ minRows: 1, maxRows: 5 }} disabled={!targetReady || loading}
+              placeholder={targetReady ? '描述目标、素材和你希望得到的结果…' : '请先选择对象'}
+              autoSize={{ minRows: 1, maxRows: 6 }} disabled={!targetReady}
               style={{ flex: 1, borderRadius: 10 }}
             />
             {loading ? (
               <Button
                 danger
                 icon={<StopOutlined />}
+                aria-label={stoppingRun ? '正在停止生成' : '停止生成'}
                 onClick={handleStopRun}
                 loading={stoppingRun}
                 disabled={!activeRunId}
@@ -1187,12 +1319,15 @@ export default function Workbench() {
                 {isMobile ? null : stoppingRun ? '正在停止' : '停止'}
               </Button>
             ) : (
-              <Button type="primary" icon={<SendOutlined />} onClick={handleSend}
+              <Button type="primary" icon={<SendOutlined />} aria-label="发送消息" onClick={handleSend}
                 disabled={!targetReady || (!inputValue.trim() && pendingFiles.length === 0)}
                 style={{ borderRadius: 10, height: 40, fontWeight: 500 }}>
                 {isMobile ? null : '发送'}
               </Button>
             )}
+          </div>
+          <div className="wb-composer-hint" aria-live="polite">
+            {loading ? '回复生成中；你可以继续输入，草稿不会丢失。' : 'Enter 发送 · Shift + Enter 换行'}
           </div>
         </div>
       </main>

@@ -1,6 +1,6 @@
 // 全局新人帮助：首次进入自动播放聚焦引导，问号抽屉提供快速说明、手册入口和重播能力。
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Drawer, Space, Tour, Typography, type TourProps } from 'antd';
 import {
   BookOutlined,
@@ -17,6 +17,7 @@ import './UserHelp.css';
 const { Paragraph, Text, Title } = Typography;
 
 export const START_USER_GUIDE_EVENT = 'agent-studio:start-user-guide';
+export const OPEN_USER_HELP_EVENT = 'agent-studio:open-user-help';
 const GUIDE_STORAGE_KEY = 'agent-studio:user-guide:v1';
 
 type UserHelpCenterProps = {
@@ -36,6 +37,7 @@ export default function UserHelpCenter({
   onMobileGuideClose,
 }: UserHelpCenterProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   const [guideCurrent, setGuideCurrent] = useState(0);
@@ -66,6 +68,12 @@ export default function UserHelpCenter({
     };
     // 首次进入只在组件挂载时判断；响应式状态变化不能重复触发。
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const openHelp = () => setDrawerOpen(true);
+    window.addEventListener(OPEN_USER_HELP_EVENT, openHelp);
+    return () => window.removeEventListener(OPEN_USER_HELP_EVENT, openHelp);
   }, []);
 
   const steps = useMemo<TourProps['steps']>(() => [
@@ -107,7 +115,7 @@ export default function UserHelpCenter({
     <>
       <button
         type="button"
-        className="global-help-trigger"
+        className={`global-help-trigger${location.pathname === '/workbench' ? ' is-hidden-on-workbench' : ''}`}
         data-user-guide="help-trigger"
         aria-label="打开帮助与新手指引"
         onClick={() => setDrawerOpen(true)}

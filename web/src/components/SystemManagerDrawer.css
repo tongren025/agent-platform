@@ -5,6 +5,10 @@
   z-index: 180;
 }
 
+.system-manager-trigger.is-hidden-on-workbench {
+  display: none;
+}
+
 .system-manager-trigger__button.ant-btn {
   width: 52px;
   height: 52px;

@@ -88,6 +88,10 @@
   font-size: 18px;
 }
 
+.global-help-trigger.is-hidden-on-workbench {
+  display: none;
+}
+
 .user-help-drawer .ant-drawer-body {
   padding: 18px;
   background: #f6f4ef;

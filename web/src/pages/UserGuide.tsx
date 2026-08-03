@@ -194,11 +194,11 @@ export default function UserGuide() {
       keywords: '问题 失败 卡 慢 不回答 模型 404 重试 刷新 排查',
       content: (
         <div className="guide-faq">
-          <details><summary>模型为什么很慢？</summary><p>高推理模型、图片和视频本身需要更久。系统会处理流中断并尝试备用模型；若一直等待，可打开右下角系统管家检查模型与运行状态。</p></details>
+          <details><summary>模型为什么很慢？</summary><p>高推理模型、图片和视频本身需要更久。系统会处理流中断并尝试备用模型；若一直等待，可打开系统管家检查模型与运行状态（工作台入口在对话标题栏，其他页面在右下角）。</p></details>
           <details><summary>员工为什么不回答？</summary><p>先确认员工有文字模型；生图员工还需要图片模型，视频员工还需要视频模型。系统会自动过滤把图片模型当文字模型的错误配置。</p></details>
           <details><summary>画布为什么只看到几个节点？</summary><p>这是逐镜聚焦模式。系统只展示当前阶段和必要上游资产，避免整季节点一起渲染导致卡顿。可在左侧切换集和镜头。</p></details>
           <details><summary>生成错了会不会影响整季？</summary><p>不会。逐镜模式按当前 G 镜头创建和替换节点，重新生成只处理当前镜头。</p></details>
-          <details><summary>仍然解决不了怎么办？</summary><p>点击右下角耳机图标打开系统管家，它会读取当前页面和最近运行状态；描述你点了什么、看到了什么即可。</p></details>
+          <details><summary>仍然解决不了怎么办？</summary><p>点击耳机图标打开系统管家（工作台入口在对话标题栏，其他页面在右下角）。它会读取当前页面和最近运行状态；描述你点了什么、看到了什么即可。</p></details>
         </div>
       ),
     },
