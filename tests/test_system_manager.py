@@ -211,6 +211,56 @@ def test_mcp_test_api_returns_clear_gateway_timeout(app_client, tmp_path, monkey
     assert '"status": "timeout"' in health
 
 
+def test_confirming_mcp_automatically_tests_connection(app_client, monkeypatch):
+    import app.api.system_manager as system_manager_api
+    from app.dependencies import system_manager
+
+    resource = {
+        "serverCode": "private-books",
+        "name": "书籍 MCP",
+        "transportType": "streamable_http",
+        "url": "http://10.183.29.49:6336/mcp",
+        "authType": "bearer",
+    }
+    monkeypatch.setattr(
+        system_manager,
+        "confirm",
+        lambda _proposal_id, owner="local": {
+            "action": "add_mcp",
+            "message": "已保存",
+            "resource": resource,
+            "changeId": "change_test",
+        },
+    )
+    health: dict = {}
+    monkeypatch.setattr(
+        system_manager,
+        "record_mcp_health",
+        lambda server_code, **kwargs: health.update(serverCode=server_code, **kwargs),
+    )
+
+    async def successful_probe(runtime):
+        assert runtime.server_code == "private-books"
+        return [SimpleNamespace(original_name="search_books")]
+
+    monkeypatch.setattr(system_manager_api, "probe_mcp_server", successful_probe)
+
+    response = app_client.post(
+        "/api/v1/agentapp/system-manager/actions/confirm",
+        json={"proposalId": "proposal_1234567890"},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()["data"]
+    assert payload["connectionTest"] == {
+        "status": "connected",
+        "toolCount": 1,
+        "tools": ["search_books"],
+    }
+    assert "连接成功" in payload["message"]
+    assert health["status"] == "connected"
+
+
 def test_natural_language_mcp_infers_config_without_server_code(tmp_path):
     service = _service(root_dir=tmp_path / "manager")
 
@@ -236,6 +286,47 @@ def test_ip_mcp_gets_readable_default_name(tmp_path):
 
     assert proposal.payload["definition"]["serverCode"] == "10-183-29-49"
     assert proposal.payload["definition"]["name"] == "MCP 10.183.29.49"
+
+
+def test_natural_language_mcp_token_is_encrypted_before_and_after_confirmation(tmp_path):
+    from app.services.mcp_oauth import EncryptedMcpTokenStorage
+
+    secret = "unit-test-token+/="
+    root = tmp_path / "manager"
+    first = _service(root_dir=root)
+
+    reply = first.chat(
+        "接入一下这个 MCP：http://10.183.29.49:6336/mcp\n"
+        f"token: {secret}",
+        "/advanced/tools",
+        owner="alice",
+    )
+
+    assert reply["proposal"]["action"] == "add_mcp"
+    assert "加密" in reply["answer"]
+    persisted_before_confirm = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in root.rglob("*.json")
+    )
+    assert secret not in persisted_before_confirm
+
+    # 模拟确认请求落到另一个进程：提案必须可从磁盘恢复，但仍不能含明文凭证。
+    second = _service(root_dir=root)
+    result = second.confirm(reply["proposal"]["proposalId"], owner="alice")
+
+    definition = second._mcps.get("10-183-29-49")
+    assert result["action"] == "add_mcp"
+    assert definition.auth_type == "bearer"
+    assert definition.headers is None
+    storage = EncryptedMcpTokenStorage(
+        "10-183-29-49",
+        root_dir=tmp_path / "mcp-auth",
+    )
+    assert storage.get_static_headers() == {
+        "Authorization": f"Bearer {secret}",
+    }
+    credential_file = tmp_path / "mcp-auth" / "10-183-29-49.json"
+    assert secret not in credential_file.read_text(encoding="utf-8")
 
 
 def test_replacing_mcp_clears_stale_health(tmp_path):

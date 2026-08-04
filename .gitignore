@@ -6,6 +6,8 @@ appsettings.Development.json
 _tok.txt
 *_tok.txt
 data/.secrets/
+data/mcp-auth/
+data/system-manager/proposals/
 
 # 本地 Git worktree 是另一个检出目录，不是可部署文件；其中代码应先形成提交再合并。
 .worktrees/

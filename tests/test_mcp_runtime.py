@@ -210,6 +210,45 @@ async def test_probe_private_network_timeout_explains_deployment_boundary(
         await mcp_runtime.probe_mcp_server(server, timeout_seconds=0.01)
 
 
+def test_bearer_auth_is_loaded_from_encrypted_mcp_storage(tmp_path, monkeypatch):
+    import app.services.mcp_oauth as oauth_module
+
+    monkeypatch.setattr(oauth_module, "BASE_DIR", tmp_path)
+    storage = oauth_module.EncryptedMcpTokenStorage("private-books")
+    storage.set_static_headers({"Authorization": "Bearer encrypted-at-rest"})
+    server = RuntimeMcpServer(
+        server_code="private-books",
+        name="private-books",
+        transport_type="streamable_http",
+        url="http://10.183.29.49:6336/mcp",
+        auth_type="bearer",
+    )
+
+    assert mcp_runtime._resolved_http_headers(server) == {
+        "Authorization": "Bearer encrypted-at-rest",
+    }
+    raw = (tmp_path / "data" / "mcp-auth" / "private-books.json").read_text(
+        encoding="utf-8"
+    )
+    assert "encrypted-at-rest" not in raw
+
+
+def test_bearer_auth_keeps_existing_environment_header(monkeypatch):
+    monkeypatch.setenv("LEGACY_MCP_AUTHORIZATION", "Bearer legacy-env-token")
+    server = RuntimeMcpServer(
+        server_code="legacy-bearer",
+        name="legacy-bearer",
+        transport_type="streamable_http",
+        url="https://example.com/mcp",
+        headers={"Authorization": "${LEGACY_MCP_AUTHORIZATION}"},
+        auth_type="bearer",
+    )
+
+    assert mcp_runtime._resolved_http_headers(server) == {
+        "Authorization": "Bearer legacy-env-token",
+    }
+
+
 async def test_stdio_missing_command_fails_before_starting_transport(monkeypatch):
     monkeypatch.setattr(mcp_runtime.shutil, "which", lambda _command: None)
 

@@ -122,6 +122,21 @@ def _resolved_env(env: dict[str, str] | None) -> dict[str, str] | None:
     return _resolved_secret_refs(env, label="环境变量")
 
 
+def _resolved_http_headers(server: RuntimeMcpServer) -> dict[str, str]:
+    """合并注册表非敏感头与加密凭证；明文只在本次请求进程内存在。"""
+    headers = _resolved_secret_refs(server.headers, label="请求头") or {}
+    auth_type = (server.auth_type or "none").strip().lower()
+    has_authorization = any(name.lower() == "authorization" for name in headers)
+    if auth_type == "bearer" and not has_authorization:
+        from app.services.mcp_oauth import EncryptedMcpTokenStorage
+
+        static_headers = EncryptedMcpTokenStorage(server.server_code).get_static_headers()
+        if not static_headers:
+            raise ValueError(f"MCP 服务 {server.server_code} 尚未保存 Bearer 凭证")
+        headers.update(static_headers)
+    return headers
+
+
 def _command_available(command: str) -> bool:
     """检查 stdio 命令是否能在当前应用服务器启动。"""
     return shutil.which(command) is not None
@@ -189,9 +204,10 @@ async def _open_session(
 
             client = http_client
             if client is None and (
-                server.headers or (server.auth_type or "none").lower() == "oauth"
+                server.headers
+                or (server.auth_type or "none").lower() in {"oauth", "bearer"}
             ):
-                headers = _resolved_secret_refs(server.headers, label="请求头") or {}
+                headers = _resolved_http_headers(server)
                 auth = None
                 if (server.auth_type or "none").lower() == "oauth":
                     from app.services.mcp_oauth import mcp_oauth_coordinator
@@ -211,7 +227,7 @@ async def _open_session(
                 raise ValueError(f"MCP 服务 {server.server_code} 缺少 url")
             from mcp.client.sse import sse_client
 
-            headers = _resolved_secret_refs(server.headers, label="请求头") or None
+            headers = _resolved_http_headers(server) or None
             auth = None
             if (server.auth_type or "none").lower() == "oauth":
                 from app.services.mcp_oauth import mcp_oauth_coordinator

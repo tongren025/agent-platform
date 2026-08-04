@@ -1,12 +1,14 @@
-"""MCP OAuth 登录协调与加密令牌存储。
+"""MCP 登录协调与加密凭证存储。
 
 授权过程由 MCP SDK 完成；本服务只负责把浏览器跳转与回调接到 SDK，并使用与
-AI Provider 相同的 Fernet 主密钥加密保存 token/client registration。
+AI Provider 相同的 Fernet 主密钥加密保存 OAuth token、client registration 和
+用户直接提供的静态请求头。MCP 注册表始终不保存静态凭证明文。
 """
 from __future__ import annotations
 
 import asyncio
 import json
+import re
 import secrets
 import time
 import urllib.parse
@@ -24,16 +26,16 @@ from app.services.ai import LocalSecretCipher
 
 
 class EncryptedMcpTokenStorage:
-    """单个 MCP 服务的 SDK TokenStorage 实现，全部字段加密后落盘。"""
+    """单个 MCP 服务的加密凭证存储，同时实现 SDK TokenStorage。"""
 
-    def __init__(self, server_code: str) -> None:
+    def __init__(self, server_code: str, root_dir: Path | None = None) -> None:
         safe = "".join(char for char in server_code if char.isalnum() or char in "-_")
         if not safe or safe != server_code:
             raise ValueError("非法 MCP serverCode")
-        root = BASE_DIR / "data" / "mcp-auth"
+        root = Path(root_dir) if root_dir is not None else BASE_DIR / "data" / "mcp-auth"
         self._path = root / f"{safe}.json"
         self._cipher = LocalSecretCipher(
-            BASE_DIR / "data" / ".secrets" / "provider-encryption.key",
+            root.parent / ".secrets" / "provider-encryption.key",
         )
 
     def _load(self) -> dict[str, Any]:
@@ -72,6 +74,51 @@ class EncryptedMcpTokenStorage:
         payload = self._load()
         payload["clientInfo"] = client_info.model_dump(mode="json", exclude_none=True)
         self._save(payload)
+
+    def get_static_headers(self) -> dict[str, str]:
+        """读取已加密保存的静态鉴权头，仅供 MCP 运行时在内存中使用。"""
+        raw = self._load().get("staticHeaders")
+        if not isinstance(raw, dict):
+            return {}
+        return {
+            str(name): str(value)
+            for name, value in raw.items()
+            if str(name).strip() and isinstance(value, str)
+        }
+
+    def set_static_headers(self, headers: dict[str, str]) -> None:
+        """校验并加密保存静态请求头，拒绝换行注入和非法头名。"""
+        if not isinstance(headers, dict) or not headers or len(headers) > 100:
+            raise ValueError("MCP 静态请求头不能为空或超过 100 项")
+        normalized: dict[str, str] = {}
+        header_name_re = re.compile(r"^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$")
+        for raw_name, raw_value in headers.items():
+            name = str(raw_name).strip()
+            value = str(raw_value).strip()
+            if not header_name_re.fullmatch(name):
+                raise ValueError("MCP 静态请求头名称不合法")
+            if not value or "\r" in value or "\n" in value:
+                raise ValueError(f"MCP 静态请求头 {name} 的值不合法")
+            normalized[name] = value
+        payload = self._load()
+        payload["staticHeaders"] = normalized
+        self._save(payload)
+
+    def has_static_headers(self) -> bool:
+        """只返回是否已有静态凭证，不向上层暴露内容。"""
+        try:
+            return bool(self.get_static_headers())
+        except Exception:
+            return False
+
+    def clear_static_headers(self) -> None:
+        """仅清除静态请求头，保留同一服务可能已有的 OAuth 状态。"""
+        payload = self._load()
+        payload.pop("staticHeaders", None)
+        if payload:
+            self._save(payload)
+        elif self._path.exists():
+            self._path.unlink()
 
     def has_tokens(self) -> bool:
         """仅返回是否已有 token，不向上层暴露 token 内容。"""

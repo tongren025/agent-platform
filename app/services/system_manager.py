@@ -154,7 +154,7 @@ PAGE_GUIDES: dict[str, dict[str, Any]] = {
 
 @dataclass
 class _Proposal:
-    """短时待确认操作；仅驻留当前进程，不把敏感内容写入日志或磁盘。"""
+    """短时待确认操作；可加密持久化，敏感内容不以明文写入日志或磁盘。"""
 
     action: str
     payload: dict[str, Any]
@@ -265,6 +265,22 @@ class SystemManagerService:
             from app.services.mcp_oauth import mcp_oauth_coordinator
 
             auth_status = mcp_oauth_coordinator.token_status(item.server_code)
+        elif (item.auth_type or "none").lower() == "bearer":
+            from app.services.mcp_oauth import EncryptedMcpTokenStorage
+
+            has_header_reference = any(
+                name.lower() == "authorization"
+                for name in (item.headers or {})
+            )
+            has_encrypted_headers = EncryptedMcpTokenStorage(
+                item.server_code,
+                root_dir=self._root.parent / "mcp-auth",
+            ).has_static_headers()
+            auth_status = (
+                "authorized"
+                if (has_header_reference and not missing_env) or has_encrypted_headers
+                else "login_required"
+            )
         status = "incomplete" if missing else ("auth_required" if missing_env else "configured")
         if auth_status == "login_required" and not missing:
             status = "auth_required"
@@ -825,15 +841,66 @@ class SystemManagerService:
             parsed = urllib.parse.urlparse(url)
             host = parsed.hostname or "remote-mcp"
             code = re.sub(r"[^a-z0-9-]+", "-", host.lower()).strip("-")[:64]
-            auth_type = "oauth" if any(word in lowered for word in ("oauth", "登录", "授权")) else "none"
-            return {
+            static_headers = cls._extract_static_bearer_headers(message)
+            auth_type = (
+                "bearer"
+                if static_headers
+                else "oauth" if any(word in lowered for word in ("oauth", "登录", "授权")) else "none"
+            )
+            payload = {
                 "serverCode": code or "remote-mcp",
                 "name": explicit_name or cls._friendly_mcp_name(host),
                 "transportType": "streamable_http",
                 "url": url,
                 "authType": auth_type,
             }
+            if static_headers:
+                # 仅供当前请求转入加密提案；不会进入注册表、会话状态或 API 响应。
+                payload["_staticHeaders"] = static_headers
+            return payload
         return None
+
+    @staticmethod
+    def _extract_static_bearer_headers(message: str) -> dict[str, str] | None:
+        """从自然语言的 token/API Key 行提取 Bearer 凭证，不回显其内容。"""
+        match = re.search(
+            r"(?im)(?<![\w?&-])(?:access[_ -]?token|token|api[_ -]?key|"
+            r"authorization|访问令牌|鉴权令牌)\s*[:：=]\s*"
+            r"(?:bearer\s+)?[\"'`]?([^\s，,；;\"'`]+)",
+            message,
+        )
+        if not match:
+            return None
+        token = match.group(1).strip()
+        if not token or token == "***" or len(token) > 4096:
+            return None
+        return {"Authorization": f"Bearer {token}"}
+
+    def _mcp_credential_cipher(self):
+        """使用数据卷中的公共主密钥加解密短时 MCP 提案凭证。"""
+        from app.services.ai import LocalSecretCipher
+
+        return LocalSecretCipher(
+            self._root.parent / ".secrets" / "provider-encryption.key",
+        )
+
+    def _seal_mcp_headers(self, headers: dict[str, str]) -> dict[str, str]:
+        """把静态请求头封装为可跨进程确认、但不含明文的提案字段。"""
+        plaintext = json.dumps(headers, ensure_ascii=False, separators=(",", ":"))
+        return {
+            "kind": "static-headers-fernet-v1",
+            "encrypted": self._mcp_credential_cipher().encrypt(plaintext),
+        }
+
+    def _unseal_mcp_headers(self, envelope: Any) -> dict[str, str]:
+        """解开确认提案中的静态请求头并校验基本结构。"""
+        if not isinstance(envelope, dict) or envelope.get("kind") != "static-headers-fernet-v1":
+            raise ValueError("MCP 凭证提案格式无效")
+        encrypted = str(envelope.get("encrypted") or "")
+        raw = json.loads(self._mcp_credential_cipher().decrypt(encrypted))
+        if not isinstance(raw, dict) or not raw:
+            raise ValueError("MCP 凭证提案内容无效")
+        return {str(name): str(value) for name, value in raw.items()}
 
     @staticmethod
     def _safe_mcp_summary(payload: dict[str, Any]) -> str:
@@ -842,6 +909,8 @@ class SystemManagerService:
         target = payload.get("command") if transport == "stdio" else payload.get("url")
         env_names = list((payload.get("env") or {}).keys())
         suffix = f"；需要环境变量：{', '.join(env_names)}" if env_names else ""
+        if payload.get("authType") == "bearer":
+            suffix += "；鉴权：Bearer（凭证已加密）"
         return f"添加 MCP「{payload.get('name')}」（{transport}，{target or '目标未填写'}）{suffix}"
 
     @staticmethod
@@ -938,6 +1007,13 @@ class SystemManagerService:
             message,
             flags=re.IGNORECASE,
         )
+        safe_message = re.sub(
+            r"(?im)((?<![\w?&-])(?:access[_ -]?token|token|api[_ -]?key|"
+            r"authorization|访问令牌|鉴权令牌)\s*[:：=]\s*(?:bearer\s+)?)"
+            r"[\"'`]?[^\s，,；;\"'`]+",
+            r"\1***",
+            safe_message,
+        )
         data["messages"].extend([
             {"role": "user", "content": safe_message, "pagePath": page_path, "createdAt": time.time()},
             {
@@ -974,6 +1050,24 @@ class SystemManagerService:
                 path.unlink(missing_ok=True)
         except Exception:
             return
+
+    def _pending_mcp_credential(self, proposal_id: str | None, owner: str) -> Any:
+        """读取待改名提案的加密凭证封套，不解密也不向会话或响应暴露。"""
+        if not proposal_id:
+            return None
+        proposal = self._proposals.get(proposal_id)
+        if proposal is not None:
+            return proposal.payload.get("credential") if proposal.owner == owner else None
+        try:
+            path = self._proposal_path(proposal_id)
+            if not path.exists():
+                return None
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            if str(raw.get("owner") or "local") != owner:
+                return None
+            return (raw.get("payload") or {}).get("credential")
+        except Exception:
+            return None
 
     @staticmethod
     def _mcp_focus_state(
@@ -1157,13 +1251,18 @@ class SystemManagerService:
             if item is None and pending_definition is not None:
                 updated_definition = dict(pending_definition)
                 updated_definition["name"] = requested_name
+                pending_proposal_id = str(session_state.get("pendingProposalId") or "")
+                credential = self._pending_mcp_credential(pending_proposal_id, owner)
                 self._discard_proposal(
-                    str(session_state.get("pendingProposalId") or ""),
+                    pending_proposal_id,
                     owner,
                 )
+                proposal_payload: dict[str, Any] = {"definition": updated_definition}
+                if credential is not None:
+                    proposal_payload["credential"] = credential
                 proposal = self._add_proposal(
                     "add_mcp",
-                    {"definition": updated_definition},
+                    proposal_payload,
                     self._safe_mcp_summary(updated_definition),
                     owner=owner,
                 )
@@ -1343,7 +1442,9 @@ class SystemManagerService:
 
         mcp_payload = self._extract_mcp_config(text) or self._infer_mcp_config(text)
         if mcp_payload and "mcp" in text.lower():
-            item = McpServerDefinition.model_validate(mcp_payload)
+            normalized_payload = dict(mcp_payload)
+            static_headers = normalized_payload.pop("_staticHeaders", None)
+            item = McpServerDefinition.model_validate(normalized_payload)
             if not item.server_code:
                 raise ValueError("MCP 配置缺少 serverCode")
             for name, value in {**(item.env or {}), **(item.headers or {})}.items():
@@ -1352,22 +1453,26 @@ class SystemManagerService:
                     raise ValueError(
                         f"敏感字段 {name} 不能直接写入 MCP 配置，请使用 ${{ENV_VAR}} 引用 .env 环境变量"
                     )
+            definition = item.model_dump(by_alias=True, mode="json")
+            proposal_payload: dict[str, Any] = {"definition": definition}
+            if static_headers:
+                proposal_payload["credential"] = self._seal_mcp_headers(static_headers)
             proposal = self._add_proposal(
                 "add_mcp",
-                {"definition": item.model_dump(by_alias=True, mode="json")},
-                self._safe_mcp_summary(mcp_payload),
+                proposal_payload,
+                self._safe_mcp_summary(definition),
                 owner=owner,
             )
             response.update({
                 "mode": "manage",
                 "answer": (
                     f"我识别到这是 MCP「{item.name}」，编码为 `{item.server_code}`。"
-                    "连接方式已经解析完成；名称或编码不合适可以直接说"
+                    + ("Token 已加密封装，确认后会安全保存；" if static_headers else "")
+                    + "连接方式已经解析完成；名称或编码不合适可以直接说"
                     "“名字改成 …”，确认后才会保存。"
                 ),
                 "proposal": proposal,
             })
-            definition = item.model_dump(by_alias=True, mode="json")
             return finish(
                 response,
                 state_update=self._mcp_focus_state(
@@ -1509,9 +1614,22 @@ class SystemManagerService:
         if proposal.action == "add_mcp":
             item = McpServerDefinition.model_validate(proposal.payload["definition"])
             previous = self._mcps.get(item.server_code)
+            from app.services.mcp_oauth import EncryptedMcpTokenStorage
+
+            credential_storage = EncryptedMcpTokenStorage(
+                item.server_code,
+                root_dir=self._root.parent / "mcp-auth",
+            )
+            credential = proposal.payload.get("credential")
+            if credential is not None:
+                credential_storage.set_static_headers(
+                    self._unseal_mcp_headers(credential)
+                )
+            elif (item.auth_type or "none").lower() != "bearer":
+                credential_storage.clear_static_headers()
             saved = self._mcps.save(item)
             self._clear_mcp_runtime_state(saved.server_code)
-            message = f"MCP「{saved.name}」已保存。下一步请测试连接，再绑定给数字员工。"
+            message = f"MCP「{saved.name}」及其鉴权配置已安全保存。下一步将验证连接。"
             change_id = self._save_change(
                 owner,
                 proposal.action,
@@ -1633,9 +1751,12 @@ class SystemManagerService:
                 raise ValueError(f"MCP 不存在：{server_code}")
             before = item.model_dump(by_alias=True, mode="json")
             self._mcps.delete(server_code)
-            from app.services.mcp_oauth import mcp_oauth_coordinator
+            from app.services.mcp_oauth import EncryptedMcpTokenStorage
 
-            mcp_oauth_coordinator.clear_tokens(server_code)
+            EncryptedMcpTokenStorage(
+                server_code,
+                root_dir=self._root.parent / "mcp-auth",
+            ).clear()
             self._clear_mcp_runtime_state(server_code)
             message = f"MCP「{item.name}」已删除。"
             change_id = self._save_change(owner, proposal.action, "mcp", server_code, before)

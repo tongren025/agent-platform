@@ -68,8 +68,8 @@ def chat(body: ManagerChatBody, request: Request):
 
 
 @router.post("/actions/confirm")
-def confirm_action(body: ConfirmActionBody, request: Request):
-    """确认并执行管家给出的单次变更提案。"""
+async def confirm_action(body: ConfirmActionBody, request: Request):
+    """确认并执行提案；新增 MCP 保存后立即真实连接并发现工具。"""
     try:
         result = system_manager.confirm(
             body.proposal_id,
@@ -77,6 +77,37 @@ def confirm_action(body: ConfirmActionBody, request: Request):
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if result.get("action") == "add_mcp" and isinstance(result.get("resource"), dict):
+        runtime = RuntimeMcpServer.model_validate(result["resource"])
+        try:
+            specs = await probe_mcp_server(runtime)
+            tool_names = [spec.original_name for spec in specs]
+            system_manager.record_mcp_health(
+                runtime.server_code,
+                status="connected",
+                tool_names=tool_names,
+            )
+            result["connectionTest"] = {
+                "status": "connected",
+                "toolCount": len(tool_names),
+                "tools": tool_names,
+            }
+            result["message"] = (
+                f"MCP「{runtime.name}」已安全保存并连接成功，"
+                f"发现 {len(tool_names)} 个工具。现在可以绑定给数字员工。"
+            )
+        except Exception as exc:
+            error = str(exc)
+            status = "timeout" if isinstance(exc, McpConnectionTimeoutError) else "error"
+            system_manager.record_mcp_health(
+                runtime.server_code,
+                status=status,
+                error=error,
+            )
+            result["connectionTest"] = {"status": status, "error": error}
+            result["message"] = (
+                f"MCP「{runtime.name}」已安全保存，但自动连接测试失败：{error}"
+            )
     return ok(result)
 
 
