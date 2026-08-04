@@ -13,6 +13,12 @@
       "skillPath": ".agents/skills/belt/SKILL.md",
       "computedHash": "a74a9ff97aaba51c241cb77b31aa03c2fa8bb8c91e5cbd2ac264b8e528d06c87"
     },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "7edd436132b43ea2973710f0c28a9879c9b0910651eb89a991a7e98cb6dbbacb"
+    },
     "remotion-render": {
       "source": "halt-catch-fire/skills",
       "sourceType": "github",
