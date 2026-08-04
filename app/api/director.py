@@ -5,7 +5,7 @@ import json
 import uuid
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from app.api import production as production_api
@@ -50,7 +50,11 @@ from app.services.production_quality import (
 )
 
 
-router = APIRouter(prefix="/api/v1/agentapp/director", tags=["director"])
+router = APIRouter(
+    prefix="/api/v1/agentapp/director",
+    tags=["director"],
+    dependencies=[Depends(production_api._require_project_membership)],
+)
 SPEC_STAGES = ("script", "storyboard", "img_prompt", "vid_prompt")
 ACTIVE_VIDEO_STATUSES = {"pending", "in_progress", "queued", "processing", "running"}
 READY_VIDEO_STATUSES = {"completed", "complete", "succeeded"}

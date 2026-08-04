@@ -25,6 +25,7 @@ export default function Tools() {
 
   const [mcpOpen, setMcpOpen] = useState(false);
   const [mcpEditing, setMcpEditing] = useState<any>(null);
+  const [testingMcp, setTestingMcp] = useState('');
   const [mcpForm] = Form.useForm();
 
   const fetchAll = () => {
@@ -68,7 +69,7 @@ export default function Tools() {
         name: v.name,
         description: v.description || '',
         command: v.command || '',
-        args: v.args ? v.args.split('\n').filter((s: string) => s.trim()) : [],
+        commandArgs: v.args ? v.args.split('\n').filter((s: string) => s.trim()) : [],
         url: v.url || '',
         transportType: v.transportType || 'stdio',
       };
@@ -81,6 +82,18 @@ export default function Tools() {
       setMcpOpen(false);
       fetchAll();
     } catch (e: any) { if (e.message) message.error(e.message); }
+  };
+
+  const handleTestMcp = async (serverCode: string) => {
+    setTestingMcp(serverCode);
+    try {
+      const result = await api.testSystemManagerMcp(serverCode);
+      message.success(`连接成功，发现 ${result.toolCount} 个工具`);
+    } catch (e: any) {
+      message.error(e.message || 'MCP 连接失败');
+    } finally {
+      setTestingMcp('');
+    }
   };
 
   if (loading) return <Spin size="large" style={{ display: 'block', marginTop: isMobile ? 48 : 120, textAlign: 'center' }} />;
@@ -176,14 +189,15 @@ export default function Tools() {
                 { title: '命令', dataIndex: 'command', key: 'command', ellipsis: true },
                 { title: '描述', dataIndex: 'description', key: 'description', ellipsis: true },
                 {
-                  title: '操作', key: 'actions', width: 150,
+                  title: '操作', key: 'actions', width: 210,
                   render: (_: unknown, r: any) => (
                     <Space>
+                      <Button type="link" size="small" loading={testingMcp === r.serverCode} onClick={() => void handleTestMcp(r.serverCode)}>测试</Button>
                       <Button type="link" size="small" onClick={() => {
                         setMcpEditing(r);
                         mcpForm.setFieldsValue({
                           serverCode: r.serverCode, name: r.name, description: r.description,
-                          command: r.command, args: r.args?.join('\n') ?? '', url: r.url,
+                          command: r.command, args: r.commandArgs?.join('\n') ?? '', url: r.url,
                           transportType: r.transportType, env: r.env ? JSON.stringify(r.env, null, 2) : '',
                         });
                         setMcpOpen(true);

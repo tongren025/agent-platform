@@ -53,6 +53,8 @@ class CoreSettings(BaseSettings):
     admin_password: str = "admin123"
     admin_secret: str = ""
     admin_token_ttl: int = 12 * 3600
+    # 生产 SPA 通过 app 的 /api/admin 同源代理访问独立管理端进程。
+    admin_api_url: str = "http://127.0.0.1:8001"
 
     # LLM / Embedding(M3 起用,国内 DashScope)
     # 后台托管 provider API Key 的 Fernet 主密钥；留空时生成到持久化 data/.secrets。

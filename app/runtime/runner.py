@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Awaitable, Callable, Optional
 
 import openai
@@ -23,6 +23,7 @@ from app.runtime.loop import (
     AgentLoopResult,
     ToolHandler,
     run_agent_loop,
+    run_responses_agent_loop,
 )
 from app.runtime.context_compaction import compact_tool_result
 from app.runtime.mcp import mcp_tool_handlers
@@ -32,6 +33,10 @@ logger = logging.getLogger(__name__)
 
 DEEP_AGENT_CHECKPOINT_KEY = "deepAgentCheckpoint"
 AUTOMATIC_CHAT_FALLBACK_LIMIT = 4
+
+
+def _is_gpt_56_model(model_id: str) -> bool:
+    return "gpt-5.6" in str(model_id or "").strip().lower()
 
 
 @dataclass
@@ -291,7 +296,7 @@ async def run_agent(
         return run_result
 
     client, resolved_model, selected_model_id = resolved_candidates[0]
-    if "gpt-5.6" in resolved_model.lower() and reasoning_effort is None:
+    if _is_gpt_56_model(resolved_model) and reasoning_effort is None:
         reasoning_effort = "medium"
     if selected_model_id != model_id:
         logger.warning(
@@ -356,13 +361,59 @@ async def run_agent(
         # MCP 是可选增强：只在员工绑定了服务时建立会话并追加工具；
         # 未配置或单个服务故障时，现有本地工具与 AgentLoop 原样继续。
         async with mcp_tool_handlers(visible_mcp_servers) as mcp_handlers:
-            loop_result: AgentLoopResult = await run_agent_loop(
+            all_tools = [*tool_handlers, *mcp_handlers]
+            configured_surface = str(
+                model_policy.get("api_surface") or "auto"
+            ).strip().lower()
+            use_responses = configured_surface == "responses" or (
+                configured_surface == "auto"
+                and _is_gpt_56_model(resolved_model)
+                and bool(all_tools)
+                and reasoning_effort != "none"
+            )
+            if configured_surface == "chat_completions":
+                use_responses = False
+
+            loop_runner = (
+                run_responses_agent_loop if use_responses else run_agent_loop
+            )
+            options.api_surface = (
+                "responses" if use_responses else "chat_completions"
+            )
+            loop_result: AgentLoopResult = await loop_runner(
                 client=client,
                 options=options,
                 system_prompt=compiled_prompt.system_prompt,
                 user_message=user_message,
-                tools=[*tool_handlers, *mcp_handlers],
+                tools=all_tools,
             )
+            if (
+                use_responses
+                and not loop_result.success
+                and not loop_result.traces
+                and loop_result.pending_approval is None
+                and bool(model_policy.get("allow_chat_fallback", True))
+            ):
+                # 部分 OpenAI 兼容代理尚未实现 /responses。仅在尚未执行工具时
+                # 安全降级，避免重复生图、视频等有成本或副作用的操作。
+                logger.warning(
+                    "Responses API 不可用，安全降级到 Chat Completions "
+                    "reasoning_effort=none (employee=%s): %s",
+                    employee_key,
+                    loop_result.final_text,
+                )
+                fallback_options = replace(
+                    options,
+                    reasoning_effort="none",
+                    api_surface="chat_completions",
+                )
+                loop_result = await run_agent_loop(
+                    client=client,
+                    options=fallback_options,
+                    system_prompt=compiled_prompt.system_prompt,
+                    user_message=user_message,
+                    tools=all_tools,
+                )
     except Exception as exc:
         logger.error("Agent loop failed for %s: %s", employee_key, exc)
         run_result.success = False

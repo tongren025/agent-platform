@@ -2,7 +2,7 @@
 from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 def _now() -> datetime:
@@ -66,6 +66,18 @@ class McpServerDefinition(RegistryEntity):
     auth_type: str = Field("none", alias="authType")
     oauth_scope: Optional[str] = Field(None, alias="oauthScope")
     description: Optional[str] = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_legacy_args(cls, data):
+        """兼容旧工具页同时写入 ``commandArgs: null`` 与实际 ``args`` 的配置。"""
+        if isinstance(data, dict) and "args" in data:
+            migrated = dict(data)
+            legacy_args = migrated.pop("args")
+            if not migrated.get("commandArgs") and legacy_args is not None:
+                migrated["commandArgs"] = legacy_args
+            return migrated
+        return data
 
     def get_key(self) -> str:
         """注册表主键：server_code。"""

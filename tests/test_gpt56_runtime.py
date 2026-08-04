@@ -204,7 +204,7 @@ async def test_responses_loop_replays_tool_output_and_preserves_reasoning():
 
 
 @pytest.mark.asyncio
-async def _legacy_runner_only_falls_back_when_proxy_compatibility_is_explicit(
+async def test_runner_only_falls_back_when_proxy_compatibility_is_explicit(
     monkeypatch,
 ):
     calls = []
@@ -266,7 +266,7 @@ async def _legacy_runner_only_falls_back_when_proxy_compatibility_is_explicit(
 
 
 @pytest.mark.asyncio
-async def _legacy_runner_does_not_silently_fallback_to_chat(monkeypatch):
+async def test_runner_does_not_silently_fallback_to_chat(monkeypatch):
     calls = []
 
     async def responses_loop(**_kwargs):
@@ -299,6 +299,8 @@ async def _legacy_runner_does_not_silently_fallback_to_chat(monkeypatch):
             default_model_policy={
                 "model_id": "gpt-5.6-sol",
                 "reasoning_effort": "high",
+                "api_surface": "responses",
+                "allow_chat_fallback": False,
             },
         ),
         compiled_prompt=PromptCompileResult(system_prompt="qa"),
@@ -313,7 +315,7 @@ async def _legacy_runner_does_not_silently_fallback_to_chat(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def _legacy_runner_does_not_fallback_after_a_tool_side_effect(
+async def test_runner_does_not_fallback_after_a_tool_side_effect(
     monkeypatch,
 ):
     calls = []
@@ -359,6 +361,7 @@ async def _legacy_runner_does_not_fallback_after_a_tool_side_effect(
             default_model_policy={
                 "model_id": "gpt-5.6-sol",
                 "reasoning_effort": "high",
+                "allow_chat_fallback": True,
             },
         ),
         compiled_prompt=PromptCompileResult(system_prompt="artist"),

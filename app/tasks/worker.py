@@ -6,6 +6,7 @@ docker-compose 里加一个 worker 服务指向这个模块即可。
 from __future__ import annotations
 
 from arq.connections import RedisSettings
+from arq.constants import default_queue_name
 
 from app.core.queue import _redis_settings
 from app.tasks.agent_task import run_agent_task
@@ -19,7 +20,8 @@ class WorkerSettings:
     redis_settings: RedisSettings = _redis_settings(conn_retries=5, conn_retry_delay=1)
     max_jobs = 10
     job_timeout = 600
-    queue_name = "default"
+    # enqueue_job 未显式指定队列时写入 arq:queue；worker 必须监听同一个键。
+    queue_name = default_queue_name
 
 
 if __name__ == "__main__":

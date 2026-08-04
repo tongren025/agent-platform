@@ -5,16 +5,21 @@ API 路由已注册。联调交给 docker-compose 环境。
 """
 from __future__ import annotations
 
+import asyncio
 import importlib
+from types import SimpleNamespace
 
 
 def test_worker_settings_importable():
     mod = importlib.import_module("app.tasks.worker")
+    from arq.constants import default_queue_name
+
     ws = mod.WorkerSettings
     assert hasattr(ws, "functions")
     assert len(ws.functions) >= 1
     assert ws.max_jobs > 0
     assert ws.job_timeout > 0
+    assert ws.queue_name == default_queue_name
 
 
 def test_agent_task_importable():
@@ -73,3 +78,32 @@ def test_tasks_list_degrades_to_empty_without_redis(app_client, monkeypatch):
 
     assert resp.status_code == 200
     assert resp.json()["data"] == []
+
+
+def test_task_view_uses_arq_job_status_api(monkeypatch):
+    """arq 0.28 的 JobDef 没有 status；状态必须通过 Job.status() 获取。"""
+    tasks_api = importlib.import_module("app.api.tasks")
+    arq_jobs = importlib.import_module("arq.jobs")
+
+    class FakeJob:
+        def __init__(self, job_id, redis):
+            self.job_id = job_id
+
+        async def info(self):
+            return SimpleNamespace(
+                enqueue_time="2026-08-04T00:00:00Z",
+                result={"assistant_message": "QA-ASYNC-OK"},
+            )
+
+        async def status(self):
+            return arq_jobs.JobStatus.complete
+
+    monkeypatch.setattr(arq_jobs, "Job", FakeJob)
+
+    view = asyncio.run(tasks_api._task_view(object(), "job-qa", {
+        "employee_key": "qa-openrouter",
+        "user_input": "ping",
+    }))
+
+    assert view["status"] == "complete"
+    assert view["result"] == {"assistant_message": "QA-ASYNC-OK"}

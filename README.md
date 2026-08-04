@@ -287,7 +287,7 @@ Redis、MinIO、Milvus 或 Neo4j；在后台配置对应服务后再启用数据
 | 服务 | 端口 | 说明 |
 |------|------|------|
 | app | 8000 | 用户端 API + 前端 SPA |
-| admin | 8001 | 管理端（用户/角色/AI 供应商治理，独立鉴权） |
+| admin | 8001 | 管理端 API（用户/角色/AI 供应商治理，独立鉴权；界面由 8000 的 SPA 提供） |
 | worker | — | arq 异步任务消费者（可独立扩容） |
 | postgres (pgvector) | 5432 | 关系数据 + 向量检索 |
 | redis | 6379 | 任务队列 / 限流 |
@@ -319,7 +319,16 @@ cp .env.example .env      # 按需修改密码/密钥
 docker compose up -d --build
 ```
 
-前端 http://localhost:8000 · 管理端 http://localhost:8001（默认 `admin/admin123`，生产请改）· Grafana http://localhost:3000
+Compose 内的 `app`、`admin`、`worker` 固定通过服务名连接 `postgres` 与 `redis`；
+`.env` 中面向宿主机开发进程的 `DATABASE_URL` / `REDIS_URL` 不会覆盖容器网络地址。
+容器数据库账号、密码和库名分别通过 `POSTGRES_USER`、`POSTGRES_PASSWORD`、`POSTGRES_DB` 配置。
+运行镜像已内置 Node.js、npm 与 npx，可直接运行工具页常用的 stdio MCP 服务器；HTTP/SSE MCP
+无需额外运行时。
+
+前端 http://localhost:8000 · 管理控制台 http://localhost:8000/admin/login（默认
+`admin/admin123`，生产请改）· 管理 API/文档 http://localhost:8001/docs · Grafana http://localhost:3000。
+生产 SPA 的 `/api/admin/*` 会由 app 同源代理到独立 admin 进程；非 Compose 部署可用
+`ADMIN_API_URL` 指定该进程地址，Compose 已固定为 `http://admin:8001`。
 
 短剧无限画布入口为 http://localhost:8000/canvas。它是主站原生页面，直接使用平台
 登录态、数字员工、模型目录、项目数据和任务 API，不加载任何第三方 HTML。画布助手
@@ -446,7 +455,8 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
 > ⚠️ 不要用 `python -m app.main` 启动——它读业务配置 `Port` 默认起在 **5311**，前端代理会对不上。
-> 管理端（可选）：`uvicorn admin.main:app --port 8001 --reload`；
+> 管理端（可选）：`uvicorn admin.main:app --port 8001 --reload`，控制台界面仍从前端
+> `/admin/login` 打开；
 > 异步任务 worker（可选，需 Redis）：`python -m app.tasks.worker`——不起它任务中心的任务会一直排队。
 
 ### 4. 启动前端
@@ -609,7 +619,8 @@ memory / evolution / ai-providers / auth 登录等完整端点以 `app/api/` 代
 | POST | `/tasks/{job_id}/retry` | 使用原参数重新入队任务 |
 
 > 知识检索升级：`GET /registry/employees/{key}/knowledge/search?q=` — 配置 `DASHSCOPE_API_KEY` 且 `USE_DB_STORES=true` 时走向量语义检索，否则退化关键词。
-> 管理端另有独立服务（:8001，前缀 `/api/admin`）：登录、用户/角色/权限、AI 供应商治理。
+> 管理端另有独立服务（:8001，前缀 `/api/admin`）：登录、用户/角色/权限、AI 供应商治理；
+> 生产 SPA 通过 app 的同源 `/api/admin/*` 代理访问它。
 
 ### 工作流（`/workflow`）
 | 方法 | 路径 | 说明 |
@@ -657,7 +668,7 @@ memory / evolution / ai-providers / auth 登录等完整端点以 `app/api/` 代
 
 ## 安全设计
 
-- **API 强制鉴权** — 用户端所有 `/api/*` 端点须携带 `Authorization: Bearer <token>`(登录获取);读操作任何登录用户可用,写操作按角色权限(admin/editor/viewer)前缀映射拦截;禁用账号立即失效。开关 `USER_API_AUTH`(默认开)。管理端(:8001)独立鉴权
+- **API 强制鉴权** — 用户端所有 `/api/*` 端点须携带 `Authorization: Bearer <token>`(登录获取);全局目录读操作对登录用户开放，制作项目、矩阵、导演视图及卡片按 `owner/members` 隔离，非成员不可见也不可直接访问；写操作再按角色权限(admin/editor/viewer)前缀映射拦截；禁用账号立即失效。开关 `USER_API_AUTH`(默认开)。`/api/admin/*` 仅做同源转发，最终由 :8001 管理服务独立鉴权
 - **工具节点授权** — 工作流中的工具节点必须指定授权员工（`employeeKey`），且工具必须在该员工的 `toolRefs` 绑定列表内才能执行
 - **黑名单机制** — Shell 执行（`execute`）和跨员工委派（`delegate_to_employee`）在工作流节点中硬禁止
 - **审批闸门** — 工具返回 `##PENDING_APPROVAL##` 时，工作流节点按失败处理，不会静默跳过人工审批

@@ -334,6 +334,7 @@ export interface SystemManagerContext {
     serverCode: string;
     name: string;
     transportType: string;
+    inUse: boolean;
     status: 'configured' | 'incomplete' | 'auth_required' | 'error' | 'timeout';
     missingFields: string[];
     missingEnvironmentVariables: string[];

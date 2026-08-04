@@ -80,11 +80,14 @@ async def _task_view(pool, job_id: str, meta: dict | None = None) -> dict | None
     info = await job.info()
     if info is None:
         return None
+    # arq 0.28 的 info() 返回 JobDef/JobResult，二者都没有 status 字段；
+    # 状态是独立的 Redis 查询，必须使用 Job.status()。
+    status = _status_value(await job.status())
     meta = meta or {}
     return {
         "job_id": job_id,
-        "status": _status_value(info.status),
-        "result": info.result if _status_value(info.status) == "complete" else None,
+        "status": status,
+        "result": getattr(info, "result", None) if status == "complete" else None,
         "enqueue_time": str(info.enqueue_time) if info.enqueue_time else None,
         "employee_key": meta.get("employee_key", ""),
         "user_input": meta.get("user_input", ""),

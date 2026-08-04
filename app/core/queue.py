@@ -5,7 +5,7 @@ arq 用 Redis 做 broker：任务入队后由独立 worker 进程消费，
 
 用法：
   pool = await get_pool()
-  job = await pool.enqueue_job("run_agent_task", request_dict, _queue_name="default")
+  job = await pool.enqueue_job("run_agent_task", request_dict)
 """
 from __future__ import annotations
 

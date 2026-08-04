@@ -1,7 +1,7 @@
 """用户端登录接口——与管理端共用同一套用户存储和 token 签发。"""
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 
 from app.api.common import ok
@@ -32,11 +32,22 @@ def login(req: LoginRequest):
 
 
 @router.get("/me")
-def me(authorization: str = ""):
-    """GET /me：占位接口，当前恒返回未认证（实际身份校验走 /check）。"""
-    from fastapi import Header
-    # 手动拿 header 避免自动 401
-    return ok({"authenticated": False})
+def me(authorization: str = Header(default="")):
+    """GET /me：校验 Bearer token 与账号当前状态，返回实时身份和权限。"""
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="未登录或缺少凭证")
+    claims = parse_token(authorization[len("Bearer "):].strip())
+    username = claims.get("sub", "")
+    user = user_store.get(username)
+    if not user or not user.get("enabled", True):
+        raise HTTPException(status_code=401, detail="用户不存在或已禁用")
+    return ok({
+        "authenticated": True,
+        "username": username,
+        "displayName": user.get("displayName", username),
+        "role": user.get("role", "viewer"),
+        "permissions": user_store.get_permissions(username),
+    })
 
 
 @router.get("/check")

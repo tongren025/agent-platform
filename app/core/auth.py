@@ -1,9 +1,10 @@
 """用户端 API 鉴权中间件 —— 后端强制校验,登录门禁不再只是前端装饰。
 
 此前 /agent/run、/registry/* 等端点无任何鉴权,局域网内可绕过前端直接调用。
-本中间件保护 app.main 下所有 /api/* 路径(管理端是独立服务 :8001,不经此处):
+本中间件保护 app.main 下所有用户端 /api/* 路径；/api/admin/* 由同源代理转交
+独立管理服务自行鉴权：
 
-- 豁免:/api/v1/agentapp/auth/*(登录/校验)、OPTIONS 预检。
+- 豁免:/api/v1/agentapp/auth/*(登录/校验)、/api/admin/*(独立管理鉴权)、OPTIONS 预检。
 - 读(GET/HEAD):任何已登录且未禁用的用户。
 - 写(POST/PUT/PATCH/DELETE):按路由前缀映射角色权限(最长前缀优先);
   未映射的写操作按 workbench:use(对话/入队等工作台使用类)。
@@ -22,7 +23,7 @@ from starlette.requests import Request
 
 from admin.auth import parse_token
 
-_AUTH_EXEMPT_PREFIX = "/api/v1/agentapp/auth/"
+_AUTH_EXEMPT_PREFIXES = ("/api/v1/agentapp/auth/", "/api/admin/")
 
 # 只读豁免:浏览器的 <img src> / <video src> 不会带 Authorization 头,
 # 素材若挂在鉴权路由下必然 401、图片永远渲染不出来。故对媒体路由的 GET/HEAD 放行,
@@ -78,7 +79,7 @@ class UserAuthMiddleware(BaseHTTPMiddleware):
         """逐请求鉴权：豁免路径放行 → 解析 Bearer token → 校验账号有效 → 写操作再查角色权限，失败返回统一信封。"""
         path = request.url.path
         # 非 API 路径(SPA/静态/healthcheck/metrics/uploads)与登录端点直接放行
-        if not path.startswith("/api/") or path.startswith(_AUTH_EXEMPT_PREFIX):
+        if not path.startswith("/api/") or path.startswith(_AUTH_EXEMPT_PREFIXES):
             return await call_next(request)
         if request.method == "OPTIONS":
             return await call_next(request)

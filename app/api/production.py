@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import AliasChoices, BaseModel, Field
 from starlette.background import BackgroundTask
@@ -44,7 +44,45 @@ from app.services.production_quality import (
     visual_quality_profile,
 )
 
-router = APIRouter(prefix="/api/v1/agentapp/production", tags=["production"])
+def _is_project_member(project: ProductionProject, request: Request) -> bool:
+    """判断当前请求是否可访问项目；平台管理员可处理历史/故障数据。"""
+    username = getattr(request.state, "username", "")
+    user = getattr(request.state, "user", {}) or {}
+    role = user.get("role", "") if isinstance(user, dict) else ""
+    if username == "admin" or role == "admin":
+        return True
+    return bool(username) and any(member.user_id == username for member in project.members)
+
+
+def _project_id_for_card(card_id: str) -> str | None:
+    """从卡片 ID 找到所属项目，供无 pid 的卡片路由执行成员校验。"""
+    if not DATA_DIR.exists():
+        return None
+    for directory in DATA_DIR.iterdir():
+        if not directory.is_dir() or not (directory / "project.json").exists():
+            continue
+        if any(card.card_id == card_id for card in _load_cards(directory.name)):
+            return directory.name
+    return None
+
+
+def _require_project_membership(request: Request) -> None:
+    """统一保护带项目/卡片路径参数的接口，防止同角色用户跨项目读写。"""
+    project_id = request.path_params.get("pid") or request.path_params.get("project_id")
+    if not project_id and request.path_params.get("card_id"):
+        project_id = _project_id_for_card(request.path_params["card_id"])
+    if not project_id:
+        return
+    project = _load_project(project_id)
+    if not _is_project_member(project, request):
+        raise HTTPException(403, "当前用户不是项目成员")
+
+
+router = APIRouter(
+    prefix="/api/v1/agentapp/production",
+    tags=["production"],
+    dependencies=[Depends(_require_project_membership)],
+)
 logger = get_logger(__name__)
 
 INBOX_MAX_FILE_BYTES = 50 * 1024 * 1024  # 50 MB per file
@@ -668,14 +706,16 @@ def _compute_stats(cards: list[ProductionCard]) -> dict:
 # ── Projects ──────────────────────────────────────────────────────
 
 @router.get("/projects")
-def list_projects():
-    """GET /projects：列出全部生产项目，附带卡片数与进度统计。"""
+def list_projects(request: Request):
+    """GET /projects：列出当前用户有权访问的项目，附带卡片数与进度统计。"""
     projects = []
     if DATA_DIR.exists():
         for d in sorted(DATA_DIR.iterdir()):
             f = d / "project.json"
             if f.exists():
                 proj = _load_project(d.name)
+                if not _is_project_member(proj, request):
+                    continue
                 cards = _load_cards(proj.project_id)
                 stats = _compute_stats(cards)
                 projects.append({**proj.model_dump(), "cardCount": len(cards), "stats": stats})
@@ -705,6 +745,10 @@ class CreateProjectReq(BaseModel):
 @router.post("/projects")
 def create_project(req: CreateProjectReq, request: Request):
     """POST /projects：创建项目（创建者自动成为 owner）；若带原始素材则自动生成一张 idea 阶段卡片。"""
+    name = req.name.strip()
+    if not name:
+        raise HTTPException(status_code=400, detail="项目名称不能为空")
+
     pid = str(uuid.uuid4())[:8]
     now = _now()
     username = getattr(request.state, "username", "owner")
@@ -712,7 +756,7 @@ def create_project(req: CreateProjectReq, request: Request):
     display_name = user.get("displayName", username) if isinstance(user, dict) else username
     proj = ProductionProject(
         project_id=pid,
-        name=req.name,
+        name=name,
         description=req.description,
         source_type=req.source_type,
         source_content=req.source_content,
@@ -2902,7 +2946,7 @@ def _orphan_cards(cards: list[ProductionCard]) -> list[ProductionCard]:
 
 
 @router.get("/matrix")
-def production_matrix():
+def production_matrix(request: Request):
     """GET /matrix：跨全部项目返回「季 → 集 → G 生成单元」的链路对照表。
 
     每个 G 单元一行，聚合它在四个 spec 阶段各有几张卡、以及已产出的图/视频数。
@@ -2919,6 +2963,8 @@ def production_matrix():
         if not f.exists():
             continue
         proj = ProductionProject.model_validate_json(f.read_text("utf-8"))
+        if not _is_project_member(proj, request):
+            continue
         cards = _load_cards(proj.project_id)
         episodes = sorted({c.episode for c in cards if c.episode is not None})
         projects.append({
@@ -2962,7 +3008,7 @@ def production_matrix():
 
 
 @router.get("/orphans")
-def list_orphans():
+def list_orphans(request: Request):
     """GET /orphans：跨全部项目列出孤儿卡（挂在四个 spec 阶段全空的 G 单元上的卡片）。
 
     附带该集实际存在的 G 单元号，便于判断是编号错位还是该单元从未写完。
@@ -2976,6 +3022,8 @@ def list_orphans():
         if not f.exists():
             continue
         proj = ProductionProject.model_validate_json(f.read_text("utf-8"))
+        if not _is_project_member(proj, request):
+            continue
         cards = _load_cards(proj.project_id)
         for c in _orphan_cards(cards):
             siblings = sorted({

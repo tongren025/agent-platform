@@ -52,6 +52,20 @@ def test_create_project_persists_goal_and_pinned(project_env):
     assert director["project"]["pinned"] is True
 
 
+def test_create_project_rejects_blank_name_without_writing(project_env):
+    """项目名只有空白时必须拒绝，且不能留下无效项目目录。"""
+    client, data_dir = project_env
+
+    response = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={"name": "  \t  "},
+    )
+
+    assert response.status_code == 400
+    assert "项目名称不能为空" in response.text
+    assert list(data_dir.iterdir()) == []
+
+
 def test_update_project_persists_goal_and_pinned(project_env):
     client, data_dir = project_env
     created = client.post(

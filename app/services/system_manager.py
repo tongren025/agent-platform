@@ -241,7 +241,12 @@ class SystemManagerService:
             }
         return max(matches, key=lambda item: len(item[0]))[1]
 
-    def _mcp_status(self, item: McpServerDefinition) -> dict[str, Any]:
+    def _mcp_status(
+        self,
+        item: McpServerDefinition,
+        *,
+        in_use: bool = False,
+    ) -> dict[str, Any]:
         """生成不泄露密钥的 MCP 配置诊断。"""
         transport = (item.transport_type or "stdio").lower()
         missing: list[str] = []
@@ -280,6 +285,7 @@ class SystemManagerService:
             "serverCode": item.server_code,
             "name": item.name,
             "transportType": transport,
+            "inUse": in_use,
             "status": status,
             "missingFields": missing,
             "missingEnvironmentVariables": missing_env,
@@ -320,7 +326,30 @@ class SystemManagerService:
     def context(self, page_path: str) -> dict[str, Any]:
         """返回当前页面指引、资源盘点、MCP 健康摘要与最近失败。"""
         mcps = self._mcps.list_all()
-        statuses = [self._mcp_status(item) for item in mcps]
+        employees = self._employees.list_all()
+        skills = self._skills.list_all()
+        skills_by_code = {
+            str(getattr(item, "code", "") or ""): item
+            for item in skills
+        }
+        active_mcp_refs: set[str] = set()
+        for employee in employees:
+            if getattr(employee, "enabled", True) is False:
+                continue
+            active_mcp_refs.update(
+                str(ref) for ref in (getattr(employee, "mcp_server_refs", None) or [])
+            )
+            for skill_ref in getattr(employee, "skill_refs", None) or []:
+                skill = skills_by_code.get(str(skill_ref))
+                if skill is not None:
+                    active_mcp_refs.update(
+                        str(ref)
+                        for ref in (getattr(skill, "mcp_dependencies", None) or [])
+                    )
+        statuses = [
+            self._mcp_status(item, in_use=item.server_code in active_mcp_refs)
+            for item in mcps
+        ]
         recent_failures = []
         try:
             for run in self._runs.list_runs(success=False, limit=3):
@@ -337,8 +366,8 @@ class SystemManagerService:
             "manager": self._manager_info(),
             "page": self._guide_for_path(page_path),
             "inventory": {
-                "employees": len(self._employees.list_all()),
-                "skills": len(self._skills.list_all()),
+                "employees": len(employees),
+                "skills": len(skills),
                 "tools": len(self._tools.list_all()),
                 "mcpServers": len(mcps),
             },
@@ -1361,13 +1390,21 @@ class SystemManagerService:
         context = self.context(page_path)
         if any(word in lower for word in ("状态", "健康", "检查", "装了什么")):
             inventory = context["inventory"]
-            bad = [item for item in context["mcpStatus"] if item["status"] != "configured"]
+            bad = [
+                item
+                for item in context["mcpStatus"]
+                if item.get("inUse") and item["status"] != "configured"
+            ]
             response.update({
                 "mode": "diagnose",
                 "answer": (
                     f"当前有 {inventory['employees']} 个数字员工、{inventory['skills']} 个 Skill、"
                     f"{inventory['tools']} 个工具和 {inventory['mcpServers']} 个 MCP。"
-                    + (f"\n\n其中 {len(bad)} 个 MCP 需要补配置或登录。" if bad else "\n\nMCP 配置检查未发现缺项。")
+                    + (
+                        f"\n\n其中 {len(bad)} 个正在使用的 MCP 需要处理。"
+                        if bad
+                        else "\n\n正在使用的 MCP 未发现配置问题。"
+                    )
                 ),
                 "diagnostics": context,
             })

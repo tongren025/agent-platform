@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from app.models.registry import McpServerDefinition
+from app.models.registry import EmployeeDefinition, McpServerDefinition
 from app.services.system_manager import SystemManagerService
 
 
@@ -45,12 +45,19 @@ class _Run:
     error_message: str = "模型返回空内容"
 
 
-def _service(*, mcps=None, runs=None, root_dir=None, ai_service=None):
+def _service(
+    *,
+    mcps=None,
+    employees=None,
+    runs=None,
+    root_dir=None,
+    ai_service=None,
+):
     return SystemManagerService(
         skill_registry=_Registry(),
         mcp_registry=_Registry(mcps),
         tool_registry=_Registry(),
-        employee_registry=_Registry(),
+        employee_registry=_Registry(employees),
         run_store=_RunStore(runs),
         ai_service=ai_service,
         root_dir=root_dir,
@@ -80,6 +87,27 @@ def test_context_redacts_mcp_env_and_reports_missing_login(monkeypatch):
     assert result["mcpStatus"][0]["status"] == "auth_required"
     assert result["mcpStatus"][0]["missingEnvironmentVariables"] == ["DEMO_TOKEN"]
     assert "env" not in result["mcpStatus"][0]
+
+
+def test_context_only_marks_mcp_as_in_use_when_bound_to_enabled_employee():
+    mcp = McpServerDefinition(
+        serverCode="demo",
+        name="Demo",
+        transportType="stdio",
+        command="demo-command",
+    )
+    unbound = _service(mcps=[mcp]).context("/advanced/tools")
+    bound = _service(
+        mcps=[mcp],
+        employees=[EmployeeDefinition(
+            employeeKey="writer",
+            name="编剧",
+            mcpServerRefs=["demo"],
+        )],
+    ).context("/advanced/tools")
+
+    assert unbound["mcpStatus"][0]["inUse"] is False
+    assert bound["mcpStatus"][0]["inUse"] is True
 
 
 def test_mcp_chat_requires_confirmation_and_never_accepts_literal_secret(tmp_path, monkeypatch):

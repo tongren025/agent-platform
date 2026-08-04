@@ -44,8 +44,9 @@ services:
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
     env_file: .env
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://agent:change-me-in-prod@postgres:5432/agent}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-agent}:${POSTGRES_PASSWORD:-change-me-in-prod}@postgres:5432/${POSTGRES_DB:-agent}
+      REDIS_URL: redis://redis:6379/0
+      ADMIN_API_URL: http://admin:8001
     volumes:
       - app_data:/app/data
     ports:
@@ -62,8 +63,8 @@ services:
     command: ["uvicorn", "admin.main:app", "--host", "0.0.0.0", "--port", "8001"]
     env_file: .env
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://agent:change-me-in-prod@postgres:5432/agent}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-agent}:${POSTGRES_PASSWORD:-change-me-in-prod}@postgres:5432/${POSTGRES_DB:-agent}
+      REDIS_URL: redis://redis:6379/0
     volumes:
       - app_data:/app/data
     ports:
@@ -80,8 +81,8 @@ services:
     command: ["python", "-m", "app.tasks.worker"]
     env_file: .env
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://agent:change-me-in-prod@postgres:5432/agent}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-agent}:${POSTGRES_PASSWORD:-change-me-in-prod}@postgres:5432/${POSTGRES_DB:-agent}
+      REDIS_URL: redis://redis:6379/0
     volumes:
       - app_data:/app/data
     depends_on:

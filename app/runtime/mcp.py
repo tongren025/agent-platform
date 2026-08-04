@@ -10,14 +10,17 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import ipaddress
 import json
 import logging
 import os
 import re
+import shutil
 from collections.abc import AsyncIterator
 from contextlib import AsyncExitStack, asynccontextmanager
 from dataclasses import dataclass
 from typing import Any
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -119,6 +122,29 @@ def _resolved_env(env: dict[str, str] | None) -> dict[str, str] | None:
     return _resolved_secret_refs(env, label="环境变量")
 
 
+def _command_available(command: str) -> bool:
+    """检查 stdio 命令是否能在当前应用服务器启动。"""
+    return shutil.which(command) is not None
+
+
+def _private_network_host(url: str | None) -> str | None:
+    """识别超时目标是否为本机、私网或链路本地地址。"""
+    if not url:
+        return None
+    hostname = urlsplit(url).hostname
+    if not hostname:
+        return None
+    if hostname.lower() == "localhost":
+        return hostname
+    try:
+        address = ipaddress.ip_address(hostname)
+    except ValueError:
+        return None
+    if address.is_private or address.is_loopback or address.is_link_local:
+        return hostname
+    return None
+
+
 @asynccontextmanager
 async def _open_session(
     server: RuntimeMcpServer,
@@ -138,6 +164,11 @@ async def _open_session(
         if transport_type == "stdio":
             if not server.command:
                 raise ValueError(f"MCP 服务 {server.server_code} 缺少 command")
+            if not _command_available(server.command):
+                raise FileNotFoundError(
+                    f"当前应用服务器未安装 MCP 启动命令：{server.command}。"
+                    "请安装该命令，或改用当前服务器可访问的 HTTP MCP 地址"
+                )
             from mcp.client.stdio import stdio_client
 
             env = None
@@ -213,13 +244,16 @@ def _tool_input_schema(tool: Any) -> dict[str, Any]:
 async def _discover_tool_specs(
     session: Any,
     server: RuntimeMcpServer,
+    *,
+    use_cache: bool = True,
 ) -> list[McpToolSpec]:
     """发现并缓存一个服务的完整工具声明，支持 MCP 分页。"""
     cache_key = _server_cache_key(server)
-    async with _mcp_cache_lock:
-        cached = _mcp_tool_specs_cache.get(cache_key)
-    if cached is not None:
-        return cached
+    if use_cache:
+        async with _mcp_cache_lock:
+            cached = _mcp_tool_specs_cache.get(cache_key)
+        if cached is not None:
+            return cached
 
     tools: list[Any] = []
     cursor: str | None = None
@@ -271,11 +305,19 @@ async def probe_mcp_server(
     try:
         async with asyncio.timeout(timeout_seconds):
             async with _open_session(server, http_client=http_client) as session:
-                return await _discover_tool_specs(session, server)
+                return await _discover_tool_specs(session, server, use_cache=False)
     except TimeoutError as exc:
         timeout_label = f"{timeout_seconds:g}"
+        private_host = _private_network_host(server.url)
+        network_hint = (
+            f"；目标 {private_host} 是内网地址，当前应用服务器无法访问，"
+            "请改用公网地址或将应用部署到同一网络"
+            if private_host
+            else ""
+        )
         raise McpConnectionTimeoutError(
             f"MCP 服务 {server.server_code} 连接超过 {timeout_label} 秒，已自动终止"
+            f"{network_hint}"
         ) from exc
 
 

@@ -22,7 +22,7 @@ from app.core.errors import register_exception_handlers
 from app.core.observability import setup_metrics
 from app.core.rate_limit import limiter, rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from app.api import agent, ai_providers, canvas, director, evolution, knowledge_graph, memory_api, pipeline, production, quick_prompts, registry, runs, scrape, sessions, skills, strategy_proxy, system_manager, tasks, trend_sources, user_auth, workflow
+from app.api import admin_proxy, agent, ai_providers, canvas, director, evolution, knowledge_graph, memory_api, pipeline, production, quick_prompts, registry, runs, scrape, sessions, skills, strategy_proxy, system_manager, tasks, trend_sources, user_auth, workflow
 
 import app.tools.builtin  # noqa: F401
 import app.tools.delegate  # noqa: F401
@@ -135,6 +135,7 @@ def healthcheck():
     return "ok"
 
 app.include_router(user_auth.router)
+app.include_router(admin_proxy.router)
 app.include_router(registry.router)
 app.include_router(agent.router)
 app.include_router(ai_providers.router)

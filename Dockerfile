@@ -22,7 +22,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 # 系统依赖(psycopg 运行时需要 libpq)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl libpq5 \
+    && apt-get install -y --no-install-recommends curl libpq5 nodejs npm \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
@@ -39,6 +39,9 @@ COPY migrations/ ./migrations/
 
 # 种子数据(production cards 等,首次启动时写入 named volume)
 COPY data/ ./data/
+
+# 趋势页与默认开启的每日同步调度器都在运行时导入此包。
+COPY skill_tracker/ ./skill_tracker/
 
 # 前端构建产物(app.main 通过 SPA fallback 提供)
 # 注意:vite 的 outDir 是 ../wwwroot(web/vite.config.ts),stage1 WORKDIR=/web,

@@ -54,7 +54,7 @@ export default function SystemManagerDrawer() {
   const [testingMcp, setTestingMcp] = useState('');
   const [oauthMcp, setOauthMcp] = useState('');
   const [sessionId, setSessionId] = useState(() => localStorage.getItem(SESSION_KEY) || '');
-  const messageEndRef = useRef<HTMLDivElement>(null);
+  const latestMessageRef = useRef<HTMLDivElement>(null);
   const skillFileRef = useRef<HTMLInputElement>(null);
   const pagePath = `${location.pathname}${location.search}`;
 
@@ -109,9 +109,15 @@ export default function SystemManagerDrawer() {
     return () => window.removeEventListener(OPEN_SYSTEM_MANAGER_EVENT, openManager);
   }, []);
 
+  const latestMessageId = messages[messages.length - 1]?.id;
+
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, [messages, loading]);
+    if (!open || !latestMessageId) return undefined;
+    const frame = window.requestAnimationFrame(() => {
+      latestMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, latestMessageId]);
 
   const send = async (preset?: string) => {
     const content = (preset ?? input).trim();
@@ -240,7 +246,9 @@ export default function SystemManagerDrawer() {
     }
   };
 
-  const unhealthyCount = context?.mcpStatus.filter(item => item.status !== 'configured').length || 0;
+  const unhealthyCount = context?.mcpStatus.filter(
+    item => item.inUse && item.status !== 'configured',
+  ).length || 0;
 
   return (
     <>
@@ -311,7 +319,9 @@ export default function SystemManagerDrawer() {
                       <ToolOutlined /> {item.name || item.serverCode}
                     </Typography.Text>
                     <Space size={4}>
-                      {item.status === 'configured'
+                      {!item.inUse
+                        ? <Tooltip title="尚未绑定到任何启用中的员工"><Tag>未绑定</Tag></Tooltip>
+                        : item.status === 'configured'
                         ? <Tag color="green">已配置</Tag>
                         : <Tag color={['error', 'timeout'].includes(item.status) ? 'red' : 'orange'}>
                             {item.status === 'auth_required'
@@ -346,11 +356,13 @@ export default function SystemManagerDrawer() {
           </div>
         )}
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+        <div className="system-manager-messages">
           {!messages.length && !loading && <Empty description="问我这个页面怎么用" />}
-          {messages.map(item => (
+          {messages.map((item, index) => (
             <div
               key={item.id}
+              ref={index === messages.length - 1 ? latestMessageRef : undefined}
+              className="system-manager-message"
               style={{
                 display: 'flex',
                 justifyContent: item.role === 'user' ? 'flex-end' : 'flex-start',
@@ -416,7 +428,6 @@ export default function SystemManagerDrawer() {
             </div>
           ))}
           {loading && <div style={{ textAlign: 'center', padding: 12 }}><Spin size="small" /> 正在检查</div>}
-          <div ref={messageEndRef} />
         </div>
 
         <div className="system-manager-composer">

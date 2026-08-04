@@ -9,8 +9,24 @@ from types import SimpleNamespace
 
 import pytest
 
+from app.models.registry import McpServerDefinition
 from app.models.runtime import RuntimeMcpServer
 from app.runtime import mcp as mcp_runtime
+
+
+def test_mcp_registry_migrates_legacy_args_to_command_args():
+    """旧版工具页写入的 args 仍需作为 stdio 启动参数读取。"""
+    server = McpServerDefinition.model_validate({
+        "serverCode": "legacy-npx",
+        "command": "npx",
+        "commandArgs": None,
+        "args": ["-y", "@modelcontextprotocol/server-everything"],
+    })
+
+    assert server.command_args == ["-y", "@modelcontextprotocol/server-everything"]
+    dumped = server.model_dump(by_alias=True, mode="json")
+    assert dumped["commandArgs"] == ["-y", "@modelcontextprotocol/server-everything"]
+    assert "args" not in dumped
 
 
 def _server(code: str = "math-server") -> RuntimeMcpServer:
@@ -152,6 +168,61 @@ async def test_probe_timeout_closes_hanging_session(monkeypatch):
         await mcp_runtime.probe_mcp_server(_server(), timeout_seconds=0.01)
 
     assert closed is True
+
+
+async def test_probe_revalidates_tools_instead_of_returning_cached_specs(monkeypatch):
+    """连接测试必须每次走真实工具发现，避免缓存命中后过早关闭 stdio。"""
+    session = _FakeSession()
+
+    @asynccontextmanager
+    async def fake_open_session(_server, *, http_client=None):
+        yield session
+
+    mcp_runtime.clear_mcp_tools_cache()
+    monkeypatch.setattr(mcp_runtime, "_open_session", fake_open_session)
+
+    await mcp_runtime.probe_mcp_server(_server())
+    await mcp_runtime.probe_mcp_server(_server())
+
+    assert session.list_count == 2
+
+
+async def test_probe_private_network_timeout_explains_deployment_boundary(
+    monkeypatch,
+):
+    @asynccontextmanager
+    async def hanging_open_session(_server, *, http_client=None):
+        await asyncio.sleep(60)
+        yield _FakeSession()
+
+    monkeypatch.setattr(mcp_runtime, "_open_session", hanging_open_session)
+    server = RuntimeMcpServer(
+        server_code="private-books",
+        name="private-books",
+        transport_type="streamable_http",
+        url="http://10.183.29.49:6336/mcp",
+    )
+
+    with pytest.raises(
+        mcp_runtime.McpConnectionTimeoutError,
+        match="目标 10.183.29.49 是内网地址",
+    ):
+        await mcp_runtime.probe_mcp_server(server, timeout_seconds=0.01)
+
+
+async def test_stdio_missing_command_fails_before_starting_transport(monkeypatch):
+    monkeypatch.setattr(mcp_runtime.shutil, "which", lambda _command: None)
+
+    with pytest.raises(FileNotFoundError, match="未安装 MCP 启动命令：codegraph"):
+        async with mcp_runtime._open_session(
+            RuntimeMcpServer(
+                server_code="codegraph",
+                name="CodeGraph",
+                transport_type="stdio",
+                command="codegraph",
+            )
+        ):
+            pass
 
 
 async def test_mcp_error_result_becomes_tool_failure(monkeypatch):

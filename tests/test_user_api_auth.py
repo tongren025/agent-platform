@@ -49,6 +49,19 @@ def test_valid_token_passes(app_client):
     assert resp.status_code == 200
 
 
+def test_me_requires_a_valid_token(app_client, anon_client):
+    """身份接口不能用恒定 200 占位响应掩盖失效会话。"""
+    assert anon_client.get("/api/v1/agentapp/auth/me").status_code == 401
+    assert anon_client.get(
+        "/api/v1/agentapp/auth/me",
+        headers={"Authorization": "Bearer invalid-token"},
+    ).status_code == 401
+
+    resp = app_client.get("/api/v1/agentapp/auth/me")
+    assert resp.status_code == 200
+    assert resp.json()["data"]["authenticated"] is True
+
+
 def test_viewer_read_ok_write_forbidden(monkeypatch):
     from app.main import app
     from admin.auth import issue_token
@@ -90,3 +103,4 @@ def test_disabled_user_rejected(monkeypatch):
     client.headers.update({"Authorization": f"Bearer {issue_token('banned', 'admin')}"})
     resp = client.get("/api/v1/agentapp/registry/employees")
     assert resp.status_code == 401
+    assert client.get("/api/v1/agentapp/auth/me").status_code == 401
