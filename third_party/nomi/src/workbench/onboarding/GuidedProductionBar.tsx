@@ -9,12 +9,18 @@ import {
 } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '../../utils/cn'
+import { toast } from '../../ui/toast'
 import { extractWorkbenchDocumentText } from '../creation/creationAiModes'
+import { mintSpendGrant } from '../api/taskApi'
 import { generationCanvasTools } from '../generationCanvas/agent/generationCanvasTools'
+import { runPlanWithToasts } from '../generationCanvas/components/batchPlanPreview'
+import { buildDependencyWaves } from '../generationCanvas/runner/dependencyWaves'
 import { useGenerationCanvasStore } from '../generationCanvas/store/generationCanvasStore'
 import { useWorkbenchStore } from '../workbenchStore'
 import {
   deriveGuidedProductionProgress,
+  isNodeInGuidedGeneratedStage,
+  selectPendingGuidedGenerationNodes,
   type GuidedGeneratedAssetStageId,
   type GuidedProductionStageId,
 } from './guidedProductionFlow'
@@ -28,7 +34,6 @@ import {
 } from './guidedProductionEvents'
 import {
   buildGuidedCanvasPrompt,
-  buildGuidedMediaRunPrompt,
   buildGuidedScriptPrompt,
 } from './guidedProductionPrompts'
 import { guidedEmployeeForStage } from './guidedProductionEmployees'
@@ -57,6 +62,8 @@ function isGeneratedAssetStage(stageId: GuidedProductionStageId): stageId is Gui
 export default function GuidedProductionBar(): JSX.Element {
   const { t } = useTranslation()
   const [expanded, setExpanded] = React.useState(false)
+  const [startingGeneration, setStartingGeneration] = React.useState(false)
+  const startingGenerationRef = React.useRef(false)
   const workbenchDocument = useWorkbenchStore((state) => state.workbenchDocument)
   const storyboardPlan = useWorkbenchStore((state) => state.storyboardPlan)
   const storyboardPlanCommitted = useWorkbenchStore((state) => state.storyboardPlanCommitted)
@@ -105,10 +112,16 @@ export default function GuidedProductionBar(): JSX.Element {
   )
   const current = progress.current
   const allComplete = progress.completedCount === progress.stages.length
+  const currentGeneratedStageId = isGeneratedAssetStage(current.id) ? current.id : null
   const currentNeedsGeneration =
-    isGeneratedAssetStage(current.id) &&
-    progress.plannedByStage[current.id] &&
+    currentGeneratedStageId !== null &&
+    progress.plannedByStage[currentGeneratedStageId] &&
     !current.complete
+  const currentStageHasActiveGeneration = currentGeneratedStageId !== null && nodes.some(
+    (node) =>
+      isNodeInGuidedGeneratedStage(node, currentGeneratedStageId) &&
+      (node.status === 'queued' || node.status === 'running'),
+  )
 
   React.useEffect(() => {
     const missingEdges = buildMissingGuidedProductionEdges(nodes, edges)
@@ -119,6 +132,10 @@ export default function GuidedProductionBar(): JSX.Element {
 
   const actionLabel = allComplete
     ? t('guidedProduction.completeAction')
+    : currentNeedsGeneration && currentStageHasActiveGeneration
+      ? t('guidedProduction.generationInProgress')
+      : currentNeedsGeneration && startingGeneration
+        ? t('guidedProduction.startingGeneration')
     : current.id === 'storyboard' && storyboardPlan && !storyboardPlanCommitted
       ? t('guidedProduction.reviewStoryboardAction')
       : currentNeedsGeneration
@@ -148,7 +165,35 @@ export default function GuidedProductionBar(): JSX.Element {
     setWorkspaceMode('preview')
   }, [setWorkspaceMode])
 
+  const startCurrentStageGeneration = React.useCallback(async (stageId: GuidedGeneratedAssetStageId) => {
+    if (startingGenerationRef.current) return
+    const selected = selectPendingGuidedGenerationNodes(stageId, nodes)
+    const plan = buildDependencyWaves(selected.map((node) => node.id), { nodes, edges })
+    const runnableIds = plan.waves.flat()
+    if (runnableIds.length === 0) {
+      await runPlanWithToasts(plan)
+      return
+    }
+    startingGenerationRef.current = true
+    setStartingGeneration(true)
+    try {
+      const grantId = await mintSpendGrant(runnableIds)
+      await runPlanWithToasts(plan, grantId)
+    } catch (error: unknown) {
+      toast(
+        error instanceof Error && error.message
+          ? error.message
+          : t('guidedProduction.authorizationFailed'),
+        'error',
+      )
+    } finally {
+      startingGenerationRef.current = false
+      setStartingGeneration(false)
+    }
+  }, [edges, nodes, t])
+
   const handleAction = React.useCallback(() => {
+    if (currentNeedsGeneration && (startingGenerationRef.current || currentStageHasActiveGeneration)) return
     if (allComplete || current.id === 'review') {
       handleReview()
       return
@@ -172,22 +217,16 @@ export default function GuidedProductionBar(): JSX.Element {
       })
       return
     }
+    if (currentNeedsGeneration && isGeneratedAssetStage(current.id)) {
+      setWorkspaceMode('generation')
+      void startCurrentStageGeneration(current.id)
+      return
+    }
     if (current.id === 'storyboard') {
       if (storyboardPlan && !storyboardPlanCommitted) {
         setWorkspaceMode('creation')
         setCreationAiCollapsed(false)
         setStoryboardEditorOpen(true)
-        return
-      }
-      if (currentNeedsGeneration) {
-        setWorkspaceMode('generation')
-        requestGuidedCanvas({
-          prompt: buildGuidedMediaRunPrompt('storyboard'),
-          displayMessage: t('guidedProduction.stage.storyboard.generateDisplayMessage'),
-          autoApproveSafeWrites: true,
-          employeeKey: guidedEmployeeForStage('storyboard', true),
-          requiredTool: 'run_generation_batch',
-        })
         return
       }
       setWorkspaceMode('creation')
@@ -210,25 +249,23 @@ export default function GuidedProductionBar(): JSX.Element {
       if (missingNarrative.length) generationCanvasTools.create_nodes(missingNarrative)
     }
     requestGuidedCanvas({
-      prompt: currentNeedsGeneration && isGeneratedAssetStage(current.id)
-        ? buildGuidedMediaRunPrompt(current.id)
-        : buildGuidedCanvasPrompt(current.id, documentText),
-      displayMessage: currentNeedsGeneration
-        ? t(stageTranslationKey(current.id, 'generateDisplayMessage'))
-        : t(`guidedProduction.stage.${current.id}.displayMessage` as 'guidedProduction.stage.style.displayMessage'),
+      prompt: buildGuidedCanvasPrompt(current.id, documentText),
+      displayMessage: t(`guidedProduction.stage.${current.id}.displayMessage` as 'guidedProduction.stage.style.displayMessage'),
       autoApproveSafeWrites: true,
-      employeeKey: guidedEmployeeForStage(current.id, currentNeedsGeneration),
-      requiredTool: currentNeedsGeneration ? 'run_generation_batch' : 'create_canvas_nodes',
+      employeeKey: guidedEmployeeForStage(current.id),
+      requiredTool: 'create_canvas_nodes',
     })
   }, [
     allComplete,
     current.id,
+    currentStageHasActiveGeneration,
     documentText,
     handleReview,
     currentNeedsGeneration,
     setCreationAiCollapsed,
     setStoryboardEditorOpen,
     setWorkspaceMode,
+    startCurrentStageGeneration,
     storyboardPlan,
     storyboardPlanCommitted,
     t,
@@ -275,8 +312,10 @@ export default function GuidedProductionBar(): JSX.Element {
             'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-nomi px-4',
             'border-0 bg-nomi-accent text-white text-body-sm font-semibold cursor-pointer',
             'shadow-nomi-sm transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-nomi-md',
+            'disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-nomi-sm',
           )}
           onClick={handleAction}
+          disabled={currentNeedsGeneration && (startingGeneration || currentStageHasActiveGeneration)}
         >
           {actionLabel}
           <IconArrowRight size={15} stroke={2} />

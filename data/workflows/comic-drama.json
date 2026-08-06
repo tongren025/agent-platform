@@ -1,10 +1,10 @@
 {
   "sortOrder": 0,
   "createdAt": "2026-06-23T18:07:53.810609Z",
-  "updatedAt": "2026-07-30T14:57:56.277456Z",
+  "updatedAt": "2026-08-06T04:17:58.210328Z",
   "workflowKey": "comic-drama",
   "name": "漫剧生产流水线",
-  "description": "总导演 → 编剧 → 人物/场景设计 → 独立分镜 → 特效/动作 → 规格 QA → 角色/场景/关键帧生成 → 图片 QA → 视频提示词 → 视频生成 → 视频 QA → 交付",
+  "description": "总导演 → 编剧 → 人物/场景设计 → 独立分镜 → 特效/动作 → 确定性合同审计 → 规格 QA → 角色/场景/关键帧生成 → 图片 QA → 视频提示词 → 视频生成 → 视频 QA → 交付",
   "teamCode": "comic-drama-team",
   "nodes": [
     {
@@ -53,7 +53,7 @@
       },
       "config": {
         "employeeKey": "comic-director",
-        "userInputTemplate": "输出本集唯一生产简报与岗位任务。总时长可以大于 6 秒；在交付规格中明确下游单镜生成时长上限为 6 秒，但不要把计划写成已生成成品。\n【项目设定】\n{{start.projectBrief}}\n【本集需求】\n{{start.episodeBrief}}\n【总时长】{{start.durationSeconds}} 秒\n【画幅】{{start.aspectRatio}}\n【额外要求】{{start.requirements}}",
+        "userInputTemplate": "输出本集唯一生产简报与岗位任务。先按‘目标—阻碍—有代价的选择—变化’明确戏剧主线，再设计观众信息路径、情绪曲线、转折和视觉策略，并写入 production_brief.delivery_spec.directorial_intent。给编剧任务设置因果升级、场景目标/冲突/转折/退出状态、行动塑造人物、潜台词和伏笔回收门禁；给分镜任务设置一镜一意图、景别/机位服务信息与情绪、可见可听描述、起止状态与时空连续性、静音/删镜检查门禁。总时长可以大于 6 秒；在交付规格中明确下游单镜默认不超过 6 秒且只做一个核心动作，但不要把计划写成已生成成品。\n【项目设定】\n{{start.projectBrief}}\n【本集需求】\n{{start.episodeBrief}}\n【总时长】{{start.durationSeconds}} 秒\n【画幅】{{start.aspectRatio}}\n【额外要求】{{start.requirements}}",
         "onError": "stop",
         "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"production_brief\",\"tasks\",\"asset_status\",\"quality_gates\",\"next_action\"],\"properties\":{\"production_brief\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"goal\",\"delivery_spec\",\"assumptions\",\"blockers\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"goal\":{\"type\":\"string\"},\"delivery_spec\":{\"type\":\"object\"},\"assumptions\":{\"type\":\"array\"},\"blockers\":{\"type\":\"array\"}}},\"tasks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"asset_status\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"quality_gates\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"next_action\":{\"type\":\"string\"}}}"
       }
@@ -68,7 +68,7 @@
       },
       "config": {
         "employeeKey": "comic-screenwriter",
-        "userInputTemplate": "把导演简报写成纯剧本包，总时长与简报一致。按场景和节拍写可见动作、台词、声音与连续性，不规定景别、运镜或模型提示词。\n【导演简报】\n{{director.output}}",
+        "userInputTemplate": "读取导演简报中的 directorial_intent，把主角目标、中心阻碍、风险和有代价的选择写成由‘但是/因此’推进的纯剧本包，总时长与简报一致。每场明确进入状态、场景目标、对抗力量、失败代价、人物策略、转折和退出状态；每个节拍写可观察行动、台词/潜台词、声音与后果。关键转折必须来自人物主动选择，反转必须有前置线索，删除无状态变化且无铺垫/回收功能的场景。保持人物声音和连续性，不用旁白重复画面，不规定景别、运镜或模型提示词。\n【导演简报】\n{{director.output}}",
         "onError": "stop",
         "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"script_package\"],\"properties\":{\"script_package\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"logline\",\"theme\",\"target_duration_sec\",\"assumptions\",\"blockers\",\"scenes\",\"continuity_constraints\",\"handoff_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"logline\":{\"type\":\"string\"},\"theme\":{\"type\":\"string\"},\"target_duration_sec\":{\"type\":\"number\",\"exclusiveMinimum\":0},\"assumptions\":{\"type\":\"array\"},\"blockers\":{\"type\":\"array\"},\"scenes\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"continuity_constraints\":{\"type\":\"array\"},\"handoff_notes\":{\"type\":\"array\"}}}}}"
       }
@@ -83,9 +83,9 @@
       },
       "config": {
         "employeeKey": "comic-character-designer",
-        "userInputTemplate": "只建立本集实际出场角色的角色 ID、版本 ID、不可漂移特征、服装和禁改项。项目设定优先于通用风格，不得引入其他项目的专名或角色。\n【项目设定】\n{{start.projectBrief}}\n【剧本】\n{{writer.output}}",
+        "userInputTemplate": "只建立本集实际出场角色的视觉身份与版本系统。把故事功能转换成剪影、比例、脸部识别点、发型、服装层级、材质、配色、道具和表演边界；明确不可变身份、阶段 variant、逐镜状态、适用范围与禁继承项。多人必须可从剪影/配色区分，设计复杂度必须支持跨视角稳定生成。不得引入其他项目角色或调用图片工具。\n【项目设定】\n{{start.projectBrief}}\n【剧本】\n{{writer.output}}",
         "onError": "stop",
-        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"character_bible\"],\"properties\":{\"character_bible\":{\"type\":\"object\",\"required\":[\"project_id\",\"characters\",\"handoff_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"characters\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"character_id\",\"name\",\"version\",\"identity_invariants\",\"variants\",\"continuity_rules\",\"generation_description\"],\"properties\":{\"character_id\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"version\":{\"type\":\"string\"},\"identity_invariants\":{\"type\":\"object\"},\"variants\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"continuity_rules\":{\"type\":\"array\"},\"generation_description\":{\"type\":\"string\"}}}},\"handoff_notes\":{\"type\":\"array\"}}}}}"
+        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"character_bible\"],\"properties\":{\"character_bible\":{\"type\":\"object\",\"required\":[\"project_id\",\"characters\",\"handoff_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"characters\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"character_id\",\"name\",\"version\",\"story_function\",\"identity_invariants\",\"variants\",\"expression_range\",\"pose_constraints\",\"continuity_rules\",\"generation_description\",\"open_questions\"],\"properties\":{\"character_id\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"version\":{\"type\":\"string\"},\"story_function\":{\"type\":\"string\"},\"identity_invariants\":{\"type\":\"object\"},\"variants\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"expression_range\":{\"type\":\"array\"},\"pose_constraints\":{\"type\":\"array\"},\"continuity_rules\":{\"type\":\"array\"},\"generation_description\":{\"type\":\"string\"},\"open_questions\":{\"type\":\"array\"}}}},\"handoff_notes\":{\"type\":\"array\"}}}}}"
       }
     },
     {
@@ -98,9 +98,9 @@
       },
       "config": {
         "employeeKey": "comic-scene-designer",
-        "userInputTemplate": "只建立本集实际使用场景的场景 ID、空间布局、地标、行动区和光照。场景必须支持剧本动作，不得引入其他项目的专名或地点。\n【项目设定】\n{{start.projectBrief}}\n【剧本】\n{{writer.output}}",
+        "userInputTemplate": "只建立本集实际场景的空间母版与状态版本。根据剧情功能写清区域、出入口、高低关系、永久地标、尺度、行动/遮挡/危险区、主轴线、可用机位、材质和物理光源；场景必须支持剧本动作并能跨机位辨认。场景母版保持无人，不得混入其他项目地点或调用图片工具。\n【项目设定】\n{{start.projectBrief}}\n【剧本】\n{{writer.output}}",
         "onError": "stop",
-        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"scene_bible\"],\"properties\":{\"scene_bible\":{\"type\":\"object\",\"required\":[\"project_id\",\"scenes\",\"handoff_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"scenes\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"scene_id\",\"name\",\"version\",\"layout\",\"lighting\",\"camera_positions\",\"continuity_rules\",\"generation_description\"],\"properties\":{\"scene_id\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"version\":{\"type\":\"string\"},\"layout\":{\"type\":\"object\"},\"lighting\":{\"type\":\"object\"},\"camera_positions\":{\"type\":\"array\"},\"continuity_rules\":{\"type\":\"array\"},\"generation_description\":{\"type\":\"string\"}}}},\"handoff_notes\":{\"type\":\"array\"}}}}}"
+        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"scene_bible\"],\"properties\":{\"scene_bible\":{\"type\":\"object\",\"required\":[\"project_id\",\"scenes\",\"handoff_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"scenes\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"scene_id\",\"name\",\"version\",\"story_usage\",\"layout\",\"materials\",\"palette\",\"lighting\",\"time_variants\",\"camera_positions\",\"continuity_rules\",\"generation_description\",\"open_questions\"],\"properties\":{\"scene_id\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"version\":{\"type\":\"string\"},\"story_usage\":{\"type\":\"array\"},\"layout\":{\"type\":\"object\"},\"materials\":{\"type\":\"array\"},\"palette\":{\"type\":\"array\"},\"lighting\":{\"type\":\"object\"},\"time_variants\":{\"type\":\"array\"},\"camera_positions\":{\"type\":\"array\"},\"continuity_rules\":{\"type\":\"array\"},\"generation_description\":{\"type\":\"string\"},\"open_questions\":{\"type\":\"array\"}}}},\"handoff_notes\":{\"type\":\"array\"}}}}}"
       }
     },
     {
@@ -113,9 +113,9 @@
       },
       "config": {
         "employeeKey": "comic-storyboard",
-        "userInputTemplate": "将剧本转换为连续镜头。每镜绑定 beat_id、角色版本和场景 ID，明确起止状态、景别、构图、主体动作、摄影机运动和连续性检查；当前视频生成链要求单镜不得超过 6 秒，超出时拆镜且保持总时长。\n【剧本】\n{{writer.output}}\n【人物设定】\n{{char_design.output}}\n【场景设定】\n{{scene_design.output}}",
+        "userInputTemplate": "把导演意图和剧本状态变化转换为镜头因果。先拆节拍；每镜写清唯一叙事意图、观众信息变化、目标情绪，并说明景别、机位、构图和运镜如何服务它。每镜绑定 beat_id、角色版本、场景与道具 ID，分别描述可见主体动作和摄影机运动，明确声音、转场、生成风险及起止状态；守住轴线、视线、画面方向、人物/道具位置和动作连续性。执行静音、删镜、连续性、生成性与总时长检查。当前视频生成链默认单镜不超过 6 秒且只做一个核心动作，超出时拆镜并保持总时长；不得改写核心剧情和对白。\n【剧本】\n{{writer.output}}\n【人物设定】\n{{char_design.output}}\n【场景设定】\n{{scene_design.output}}",
         "onError": "stop",
-        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"storyboard\"],\"properties\":{\"storyboard\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"aspect_ratio\",\"total_duration_sec\",\"shots\",\"duration_check\",\"handoff_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"aspect_ratio\":{\"type\":\"string\"},\"total_duration_sec\":{\"type\":\"number\",\"exclusiveMinimum\":0},\"shots\":{\"type\":\"array\",\"minItems\":1,\"items\":{\"type\":\"object\",\"required\":[\"shot_id\",\"scene_id\",\"beat_id\",\"duration_sec\",\"shot_size\",\"composition\",\"subject_action\",\"camera_motion\",\"start_state\",\"end_state\",\"character_refs\",\"scene_ref\",\"continuity_checks\"],\"properties\":{\"shot_id\":{\"type\":\"string\"},\"scene_id\":{\"type\":\"string\"},\"beat_id\":{\"type\":\"string\"},\"duration_sec\":{\"type\":\"number\",\"exclusiveMinimum\":0,\"maximum\":6},\"shot_size\":{\"type\":\"string\"},\"composition\":{\"type\":\"string\"},\"subject_action\":{\"type\":\"string\"},\"camera_motion\":{\"type\":\"string\"},\"start_state\":{\"type\":\"object\"},\"end_state\":{\"type\":\"object\"},\"character_refs\":{\"type\":\"array\"},\"scene_ref\":{\"type\":\"string\"},\"continuity_checks\":{\"type\":\"array\"}}}},\"duration_check\":{\"type\":\"object\"},\"handoff_notes\":{\"type\":\"array\"}}}}}"
+        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"storyboard\"],\"properties\":{\"storyboard\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"aspect_ratio\",\"total_duration_sec\",\"shots\",\"duration_check\",\"handoff_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"aspect_ratio\":{\"type\":\"string\"},\"total_duration_sec\":{\"type\":\"number\",\"exclusiveMinimum\":0},\"shots\":{\"type\":\"array\",\"minItems\":1,\"items\":{\"type\":\"object\",\"required\":[\"shot_id\",\"scene_id\",\"beat_id\",\"duration_sec\",\"narrative_intent\",\"information_change\",\"emotion_target\",\"shot_size\",\"camera_angle\",\"composition\",\"subject_action\",\"camera_motion\",\"start_state\",\"end_state\",\"character_refs\",\"scene_ref\",\"prop_refs\",\"dialogue\",\"audio\",\"transition\",\"continuity_checks\",\"generation_risks\"],\"properties\":{\"shot_id\":{\"type\":\"string\"},\"scene_id\":{\"type\":\"string\"},\"beat_id\":{\"type\":\"string\"},\"narrative_intent\":{\"type\":\"string\"},\"information_change\":{\"type\":\"string\"},\"emotion_target\":{\"type\":\"string\"},\"duration_sec\":{\"type\":\"number\",\"exclusiveMinimum\":0,\"maximum\":6},\"shot_size\":{\"type\":\"string\"},\"camera_angle\":{\"type\":\"string\"},\"composition\":{\"type\":\"string\"},\"subject_action\":{\"type\":\"string\"},\"camera_motion\":{\"type\":\"string\"},\"start_state\":{\"type\":\"object\"},\"end_state\":{\"type\":\"object\"},\"character_refs\":{\"type\":\"array\"},\"scene_ref\":{\"type\":\"string\"},\"prop_refs\":{\"type\":\"array\"},\"dialogue\":{\"type\":\"string\"},\"audio\":{\"type\":\"string\"},\"transition\":{\"type\":\"string\"},\"continuity_checks\":{\"type\":\"array\"},\"generation_risks\":{\"type\":\"array\"}}}},\"duration_check\":{\"type\":\"object\"},\"handoff_notes\":{\"type\":\"array\"}}}}}"
       }
     },
     {
@@ -128,7 +128,7 @@
       },
       "config": {
         "employeeKey": "comic-vfx-designer",
-        "userInputTemplate": "逐镜定义角色/物体和摄影机的时序轨迹、空间约束、必要特效层及负向约束。无复杂动作时保持简单，普通叙事镜头允许 vfxLayers 为空；不得为了展示技巧制造无关运动或强加战斗光效。\n【分镜】\n{{storyboard.output}}",
+        "userInputTemplate": "逐镜把动作拆成预备/重心转移、发力、路径、接触或转折、受力反馈、结果和恢复，分开记录人物、道具、环境与摄影机轨迹，并让 continuity_in/out 对应分镜起止状态。特效仅在有剧情来源时按 source/interaction/environment/residual 分层，写清时序、遮挡和消散；普通镜头允许为空。指出具体生成风险与拆镜建议，不改剧情、shot_id 或强加战斗光效。\n【分镜】\n{{storyboard.output}}",
         "onError": "stop",
         "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"action_vfx_package\"],\"properties\":{\"action_vfx_package\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"shots\",\"handoff_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"shots\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"shot_id\",\"action\",\"vfx_layers\",\"continuity_in\",\"continuity_out\",\"generation_risks\",\"split_recommendation\"],\"properties\":{\"shot_id\":{\"type\":\"string\"},\"action\":{\"type\":\"object\"},\"vfx_layers\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"continuity_in\":{\"type\":\"object\"},\"continuity_out\":{\"type\":\"object\"},\"generation_risks\":{\"type\":\"array\"},\"split_recommendation\":{\"type\":\"string\"}}}},\"handoff_notes\":{\"type\":\"array\"}}}}}"
       }
@@ -146,18 +146,58 @@
       }
     },
     {
-      "nodeKey": "spec_qa",
-      "type": "agent",
-      "name": "规格 QA",
+      "nodeKey": "spec_audit",
+      "type": "comic-contract-audit",
+      "name": "规格合同审计",
       "position": {
         "x": 1680,
         "y": 400
       },
       "config": {
+        "inputs": {
+          "director": "{{director.production_brief}}",
+          "script": "{{writer.script_package}}",
+          "characters": "{{char_design.character_bible}}",
+          "scenes": "{{scene_design.scene_bible}}",
+          "storyboard": "{{storyboard.storyboard}}",
+          "action_vfx": "{{vfx_action.action_vfx_package}}"
+        },
+        "onError": "stop"
+      }
+    },
+    {
+      "nodeKey": "spec_contract_gate",
+      "type": "condition",
+      "name": "合同门禁",
+      "position": {
+        "x": 1900,
+        "y": 400
+      },
+      "config": {
+        "cases": [
+          {
+            "label": "PASS",
+            "var": "{{spec_audit.gate}}",
+            "op": "eq",
+            "value": "PASS"
+          }
+        ],
+        "elseLabel": "FAIL"
+      }
+    },
+    {
+      "nodeKey": "spec_qa",
+      "type": "agent",
+      "name": "规格 QA",
+      "position": {
+        "x": 2120,
+        "y": 400
+      },
+      "config": {
         "employeeKey": "comic-qa-inspector",
-        "userInputTemplate": "对规格包做生产前门禁。检查 ID 引用、时长、角色/场景一致性、起止帧、动作可执行性和负向约束。任何阻断项都必须 gate=FAIL；只有证据完整且 blockers 为空且 qa_report.verdict=pass 才能 gate=PASS。顶层 gate 必须与 qa_report.verdict 一致。\n【规格包】\n{{spec_package.output}}",
+        "userInputTemplate": "对规格包做生产前证据门禁：检查导演意图承接、剧本因果与人物主动选择、人物/场景版本、镜头叙事字段、ID 引用、时长求和、起止连续性、动作/VFX可执行性和提示词前置条件。每个问题绑定观察事实、expected、severity、责任岗位与最小返工。任何阻断项都必须 gate=FAIL；只有证据完整且 blockers 为空且 qa_report.verdict=pass 才能 gate=PASS。确定性合同审计只要出现 FAIL 或 errors，本节点不得覆盖或降级其结论。顶层 gate 必须与 qa_report.verdict 一致。\n【确定性合同审计】\n{{spec_audit.output}}\n【规格包】\n{{spec_package.output}}",
         "onError": "stop",
-        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"phase\",\"gate\",\"qa_report\"],\"properties\":{\"phase\":{\"type\":\"string\",\"const\":\"SPEC\"},\"gate\":{\"type\":\"string\",\"enum\":[\"PASS\",\"FAIL\"]},\"qa_report\":{\"type\":\"object\",\"required\":[\"scope\",\"evidence\",\"checks\",\"verdict\",\"blockers\",\"rework_tasks\",\"summary\"],\"properties\":{\"scope\":{\"type\":\"string\",\"enum\":[\"text\",\"image\",\"video\",\"mixed\"]},\"evidence\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"checks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"verdict\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"passed_items\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"blockers\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"rework_tasks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"summary\":{\"type\":\"string\"}}}}}"
+        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"phase\",\"gate\",\"qa_report\"],\"properties\":{\"phase\":{\"type\":\"string\",\"const\":\"SPEC\"},\"gate\":{\"type\":\"string\",\"enum\":[\"PASS\",\"FAIL\"]},\"qa_report\":{\"type\":\"object\",\"required\":[\"scope\",\"evidence\",\"checks\",\"verdict\",\"blockers\",\"rework_tasks\",\"summary\"],\"properties\":{\"scope\":{\"type\":\"string\",\"enum\":[\"text\",\"image\",\"video\",\"mixed\"]},\"evidence\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"evidence_id\",\"type\",\"accessible\",\"asset_id\",\"shot_id\"],\"properties\":{\"evidence_id\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"},\"accessible\":{\"type\":\"boolean\"},\"asset_id\":{\"type\":\"string\"},\"shot_id\":{\"type\":\"string\"}}}},\"checks\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"check_id\",\"result\",\"severity\",\"evidence_id\",\"observation\",\"expected\",\"owner_employee_key\",\"rework\"],\"properties\":{\"check_id\":{\"type\":\"string\"},\"result\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"severity\":{\"type\":\"string\",\"enum\":[\"critical\",\"major\",\"minor\",\"info\"]},\"evidence_id\":{\"type\":\"string\"},\"observation\":{\"type\":\"string\"},\"expected\":{\"type\":\"string\"},\"owner_employee_key\":{\"type\":\"string\"},\"rework\":{\"type\":\"string\"}}}},\"verdict\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"passed_items\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"blockers\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"rework_tasks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"summary\":{\"type\":\"string\"}}}}}"
       }
     },
     {
@@ -165,7 +205,7 @@
       "type": "condition",
       "name": "规格门禁",
       "position": {
-        "x": 1900,
+        "x": 2340,
         "y": 400
       },
       "config": {
@@ -185,14 +225,14 @@
       "type": "agent",
       "name": "图片提示词规格",
       "position": {
-        "x": 2120,
+        "x": 2560,
         "y": 400
       },
       "config": {
         "employeeKey": "comic-prompt-engineer",
-        "userInputTemplate": "以 IMAGE 模式工作：把已通过规格门禁的人物 Bible、场景 Bible、分镜和动作特效包编译成三类可直接提交的图片生成任务。每项必须绑定稳定资产 ID、上游版本、最终 prompt、size 和 quality；关键帧 prompt 必须描述单一冻结时刻。只输出规格，不调用图片工具，也不把提示词称为图片成品。\n【规格包】\n{{spec_package.output}}\n【规格 QA】\n{{spec_qa.output}}",
+        "userInputTemplate": "以 IMAGE 模式把已通过门禁的人物、场景、分镜和动作包编译成角色、场景、关键帧三类任务。逐项建立来源/参考映射，绑定稳定资产 ID 与版本；正向 prompt只写可见目标，negative_prompt 独立；关键帧只描述一个冻结时刻。每项执行语义、版本、引用真实性、模型参数和可提交性 validation；错误非空即 blocked。只输出规格，不调用图片工具或把提示词称为成品。\n【规格包】\n{{spec_package.output}}\n【规格 QA】\n{{spec_qa.output}}",
         "onError": "stop",
-        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"image_prompt_package\"],\"properties\":{\"image_prompt_package\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"character_assets\",\"scene_assets\",\"keyframe_assets\",\"validation\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"character_assets\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"asset_id\",\"character_id\",\"version\",\"variant_id\",\"prompt\",\"size\",\"quality\"],\"properties\":{\"asset_id\":{\"type\":\"string\"},\"character_id\":{\"type\":\"string\"},\"version\":{\"type\":\"string\"},\"variant_id\":{\"type\":\"string\"},\"prompt\":{\"type\":\"string\"},\"size\":{\"type\":\"string\"},\"quality\":{\"type\":\"string\"}}}},\"scene_assets\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"asset_id\",\"scene_id\",\"version\",\"view_id\",\"prompt\",\"size\",\"quality\"],\"properties\":{\"asset_id\":{\"type\":\"string\"},\"scene_id\":{\"type\":\"string\"},\"version\":{\"type\":\"string\"},\"view_id\":{\"type\":\"string\"},\"prompt\":{\"type\":\"string\"},\"size\":{\"type\":\"string\"},\"quality\":{\"type\":\"string\"}}}},\"keyframe_assets\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"asset_id\",\"shot_id\",\"frame_role\",\"character_versions\",\"scene_version\",\"prompt\",\"size\",\"quality\"],\"properties\":{\"asset_id\":{\"type\":\"string\"},\"shot_id\":{\"type\":\"string\"},\"frame_role\":{\"type\":\"string\",\"enum\":[\"start\",\"end\",\"action\"]},\"character_versions\":{\"type\":\"array\"},\"scene_version\":{\"type\":\"string\"},\"prompt\":{\"type\":\"string\"},\"size\":{\"type\":\"string\"},\"quality\":{\"type\":\"string\"}}}},\"validation\":{\"type\":\"object\"}}}}}"
+        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"image_prompt_package\"],\"properties\":{\"image_prompt_package\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"character_assets\",\"scene_assets\",\"keyframe_assets\",\"validation\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"character_assets\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"asset_id\",\"character_id\",\"version\",\"variant_id\",\"prompt\",\"reference_map\",\"negative_prompt\",\"size\",\"quality\",\"validation\"],\"properties\":{\"asset_id\":{\"type\":\"string\"},\"character_id\":{\"type\":\"string\"},\"version\":{\"type\":\"string\"},\"variant_id\":{\"type\":\"string\"},\"prompt\":{\"type\":\"string\"},\"reference_map\":{\"type\":\"array\"},\"negative_prompt\":{\"type\":\"string\"},\"size\":{\"type\":\"string\"},\"quality\":{\"type\":\"string\"},\"validation\":{\"type\":\"object\"}}}},\"scene_assets\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"asset_id\",\"scene_id\",\"version\",\"view_id\",\"prompt\",\"reference_map\",\"negative_prompt\",\"size\",\"quality\",\"validation\"],\"properties\":{\"asset_id\":{\"type\":\"string\"},\"scene_id\":{\"type\":\"string\"},\"version\":{\"type\":\"string\"},\"view_id\":{\"type\":\"string\"},\"prompt\":{\"type\":\"string\"},\"reference_map\":{\"type\":\"array\"},\"negative_prompt\":{\"type\":\"string\"},\"size\":{\"type\":\"string\"},\"quality\":{\"type\":\"string\"},\"validation\":{\"type\":\"object\"}}}},\"keyframe_assets\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"asset_id\",\"shot_id\",\"frame_role\",\"character_versions\",\"scene_version\",\"prompt\",\"reference_map\",\"negative_prompt\",\"size\",\"quality\",\"validation\"],\"properties\":{\"asset_id\":{\"type\":\"string\"},\"shot_id\":{\"type\":\"string\"},\"frame_role\":{\"type\":\"string\",\"enum\":[\"start\",\"end\",\"action\"]},\"character_versions\":{\"type\":\"array\"},\"scene_version\":{\"type\":\"string\"},\"prompt\":{\"type\":\"string\"},\"reference_map\":{\"type\":\"array\"},\"negative_prompt\":{\"type\":\"string\"},\"size\":{\"type\":\"string\"},\"quality\":{\"type\":\"string\"},\"validation\":{\"type\":\"object\"}}}},\"validation\":{\"type\":\"object\"}}}}}"
       }
     },
     {
@@ -200,7 +240,7 @@
       "type": "code",
       "name": "角色图片任务",
       "position": {
-        "x": 2340,
+        "x": 2780,
         "y": 100
       },
       "config": {
@@ -216,7 +256,7 @@
       "type": "code",
       "name": "场景图片任务",
       "position": {
-        "x": 2340,
+        "x": 2780,
         "y": 400
       },
       "config": {
@@ -232,7 +272,7 @@
       "type": "code",
       "name": "关键帧任务",
       "position": {
-        "x": 2340,
+        "x": 2780,
         "y": 700
       },
       "config": {
@@ -248,13 +288,13 @@
       "type": "iteration",
       "name": "角色母版生成",
       "position": {
-        "x": 2560,
+        "x": 3000,
         "y": 100
       },
       "config": {
         "employeeKey": "comic-character-artist",
         "arrayTemplate": "{{character_tasks.items}}",
-        "userInputTemplate": "用户要求生成最终角色母版。直接使用单项任务的最终 prompt 调用 generate_image；不要重新设计或批量处理其他角色。工具证据必须原样写入岗位固定 JSON。\n【单项任务】\n{{__item__}}",
+        "userInputTemplate": "执行最终角色母版任务。先核对 asset/character/version/variant、视图、prompt、size、quality 和 validation=ready，再原样调用 generate_image；不得重新设计、润色 prompt 或处理其他角色。避免重复提交，工具证据原样写入固定 JSON。\n【单项任务】\n{{__item__}}",
         "maxParallel": 2,
         "onError": "stop"
       }
@@ -264,13 +304,13 @@
       "type": "iteration",
       "name": "场景母版生成",
       "position": {
-        "x": 2560,
+        "x": 3000,
         "y": 400
       },
       "config": {
         "employeeKey": "comic-scene-artist",
         "arrayTemplate": "{{scene_tasks.items}}",
-        "userInputTemplate": "用户要求生成最终纯场景母版。直接使用单项任务的最终 prompt 调用 generate_image；不得加入主要人物。工具证据必须原样写入岗位固定 JSON。\n【单项任务】\n{{__item__}}",
+        "userInputTemplate": "执行最终纯场景母版任务。先核对 asset/scene/version/view、prompt、size、quality和 validation=ready，再原样调用 generate_image；不得重设计或润色 prompt，不得加入主要人物。避免重复提交，工具证据原样写入固定 JSON。\n【单项任务】\n{{__item__}}",
         "maxParallel": 2,
         "onError": "stop"
       }
@@ -280,13 +320,13 @@
       "type": "iteration",
       "name": "关键帧生成",
       "position": {
-        "x": 2560,
+        "x": 3000,
         "y": 700
       },
       "config": {
         "employeeKey": "comic-keyframe-artist",
         "arrayTemplate": "{{keyframe_tasks.items}}",
-        "userInputTemplate": "用户要求生成最终关键帧。只执行：直接使用单项任务的最终 prompt 调用 generate_image；不得设计/改写提示词，不得改 shot_id、角色版本或场景版本。工具证据必须原样写入岗位固定 JSON。\n【单项任务】\n{{__item__}}\n【动作与特效包】\n{{vfx_action.output}}",
+        "userInputTemplate": "执行最终关键帧任务。先核对 asset/shot/frame_role、单一时间点、人物/场景版本、prompt、size、quality 和 validation=ready，再原样调用 generate_image；不得设计/改写提示词，不得改 shot_id、版本、构图或动作结果。避免重复提交，工具证据原样写入固定 JSON。\n【单项任务】\n{{__item__}}\n【动作与特效包】\n{{vfx_action.output}}",
         "maxParallel": 2,
         "onError": "stop"
       }
@@ -296,7 +336,7 @@
       "type": "template",
       "name": "图片资产汇总",
       "position": {
-        "x": 2800,
+        "x": 3240,
         "y": 400
       },
       "config": {
@@ -308,14 +348,14 @@
       "type": "agent",
       "name": "图片 QA",
       "position": {
-        "x": 3020,
+        "x": 3460,
         "y": 400
       },
       "config": {
         "employeeKey": "comic-qa-inspector",
-        "userInputTemplate": "执行图片资产门禁：先核对预期 ID、工具调用证据、READY 状态、真实 URL、模型和缺失项，再提取全部 READY 图片 URL，必须实际调用 inspect_media，inspection_type=image，criteria 使用规格包验收标准。将工具返回的视觉证据合并进 qa_report。inspect_media 未调用/失败/blocked、URL 缺失或预期资产缺失都必须 gate=FAIL；仅 qa_report.verdict=pass 时 gate=PASS。\n【规格包】\n{{spec_package.output}}\n【图片资产包】\n{{image_package.output}}",
+        "userInputTemplate": "执行图片资产门禁：先核对预期 ID、工具调用证据、READY 状态、真实 URL、模型和缺失项，再提取全部 READY 图片 URL，必须实际调用 inspect_media，inspection_type=image，criteria 使用逐资产规格，检查身份/版本、人数、解剖手部、服装道具、空间地标/光源、构图时刻、水印与生成瑕疵。将工具视觉证据合并进qa_report，并给出 severity、责任岗位和最小返工。inspect_media 未调用/失败/blocked、URL 缺失或预期资产缺失都必须 gate=FAIL；仅 qa_report.verdict=pass 时 gate=PASS。\n【规格包】\n{{spec_package.output}}\n【图片资产包】\n{{image_package.output}}",
         "onError": "stop",
-        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"phase\",\"gate\",\"qa_report\"],\"properties\":{\"phase\":{\"type\":\"string\",\"const\":\"IMAGE\"},\"gate\":{\"type\":\"string\",\"enum\":[\"PASS\",\"FAIL\"]},\"qa_report\":{\"type\":\"object\",\"required\":[\"scope\",\"evidence\",\"checks\",\"verdict\",\"blockers\",\"rework_tasks\",\"summary\"],\"properties\":{\"scope\":{\"type\":\"string\",\"enum\":[\"text\",\"image\",\"video\",\"mixed\"]},\"evidence\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"checks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"verdict\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"passed_items\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"blockers\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"rework_tasks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"summary\":{\"type\":\"string\"}}}}}"
+        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"phase\",\"gate\",\"qa_report\"],\"properties\":{\"phase\":{\"type\":\"string\",\"const\":\"IMAGE\"},\"gate\":{\"type\":\"string\",\"enum\":[\"PASS\",\"FAIL\"]},\"qa_report\":{\"type\":\"object\",\"required\":[\"scope\",\"evidence\",\"checks\",\"verdict\",\"blockers\",\"rework_tasks\",\"summary\"],\"properties\":{\"scope\":{\"type\":\"string\",\"enum\":[\"text\",\"image\",\"video\",\"mixed\"]},\"evidence\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"evidence_id\",\"type\",\"accessible\",\"asset_id\",\"shot_id\"],\"properties\":{\"evidence_id\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"},\"accessible\":{\"type\":\"boolean\"},\"asset_id\":{\"type\":\"string\"},\"shot_id\":{\"type\":\"string\"}}}},\"checks\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"check_id\",\"result\",\"severity\",\"evidence_id\",\"observation\",\"expected\",\"owner_employee_key\",\"rework\"],\"properties\":{\"check_id\":{\"type\":\"string\"},\"result\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"severity\":{\"type\":\"string\",\"enum\":[\"critical\",\"major\",\"minor\",\"info\"]},\"evidence_id\":{\"type\":\"string\"},\"observation\":{\"type\":\"string\"},\"expected\":{\"type\":\"string\"},\"owner_employee_key\":{\"type\":\"string\"},\"rework\":{\"type\":\"string\"}}}},\"verdict\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"passed_items\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"blockers\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"rework_tasks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"summary\":{\"type\":\"string\"}}}}}"
       }
     },
     {
@@ -323,7 +363,7 @@
       "type": "condition",
       "name": "图片门禁",
       "position": {
-        "x": 3240,
+        "x": 3680,
         "y": 400
       },
       "config": {
@@ -343,14 +383,14 @@
       "type": "agent",
       "name": "视频提示词编译",
       "position": {
-        "x": 3460,
+        "x": 3900,
         "y": 400
       },
       "config": {
         "employeeKey": "comic-prompt-engineer",
-        "userInputTemplate": "把通过门禁的分镜、动作特效包和真实关键帧 URL 编译成逐镜视频生成包。每条参数 duration 为 1-6 秒，绑定唯一 shot_id、目标模型和真实引用；不得输出整集一次生成的合并提示词，也不得声称视频已生成。\n【规格包】\n{{spec_package.output}}\n【图片资产】\n{{image_package.output}}\n【图片 QA】\n{{image_qa.output}}",
+        "userInputTemplate": "把通过门禁的分镜、动作特效包和真实图片 URL 编译成逐镜视频生成包。按起始状态→主体动作/受力→环境响应→结束状态组织 prompt，单独写唯一运镜和音频。每条 duration 为 1-6 秒，绑定 shot_id、目标模型、generation_mode 和真实引用；keyframe 与 reference 模式互斥，执行语义、版本、引用、参数和连续性 validation。不得输出整集一次生成的合并提示词，也不得声称视频已生成。\n【规格包】\n{{spec_package.output}}\n【图片资产】\n{{image_package.output}}\n【图片 QA】\n{{image_qa.output}}",
         "onError": "stop",
-        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"video_prompt_package\"],\"properties\":{\"video_prompt_package\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"shots\",\"global_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"shots\":{\"type\":\"array\",\"minItems\":1,\"items\":{\"type\":\"object\",\"required\":[\"shot_id\",\"target_model_id\",\"prompt\",\"reference_map\",\"parameters\",\"continuity_in\",\"continuity_out\",\"validation\"],\"properties\":{\"shot_id\":{\"type\":\"string\"},\"target_model_id\":{\"type\":\"string\"},\"prompt\":{\"type\":\"string\"},\"reference_map\":{\"type\":\"array\"},\"parameters\":{\"type\":\"object\",\"required\":[\"duration\",\"resolution\",\"aspect_ratio\",\"image_url\",\"generate_audio\"],\"properties\":{\"duration\":{\"type\":\"number\",\"exclusiveMinimum\":0,\"maximum\":6},\"resolution\":{\"type\":\"string\"},\"aspect_ratio\":{\"type\":\"string\"},\"image_url\":{\"type\":\"string\"},\"generate_audio\":{\"type\":\"boolean\"}}},\"continuity_in\":{\"type\":\"object\"},\"continuity_out\":{\"type\":\"object\"},\"validation\":{\"type\":\"object\"}}}},\"global_notes\":{\"type\":\"array\"}}}}}"
+        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"video_prompt_package\"],\"properties\":{\"video_prompt_package\":{\"type\":\"object\",\"required\":[\"project_id\",\"episode_id\",\"shots\",\"global_notes\"],\"properties\":{\"project_id\":{\"type\":\"string\"},\"episode_id\":{\"type\":\"string\"},\"shots\":{\"type\":\"array\",\"minItems\":1,\"items\":{\"type\":\"object\",\"required\":[\"shot_id\",\"target_model_id\",\"generation_mode\",\"prompt\",\"reference_map\",\"parameters\",\"continuity_in\",\"continuity_out\",\"validation\"],\"properties\":{\"shot_id\":{\"type\":\"string\"},\"target_model_id\":{\"type\":\"string\"},\"generation_mode\":{\"type\":\"string\",\"enum\":[\"keyframe\",\"reference\"]},\"prompt\":{\"type\":\"string\"},\"reference_map\":{\"type\":\"array\"},\"parameters\":{\"type\":\"object\",\"required\":[\"duration\",\"resolution\",\"aspect_ratio\",\"image_url\",\"last_frame_url\",\"reference_urls\",\"generate_audio\"],\"properties\":{\"duration\":{\"type\":\"number\",\"exclusiveMinimum\":0,\"maximum\":6},\"resolution\":{\"type\":\"string\"},\"aspect_ratio\":{\"type\":\"string\"},\"image_url\":{\"type\":\"string\"},\"last_frame_url\":{\"type\":\"string\"},\"reference_urls\":{\"type\":\"array\"},\"generate_audio\":{\"type\":\"boolean\"}}},\"continuity_in\":{\"type\":\"object\"},\"continuity_out\":{\"type\":\"object\"},\"validation\":{\"type\":\"object\"}}}},\"global_notes\":{\"type\":\"array\"}}}}}"
       }
     },
     {
@@ -358,7 +398,7 @@
       "type": "code",
       "name": "视频任务拆分",
       "position": {
-        "x": 3680,
+        "x": 4120,
         "y": 400
       },
       "config": {
@@ -374,13 +414,13 @@
       "type": "iteration",
       "name": "视频生成",
       "position": {
-        "x": 3900,
+        "x": 4340,
         "y": 400
       },
       "config": {
         "employeeKey": "comic-video-artist",
         "arrayTemplate": "{{video_tasks.items}}",
-        "userInputTemplate": "用户要求生成这个 shot_id 的最终视频。严格按单项参数实际调用 generate_video；有 image_url 时传入，禁止重复提交。流程已经进入轮询阶段：提交成功后调用 check_video_generation 一次并如实保留 pending/completed/failed 状态。不得编造 URL 或完成状态。\n【单项视频任务】\n{{__item__}}",
+        "userInputTemplate": "执行这个 shot_id 的最终视频任务。先核对 validation=ready、模型、1-6 秒参数、连续性与 keyframe/reference 模式互斥，再按单项参数原样调用 generate_video；以 shot_id/输入指纹避免重复提交。流程已进入轮询阶段：提交成功后调用 check_video_generation 一次并如实保留 pending/completed/failed 状态。不得编造 URL 或完成状态。\n【单项视频任务】\n{{__item__}}",
         "maxParallel": 1,
         "onError": "stop"
       }
@@ -390,14 +430,14 @@
       "type": "agent",
       "name": "视频 QA",
       "position": {
-        "x": 4120,
+        "x": 4560,
         "y": 400
       },
       "config": {
         "employeeKey": "comic-qa-inspector",
-        "userInputTemplate": "执行视频交付门禁：逐生成单元核对真实 jobId、状态、URL、时长和顺序。只有全部任务 completed 且有平台 /uploads/ URL 才可继续；然后必须实际调用 inspect_media，inspection_type=video，criteria 使用分镜和连续性标准，并将抽帧证据合并进 qa_report。pending/failed/缺失、inspect_media 未调用/失败/blocked 都必须 gate=FAIL；仅 qa_report.verdict=pass 时 gate=PASS。\n【分镜】\n{{storyboard.output}}\n【视频任务】\n{{video_generation.output}}",
+        "userInputTemplate": "执行视频交付门禁：逐生成单元核对真实 jobId、状态、URL、时长和顺序。只有全部任务 completed 且有平台 /uploads/ URL 才可继续；然后必须实际调用 inspect_media，inspection_type=video，criteria 使用镜头语义、起止状态、身份/服装、时空连续、动作受力、物体穿插、闪烁融化、运镜、时长顺序和音画标准。将抽帧证据及 severity/责任岗位/最小返工合并进 qa_report。pending/failed/缺失、inspect_media 未调用/失败/blocked 都必须 gate=FAIL；仅 qa_report.verdict=pass 时 gate=PASS。\n【分镜】\n{{storyboard.output}}\n【视频任务】\n{{video_generation.output}}",
         "onError": "stop",
-        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"phase\",\"gate\",\"qa_report\"],\"properties\":{\"phase\":{\"type\":\"string\",\"const\":\"VIDEO\"},\"gate\":{\"type\":\"string\",\"enum\":[\"PASS\",\"FAIL\"]},\"qa_report\":{\"type\":\"object\",\"required\":[\"scope\",\"evidence\",\"checks\",\"verdict\",\"blockers\",\"rework_tasks\",\"summary\"],\"properties\":{\"scope\":{\"type\":\"string\",\"enum\":[\"text\",\"image\",\"video\",\"mixed\"]},\"evidence\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"checks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"verdict\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"passed_items\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"blockers\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"rework_tasks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"summary\":{\"type\":\"string\"}}}}}"
+        "structuredSchemaJson": "{\"type\":\"object\",\"required\":[\"phase\",\"gate\",\"qa_report\"],\"properties\":{\"phase\":{\"type\":\"string\",\"const\":\"VIDEO\"},\"gate\":{\"type\":\"string\",\"enum\":[\"PASS\",\"FAIL\"]},\"qa_report\":{\"type\":\"object\",\"required\":[\"scope\",\"evidence\",\"checks\",\"verdict\",\"blockers\",\"rework_tasks\",\"summary\"],\"properties\":{\"scope\":{\"type\":\"string\",\"enum\":[\"text\",\"image\",\"video\",\"mixed\"]},\"evidence\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"evidence_id\",\"type\",\"accessible\",\"asset_id\",\"shot_id\"],\"properties\":{\"evidence_id\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"},\"accessible\":{\"type\":\"boolean\"},\"asset_id\":{\"type\":\"string\"},\"shot_id\":{\"type\":\"string\"}}}},\"checks\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"check_id\",\"result\",\"severity\",\"evidence_id\",\"observation\",\"expected\",\"owner_employee_key\",\"rework\"],\"properties\":{\"check_id\":{\"type\":\"string\"},\"result\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"severity\":{\"type\":\"string\",\"enum\":[\"critical\",\"major\",\"minor\",\"info\"]},\"evidence_id\":{\"type\":\"string\"},\"observation\":{\"type\":\"string\"},\"expected\":{\"type\":\"string\"},\"owner_employee_key\":{\"type\":\"string\"},\"rework\":{\"type\":\"string\"}}}},\"verdict\":{\"type\":\"string\",\"enum\":[\"pass\",\"fail\",\"blocked\"]},\"passed_items\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"blockers\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"rework_tasks\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}},\"summary\":{\"type\":\"string\"}}}}}"
       }
     },
     {
@@ -405,7 +445,7 @@
       "type": "condition",
       "name": "视频门禁",
       "position": {
-        "x": 4340,
+        "x": 4780,
         "y": 400
       },
       "config": {
@@ -425,11 +465,11 @@
       "type": "end",
       "name": "生产交付",
       "position": {
-        "x": 4580,
+        "x": 5020,
         "y": 400
       },
       "config": {
-        "outputTemplate": "# 漫剧生产结果\n\n## 规格门禁\n{{spec_qa.output}}\n\n## 图片门禁\n{{image_qa.output}}\n\n## 视频门禁\n{{video_qa.output}}\n\n## 图片资产\n{{image_package.output}}\n\n## 视频资产\n{{video_generation.output}}"
+        "outputTemplate": "# 漫剧生产结果\n\n## 确定性合同审计\n{{spec_audit.output}}\n\n## 规格门禁\n{{spec_qa.output}}\n\n## 图片门禁\n{{image_qa.output}}\n\n## 视频门禁\n{{video_qa.output}}\n\n## 图片资产\n{{image_package.output}}\n\n## 视频资产\n{{video_generation.output}}"
       }
     }
   ],
@@ -483,10 +523,28 @@
       "sourceHandle": null
     },
     {
-      "edgeId": "spec_package->spec_qa",
+      "edgeId": "spec_package->spec_audit",
       "source": "spec_package",
-      "target": "spec_qa",
+      "target": "spec_audit",
       "sourceHandle": null
+    },
+    {
+      "edgeId": "spec_audit->spec_contract_gate",
+      "source": "spec_audit",
+      "target": "spec_contract_gate",
+      "sourceHandle": null
+    },
+    {
+      "edgeId": "spec_contract_gate->spec_qa:PASS",
+      "source": "spec_contract_gate",
+      "target": "spec_qa",
+      "sourceHandle": "PASS"
+    },
+    {
+      "edgeId": "spec_contract_gate->end:FAIL",
+      "source": "spec_contract_gate",
+      "target": "end",
+      "sourceHandle": "FAIL"
     },
     {
       "edgeId": "spec_qa->spec_gate",
@@ -623,6 +681,5 @@
   ],
   "enabled": true,
   "ownerUserId": null,
-  "builtinRevision": 2,
-  "managedRevision": 3
+  "builtinRevision": 7
 }

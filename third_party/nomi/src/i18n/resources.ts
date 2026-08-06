@@ -129,6 +129,9 @@ export const zhCN = {
     allStepsDescription: '系统自动识别项目进度；你每次只需要点当前这一个按钮。',
     completedCount: '已完成 {{completed}} / {{total}}',
     reviewStoryboardAction: '审阅并确认分镜',
+    startingGeneration: '正在启动生成…',
+    generationInProgress: '生成中…',
+    authorizationFailed: '额度授权失败，请重试',
     generateVideoAction: '确认额度并生成视频',
     generateVideoDisplayMessage: '生成全部已准备好的镜头视频',
     stage: {
@@ -516,6 +519,9 @@ export const en = {
     allStepsDescription: 'The system detects project progress automatically. You only need to click the current action.',
     completedCount: '{{completed}} / {{total}} complete',
     reviewStoryboardAction: 'Review and confirm shots',
+    startingGeneration: 'Starting generation…',
+    generationInProgress: 'Generating…',
+    authorizationFailed: 'Credit authorization failed. Please retry.',
     generateVideoAction: 'Confirm credits and generate',
     generateVideoDisplayMessage: 'Generate all prepared shot videos',
     stage: {

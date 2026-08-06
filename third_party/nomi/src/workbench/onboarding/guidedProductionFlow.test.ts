@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { GenerationCanvasNode } from '../generationCanvas/model/generationCanvasTypes'
-import { deriveGuidedProductionProgress } from './guidedProductionFlow'
+import { deriveGuidedProductionProgress, selectPendingGuidedGenerationNodes } from './guidedProductionFlow'
 
 function node(
   id: string,
@@ -123,5 +123,42 @@ describe('deriveGuidedProductionProgress', () => {
     expect(progress({ documentText, nodes: allGenerated }).current.id).toBe('review')
     expect(progress({ documentText, nodes: allGenerated, timelineClipCount: 1 }).current.id).toBe('review')
     expect(progress({ documentText, nodes: allGenerated, timelineClipCount: 2 }).completedCount).toBe(10)
+  })
+})
+
+describe('selectPendingGuidedGenerationNodes', () => {
+  it('scene 只选本阶段尚未生成的节点，不串入其他阶段或已有结果', () => {
+    const pendingScene = node('scene-pending', 'scene', '雨巷场景设定')
+    const generatedScene = node('scene-done', 'scene', '客栈场景设定', generatedImage('scene-done'))
+    const character = node('character', 'character', '少年人物三视图')
+    const storyboard = node('shot', 'image', '镜头 1', { shotIndex: 1 })
+
+    expect(selectPendingGuidedGenerationNodes(
+      'scene',
+      [pendingScene, generatedScene, character, storyboard],
+    ).map((item) => item.id)).toEqual(['scene-pending'])
+  })
+
+  it('排除 queued/running，保留 idle/error/recoverable 供失败后重试', () => {
+    const nodes = [
+      node('idle', 'scene', '场景设定 A', { status: 'idle' }),
+      node('queued', 'scene', '场景设定 B', { status: 'queued' }),
+      node('running', 'scene', '场景设定 C', { status: 'running' }),
+      node('error', 'scene', '场景设定 D', { status: 'error' }),
+      node('recoverable', 'scene', '场景设定 E', { status: 'recoverable' }),
+    ]
+
+    expect(selectPendingGuidedGenerationNodes('scene', nodes).map((item) => item.id)).toEqual([
+      'idle',
+      'error',
+      'recoverable',
+    ])
+  })
+
+  it('关键帧和视频按媒体阶段隔离', () => {
+    const keyframe = node('keyframe', 'keyframe', '镜头1｜首帧关键帧')
+    const video = node('video', 'video', '镜头1｜视频')
+    expect(selectPendingGuidedGenerationNodes('keyframe', [keyframe, video]).map((item) => item.id)).toEqual(['keyframe'])
+    expect(selectPendingGuidedGenerationNodes('video', [keyframe, video]).map((item) => item.id)).toEqual(['video'])
   })
 })

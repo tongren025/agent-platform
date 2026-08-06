@@ -136,7 +136,47 @@ def test_bundled_manifest_matches_current_builtin_sources():
         for workflow_key in ("comic-drama", "comic-drama-10s")
     ]
 
-    assert manifest["revision"] == 3
+    assert manifest["revision"] == 8
+    director = next(
+        item
+        for item in manifest["employees"]
+        if item["employeeKey"] == "comic-director"
+    )
+    assert "导演判断框架" in director["roleProfile"]
+    assert "静音看画面、只读声音/对白、逐镜删除测试" in director["roleProfile"]
+    screenwriter = next(
+        item
+        for item in manifest["employees"]
+        if item["employeeKey"] == "comic-screenwriter"
+    )
+    assert "编剧判断框架" in screenwriter["roleProfile"]
+    assert "用“但是/因此”构造因果链" in screenwriter["roleProfile"]
+    assert "不负责镜头景别与运镜" in screenwriter["roleProfile"]
+    storyboard = next(
+        item
+        for item in manifest["employees"]
+        if item["employeeKey"] == "comic-storyboard"
+    )
+    assert "分镜判断框架" in storyboard["roleProfile"]
+    assert "视听时空、观众注意力和镜头因果" in storyboard["roleProfile"]
+    assert "静音检查" in storyboard["roleProfile"]
+    specialized_markers = {
+        "comic-character-designer": "人物设计判断框架",
+        "comic-scene-designer": "场景设计判断框架",
+        "comic-vfx-designer": "动作特效判断框架",
+        "comic-prompt-engineer": "提示词编译判断框架",
+        "comic-character-artist": "忠实渲染与证据记录者",
+        "comic-scene-artist": "空间规格到真实场景资产",
+        "comic-keyframe-artist": "决定性时刻",
+        "comic-video-artist": "可靠提交器",
+        "comic-qa-inspector": "质量判断框架",
+    }
+    profiles = {
+        item["employeeKey"]: item["roleProfile"]
+        for item in manifest["employees"]
+    }
+    for employee_key, marker in specialized_markers.items():
+        assert marker in profiles[employee_key]
     assert sorted(
         manifest["employees"],
         key=lambda item: item["employeeKey"],

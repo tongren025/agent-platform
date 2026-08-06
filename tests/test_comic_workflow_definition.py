@@ -44,6 +44,8 @@ def test_default_comic_workflow_is_valid_real_production_dag():
         "storyboard",
         "vfx_action",
         "spec_package",
+        "spec_audit",
+        "spec_contract_gate",
         "spec_qa",
         "spec_gate",
         "image_prompt",
@@ -92,6 +94,10 @@ def test_default_comic_workflow_is_valid_real_production_dag():
         assert nodes[node_key].type == "iteration"
         assert nodes[node_key].config["employeeKey"] == employee_key
         assert nodes[node_key].config["onError"] == "stop"
+
+    assert nodes["spec_audit"].type == "comic-contract-audit"
+    assert nodes["spec_audit"].config["onError"] == "stop"
+    assert nodes["spec_contract_gate"].type == "condition"
 
 
 def test_media_nodes_require_real_tool_calls_and_preserve_async_video_state():
@@ -158,6 +164,16 @@ def test_qa_nodes_publish_machine_readable_gate_and_conditions_fail_closed():
             "op": "eq",
             "value": "PASS",
         }]
+
+    contract_gate = nodes["spec_contract_gate"].config
+    assert contract_gate["elseLabel"] == "FAIL"
+    assert contract_gate["cases"] == [{
+        "label": "PASS",
+        "var": "{{spec_audit.gate}}",
+        "op": "eq",
+        "value": "PASS",
+    }]
+    assert "确定性合同审计" in nodes["spec_qa"].config["userInputTemplate"]
 
     assert "实际调用 inspect_media" in nodes["image_qa"].config["userInputTemplate"]
     assert "inspection_type=image" in nodes["image_qa"].config["userInputTemplate"]

@@ -83,6 +83,60 @@ function hasGeneratedResult(node: GenerationCanvasNode, type: 'image' | 'video')
   return node.result?.type === type || node.history?.some((result) => result.type === type) === true
 }
 
+/** 单一阶段归属规则：进度判定和顶部“一键生成”必须共用，避免显示在 A 阶段却生成 B 阶段。 */
+export function isNodeInGuidedGeneratedStage(
+  node: GenerationCanvasNode,
+  stageId: GuidedGeneratedAssetStageId,
+): boolean {
+  switch (stageId) {
+    case 'style':
+      return (
+        nodeMatches(node, /视觉风格母版|风格母版|美术母版|style\s*bible|look\s*dev/) ||
+        node.meta?.workflowStage === 'style'
+      )
+    case 'character':
+      return (
+        node.kind === 'character' ||
+        nodeMatches(node, /人物三视图|角色三视图|表情服装|character\s*(sheet|turnaround)/) ||
+        node.meta?.workflowStage === 'character'
+      )
+    case 'scene':
+      return (
+        node.kind === 'scene' ||
+        nodeMatches(node, /场景设定|场景母版|场景道具|scene\s*(sheet|bible)/) ||
+        node.meta?.workflowStage === 'scene'
+      )
+    case 'storyboard':
+      return isStoryboardNode(node)
+    case 'keyframe':
+      return (
+        node.kind === 'keyframe' ||
+        node.meta?.storyboardKeyframe === true ||
+        nodeMatches(node, /首帧|尾帧|关键帧|first\s*frame|last\s*frame|keyframe/) ||
+        node.meta?.workflowStage === 'keyframe'
+      )
+    case 'video':
+      return node.kind === 'video'
+  }
+}
+
+/**
+ * 当前阶段真正需要下单的节点：属于该阶段、没有对应媒体结果、且没有排队/生成中。
+ * error/recoverable 没有结果时仍会返回，用户再次点击即可重试。
+ */
+export function selectPendingGuidedGenerationNodes(
+  stageId: GuidedGeneratedAssetStageId,
+  nodes: readonly GenerationCanvasNode[],
+): GenerationCanvasNode[] {
+  const resultType = stageId === 'video' ? 'video' : 'image'
+  return nodes.filter((node) => (
+    isNodeInGuidedGeneratedStage(node, stageId) &&
+    !hasGeneratedResult(node, resultType) &&
+    node.status !== 'queued' &&
+    node.status !== 'running'
+  ))
+}
+
 function extractShotKey(node: GenerationCanvasNode, fallbackIndex: number): string {
   const match = normalizedNodeText(node).match(/(?:镜头|shot)\s*[-_#：:]?\s*(\d+)/i)
   if (match?.[1]) return `shot-${Number(match[1])}`
@@ -119,24 +173,10 @@ export function deriveGuidedProductionProgress(input: GuidedProductionInput): Gu
     /(^|\n)\s*#{0,3}\s*(剧本|分场剧本|逐镜剧本)(?:\s|$)/m.test(documentText) ||
     /(^|\n)\s*(△|场景\s*\d+|第\s*\d+\s*场|INT\.|EXT\.)/im.test(documentText) ||
     documentText.length >= 420
-  const styleNodes = input.nodes.filter(
-    (node) =>
-      nodeMatches(node, /视觉风格母版|风格母版|美术母版|style\s*bible|look\s*dev/) ||
-      node.meta?.workflowStage === 'style',
-  )
-  const characterNodes = input.nodes.filter(
-    (node) =>
-      node.kind === 'character' ||
-      nodeMatches(node, /人物三视图|角色三视图|表情服装|character\s*(sheet|turnaround)/) ||
-      node.meta?.workflowStage === 'character',
-  )
-  const sceneNodes = input.nodes.filter(
-    (node) =>
-      node.kind === 'scene' ||
-      nodeMatches(node, /场景设定|场景母版|场景道具|scene\s*(sheet|bible)/) ||
-      node.meta?.workflowStage === 'scene',
-  )
-  const storyboardNodes = input.nodes.filter(isStoryboardNode)
+  const styleNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'style'))
+  const characterNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'character'))
+  const sceneNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'scene'))
+  const storyboardNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'storyboard'))
   const motionNodes = input.nodes.filter(
     (node) =>
       nodeMatches(node, /镜头动态设计|运镜设计|镜头运动|运动轨迹|动作轨迹|camera\s*(move|path)|motion\s*design/) ||
@@ -144,14 +184,8 @@ export function deriveGuidedProductionProgress(input: GuidedProductionInput): Gu
       node.meta?.cameraMovePromptApplied !== undefined ||
       node.meta?.workflowStage === 'motion',
   )
-  const keyframeNodes = input.nodes.filter(
-    (node) =>
-      node.kind === 'keyframe' ||
-      node.meta?.storyboardKeyframe === true ||
-      nodeMatches(node, /首帧|尾帧|关键帧|first\s*frame|last\s*frame|keyframe/) ||
-      node.meta?.workflowStage === 'keyframe',
-  )
-  const videoNodes = input.nodes.filter((node) => node.kind === 'video')
+  const keyframeNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'keyframe'))
+  const videoNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'video'))
   const shotCount = storyboardNodes.length
   const generatedStyleCount = styleNodes.filter((node) => hasGeneratedResult(node, 'image')).length
   const generatedCharacterCount = characterNodes.filter((node) => hasGeneratedResult(node, 'image')).length

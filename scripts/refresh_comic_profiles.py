@@ -1,4 +1,4 @@
-"""刷新漫剧专业员工的生产提示词，并保留各员工已有项目知识库。"""
+"""规范化漫剧员工元数据并重建默认工作流；角色提示词以 data JSON 为唯一来源。"""
 from __future__ import annotations
 
 import json
@@ -11,7 +11,6 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 EMPLOYEE_DIR = ROOT / "data" / "employees"
-KNOWLEDGE_MARKER = "---\n\n# 以下是已锁定的项目知识库"
 
 COMMON = """你服务于一人漫剧生产团队。你的工作必须形成可被下一位专业角色直接消费的制作资产，不写文学化空话，不越权替下游角色完成全部工作。
 
@@ -176,29 +175,15 @@ PROFILES = {
 """,
 }
 
-DISPLAY_NAMES = {
-    "comic-director": "总导演 / 制作向导",
-    "comic-vfx-designer": "视觉导演 / 特效设计",
-    "comic-trajectory-artist": "镜头动态设计",
-    "comic-qa-inspector": "审片与质检",
-}
-
-
 def refresh_profiles() -> None:
-    """更新目标员工提示词，保留知识库段，并启用工作流直接引用的专业员工。"""
+    """保留当前角色提示词/启用状态，只规范团队归属和更新时间。"""
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-    for employee_key, profile in PROFILES.items():
+    for employee_key in PROFILES:
         path = EMPLOYEE_DIR / f"{employee_key}.json"
         payload = json.loads(path.read_text("utf-8"))
-        old_profile = payload.get("roleProfile", "")
-        knowledge = ""
-        if KNOWLEDGE_MARKER in old_profile:
-            knowledge = KNOWLEDGE_MARKER + old_profile.split(KNOWLEDGE_MARKER, 1)[1]
-        payload["roleProfile"] = profile.strip() + ("\n\n" + knowledge if knowledge else "")
-        if employee_key in DISPLAY_NAMES:
-            payload["name"] = DISPLAY_NAMES[employee_key]
+        if not str(payload.get("roleProfile") or "").strip():
+            raise ValueError(f"员工缺少 roleProfile: {employee_key}")
         payload["updatedAt"] = now
-        payload["enabled"] = True
         payload["teamCode"] = "comic-drama-team"
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", "utf-8")
 

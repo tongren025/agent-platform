@@ -558,6 +558,33 @@ class CodeExecutor(NodeExecutor):
         return NodeResult(output=out)
 
 
+class ComicContractAuditExecutor(NodeExecutor):
+    """漫剧规格合同审计：不调用模型，确定性检查跨岗位结构与引用闭环。"""
+
+    node_type = "comic-contract-audit"
+
+    async def execute(self, ctx: NodeContext) -> NodeResult:
+        """解析六个规格阶段的原生对象，发布可供条件节点直接读取的 PASS/FAIL。"""
+        cfg = ctx.node.config or {}
+        inputs = resolve_value(cfg.get("inputs") or {}, ctx.variables)
+        if not isinstance(inputs, dict):
+            return NodeResult(status="failed", error="comic-contract-audit inputs 必须为对象")
+
+        from app.services.comic_contracts import audit_comic_spec_contract
+
+        report = audit_comic_spec_contract(inputs)
+        text = json.dumps(report, ensure_ascii=False)
+        return NodeResult(output=_publish(
+            text,
+            gate=report["gate"],
+            verdict=report["verdict"],
+            errors=report["errors"],
+            warnings=report["warnings"],
+            metrics=report["metrics"],
+            audit=report,
+        ))
+
+
 class SubWorkflowExecutor(NodeExecutor):
     """子工作流节点：执行另一个工作流定义，把其最终输出注入变量池。
 
@@ -614,6 +641,7 @@ class SubWorkflowExecutor(NodeExecutor):
 for _ex in (
     StartExecutor(), AgentExecutor(), ConditionExecutor(), TemplateExecutor(),
     ToolExecutor(), KnowledgeExecutor(), EndExecutor(),
-    IterationExecutor(), HttpExecutor(), CodeExecutor(), SubWorkflowExecutor(),
+    IterationExecutor(), HttpExecutor(), CodeExecutor(), ComicContractAuditExecutor(),
+    SubWorkflowExecutor(),
 ):
     register_node_executor(_ex)

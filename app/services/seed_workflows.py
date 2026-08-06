@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 COMIC_WORKFLOW_KEY = "comic-drama"
 COMIC_LEGACY_WORKFLOW_KEY = "comic-drama-10s"
 COMIC_TEAM_CODE = "comic-drama-team"
-COMIC_WORKFLOW_REVISION = 2
+COMIC_WORKFLOW_REVISION = 7
 
 # 员工 -> (阶段, 阶段内排序)，作为团队 roles 的真实来源（替代前端 tag 猜测）。
 COMIC_ROLES: list[tuple[str, str, int]] = [
@@ -114,18 +114,23 @@ CHARACTER_SCHEMA = _schema({
                     "items": {
                         "type": "object",
                         "required": [
-                            "character_id", "name", "version",
-                            "identity_invariants", "variants",
-                            "continuity_rules", "generation_description",
+                            "character_id", "name", "version", "story_function",
+                            "identity_invariants", "variants", "expression_range",
+                            "pose_constraints", "continuity_rules",
+                            "generation_description", "open_questions",
                         ],
                         "properties": {
                             "character_id": {"type": "string"},
                             "name": {"type": "string"},
                             "version": {"type": "string"},
+                            "story_function": {"type": "string"},
                             "identity_invariants": {"type": "object"},
                             "variants": {"type": "array", "items": {"type": "object"}},
+                            "expression_range": {"type": "array"},
+                            "pose_constraints": {"type": "array"},
                             "continuity_rules": {"type": "array"},
                             "generation_description": {"type": "string"},
+                            "open_questions": {"type": "array"},
                         },
                     },
                 },
@@ -149,19 +154,26 @@ SCENE_SCHEMA = _schema({
                     "items": {
                         "type": "object",
                         "required": [
-                            "scene_id", "name", "version", "layout",
-                            "lighting", "camera_positions",
+                            "scene_id", "name", "version", "story_usage",
+                            "layout", "materials", "palette", "lighting",
+                            "time_variants", "camera_positions",
                             "continuity_rules", "generation_description",
+                            "open_questions",
                         ],
                         "properties": {
                             "scene_id": {"type": "string"},
                             "name": {"type": "string"},
                             "version": {"type": "string"},
+                            "story_usage": {"type": "array"},
                             "layout": {"type": "object"},
+                            "materials": {"type": "array"},
+                            "palette": {"type": "array"},
                             "lighting": {"type": "object"},
+                            "time_variants": {"type": "array"},
                             "camera_positions": {"type": "array"},
                             "continuity_rules": {"type": "array"},
                             "generation_description": {"type": "string"},
+                            "open_questions": {"type": "array"},
                         },
                     },
                 },
@@ -193,20 +205,27 @@ STORYBOARD_SCHEMA = _schema({
                         "type": "object",
                         "required": [
                             "shot_id", "scene_id", "beat_id", "duration_sec",
-                            "shot_size", "composition", "subject_action",
-                            "camera_motion", "start_state", "end_state",
-                            "character_refs", "scene_ref", "continuity_checks",
+                            "narrative_intent", "information_change",
+                            "emotion_target", "shot_size", "camera_angle",
+                            "composition", "subject_action", "camera_motion",
+                            "start_state", "end_state", "character_refs",
+                            "scene_ref", "prop_refs", "dialogue", "audio",
+                            "transition", "continuity_checks", "generation_risks",
                         ],
                         "properties": {
                             "shot_id": {"type": "string"},
                             "scene_id": {"type": "string"},
                             "beat_id": {"type": "string"},
+                            "narrative_intent": {"type": "string"},
+                            "information_change": {"type": "string"},
+                            "emotion_target": {"type": "string"},
                             "duration_sec": {
                                 "type": "number",
                                 "exclusiveMinimum": 0,
                                 "maximum": 6,
                             },
                             "shot_size": {"type": "string"},
+                            "camera_angle": {"type": "string"},
                             "composition": {"type": "string"},
                             "subject_action": {"type": "string"},
                             "camera_motion": {"type": "string"},
@@ -214,7 +233,12 @@ STORYBOARD_SCHEMA = _schema({
                             "end_state": {"type": "object"},
                             "character_refs": {"type": "array"},
                             "scene_ref": {"type": "string"},
+                            "prop_refs": {"type": "array"},
+                            "dialogue": {"type": "string"},
+                            "audio": {"type": "string"},
+                            "transition": {"type": "string"},
                             "continuity_checks": {"type": "array"},
+                            "generation_risks": {"type": "array"},
                         },
                     },
                 },
@@ -277,8 +301,50 @@ def _qa_schema(phase: str) -> str:
                 ],
                 "properties": {
                     "scope": {"type": "string", "enum": ["text", "image", "video", "mixed"]},
-                    "evidence": {"type": "array", "items": {"type": "object"}},
-                    "checks": {"type": "array", "items": {"type": "object"}},
+                    "evidence": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "evidence_id", "type", "accessible",
+                                "asset_id", "shot_id",
+                            ],
+                            "properties": {
+                                "evidence_id": {"type": "string"},
+                                "type": {"type": "string"},
+                                "accessible": {"type": "boolean"},
+                                "asset_id": {"type": "string"},
+                                "shot_id": {"type": "string"},
+                            },
+                        },
+                    },
+                    "checks": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "check_id", "result", "severity", "evidence_id",
+                                "observation", "expected", "owner_employee_key",
+                                "rework",
+                            ],
+                            "properties": {
+                                "check_id": {"type": "string"},
+                                "result": {
+                                    "type": "string",
+                                    "enum": ["pass", "fail", "blocked"],
+                                },
+                                "severity": {
+                                    "type": "string",
+                                    "enum": ["critical", "major", "minor", "info"],
+                                },
+                                "evidence_id": {"type": "string"},
+                                "observation": {"type": "string"},
+                                "expected": {"type": "string"},
+                                "owner_employee_key": {"type": "string"},
+                                "rework": {"type": "string"},
+                            },
+                        },
+                    },
                     "verdict": {"type": "string", "enum": ["pass", "fail", "blocked"]},
                     "passed_items": {"type": "array", "items": {"type": "string"}},
                     "blockers": {"type": "array", "items": {"type": "string"}},
@@ -309,7 +375,8 @@ IMAGE_PROMPT_SCHEMA = _schema({
                         "type": "object",
                         "required": [
                             "asset_id", "character_id", "version", "variant_id",
-                            "prompt", "size", "quality",
+                            "prompt", "reference_map", "negative_prompt",
+                            "size", "quality", "validation",
                         ],
                         "properties": {
                             "asset_id": {"type": "string"},
@@ -317,8 +384,11 @@ IMAGE_PROMPT_SCHEMA = _schema({
                             "version": {"type": "string"},
                             "variant_id": {"type": "string"},
                             "prompt": {"type": "string"},
+                            "reference_map": {"type": "array"},
+                            "negative_prompt": {"type": "string"},
                             "size": {"type": "string"},
                             "quality": {"type": "string"},
+                            "validation": {"type": "object"},
                         },
                     },
                 },
@@ -328,7 +398,8 @@ IMAGE_PROMPT_SCHEMA = _schema({
                         "type": "object",
                         "required": [
                             "asset_id", "scene_id", "version", "view_id",
-                            "prompt", "size", "quality",
+                            "prompt", "reference_map", "negative_prompt",
+                            "size", "quality", "validation",
                         ],
                         "properties": {
                             "asset_id": {"type": "string"},
@@ -336,8 +407,11 @@ IMAGE_PROMPT_SCHEMA = _schema({
                             "version": {"type": "string"},
                             "view_id": {"type": "string"},
                             "prompt": {"type": "string"},
+                            "reference_map": {"type": "array"},
+                            "negative_prompt": {"type": "string"},
                             "size": {"type": "string"},
                             "quality": {"type": "string"},
+                            "validation": {"type": "object"},
                         },
                     },
                 },
@@ -348,7 +422,8 @@ IMAGE_PROMPT_SCHEMA = _schema({
                         "required": [
                             "asset_id", "shot_id", "frame_role",
                             "character_versions", "scene_version",
-                            "prompt", "size", "quality",
+                            "prompt", "reference_map", "negative_prompt",
+                            "size", "quality", "validation",
                         ],
                         "properties": {
                             "asset_id": {"type": "string"},
@@ -360,8 +435,11 @@ IMAGE_PROMPT_SCHEMA = _schema({
                             "character_versions": {"type": "array"},
                             "scene_version": {"type": "string"},
                             "prompt": {"type": "string"},
+                            "reference_map": {"type": "array"},
+                            "negative_prompt": {"type": "string"},
                             "size": {"type": "string"},
                             "quality": {"type": "string"},
+                            "validation": {"type": "object"},
                         },
                     },
                 },
@@ -388,20 +466,25 @@ VIDEO_PROMPT_SCHEMA = _schema({
                     "items": {
                         "type": "object",
                         "required": [
-                            "shot_id", "target_model_id", "prompt",
+                            "shot_id", "target_model_id", "generation_mode", "prompt",
                             "reference_map", "parameters", "continuity_in",
                             "continuity_out", "validation",
                         ],
                         "properties": {
                             "shot_id": {"type": "string"},
                             "target_model_id": {"type": "string"},
+                            "generation_mode": {
+                                "type": "string",
+                                "enum": ["keyframe", "reference"],
+                            },
                             "prompt": {"type": "string"},
                             "reference_map": {"type": "array"},
                             "parameters": {
                                 "type": "object",
                                 "required": [
                                     "duration", "resolution", "aspect_ratio",
-                                    "image_url", "generate_audio",
+                                    "image_url", "last_frame_url",
+                                    "reference_urls", "generate_audio",
                                 ],
                                 "properties": {
                                     "duration": {
@@ -412,6 +495,8 @@ VIDEO_PROMPT_SCHEMA = _schema({
                                     "resolution": {"type": "string"},
                                     "aspect_ratio": {"type": "string"},
                                     "image_url": {"type": "string"},
+                                    "last_frame_url": {"type": "string"},
+                                    "reference_urls": {"type": "array"},
                                     "generate_audio": {"type": "boolean"},
                                 },
                             },
@@ -570,8 +655,13 @@ def build_comic_drama_workflow(
         ),
         _agent(
             "director", "总导演·创作简报", "comic-director",
-            "输出本集唯一生产简报与岗位任务。总时长可以大于 6 秒；在交付规格中明确"
-            "下游单镜生成时长上限为 6 秒，但不要把计划写成已生成成品。\n"
+            "输出本集唯一生产简报与岗位任务。先按‘目标—阻碍—有代价的选择—变化’"
+            "明确戏剧主线，再设计观众信息路径、情绪曲线、转折和视觉策略，并写入 "
+            "production_brief.delivery_spec.directorial_intent。给编剧任务设置因果升级、"
+            "场景目标/冲突/转折/退出状态、行动塑造人物、潜台词和伏笔回收门禁；给分镜"
+            "任务设置一镜一意图、景别/机位服务信息与情绪、可见可听描述、起止状态与"
+            "时空连续性、静音/删镜检查门禁。总时长可以大于 6 秒；在交付规格中明确"
+            "下游单镜默认不超过 6 秒且只做一个核心动作，但不要把计划写成已生成成品。\n"
             "【项目设定】\n{{start.projectBrief}}\n"
             "【本集需求】\n{{start.episodeBrief}}\n"
             "【总时长】{{start.durationSeconds}} 秒\n"
@@ -581,30 +671,42 @@ def build_comic_drama_workflow(
         ),
         _agent(
             "writer", "编剧·剧本包", "comic-screenwriter",
-            "把导演简报写成纯剧本包，总时长与简报一致。按场景和节拍写可见动作、"
-            "台词、声音与连续性，不规定景别、运镜或模型提示词。\n"
+            "读取导演简报中的 directorial_intent，把主角目标、中心阻碍、风险和有代价"
+            "的选择写成由‘但是/因此’推进的纯剧本包，总时长与简报一致。每场明确进入"
+            "状态、场景目标、对抗力量、失败代价、人物策略、转折和退出状态；每个节拍"
+            "写可观察行动、台词/潜台词、声音与后果。关键转折必须来自人物主动选择，"
+            "反转必须有前置线索，删除无状态变化且无铺垫/回收功能的场景。保持人物声音"
+            "和连续性，不用旁白重复画面，不规定景别、运镜或模型提示词。\n"
             "【导演简报】\n{{director.output}}",
             500, 400, schema=WRITER_SCHEMA,
         ),
         _agent(
             "char_design", "人物设定", "comic-character-designer",
-            "只建立本集实际出场角色的角色 ID、版本 ID、不可漂移特征、服装和禁改项。"
-            "项目设定优先于通用风格，不得引入其他项目的专名或角色。\n"
+            "只建立本集实际出场角色的视觉身份与版本系统。把故事功能转换成剪影、比例、"
+            "脸部识别点、发型、服装层级、材质、配色、道具和表演边界；明确不可变身份、"
+            "阶段 variant、逐镜状态、适用范围与禁继承项。多人必须可从剪影/配色区分，"
+            "设计复杂度必须支持跨视角稳定生成。不得引入其他项目角色或调用图片工具。\n"
             "【项目设定】\n{{start.projectBrief}}\n【剧本】\n{{writer.output}}",
             740, 220, schema=CHARACTER_SCHEMA,
         ),
         _agent(
             "scene_design", "场景设定", "comic-scene-designer",
-            "只建立本集实际使用场景的场景 ID、空间布局、地标、行动区和光照。"
-            "场景必须支持剧本动作，不得引入其他项目的专名或地点。\n"
+            "只建立本集实际场景的空间母版与状态版本。根据剧情功能写清区域、出入口、"
+            "高低关系、永久地标、尺度、行动/遮挡/危险区、主轴线、可用机位、材质和"
+            "物理光源；场景必须支持剧本动作并能跨机位辨认。场景母版保持无人，不得"
+            "混入其他项目地点或调用图片工具。\n"
             "【项目设定】\n{{start.projectBrief}}\n【剧本】\n{{writer.output}}",
             740, 580, schema=SCENE_SCHEMA,
         ),
         _agent(
             "storyboard", "独立分镜", "comic-storyboard",
-            "将剧本转换为连续镜头。每镜绑定 beat_id、角色版本和场景 ID，明确起止状态、"
-            "景别、构图、主体动作、摄影机运动和连续性检查；当前视频生成链要求单镜"
-            "不得超过 6 秒，超出时拆镜且保持总时长。\n"
+            "把导演意图和剧本状态变化转换为镜头因果。先拆节拍；每镜写清唯一叙事意图、"
+            "观众信息变化、目标情绪，并说明景别、机位、构图和运镜如何服务它。每镜绑定 "
+            "beat_id、角色版本、场景与道具 ID，分别描述可见主体动作和摄影机运动，明确"
+            "声音、转场、生成风险及起止状态；守住轴线、视线、画面方向、人物/道具位置"
+            "和动作连续性。执行静音、删镜、连续性、生成性与总时长检查。当前视频生成链"
+            "默认单镜不超过 6 秒且只做一个核心动作，超出时拆镜并保持总时长；不得改写"
+            "核心剧情和对白。\n"
             "【剧本】\n{{writer.output}}\n"
             "【人物设定】\n{{char_design.output}}\n"
             "【场景设定】\n{{scene_design.output}}",
@@ -612,9 +714,11 @@ def build_comic_drama_workflow(
         ),
         _agent(
             "vfx_action", "动作与特效设计", "comic-vfx-designer",
-            "逐镜定义角色/物体和摄影机的时序轨迹、空间约束、必要特效层及负向约束。"
-            "无复杂动作时保持简单，普通叙事镜头允许 vfxLayers 为空；不得为了展示技巧"
-            "制造无关运动或强加战斗光效。\n【分镜】\n{{storyboard.output}}",
+            "逐镜把动作拆成预备/重心转移、发力、路径、接触或转折、受力反馈、结果和"
+            "恢复，分开记录人物、道具、环境与摄影机轨迹，并让 continuity_in/out 对应"
+            "分镜起止状态。特效仅在有剧情来源时按 source/interaction/environment/"
+            "residual 分层，写清时序、遮挡和消散；普通镜头允许为空。指出具体生成风险"
+            "与拆镜建议，不改剧情、shot_id 或强加战斗光效。\n【分镜】\n{{storyboard.output}}",
             1220, 400, schema=SHOT_EFFECT_SCHEMA,
         ),
         _template(
@@ -627,69 +731,94 @@ def build_comic_drama_workflow(
             "【动作与特效】\n{{vfx_action.output}}",
             1460, 400,
         ),
+        WorkflowNode(
+            node_key="spec_audit",
+            type="comic-contract-audit",
+            name="规格合同审计",
+            position={"x": 1680, "y": 400},
+            config={
+                "inputs": {
+                    "director": "{{director.production_brief}}",
+                    "script": "{{writer.script_package}}",
+                    "characters": "{{char_design.character_bible}}",
+                    "scenes": "{{scene_design.scene_bible}}",
+                    "storyboard": "{{storyboard.storyboard}}",
+                    "action_vfx": "{{vfx_action.action_vfx_package}}",
+                },
+                "onError": "stop",
+            },
+        ),
+        _gate("spec_contract_gate", "合同门禁", "spec_audit", 1900, 400),
         _agent(
             "spec_qa", "规格 QA", "comic-qa-inspector",
-            "对规格包做生产前门禁。检查 ID 引用、时长、角色/场景一致性、起止帧、"
-            "动作可执行性和负向约束。任何阻断项都必须 gate=FAIL；只有证据完整且"
-            " blockers 为空且 qa_report.verdict=pass 才能 gate=PASS。"
+            "对规格包做生产前证据门禁：检查导演意图承接、剧本因果与人物主动选择、"
+            "人物/场景版本、镜头叙事字段、ID 引用、时长求和、起止连续性、动作/VFX"
+            "可执行性和提示词前置条件。每个问题绑定观察事实、expected、severity、责任"
+            "岗位与最小返工。任何阻断项都必须 gate=FAIL；只有证据完整且 blockers 为空"
+            "且 qa_report.verdict=pass 才能 gate=PASS。确定性合同审计只要出现 FAIL 或 errors，"
+            "本节点不得覆盖或降级其结论。"
             "顶层 gate 必须与 qa_report.verdict 一致。\n"
+            "【确定性合同审计】\n{{spec_audit.output}}\n"
             "【规格包】\n{{spec_package.output}}",
-            1680, 400, schema=_qa_schema("SPEC"),
+            2120, 400, schema=_qa_schema("SPEC"),
         ),
-        _gate("spec_gate", "规格门禁", "spec_qa", 1900, 400),
+        _gate("spec_gate", "规格门禁", "spec_qa", 2340, 400),
         _agent(
             "image_prompt", "图片提示词规格", "comic-prompt-engineer",
-            "以 IMAGE 模式工作：把已通过规格门禁的人物 Bible、场景 Bible、分镜和"
-            "动作特效包编译成三类可直接提交的图片生成任务。每项必须绑定稳定资产 ID、"
-            "上游版本、最终 prompt、size 和 quality；关键帧 prompt 必须描述单一冻结时刻。"
-            "只输出规格，不调用图片工具，也不把提示词称为图片成品。\n"
+            "以 IMAGE 模式把已通过门禁的人物、场景、分镜和动作包编译成角色、场景、"
+            "关键帧三类任务。逐项建立来源/参考映射，绑定稳定资产 ID 与版本；正向 prompt"
+            "只写可见目标，negative_prompt 独立；关键帧只描述一个冻结时刻。每项执行"
+            "语义、版本、引用真实性、模型参数和可提交性 validation；错误非空即 blocked。"
+            "只输出规格，不调用图片工具或把提示词称为成品。\n"
             "【规格包】\n{{spec_package.output}}\n"
             "【规格 QA】\n{{spec_qa.output}}",
-            2120, 400, schema=IMAGE_PROMPT_SCHEMA,
+            2560, 400, schema=IMAGE_PROMPT_SCHEMA,
         ),
         _code(
             "character_tasks", "角色图片任务",
             'package.get("character_assets",[])',
             {"package": "{{image_prompt.image_prompt_package}}"},
-            2340, 100,
+            2780, 100,
         ),
         _code(
             "scene_tasks", "场景图片任务",
             'package.get("scene_assets",[])',
             {"package": "{{image_prompt.image_prompt_package}}"},
-            2340, 400,
+            2780, 400,
         ),
         _code(
             "keyframe_tasks", "关键帧任务",
             'package.get("keyframe_assets",[])',
             {"package": "{{image_prompt.image_prompt_package}}"},
-            2340, 700,
+            2780, 700,
         ),
         _iteration(
             "char_art", "角色母版生成", "comic-character-artist",
             "{{character_tasks.items}}",
-            "用户要求生成最终角色母版。直接使用单项任务的最终 prompt 调用 generate_image；"
-            "不要重新设计或批量处理其他角色。工具证据必须原样写入岗位固定 JSON。\n"
+            "执行最终角色母版任务。先核对 asset/character/version/variant、视图、prompt、"
+            "size、quality 和 validation=ready，再原样调用 generate_image；不得重新设计、"
+            "润色 prompt 或处理其他角色。避免重复提交，工具证据原样写入固定 JSON。\n"
             "【单项任务】\n{{__item__}}",
-            2560, 100, max_parallel=2,
+            3000, 100, max_parallel=2,
         ),
         _iteration(
             "scene_art", "场景母版生成", "comic-scene-artist",
             "{{scene_tasks.items}}",
-            "用户要求生成最终纯场景母版。直接使用单项任务的最终 prompt 调用 generate_image；"
-            "不得加入主要人物。工具证据必须原样写入岗位固定 JSON。\n"
+            "执行最终纯场景母版任务。先核对 asset/scene/version/view、prompt、size、quality"
+            "和 validation=ready，再原样调用 generate_image；不得重设计或润色 prompt，"
+            "不得加入主要人物。避免重复提交，工具证据原样写入固定 JSON。\n"
             "【单项任务】\n{{__item__}}",
-            2560, 400, max_parallel=2,
+            3000, 400, max_parallel=2,
         ),
         _iteration(
             "keyframe_art", "关键帧生成", "comic-keyframe-artist",
             "{{keyframe_tasks.items}}",
-            "用户要求生成最终关键帧。只执行：直接使用单项任务的最终 prompt 调用"
-            " generate_image；不得设计/改写提示词，不得改 shot_id、角色版本或场景版本。"
-            "工具证据必须原样写入岗位固定 JSON。\n"
+            "执行最终关键帧任务。先核对 asset/shot/frame_role、单一时间点、人物/场景版本、"
+            "prompt、size、quality 和 validation=ready，再原样调用 generate_image；不得设计/"
+            "改写提示词，不得改 shot_id、版本、构图或动作结果。避免重复提交，工具证据原样写入固定 JSON。\n"
             "【单项任务】\n{{__item__}}\n"
             "【动作与特效包】\n{{vfx_action.output}}",
-            2560, 700, max_parallel=2,
+            3000, 700, max_parallel=2,
         ),
         _template(
             "image_package", "图片资产汇总",
@@ -697,64 +826,72 @@ def build_comic_drama_workflow(
             "【场景母版】\n{{scene_art.output}}\n\n"
             "【关键帧】\n{{keyframe_art.output}}\n\n"
             "【预期分镜】\n{{storyboard.output}}",
-            2800, 400,
+            3240, 400,
         ),
         _agent(
             "image_qa", "图片 QA", "comic-qa-inspector",
             "执行图片资产门禁：先核对预期 ID、工具调用证据、READY 状态、真实 URL、模型"
             "和缺失项，再提取全部 READY 图片 URL，必须实际调用 inspect_media，"
-            "inspection_type=image，criteria 使用规格包验收标准。将工具返回的视觉证据"
-            "合并进 qa_report。inspect_media 未调用/失败/blocked、URL 缺失或预期资产缺失"
+            "inspection_type=image，criteria 使用逐资产规格，检查身份/版本、人数、解剖手部、"
+            "服装道具、空间地标/光源、构图时刻、水印与生成瑕疵。将工具视觉证据合并进"
+            "qa_report，并给出 severity、责任岗位和最小返工。inspect_media 未调用/失败/"
+            "blocked、URL 缺失或预期资产缺失"
             "都必须 gate=FAIL；仅 qa_report.verdict=pass 时 gate=PASS。\n"
             "【规格包】\n{{spec_package.output}}\n"
             "【图片资产包】\n{{image_package.output}}",
-            3020, 400, schema=_qa_schema("IMAGE"),
+            3460, 400, schema=_qa_schema("IMAGE"),
         ),
-        _gate("image_gate", "图片门禁", "image_qa", 3240, 400),
+        _gate("image_gate", "图片门禁", "image_qa", 3680, 400),
         _agent(
             "video_prompt", "视频提示词编译", "comic-prompt-engineer",
-            "把通过门禁的分镜、动作特效包和真实关键帧 URL 编译成逐镜视频生成包。"
-            "每条参数 duration 为 1-6 秒，绑定唯一 shot_id、目标模型和真实引用；"
+            "把通过门禁的分镜、动作特效包和真实图片 URL 编译成逐镜视频生成包。按"
+            "起始状态→主体动作/受力→环境响应→结束状态组织 prompt，单独写唯一运镜和音频。"
+            "每条 duration 为 1-6 秒，绑定 shot_id、目标模型、generation_mode 和真实引用；"
+            "keyframe 与 reference 模式互斥，执行语义、版本、引用、参数和连续性 validation。"
             "不得输出整集一次生成的合并提示词，也不得声称视频已生成。\n"
             "【规格包】\n{{spec_package.output}}\n"
             "【图片资产】\n{{image_package.output}}\n"
             "【图片 QA】\n{{image_qa.output}}",
-            3460, 400, schema=VIDEO_PROMPT_SCHEMA,
+            3900, 400, schema=VIDEO_PROMPT_SCHEMA,
         ),
         _code(
             "video_tasks", "视频任务拆分",
             'package.get("shots",[])',
             {"package": "{{video_prompt.video_prompt_package}}"},
-            3680, 400,
+            4120, 400,
         ),
         _iteration(
             "video_generation", "视频生成", "comic-video-artist",
             "{{video_tasks.items}}",
-            "用户要求生成这个 shot_id 的最终视频。严格按单项参数实际调用 generate_video；"
-            "有 image_url 时传入，禁止重复提交。流程已经进入轮询阶段：提交成功后调用"
+            "执行这个 shot_id 的最终视频任务。先核对 validation=ready、模型、1-6 秒参数、"
+            "连续性与 keyframe/reference 模式互斥，再按单项参数原样调用 generate_video；"
+            "以 shot_id/输入指纹避免重复提交。流程已进入轮询阶段：提交成功后调用"
             " check_video_generation 一次并如实保留 pending/completed/failed 状态。"
             "不得编造 URL 或完成状态。\n【单项视频任务】\n{{__item__}}",
-            3900, 400,
+            4340, 400,
         ),
         _agent(
             "video_qa", "视频 QA", "comic-qa-inspector",
             "执行视频交付门禁：逐生成单元核对真实 jobId、状态、URL、时长和顺序。"
             "只有全部任务 completed 且有平台 /uploads/ URL 才可继续；然后必须实际调用"
-            " inspect_media，inspection_type=video，criteria 使用分镜和连续性标准，并将"
-            "抽帧证据合并进 qa_report。pending/failed/缺失、inspect_media 未调用/失败/"
+            " inspect_media，inspection_type=video，criteria 使用镜头语义、起止状态、身份/"
+            "服装、时空连续、动作受力、物体穿插、闪烁融化、运镜、时长顺序和音画标准。"
+            "将抽帧证据及 severity/责任岗位/最小返工合并进 qa_report。pending/failed/缺失、"
+            "inspect_media 未调用/失败/"
             "blocked 都必须 gate=FAIL；仅 qa_report.verdict=pass 时 gate=PASS。\n"
             "【分镜】\n{{storyboard.output}}\n"
             "【视频任务】\n{{video_generation.output}}",
-            4120, 400, schema=_qa_schema("VIDEO"),
+            4560, 400, schema=_qa_schema("VIDEO"),
         ),
-        _gate("video_gate", "视频门禁", "video_qa", 4340, 400),
+        _gate("video_gate", "视频门禁", "video_qa", 4780, 400),
         WorkflowNode(
             node_key="end",
             type="end",
             name="生产交付",
-            position={"x": 4580, "y": 400},
+            position={"x": 5020, "y": 400},
             config={"outputTemplate":
                 "# 漫剧生产结果\n\n"
+                "## 确定性合同审计\n{{spec_audit.output}}\n\n"
                 "## 规格门禁\n{{spec_qa.output}}\n\n"
                 "## 图片门禁\n{{image_qa.output}}\n\n"
                 "## 视频门禁\n{{video_qa.output}}\n\n"
@@ -773,7 +910,10 @@ def build_comic_drama_workflow(
         _edge("scene_design", "storyboard"),
         _edge("storyboard", "vfx_action"),
         _edge("vfx_action", "spec_package"),
-        _edge("spec_package", "spec_qa"),
+        _edge("spec_package", "spec_audit"),
+        _edge("spec_audit", "spec_contract_gate"),
+        _edge("spec_contract_gate", "spec_qa", "PASS"),
+        _edge("spec_contract_gate", "end", "FAIL"),
         _edge("spec_qa", "spec_gate"),
         _edge("spec_gate", "image_prompt", "PASS"),
         _edge("spec_gate", "end", "FAIL"),
@@ -799,7 +939,7 @@ def build_comic_drama_workflow(
     ]
 
     description = (
-        "总导演 → 编剧 → 人物/场景设计 → 独立分镜 → 特效/动作 → 规格 QA → "
+        "总导演 → 编剧 → 人物/场景设计 → 独立分镜 → 特效/动作 → 确定性合同审计 → 规格 QA → "
         "角色/场景/关键帧生成 → 图片 QA → 视频提示词 → 视频生成 → 视频 QA → 交付"
     )
 

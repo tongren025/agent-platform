@@ -28,6 +28,7 @@ import {
   type FixationPlanningRequest,
 } from '../agent/fixationLauncher'
 import AssistantTimeline from './AssistantTimeline'
+import { routeApprovalRequestsByOwner, type ApprovalOwner } from './pendingApprovalRouter'
 import { buildStepDetailLabels, countCreatedNodesByCategory, summarizeToolCall } from './toolCallSummary'
 import { MemoryFold } from './MemoryFold'
 import { runProposalUndo, setCommittedProposal, useCommittedProposal } from '../agent/proposalUndo'
@@ -56,6 +57,8 @@ type PendingToolCall = {
   args: unknown
   /** 纯传输:把判决回给主进程(LLM 的 confirm 通道)。应用画布变更走 approveCalls 的事务批。 */
   confirm: ToolCallEvent['confirm']
+  /** 卡片所属轮次的批准执行器；Web 流结束后仍存活，新轮次不会覆盖它。 */
+  approveOwner: ApprovalOwner<ApproveCallRequest>
   /** 时序内联:本卡跟在哪条消息后(入队时的「卡前气泡」或用户消息 id)。 */
   anchorMessageId?: string
 }
@@ -128,11 +131,13 @@ export default function CanvasAssistantPanel({
     setPendingToolCalls((current) => current.filter((item) => item.toolCallId !== toolCallId))
   }, [])
 
-  // S6-2 提议事务:批准 = 一笔原子批量(plan card 的 create+connect 共一个 proposalId)。
-  // 实现挂在 turn 闭包里(要数 toolActionCount),组件层暴露稳定回调。
-  const approveCallsRef = React.useRef<((requests: ApproveCallRequest[]) => Promise<void>) | null>(null)
+  // S6-2 提议事务:批准请求按卡片所属轮次路由。不能用单一 ref：Web 后端先结束流、
+  // 用户后点确认，且旧卡可与新一轮并存；覆盖/清空 ref 都会让可见卡失效。
   const approveCalls = React.useCallback((requests: ApproveCallRequest[]) => {
-    void approveCallsRef.current?.(requests)
+    void routeApprovalRequestsByOwner(
+      requests,
+      (toolCallId) => pendingByIdRef.current.get(toolCallId)?.approveOwner,
+    )
   }, [])
 
   // 稳定引用:传给 AssistantTimeline→AgentPlanCard,使 React.memo(AgentPlanCard) 在流式吐字
@@ -142,20 +147,6 @@ export default function CanvasAssistantPanel({
     [resolvePending],
   )
 
-  // Exposed for the V2 agent client (wired in B6) so the panel can render
-  // pending tool calls and forward the user's confirmation back to the IPC
-  // session. We surface it via a ref so the call site doesn't have to
-  // re-render on every state change.
-  const pendingToolCallsRef = React.useRef({
-    enqueue: (call: PendingToolCall) => {
-      pendingByIdRef.current.set(call.toolCallId, call)
-      setPendingToolCalls((current) => [...current, call])
-    },
-    clear: () => {
-      pendingByIdRef.current.clear()
-      setPendingToolCalls([])
-    },
-  })
   const draft = useGenerationCanvasStore((state) => state.generationAiDraft)
   const messages = useGenerationCanvasStore((state) => state.generationAiMessages)
   // S1b 诚实分隔线:气泡有历史而 LLM 记忆为空 → 在历史末尾画「以上对话 AI 已不再记得」。
@@ -259,7 +250,7 @@ export default function CanvasAssistantPanel({
       let requiredToolEmitted = !options.requiredTool
       // S6-2 提议事务批:用户点「确认」后整批原子应用——全成 committed,中途失败补偿回滚
       // (零半截)。先落地后回话:LLM 收到的每步成败与画布事实一致。
-      approveCallsRef.current = async (requests: ApproveCallRequest[]) => {
+      const approveOwner: ApprovalOwner<ApproveCallRequest> = async (requests) => {
         const items = requests
           .map((request) => ({ request, call: pendingByIdRef.current.get(request.toolCallId) }))
           .filter((item): item is { request: ApproveCallRequest; call: PendingToolCall } => Boolean(item.call))
@@ -481,13 +472,16 @@ export default function CanvasAssistantPanel({
             }
             // ask:写/破坏性操作排队,等用户经 pending 卡显式点头。卡锚定到当前「卡前气泡」,
             // 收口本段→卡后文字另起新气泡。confirm 纯传输,批准走 approveCalls 事务批(S6-2)。
-            pendingToolCallsRef.current.enqueue({
+            const pendingCall: PendingToolCall = {
               toolCallId: event.toolCallId,
               toolName: event.toolName,
               args: event.args,
               confirm: event.confirm,
+              approveOwner,
               anchorMessageId: anchorId,
-            })
+            }
+            pendingByIdRef.current.set(event.toolCallId, pendingCall)
+            setPendingToolCalls((current) => [...current, pendingCall])
             sealBubble()
             // “制作向导”的主按钮已经明确授权本步骤。建卡、连线、站位和运镜参考均可撤销，
             // 因此自动通过，避免新手再点一张技术确认卡；真实生成/删除仍必须人工确认。
@@ -501,9 +495,7 @@ export default function CanvasAssistantPanel({
                 'set_node_prompt',
               ]).has(event.toolName)
             ) {
-              void Promise.resolve().then(() =>
-                approveCallsRef.current?.([{ toolCallId: event.toolCallId }]),
-              )
+              void Promise.resolve().then(() => approveOwner([{ toolCallId: event.toolCallId }]))
             }
           },
         })
@@ -549,7 +541,6 @@ export default function CanvasAssistantPanel({
       } finally {
         setBusy(false)
         cancelRef.current = null
-        approveCallsRef.current = null
         setMemoryRefreshKey((key) => key + 1) // S9:本轮事件可能提炼出新记忆
       }
     })()
@@ -615,6 +606,11 @@ export default function CanvasAssistantPanel({
     // 新对话 = 该 area 模型上下文归零(创作/画布各一份键,互不影响)。
     void clearWorkbenchAgentSession(workbenchSessionKey('generation'))
   }, [clearAttachments, setDraft])
+
+  React.useEffect(() => () => {
+    // 卸载后清掉卡片持有的轮次执行器，防止外部残留事件误触过期闭包。
+    pendingByIdRef.current.clear()
+  }, [])
 
   if (collapsed) {
     return (
