@@ -11,16 +11,15 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '../../utils/cn'
 import { toast } from '../../ui/toast'
 import { extractWorkbenchDocumentText } from '../creation/creationAiModes'
+import { requestSourceEditorFocus } from '../creation/sourceEditorFocus'
 import { mintSpendGrant } from '../api/taskApi'
 import { generationCanvasTools } from '../generationCanvas/agent/generationCanvasTools'
 import { runPlanWithToasts } from '../generationCanvas/components/batchPlanPreview'
-import { buildDependencyWaves } from '../generationCanvas/runner/dependencyWaves'
 import { useGenerationCanvasStore } from '../generationCanvas/store/generationCanvasStore'
 import { useWorkbenchStore } from '../workbenchStore'
 import {
   deriveGuidedProductionProgress,
   isNodeReadyForGuidedGeneratedStage,
-  selectPendingGuidedGenerationNodes,
   type GuidedGeneratedAssetStageId,
   type GuidedProductionStageId,
 } from './guidedProductionFlow'
@@ -33,10 +32,10 @@ import {
   requestGuidedCreation,
 } from './guidedProductionEvents'
 import {
-  buildGuidedCanvasPrompt,
-  buildGuidedScriptPrompt,
-} from './guidedProductionPrompts'
-import { guidedEmployeeForStage } from './guidedProductionEmployees'
+  appendGuidedReviewVideos,
+  dispatchGuidedProductionPrimaryAction,
+  startGuidedStageGeneration,
+} from './guidedProductionPrimaryAction'
 import {
   filterProductionTimeline,
   isNodeInProductionAgentScope,
@@ -71,6 +70,7 @@ export default function GuidedProductionBar(): JSX.Element {
   const setWorkspaceMode = useWorkbenchStore((state) => state.setWorkspaceMode)
   const setStoryboardEditorOpen = useWorkbenchStore((state) => state.setStoryboardEditorOpen)
   const setCreationAiCollapsed = useWorkbenchStore((state) => state.setCreationAiCollapsed)
+  const setGenerationAiCollapsed = useGenerationCanvasStore((state) => state.setGenerationAiCollapsed)
   const allNodes = useGenerationCanvasStore((state) => state.nodes)
   const allEdges = useGenerationCanvasStore((state) => state.edges)
   const storedProductionScope = useProductionScopeStore((state) => state.activeScope)
@@ -95,8 +95,8 @@ export default function GuidedProductionBar(): JSX.Element {
     () => extractWorkbenchDocumentText(workbenchDocument),
     [workbenchDocument],
   )
-  const timelineClipCount = React.useMemo(
-    () => timeline.tracks.reduce((total, track) => total + track.clips.length, 0),
+  const timelineSourceNodeIds = React.useMemo(
+    () => timeline.tracks.flatMap((track) => track.clips.map((clip) => clip.sourceNodeId)),
     [timeline.tracks],
   )
   const progress = React.useMemo(
@@ -106,9 +106,9 @@ export default function GuidedProductionBar(): JSX.Element {
         nodes,
         storyboardPlanExists: Boolean(storyboardPlan),
         storyboardPlanCommitted,
-        timelineClipCount,
+        timelineSourceNodeIds,
       }),
-    [documentText, nodes, storyboardPlan, storyboardPlanCommitted, timelineClipCount],
+    [documentText, nodes, storyboardPlan, storyboardPlanCommitted, timelineSourceNodeIds],
   )
   const current = progress.current
   const allComplete = progress.completedCount === progress.stages.length
@@ -149,112 +149,71 @@ export default function GuidedProductionBar(): JSX.Element {
       workbenchState.timeline.tracks.flatMap((track) => track.clips.map((clip) => clip.sourceNodeId)),
     )
     const scopedNodeIds = new Set(generationCanvasTools.read_canvas().nodes.map((node) => node.id))
-    const videos = canvasState.nodes
-      .filter((node) => scopedNodeIds.has(node.id))
-      .filter((node) => node.kind === 'video' && (node.status === 'success' || node.result?.type === 'video'))
-      .filter((node) => !existingSourceIds.has(node.id))
-      .sort((left, right) => (left.shotIndex ?? Number.MAX_SAFE_INTEGER) - (right.shotIndex ?? Number.MAX_SAFE_INTEGER))
-    let nextFrame = Math.max(
+    const scopedNodes = canvasState.nodes.filter((node) => scopedNodeIds.has(node.id))
+    const initialFrame = Math.max(
       0,
       ...workbenchState.timeline.tracks.flatMap((track) => track.clips.map((clip) => clip.endFrame)),
     )
-    for (const video of videos) {
-      const outcome = generationCanvasTools.send_to_timeline(video.id, { startFrame: nextFrame })
-      if (outcome.ok) nextFrame = outcome.clip.endFrame
-    }
+    appendGuidedReviewVideos(
+      { nodes: scopedNodes, existingSourceIds, initialFrame },
+      (nodeId, startFrame) => {
+        const outcome = generationCanvasTools.send_to_timeline(nodeId, { startFrame })
+        return outcome.ok ? { ok: true, endFrame: outcome.clip.endFrame } : { ok: false }
+      },
+    )
     setWorkspaceMode('preview')
   }, [setWorkspaceMode])
 
   const startCurrentStageGeneration = React.useCallback(async (stageId: GuidedGeneratedAssetStageId) => {
-    if (startingGenerationRef.current) return
-    const selected = selectPendingGuidedGenerationNodes(stageId, nodes)
-    const plan = buildDependencyWaves(selected.map((node) => node.id), { nodes, edges })
-    const runnableIds = plan.waves.flat()
-    if (runnableIds.length === 0) {
-      await runPlanWithToasts(plan)
-      return
-    }
-    startingGenerationRef.current = true
-    setStartingGeneration(true)
-    try {
-      const grantId = await mintSpendGrant(runnableIds)
-      await runPlanWithToasts(plan, grantId)
-    } catch (error: unknown) {
-      toast(
-        error instanceof Error && error.message
-          ? error.message
-          : t('guidedProduction.authorizationFailed'),
-        'error',
-      )
-    } finally {
-      startingGenerationRef.current = false
-      setStartingGeneration(false)
-    }
+    await startGuidedStageGeneration(
+      { stageId, nodes, edges, lock: startingGenerationRef },
+      {
+        mintGrant: mintSpendGrant,
+        runPlan: runPlanWithToasts,
+        setStarting: setStartingGeneration,
+        authorizationFailed: (error) => {
+          toast(
+            error instanceof Error && error.message
+              ? error.message
+              : t('guidedProduction.authorizationFailed'),
+            'error',
+          )
+        },
+      },
+    )
   }, [edges, nodes, t])
 
   const handleAction = React.useCallback(() => {
-    if (currentNeedsGeneration && (startingGenerationRef.current || currentStageHasActiveGeneration)) return
-    if (allComplete || current.id === 'review') {
-      handleReview()
-      return
-    }
-    if (current.id === 'idea') {
-      setWorkspaceMode('creation')
-      setCreationAiCollapsed(false)
-      return
-    }
-    if (current.id === 'script') {
-      setWorkspaceMode('creation')
-      setCreationAiCollapsed(false)
-      requestGuidedCreation({
-        action: 'send',
-        prompt: buildGuidedScriptPrompt(documentText),
-        modeId: 'script',
-        displayMessage: t('guidedProduction.stage.script.displayMessage'),
-        autoApproveWrites: true,
-        employeeKey: guidedEmployeeForStage('script'),
-        requiredTool: 'append_to_end',
-      })
-      return
-    }
-    if (currentNeedsGeneration && isGeneratedAssetStage(current.id)) {
-      setWorkspaceMode('generation')
-      void startCurrentStageGeneration(current.id)
-      return
-    }
-    if (current.id === 'storyboard') {
-      if (storyboardPlan && !storyboardPlanCommitted) {
-        setWorkspaceMode('creation')
-        setCreationAiCollapsed(false)
-        setStoryboardEditorOpen(true)
-        return
-      }
-      setWorkspaceMode('creation')
-      setCreationAiCollapsed(false)
-      requestGuidedCreation({
-        action: 'storyboard',
-        displayMessage: t('guidedProduction.stage.storyboard.displayMessage'),
-        shotMode: 'image',
-        employeeKey: guidedEmployeeForStage('storyboard'),
-        requiredTool: 'propose_storyboard_plan',
-      })
-      return
-    }
-    setWorkspaceMode('generation')
-    if (current.id === 'style') {
-      const missingNarrative = buildMissingNarrativeNodes(
+    dispatchGuidedProductionPrimaryAction(
+      {
+        currentStageId: current.id,
+        allComplete,
+        currentNeedsGeneration,
+        generationBlocked: startingGenerationRef.current || currentStageHasActiveGeneration,
+        storyboardPlanExists: Boolean(storyboardPlan),
+        storyboardPlanCommitted,
         documentText,
-        useGenerationCanvasStore.getState().nodes,
-      )
-      if (missingNarrative.length) generationCanvasTools.create_nodes(missingNarrative)
-    }
-    requestGuidedCanvas({
-      prompt: buildGuidedCanvasPrompt(current.id, documentText),
-      displayMessage: t(`guidedProduction.stage.${current.id}.displayMessage` as 'guidedProduction.stage.style.displayMessage'),
-      autoApproveSafeWrites: true,
-      employeeKey: guidedEmployeeForStage(current.id),
-      requiredTool: 'create_canvas_nodes',
-    })
+        translate: (key) => t(key as 'guidedProduction.stage.script.displayMessage'),
+      },
+      {
+        setWorkspaceMode,
+        openCreationAssistant: () => setCreationAiCollapsed(false),
+        focusSourceEditor: requestSourceEditorFocus,
+        openCanvasAssistant: () => setGenerationAiCollapsed(false),
+        openStoryboardEditor: () => setStoryboardEditorOpen(true),
+        ensureNarrativeNodes: () => {
+          const missingNarrative = buildMissingNarrativeNodes(
+            documentText,
+            useGenerationCanvasStore.getState().nodes,
+          )
+          if (missingNarrative.length) generationCanvasTools.create_nodes(missingNarrative)
+        },
+        requestCreation: requestGuidedCreation,
+        requestCanvas: requestGuidedCanvas,
+        startGeneration: (stageId) => { void startCurrentStageGeneration(stageId) },
+        review: handleReview,
+      },
+    )
   }, [
     allComplete,
     current.id,
@@ -263,6 +222,7 @@ export default function GuidedProductionBar(): JSX.Element {
     handleReview,
     currentNeedsGeneration,
     setCreationAiCollapsed,
+    setGenerationAiCollapsed,
     setStoryboardEditorOpen,
     setWorkspaceMode,
     startCurrentStageGeneration,

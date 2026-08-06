@@ -30,7 +30,7 @@ export type GuidedProductionInput = {
   nodes: readonly GenerationCanvasNode[]
   storyboardPlanExists: boolean
   storyboardPlanCommitted: boolean
-  timelineClipCount: number
+  timelineSourceNodeIds: readonly string[]
 }
 
 export type GuidedProductionProgress = {
@@ -229,10 +229,16 @@ export function deriveGuidedProductionProgress(input: GuidedProductionInput): Gu
   const hasKeyframe = shotCount > 0 && generatedKeyframeCount === shotCount
   const hasVideoNodes = videoNodes.length > 0
   const hasGeneratedVideo = shotCount > 0 && generatedVideoCount === shotCount
+  const timelineSourceNodeIds = new Set(input.timelineSourceNodeIds)
+  const reviewedVideoCount = coveredShotCount(
+    storyboardNodes,
+    videoNodes,
+    (node) => hasGeneratedResult(node, 'video') && timelineSourceNodeIds.has(node.id),
+  )
   const hasReviewTimeline =
     shotCount > 0 &&
     hasGeneratedVideo &&
-    input.timelineClipCount >= shotCount
+    reviewedVideoCount === shotCount
   const plannedByStage: Record<GuidedGeneratedAssetStageId, boolean> = {
     style: styleNodes.length > 0,
     character: characterNodes.length > 0,

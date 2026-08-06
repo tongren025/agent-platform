@@ -100,8 +100,20 @@ def _write_manifest(tmp_path: Path, payload: dict) -> Path:
     return path
 
 
+def _without_runtime_metadata(records: list[dict]) -> list[dict]:
+    """只忽略注册表保存时维护的顶层元数据，嵌套业务内容仍参与精确比较。"""
+    return [
+        {
+            key: value
+            for key, value in record.items()
+            if key not in {"managedRevision", "updatedAt"}
+        }
+        for record in records
+    ]
+
+
 def test_bundled_manifest_matches_current_builtin_sources():
-    """防止只改 data JSON 却忘记同步镜像内迁移清单。"""
+    """防止业务配置只改 data JSON 却忘记同步镜像内迁移清单。"""
     root = Path(__file__).resolve().parents[1]
     manifest = json.loads(
         (
@@ -177,19 +189,31 @@ def test_bundled_manifest_matches_current_builtin_sources():
     }
     for employee_key, marker in specialized_markers.items():
         assert marker in profiles[employee_key]
-    assert sorted(
-        manifest["employees"],
-        key=lambda item: item["employeeKey"],
-    ) == expected_employees
-    assert manifest["team"] == [
-        json.loads(
-            (
-                root / "data" / "teams" / "comic-drama-team.json"
-            ).read_text(encoding="utf-8")
+    # 启动迁移会更新源注册表的 managedRevision/updatedAt；这两个顶层字段不是打包业务内容。
+    # 其余结构仍用字典深度相等严格比较，嵌套提示词、Schema、节点和边的漂移都会失败。
+    assert _without_runtime_metadata(
+        sorted(
+            manifest["employees"],
+            key=lambda item: item["employeeKey"],
         )
-    ]
-    assert manifest["tools"] == expected_tools
-    assert manifest["workflows"] == expected_workflows
+    ) == _without_runtime_metadata(expected_employees)
+    assert _without_runtime_metadata(
+        manifest["team"]
+    ) == _without_runtime_metadata(
+        [
+            json.loads(
+                (
+                    root / "data" / "teams" / "comic-drama-team.json"
+                ).read_text(encoding="utf-8")
+            )
+        ]
+    )
+    assert _without_runtime_metadata(
+        manifest["tools"]
+    ) == _without_runtime_metadata(expected_tools)
+    assert _without_runtime_metadata(
+        manifest["workflows"]
+    ) == _without_runtime_metadata(expected_workflows)
 
 
 def test_first_import_creates_strongly_typed_entities_with_revision(

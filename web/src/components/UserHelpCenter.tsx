@@ -13,6 +13,7 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import './UserHelp.css';
+import { shouldAutoStartUserGuide } from './userHelpTourPolicy';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -60,7 +61,11 @@ export default function UserHelpCenter({
     window.addEventListener(START_USER_GUIDE_EVENT, startFromEvent);
     const timer = window.setTimeout(() => {
       // 手机轻制作有自己的四步引导，避免两个弹层首次进入时互相遮挡。
-      if (window.location.pathname !== '/mobile' && !localStorage.getItem(GUIDE_STORAGE_KEY)) startGuide();
+      // 画布也有自己的制作引导；这里只拦截自动播放，手动重播事件仍然有效。
+      if (shouldAutoStartUserGuide(
+        window.location.pathname,
+        Boolean(localStorage.getItem(GUIDE_STORAGE_KEY)),
+      )) startGuide();
     }, 900);
     return () => {
       window.clearTimeout(timer);

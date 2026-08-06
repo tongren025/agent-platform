@@ -28,7 +28,7 @@ function progress(patch: Partial<Parameters<typeof deriveGuidedProductionProgres
     nodes: [],
     storyboardPlanExists: false,
     storyboardPlanCommitted: false,
-    timelineClipCount: 0,
+    timelineSourceNodeIds: [],
     ...patch,
   })
 }
@@ -128,8 +128,21 @@ describe('deriveGuidedProductionProgress', () => {
       }),
     ]
     expect(progress({ documentText, nodes: allGenerated }).current.id).toBe('review')
-    expect(progress({ documentText, nodes: allGenerated, timelineClipCount: 1 }).current.id).toBe('review')
-    expect(progress({ documentText, nodes: allGenerated, timelineClipCount: 2 }).completedCount).toBe(10)
+    expect(progress({
+      documentText,
+      nodes: allGenerated,
+      timelineSourceNodeIds: ['text-node', 'audio-node'],
+    }).completedCount).toBe(9)
+    expect(progress({
+      documentText,
+      nodes: allGenerated,
+      timelineSourceNodeIds: ['video', 'video'],
+    }).completedCount).toBe(9)
+    expect(progress({
+      documentText,
+      nodes: allGenerated,
+      timelineSourceNodeIds: ['video', 'video-2'],
+    }).completedCount).toBe(10)
   })
 })
 

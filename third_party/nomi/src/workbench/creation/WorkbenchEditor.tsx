@@ -9,6 +9,11 @@ import { normalizeWorkbenchContentJson, type CreationDocumentTools } from '../wo
 import { useTransientScrollingClass } from './useTransientScrollingClass'
 import { useNomiRichTextEditor } from '../common/useNomiRichTextEditor'
 import { buildRichTextActions, type RichTextAction } from '../common/richTextActions'
+import {
+  consumePendingSourceEditorFocus,
+  hasPendingSourceEditorFocus,
+  SOURCE_EDITOR_FOCUS_EVENT,
+} from './sourceEditorFocus'
 
 // 工具栏分组：格式按语义分 3 簇（强调 / 标题 / 列表·引用）靠左，历史（撤销/重做）推到右端。
 // 之前用一个 flex-1 spacer 把 9 个按钮全挤到左侧、右边 ~570px 浪费 —— 这里按语义两端锚定。
@@ -136,6 +141,27 @@ export default function WorkbenchEditor(): JSX.Element {
     onChange: handleChange,
     onSelectionChange: handleSelectionChange,
   })
+
+  React.useEffect(() => {
+    if (!editor) return
+    let focusFrame: number | null = null
+    const focusWhenReady = () => {
+      if (!hasPendingSourceEditorFocus()) return
+      if (focusFrame !== null) window.cancelAnimationFrame(focusFrame)
+      // 等工作区切换完成后再聚焦；若此编辑器先被卸载，待处理标记仍留给下一次挂载消费。
+      focusFrame = window.requestAnimationFrame(() => {
+        focusFrame = null
+        if (editor.isDestroyed || !consumePendingSourceEditorFocus()) return
+        editor.chain().focus('end').run()
+      })
+    }
+    window.addEventListener(SOURCE_EDITOR_FOCUS_EVENT, focusWhenReady)
+    focusWhenReady()
+    return () => {
+      window.removeEventListener(SOURCE_EDITOR_FOCUS_EVENT, focusWhenReady)
+      if (focusFrame !== null) window.cancelAnimationFrame(focusFrame)
+    }
+  }, [editor])
 
   // Publish creation document tools = the shared rich-text read/write surface (read full/selection,
   // insert/replace/append). The AI panel reads these to apply approved write-tool calls.
