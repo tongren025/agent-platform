@@ -72,6 +72,7 @@ export type GenerationErrorKind =
   | 'content-policy'
   | 'server'
   | 'input'
+  | 'empty-prompt'
   | 'output-truncated'
   | 'unknown'
 
@@ -88,6 +89,7 @@ const ERROR_KEY_BY_KIND: Record<GenerationErrorKind, string> = {
   'content-policy': 'contentPolicy',
   server: 'server',
   input: 'input',
+  'empty-prompt': 'emptyPrompt',
   'output-truncated': 'outputTruncated',
   unknown: 'unknown',
 }

@@ -63,6 +63,7 @@ import { useNodeVideoHoverPreview } from './useNodeVideoHoverPreview'
 import { NodeInlineImageTitle, NodeResultHeaderActions } from './NodeImagePreviewActions'
 import { useNodeDisplayPrompt } from './useNodeDisplayPrompt'
 import { useNodeMediaPreview } from './useNodeMediaPreview'
+import { isGenerationPromptMissing } from '../runner/generationPromptGuard'
 
 export type BaseGenerationNodeProps = {
   node: GenerationCanvasNode
@@ -494,13 +495,17 @@ function BaseGenerationNodeImpl({
         <NodeErrorReport
           message={node.error}
           onRetry={
-            isAssetKind && node.meta?.source === 'clipboard-url'
-              ? undefined
-              : () => {
-                  void (node.meta?.retryableImport === true
-                    ? retryLocalAssetImport(node.id)
-                    : confirmAndRunNode(node.id))
-                }
+            isAssetKind
+              ? node.meta?.source === 'clipboard-url'
+                ? undefined
+                : () => {
+                    void (node.meta?.retryableImport === true
+                      ? retryLocalAssetImport(node.id)
+                      : confirmAndRunNode(node.id))
+                  }
+              : isGenerationPromptMissing(node)
+                ? undefined
+                : () => { void confirmAndRunNode(node.id) }
           }
         />
       ) : null}

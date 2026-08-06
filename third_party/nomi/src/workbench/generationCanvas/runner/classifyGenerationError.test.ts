@@ -105,6 +105,14 @@ describe('classifyGenerationError — 已知分类', () => {
     expect(r.reason).not.toBe('账号权限不足')
   })
 
+  it('空提示词错误给出可行动中文提示，不建议原样重试', () => {
+    const english = classifyGenerationError('prompt is required')
+    expect(english.reason).toBe('这个节点没有提示词')
+    expect(english.hint).toMatch(/顶部制作按钮|填写提示词/)
+    const chinese = classifyGenerationError('提示词不能为空')
+    expect(chinese.reason).toBe('这个节点没有提示词')
+  })
+
   it('RunningHub 605/1620 余额错误 → 余额不足(不误导成「服务商故障/参数错」)', () => {
     const mk = (code: number, msg: string, cat: string) =>
       "NOMI_VENDOR_ERR_B64::" +

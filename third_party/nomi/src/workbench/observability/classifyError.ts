@@ -78,6 +78,19 @@ function truncateLine(value: string): string {
  */
 const STRUCTURED_KINDS: readonly GenerationErrorKind[] = ['auth', 'balance', 'quota', 'network', 'server', 'input']
 
+function detectEmptyPrompt(upstream: string | undefined, raw: string): boolean {
+  const text = `${upstream || ''} ${raw}`.toLowerCase()
+  return (
+    text.includes('prompt is required') ||
+    text.includes('prompt required') ||
+    text.includes('prompt cannot be empty') ||
+    text.includes('empty prompt') ||
+    text.includes('提示词不能为空') ||
+    text.includes('提示词为空') ||
+    text.includes('缺少提示词')
+  )
+}
+
 /** legacy 字符串 → 类别(老项目持久化的 node.error / 非 vendor 错误的兜底识别;文案不在这里)。 */
 function detectLegacyErrorKind(raw: string): GenerationErrorKind | null {
   const lower = raw.toLowerCase()
@@ -214,6 +227,10 @@ export function classifyGenerationError(message: string): GenerationErrorReport 
     stripVendorErrorMarker(String(message || ''))
       .split('\n→')[0]
       .trim() || i18n.t('generationCommon.observability.error.unknown.reason')
+  if (detectEmptyPrompt(structured?.upstreamMsg, cleanRaw)) {
+    const { reason, hint } = narrateGenerationError('empty-prompt')
+    return { reason, hint, raw: cleanRaw }
+  }
   // 账号档位闸（会员/企业 Key/网页授权）**最先**判——它的关键词（会员/授权/开通即梦会员）比
   // model-not-open 更具体；反过来放后面会被宽词抢走（即梦 CLI 兜底文案曾被判成「模型未开通」
   // 并给出火山 Ark 指引，2026-07-06 真机走查抓出）。reason 出自 narrate，服务商原话单独提到可见区。

@@ -289,6 +289,10 @@ export const zhGenerationCommon = {
         reason: '参数不被接受',
         hint: '服务商拒绝了请求参数，请检查比例/尺寸等设置，或换一个模型。',
       },
+      emptyPrompt: {
+        reason: '这个节点没有提示词',
+        hint: '空占位不会继续生成。请点击顶部制作按钮重新规划，或先填写提示词再生成。',
+      },
       outputTruncated: {
         reason: '输出超长被截断',
         hint: '这一轮要返回的内容超过了模型的单轮输出上限，原样重试只会再次截断。请缩短这轮任务（如剧本分段拆镜头、减少镜头数），或换单轮输出上限更大的模型。',
@@ -807,6 +811,7 @@ export const zhGenerationCommon = {
     authorizationFailed: '付费授权失败',
     waitingUpstream: '{{count}} 个在等上游参考（参考卡）先生成',
     cyclicReferences: '{{count}} 个存在循环引用',
+    missingPrompt: '{{count}} 个节点没有提示词（已跳过，不会扣费）',
     detailSeparator: '、',
     blockedNotice: '还有 {{details}}——先把它们生成/理顺，再批量。',
     startTitle: '开始生成',
@@ -1251,6 +1256,10 @@ export const enGenerationCommon = {
       input: {
         reason: 'Parameters rejected',
         hint: 'The provider rejected the request parameters. Check settings such as ratio and size, or choose another model.',
+      },
+      emptyPrompt: {
+        reason: 'This node has no prompt',
+        hint: 'Empty placeholders are skipped. Use the guided action at the top to plan again, or enter a prompt before generating.',
       },
       outputTruncated: {
         reason: 'Output truncated',
@@ -1780,6 +1789,7 @@ export const enGenerationCommon = {
     authorizationFailed: 'Payment authorization failed',
     waitingUpstream: '{{count}} waiting for upstream reference cards to generate first',
     cyclicReferences: '{{count}} have cyclic references',
+    missingPrompt: '{{count}} nodes have no prompt (skipped without charge)',
     detailSeparator: '; ',
     blockedNotice: '{{details}} remain blocked. Generate or untangle them before running the batch.',
     startTitle: 'Start generation',

@@ -121,6 +121,19 @@ export function isNodeInGuidedGeneratedStage(
 }
 
 /**
+ * 阶段节点是否已具备真实生产意义：有非空提示词可下单，或已有相应媒体结果可兼容旧项目。
+ * 空白占位节点不能让流程误判“已规划”，也不能进入额度授权与生成队列。
+ */
+export function isNodeReadyForGuidedGeneratedStage(
+  node: GenerationCanvasNode,
+  stageId: GuidedGeneratedAssetStageId,
+): boolean {
+  if (!isNodeInGuidedGeneratedStage(node, stageId)) return false
+  const resultType = stageId === 'video' ? 'video' : 'image'
+  return Boolean(node.prompt?.trim()) || hasGeneratedResult(node, resultType)
+}
+
+/**
  * 当前阶段真正需要下单的节点：属于该阶段、没有对应媒体结果、且没有排队/生成中。
  * error/recoverable 没有结果时仍会返回，用户再次点击即可重试。
  */
@@ -130,7 +143,7 @@ export function selectPendingGuidedGenerationNodes(
 ): GenerationCanvasNode[] {
   const resultType = stageId === 'video' ? 'video' : 'image'
   return nodes.filter((node) => (
-    isNodeInGuidedGeneratedStage(node, stageId) &&
+    isNodeReadyForGuidedGeneratedStage(node, stageId) &&
     !hasGeneratedResult(node, resultType) &&
     node.status !== 'queued' &&
     node.status !== 'running'
@@ -173,10 +186,10 @@ export function deriveGuidedProductionProgress(input: GuidedProductionInput): Gu
     /(^|\n)\s*#{0,3}\s*(剧本|分场剧本|逐镜剧本)(?:\s|$)/m.test(documentText) ||
     /(^|\n)\s*(△|场景\s*\d+|第\s*\d+\s*场|INT\.|EXT\.)/im.test(documentText) ||
     documentText.length >= 420
-  const styleNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'style'))
-  const characterNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'character'))
-  const sceneNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'scene'))
-  const storyboardNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'storyboard'))
+  const styleNodes = input.nodes.filter((node) => isNodeReadyForGuidedGeneratedStage(node, 'style'))
+  const characterNodes = input.nodes.filter((node) => isNodeReadyForGuidedGeneratedStage(node, 'character'))
+  const sceneNodes = input.nodes.filter((node) => isNodeReadyForGuidedGeneratedStage(node, 'scene'))
+  const storyboardNodes = input.nodes.filter((node) => isNodeReadyForGuidedGeneratedStage(node, 'storyboard'))
   const motionNodes = input.nodes.filter(
     (node) =>
       nodeMatches(node, /镜头动态设计|运镜设计|镜头运动|运动轨迹|动作轨迹|camera\s*(move|path)|motion\s*design/) ||
@@ -184,8 +197,8 @@ export function deriveGuidedProductionProgress(input: GuidedProductionInput): Gu
       node.meta?.cameraMovePromptApplied !== undefined ||
       node.meta?.workflowStage === 'motion',
   )
-  const keyframeNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'keyframe'))
-  const videoNodes = input.nodes.filter((node) => isNodeInGuidedGeneratedStage(node, 'video'))
+  const keyframeNodes = input.nodes.filter((node) => isNodeReadyForGuidedGeneratedStage(node, 'keyframe'))
+  const videoNodes = input.nodes.filter((node) => isNodeReadyForGuidedGeneratedStage(node, 'video'))
   const shotCount = storyboardNodes.length
   const generatedStyleCount = styleNodes.filter((node) => hasGeneratedResult(node, 'image')).length
   const generatedCharacterCount = characterNodes.filter((node) => hasGeneratedResult(node, 'image')).length

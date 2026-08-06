@@ -7,6 +7,7 @@ const node = (id: string, withResult = false): GenerationCanvasNode =>
     id,
     kind: 'image',
     title: id,
+    prompt: `生成 ${id}`,
     ...(withResult ? { result: { id: `r-${id}`, url: `https://cdn/${id}.png` } } : {}),
   }) as unknown as GenerationCanvasNode
 
@@ -59,5 +60,17 @@ describe('buildDependencyWaves', () => {
     const plan = buildDependencyWaves(['A', 'A的下游'], { nodes, edges })
     expect(plan.waves).toEqual([])
     expect(plan.blocked.map((b) => b.nodeId).sort()).toEqual(['A', 'A的下游'])
+  })
+
+  it('空提示词节点单独标 missing-prompt，不进入任何执行波次', () => {
+    const empty = { ...node('空占位'), prompt: '   ' }
+    const valid = node('可生成')
+    const plan = buildDependencyWaves(['空占位', '可生成'], { nodes: [empty, valid], edges: [] })
+    expect(plan.waves).toEqual([['可生成']])
+    expect(plan.blocked).toContainEqual({
+      nodeId: '空占位',
+      reason: 'missing-prompt',
+      detail: '节点提示词为空，无法生成',
+    })
   })
 })

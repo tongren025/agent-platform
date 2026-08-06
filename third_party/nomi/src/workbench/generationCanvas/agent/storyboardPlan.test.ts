@@ -170,6 +170,11 @@ describe('parseStoryboardPlan（落库前运行时守卫）', () => {
     const bad = { title: 't', anchors: [], shots: [{ index: 1, durationSec: 5, anchorIds: [] }] }
     expect(() => parseStoryboardPlan(bad)).toThrow()
   })
+
+  it('镜头 prompt 为空白 → throw，不能把空镜头落进生产流程', () => {
+    const bad = { ...PLAN, shots: [{ ...PLAN.shots[0], prompt: '   ' }] }
+    expect(() => parseStoryboardPlan(bad)).toThrow()
+  })
 })
 
 describe('图片分镜（shotKind=image，用户拍板 2026-07-02 image-first）', () => {
@@ -194,11 +199,13 @@ describe('图片分镜（shotKind=image，用户拍板 2026-07-02 image-first）
     })
     const shot1 = nodes.find((n) => n.clientId === 'shot-1')!
     expect(shot1.kind).toBe('image')
+    expect(shot1.workflowStage).toBe('storyboard')
     expect(shot1.modelKey).toBe('img-model')
     expect(shot1.modeId).toBe('img-mode')
     expect(shot1.params?.duration).toBeUndefined()
     const shot2 = nodes.find((n) => n.clientId === 'shot-2')!
     expect(shot2.kind).toBe('video')
+    expect(shot2.workflowStage).toBe('video')
     expect(shot2.modelKey).toBe('vid-model')
     expect(shot2.params?.duration).toBe(6)
   })
@@ -297,6 +304,8 @@ describe('图片+视频分镜（video shot + keyframe.enabled）', () => {
   it('首帧图带 storyboardKeyframe 身份标记（不占镜号，落地后共用所属视频镜号）；视频不带', () => {
     const { nodes } = storyboardPlanToCreateNodesArgs(IMAGE_VIDEO_PLAN)
     expect(nodes.find((node) => node.clientId === 'shot-1-keyframe')?.storyboardKeyframe).toBe(true)
+    expect(nodes.find((node) => node.clientId === 'shot-1-keyframe')?.workflowStage).toBe('keyframe')
+    expect(nodes.find((node) => node.clientId === 'shot-1')?.workflowStage).toBe('video')
     expect(nodes.find((node) => node.clientId === 'shot-1')?.storyboardKeyframe).toBeUndefined()
   })
 
@@ -325,6 +334,7 @@ describe('参考卡身份标记（referenceSheet，防占镜号）', () => {
     const { nodes } = storyboardPlanToCreateNodesArgs(PLAN)
     for (const n of nodes.filter((node) => node.clientId.startsWith('a-'))) {
       expect(n.referenceSheet).toBe(true)
+      expect(n.workflowStage).toBeUndefined()
     }
     for (const n of nodes.filter((node) => node.clientId.startsWith('shot-'))) {
       expect(n.referenceSheet).toBeUndefined()

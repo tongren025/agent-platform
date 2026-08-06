@@ -3,12 +3,13 @@
 // 纯函数:同一份计划既给确认 UI 画,也给调度器跑——显示的 ≡ 执行的(可断言)。
 import type { GenerationCanvasEdge, GenerationCanvasNode } from '../model/generationCanvasTypes'
 import { isTextPromptEdge } from '../agent/referenceEdgeCapability'
+import { isGenerationPromptMissing } from './generationPromptGuard'
 
 export type DependencyWavePlan = {
   /** 执行波次:waves[0] 全部并行,waves[n] 等 waves[n-1] 完成。 */
   waves: string[][]
   /** 不进本批的节点及原因。 */
-  blocked: { nodeId: string; reason: 'cycle' | 'missing-upstream'; detail: string }[]
+  blocked: { nodeId: string; reason: 'cycle' | 'missing-upstream' | 'missing-prompt'; detail: string }[]
   /** 本次计划用到的依赖边(target 在选择集内、source 是它的生成输入)。 */
   edgesUsed: GenerationCanvasEdge[]
 }
@@ -38,6 +39,13 @@ export function buildDependencyWaves(
   const blockedIds = new Set<string>()
   const edgesUsed: GenerationCanvasEdge[] = []
 
+  // 所有批量入口共用的最前置守卫：空提示词不进入执行波次，更不能进入额度授权。
+  for (const id of selection) {
+    if (!isGenerationPromptMissing(nodesById.get(id))) continue
+    blockedIds.add(id)
+    blocked.push({ nodeId: id, reason: 'missing-prompt', detail: '节点提示词为空，无法生成' })
+  }
+
   // 选中集内的依赖邻接:target ← sources(只算 selection 内部的 source)
   const internalDeps = new Map<string, Set<string>>()
   for (const id of selection) internalDeps.set(id, new Set())
@@ -66,12 +74,11 @@ export function buildDependencyWaves(
   // Kahn 分层(排除已 blocked 的;依赖 blocked 节点的也传染 blocked)
   const waves: string[][] = []
   const placed = new Set<string>(blockedIds)
-  let frontier: string[] = []
   let remaining = [...selection].filter((id) => !blockedIds.has(id))
   let guard = remaining.length + 1
   while (remaining.length > 0 && guard > 0) {
     guard -= 1
-    frontier = remaining.filter((id) => {
+    const frontier = remaining.filter((id) => {
       const deps = internalDeps.get(id) ?? new Set()
       for (const dep of deps) {
         if (blockedIds.has(dep)) return false // 依赖被拦 → 自己也跑不了(下面传染处理)

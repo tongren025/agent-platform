@@ -53,8 +53,10 @@ export const useBatchPlanPreviewStore = create<BatchPlanPreviewState>()((set, ge
 export function describeBlockedNotice(plan: DependencyWavePlan): string | null {
   if (plan.blocked.length === 0) return null
   const cycle = plan.blocked.filter((b) => b.reason === 'cycle').length
-  const waiting = plan.blocked.length - cycle
+  const missingPrompt = plan.blocked.filter((b) => b.reason === 'missing-prompt').length
+  const waiting = plan.blocked.filter((b) => b.reason === 'missing-upstream').length
   const parts: string[] = []
+  if (missingPrompt > 0) parts.push(i18n.t('generationCommon.batchPlan.missingPrompt', { count: missingPrompt }))
   if (waiting > 0) parts.push(i18n.t('generationCommon.batchPlan.waitingUpstream', { count: waiting }))
   if (cycle > 0) parts.push(i18n.t('generationCommon.batchPlan.cyclicReferences', { count: cycle }))
   return i18n.t('generationCommon.batchPlan.blockedNotice', {

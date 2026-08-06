@@ -32,4 +32,13 @@ describe('describeBlockedNotice — 批量「缺啥提示啥」', () => {
     expect(msg).toContain('1 个在等上游参考')
     expect(msg).toContain('1 个存在循环引用')
   })
+
+  it('空提示词单独提示已跳过，不误报为等待上游', () => {
+    const msg = describeBlockedNotice(plan({
+      blocked: [{ nodeId: 'empty', reason: 'missing-prompt', detail: '节点提示词为空，无法生成' }],
+    }))!
+    expect(msg).toContain('没有提示词')
+    expect(msg).toContain('不会扣费')
+    expect(msg).not.toContain('等待上游')
+  })
 })

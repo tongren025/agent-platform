@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import type { GenerationCanvasNode } from '../generationCanvas/model/generationCanvasTypes'
-import { deriveGuidedProductionProgress, selectPendingGuidedGenerationNodes } from './guidedProductionFlow'
+import {
+  deriveGuidedProductionProgress,
+  isNodeReadyForGuidedGeneratedStage,
+  selectPendingGuidedGenerationNodes,
+} from './guidedProductionFlow'
 
 function node(
   id: string,
@@ -64,7 +68,10 @@ describe('deriveGuidedProductionProgress', () => {
 
   it('视觉节点只规划未出图时仍停留当前阶段', () => {
     const documentText = '# 剧本\n△ 室内，人物转身。'
-    const style = node('style', 'image', '视觉风格母版图', { meta: { referenceSheet: true } })
+    const style = node('style', 'image', '视觉风格母版图', {
+      prompt: '冷色雨夜电影风格',
+      meta: { referenceSheet: true },
+    })
     const result = progress({ documentText, nodes: [style] })
     expect(result.current.id).toBe('style')
     expect(result.plannedByStage.style).toBe(true)
@@ -94,7 +101,7 @@ describe('deriveGuidedProductionProgress', () => {
       node('motion-2', 'text', '镜头动态设计｜镜头2'),
       node('keyframe-1', 'keyframe', '镜头1｜首帧关键帧', generatedImage('keyframe-1')),
       node('keyframe-2', 'keyframe', '镜头2｜首帧关键帧', generatedImage('keyframe-2')),
-      node('video', 'video', '镜头1｜视频'),
+      node('video', 'video', '镜头1｜视频', { prompt: '人物向前走，镜头跟拍' }),
     ]
     const documentText = '# 剧本\n△ 人物向前走。'
     const beforeRun = progress({ documentText, nodes })
@@ -128,10 +135,10 @@ describe('deriveGuidedProductionProgress', () => {
 
 describe('selectPendingGuidedGenerationNodes', () => {
   it('scene 只选本阶段尚未生成的节点，不串入其他阶段或已有结果', () => {
-    const pendingScene = node('scene-pending', 'scene', '雨巷场景设定')
+    const pendingScene = node('scene-pending', 'scene', '雨巷场景设定', { prompt: '雨夜湿润石板路' })
     const generatedScene = node('scene-done', 'scene', '客栈场景设定', generatedImage('scene-done'))
-    const character = node('character', 'character', '少年人物三视图')
-    const storyboard = node('shot', 'image', '镜头 1', { shotIndex: 1 })
+    const character = node('character', 'character', '少年人物三视图', { prompt: '少年角色设定' })
+    const storyboard = node('shot', 'image', '镜头 1', { prompt: '少年走入雨巷', shotIndex: 1 })
 
     expect(selectPendingGuidedGenerationNodes(
       'scene',
@@ -141,11 +148,11 @@ describe('selectPendingGuidedGenerationNodes', () => {
 
   it('排除 queued/running，保留 idle/error/recoverable 供失败后重试', () => {
     const nodes = [
-      node('idle', 'scene', '场景设定 A', { status: 'idle' }),
-      node('queued', 'scene', '场景设定 B', { status: 'queued' }),
-      node('running', 'scene', '场景设定 C', { status: 'running' }),
-      node('error', 'scene', '场景设定 D', { status: 'error' }),
-      node('recoverable', 'scene', '场景设定 E', { status: 'recoverable' }),
+      node('idle', 'scene', '场景设定 A', { prompt: 'A', status: 'idle' }),
+      node('queued', 'scene', '场景设定 B', { prompt: 'B', status: 'queued' }),
+      node('running', 'scene', '场景设定 C', { prompt: 'C', status: 'running' }),
+      node('error', 'scene', '场景设定 D', { prompt: 'D', status: 'error' }),
+      node('recoverable', 'scene', '场景设定 E', { prompt: 'E', status: 'recoverable' }),
     ]
 
     expect(selectPendingGuidedGenerationNodes('scene', nodes).map((item) => item.id)).toEqual([
@@ -156,9 +163,35 @@ describe('selectPendingGuidedGenerationNodes', () => {
   })
 
   it('关键帧和视频按媒体阶段隔离', () => {
-    const keyframe = node('keyframe', 'keyframe', '镜头1｜首帧关键帧')
-    const video = node('video', 'video', '镜头1｜视频')
+    const keyframe = node('keyframe', 'keyframe', '镜头1｜首帧关键帧', { prompt: '首帧构图' })
+    const video = node('video', 'video', '镜头1｜视频', { prompt: '人物向前走' })
     expect(selectPendingGuidedGenerationNodes('keyframe', [keyframe, video]).map((item) => item.id)).toEqual(['keyframe'])
     expect(selectPendingGuidedGenerationNodes('video', [keyframe, video]).map((item) => item.id)).toEqual(['video'])
+  })
+
+  it('空 prompt 的 generic image + shotIndex 不是有效分镜，也不会进入待生成队列', () => {
+    const emptyShot = node('empty-shot', 'image', '图片', { shotIndex: 1, prompt: '   ' })
+    const queuedEmpty = node('queued-empty', 'image', '图片', { shotIndex: 2, prompt: '', status: 'queued' })
+    const result = progress({ nodes: [emptyShot] })
+    expect(result.plannedByStage.storyboard).toBe(false)
+    expect(isNodeReadyForGuidedGeneratedStage(emptyShot, 'storyboard')).toBe(false)
+    expect(isNodeReadyForGuidedGeneratedStage(queuedEmpty, 'storyboard')).toBe(false)
+    expect(selectPendingGuidedGenerationNodes('storyboard', [emptyShot])).toEqual([])
+  })
+
+  it('非空真实镜头可规划待生成；已有结果即使 prompt 丢失仍计入完成', () => {
+    const pendingShot = node('pending-shot', 'image', '镜头 1', { shotIndex: 1, prompt: '人物推门进入' })
+    expect(progress({ nodes: [pendingShot] }).plannedByStage.storyboard).toBe(true)
+    expect(selectPendingGuidedGenerationNodes('storyboard', [pendingShot]).map((item) => item.id)).toEqual(['pending-shot'])
+
+    const generatedWithoutPrompt = node('done-shot', 'image', '镜头 1', {
+      ...generatedImage('done-shot'),
+      shotIndex: 1,
+      prompt: '',
+    })
+    const generatedProgress = progress({ nodes: [generatedWithoutPrompt] })
+    expect(generatedProgress.plannedByStage.storyboard).toBe(true)
+    expect(generatedProgress.generatedCountByStage.storyboard).toBe(1)
+    expect(generatedProgress.stages.find((stage) => stage.id === 'storyboard')?.complete).toBe(true)
   })
 })

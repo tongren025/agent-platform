@@ -19,7 +19,7 @@ import { useGenerationCanvasStore } from '../generationCanvas/store/generationCa
 import { useWorkbenchStore } from '../workbenchStore'
 import {
   deriveGuidedProductionProgress,
-  isNodeInGuidedGeneratedStage,
+  isNodeReadyForGuidedGeneratedStage,
   selectPendingGuidedGenerationNodes,
   type GuidedGeneratedAssetStageId,
   type GuidedProductionStageId,
@@ -119,7 +119,7 @@ export default function GuidedProductionBar(): JSX.Element {
     !current.complete
   const currentStageHasActiveGeneration = currentGeneratedStageId !== null && nodes.some(
     (node) =>
-      isNodeInGuidedGeneratedStage(node, currentGeneratedStageId) &&
+      isNodeReadyForGuidedGeneratedStage(node, currentGeneratedStageId) &&
       (node.status === 'queued' || node.status === 'running'),
   )
 

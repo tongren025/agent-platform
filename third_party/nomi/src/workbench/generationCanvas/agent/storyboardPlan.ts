@@ -104,7 +104,7 @@ export const planShotSchema = z.object({
     .describe("镜头种类:'image'=图片分镜(图生图静态画面,无时长),'video'=视频分镜(带时长运镜)。默认 image。"),
   durationSec: z.number(),
   anchorIds: z.array(z.string()),
-  prompt: z.string(),
+  prompt: z.string().trim().min(1),
   modelKey: z.string().optional(),
   modeId: z.string().optional(),
   params: z.record(z.unknown()).optional(),
@@ -163,6 +163,8 @@ export type PlanCreatedNode = {
   modelKey?: string
   modeId?: string
   params?: Record<string, unknown>
+  /** 生产阶段身份；参考卡不设置，避免被误认成分镜/关键帧。 */
+  workflowStage?: 'storyboard' | 'keyframe' | 'video'
   /** 参考卡身份（角色/场景/道具锚）：落画布写进 node.meta.referenceSheet → 永不占镜头编号（shotNumbering）。 */
   referenceSheet?: true
   /**
@@ -367,6 +369,7 @@ export function storyboardPlanToCreateNodesArgs(
         title: i18n.t('generationCommon.agentRuntime.shotKeyframeTitle', { index: shot.index }),
         prompt: buildKeyframePrompt(shot, anchorById),
         storyboardKeyframe: true,
+        workflowStage: 'keyframe',
         ...(keyframeModelKey ? { modelKey: keyframeModelKey } : {}),
         ...(keyframeModeId ? { modeId: keyframeModeId } : {}),
         ...(shot.keyframe?.params ? { params: shot.keyframe.params } : {}),
@@ -378,6 +381,7 @@ export function storyboardPlanToCreateNodesArgs(
       kind: isImageShot ? 'image' : 'video',
       title: i18n.t('generationCommon.agentRuntime.shotTitle', { index: shot.index }),
       prompt: buildShotPrompt(shot, anchorById),
+      workflowStage: isImageShot ? 'storyboard' : 'video',
       ...(modelKey ? { modelKey } : {}),
       ...(modeId ? { modeId } : {}),
       // duration 仅视频镜头写（由卡的「时长」选择器管）；图片镜头不写。其余模型参数（比例/清晰度/负向…）来自 shot.params。

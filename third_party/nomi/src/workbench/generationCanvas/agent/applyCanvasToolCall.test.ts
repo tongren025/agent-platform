@@ -147,8 +147,8 @@ describe('applyCanvasToolCall 图片+视频分镜镜号', () => {
   it('首帧图不占号：视频连续编号 1..N，首帧图与所属视频共号', async () => {
     const result = (await applyCanvasToolCall('create_canvas_nodes', {
       nodes: [
-        { clientId: 'shot-1-keyframe', kind: 'image', title: '镜头 1 首帧', prompt: 'k1', storyboardKeyframe: true },
-        { clientId: 'shot-1', kind: 'video', title: '镜头 1', prompt: 'v1' },
+        { clientId: 'shot-1-keyframe', kind: 'image', title: '镜头 1 首帧', prompt: 'k1', storyboardKeyframe: true, workflowStage: 'keyframe' },
+        { clientId: 'shot-1', kind: 'video', title: '镜头 1', prompt: 'v1', workflowStage: 'video' },
         { clientId: 'shot-2-keyframe', kind: 'image', title: '镜头 2 首帧', prompt: 'k2', storyboardKeyframe: true },
         { clientId: 'shot-2', kind: 'video', title: '镜头 2', prompt: 'v2' },
       ],
@@ -171,6 +171,21 @@ describe('applyCanvasToolCall 图片+视频分镜镜号', () => {
     expect(kf1?.shotIndex).toBe(1)
     expect(kf2?.shotIndex).toBe(2)
     expect((kf1?.meta as Record<string, unknown>)?.storyboardKeyframe).toBe(true)
+    expect((kf1?.meta as Record<string, unknown>)?.workflowStage).toBe('keyframe')
+    expect((video1?.meta as Record<string, unknown>)?.workflowStage).toBe('video')
+  })
+
+  it('图片分镜阶段身份写入 meta，参考卡不会被错标为分镜', async () => {
+    const result = (await applyCanvasToolCall('create_canvas_nodes', {
+      nodes: [
+        { clientId: 'reference', kind: 'image', title: '人物参考', prompt: '角色三视图', referenceSheet: true },
+        { clientId: 'storyboard', kind: 'image', title: '镜头 1', prompt: '人物推门', workflowStage: 'storyboard' },
+      ],
+      anchorCount: 1,
+    })) as { clientIdToNodeId: Record<string, string> }
+    const byRealId = new Map(useGenerationCanvasStore.getState().nodes.map((node) => [node.id, node]))
+    expect(byRealId.get(result.clientIdToNodeId.storyboard)?.meta?.workflowStage).toBe('storyboard')
+    expect(byRealId.get(result.clientIdToNodeId.reference)?.meta?.workflowStage).toBeUndefined()
   })
 })
 

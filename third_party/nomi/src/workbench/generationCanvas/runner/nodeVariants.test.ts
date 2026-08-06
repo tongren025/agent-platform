@@ -1,6 +1,6 @@
 // ×N 变体连发的付费语义（样张拍板 2026-07-29）：一次确认 N 次跑、串行、失败即停不连烧。
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { confirmAndRunNodeVariants } from './generationRunController'
+import { confirmAndRunNode, confirmAndRunNodeVariants, regenerateNodeInPlace } from './generationRunController'
 import { useGenerationCanvasStore } from '../store/generationCanvasStore'
 import { useSpendConfirmStore } from '../spend/spendConfirm'
 import { setCanvasEventSinkForTests } from '../events/canvasEventEmitter'
@@ -94,5 +94,13 @@ describe('confirmAndRunNodeVariants', () => {
       },
     })
     expect(runs).toBe(1)
+  })
+
+  it('空提示词在单节点、变体和原地重生成入口均不弹确认', async () => {
+    const node = useGenerationCanvasStore.getState().addNode({ kind: 'image', prompt: '   ' })
+    await confirmAndRunNode(node.id)
+    await confirmAndRunNodeVariants(node.id, 4)
+    await regenerateNodeInPlace(node.id)
+    expect(confirmCalls).toBe(0)
   })
 })

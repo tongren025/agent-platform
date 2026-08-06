@@ -7,7 +7,7 @@ import { toast } from '../../../ui/toast'
 import { mintSpendGrant } from '../../api/taskApi'
 import { describeGenerationCost, useSpendConfirmStore } from '../spend/spendConfirm'
 import { generationNodeExecutor, type GenerationNodeExecutor } from './generationNodeExecutor'
-import { narrateProgress } from '../../observability/narrate'
+import { narrateGenerationError, narrateProgress } from '../../observability/narrate'
 import { isRecoverableTimeoutError } from './recoverableTimeout'
 import { recordModelFailure, recordModelSuccess } from './modelHealthMemory'
 // 错误分类(classifyGenerationError)已抽到 observability/classifyError(人话叶子层,生成域+对话域共用);
@@ -24,6 +24,14 @@ import {
 import { resolveTaskArchetype } from './catalogTaskResolve'
 import type { GenerationNodeKind } from '../model/generationCanvasTypes'
 import i18n from '../../../i18n'
+import { isGenerationPromptMissing } from './generationPromptGuard'
+
+function rejectMissingGenerationPrompt(node: GenerationCanvasNode | undefined): boolean {
+  if (!isGenerationPromptMissing(node)) return false
+  const report = narrateGenerationError('empty-prompt')
+  toast(`${report.reason}：${report.hint}`, 'error')
+  return true
+}
 
 /** 节点 kind → 付费预估用的产物口径（视频/配音/画面），喂给 describeGenerationCost 报对名词与时长。 */
 function spendCostKind(kind: GenerationNodeKind): 'image' | 'video' | 'audio' {
@@ -350,6 +358,7 @@ export async function runGenerationNodesByPlan(
  */
 export async function confirmAndRunNode(nodeId: string, opts: { rerun?: boolean } = {}): Promise<void> {
   const node = useGenerationCanvasStore.getState().nodes.find((n) => n.id === nodeId)
+  if (rejectMissingGenerationPrompt(node)) return
   const ok = await useSpendConfirmStore.getState().requestConfirm({
     title: opts.rerun
       ? i18n.t('generationCommon.spend.generateVariant')
@@ -401,6 +410,7 @@ export async function confirmAndRunNodeVariants(
   if (!id) return
   const total = Math.max(1, Math.min(8, Math.floor(count)))
   const node = useGenerationCanvasStore.getState().nodes.find((n) => n.id === id)
+  if (rejectMissingGenerationPrompt(node)) return
   const ok = await useSpendConfirmStore.getState().requestConfirm({
     title: i18n.t('generationCommon.spend.startGeneration'),
     message: describeGenerationCost(total, node ? spendCostKind(node.kind) : 'image'),
@@ -452,6 +462,7 @@ export async function regenerateNodeInPlace(nodeId: string): Promise<void> {
   const id = String(nodeId || '').trim()
   if (!id) return
   const node = useGenerationCanvasStore.getState().nodes.find((n) => n.id === id)
+  if (rejectMissingGenerationPrompt(node)) return
   const ok = await useSpendConfirmStore.getState().requestConfirm({
     title: i18n.t('generationCommon.composer.regenerate'),
     message: describeGenerationCost(1, node ? spendCostKind(node.kind) : 'image'),

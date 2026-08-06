@@ -44,7 +44,7 @@ describe('guidedProductionGraph', () => {
       node('style', 'image', '视觉风格母版图'),
       node('char', 'character', 'R01｜姐姐｜人物三视图·表情·服装'),
       node('scene', 'scene', 'SCENE01｜仓库｜场景设定·道具'),
-      node('shot', 'image', '镜头1｜分镜图', { shotIndex: 1 }),
+      node('shot', 'image', '镜头1｜分镜图', { prompt: '姐姐推开仓库门', shotIndex: 1 }),
       node('motion', 'text', '镜头动态设计｜镜头1'),
       node('first', 'keyframe', '镜头1｜首帧关键帧'),
       node('last', 'keyframe', '镜头1｜尾帧关键帧'),
@@ -78,5 +78,16 @@ describe('guidedProductionGraph', () => {
       mode: 'reference',
     }]
     expect(buildMissingGuidedProductionEdges(nodes, existing)).toEqual([])
+  })
+
+  it('空 prompt 的通用 shot 占位不参与自动补边', () => {
+    const nodes = [
+      node('script', 'text', '剧本｜制作稿'),
+      node('empty-shot', 'image', '图片', { shotIndex: 1, prompt: '  ' }),
+      node('keyframe', 'keyframe', '镜头1｜首帧关键帧'),
+    ]
+    const edges = buildMissingGuidedProductionEdges(nodes, [])
+    expect(edges.some((edge) => edge.source === 'script' && edge.target === 'empty-shot')).toBe(false)
+    expect(edges.some((edge) => edge.source === 'empty-shot' && edge.target === 'keyframe')).toBe(false)
   })
 })

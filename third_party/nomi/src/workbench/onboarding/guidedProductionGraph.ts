@@ -3,6 +3,7 @@ import type {
   GenerationCanvasEdgeMode,
   GenerationCanvasNode,
 } from '../generationCanvas/model/generationCanvasTypes'
+import { isNodeReadyForGuidedGeneratedStage } from './guidedProductionFlow'
 
 export type GuidedProductionEdge = Pick<
   GenerationCanvasEdge,
@@ -66,11 +67,7 @@ function isMotionNode(node: GenerationCanvasNode): boolean {
 }
 
 function isStoryboardNode(node: GenerationCanvasNode): boolean {
-  if (node.meta?.referenceSheet === true || isKeyframeNode(node) || isVideoNode(node)) return false
-  return node.kind === 'shot' || (
-    node.kind === 'image' &&
-    (workflowStage(node) === 'storyboard' || typeof node.shotIndex === 'number' || matchesTitle(node, /镜头|分镜|shot/))
-  )
+  return isNodeReadyForGuidedGeneratedStage(node, 'storyboard')
 }
 
 function extractShotNumber(node: GenerationCanvasNode): number | null {

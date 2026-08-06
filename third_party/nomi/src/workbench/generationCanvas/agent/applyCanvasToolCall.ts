@@ -262,6 +262,9 @@ export async function applyCanvasToolCall(toolName: string, args: unknown, gestu
       const identityMarks = {
         ...(node.referenceSheet === true ? { referenceSheet: true } : {}),
         ...(node.storyboardKeyframe === true ? { storyboardKeyframe: true } : {}),
+        ...(typeof node.workflowStage === 'string' && ['storyboard', 'keyframe', 'video'].includes(node.workflowStage)
+          ? { workflowStage: node.workflowStage }
+          : {}),
       }
       const meta = Object.keys(identityMarks).length ? { ...(plannedMeta ?? {}), ...identityMarks } : plannedMeta
       // 单节点：尊重 agent 指定位置（增量添加可能要贴近某节点），否则同走避让布局。
