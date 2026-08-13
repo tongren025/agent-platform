@@ -16,7 +16,8 @@
       "runtime_minutes": 100,
       "scene_count": 52,
       "screenplay_file": "SCREENPLAY.md",
-      "version": "v1"
+      "version": "v2",
+      "actor_rehearsal_file": "ACTOR_REHEARSAL_NOTES.md"
     },
     "status": "done",
     "assignee": "comic-director",
@@ -37,7 +38,7 @@
     "videos": [],
     "metadata": {
       "asset_type": "story_bible",
-      "version": "v1",
+      "version": "v2",
       "screenplay_file": "SCREENPLAY.md"
     },
     "status": "done",
@@ -139,6 +140,30 @@
     "status": "done",
     "assignee": "comic-screenwriter",
     "created_at": "2026-08-13T12:00:00+08:00",
-    "updated_at": "2026-08-13T12:00:00+08:00"
+    "updated_at": "2026-08-13T17:01:00+08:00"
+  },
+  {
+    "card_id": "wc100_actor_rehearsal_v2",
+    "project_id": "wangchuan-film-100m",
+    "stage": "setting",
+    "title": "V2 演员排练手册：52场行动谱",
+    "content": "## 演员版优化内容\n- 每个主要角色补充公开动作、私下恐惧、身体习惯和语言节奏。\n- 52场逐场给出主行动、障碍/手段及场尾变化，排练时不需要用抽象情绪猜人物。\n- 标明人物秘密在开场、中段与结尾的知情进度，避免演员提前表演后续真相。\n- 重点试戏覆盖陆沉/苏照婚姻、两个陆沉争夺女儿、苏照/小满母女行动、裴九思招募同谋、剑中小满真假辨认及失忆尾声。\n\n[打开演员排练手册](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/ACTOR_REHEARSAL_NOTES.md)\n\n[打开V2完整剧本](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
+    "episode": 1,
+    "shot_number": 5,
+    "prompts": [],
+    "negative_prompts": [],
+    "images": [],
+    "videos": [],
+    "metadata": {
+      "asset_type": "actor_rehearsal_notes",
+      "version": "v2",
+      "scene_count": 52,
+      "rehearsal_file": "ACTOR_REHEARSAL_NOTES.md",
+      "screenplay_file": "SCREENPLAY.md"
+    },
+    "status": "done",
+    "assignee": "comic-director",
+    "created_at": "2026-08-13T17:01:00+08:00",
+    "updated_at": "2026-08-13T17:01:00+08:00"
   }
 ]
