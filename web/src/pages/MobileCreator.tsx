@@ -45,6 +45,11 @@ import {
 } from '../api';
 import HelpHint from '../components/HelpHint';
 import { message } from '../ui';
+import {
+  getMobileDiscoveryProgress,
+  MOBILE_DIRECTION_READY_MARKER,
+  MOBILE_STARTER_IDEAS,
+} from '../storyStarters';
 import './MobileCreator.css';
 
 const { Text, Title } = Typography;
@@ -196,12 +201,6 @@ const HOOK_OPTIONS = [
   { label: '轻松搞笑', value: '轻松搞笑' },
 ];
 
-const STARTER_IDEAS = [
-  '一个普通人突然发现今天能听见所有人的心声',
-  '帮我把一次下班路上的小事，变成有反转的短片',
-  '我拍了一张照片，想让它变成有电影感的小视频',
-];
-
 const MOBILE_DIRECTOR_CONTEXT = `
 你现在是 Agent Studio 手机端的“灵感导演”，服务第一次做短视频的普通用户。
 目标是把用户随口说的想法收敛成 15–30 秒、9:16 竖屏小视频，而不是大型漫剧。
@@ -209,17 +208,18 @@ const MOBILE_DIRECTOR_CONTEXT = `
 
 回复规则：
 1. 不要输出 JSON、任务表、技术参数堆砌或长篇教程。
-2. 每次回复最多 180 个中文字符，一次只推进一个决定。
-3. 先用一句话指出这个想法最有传播潜力的部分，再给一个“前三秒钩子”建议。
-4. 最后只问一个最关键的问题；不要一次问角色、风格、时长等多个问题。
+2. 每次回复最多 180 个中文字符，一次只推进一个决定，但默认要连续完成 3–4 轮导演访谈。
+3. 第一轮先指出想法最有传播潜力的部分，并给一个“前三秒钩子”建议；后续不要重复总结。
+4. 每轮最后只问一个尚未明确的关键问题。按以下优先级追问：主角当下目标、失败代价、人物关系或道德选择、结尾反转与观众余味、必要的视觉记忆点。
 5. 不得假装掌握实时平台热榜；请称为“常见高互动结构”或“高传播结构”。
-6. 用户说“就这样”“开始拍”“按这个做”时，给出一段简洁的可执行创作方向，并提醒可以点击“按这个方向开拍”。
+6. 不要重复询问用户已经回答的信息，不要为了凑轮数问无关问题。
+7. 只有当目标、阻碍/代价、核心反转和结尾余味都足够明确，或用户明确说“就这样”“开始拍”“按这个做”时，才在回复末尾加“${MOBILE_DIRECTION_READY_MARKER}”，并提醒可以点击“按这个方向开拍”。
 `.trim();
 
 const initialMessage: ConversationMessage = {
   id: 'welcome',
   role: 'assistant',
-  content: '把脑海里的画面直接说出来就行，不用写剧本和提示词。我会先帮你找前三秒钩子，然后一次只带你走一个下一步。',
+  content: '把脑海里的画面直接说出来就行。我会先找前三秒钩子，再一次问一个关键问题，把人物目标、代价和结尾反转聊清楚。',
 };
 
 function createRunId() {
@@ -381,12 +381,14 @@ export default function MobileCreator() {
   const [guideOpen, setGuideOpen] = useState(
     () => !localStorage.getItem(MOBILE_GUIDE_KEY),
   );
+  const [directionReadyOverride, setDirectionReadyOverride] = useState(false);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const syncingRef = useRef(false);
 
   const hasUserIdea = messages.some(item => item.role === 'user');
+  const discovery = getMobileDiscoveryProgress(messages, directionReadyOverride);
   const action = useMemo(() => resolveMobileAction(state), [state]);
   const selectedImageModel = imageModels.find(model => model.id === imageModel);
   const selectedVideoModel = videoModels.find(model => model.id === videoModel);
@@ -728,6 +730,7 @@ export default function MobileCreator() {
     setSessionId('');
     setReference(null);
     setInput('');
+    setDirectionReadyOverride(false);
     setProjectId('');
     setState(null);
     localStorage.removeItem(MOBILE_SESSION_KEY);
@@ -1021,15 +1024,16 @@ export default function MobileCreator() {
                   <BulbOutlined />
                 </span>
                 <strong>不用想完整，先说半句话也行</strong>
-                <p>系统会帮你补钩子、节奏和结尾，但每次只问一个问题。</p>
+                <p>下面都是可编辑的示例灵感，不是已经存在的项目。点击只会带入输入框，发送后导演会继续逐项追问。</p>
                 <div>
-                  {STARTER_IDEAS.map(idea => (
+                  {MOBILE_STARTER_IDEAS.map(starter => (
                     <button
                       type="button"
-                      key={idea}
-                      onClick={() => void sendIdea(idea)}
+                      key={starter.idea}
+                      onClick={() => setInput(starter.idea)}
                     >
-                      {idea}
+                      <strong>{starter.label}</strong>
+                      <span>{starter.idea}</span>
                     </button>
                   ))}
                 </div>
@@ -1060,7 +1064,24 @@ export default function MobileCreator() {
               </article>
             ))}
 
-            {hasUserIdea && !thinking && (
+            {hasUserIdea && !thinking && !discovery.ready && (
+              <div className="mobile-creator__discovery-card">
+                <div>
+                  <span><MessageOutlined /> 导演访谈进行中</span>
+                  <strong>再确认约 {discovery.remainingTurns} 个关键决定</strong>
+                  <p>一次只回答当前问题。导演会把目标、代价、反转和结尾逐步收紧。</p>
+                </div>
+                <Button
+                  type="text"
+                  block
+                  onClick={() => setDirectionReadyOverride(true)}
+                >
+                  信息够了，先按当前方向开拍
+                </Button>
+              </div>
+            )}
+
+            {hasUserIdea && !thinking && discovery.ready && (
               <div className="mobile-creator__launch-card">
                 <div>
                   <span><RocketOutlined /> 方向确认后</span>

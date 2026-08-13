@@ -20,6 +20,7 @@ import {
 } from 'antd';
 import {
   BookOutlined,
+  BulbOutlined,
   EyeOutlined,
   PictureOutlined,
   PlayCircleOutlined,
@@ -30,6 +31,7 @@ import { api } from '../api';
 import { useInputHabit } from '../hooks/useInputHabit';
 import { thumbUrl, onImageError } from '../media';
 import { message } from '../ui';
+import { MEMORY_SWORDSMAN_STARTER } from '../storyStarters';
 import {
   extractOneLineStory,
   friendlyProjectName,
@@ -192,6 +194,21 @@ export default function ProjectsHome() {
       return;
     }
     setCreateStep(1);
+  };
+
+  const applyMemorySwordsmanStarter = () => {
+    setForm(current => ({
+      ...current,
+      name: MEMORY_SWORDSMAN_STARTER.name,
+      description: MEMORY_SWORDSMAN_STARTER.oneLine,
+      sourceType: 'gc',
+      sourceContent: MEMORY_SWORDSMAN_STARTER.sourceContent,
+      episodeCount: 1,
+      episodeDurationSeconds: 30,
+      aspectRatio: '9:16',
+      visualStyle: MEMORY_SWORDSMAN_STARTER.visualStyle,
+    }));
+    message.success('已套用示例模板，创建前仍可继续修改');
   };
 
   const createProject = async () => {
@@ -362,6 +379,18 @@ export default function ProjectsHome() {
         />
         {createStep === 0 ? (
           <div className="story-form-grid">
+            <Alert
+              type="info"
+              showIcon
+              icon={<BulbOutlined />}
+              message="想先看看完整填写方式？"
+              description="“失忆剑客”是可编辑的30秒创作模板，不是项目库里已经存在的剧本。只有点击创建后才会成为你的项目。"
+              action={(
+                <Button type="dashed" onClick={applyMemorySwordsmanStarter}>
+                  套用失忆剑客模板
+                </Button>
+              )}
+            />
             <label>
               <Text strong>项目形式</Text>
               <Select

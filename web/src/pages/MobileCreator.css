@@ -175,6 +175,24 @@
   line-height: 1.45;
 }
 
+.mobile-creator__starter button strong,
+.mobile-creator__starter button span {
+  display: block;
+  text-align: left;
+}
+
+.mobile-creator__starter button strong {
+  margin-bottom: 3px;
+  color: #302a25;
+  font-size: 13px;
+}
+
+.mobile-creator__starter button span {
+  color: var(--mobile-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .mobile-chat-bubble {
   display: flex;
   align-items: flex-end;
@@ -234,6 +252,38 @@
 
 .mobile-chat-bubble p .anticon {
   margin-right: 6px;
+}
+
+.mobile-creator__discovery-card {
+  margin: 17px 0 4px 38px;
+  padding: 15px;
+  background: rgba(238, 244, 250, .9);
+  border: 1px solid rgba(73, 113, 146, .16);
+  border-radius: 18px;
+}
+
+.mobile-creator__discovery-card span,
+.mobile-creator__discovery-card strong,
+.mobile-creator__discovery-card p {
+  display: block;
+}
+
+.mobile-creator__discovery-card span {
+  color: #426d8b;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.mobile-creator__discovery-card strong {
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.mobile-creator__discovery-card p {
+  margin: 5px 0 10px;
+  color: var(--mobile-muted);
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 .mobile-creator__launch-card {

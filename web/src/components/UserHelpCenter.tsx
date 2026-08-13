@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons';
 import './UserHelp.css';
 import { shouldAutoStartUserGuide } from './userHelpTourPolicy';
+import { MEMORY_SWORDSMAN_STARTER } from '../storyStarters';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -163,7 +164,7 @@ export default function UserHelpCenter({
         <section className="user-help-section" aria-labelledby="help-fast-path">
           <Title id="help-fast-path" level={4}>最短使用路径</Title>
           <ol className="user-help-steps">
-            <li><span>1</span><div><strong>说一句故事</strong><Text>例如：失忆剑客发现追杀自己的人是未来的自己。</Text></div></li>
+            <li><span>1</span><div><strong>说一句故事</strong><Text>可套用示例“{MEMORY_SWORDSMAN_STARTER.idea}”。示例不是现成项目，创建后才会保存。</Text></div></li>
             <li><span>2</span><div><strong>选择交付目标</strong><Text>只要分镜、要镜头图，或直接做到完整成片。</Text></div></li>
             <li><span>3</span><div><strong>一直完成下一步</strong><Text>先定故事和角色，再逐镜出图、生视频、审片。</Text></div></li>
           </ol>

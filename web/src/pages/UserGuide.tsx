@@ -18,6 +18,7 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { START_USER_GUIDE_EVENT } from '../components/UserHelpCenter';
+import { MEMORY_SWORDSMAN_STARTER } from '../storyStarters';
 import './UserGuide.css';
 
 const { Paragraph, Text, Title } = Typography;
@@ -79,7 +80,7 @@ export default function UserGuide() {
       content: (
         <ol className="guide-numbered-list">
           <li><strong>打开“快速制作”</strong><span>点击左侧快速制作，再点“新建制作”。</span></li>
-          <li><strong>说一句故事</strong><span>不用先写专业剧本，例如“失忆剑客发现追杀自己的人是未来的自己”。</span></li>
+          <li><strong>说一句故事</strong><span>不用先写专业剧本。可套用示例灵感“{MEMORY_SWORDSMAN_STARTER.idea}”；它只是可编辑起点，创建后才会成为项目。</span></li>
           <li><strong>选择目标</strong><span>新手建议选“制作完整成片”；只想预演故事可以先选“文字分镜”。</span></li>
           <li><strong>完成当前下一步</strong><span>页面只会突出现在该做的事。完成后自动进入下一阶段。</span></li>
         </ol>
