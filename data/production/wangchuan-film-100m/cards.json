@@ -3,8 +3,8 @@
     "card_id": "wc100_idea_master",
     "project_id": "wangchuan-film-100m",
     "stage": "idea",
-    "title": "《忘川剑》100分钟电影总案",
-    "content": "## 一句话故事\n失去三日记忆的守城剑客陆沉遭神秘老者追杀，揭开面具后发现对方竟是十九年后的自己；而未来的他回来，是为了阻止陆沉拔出一柄能用全城记忆换回女儿的剑。\n\n## 电影规格\n- 类型：东方奇幻 / 武侠 / 悬疑 / 亲情\n- 片长：100分钟\n- 画幅：2.39:1\n- 结构：第一幕25分钟、第二幕上30分钟、第二幕下25分钟、第三幕20分钟\n- 场次：52场\n- 核心命题：爱一个人，不等于有权让所有人为自己的不舍付费。\n\n## 完整正文\n[打开《忘川剑》完整演员阅读稿](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
+    "title": "《忘川剑》100分钟电影定稿（唯一版本）",
+    "content": "## 一句话故事\n失去三日记忆的守城剑客陆沉遭神秘老者追杀，揭开面具后发现对方竟是十九年后的自己；而未来的他回来，是为了阻止陆沉拔出一柄能用全城记忆换回女儿的剑。\n\n## 电影规格\n- 类型：东方奇幻 / 武侠 / 悬疑 / 亲情\n- 片长：100分钟\n- 画幅：2.39:1\n- 结构：第一幕25分钟、第二幕上30分钟、第二幕下25分钟、第三幕20分钟\n- 场次：52场\n- 核心命题：爱一个人，不等于有权让所有人为自己的不舍付费。\n- 时间线：老陆沉仅穿越一次，在正片开始三日前抵达；后续事件全部顺序发生。\n\n## 唯一正文\n[打开《忘川剑》电影定稿](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
     "episode": 1,
     "shot_number": 0,
     "prompts": [],
@@ -16,20 +16,19 @@
       "runtime_minutes": 100,
       "scene_count": 52,
       "screenplay_file": "SCREENPLAY.md",
-      "version": "v3",
-      "actor_rehearsal_file": "ACTOR_REHEARSAL_NOTES.md"
+      "version": "final"
     },
     "status": "done",
     "assignee": "comic-director",
     "created_at": "2026-08-13T12:00:00+08:00",
-    "updated_at": "2026-08-13T12:00:00+08:00"
+    "updated_at": "2026-08-13T19:05:00+08:00"
   },
   {
     "card_id": "wc100_setting_cast",
     "project_id": "wangchuan-film-100m",
     "stage": "setting",
     "title": "角色、表演弧与忘川剑规则",
-    "content": "## 主要角色\n- **陆沉（33）**：雁回城执剑使。外在目标是找回三日记忆、救回女儿；内在变化是从控制一切到承认失去。\n- **老陆沉（52）**：十九年后的陆沉。以猎人姿态回来杀死年轻自己，却需要让年轻的自己主动改变。\n- **苏照（32）**：钟律官兼医官。独立完成查钟律、救孩子、组织百姓与还忆行动。\n- **陆小满（8）**：听音辨路，危机中主动留下缺尾燕子路标并带其他孩子撤离；她的选择推动父亲完成改变。\n- **裴九思（46）**：司天监监正。试图用全城记忆改写独子死亡，是陆沉执念的镜像。\n- **秦野（27）**：陆沉副手，承担北渠救城线。\n\n## 五条硬规则\n1. 剑只能重放并改写记忆回声，不能凭空复活。\n2. 拔剑越深，全城被抽走的记忆越多。\n3. 倒悬星夜每十九年开启一次回声门。\n4. 老陆沉以自身记忆构成穿越身体，改变过去会使他碎裂。\n5. 七十二钟能还忆，但持剑者必须自愿放弃最珍爱的记忆；两个陆沉是同一灵魂，因此共同遗忘小满，苏照仍记得女儿。\n\n[查看完整剧本及演员排演提示](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
+    "content": "## 主要角色\n- **陆沉（33）**：雁回城执剑使。外在目标是找回三日记忆、救回女儿；内在变化是从控制一切到承认失去。\n- **老陆沉（52）**：十九年后的陆沉。三日前完成唯一一次穿越；以猎人姿态阻止年轻自己，却需要让他主动改变。\n- **苏照（32）**：钟律官兼医官。独立完成查钟律、救孩子、组织百姓与还忆行动。\n- **陆小满（8）**：听音辨路，危机中主动留下缺尾燕子路标并带其他孩子撤离；她的选择推动父亲完成改变。\n- **裴九思（46）**：司天监监正。试图用全城记忆改写独子死亡，是陆沉执念的镜像。\n- **秦野（27）**：陆沉副手，承担北渠救城线。\n\n## 五条硬规则\n1. 剑只能重放并改写记忆回声，不能凭空复活。\n2. 拔剑越深，全城被抽走的记忆越多。\n3. 老陆沉只穿越一次，三日前抵达；年轻陆沉后来主动把这三日记忆封进剑中。\n4. 老陆沉以自身记忆构成穿越身体，过去发生偏离时便会碎裂。\n5. 七十二钟能还忆，但持剑者必须自愿放弃最珍爱的记忆；两个陆沉是同一灵魂，因此共同遗忘小满，苏照仍记得女儿。\n\n[查看《忘川剑》电影定稿](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
     "episode": 1,
     "shot_number": 0,
     "prompts": [],
@@ -38,13 +37,13 @@
     "videos": [],
     "metadata": {
       "asset_type": "story_bible",
-      "version": "v3",
+      "version": "final",
       "screenplay_file": "SCREENPLAY.md"
     },
     "status": "done",
     "assignee": "comic-screenwriter",
     "created_at": "2026-08-13T12:00:00+08:00",
-    "updated_at": "2026-08-13T12:00:00+08:00"
+    "updated_at": "2026-08-13T19:05:00+08:00"
   },
   {
     "card_id": "wc100_script_act1",
@@ -63,7 +62,8 @@
       "scene_end": 12,
       "time_start": "00:00",
       "time_end": "25:00",
-      "screenplay_file": "SCREENPLAY.md"
+      "screenplay_file": "SCREENPLAY.md",
+      "version": "final"
     },
     "status": "done",
     "assignee": "comic-screenwriter",
@@ -75,7 +75,7 @@
     "project_id": "wangchuan-film-100m",
     "stage": "script",
     "title": "第二幕上《看见未来》25:00—55:00",
-    "content": "## 场13—27\n年轻与年老的陆沉被迫结盟，调查忘川剑和七十二口城钟。苏照发现老陆沉刻名木鞘其实是还忆钟槌；裴九思则用失魂草和伪造记忆操控全城。他十二年前失去独子，准备以全城记忆改写旧灾。中点处，陆沉亲眼看见未来空城和苏照之死。随后，三日前陆沉主动抹去记忆的影像被揭开：他想在不知道结局的情况下重选一次，因为如果每次都错，那不是失误，而是他。\n\n**幕尾不可逆信息**：裴九思会用小满逼陆沉拔剑，而陆沉此前每一次循环都自愿选择了女儿。\n\n[打开完整场景、动作与对白](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
+    "content": "## 场13—27\n年轻与年老的陆沉被迫结盟，调查忘川剑和七十二口城钟。苏照发现老陆沉刻名木鞘其实是还忆钟槌；裴九思则用失魂草和伪造记忆操控全城。他十二年前失去独子，准备以全城记忆改写旧灾。中点处，陆沉亲眼看见未来空城和苏照之死。随后，失忆前的陆沉主动将最近三日封入忘川剑的影像被揭开：他想摆脱预言，在不知道结局的情况下重新选择。\n\n**幕尾不可逆信息**：裴九思会用小满逼陆沉拔剑；老陆沉虽然提前三日归来，却仍无法替年轻的自己完成选择。\n\n[打开完整场景、动作与对白](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
     "episode": 1,
     "shot_number": 2,
     "prompts": [],
@@ -87,7 +87,8 @@
       "scene_end": 27,
       "time_start": "25:00",
       "time_end": "55:00",
-      "screenplay_file": "SCREENPLAY.md"
+      "screenplay_file": "SCREENPLAY.md",
+      "version": "final"
     },
     "status": "done",
     "assignee": "comic-screenwriter",
@@ -111,7 +112,8 @@
       "scene_end": 40,
       "time_start": "55:00",
       "time_end": "80:00",
-      "screenplay_file": "SCREENPLAY.md"
+      "screenplay_file": "SCREENPLAY.md",
+      "version": "final"
     },
     "status": "done",
     "assignee": "comic-screenwriter",
@@ -135,60 +137,12 @@
       "scene_end": 52,
       "time_start": "80:00",
       "time_end": "100:00",
-      "screenplay_file": "SCREENPLAY.md"
+      "screenplay_file": "SCREENPLAY.md",
+      "version": "final"
     },
     "status": "done",
     "assignee": "comic-screenwriter",
     "created_at": "2026-08-13T12:00:00+08:00",
-    "updated_at": "2026-08-13T17:42:00+08:00"
-  },
-  {
-    "card_id": "wc100_actor_rehearsal_v2",
-    "project_id": "wangchuan-film-100m",
-    "stage": "setting",
-    "title": "V3 演员排练手册：52场行动谱",
-    "content": "## 演员版优化内容\n- 每个主要角色补充公开动作、私下恐惧、身体习惯和语言节奏。\n- 52场逐场给出主行动、障碍/手段及场尾变化，排练时不需要用抽象情绪猜人物。\n- 标明人物秘密在开场、中段与结尾的知情进度，避免演员提前表演后续真相。\n- V3同步小满主动留路、未来苏照可见死亡，以及苏照在尾声仍记得女儿的新逻辑。\n\n[打开演员排练手册](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/ACTOR_REHEARSAL_NOTES.md)\n\n[打开V3完整剧本](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
-    "episode": 1,
-    "shot_number": 5,
-    "prompts": [],
-    "negative_prompts": [],
-    "images": [],
-    "videos": [],
-    "metadata": {
-      "asset_type": "actor_rehearsal_notes",
-      "version": "v3",
-      "scene_count": 52,
-      "rehearsal_file": "ACTOR_REHEARSAL_NOTES.md",
-      "screenplay_file": "SCREENPLAY.md"
-    },
-    "status": "done",
-    "assignee": "comic-director",
-    "created_at": "2026-08-13T17:01:00+08:00",
-    "updated_at": "2026-08-13T17:42:00+08:00"
-  },
-  {
-    "card_id": "wc100_audience_experience_v3",
-    "project_id": "wangchuan-film-100m",
-    "stage": "idea",
-    "title": "V3 观众体验：十分钟悬念与伏笔回报",
-    "content": "## 观众版优化内容\n- 为00—100分钟每十分钟明确一个观众追问、当段回报和下段新问题。\n- 将观众必须记住的世界规则压缩为五句，删减不必要专有名词。\n- 把小满被抓搬到画面中：她识破假钟号，为保护孩子假装顺从并留下缺尾燕子路标。\n- 把未来说明改成可见失败：老陆沉因剑中女儿呼唤松开钟绳，导致未来苏照死亡。\n- 修复尾声规则：只有同一灵魂的两个陆沉遗忘小满，苏照仍记得并把女儿重新介绍给陆沉。\n\n[打开观众体验检查](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/AUDIENCE_EXPERIENCE_NOTES.md)\n\n[打开V3完整剧本](/api/v1/agentapp/production/resource/production/wangchuan-film-100m/SCREENPLAY.md)",
-    "episode": 1,
-    "shot_number": 6,
-    "prompts": [],
-    "negative_prompts": [],
-    "images": [],
-    "videos": [],
-    "metadata": {
-      "asset_type": "audience_experience_notes",
-      "version": "v3",
-      "runtime_checkpoints": 10,
-      "payoff_ledger_items": 8,
-      "audience_file": "AUDIENCE_EXPERIENCE_NOTES.md",
-      "screenplay_file": "SCREENPLAY.md"
-    },
-    "status": "done",
-    "assignee": "comic-director",
-    "created_at": "2026-08-13T17:42:00+08:00",
-    "updated_at": "2026-08-13T17:42:00+08:00"
+    "updated_at": "2026-08-13T19:05:00+08:00"
   }
 ]
