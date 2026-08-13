@@ -1,7 +1,7 @@
 {
   "project_id": "wangchuan-film-100m",
   "name": "《忘川剑》100分钟电影",
-  "description": "东方奇幻武侠悬疑电影｜失忆剑客发现追杀自己的人是十九年后的自己｜V2演员排练修订稿｜约100分钟｜2.39:1",
+  "description": "东方奇幻武侠悬疑电影｜失忆剑客发现追杀自己的人是十九年后的自己｜V3观众体验修订稿｜约100分钟｜2.39:1",
   "source_type": "screenplay",
   "source_content": "一个失忆剑客发现追杀自己的人是未来的自己。未来的他要阻止年轻的自己拔出一柄可以用全城记忆改写过去的剑。",
   "employee_key": "comic-director",
@@ -28,10 +28,11 @@
     "default_status": "pending",
     "screenplay_file": "SCREENPLAY.md",
     "actor_rehearsal_file": "ACTOR_REHEARSAL_NOTES.md",
+    "audience_experience_file": "AUDIENCE_EXPERIENCE_NOTES.md",
     "screenplay_format": "feature-film",
-    "screenplay_version": "v2",
+    "screenplay_version": "v3",
     "target_runtime_minutes": 100
   },
   "created_at": "2026-08-13T12:00:00+08:00",
-  "updated_at": "2026-08-13T17:01:00+08:00"
+  "updated_at": "2026-08-13T17:42:00+08:00"
 }
