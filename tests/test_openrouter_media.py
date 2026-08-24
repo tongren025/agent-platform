@@ -239,3 +239,76 @@ def test_submit_video_rejects_frames_mixed_with_input_references(monkeypatch):
             image_url="https://example.test/frame.png",
             reference_urls=["https://example.test/character.png"],
         )
+def test_list_video_models_exposes_multimodal_capabilities(monkeypatch):
+    """导演台必须拿到时长、首末帧、多模态和原生音频能力。"""
+    monkeypatch.setattr(
+        openrouter_media,
+        "_openrouter_config",
+        lambda: ("https://example.test/api/v1", "secret"),
+    )
+    monkeypatch.setattr(
+        openrouter_media.httpx,
+        "get",
+        lambda *_args, **_kwargs: FakeResponse({"data": [{
+            "id": "bytedance/seedance-2.0",
+            "name": "Seedance 2.0",
+            "supported_durations": [4, 5, 8, 10, 15],
+            "supported_frame_images": ["first_frame", "last_frame"],
+            "generate_audio": True,
+        }]}),
+    )
+
+    model = openrouter_media.list_media_models("video")[0]
+
+    assert model["supportedDurations"][-1] == 15
+    assert model["supportedFrameImages"] == ["first_frame", "last_frame"]
+    assert model["inputReferenceModalities"] == ["image", "video", "audio"]
+    assert model["generateAudio"] is True
+
+
+def test_submit_video_encodes_local_video_and_audio_references(
+    tmp_path,
+    monkeypatch,
+):
+    """项目内的表演视频和对白音频会作为多模态引用提交，不泄露本地路径。"""
+    asset_dir = tmp_path / "data" / "production" / "demo" / "uploads"
+    asset_dir.mkdir(parents=True)
+    (asset_dir / "performance.mp4").write_bytes(b"video")
+    (asset_dir / "dialogue.mp3").write_bytes(b"audio")
+    captured = {}
+
+    monkeypatch.setattr(openrouter_media, "BASE_DIR", tmp_path)
+    monkeypatch.setattr(
+        openrouter_media,
+        "_openrouter_config",
+        lambda: ("https://example.test/api/v1", "secret"),
+    )
+
+    def fake_post(_url, *, headers, json, timeout):
+        captured["json"] = json
+        return FakeResponse({"id": "job-multimodal", "status": "queued"})
+
+    monkeypatch.setattr(openrouter_media.httpx, "post", fake_post)
+    prefix = (
+        "/api/v1/agentapp/production/resource/production/demo/uploads/"
+    )
+    result = openrouter_media.submit_video(
+        "demo",
+        model="bytedance/seedance-2.0",
+        prompt="参考表演和声音生成",
+        reference_inputs=[
+            {"kind": "video", "url": f"{prefix}performance.mp4"},
+            {"kind": "audio", "url": f"{prefix}dialogue.mp3"},
+        ],
+    )
+
+    references = captured["json"]["input_references"]
+    assert "frame_images" not in captured["json"]
+    assert references[0]["video_url"]["url"].startswith(
+        "data:video/mp4;base64,"
+    )
+    assert references[1]["audio_url"]["url"].startswith(
+        "data:audio/mpeg;base64,"
+    )
+    assert result["generationMode"] == "reference"
+    assert result["referenceCount"] == 2

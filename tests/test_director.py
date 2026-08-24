@@ -669,3 +669,112 @@ def test_rejected_image_feedback_is_applied_to_next_generation(
     assert "当前角色时期的脸、发型、服装" in prompts[-1]
     assert "女主必须保留左眼泪痣和青色发带" in prompts[-1]
     assert prompts[-1].startswith("img_prompt prompt")
+def test_director_control_pack_upload_and_multimodal_submission(
+    director_env,
+    monkeypatch,
+):
+    """镜头控制保存、音频上传与多模态生成必须形成一条真实链路。"""
+    from app.services import openrouter_media
+
+    client = director_env
+    submitted = {}
+
+    def capture_submit(project_id, **kwargs):
+        submitted.update(kwargs)
+        return {
+            "id": "job-control",
+            "status": "pending",
+            "pollingUrl": "/videos/job-control",
+            "model": kwargs["model"],
+        }
+
+    monkeypatch.setattr(openrouter_media, "submit_video", capture_submit)
+    pid, card_ids = _create_gc(client)
+    control_url = (
+        f"/api/v1/agentapp/director/projects/{pid}/cards/"
+        f"{card_ids['vid_prompt']}/control-pack"
+    )
+    saved = client.put(
+        control_url,
+        json={
+            "generation_mode": "auto",
+            "shot_type": "dialogue",
+            "references": [{
+                "url": "https://example.test/performance.mp4",
+                "kind": "video",
+                "role": "performance",
+                "label": "表演参考",
+            }],
+            "storyboard": "【时间轴】[00:00-00:04] 起身；[00:04-00:08] 说话",
+            "camera_plan": "中近景缓慢推进",
+            "performance_plan": "停顿后开口",
+            "audio_plan": "低声对白",
+        },
+    )
+    assert saved.status_code == 200, saved.text
+    assert saved.json()["data"]["controlPlan"]["mode"] == "reference"
+
+    uploaded = client.post(
+        (
+            f"/api/v1/agentapp/director/projects/{pid}/cards/"
+            f"{card_ids['vid_prompt']}/control-assets"
+        ),
+        params={"role": "dialogue"},
+        files={"file": ("dialogue.mp3", b"voice", "audio/mpeg")},
+    )
+    assert uploaded.status_code == 200, uploaded.text
+    uploaded_data = uploaded.json()["data"]
+    assert uploaded_data["asset"]["kind"] == "audio"
+    assert uploaded_data["asset"]["role"] == "dialogue"
+
+    image = client.post(
+        (
+            f"/api/v1/agentapp/director/projects/{pid}/cards/"
+            f"{card_ids['img_prompt']}/image"
+        ),
+        json={"model": "demo/image", "aspect_ratio": "9:16"},
+    )
+    assert image.status_code == 200, image.text
+    image_url = image.json()["data"]["url"]
+    approved = client.post(
+        (
+            f"/api/v1/agentapp/production/projects/{pid}/cards/"
+            f"{card_ids['img_prompt']}/review"
+        ),
+        json={
+            "verdict": "pass",
+            "image": image_url,
+            "ratings": {
+                "identity_consistency": 5,
+                "composition_accuracy": 5,
+                "scene_consistency": 4,
+                "style_fidelity": 4,
+                "technical_integrity": 4,
+            },
+        },
+    )
+    assert approved.status_code == 200, approved.text
+
+    video = client.post(
+        (
+            f"/api/v1/agentapp/director/projects/{pid}/cards/"
+            f"{card_ids['vid_prompt']}/video"
+        ),
+        json={"model": "demo/video", "duration": 8, "aspect_ratio": "9:16"},
+    )
+    assert video.status_code == 200, video.text
+    assert submitted["image_url"] == ""
+    assert submitted["last_frame_url"] == ""
+    assert {item["kind"] for item in submitted["reference_inputs"]} == {
+        "image", "video", "audio",
+    }
+    metadata = video.json()["data"]["card"]["metadata"]["openrouter_video_job"]
+    assert metadata["generationMode"] == "reference"
+    assert metadata["controlPlan"]["summary"]["referenceCount"] == 3
+
+    state = client.get(
+        f"/api/v1/agentapp/director/projects/{pid}"
+    ).json()["data"]
+    shot = state["shots"][0]
+    assert shot["controlPlan"]["mode"] == "reference"
+    assert len(shot["controlPack"]["references"]) == 2

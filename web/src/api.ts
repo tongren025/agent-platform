@@ -478,6 +478,36 @@ async function download(
   return { filename };
 }
 
+export type ShotReferenceKind = 'image' | 'video' | 'audio';
+export type ShotReferenceRole =
+  | 'identity' | 'expression' | 'scene' | 'prop' | 'storyboard'
+  | 'performance' | 'motion' | 'camera' | 'blocking' | 'dialogue'
+  | 'sound' | 'continuity' | 'style';
+
+export interface ShotReference {
+  reference_id?: string;
+  url: string;
+  kind: ShotReferenceKind;
+  role: ShotReferenceRole;
+  label?: string;
+  note?: string;
+  priority?: number;
+}
+
+export interface ShotControlPack {
+  schema_version?: number;
+  generation_mode: 'auto' | 'keyframe' | 'reference';
+  shot_type: 'auto' | 'dialogue' | 'performance' | 'action' | 'camera' | 'establishing' | 'transition';
+  first_frame_url?: string;
+  last_frame_url?: string;
+  references: ShotReference[];
+  storyboard?: string;
+  camera_plan?: string;
+  performance_plan?: string;
+  audio_plan?: string;
+  continuity_plan?: string;
+}
+
 export const api = {
   // Registry
   getOverview: () => request<Record<string, number>>('/registry/overview'),
@@ -981,6 +1011,23 @@ export const api = {
     request<any>(`/director/projects/${pid}/cards/${cardId}/image-prompt`, {
       method: 'PUT', body: JSON.stringify(data),
     }),
+  updateDirectorControlPack: (pid: string, cardId: string, data: ShotControlPack) =>
+    request<any>(`/director/projects/${pid}/cards/${cardId}/control-pack`, {
+      method: 'PUT', body: JSON.stringify(data),
+    }),
+  uploadDirectorControlAsset: (
+    pid: string,
+    cardId: string,
+    file: File,
+    role: ShotReferenceRole,
+  ) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<any>(
+      `/director/projects/${pid}/cards/${cardId}/control-assets?role=${encodeURIComponent(role)}`,
+      { method: 'POST', body: form, timeoutMs: 120_000 },
+    );
+  },
   reorderDirectorShots: (pid: string, data: {
     episode: number | null;
     ordered_units: number[];
@@ -1004,6 +1051,7 @@ export const api = {
     model?: string; employee_key?: string; prompt?: string; duration?: number;
     resolution?: string; aspect_ratio?: string; image_url?: string;
     last_frame_url?: string; reference_urls?: string[];
+    control_pack?: ShotControlPack;
     generate_audio?: boolean;
   }) => request<any>(`/director/projects/${pid}/cards/${cardId}/video`, {
     method: 'POST', body: JSON.stringify(data),

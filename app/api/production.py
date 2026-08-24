@@ -3189,7 +3189,9 @@ def serve_resource(path: str, w: int | None = None):
     media_types = {
         ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
         ".gif": "image/gif", ".webp": "image/webp", ".mp4": "video/mp4",
-        ".webm": "video/webm", ".pdf": "application/pdf",
+        ".mov": "video/quicktime", ".webm": "video/webm",
+        ".mp3": "audio/mpeg", ".wav": "audio/wav", ".m4a": "audio/mp4",
+        ".aac": "audio/aac", ".pdf": "application/pdf",
     }
     # 原图给 1 小时缓存：素材文件基本不原地改写（改了也是换文件名），
     # 避免抽屉/预览每次重拉 MB 级原图；不敢给 immutable，路径没有内容指纹。

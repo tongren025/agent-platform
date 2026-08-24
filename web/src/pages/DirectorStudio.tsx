@@ -2,18 +2,25 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button, Empty, Input, Modal, Progress, Segmented, Select, Spin, Tag, Tooltip,
-  Typography,
+  Typography, Upload,
 } from 'antd';
 import {
   ArrowRightOutlined, CheckCircleFilled, CheckOutlined, ClockCircleOutlined,
   CloseOutlined, DownloadOutlined, EditOutlined, ExclamationCircleOutlined,
-  FileTextOutlined, FolderOpenOutlined, HistoryOutlined, MenuOutlined,
-  PictureOutlined, PlusOutlined, ReloadOutlined, RocketOutlined, SaveOutlined,
+  ControlOutlined, DeleteOutlined, FileTextOutlined, FolderOpenOutlined,
+  HistoryOutlined, MenuOutlined, PaperClipOutlined, PictureOutlined, PlusOutlined,
+  ReloadOutlined, RocketOutlined, SaveOutlined,
   SortAscendingOutlined, SyncOutlined, VideoCameraOutlined,
   ArrowUpOutlined, ArrowDownOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { api, type ProductionGoal, type VisualQualityRatings } from '../api';
+import {
+  api,
+  type ProductionGoal,
+  type ShotControlPack,
+  type ShotReferenceRole,
+  type VisualQualityRatings,
+} from '../api';
 import VisualQualityReviewModal from '../components/VisualQualityReviewModal';
 import HelpHint from '../components/HelpHint';
 import { message } from '../ui';
@@ -25,6 +32,17 @@ const { Text, Title } = Typography;
 const { TextArea } = Input;
 
 type MediaKind = 'image' | 'video';
+
+interface ShotControlPlan {
+  mode: 'keyframe' | 'reference';
+  warnings: string[];
+  summary: {
+    shotType?: string;
+    referenceCount?: number;
+    referenceKinds?: string[];
+    warningCount?: number;
+  };
+}
 
 interface Project {
   project_id: string;
@@ -77,6 +95,8 @@ interface ShotState {
   videoQualityRequired?: boolean;
   videoQualityScore?: number | null;
   videoQualityPassed?: boolean | null;
+  controlPack?: ShotControlPack;
+  controlPlan?: ShotControlPlan;
 }
 
 interface DirectorState {
@@ -124,10 +144,39 @@ interface MediaModel {
   pricing?: Record<string, string | number>;
   supportedResolutions?: string[];
   supportedAspectRatios?: string[];
+  supportedDurations?: Array<number | string>;
+  inputReferenceModalities?: string[];
+  generateAudio?: boolean;
   isFree?: boolean;
   recommended?: boolean;
   recommendationReason?: string;
 }
+
+const CONTROL_ROLE_OPTIONS: { value: ShotReferenceRole; label: string }[] = [
+  { value: 'identity', label: '人物身份' },
+  { value: 'expression', label: '人物表情' },
+  { value: 'scene', label: '场景空间' },
+  { value: 'prop', label: '关键道具' },
+  { value: 'storyboard', label: '分镜构图' },
+  { value: 'performance', label: '表演参考' },
+  { value: 'motion', label: '动作轨迹' },
+  { value: 'camera', label: '运镜轨迹' },
+  { value: 'blocking', label: '白模走位' },
+  { value: 'dialogue', label: '对白口型' },
+  { value: 'sound', label: '声音氛围' },
+  { value: 'continuity', label: '前后镜连续' },
+  { value: 'style', label: '视觉风格' },
+];
+
+const SHOT_TYPE_OPTIONS = [
+  { value: 'auto', label: '自动判断' },
+  { value: 'dialogue', label: '对白镜头' },
+  { value: 'performance', label: '表演镜头' },
+  { value: 'action', label: '动作镜头' },
+  { value: 'camera', label: '运镜镜头' },
+  { value: 'establishing', label: '场景建立' },
+  { value: 'transition', label: '转场镜头' },
+];
 
 const ACTIVE_VIDEO_STATUSES = new Set([
   'pending', 'in_progress', 'queued', 'processing', 'running',
@@ -342,6 +391,10 @@ export default function DirectorStudio() {
   const [mediaBatchSize, setMediaBatchSize] = useState(3);
   const [batchProgress, setBatchProgress] = useState({ done: 0, total: 0 });
   const [mediaTargetCardId, setMediaTargetCardId] = useState('');
+  const [controlTargetCardId, setControlTargetCardId] = useState('');
+  const [controlDraft, setControlDraft] = useState<ShotControlPack | null>(null);
+  const [controlUploadRole, setControlUploadRole] = useState<ShotReferenceRole>('style');
+  const [controlBusy, setControlBusy] = useState('');
   const [editingPromptCardId, setEditingPromptCardId] = useState('');
   const [promptDrafts, setPromptDrafts] = useState<Record<string, string>>({});
   const [promptBusy, setPromptBusy] = useState<Record<string, boolean>>({});
@@ -404,6 +457,9 @@ export default function DirectorStudio() {
     mediaModelRequestRef.current += 1;
     setMediaKind(null);
     setMediaTargetCardId('');
+    setControlTargetCardId('');
+    setControlDraft(null);
+    setControlBusy('');
     setEditingPromptCardId('');
     setPromptDrafts({});
     setQualityReviewTargetCardId('');
@@ -899,6 +955,85 @@ export default function DirectorStudio() {
     }
   };
 
+  const applyControlResult = (
+    cardId: string,
+    result: { controlPack: ShotControlPack; controlPlan: ShotControlPlan },
+  ) => {
+    setControlDraft(result.controlPack);
+    setState(current => current
+      ? {
+          ...current,
+          shots: current.shots.map(shot => shot.videoCardId === cardId
+            ? {
+                ...shot,
+                controlPack: result.controlPack,
+                controlPlan: result.controlPlan,
+              }
+            : shot),
+        }
+      : current);
+  };
+
+  const openControl = (shot: ShotState) => {
+    if (!shot.videoCardId) return;
+    const draft = shot.controlPack || {
+      schema_version: 1,
+      generation_mode: 'auto',
+      shot_type: 'auto',
+      first_frame_url: shot.imageUrl,
+      last_frame_url: '',
+      references: [],
+      storyboard: '',
+      camera_plan: '',
+      performance_plan: '',
+      audio_plan: '',
+      continuity_plan: '',
+    };
+    setControlDraft(JSON.parse(JSON.stringify(draft)));
+    setControlTargetCardId(shot.videoCardId);
+    setControlUploadRole('style');
+  };
+
+  const saveControl = async () => {
+    if (!projectId || !controlTargetCardId || !controlDraft || controlBusy) return;
+    setControlBusy('save');
+    try {
+      const result = await api.updateDirectorControlPack(
+        projectId,
+        controlTargetCardId,
+        controlDraft,
+      );
+      applyControlResult(controlTargetCardId, result);
+      setControlTargetCardId('');
+      setControlDraft(null);
+      message.success('镜头控制已保存');
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setControlBusy('');
+    }
+  };
+
+  const uploadControlAsset = async (file: File) => {
+    if (!projectId || !controlTargetCardId || !controlDraft || controlBusy) return;
+    setControlBusy('upload');
+    try {
+      await api.updateDirectorControlPack(projectId, controlTargetCardId, controlDraft);
+      const result = await api.uploadDirectorControlAsset(
+        projectId,
+        controlTargetCardId,
+        file,
+        controlUploadRole,
+      );
+      applyControlResult(controlTargetCardId, result);
+      message.success('参考素材已加入镜头');
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setControlBusy('');
+    }
+  };
+
   const startPromptEdit = (shot: ShotState) => {
     if (!shot.imageCardId) return;
     setEditingPromptCardId(shot.imageCardId);
@@ -1167,6 +1302,13 @@ export default function DirectorStudio() {
   }, [state, mediaKind, mediaTargetCardId]);
 
   const selectedModel = mediaModels.find(model => model.id === mediaModel);
+  const activeVideoControl = mediaKind === 'video' ? pendingShots[0]?.controlPack : undefined;
+  const unsupportedReferenceKinds = activeVideoControl
+    ? [...new Set(activeVideoControl.references.map(reference => reference.kind))]
+        .filter(kind => !(
+          selectedModel?.inputReferenceModalities || ['image']
+        ).includes(kind))
+    : [];
   const selectedPendingShots = useMemo(() => (
     mediaTargetCardId
       ? pendingShots
@@ -1192,6 +1334,9 @@ export default function DirectorStudio() {
   );
   const videoRejectTarget = state?.shots.find(
     shot => shot.videoCardId === videoRejectTargetCardId,
+  );
+  const controlTargetShot = state?.shots.find(
+    shot => shot.videoCardId === controlTargetCardId,
   );
   const finalMediaUrl = safeMediaUrl(
     state?.finalUrl || state?.finalCandidateUrl || '',
@@ -1260,11 +1405,23 @@ export default function DirectorStudio() {
                 model: requestedModel,
                 ...(requestedEmployeeKey ? { employee_key: requestedEmployeeKey } : {}),
                 prompt: shot.videoPrompt,
-                duration: shot.durationSeconds,
+                duration: (() => {
+                  const durations = (selectedModel?.supportedDurations || [])
+                    .map(value => Number(value))
+                    .filter(value => Number.isFinite(value));
+                  if (!durations.length) return shot.durationSeconds;
+                  return durations.reduce((closest, value) => (
+                    Math.abs(value - shot.durationSeconds)
+                      < Math.abs(closest - shot.durationSeconds)
+                      ? value
+                      : closest
+                  ), durations[0]);
+                })(),
                 resolution: '720p',
                 aspect_ratio: state.project.aspect_ratio,
                 image_url: shot.imageUrl,
-                generate_audio: true,
+                control_pack: shot.controlPack,
+                generate_audio: selectedModel?.generateAudio !== false,
               });
               if (result?.stale || result?.applied === false) staleResults += 1;
             }
@@ -1706,6 +1863,31 @@ export default function DirectorStudio() {
                             <p>{shot.imagePrompt || '还没有画面提示词'}</p>
                           )}
                         </section>
+                        {shot.videoCardId && (
+                          <section className="director-shot-control">
+                            <div>
+                              <strong>
+                                {shot.controlPlan?.mode === 'reference'
+                                  ? '多模态参考'
+                                  : '首尾帧控制'}
+                              </strong>
+                              <span>
+                                {shot.controlPlan?.summary?.referenceCount || 0} 项素材
+                                {shot.controlPlan?.warnings?.length
+                                  ? ` · ${shot.controlPlan.warnings.length} 项待补`
+                                  : ' · 已就绪'}
+                              </span>
+                            </div>
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<ControlOutlined />}
+                              onClick={() => openControl(shot)}
+                            >
+                              镜头控制
+                            </Button>
+                          </section>
+                        )}
                         <div className="director-shot-status">
                           <Tag color={shot.imageStale ? 'warning' : shot.imageUrl ? 'success' : 'default'}>
                             {shot.imageStale ? '提示词已更新，需重做画面' : shot.imageUrl ? '画面就绪' : '等待画面'}
@@ -2296,6 +2478,194 @@ export default function DirectorStudio() {
       </Modal>
 
       <Modal
+        open={Boolean(controlTargetCardId && controlDraft)}
+        title={`镜头控制 · G${controlTargetShot?.unit || ''}`}
+        okText="保存控制"
+        cancelText="取消"
+        confirmLoading={controlBusy === 'save'}
+        okButtonProps={{ disabled: !controlDraft || Boolean(controlBusy) }}
+        onOk={() => void saveControl()}
+        onCancel={() => {
+          if (controlBusy) return;
+          setControlTargetCardId('');
+          setControlDraft(null);
+        }}
+        width={isMobile ? 'calc(100vw - 24px)' : 760}
+      >
+        {controlDraft && (
+          <div className="director-control-dialog">
+            <div className="director-control-mode-grid">
+              <label>
+                生成模式
+                <Select
+                  value={controlDraft.generation_mode}
+                  options={[
+                    { value: 'auto', label: '自动选择' },
+                    { value: 'keyframe', label: '首尾帧' },
+                    { value: 'reference', label: '多模态参考' },
+                  ]}
+                  onChange={value => setControlDraft(current => current
+                    ? { ...current, generation_mode: value }
+                    : current)}
+                />
+              </label>
+              <label>
+                镜头类型
+                <Select
+                  value={controlDraft.shot_type}
+                  options={SHOT_TYPE_OPTIONS}
+                  onChange={value => setControlDraft(current => current
+                    ? { ...current, shot_type: value }
+                    : current)}
+                />
+              </label>
+            </div>
+            <div className="director-control-mode-grid">
+              <label>
+                首帧
+                <Input
+                  value={controlDraft.first_frame_url || ''}
+                  readOnly
+                  disabled
+                />
+              </label>
+              <label>
+                末帧
+                <Input
+                  value={controlDraft.last_frame_url || ''}
+                  placeholder="可选"
+                  onChange={event => setControlDraft(current => current
+                    ? { ...current, last_frame_url: event.target.value }
+                    : current)}
+                />
+              </label>
+            </div>
+            <label>
+              时间轴与分镜
+              <TextArea
+                value={controlDraft.storyboard || ''}
+                autoSize={{ minRows: 3, maxRows: 7 }}
+                onChange={event => setControlDraft(current => current
+                  ? { ...current, storyboard: event.target.value }
+                  : current)}
+              />
+            </label>
+            <div className="director-control-mode-grid">
+              <label>
+                运镜与空间调度
+                <TextArea
+                  value={controlDraft.camera_plan || ''}
+                  autoSize={{ minRows: 2, maxRows: 5 }}
+                  onChange={event => setControlDraft(current => current
+                    ? { ...current, camera_plan: event.target.value }
+                    : current)}
+                />
+              </label>
+              <label>
+                表演与动作
+                <TextArea
+                  value={controlDraft.performance_plan || ''}
+                  autoSize={{ minRows: 2, maxRows: 5 }}
+                  onChange={event => setControlDraft(current => current
+                    ? { ...current, performance_plan: event.target.value }
+                    : current)}
+                />
+              </label>
+              <label>
+                对白与声音
+                <TextArea
+                  value={controlDraft.audio_plan || ''}
+                  autoSize={{ minRows: 2, maxRows: 5 }}
+                  onChange={event => setControlDraft(current => current
+                    ? { ...current, audio_plan: event.target.value }
+                    : current)}
+                />
+              </label>
+              <label>
+                前后镜连续性
+                <TextArea
+                  value={controlDraft.continuity_plan || ''}
+                  autoSize={{ minRows: 2, maxRows: 5 }}
+                  onChange={event => setControlDraft(current => current
+                    ? { ...current, continuity_plan: event.target.value }
+                    : current)}
+                />
+              </label>
+            </div>
+            <div className="director-control-assets">
+              <div className="director-control-assets-heading">
+                <strong>参考素材</strong>
+                <div>
+                  <Select
+                    value={controlUploadRole}
+                    options={CONTROL_ROLE_OPTIONS}
+                    onChange={setControlUploadRole}
+                    aria-label="选择参考素材用途"
+                  />
+                  <Upload
+                    accept=".png,.jpg,.jpeg,.webp,.gif,.mp4,.mov,.webm,.mp3,.wav,.m4a,.aac"
+                    showUploadList={false}
+                    beforeUpload={file => {
+                      void uploadControlAsset(file);
+                      return Upload.LIST_IGNORE;
+                    }}
+                  >
+                    <Button
+                      icon={<PaperClipOutlined />}
+                      loading={controlBusy === 'upload'}
+                      disabled={Boolean(controlBusy)}
+                    >
+                      添加素材
+                    </Button>
+                  </Upload>
+                </div>
+              </div>
+              {controlDraft.references.length === 0 ? (
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无额外参考素材" />
+              ) : (
+                <div className="director-control-reference-list">
+                  {controlDraft.references.map((reference, index) => (
+                    <div
+                      className="director-control-reference"
+                      key={reference.reference_id || `${reference.url}-${index}`}
+                    >
+                      <div>
+                        <Tag>{reference.kind}</Tag>
+                        <Tag color="purple">
+                          {CONTROL_ROLE_OPTIONS.find(item => item.value === reference.role)?.label
+                            || reference.role}
+                        </Tag>
+                        <span>{reference.label || reference.url}</span>
+                      </div>
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        aria-label={`删除参考素材 ${reference.label || index + 1}`}
+                        onClick={() => setControlDraft(current => current
+                          ? {
+                              ...current,
+                              references: current.references.filter((_, itemIndex) => (
+                                itemIndex !== index
+                              )),
+                            }
+                          : current)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {controlTargetShot?.controlPlan?.warnings?.map(warning => (
+              <div className="director-media-warning" key={warning}>
+                <ExclamationCircleOutlined /> {warning}
+              </div>
+            ))}
+          </div>
+        )}
+      </Modal>
+
+      <Modal
         open={Boolean(mediaKind)}
         title={mediaTargetCardId && pendingShots[0]
           ? `${mediaKind === 'image' ? '生成图片' : '生成视频'} · G${pendingShots[0].unit}`
@@ -2321,7 +2691,11 @@ export default function DirectorStudio() {
             <strong>{mediaTargetCardId && pendingShots[0]
               ? `镜头 G${pendingShots[0].unit}`
               : `${pendingShots.length} 个待生成 · 本次 ${selectedPendingShots.length} 个`}</strong>
-            <span>{mediaKind === 'image' ? '1K · 项目画幅' : '720p · 首帧转视频 · 同步音频'}</span>
+            <span>{mediaKind === 'image'
+              ? '1K · 项目画幅'
+              : pendingShots[0]?.controlPlan?.mode === 'reference'
+                ? `720p · 多模态参考 · ${pendingShots[0].controlPlan?.summary?.referenceCount || 0} 项素材`
+                : '720p · 首尾帧 · 同步音频'}</span>
           </div>
           {!mediaTargetCardId && pendingShots.length > 0 && (
             <div className="director-media-batch">
@@ -2363,6 +2737,12 @@ export default function DirectorStudio() {
             <Text type="secondary">
               {selectedModel.recommendationReason || modelPriceLabel(selectedModel, mediaKind || 'image')}
             </Text>
+          )}
+          {mediaKind === 'video' && selectedModel && unsupportedReferenceKinds.length > 0 && (
+            <div className="director-media-warning">
+              <ExclamationCircleOutlined /> 当前模型不接收
+              {unsupportedReferenceKinds.join('、')} 参考，请换支持多模态参考的视频模型。
+            </div>
           )}
           {busy.startsWith('batch-') && batchProgress.total > 0 && (
             <div

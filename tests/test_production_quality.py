@@ -41,3 +41,19 @@ def test_video_prompt_rejects_unstable_words_and_over_six_seconds():
 def test_clean_six_second_video_segment_passes():
     """正向、单运镜、6 秒内的连续动作不应误报。"""
     assert _codes("vid_prompt", "[00:00-00:06] 右手缓慢抬至胸前。运镜：固定(static)。") == set()
+def test_controlled_ten_second_video_segment_passes():
+    """有逐秒时间轴的连续表演镜头可使用当前模型支持的 7~15 秒档位。"""
+    content = (
+        "【时间轴】[00:00-00:04] 角色起身；"
+        "[00:04-00:10] 中近景缓慢推进，角色低声说出台词。"
+    )
+    assert "segment_too_long" not in _codes("vid_prompt", content)
+
+
+def test_video_segment_over_fifteen_seconds_still_fails_with_timeline():
+    """即使带时间轴，当前视频接口也不能提交超过 15 秒的单段。"""
+    codes = _codes(
+        "vid_prompt",
+        "【时间轴】[00:00-00:16] 角色连续表演，镜头缓慢推进。",
+    )
+    assert "segment_too_long" in codes

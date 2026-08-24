@@ -500,16 +500,33 @@ def evaluate_production_draft(stage: str, title: str, content: str, prompts: lis
         motion = [word for word in FORBIDDEN_MOTION_WORDS if word.lower() in text.lower()]
         if motion:
             add("unstable_motion", f"包含易导致画面失稳的运动词：{'、'.join(motion)}")
+        controlled_long_segment = any(
+            marker in text
+            for marker in ("【时间轴】", "时间轴：", "时间轴:", "逐秒时间轴")
+        )
         for start_m, start_s, end_m, end_s in re.findall(
             r"\[(\d{1,2}):(\d{2})\s*[-~—]\s*(\d{1,2}):(\d{2})\]", text
         ):
             duration = (int(end_m) * 60 + int(end_s)) - (int(start_m) * 60 + int(start_s))
-            if duration > 6:
-                add("segment_too_long", f"存在 {duration} 秒连续生成段，单段必须不超过 6 秒")
+            if duration > 15 or (duration > 6 and not controlled_long_segment):
+                add(
+                    "segment_too_long",
+                    (
+                        f"存在 {duration} 秒生成段；7~15 秒连续镜头必须提供【时间轴】，"
+                        "其它镜头单段不超过 6 秒"
+                    ),
+                )
                 break
         for match in re.finditer(r"(?:一次生成|生成时长)(\d{1,2})s", text):
-            if int(match.group(1)) > 6:
-                add("segment_too_long", f"声明单次生成 {match.group(1)} 秒，连续生成段必须不超过 6 秒")
+            duration = int(match.group(1))
+            if duration > 15 or (duration > 6 and not controlled_long_segment):
+                add(
+                    "segment_too_long",
+                    (
+                        f"声明单次生成 {duration} 秒；7~15 秒连续镜头必须提供【时间轴】，"
+                        "其它镜头单段不超过 6 秒"
+                    ),
+                )
                 break
 
     return issues

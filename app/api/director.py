@@ -5,7 +5,7 @@ import json
 import uuid
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field
 
 from app.api import production as production_api
@@ -26,6 +26,14 @@ from app.dependencies import employee_registry
 from app.models.production import ProductionCard, ProductionProject
 from app.services import openrouter_media
 from app.services.image_generation import generate_image_to_local
+from app.services.shot_control import (
+    ReferenceRole,
+    ShotControlPack,
+    ShotReference,
+    build_shot_control_pack,
+    compile_shot_control_plan,
+    infer_reference_kind,
+)
 from app.services.project_diagnostics import (
     active_card_for_unit,
     diagnose_project,
@@ -123,7 +131,7 @@ def _resolve_media_route(
 
 
 def _configured_media_model(employee_key: str, kind: str) -> dict:
-    """把员工配置的专用媒体模型转成导演台可展示的单模型选项。"""
+    """把员工固定模型与供应商实时能力合并为导演台选项。"""
     employee = employee_registry.get(employee_key)
     if employee is None or not employee.enabled:
         raise HTTPException(400, f"媒体执行员工 {employee_key} 不存在或已停用")
@@ -133,13 +141,30 @@ def _configured_media_model(employee_key: str, kind: str) -> dict:
     ).strip()
     if not model_ref:
         raise HTTPException(400, f"员工 {employee_key} 尚未配置 {route_key}")
+
+    capability: dict = {}
+    if model_ref.lower().startswith("openrouter:"):
+        try:
+            capability = next(
+                (
+                    model for model in openrouter_media.list_media_models(kind)
+                    if _same_media_model(str(model.get("id") or ""), model_ref)
+                ),
+                {},
+            )
+        except Exception:
+            capability = {}
     return {
+        **capability,
         "id": model_ref,
         "name": f"{employee.name}默认 · {_unqualified_media_model(model_ref)}",
         "kind": kind,
-        "description": "由数字员工配置统一管理；如需更换请到员工管理中修改",
-        "pricing": {},
-        "isFree": False,
+        "description": (
+            str(capability.get("description") or "")
+            or "由数字员工配置统一管理；如需更换请到员工管理中修改"
+        ),
+        "pricing": capability.get("pricing") or {},
+        "isFree": bool(capability.get("isFree")),
         "recommended": True,
         "recommendationReason": "当前岗位已配置的执行模型",
         "employeeKey": employee_key,
@@ -297,6 +322,32 @@ def _director_state(project_id: str) -> dict:
         video_review_verdict = ""
         video_job = None
         video_stale = False
+        control_pack_payload: dict = {}
+        control_plan_payload: dict = {}
+        if video_card:
+            try:
+                control_duration = int(
+                    video_card.metadata.get("duration_seconds") or 5
+                )
+            except (TypeError, ValueError):
+                control_duration = 5
+            control_pack = build_shot_control_pack(
+                cards,
+                video_card,
+                image_card,
+                current_image_url=image_url,
+            )
+            control_plan = compile_shot_control_plan(
+                (
+                    video_card.prompts[0]
+                    if video_card.prompts
+                    else video_card.content
+                ),
+                control_pack,
+                duration=control_duration,
+            )
+            control_pack_payload = control_pack.model_dump(mode="json")
+            control_plan_payload = control_plan.model_dump(mode="json")
         if video_card:
             raw_video_job = video_card.metadata.get("openrouter_video_job") or {}
             current_video_prompt = (
@@ -308,6 +359,10 @@ def _director_state(project_id: str) -> dict:
             job_matches_inputs = (
                 (not job_image or not image_url or job_image == image_url)
                 and (not job_prompt or not current_video_prompt or job_prompt == current_video_prompt)
+                and (
+                    not raw_video_job.get("controlPack")
+                    or raw_video_job.get("controlPack") == control_pack_payload
+                )
             )
             if job_matches_inputs:
                 video_job = raw_video_job or None
@@ -407,6 +462,8 @@ def _director_state(project_id: str) -> dict:
             "videoQualityScore": latest_video_quality.get("score"),
             "videoQualityPassed": video_quality_passed,
             "durationSeconds": max(1, min(duration, 15)),
+            "controlPack": control_pack_payload,
+            "controlPlan": control_plan_payload,
             "reviewCount": image_review_count,
             "imageReviewVerdict": str(latest_image_review.get("verdict") or ""),
             "imageReviewReason": str(latest_image_review.get("reason") or ""),
@@ -1040,6 +1097,143 @@ def generate_director_image(project_id: str, card_id: str, req: ImageGenerateReq
     })
 
 
+_CONTROL_ASSET_KINDS = {
+    ".png": "image", ".jpg": "image", ".jpeg": "image", ".webp": "image",
+    ".gif": "image", ".mp4": "video", ".mov": "video", ".webm": "video",
+    ".mp3": "audio", ".wav": "audio", ".m4a": "audio", ".aac": "audio",
+}
+_CONTROL_ASSET_LIMITS = {
+    "image": 20 * 1024 * 1024,
+    "video": 100 * 1024 * 1024,
+    "audio": 15 * 1024 * 1024,
+}
+
+
+def _control_pack_result(
+    cards: list[ProductionCard],
+    card: ProductionCard,
+    pack: ShotControlPack,
+) -> dict:
+    image_card = (
+        _card_for(cards, card.episode, card.shot_number, "img_prompt")
+        or _card_for(cards, card.episode, card.shot_number, "storyboard")
+    )
+    resolved_pack = build_shot_control_pack(
+        cards,
+        card,
+        image_card,
+        current_image_url=_active_image_url(image_card),
+        override=pack,
+    )
+    try:
+        duration = int(card.metadata.get("duration_seconds") or 5)
+    except (TypeError, ValueError):
+        duration = 5
+    prompt = card.prompts[0] if card.prompts else card.content
+    plan = compile_shot_control_plan(prompt, resolved_pack, duration=duration)
+    return {
+        "controlPack": resolved_pack.model_dump(mode="json"),
+        "controlPlan": plan.model_dump(mode="json"),
+    }
+
+
+@router.put("/projects/{project_id}/cards/{card_id}/control-pack")
+def update_director_control_pack(
+    project_id: str,
+    card_id: str,
+    req: ShotControlPack,
+):
+    """保存单镜头的角色、场景、表演、运镜和声音控制。"""
+    with _project_lock(project_id):
+        _load_project(project_id)
+        cards = _load_cards(project_id)
+        card = next((item for item in cards if item.card_id == card_id), None)
+        if card is None:
+            raise HTTPException(404, f"卡片 {card_id} 不存在")
+        if card.stage != "vid_prompt":
+            raise HTTPException(400, "该卡片不是视频生产卡")
+        result = _control_pack_result(cards, card, req)
+        card.metadata = {
+            **card.metadata,
+            "shot_control_pack": result["controlPack"],
+        }
+        card.updated_at = _now()
+        _save_cards(project_id, cards)
+    return ok(result)
+
+
+@router.post("/projects/{project_id}/cards/{card_id}/control-assets")
+async def upload_director_control_asset(
+    project_id: str,
+    card_id: str,
+    role: ReferenceRole = Query("style"),
+    file: UploadFile = File(...),
+):
+    """上传镜头参考素材并立即绑定到控制包。"""
+    original_name = str(file.filename or "reference")
+    suffix = (
+        f".{original_name.rsplit('.', 1)[-1].lower()}"
+        if "." in original_name
+        else ""
+    )
+    kind = _CONTROL_ASSET_KINDS.get(suffix)
+    if kind is None:
+        raise HTTPException(400, "仅支持常见图片、MP4/MOV/WebM、MP3/WAV/M4A/AAC")
+    limit = _CONTROL_ASSET_LIMITS[kind]
+    content = await file.read(limit + 1)
+    await file.close()
+    if len(content) > limit:
+        raise HTTPException(
+            413,
+            f"{kind} 参考素材超过 {limit // (1024 * 1024)}MB 上限",
+        )
+    if not content:
+        raise HTTPException(400, "参考素材为空")
+
+    with _project_lock(project_id):
+        _load_project(project_id)
+        cards = _load_cards(project_id)
+        card = next((item for item in cards if item.card_id == card_id), None)
+        if card is None:
+            raise HTTPException(404, f"卡片 {card_id} 不存在")
+        if card.stage != "vid_prompt":
+            raise HTTPException(400, "该卡片不是视频生产卡")
+        upload_dir = _proj_dir(project_id) / "uploads"
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        filename = f"control_{uuid.uuid4().hex[:16]}{suffix}"
+        (upload_dir / filename).write_bytes(content)
+        url = (
+            "/api/v1/agentapp/production/resource/production/"
+            f"{project_id}/uploads/{filename}"
+        )
+        stored = ShotControlPack.model_validate(
+            card.metadata.get("shot_control_pack") or {},
+        )
+        stored.references.append(ShotReference(
+            reference_id=uuid.uuid4().hex[:12],
+            url=url,
+            kind=kind,
+            role=role,
+            label=original_name[:120],
+        ))
+        result = _control_pack_result(cards, card, stored)
+        card.metadata = {
+            **card.metadata,
+            "shot_control_pack": result["controlPack"],
+        }
+        card.updated_at = _now()
+        _save_cards(project_id, cards)
+    return ok({
+        **result,
+        "asset": {
+            "url": url,
+            "kind": kind,
+            "role": role,
+            "label": original_name[:120],
+        },
+    })
+
+
 class VideoGenerateReq(BaseModel):
     model: str = ""
     employee_key: str = ""
@@ -1050,6 +1244,7 @@ class VideoGenerateReq(BaseModel):
     image_url: str = ""
     last_frame_url: str = ""
     reference_urls: list[str] = Field(default_factory=list)
+    control_pack: ShotControlPack | None = None
     generate_audio: bool = True
 
 
@@ -1102,8 +1297,37 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
                 raise HTTPException(409, "当前镜头图片待返工，请修改并通过后再提交视频")
             raise HTTPException(409, "当前镜头图片必须完成精品评分并通过后才能提交视频")
         image_url = current_image_url
-        generation_prompt = build_video_repair_prompt(
+        initial_stored_pack = dict(
+            card.metadata.get("shot_control_pack") or {}
+        )
+        control_pack = build_shot_control_pack(
+            cards,
+            card,
+            image_card,
+            current_image_url=image_url,
+            override=req.control_pack,
+        )
+        if req.last_frame_url:
+            control_pack.last_frame_url = req.last_frame_url
+        if req.reference_urls:
+            control_pack.references.extend(
+                ShotReference(
+                    url=url,
+                    kind=infer_reference_kind(url),
+                    role="style",
+                )
+                for url in req.reference_urls
+                if str(url or "").strip()
+            )
+        control_plan = compile_shot_control_plan(
             prompt,
+            control_pack,
+            duration=req.duration,
+        )
+        control_pack_payload = control_pack.model_dump(mode="json")
+        control_plan_payload = control_plan.model_dump(mode="json")
+        generation_prompt = build_video_repair_prompt(
+            control_plan.prompt,
             list(card.metadata.get("video_reviews") or []),
         )
         aspect_ratio = req.aspect_ratio or project.aspect_ratio
@@ -1116,9 +1340,12 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
             duration=req.duration,
             resolution=req.resolution,
             aspect_ratio=aspect_ratio,
-            image_url=image_url,
-            last_frame_url=req.last_frame_url,
-            reference_urls=req.reference_urls,
+            image_url=control_plan.first_frame_url,
+            last_frame_url=control_plan.last_frame_url,
+            reference_inputs=[
+                {"kind": reference.kind, "url": reference.url}
+                for reference in control_plan.references
+            ],
             generate_audio=req.generate_audio,
         )
     except ValueError as exc:
@@ -1157,6 +1384,8 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         inputs_match = (
             current_prompt == prompt
             and image_approved
+            and dict(card.metadata.get("shot_control_pack") or {})
+            == initial_stored_pack
             and (
                 not image_url
                 or not current_image_url
@@ -1171,13 +1400,24 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
             "prompt": prompt,
             "generationPrompt": generation_prompt,
             "imageUrl": image_url,
-            "lastFrameUrl": req.last_frame_url,
-            "referenceUrls": req.reference_urls,
+            "lastFrameUrl": control_plan.last_frame_url,
+            "referenceUrls": [
+                reference.url for reference in control_plan.references
+            ],
+            "referenceInputs": [
+                reference.model_dump(mode="json")
+                for reference in control_plan.references
+            ],
+            "generationMode": control_plan.mode,
+            "controlPack": control_pack_payload,
+            "controlPlan": control_plan_payload,
+            "controlWarnings": control_plan.warnings,
             "submittedAt": submission_started_at,
         }
         if applied:
             card.metadata = {
                 **card.metadata,
+                "shot_control_pack": control_pack_payload,
                 "openrouter_video_job": job_payload,
             }
             card.updated_at = _now()
@@ -1194,7 +1434,9 @@ def generate_director_video(project_id: str, card_id: str, req: VideoGenerateReq
         "card": card.model_dump(),
         "applied": applied,
         "stale": not applied,
-        "qualityFeedbackApplied": generation_prompt != prompt,
+        "controlPack": control_pack_payload,
+        "controlPlan": control_plan_payload,
+        "qualityFeedbackApplied": generation_prompt != control_plan.prompt,
     })
 
 

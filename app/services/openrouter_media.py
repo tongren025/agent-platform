@@ -121,6 +121,20 @@ def list_media_models(kind: str) -> list[dict]:
             "supportedParameters": item.get("supported_parameters") or {},
             "supportedResolutions": item.get("supported_resolutions") or [],
             "supportedAspectRatios": item.get("supported_aspect_ratios") or [],
+            "supportedDurations": item.get("supported_durations") or [],
+            "supportedFrameImages": item.get("supported_frame_images") or [],
+            "inputReferenceModalities": (
+                item.get("input_reference_modalities")
+                or (
+                    ["image", "video", "audio"]
+                    if "seedance-2.0" in model_id.lower()
+                    else ["image"]
+                )
+            ),
+            "generateAudio": bool(item.get("generate_audio")),
+            "allowedPassthroughParameters": (
+                item.get("allowed_passthrough_parameters") or []
+            ),
             "pricing": pricing,
             "isFree": is_free,
             "recommended": recommended,
@@ -243,33 +257,62 @@ def generate_image(
 
 
 def _local_upload_path(url: str) -> Path | None:
+    """解析生成目录和项目素材目录中的平台本地 URL。"""
     parsed = urlparse(url)
-    if parsed.scheme or not parsed.path.startswith("/uploads/"):
+    if parsed.scheme:
         return None
-    relative = parsed.path.removeprefix("/uploads/").lstrip("/")
-    path = (UPLOAD_ROOT / relative).resolve()
-    root = UPLOAD_ROOT.resolve()
+
+    path: Path
+    root: Path
+    if parsed.path.startswith("/uploads/"):
+        relative = parsed.path.removeprefix("/uploads/").lstrip("/")
+        root = UPLOAD_ROOT.resolve()
+        path = (root / relative).resolve()
+    else:
+        marker = "/api/v1/agentapp/production/resource/production/"
+        if not parsed.path.startswith(marker):
+            return None
+        relative = parsed.path.removeprefix(marker).lstrip("/")
+        project_id, separator, asset_path = relative.partition("/")
+        if (
+            not separator
+            or not _SAFE_ID_RE.fullmatch(project_id)
+            or not asset_path.startswith("uploads/")
+        ):
+            raise ValueError("项目素材 URL 非法")
+        root = (BASE_DIR / "data" / "production" / project_id / "uploads").resolve()
+        path = (root / asset_path.removeprefix("uploads/").lstrip("/")).resolve()
+
     if path != root and root not in path.parents:
         raise ValueError("素材路径越界")
     if not path.is_file():
-        raise ValueError(f"参考图不存在: {url}")
+        raise ValueError(f"参考素材不存在: {url}")
     return path
 
 
 def resolve_upload_path(url: str) -> Path | None:
-    """安全解析平台 ``/uploads/`` URL；远端 HTTPS 资源返回 None。"""
+    """安全解析平台本地素材 URL；远端 HTTPS 资源返回 None。"""
     return _local_upload_path(url)
 
 
-def _image_reference(url: str) -> str:
+def _media_reference(url: str, kind: str) -> str:
     local_path = _local_upload_path(url)
     if local_path is not None:
-        media_type = mimetypes.guess_type(local_path.name)[0] or "image/png"
+        default_type = {
+            "image": "image/png",
+            "video": "video/mp4",
+            "audio": "audio/mpeg",
+        }.get(kind, "application/octet-stream")
+        media_type = mimetypes.guess_type(local_path.name)[0] or default_type
         encoded = base64.b64encode(local_path.read_bytes()).decode("ascii")
         return f"data:{media_type};base64,{encoded}"
     if urlparse(url).scheme != "https":
-        raise ValueError("远端参考图必须使用 HTTPS")
+        raise ValueError("远端参考素材必须使用 HTTPS")
     return url
+
+
+def _image_reference(url: str) -> str:
+    return _media_reference(url, "image")
 
 
 def _path_image_reference(path: Path) -> str:
@@ -296,17 +339,25 @@ def submit_video(
     image_url: str = "",
     last_frame_url: str = "",
     reference_urls: list[str] | None = None,
+    reference_inputs: list[dict] | None = None,
     image_path: Path | None = None,
     generate_audio: bool = True,
     provider: str = "openrouter",
 ) -> dict:
-    """提交兼容供应商异步视频任务，支持首末帧或参考图两种互斥模式。"""
+    """提交异步视频任务，支持首末帧或图片/视频/音频参考两种互斥模式。"""
     if image_url and image_path is not None:
         raise ValueError("image_url 与 image_path 只能提供一个")
-    if (image_url or image_path is not None or last_frame_url) and reference_urls:
+    requested_references = list(reference_inputs or [])
+    requested_references.extend(
+        {"kind": "image", "url": url}
+        for url in reference_urls or []
+        if str(url or "").strip()
+    )
+    if (
+        image_url or image_path is not None or last_frame_url
+    ) and requested_references:
         raise ValueError(
-            "OpenRouter 视频的首末帧模式与参考图模式不能同时使用；"
-            "有关键帧时请把角色和场景一致性先固化到关键帧"
+            "OpenRouter 视频的首末帧模式与多模态参考模式不能同时使用"
         )
     endpoint, api_key = (
         _openrouter_config()
@@ -343,14 +394,21 @@ def submit_video(
     if frame_images:
         payload["frame_images"] = frame_images
 
-    references = [
-        {
-            "type": "image_url",
-            "image_url": {"url": _image_reference(url)},
-        }
-        for url in reference_urls or []
-        if str(url or "").strip()
-    ]
+    references: list[dict] = []
+    for raw_reference in requested_references[:30]:
+        kind = str(
+            raw_reference.get("kind") or raw_reference.get("type") or "image"
+        ).lower().removesuffix("_url")
+        url = str(raw_reference.get("url") or "").strip()
+        if not url:
+            continue
+        if kind not in {"image", "video", "audio"}:
+            raise ValueError(f"不支持的参考素材类型: {kind}")
+        field = f"{kind}_url"
+        references.append({
+            "type": field,
+            field: {"url": _media_reference(url, kind)},
+        })
     if references:
         payload["input_references"] = references
 
@@ -371,6 +429,8 @@ def submit_video(
         "pollingUrl": body.get("polling_url") or f"{endpoint}/videos/{job_id}",
         "model": model,
         "provider": provider,
+        "referenceCount": len(references),
+        "generationMode": "reference" if references else "keyframe",
     }
 
 
