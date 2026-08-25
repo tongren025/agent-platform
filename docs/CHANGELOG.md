@@ -5,6 +5,20 @@
 
 ---
 
+## [2026-08-25] fix: 修复漫剧图片员工的模型路由
+
+- 角色生成师、布景生成师和关键帧生成师改为显式绑定
+  `openrouter:openai/gpt-image-2`，避免裸模型 ID 被错误交给普通供应商查找并报
+  `Model 'gpt-image-2' not found in any provider`。
+- 同步运行态员工配置与内置漫剧团队清单，新建和现有项目都使用同一条可执行图片路由。
+- 导演执行层自动把历史裸值 `gpt-image-2` 迁移为完整路由，已有安装无需手工重建员工；
+  回归测试固定验证目录返回、实际生图调用与拦截提示使用同一模型标识。
+
+**影响面**：`app/api/director.py`、`app/resources/comic_team_manifest.json`、三名图片员工
+运行配置、`tests/test_director.py` 及 `docs/MULTIMODAL_EMPLOYEES.md`；不改数据库表或部署变量。
+
+---
+
 ## [2026-08-24] feat: 镜头控制包与多模态视频生成
 
 - 快速制作的每个视频镜头新增统一控制包，集中保存首末帧、时间轴故事板、人物/表情、

@@ -80,6 +80,14 @@ def _unqualified_media_model(model_ref: str) -> str:
     return normalized
 
 
+def _normalize_media_model_route(kind: str, model_ref: object) -> str:
+    """把历史裸图片模型 ID 迁移到当前可执行的 OpenRouter 路由。"""
+    clean = str(model_ref or "").strip()
+    if kind == "image" and clean.lower() == "gpt-image-2":
+        return "openrouter:openai/gpt-image-2"
+    return clean
+
+
 def _same_media_model(left: str, right: str) -> bool:
     return (
         _unqualified_media_model(left).lower()
@@ -118,7 +126,7 @@ def _resolve_media_route(
         raise HTTPException(400, f"媒体执行员工 {key} 已停用")
     policy = employee.default_model_policy or {}
     route_key = "image_model_id" if kind == "image" else "video_model_id"
-    model_ref = str(policy.get(route_key) or "").strip()
+    model_ref = _normalize_media_model_route(kind, policy.get(route_key))
     if not model_ref:
         raise HTTPException(400, f"员工 {key} 尚未配置 {route_key}")
     if requested_model and not _same_media_model(requested_model, model_ref):
@@ -136,9 +144,10 @@ def _configured_media_model(employee_key: str, kind: str) -> dict:
     if employee is None or not employee.enabled:
         raise HTTPException(400, f"媒体执行员工 {employee_key} 不存在或已停用")
     route_key = "image_model_id" if kind == "image" else "video_model_id"
-    model_ref = str(
-        (employee.default_model_policy or {}).get(route_key) or ""
-    ).strip()
+    model_ref = _normalize_media_model_route(
+        kind,
+        (employee.default_model_policy or {}).get(route_key),
+    )
     if not model_ref:
         raise HTTPException(400, f"员工 {employee_key} 尚未配置 {route_key}")
 

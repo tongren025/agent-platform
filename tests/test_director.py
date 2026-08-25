@@ -189,18 +189,18 @@ def test_comic_director_uses_employee_media_routes(
         },
     )
     assert models.status_code == 200
-    assert models.json()["data"][0]["id"] == "gpt-image-2"
+    assert models.json()["data"][0]["id"] == "openrouter:openai/gpt-image-2"
 
     image = client.post(
         f"/api/v1/agentapp/director/projects/{pid}/cards/"
         f"{card_ids['img_prompt']}/image",
         json={
-            "model": "gpt-image-2",
+            "model": "openrouter:openai/gpt-image-2",
             "employee_key": "comic-keyframe-artist",
         },
     )
     assert image.status_code == 200, image.text
-    assert image_calls["model"] == "gpt-image-2"
+    assert image_calls["model"] == "openrouter:openai/gpt-image-2"
     assert image_calls["reference_urls"] == [
         "/uploads/canvas/character-master.png"
     ]
@@ -279,7 +279,7 @@ def test_comic_director_rejects_model_that_bypasses_employee(director_env):
     )
 
     assert response.status_code == 400
-    assert "已固定使用 gpt-image-2" in response.text
+    assert "已固定使用 openrouter:openai/gpt-image-2" in response.text
 
 
 def test_update_image_prompt_preserves_secondary_prompts(director_env):
@@ -778,3 +778,13 @@ def test_director_control_pack_upload_and_multimodal_submission(
     shot = state["shots"][0]
     assert shot["controlPlan"]["mode"] == "reference"
     assert len(shot["controlPack"]["references"]) == 2
+
+
+def test_legacy_bare_image_model_is_routed_to_openrouter():
+    """历史员工裸模型 ID 也必须解析成可执行的完整图片路由。"""
+    import app.api.director as director
+
+    assert director._normalize_media_model_route(
+        "image",
+        "gpt-image-2",
+    ) == "openrouter:openai/gpt-image-2"

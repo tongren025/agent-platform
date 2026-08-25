@@ -15,9 +15,9 @@
 | 场景设计师 | text | `gpt-5.6-terra` medium | — | 产出空间、材质、光线与可复用场景规格 |
 | 动作与特效设计 | text | `gpt-5.6-terra` high | — | 统一产出动作路径、受力因果与特效分层 |
 | 媒体提示词工程师 | text | `gpt-5.6-terra` high | — | 分别生成图片与视频的结构化提交包 |
-| 角色生成师 | text + image | `gpt-5.6-luna` none | `gpt-image-2` | 轻量编排已审核提示词，GPT Image 2 真正出图 |
-| 布景生成师 | text + image | `gpt-5.6-luna` none | `gpt-image-2` | 轻量执行场景母版，不重新设计场景 |
-| 关键帧生成师 | text + image | `gpt-5.6-luna` none | `gpt-image-2` | 只执行最终关键帧包，不兼任提示词设计 |
+| 角色生成师 | text + image | `gpt-5.6-luna` none | `openrouter:openai/gpt-image-2` | 轻量编排已审核提示词，GPT Image 2 真正出图 |
+| 布景生成师 | text + image | `gpt-5.6-luna` none | `openrouter:openai/gpt-image-2` | 轻量执行场景母版，不重新设计场景 |
+| 关键帧生成师 | text + image | `gpt-5.6-luna` none | `openrouter:openai/gpt-image-2` | 只执行最终关键帧包，不兼任提示词设计 |
 | 视频生成师 | text + video | `gpt-5.6-luna` none | `openrouter:bytedance/seedance-2.0` | 消费已审核视频包，异步产出 MP4 |
 
 GPT-5.6 档位说明以 [OpenAI 模型指南](https://developers.openai.com/api/docs/guides/model-guidance?model=gpt-5.6)
@@ -32,7 +32,7 @@ GPT-5.6 档位说明以 [OpenAI 模型指南](https://developers.openai.com/api/
   "outputModalities": ["text", "image"],
   "defaultModelPolicy": {
     "model_id": "openai代理:gpt-5.6-terra",
-    "image_model_id": "openai代理:gpt-image-2",
+    "image_model_id": "openrouter:openai/gpt-image-2",
     "reasoning_effort": "medium",
     "temperature": 0.7,
     "max_tokens": 8192
