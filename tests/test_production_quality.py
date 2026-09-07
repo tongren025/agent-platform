@@ -57,3 +57,22 @@ def test_video_segment_over_fifteen_seconds_still_fails_with_timeline():
         "【时间轴】[00:00-00:16] 角色连续表演，镜头缓慢推进。",
     )
     assert "segment_too_long" in codes
+
+
+def test_displayed_copy_does_not_multiply_texture_budget():
+    prompt = "近景，金属门旁局部尘埃与地面碎石。"
+    issues = evaluate_production_draft("img_prompt", "G1 首帧", prompt, [prompt])
+    assert issues == []
+
+
+def test_explanatory_notes_are_not_positive_prompt():
+    issues = evaluate_production_draft("img_prompt", "G1 首帧", "不要使用未审核资产", ["近景，人物站在门旁。"])
+    assert issues == []
+
+
+def test_storyboard_templates_include_all_gate_fields():
+    from app.models.production import GC_STAGE_INSTRUCTIONS, STAGE_INSTRUCTIONS
+
+    for template in (STAGE_INSTRUCTIONS["storyboard"], GC_STAGE_INSTRUCTIONS["storyboard"]):
+        for field in ("起始姿态", "结束姿态", "画面位置", "视线方向", "前景", "中景", "背景"):
+            assert field in template

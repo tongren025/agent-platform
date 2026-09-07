@@ -22,12 +22,14 @@ def prod_env(tmp_path, monkeypatch, app_client):
     employee_keys: list[str] = []
     captured: dict = {
         "prompts": [],
+        "schemas": [],
         "employee_keys": employee_keys,
         "employees": employee_keys,
     }
 
     async def fake_invocation(req):
         captured["prompts"].append(req.user_input)
+        captured["schemas"].append(req.structured_schema_json)
         employee_keys.append(req.employee_key)
         return SimpleNamespace(
             success=True,
@@ -478,8 +480,8 @@ def test_comic_team_setting_employee_follows_context(
     assert captured["employees"][-1] == expected_employee
 
 
-def test_comic_team_setting_rejects_ambiguous_character_and_scene_context(prod_env):
-    """单次 setting 同时要求人物和场景时提示拆单，避免任意挑一个岗位漏产资产。"""
+def test_comic_team_setting_dispatches_character_and_scene_context(prod_env):
+    """一次 setting 自动分派两个岗位，用户不再手动拆单。"""
     client, captured = prod_env
     pid = client.post(
         "/api/v1/agentapp/production/projects",
@@ -498,11 +500,112 @@ def test_comic_team_setting_rejects_ambiguous_character_and_scene_context(prod_e
         },
     )
 
-    assert response.status_code == 400
-    assert "拆成两次" in response.text
-    assert "comic-character-designer" in response.text
-    assert "comic-scene-designer" in response.text
-    assert captured["employees"] == []
+    assert response.status_code == 200, response.text
+    assert captured["employees"] == ["comic-character-designer", "comic-scene-designer"]
+    assert "已完成的角色交接" in captured["prompts"][1]
+    cards = response.json()["data"]["cards"]
+    assert len(cards) == 4
+    assert {c["metadata"]["responsible_employee_key"] for c in cards} == set(captured["employees"])
+
+
+def test_default_setting_dispatches_both_roles(prod_env):
+    client, captured = prod_env
+    pid = client.post("/api/v1/agentapp/production/projects", json={
+        "name": "默认接力", "source_content": "两个人在车站相遇", "team_code": "comic-drama-team",
+    }).json()["data"]["project_id"]
+    response = client.post(f"/api/v1/agentapp/production/projects/{pid}/generate", json={"target_stage": "setting"})
+    assert response.status_code == 200
+    assert captured["employees"] == ["comic-character-designer", "comic-scene-designer"]
+    assert all(json.loads(schema)["required"] == ["cards"] for schema in captured["schemas"])
+
+
+def test_design_drafting_uses_prompt_engineer_not_media_executor(prod_env):
+    client, captured = prod_env
+    pid = client.post("/api/v1/agentapp/production/projects", json={
+        "name": "设计草稿", "source_content": "站台", "team_code": "comic-drama-team",
+    }).json()["data"]["project_id"]
+    response = client.post(f"/api/v1/agentapp/production/projects/{pid}/generate", json={
+        "target_stage": "design", "extra_instruction": "人物三视图和场景设计",
+    })
+    assert response.status_code == 200
+    assert captured["employees"] == ["comic-prompt-engineer"]
+    assert "不调用生图/生视频工具" in captured["prompts"][0]
+
+
+def test_shot_context_preserves_global_assets_and_metadata(prod_env):
+    client, captured = prod_env
+    pid = _create_project_with_cards(client)
+    response = client.post(f"/api/v1/agentapp/production/projects/{pid}/cards", json={
+        "stage": "design", "title": "全局母版", "content": "灰色外套",
+        "shot_number": 7, "images": ["/uploads/canvas/identity.png"],
+        "metadata": {"asset_id": "CHAR7", "version": "v2", "reference_assets": [{"url": "/uploads/canvas/scene.png"}]},
+    })
+    assert response.status_code == 200
+    response = client.post(f"/api/v1/agentapp/production/projects/{pid}/generate", json={
+        "target_stage": "img_prompt", "episode": 1, "shot_number": 1, "employee_key": "e1",
+    })
+    assert response.status_code == 200
+    prompt = captured["prompts"][-1]
+    for value in ("全局母版", "CHAR7", "v2", "/uploads/canvas/identity.png", "/uploads/canvas/scene.png"):
+        assert value in prompt
+    assert "EP2剧本" not in prompt
+
+
+def test_compound_setting_failure_keeps_all_old_cards(prod_env, monkeypatch):
+    client, _ = prod_env
+    pid = _create_project_with_cards(client)
+    client.put(f"/api/v1/agentapp/production/projects/{pid}", json={"team_code": "comic-drama-team"})
+    before = _cards(client, pid)
+    import app.api.production as prod
+
+    async def fake(req):
+        if req.employee_key == "comic-scene-designer":
+            return SimpleNamespace(success=False, error_message="场景服务不可用")
+        return SimpleNamespace(success=True, assistant_message='{"cards":[{"title":"角色","content":"新规格"}]}')
+
+    monkeypatch.setattr(prod, "run_invocation", fake)
+    response = client.post(f"/api/v1/agentapp/production/projects/{pid}/generate", json={
+        "target_stage": "setting", "mode": "replace",
+    })
+    assert response.status_code == 500
+    assert _cards(client, pid) == before
+
+
+def test_wrong_json_contract_is_not_saved_as_finished_card(prod_env, monkeypatch):
+    client, _ = prod_env
+    pid = _create_project_with_cards(client)
+    before = _cards(client, pid)
+    import app.api.production as prod
+
+    async def fake(_req):
+        return SimpleNamespace(success=True, assistant_message='{"script_package":{"blockers":["missing"]}}')
+
+    monkeypatch.setattr(prod, "run_invocation", fake)
+    response = client.post(f"/api/v1/agentapp/production/projects/{pid}/generate", json={
+        "target_stage": "script", "episode": 1, "mode": "replace", "employee_key": "e1",
+    })
+    assert response.status_code == 502
+    assert _cards(client, pid) == before
+
+
+def test_explicit_input_blocker_cannot_pass_static_gate(prod_env, monkeypatch):
+    client, _ = prod_env
+    pid = _create_project_with_cards(client)
+    import app.api.production as prod
+
+    async def fake(_req):
+        return SimpleNamespace(success=True, assistant_message=json.dumps({"cards": [{
+            "title": "角色版本冲突", "content": "已有两个互斥版本", "metadata": {"blockers": ["确认当前角色版本"]},
+        }]}, ensure_ascii=False))
+
+    monkeypatch.setattr(prod, "run_invocation", fake)
+    response = client.post(f"/api/v1/agentapp/production/projects/{pid}/generate", json={
+        "target_stage": "setting", "employee_key": "e1",
+    })
+    assert response.status_code == 200
+    card = response.json()["data"]["cards"][0]
+    assert card["status"] == "review"
+    assert card["metadata"]["quality_gate"]["passed"] is False
 
 
 def test_comic_team_rejects_employee_that_does_not_support_stage(prod_env):

@@ -489,10 +489,16 @@ def evaluate_production_draft(stage: str, title: str, content: str, prompts: lis
             add("storyboard_fields_missing", f"分镜缺少生产字段：{'、'.join(missing)}")
 
     if stage in ("img_prompt", "vid_prompt"):
-        negative = [word for word in NEGATIVE_PHRASES if word.lower() in text.lower()]
+        # 只审实际正向提示词；标题/说明和同一提示词的展示副本不参与计数。
+        positive_prompts = list(dict.fromkeys(prompts or [content]))
+        positive_text = "\n".join(positive_prompts)
+        negative = [word for word in NEGATIVE_PHRASES if word.lower() in positive_text.lower()]
         if negative:
             add("negative_language", f"正向提示词混入负向表达：{'、'.join(negative)}")
-        detail_count = sum(text.count(word) for word in HIGH_FREQUENCY_DETAILS)
+        detail_count = max(
+            (sum(word in prompt for word in HIGH_FREQUENCY_DETAILS) for prompt in positive_prompts),
+            default=0,
+        )
         if stage == "img_prompt" and detail_count > 3:
             add("visual_noise_risk", "高频纹理/粒子元素超过 3 项，存在噪点与主体失焦风险")
 

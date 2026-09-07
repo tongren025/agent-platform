@@ -23,7 +23,7 @@ from app.config import BASE_DIR, settings as app_settings
 from app.core.logging import get_logger
 from app.models.conversation import AgentRunRequest
 from app.models.production import (
-    STAGES, STAGE_KEYS, STAGE_INSTRUCTIONS, ROLES,
+    STAGES, STAGE_KEYS, STAGE_INSTRUCTIONS, ROLES, PRODUCTION_CARDS_SCHEMA,
     GC_STAGES, GC_STAGE_KEYS, GC_STAGE_INSTRUCTIONS,
     ProductionCard, ProductionGoal, ProductionProject, ProjectWithCards, ProjectMember,
 )
@@ -431,6 +431,8 @@ def _sections_from_reply(reply: str) -> list[dict]:
                                "negative_prompts": negative_prompts, "metadata": metadata})
             if drafts:
                 return drafts
+        # 已识别的 JSON 资料包/阻塞报告不能伪装成一张成功的 Markdown 卡片。
+        return []
 
     drafts = []
     # 只有独占一行的 --- 才是卡片分隔符。Markdown 表格的 |---|---| 也含
@@ -2266,10 +2268,10 @@ COMIC_DRAMA_STAGE_EMPLOYEES: dict[str, tuple[str, ...]] = {
     "script": ("comic-screenwriter",),
     "setting": ("comic-character-designer", "comic-scene-designer"),
     "design": (
+        "comic-prompt-engineer",
         "comic-keyframe-artist",
         "comic-character-artist",
         "comic-scene-artist",
-        "comic-prompt-engineer",
     ),
     "storyboard": ("comic-storyboard",),
     "img_prompt": (
@@ -2326,7 +2328,7 @@ def _comic_context_employee(stage: str, work_context: str) -> str:
         if has_character:
             return "comic-character-designer"
     elif stage in {"design", "img_prompt", "img_gen"}:
-        if stage == "img_prompt":
+        if stage in {"design", "img_prompt"}:
             return "comic-prompt-engineer"
         if (
             stage == "img_gen"
@@ -2413,6 +2415,42 @@ class GenerateReq(BaseModel):
     episode: Optional[int] = None
     shot_number: Optional[int] = None
     mode: str = "append"
+
+
+def _generation_employees(project: ProductionProject, req: GenerateReq, name: str) -> list[str]:
+    """复合设定自动拆给两个专业岗位；在任何调用前校验全部岗位，避免半途缺员工。"""
+    requested = [req.employee_key]
+    if project.team_code == COMIC_DRAMA_TEAM_CODE and req.target_stage == "setting" and not req.employee_key.strip():
+        character = _contains_route_term(req.extra_instruction, _CHARACTER_ROUTE_TERMS)
+        scene = _contains_route_term(req.extra_instruction, _SCENE_ROUTE_TERMS)
+        if character == scene:
+            requested = ["comic-character-designer", "comic-scene-designer"]
+    return [
+        _resolve_generation_employee(project, key, req.target_stage, name, req.extra_instruction)
+        for key in requested
+    ]
+
+
+def _generation_card_context(card: ProductionCard) -> str:
+    """把正文与真实资产引用一起交接；省略大体积候选历史，保留当前验收状态。"""
+    keys = {
+        "asset_type", "asset_id", "version", "variant_id", "character_id", "character_refs",
+        "character_versions", "scene_id", "scene_ref", "scene_version", "shot_id", "subshot",
+        "subsegment", "unit_number", "frame_role", "reference_urls", "reference_assets",
+        "reference_roles", "duration_seconds", "time_range", "generation_mode", "shot_type",
+        "camera_plan", "performance_plan", "audio_plan", "continuity_plan", "flf",
+        "assumptions", "blockers", "quality_gate", "active_image", "active_video",
+    }
+    metadata = {key: value for key, value in card.metadata.items() if key in keys}
+    asset = {
+        "card_id": card.card_id, "stage": card.stage, "episode": card.episode,
+        "unit_number": card.shot_number, "status": card.status,
+        "metadata": metadata, "images": card.images, "videos": card.videos,
+    }
+    text = f"### {card.title}\n{card.content}"
+    if card.prompts:
+        text += "\n提示词:\n" + "\n".join(f"- {item}" for item in card.prompts)
+    return text + "\n资产交接（媒体存在不代表已通过视觉验收）：\n" + json.dumps(asset, ensure_ascii=False)
 
 
 def _commit_generated_drafts(
@@ -2520,6 +2558,11 @@ def _commit_generated_drafts(
                 body,
                 prompts,
             )
+            if metadata.get("blockers"):
+                quality_issues.append({
+                    "code": "input_blocked",
+                    "message": "当前任务仍有缺失输入：" + json.dumps(metadata["blockers"], ensure_ascii=False),
+                })
             metadata["quality_gate"] = {
                 "passed": not quality_issues,
                 "issues": quality_issues,
@@ -2590,7 +2633,10 @@ async def generate_stage(pid: str, req: GenerateReq):
     if req.shot_number is not None:
         if req.shot_number <= 0:
             raise HTTPException(400, "shot_number 必须大于 0")
-        prev_cards = [c for c in prev_cards if c.shot_number in (0, req.shot_number)]
+        prev_cards = [
+            c for c in prev_cards
+            if c.stage in {"setting", "design"} or c.shot_number in (0, req.shot_number)
+        ]
     if not prev_cards and not proj.source_content:
         raise HTTPException(400, "没有前置阶段的内容可供生成")
 
@@ -2611,20 +2657,14 @@ async def generate_stage(pid: str, req: GenerateReq):
         if art_bible_cards:
             context_parts.append("## 已锁定 Art Bible（必须继承，不得重新设计）")
             for card in art_bible_cards:
-                context_parts.append(f"### {card.title}\n{card.content}")
-                if card.prompts:
-                    context_parts.append("母版提示词:\n" + "\n".join(f"- {item}" for item in card.prompts))
-                if card.images:
-                    context_parts.append("母版图片:\n" + "\n".join(f"- {item}" for item in card.images))
+                context_parts.append(_generation_card_context(card))
     for stage_key in stage_keys[:target_idx]:
         stage_cards = sorted([c for c in prev_cards if c.stage == stage_key], key=lambda x: x.shot_number)
         if stage_cards:
             stage_name = next((s["name"] for s in stage_defs if s["key"] == stage_key), stage_key)
             context_parts.append(f"## {stage_name}")
             for sc in stage_cards:
-                context_parts.append(f"### {sc.title}\n{sc.content}")
-                if sc.prompts:
-                    context_parts.append("提示词:\n" + "\n".join(f"- {p}" for p in sc.prompts))
+                context_parts.append(_generation_card_context(sc))
 
     context = "\n\n".join(context_parts)
     target_name = next((s["name"] for s in stage_defs if s["key"] == req.target_stage), req.target_stage)
@@ -2636,13 +2676,7 @@ async def generate_stage(pid: str, req: GenerateReq):
     if req.extra_instruction:
         instruction += f"\n\n额外要求：{req.extra_instruction}"
 
-    emp_key = _resolve_generation_employee(
-        proj,
-        req.employee_key,
-        req.target_stage,
-        target_name,
-        req.extra_instruction,
-    )
+    employee_keys = _generation_employees(proj, req, target_name)
 
     scope_label = f"EP{req.episode:02d}" if req.episode is not None else "全局资产"
     if req.shot_number is not None:
@@ -2652,34 +2686,55 @@ async def generate_stage(pid: str, req: GenerateReq):
             "保持未要求修改的事实、角色和上下游约束不变。"
         )
     project_constraints = (
+        f"项目 ID：{pid}；本集 ID：{scope_label}。"
         f"项目规格：单集目标时长 {proj.episode_duration_seconds} 秒；画幅 {proj.aspect_ratio}；"
-        f"视觉风格：{proj.visual_style or '沿用已锁定 Art Bible'}。"
+        f"视觉风格：{proj.visual_style or '优先继承本项目已有设定；未设定则提出一致的默认方案并记入 assumptions'}。"
     )
     prompt = f"你正在为项目「{proj.name}」（范围：{scope_label}）生成{target_name}。\n{project_constraints}\n\n{instruction}\n\n以下是已有的内容：\n\n{context}"
 
-    try:
-        result = await asyncio.wait_for(
-            run_invocation(AgentRunRequest(
-                employeeKey=emp_key,
-                userInput=prompt,
-            )),
-            timeout=max(1, int(app_settings.agent.run_timeout_seconds)),
+    text_stage = req.target_stage in instructions_map
+    schema = json.dumps(PRODUCTION_CARDS_SCHEMA, ensure_ascii=False) if text_stage else None
+    if text_stage:
+        prompt += (
+            "\n\n本次是文字制作任务，只输出 JSON cards，不调用生图/生视频工具。"
+            "不要使用角色默认的其他顶层资料包；每张卡有 title/content/prompts/negative_prompts/metadata。"
+            "只补全不改变已确认事实的制作细节并记录 assumptions；不编造媒体 URL、审批或模型能力。"
+            "无母版图不阻塞文字设计；具体缺失且不可推断的关键事实写入 metadata.blockers，不能伪装完成。"
+            "保留输入中的 G/subshot/角色/场景 ID 和版本；已有卡片状态不等于媒体已通过验收。"
         )
+    drafts: list[dict] = []
+    try:
+        async with asyncio.timeout(max(1, int(app_settings.agent.run_timeout_seconds))):
+            for emp_key in employee_keys:
+                task_prompt = prompt
+                if len(employee_keys) > 1:
+                    task_prompt += (
+                        "\n本次子任务只交付角色设定，场景由下一岗位完成。"
+                        if emp_key == "comic-character-designer"
+                        else "\n本次子任务只交付场景设定，不重写人物。"
+                    )
+                    if drafts:
+                        task_prompt += "\n已完成的角色交接：\n" + json.dumps(drafts, ensure_ascii=False)
+                result = await run_invocation(AgentRunRequest(
+                    employeeKey=emp_key,
+                    userInput=task_prompt,
+                    structuredSchemaJson=schema,
+                ))
+                if not result.success:
+                    raise HTTPException(500, result.error_message or f"{emp_key} 生成失败")
+                if not result.assistant_message:
+                    raise HTTPException(500, f"{emp_key} 未返回内容")
+                employee_drafts = _sections_from_reply(result.assistant_message)
+                if not employee_drafts:
+                    raise HTTPException(502, f"{emp_key} 未返回有效 cards，旧卡片已保留，请重试该阶段")
+                for draft in employee_drafts:
+                    draft["metadata"]["responsible_employee_key"] = emp_key
+                drafts.extend(employee_drafts)
     except TimeoutError as exc:
         raise HTTPException(
             504,
-            f"AI 生成超过 {app_settings.agent.run_timeout_seconds} 秒，任务已停止，请重试",
+            f"AI 生成超过 {app_settings.agent.run_timeout_seconds} 秒，任务已停止，旧卡片已保留，请重试",
         ) from exc
-    if not result.success:
-        raise HTTPException(500, result.error_message or "AI 生成失败")
-    reply = result.assistant_message
-
-    if not reply:
-        raise HTTPException(500, "AI 未返回内容")
-
-    drafts = _sections_from_reply(reply)
-    if not drafts:
-        raise HTTPException(500, "AI 返回内容无法拆成卡片")
 
     return {
         "code": 200,

@@ -148,7 +148,7 @@ def test_bundled_manifest_matches_current_builtin_sources():
         for workflow_key in ("comic-drama", "comic-drama-10s")
     ]
 
-    assert manifest["revision"] == 8
+    assert manifest["revision"] == 9
     director = next(
         item
         for item in manifest["employees"]

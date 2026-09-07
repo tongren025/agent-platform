@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REVISION = 8
+REVISION = 9
 EMPLOYEE_KEYS = (
     "comic-director",
     "comic-screenwriter",

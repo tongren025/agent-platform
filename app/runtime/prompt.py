@@ -261,7 +261,10 @@ def compile(
 
     if structured_schema_json:
         parts.append(
-            f"<output_contract>\n{structured_schema_json}\n</output_contract>"
+            "<output_contract>\n"
+            "本次输出合同优先于角色画像、知识库或历史记忆中的默认格式示例。"
+            "只返回该合同要求的顶层结构；不得另套角色默认资料包或追加 Markdown 说明。\n"
+            f"{structured_schema_json}\n</output_contract>"
         )
 
     system_prompt = "\n\n".join(parts)
