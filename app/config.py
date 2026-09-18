@@ -104,9 +104,13 @@ def resolve_secret(value: str) -> str:
 
 
 def load_settings() -> Settings:
-    """装载并解析业务配置：base 与 Development 深合并后映射为强类型 Settings。"""
+    """装载并解析业务配置：base 与当前运行环境配置深合并后映射为强类型 Settings。"""
     base = _load_json(BASE_DIR / "appsettings.json")
-    env = _load_json(BASE_DIR / "appsettings.Development.json")
+    # 生产镜像以前也会无条件读取 Development 文件，导致开发模型/端点覆盖
+    # appsettings.Production.json。按 APP_ENV 选择覆盖文件，避免把开发配置带进生产。
+    app_env = os.getenv("APP_ENV", "development").strip().lower()
+    env_name = "Production" if app_env in {"production", "prod"} else "Development"
+    env = _load_json(BASE_DIR / f"appsettings.{env_name}.json")
 
     def _merge(a: dict, b: dict) -> dict:
         """递归深合并两个 dict，b 的键覆盖 a（嵌套 dict 逐层合并而非整体替换）。"""

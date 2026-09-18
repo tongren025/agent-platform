@@ -31,7 +31,7 @@ app.add_middleware(RequestContextMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=core_settings.cors_origin_list,
-    allow_credentials=True,
+    allow_credentials=core_settings.cors_allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )

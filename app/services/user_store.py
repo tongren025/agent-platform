@@ -144,16 +144,22 @@ class RoleStore:
 # ── UserStore ─────────────────────────────────────────────────
 
 class UserStore:
-    """平台用户的 JSON 存储；首次初始化自动创建默认管理员 admin/admin123。"""
+    """平台用户的 JSON 存储；首次初始化使用环境变量播种管理员账号。"""
 
     def __init__(self, role_store: RoleStore) -> None:
         self._role_store = role_store
         _DATA_DIR.mkdir(parents=True, exist_ok=True)
         if not _USERS_FILE.exists():
+            app_env = os.environ.get("APP_ENV", "development").strip().lower()
+            username = os.environ.get("ADMIN_USERNAME", "admin").strip() or "admin"
+            password = os.environ.get("ADMIN_PASSWORD", "admin123")
+            if app_env in {"production", "prod"}:
+                if password.lower() in {"", "admin", "admin123", "change-me-in-prod", "changeme"} or len(password) < 12:
+                    raise RuntimeError("生产环境首次启动必须设置至少 12 位 ADMIN_PASSWORD")
             default_user = {
                 "userId": "u_" + uuid.uuid4().hex[:8],
-                "username": "admin",
-                "passwordHash": hash_password("admin123"),
+                "username": username,
+                "passwordHash": hash_password(password),
                 "displayName": "系统管理员",
                 "role": "admin",
                 "enabled": True,
@@ -161,7 +167,7 @@ class UserStore:
                 "lastLoginAt": None,
             }
             self._write([default_user])
-            logger.info("已创建默认管理员账号 admin / admin123")
+            logger.info("已创建初始管理员账号 %s", username)
 
     @staticmethod
     def _read() -> list[dict]:

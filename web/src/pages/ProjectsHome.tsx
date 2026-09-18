@@ -27,7 +27,7 @@ import {
   PlusOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import { api } from '../api';
+import { api, type ProductionGoal } from '../api';
 import { useInputHabit } from '../hooks/useInputHabit';
 import { thumbUrl, onImageError } from '../media';
 import { message } from '../ui';
@@ -79,6 +79,7 @@ interface NewProjectForm {
   episodeDurationSeconds: number;
   aspectRatio: string;
   visualStyle: string;
+  productionGoal: ProductionGoal;
 }
 
 const EMPTY_FORM: NewProjectForm = {
@@ -90,7 +91,14 @@ const EMPTY_FORM: NewProjectForm = {
   episodeDurationSeconds: 90,
   aspectRatio: '9:16',
   visualStyle: '',
+  productionGoal: 'final',
 };
+
+const PRODUCTION_GOAL_OPTIONS: { value: ProductionGoal; label: string; description: string }[] = [
+  { value: 'final', label: '完整成片', description: '走完剧本、分镜、画面、视频、审片和成片交付。' },
+  { value: 'images', label: '先做镜头图片', description: '先完成可审核的镜头画面，确认视觉方向后再进入视频。' },
+  { value: 'storyboard', label: '先完成文字分镜', description: '先把剧情、角色、镜头和提示词规格定稿。' },
+];
 
 function ProjectCover({
   images,
@@ -219,6 +227,8 @@ export default function ProjectsHome() {
         description: form.description.trim(),
         sourceType: form.sourceType,
         sourceContent: form.sourceContent.trim(),
+        productionGoal: form.productionGoal,
+        teamCode: 'comic-drama-team',
         episodeCount: form.sourceType === 'gc' ? 1 : form.episodeCount,
         episodeDurationSeconds: form.sourceType === 'gc' ? 30 : form.episodeDurationSeconds,
         aspectRatio: form.aspectRatio,
@@ -482,6 +492,19 @@ export default function ProjectsHome() {
                   { value: '16:9', label: '横屏 16:9' },
                   { value: '1:1', label: '方形 1:1' },
                 ]}
+              />
+            </label>
+            <label style={{ gridColumn: '1 / -1' }}>
+              <Text strong>交付目标</Text>
+              <Text type="secondary">系统会按目标安排下一步；真实图片/视频生成会单独显示模型和费用确认。</Text>
+              <Select
+                value={form.productionGoal}
+                onChange={productionGoal => setForm(current => ({ ...current, productionGoal }))}
+                style={{ width: '100%', marginTop: 6 }}
+                options={PRODUCTION_GOAL_OPTIONS.map(option => ({
+                  value: option.value,
+                  label: option.label + ' · ' + option.description,
+                }))}
               />
             </label>
             <label>

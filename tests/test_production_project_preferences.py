@@ -52,6 +52,24 @@ def test_create_project_persists_goal_and_pinned(project_env):
     assert director["project"]["pinned"] is True
 
 
+def test_short_drama_goal_auto_assigns_builtin_team(project_env):
+    """业务向导声明交付目标时，项目应可直接进入内置短剧流水线。"""
+    client, _ = project_env
+    response = client.post(
+        "/api/v1/agentapp/production/projects",
+        json={
+            "name": "商业短剧项目",
+            "source_type": "idea",
+            "source_content": "雨夜重逢",
+            "productionGoal": "final",
+        },
+    )
+
+    assert response.status_code == 200
+    project = response.json()["data"]
+    assert project["team_code"] == "comic-drama-team"
+    assert project["production_goal"] == "final"
+
 def test_create_project_rejects_blank_name_without_writing(project_env):
     """项目名只有空白时必须拒绝，且不能留下无效项目目录。"""
     client, data_dir = project_env

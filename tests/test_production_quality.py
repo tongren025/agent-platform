@@ -76,3 +76,15 @@ def test_storyboard_templates_include_all_gate_fields():
     for template in (STAGE_INSTRUCTIONS["storyboard"], GC_STAGE_INSTRUCTIONS["storyboard"]):
         for field in ("起始姿态", "结束姿态", "画面位置", "视线方向", "前景", "中景", "背景"):
             assert field in template
+
+
+def test_commercial_final_requires_audio_dialogue_and_delivery_integrity():
+    from app.services.production_quality import media_quality_profile
+
+    profile = media_quality_profile("final")
+    critical = {
+        item["key"]
+        for item in profile["dimensions"]
+        if item["critical"]
+    }
+    assert {"audio_mix", "dialogue_delivery", "delivery_integrity"} <= critical

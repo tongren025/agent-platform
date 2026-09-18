@@ -97,7 +97,8 @@ VIDEO_QUALITY_RUBRIC: tuple[dict[str, Any], ...] = (
         "label": "声音与对白",
         "description": "对白、口型、音效和环境声清楚同步，无明显爆音或断音",
         "weight": 15,
-        "critical": False,
+        # 商业短剧不能把对白/声音当成可选项；低于 4 分必须返工。
+        "critical": True,
     },
     {
         "key": "technical_integrity",
@@ -137,21 +138,21 @@ FINAL_QUALITY_RUBRIC: tuple[dict[str, Any], ...] = (
         "label": "整体声音",
         "description": "对白可懂，音乐、音效和环境声层次平衡，镜间响度连续",
         "weight": 15,
-        "critical": False,
+        "critical": True,
     },
     {
         "key": "dialogue_delivery",
         "label": "对白呈现",
         "description": "口型、字幕、台词时序和角色语气一致，无错字漏字",
         "weight": 10,
-        "critical": False,
+        "critical": True,
     },
     {
         "key": "delivery_integrity",
         "label": "交付完整性",
         "description": "画幅、分辨率、首尾、黑帧、编码和完整播放均符合交付要求",
         "weight": 15,
-        "critical": False,
+        "critical": True,
     },
 )
 

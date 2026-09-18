@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -74,6 +74,30 @@ class CoreSettings(BaseSettings):
     # CORS —— 逗号分隔;"*" 表示放开(仅开发)
     cors_origins: str = "*"
 
+    @model_validator(mode="after")
+    def validate_production_security(self) -> "CoreSettings":
+        """生产环境拒绝会导致越权、数据丢失或跨环境串配置的默认值。"""
+        if not self.is_production:
+            return self
+
+        problems: list[str] = []
+        weak_passwords = {"", "admin", "admin123", "change-me-in-prod", "changeme"}
+        password = self.admin_password.strip()
+        secret = self.admin_secret.strip()
+        if password.lower() in weak_passwords or len(password) < 12:
+            problems.append("ADMIN_PASSWORD 至少 12 位且不能使用示例默认值")
+        if secret.lower() in weak_passwords or len(secret) < 32:
+            problems.append("ADMIN_SECRET 至少 32 位且不能使用示例默认值")
+        if not self.user_api_auth:
+            problems.append("USER_API_AUTH 必须为 true")
+        if "change-me-in-prod" in self.database_url.lower():
+            problems.append("DATABASE_URL 仍在使用示例数据库密码")
+        if not self.cors_origins.strip() or self.cors_origins.strip() == "*":
+            problems.append("CORS_ORIGINS 必须设置为明确的前端域名，不能使用 *")
+        if problems:
+            raise ValueError("生产配置未通过安全检查：" + "；".join(problems))
+        return self
+
     @property
     def is_production(self) -> bool:
         """APP_ENV 是否为生产环境（production / prod），用于日志格式、错误脱敏等分支。"""
@@ -86,6 +110,11 @@ class CoreSettings(BaseSettings):
         if not raw or raw == "*":
             return ["*"]
         return [o.strip() for o in raw.split(",") if o.strip()]
+
+    @property
+    def cors_allow_credentials(self) -> bool:
+        """通配符来源不能与浏览器凭证同时启用，避免无效且过宽的 CORS 响应。"""
+        return self.cors_origin_list != ["*"]
 
 
 @lru_cache

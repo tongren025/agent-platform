@@ -737,8 +737,8 @@ class CreateProjectReq(BaseModel):
     aspect_ratio: str = "9:16"
     visual_style: str = ""
     budget: float = Field(default=0, ge=0)
-    production_goal: ProductionGoal = Field(
-        default="final",
+    production_goal: Optional[ProductionGoal] = Field(
+        default=None,
         validation_alias=AliasChoices("production_goal", "productionGoal"),
     )
     pinned: bool = False
@@ -756,6 +756,19 @@ def create_project(req: CreateProjectReq, request: Request):
     username = getattr(request.state, "username", "owner")
     user = getattr(request.state, "user", {}) or {}
     display_name = user.get("displayName", username) if isinstance(user, dict) else username
+    # 新建短剧项目默认接入平台内置制作团队，避免用户创建项目后还要先理解
+    # employee_key/team_code 才能生成剧本；高级用户仍可显式传入自己的团队。
+    source_type = req.source_type.strip().lower()
+    team_code = req.team_code.strip()
+    # 显式 employee_key 通常表示高级用户/测试在使用自定义团队；保留该路径，
+    # 只有普通向导（未指定员工）才自动接入内置短剧团队。
+    if (
+        not team_code
+        and not req.employee_key.strip()
+        and req.production_goal is not None
+        and source_type in {"idea", "outline", "novel", "script", "gc"}
+    ):
+        team_code = "comic-drama-team"
     proj = ProductionProject(
         project_id=pid,
         name=name,
@@ -763,13 +776,13 @@ def create_project(req: CreateProjectReq, request: Request):
         source_type=req.source_type,
         source_content=req.source_content,
         employee_key=req.employee_key,
-        team_code=req.team_code,
+        team_code=team_code,
         episode_count=req.episode_count,
         episode_duration_seconds=req.episode_duration_seconds,
         aspect_ratio=req.aspect_ratio,
         visual_style=req.visual_style,
         budget=req.budget,
-        production_goal=req.production_goal,
+        production_goal=req.production_goal or "final",
         pinned=req.pinned,
         members=[ProjectMember(user_id=username, name=display_name, role="owner", added_at=now)],
         created_at=now,

@@ -450,6 +450,7 @@ export default function Production() {
         name: newProjForm.name, description: newProjForm.description,
         sourceType: newProjForm.sourceType, sourceContent: newProjForm.sourceContent,
         employeeKey: newProjForm.employeeKey, episodeCount: newProjForm.episodeCount,
+        teamCode: 'comic-drama-team', productionGoal: 'final',
         episodeDurationSeconds: newProjForm.episodeDurationSeconds, aspectRatio: newProjForm.aspectRatio,
         visualStyle: newProjForm.visualStyle, budget: newProjForm.budget,
       });

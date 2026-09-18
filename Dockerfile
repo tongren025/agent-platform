@@ -31,7 +31,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 后端源码
 COPY app/ ./app/
 COPY admin/ ./admin/
-COPY appsettings.json ./appsettings.json
+COPY appsettings*.json ./
 
 # 数据库迁移
 COPY alembic.ini ./alembic.ini

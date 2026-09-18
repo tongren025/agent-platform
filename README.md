@@ -1,5 +1,7 @@
 # 🎬 Agent Platform
 
+🧭 **项目知识库**：从 [docs/knowledge/README.md](docs/knowledge/README.md) 开始；按主题查架构、API、数据、运行与排障。需要源码调用关系时，结合 CodeGraph 查询。
+
 [English](README.en.md) | 简体中文
 
 📖 **第一次使用？** 阅读 [Agent Studio 系统使用手册](docs/USER_GUIDE.md)，或登录后从
@@ -297,6 +299,7 @@ Redis、MinIO、Milvus 或 Neo4j；在后台配置对应服务后再启用数据
 | prometheus | 9090 | 指标采集 |
 | grafana | 3000 | 监控面板（自动置备「Agent 运行概览」） |
 
+生产配置由 `APP_ENV` 选择：设置为 `production`/`prod` 时读取 `appsettings.Production.json`，不会再把开发配置覆盖到生产；生产启动必须提供强管理员口令、`ADMIN_SECRET`、明确的 `CORS_ORIGINS` 和启用的 `USER_API_AUTH`。本地开发不设置 `APP_ENV` 时仍使用 Development 配置与本地默认账号。
 ### GitHub Actions 自动部署
 
 `master` 的 push 或手动触发 Actions 后，会先并行执行后端测试与前端类型检查/构建；全部通过才进入
