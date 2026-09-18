@@ -1,6 +1,7 @@
 # 🎬 Agent Platform
 
 🧭 **项目知识库**：从 [docs/knowledge/README.md](docs/knowledge/README.md) 开始；按主题查架构、API、数据、运行与排障。需要源码调用关系时，结合 CodeGraph 查询。
+🔌 **完整接口手册**：[docs/API_REFERENCE.md](docs/API_REFERENCE.md)；包含鉴权、业务闭环、错误合同、启动排障和从真实路由生成的用户端/管理端全量清单。
 
 [English](README.en.md) | 简体中文
 

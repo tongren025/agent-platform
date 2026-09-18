@@ -8,6 +8,7 @@ import { adminApi, adminToken } from '../../adminApi';
 import { COLORS } from '../../theme';
 import { useInputHabit } from '../../hooks/useInputHabit';
 import { useResponsive } from '../../hooks/useResponsive';
+import { resetSessionGuard } from '../../sessionGuard';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ export default function AdminLogin() {
     try {
       const res = await adminApi.login(username, password);
       adminToken.set(res.token);
+      // 管理端与用户端共用会话跳转闸门，重新登录后必须复位。
+      resetSessionGuard();
       message.success('登录成功');
       navigate('/admin/dashboard', { replace: true });
     } catch (e: any) {

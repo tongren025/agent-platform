@@ -75,10 +75,11 @@ _EVOLUTION_PROMPT = """\
 """
 
 
-def _data_dir(emp_key: str) -> Path:
-    """员工进化数据目录（顺带创建）。"""
+def _data_dir(emp_key: str, *, create: bool = False) -> Path:
+    """员工进化数据目录；读取不存在员工时不创建目录。"""
     d = BASE_DIR / "data" / "evolution" / emp_key
-    d.mkdir(parents=True, exist_ok=True)
+    if create:
+        d.mkdir(parents=True, exist_ok=True)
     return d
 
 

@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import httpx
 from fastapi import APIRouter, File, HTTPException, Query, Request, UploadFile
 from pydantic import BaseModel, Field
 from starlette.responses import StreamingResponse
@@ -998,6 +999,11 @@ def get_workbench_task(
         )
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
+    except httpx.HTTPStatusError as exc:
+        status_code = exc.response.status_code
+        if status_code == 404:
+            raise HTTPException(404, "画布视频任务不存在") from exc
+        raise HTTPException(502, f"查询画布视频任务失败: 上游返回 {status_code}") from exc
     except Exception as exc:
         raise HTTPException(502, f"查询画布视频任务失败: {exc}") from exc
     status = str(result.get("status") or "pending")

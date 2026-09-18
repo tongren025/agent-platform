@@ -24,11 +24,7 @@ _HOP_BY_HOP_HEADERS = {
 }
 
 
-@router.api_route(
-    "/{path:path}",
-    methods=["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
-)
-async def proxy_admin_api(request: Request, path: str) -> Response:
+async def _proxy_admin_request(request: Request, path: str) -> Response:
     """保留方法、查询串、正文和管理 token，把请求转给独立 admin 服务。"""
     target = f"{settings.admin_api_url.rstrip('/')}/api/admin/{path.lstrip('/')}"
     request_headers = {
@@ -58,3 +54,45 @@ async def proxy_admin_api(request: Request, path: str) -> Response:
         status_code=upstream.status_code,
         headers=response_headers,
     )
+
+
+@router.get("/{path:path}", operation_id="proxy_admin_get")
+async def proxy_admin_get(request: Request, path: str) -> Response:
+    """转发管理端 GET 请求。"""
+    return await _proxy_admin_request(request, path)
+
+
+@router.post("/{path:path}", operation_id="proxy_admin_post")
+async def proxy_admin_post(request: Request, path: str) -> Response:
+    """转发管理端 POST 请求。"""
+    return await _proxy_admin_request(request, path)
+
+
+@router.put("/{path:path}", operation_id="proxy_admin_put")
+async def proxy_admin_put(request: Request, path: str) -> Response:
+    """转发管理端 PUT 请求。"""
+    return await _proxy_admin_request(request, path)
+
+
+@router.patch("/{path:path}", operation_id="proxy_admin_patch")
+async def proxy_admin_patch(request: Request, path: str) -> Response:
+    """转发管理端 PATCH 请求。"""
+    return await _proxy_admin_request(request, path)
+
+
+@router.delete("/{path:path}", operation_id="proxy_admin_delete")
+async def proxy_admin_delete(request: Request, path: str) -> Response:
+    """转发管理端 DELETE 请求。"""
+    return await _proxy_admin_request(request, path)
+
+
+@router.head("/{path:path}", operation_id="proxy_admin_head")
+async def proxy_admin_head(request: Request, path: str) -> Response:
+    """转发管理端 HEAD 请求。"""
+    return await _proxy_admin_request(request, path)
+
+
+@router.options("/{path:path}", operation_id="proxy_admin_options")
+async def proxy_admin_options(request: Request, path: str) -> Response:
+    """转发管理端 OPTIONS 请求。"""
+    return await _proxy_admin_request(request, path)

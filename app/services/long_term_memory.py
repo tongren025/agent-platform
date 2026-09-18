@@ -103,10 +103,14 @@ class JsonMemoryBackend:
         self._root = root or (BASE_DIR / "data" / "memory")
         self._root.mkdir(parents=True, exist_ok=True)
 
-    def _path(self, emp_key: str, kind: str) -> Path:
-        """员工某类记忆(kind)的 JSON 文件路径。"""
+    def _path(self, emp_key: str, kind: str, *, create: bool = False) -> Path:
+        """员工某类记忆(kind)的 JSON 文件路径。
+
+        读取路径时保持无副作用；只有写入路径才创建员工目录。
+        """
         d = self._root / _sanitize(emp_key)
-        d.mkdir(parents=True, exist_ok=True)
+        if create:
+            d.mkdir(parents=True, exist_ok=True)
         return d / f"{kind}.json"
 
     def load(self, emp_key: str, kind: str) -> list[dict]:
@@ -118,7 +122,10 @@ class JsonMemoryBackend:
 
     def save(self, emp_key: str, kind: str, rows: list[dict]) -> None:
         """写整表：原子覆盖某员工某类记忆。"""
-        _atomic_write(self._path(emp_key, kind), json.dumps(rows, ensure_ascii=False, indent=2))
+        _atomic_write(
+            self._path(emp_key, kind, create=True),
+            json.dumps(rows, ensure_ascii=False, indent=2),
+        )
 
 
 class LongTermMemoryStore:

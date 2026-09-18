@@ -607,7 +607,10 @@ export const api = {
   deleteEmployee: (key: string) => request<any>(`/registry/employees/${encodeURIComponent(key)}`, { method: 'DELETE' }),
   toggleEnabled: (key: string, enabled: boolean) => request<any>(`/registry/employees/${encodeURIComponent(key)}/enabled`, { method: 'POST', body: JSON.stringify({ enabled }) }),
   cloneEmployee: (key: string, newKey: string, newName: string) =>
-    request<any>(`/registry/employees/${encodeURIComponent(key)}/clone`, { method: 'POST', body: JSON.stringify({ newKey, newName }) }),
+    request<any>(`/registry/employees/${encodeURIComponent(key)}/clone`, {
+      method: 'POST',
+      body: JSON.stringify({ employeeKey: newKey, employeeName: newName }),
+    }),
   applyTemplate: (code: string, employeeKey: string, employeeName: string) =>
     request<any>(`/registry/role-templates/${encodeURIComponent(code)}/apply`, { method: 'POST', body: JSON.stringify({ employeeKey, employeeName }) }),
 

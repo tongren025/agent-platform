@@ -78,6 +78,45 @@ def _require_project_membership(request: Request) -> None:
         raise HTTPException(403, "当前用户不是项目成员")
 
 
+def _require_batch_card_access(card_ids: list[str], request: Request) -> None:
+    """校验无项目路径的批量卡片接口涉及的每个项目。
+
+    批量接口的请求体只带 card_id，无法由全局路由依赖推导项目。这里先
+    建立卡片到项目的映射，再对每个已存在项目执行同一成员校验；不存在
+    的卡片继续沿用原接口的静默跳过行为。
+    """
+    wanted = set(card_ids)
+    if not wanted:
+        return
+    for directory in DATA_DIR.iterdir():
+        if not directory.is_dir() or not (directory / "cards.json").exists():
+            continue
+        cards = _load_cards(directory.name)
+        if not any(card.card_id in wanted for card in cards):
+            continue
+        project = _load_project(directory.name)
+        if not _is_project_member(project, request):
+            raise HTTPException(403, "当前用户不是项目成员")
+
+
+def _ensure_card_can_be_done(card: ProductionCard) -> None:
+    """完成卡片前执行当前采用媒体的精品验收门禁。"""
+    active_image = str(card.metadata.get("active_image") or "")
+    active_video = str(card.metadata.get("active_video") or "")
+    if (
+        active_image
+        and image_requires_precision_review(card.metadata, active_image)
+        and not image_is_approved(card.metadata, "done", active_image)
+    ):
+        raise HTTPException(409, "当前图片未通过精品验收，不能直接标记完成")
+    if (
+        active_video
+        and video_requires_precision_review(card.metadata, active_video)
+        and not video_is_approved(card.metadata, "done", active_video)
+    ):
+        raise HTTPException(409, "当前视频未通过精品验收，不能直接标记完成")
+
+
 router = APIRouter(
     prefix="/api/v1/agentapp/production",
     tags=["production"],
@@ -1320,40 +1359,7 @@ def update_card(card_id: str, req: UpdateCardReq):
                     c.metadata = next_metadata
                 if "status" in provided and req.status is not None:
                     if req.status == "done":
-                        active_image = str(c.metadata.get("active_image") or "")
-                        active_video = str(c.metadata.get("active_video") or "")
-                        if (
-                            active_image
-                            and image_requires_precision_review(
-                                c.metadata,
-                                active_image,
-                            )
-                            and not image_is_approved(
-                                c.metadata,
-                                "done",
-                                active_image,
-                            )
-                        ):
-                            raise HTTPException(
-                                409,
-                                "当前图片未通过精品验收，不能直接标记完成",
-                            )
-                        if (
-                            active_video
-                            and video_requires_precision_review(
-                                c.metadata,
-                                active_video,
-                            )
-                            and not video_is_approved(
-                                c.metadata,
-                                "done",
-                                active_video,
-                            )
-                        ):
-                            raise HTTPException(
-                                409,
-                                "当前视频未通过精品验收，不能直接标记完成",
-                            )
+                        _ensure_card_can_be_done(c)
                     c.status = req.status
                 if "assignee" in provided:
                     c.assignee = req.assignee or ""
@@ -1511,10 +1517,11 @@ class BatchMoveReq(BaseModel):
 
 
 @router.post("/cards/batch-move")
-def batch_move_cards(req: BatchMoveReq):
+def batch_move_cards(req: BatchMoveReq, request: Request):
     """POST /cards/batch-move：跨项目批量把卡片移到目标阶段，返回实际移动的 ID 列表；阶段非法返 400。"""
     if req.stage not in STAGE_KEYS:
         raise HTTPException(400, f"无效阶段: {req.stage}")
+    _require_batch_card_access(req.card_ids, request)
     moved = []
     for d in DATA_DIR.iterdir():
         with _project_lock(d.name):
@@ -1540,8 +1547,9 @@ class BatchDeleteReq(BaseModel):
 
 
 @router.post("/cards/batch-delete")
-def batch_delete_cards(req: BatchDeleteReq):
+def batch_delete_cards(req: BatchDeleteReq, request: Request):
     """POST /cards/batch-delete：跨项目批量删除卡片，返回实际删除的 ID 列表（不存在的 ID 静默跳过）。"""
+    _require_batch_card_access(req.card_ids, request)
     deleted = []
     for d in DATA_DIR.iterdir():
         with _project_lock(d.name):
@@ -1564,8 +1572,9 @@ class BatchUpdateStatusReq(BaseModel):
 
 
 @router.post("/cards/batch-status")
-def batch_update_status(req: BatchUpdateStatusReq):
+def batch_update_status(req: BatchUpdateStatusReq, request: Request):
     """POST /cards/batch-status：跨项目批量更新卡片状态，返回实际更新的 ID 列表。"""
+    _require_batch_card_access(req.card_ids, request)
     updated = []
     for d in DATA_DIR.iterdir():
         with _project_lock(d.name):
@@ -1576,6 +1585,8 @@ def batch_update_status(req: BatchUpdateStatusReq):
             changed = False
             for c in cards:
                 if c.card_id in req.card_ids:
+                    if req.status == "done":
+                        _ensure_card_can_be_done(c)
                     c.status = req.status
                     c.updated_at = _now()
                     updated.append(c.card_id)
@@ -3244,7 +3255,7 @@ def serve_resource(path: str, w: int | None = None):
     if not file_path.exists() or not file_path.is_file():
         raise HTTPException(404, f"Resource not found: {path}")
     resolved = file_path.resolve()
-    if not str(resolved).startswith(str(allowed_root.resolve())):
+    if not resolved.is_relative_to(allowed_root.resolve()):
         raise HTTPException(403, "Access denied")
     suffix = file_path.suffix.lower()
 

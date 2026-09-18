@@ -1,6 +1,7 @@
 // 用户端登录态：token 存取、登录/校验/登出、权限缓存与 hasPerm() 判断。
 import type { ApiResult } from './types';
 import { friendlyFetch, getHttpErrorMessage, readJson } from './httpErrors';
+import { resetSessionGuard } from './sessionGuard';
 
 const TOKEN_KEY = 'user_token';
 const PERMS_KEY = 'user_perms';
@@ -41,6 +42,8 @@ export const userAuth = {
       userToken.clear();
       throw new Error('登录验证未完成，请稍后重试');
     }
+    // 401 跳转后重新登录必须解除全局短路，否则后续请求会永久被拦截。
+    resetSessionGuard();
     return json.data;
   },
 

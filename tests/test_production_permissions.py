@@ -85,3 +85,61 @@ def test_non_member_cannot_see_or_modify_project(tmp_path, monkeypatch):
         f"/api/v1/agentapp/production/projects/{project_id}",
         headers=_headers("bob"),
     ).status_code == 200
+
+
+def test_batch_card_endpoints_check_every_project_and_quality_gate(tmp_path, monkeypatch):
+    """无 pid 的批量接口也必须执行项目隔离，批量完成不能绕过验收。"""
+    import app.api.production as production
+    import app.dependencies as dependencies
+    from app.main import app
+
+    monkeypatch.setattr(production, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(dependencies, "user_store", _ProjectUserStore())
+    client = TestClient(app)
+
+    project = client.post(
+        "/api/v1/agentapp/production/projects",
+        headers=_headers("alice"),
+        json={"name": "批量隔离项目"},
+    )
+    assert project.status_code == 200
+    project_id = project.json()["data"]["project_id"]
+    card = client.post(
+        f"/api/v1/agentapp/production/projects/{project_id}/cards",
+        headers=_headers("alice"),
+        json={
+            "stage": "img_gen",
+            "title": "待验收卡片",
+            "metadata": {
+                "active_image": "/uploads/candidate.png",
+                "image_candidates": [{
+                    "image": "/uploads/candidate.png",
+                    "review_required": True,
+                }],
+            },
+        },
+    )
+    assert card.status_code == 200
+    card_id = card.json()["data"]["card_id"]
+
+    payload = {"card_ids": [card_id]}
+    assert client.post(
+        "/api/v1/agentapp/production/cards/batch-move",
+        headers=_headers("bob"),
+        json={**payload, "stage": "vid_prompt"},
+    ).status_code == 403
+    assert client.post(
+        "/api/v1/agentapp/production/cards/batch-delete",
+        headers=_headers("bob"),
+        json=payload,
+    ).status_code == 403
+    assert client.post(
+        "/api/v1/agentapp/production/cards/batch-status",
+        headers=_headers("bob"),
+        json={**payload, "status": "done"},
+    ).status_code == 403
+    assert client.post(
+        "/api/v1/agentapp/production/cards/batch-status",
+        headers=_headers("alice"),
+        json={**payload, "status": "done"},
+    ).status_code == 409
