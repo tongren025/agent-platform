@@ -44,3 +44,5 @@
 - python -m scripts.project_kb refresh：人工核对文档后更新基线。
 
 检索实时读取 docs/knowledge 和选定的 docs 手册；源码哈希只用于提醒文档可能过期，不会把源代码内容复制进索引。
+
+现有 SOURCE_SNAPSHOT.json 保留此前的核对基线；后续改动会使 check 返回 1，这是需要重新核对的提醒，不是检索不可用。本次功能清单更新不通过刷新哈希来声称全部源码已再次验证。
