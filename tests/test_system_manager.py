@@ -552,3 +552,40 @@ def test_system_manager_write_permissions_use_tool_manage():
     assert _required_write_perm(f"{base}/skills/import") == "tool:manage"
     assert _required_write_perm(f"{base}/mcp/demo/oauth/start") == "tool:manage"
     assert _required_write_perm(f"{base}/chat") == "workbench:use"
+
+
+@pytest.mark.parametrize("relative_path", [
+    "docs/knowledge/FEATURES.md",
+    "docs/USER_GUIDE.md",
+])
+def test_product_manuals_are_searched_and_passed_to_answer_model(tmp_path, monkeypatch, relative_path):
+    """产品问答可检索新增手册并引用原文，全程使用隔离文档与模型桩。"""
+    import json
+    import app.services.system_manager as manager_module
+    from app.config import settings
+
+    monkeypatch.setattr(manager_module, "BASE_DIR", tmp_path)
+    monkeypatch.setattr(settings.agent, "system_manager_model", "")
+    manual = tmp_path / relative_path
+    manual.parent.mkdir(parents=True, exist_ok=True)
+    manual.write_text(
+        "# 生产卡片功能\n生产卡片支持分镜整理、候选比较与人工验收。\n",
+        encoding="utf-8",
+    )
+    ai = _FakeAiService()
+    service = _service(root_dir=tmp_path / "manager", ai_service=ai)
+
+    context = service.context("/production")
+    knowledge = service._search_knowledge("生产卡片功能")
+    assert context["knowledgeSources"] == [relative_path]
+    assert knowledge[0]["path"] == relative_path
+    assert "人工验收" in knowledge[0]["excerpt"]
+    assert ai.calls == []
+
+    reply = service.chat("生产卡片功能", "/production", owner="alice")
+    assert len(ai.calls) == 1
+    payload = json.loads(ai.calls[0]["messages"][1]["content"])
+    assert payload["manualReferences"] == knowledge
+    assert reply["sources"] == [{
+        "title": "生产卡片功能", "type": "manual", "path": relative_path,
+    }]

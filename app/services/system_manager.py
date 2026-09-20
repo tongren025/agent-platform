@@ -39,7 +39,10 @@ _MCP_RENAME_WORDS = ("改名", "改个名称", "改名称", "改名字", "名称
 _PROPOSAL_TTL_SECONDS = 15 * 60
 _MAX_ARCHIVE_BYTES = 10 * 1024 * 1024
 _MAX_ARCHIVE_FILES = 500
+# 功能大全与用户手册是产品能力问答的资料来源；新文档需显式加入此受控检索清单。
 _KNOWLEDGE_FILES = (
+    "docs/knowledge/FEATURES.md",
+    "docs/USER_GUIDE.md",
     "README.md",
     "WORKFLOW_ENGINE.md",
     "docs/SYSTEM_MANAGER.md",

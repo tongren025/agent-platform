@@ -1,6 +1,7 @@
 # 🎬 Agent Platform
 
 🧭 **项目知识库**：从 [docs/knowledge/README.md](docs/knowledge/README.md) 开始；按主题查架构、API、数据、运行与排障。需要源码调用关系时，结合 CodeGraph 查询。
+🎞️ **业务功能大全**：[docs/knowledge/FEATURES.md](docs/knowledge/FEATURES.md)；按页面和制作环节查询能力、输入产出、使用条件与尚未贯通的部分。
 🔌 **完整接口手册**：[docs/API_REFERENCE.md](docs/API_REFERENCE.md)；包含鉴权、业务闭环、错误合同、启动排障和从 OpenAPI 生成的公开接口、参数与模型清单。
 
 [English](README.en.md) | 简体中文
@@ -80,7 +81,7 @@ codegraph status
 
 ### 可视化工作流引擎（类 DIFY）
 - **DAG 画布编辑器** — 基于 ReactFlow 的拖拽式流程图编辑，连线即定义执行顺序
-- **11 种节点类型**：
+- **后端引擎实现 11 种节点类型**：当前可视化编辑器开放开始、智能体、知识检索、条件分支、文本拼装、工具调用和结束 7 种；迭代、HTTP 请求、代码和子工作流属于引擎/API 层能力，尚未在编辑器工具箱开放。
 
   | 节点 | 作用 |
   |------|------|
