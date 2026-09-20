@@ -14,7 +14,14 @@ export const userToken = {
 
 /** 当前用户的权限列表(登录/校验时由后端返回并缓存)。 */
 export function getPerms(): string[] {
-  try { return JSON.parse(localStorage.getItem(PERMS_KEY) || '[]'); } catch { return []; }
+  try {
+    const cached: unknown = JSON.parse(localStorage.getItem(PERMS_KEY) || '[]');
+    return Array.isArray(cached)
+      ? cached.filter((perm): perm is string => typeof perm === 'string')
+      : [];
+  } catch {
+    return [];
+  }
 }
 
 export function hasPerm(perm: string): boolean {
@@ -42,8 +49,8 @@ export const userAuth = {
       userToken.clear();
       throw new Error('登录验证未完成，请稍后重试');
     }
-    // 401 跳转后重新登录必须解除全局短路，否则后续请求会永久被拦截。
-    resetSessionGuard();
+    // 用户端完成登录和权限校验后，恢复本端请求。
+    resetSessionGuard('user');
     return json.data;
   },
 
@@ -51,7 +58,10 @@ export const userAuth = {
     const token = userToken.get();
     if (!token) return false;
     try {
-      const res = await friendlyFetch(`/api/v1/agentapp/auth/check?token=${encodeURIComponent(token)}`);
+      // 凭证放在请求头，避免出现在 URL 和代理访问日志中。
+      const res = await friendlyFetch('/api/v1/agentapp/auth/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       // 仅凭证失效时清理本地登录态；服务异常或断网不误删 token。
       if (res.status === 401 || res.status === 403) { userToken.clear(); return false; }
       if (!res.ok) return false;

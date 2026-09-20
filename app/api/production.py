@@ -10,9 +10,10 @@ import tempfile
 import threading
 import uuid
 import zipfile
+from contextlib import ExitStack, contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Iterator, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, Request
 from fastapi.responses import FileResponse
@@ -78,25 +79,37 @@ def _require_project_membership(request: Request) -> None:
         raise HTTPException(403, "当前用户不是项目成员")
 
 
-def _require_batch_card_access(card_ids: list[str], request: Request) -> None:
-    """校验无项目路径的批量卡片接口涉及的每个项目。
+@contextmanager
+def _batch_card_projects(
+    card_ids: list[str], request: Request,
+) -> Iterator[dict[str, list[ProductionCard]]]:
+    """在同一批项目锁内加载目标卡片并校验全部项目权限。
 
-    批量接口的请求体只带 card_id，无法由全局路由依赖推导项目。这里先
-    建立卡片到项目的映射，再对每个已存在项目执行同一成员校验；不存在
-    的卡片继续沿用原接口的静默跳过行为。
+    固定项目 ID 顺序取得本次扫描的锁，避免并发批量请求交叉等待；所有
+    成员检查与后续写入共用这些锁。未知卡片继续静默跳过。调用方必须先
+    完成整批业务校验再保存；JSON 文件独立落盘，不提供跨文件存储事务。
     """
     wanted = set(card_ids)
-    if not wanted:
+    if not wanted or not DATA_DIR.exists():
+        yield {}
         return
-    for directory in DATA_DIR.iterdir():
-        if not directory.is_dir() or not (directory / "cards.json").exists():
-            continue
-        cards = _load_cards(directory.name)
-        if not any(card.card_id in wanted for card in cards):
-            continue
-        project = _load_project(directory.name)
-        if not _is_project_member(project, request):
-            raise HTTPException(403, "当前用户不是项目成员")
+    project_ids = sorted(
+        directory.name
+        for directory in DATA_DIR.iterdir()
+        if directory.is_dir() and (directory / "cards.json").exists()
+    )
+    with ExitStack() as locks:
+        for pid in project_ids:
+            locks.enter_context(_project_lock(pid))
+        projects = {}
+        for pid in project_ids:
+            cards = _load_cards(pid)
+            if not any(card.card_id in wanted for card in cards):
+                continue
+            if not _is_project_member(_load_project(pid), request):
+                raise HTTPException(403, "当前用户不是项目成员")
+            projects[pid] = cards
+        yield projects
 
 
 def _ensure_card_can_be_done(card: ProductionCard) -> None:
@@ -1518,26 +1531,19 @@ class BatchMoveReq(BaseModel):
 
 @router.post("/cards/batch-move")
 def batch_move_cards(req: BatchMoveReq, request: Request):
-    """POST /cards/batch-move：跨项目批量把卡片移到目标阶段，返回实际移动的 ID 列表；阶段非法返 400。"""
+    """整批权限及阶段检查通过后移动卡片；未知 ID 跳过，非法阶段返 400。"""
     if req.stage not in STAGE_KEYS:
         raise HTTPException(400, f"无效阶段: {req.stage}")
-    _require_batch_card_access(req.card_ids, request)
+    wanted = set(req.card_ids)
     moved = []
-    for d in DATA_DIR.iterdir():
-        with _project_lock(d.name):
-            cards_file = d / "cards.json"
-            if not cards_file.exists():
-                continue
-            cards = _load_cards(d.name)
-            changed = False
-            for c in cards:
-                if c.card_id in req.card_ids:
-                    c.stage = req.stage
-                    c.updated_at = _now()
-                    moved.append(c.card_id)
-                    changed = True
-            if changed:
-                _save_cards(d.name, cards)
+    with _batch_card_projects(req.card_ids, request) as projects:
+        for pid, cards in projects.items():
+            for card in cards:
+                if card.card_id in wanted:
+                    card.stage = req.stage
+                    card.updated_at = _now()
+                    moved.append(card.card_id)
+            _save_cards(pid, cards)
     return {"code": 200, "data": {"moved": moved}}
 
 
@@ -1548,20 +1554,13 @@ class BatchDeleteReq(BaseModel):
 
 @router.post("/cards/batch-delete")
 def batch_delete_cards(req: BatchDeleteReq, request: Request):
-    """POST /cards/batch-delete：跨项目批量删除卡片，返回实际删除的 ID 列表（不存在的 ID 静默跳过）。"""
-    _require_batch_card_access(req.card_ids, request)
+    """整批权限检查通过后删除卡片，返回实际删除的 ID；未知 ID 静默跳过。"""
+    wanted = set(req.card_ids)
     deleted = []
-    for d in DATA_DIR.iterdir():
-        with _project_lock(d.name):
-            cards_file = d / "cards.json"
-            if not cards_file.exists():
-                continue
-            cards = _load_cards(d.name)
-            new_cards = [c for c in cards if c.card_id not in req.card_ids]
-            if len(new_cards) < len(cards):
-                removed = [c.card_id for c in cards if c.card_id in req.card_ids]
-                deleted.extend(removed)
-                _save_cards(d.name, new_cards)
+    with _batch_card_projects(req.card_ids, request) as projects:
+        for pid, cards in projects.items():
+            deleted.extend(card.card_id for card in cards if card.card_id in wanted)
+            _save_cards(pid, [card for card in cards if card.card_id not in wanted])
     return {"code": 200, "data": {"deleted": deleted}}
 
 
@@ -1573,26 +1572,25 @@ class BatchUpdateStatusReq(BaseModel):
 
 @router.post("/cards/batch-status")
 def batch_update_status(req: BatchUpdateStatusReq, request: Request):
-    """POST /cards/batch-status：跨项目批量更新卡片状态，返回实际更新的 ID 列表。"""
-    _require_batch_card_access(req.card_ids, request)
+    """整批权限、状态及完成门禁检查通过后写入；校验失败不修改任何项目。"""
+    if req.status not in {"pending", "review", "done"}:
+        raise HTTPException(400, f"无效状态: {req.status}")
+    wanted = set(req.card_ids)
     updated = []
-    for d in DATA_DIR.iterdir():
-        with _project_lock(d.name):
-            cards_file = d / "cards.json"
-            if not cards_file.exists():
-                continue
-            cards = _load_cards(d.name)
-            changed = False
-            for c in cards:
-                if c.card_id in req.card_ids:
-                    if req.status == "done":
-                        _ensure_card_can_be_done(c)
-                    c.status = req.status
-                    c.updated_at = _now()
-                    updated.append(c.card_id)
-                    changed = True
-            if changed:
-                _save_cards(d.name, cards)
+    with _batch_card_projects(req.card_ids, request) as projects:
+        # 先检查所有目标卡片，避免后一个项目验收失败时前一个已标记完成。
+        if req.status == "done":
+            for cards in projects.values():
+                for card in cards:
+                    if card.card_id in wanted:
+                        _ensure_card_can_be_done(card)
+        for pid, cards in projects.items():
+            for card in cards:
+                if card.card_id in wanted:
+                    card.status = req.status
+                    card.updated_at = _now()
+                    updated.append(card.card_id)
+            _save_cards(pid, cards)
     return {"code": 200, "data": {"updated": updated}}
 
 

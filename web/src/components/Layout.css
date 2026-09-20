@@ -6,7 +6,7 @@
   --app-muted: #77756d;
   --app-faint: #9d9a90;
   --app-line: rgba(58, 55, 47, 0.1);
-  --app-accent: #8a6749;
+  --app-accent: #806146;
   --app-accent-strong: #6f4f35;
   --app-accent-soft: #eee7de;
   min-height: 100vh;
@@ -93,9 +93,7 @@
   z-index: 100;
   overflow: hidden auto;
   color: var(--app-ink);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(248, 246, 241, 0.94)),
-    var(--app-surface);
+  background: var(--app-surface);
   border-right: 1px solid var(--app-line);
   box-shadow: 12px 0 40px rgba(48, 44, 35, 0.025);
   transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -174,7 +172,7 @@
 .app-nav-section__title {
   padding: 7px 11px 8px;
   color: var(--app-faint);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.16em;
 }
@@ -187,7 +185,7 @@
 }
 
 .app-nav-item {
-  min-height: 42px;
+  min-height: 44px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -218,7 +216,7 @@
 
 .app-nav-item.is-active {
   color: #4b3827;
-  background: linear-gradient(110deg, #f0e9df, #f7f3ed);
+  background: var(--app-accent-soft);
   border-color: rgba(138, 103, 73, 0.13);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
@@ -324,9 +322,7 @@
   min-width: 0;
   flex: 1;
   overflow-x: hidden;
-  background:
-    radial-gradient(circle at 92% 2%, rgba(176, 151, 116, 0.075), transparent 22%),
-    var(--app-paper);
+  background: var(--app-paper);
 }
 
 .app-content {

@@ -48,6 +48,7 @@ jobs:
           npm ci
           test -s public/agent-canvas/agent-canvas.js
           test -s public/agent-canvas/agent-canvas.css
+          node --test ../scripts/test-session-guard.cjs
           npx tsc --noEmit
           npm run build
           test -s ../wwwroot/agent-canvas/agent-canvas.js

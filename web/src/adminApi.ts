@@ -16,8 +16,8 @@ export const adminToken = {
 };
 
 async function request<T>(path: string, init?: RequestInit, options?: { isLogin?: boolean }): Promise<T> {
-  // 登录请求本身要放行，其余请求在跳登录页期间一律短路，避免 401 请求风暴。
-  if (!options?.isLogin && isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
+  // 管理端凭证失效后只放行登录请求；用户端会话独立处理。
+  if (!options?.isLogin && isSessionExpired('admin')) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = adminToken.get();
   const res = await friendlyFetch(`${BASE}${path}`, {
     ...init,
@@ -33,7 +33,7 @@ async function request<T>(path: string, init?: RequestInit, options?: { isLogin?
       throw new Error(await getHttpErrorMessage(res, '用户名或密码错误'));
     }
     adminToken.clear();
-    redirectToLogin('/admin/login');
+    redirectToLogin('admin');
     throw new Error(SESSION_EXPIRED_MESSAGE);
   }
   if (res.status === 403) {

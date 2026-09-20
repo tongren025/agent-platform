@@ -26,6 +26,7 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { api } from '../api';
+import { COLORS } from '../theme';
 import { thumbUrl, onImageError } from '../media';
 import ProjectViewNav from '../components/ProjectViewNav';
 import {
@@ -78,6 +79,7 @@ interface Project {
   description: string;
   source_type: string;
   source_content: string;
+  episode_count?: number;
   settings?: Record<string, any>;
   cards?: StoryCardLike[];
   stages?: StageInfo[];
@@ -129,7 +131,7 @@ function ProgressItem({
         percent={percent}
         showInfo={false}
         size="small"
-        strokeColor={percent === 100 ? '#10b981' : '#6366f1'}
+        strokeColor={percent === 100 ? COLORS.mint : COLORS.iris}
       />
       <Text type="secondary" style={{ fontSize: 11 }}>{detail}</Text>
     </div>
@@ -228,7 +230,12 @@ export default function ProductionHub() {
     );
   }
 
-  const type = projectTypePresentation(project.source_type);
+  const sourceType = projectTypePresentation(project.source_type);
+  const isSingleFilm = project.source_type !== 'gc'
+    && Number(project.episode_count ?? project.settings?.episode_count) === 1;
+  const type = isSingleFilm
+    ? { ...sourceType, label: '单集短片', explanation: '在一支完整短片里，讲清人物的处境、选择与改变。' }
+    : sourceType;
   const oneLineStory = extractOneLineStory(project, cards);
   const theme = extractStoryTheme(project, cards);
   const backendReadiness = project.stats?.readiness;
@@ -550,7 +557,7 @@ export default function ProductionHub() {
                     percent={episode.imageRate}
                     size="small"
                     showInfo={false}
-                    strokeColor={episode.imageRate === 100 ? '#10b981' : '#6366f1'}
+                    strokeColor={episode.imageRate === 100 ? COLORS.mint : COLORS.iris}
                     style={{ marginTop: 7 }}
                   />
                 </div>

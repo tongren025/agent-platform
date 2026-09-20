@@ -3,10 +3,10 @@
 """
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.common import ok as _ok
+from app.api.common import ok as _ok, validate_key
 from app.dependencies import long_term_memory
 from app.models.memory_types import (
     EpisodicMemory,
@@ -14,18 +14,24 @@ from app.models.memory_types import (
     SemanticMemory,
 )
 
+
+def _validate_employee_key(employee_key: str) -> None:
+    """在访问员工目录前拒绝路径穿越参数，错误返回 400。"""
+    validate_key(employee_key, label="employee_key")
+
+
 router = APIRouter(prefix="/api/v1/agentapp/memory", tags=["memory"])
 
 
 # ── 总览 ─────────────────────────────────────────────
 
-@router.get("/stats/{employee_key}")
+@router.get("/stats/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def get_stats(employee_key: str):
     """GET /stats/{key}：三层记忆各自条数统计。"""
     return _ok(long_term_memory.get_stats(employee_key))
 
 
-@router.get("/all/{employee_key}")
+@router.get("/all/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def get_all(employee_key: str):
     """GET /all/{key}：返回该员工三层记忆全量（用于提示词注入的完整视图）。"""
     data = long_term_memory.get_all_for_prompt(employee_key)
@@ -38,7 +44,7 @@ async def get_all(employee_key: str):
 
 # ── 语义记忆 ──────────────────────────────────────────
 
-@router.get("/semantic/{employee_key}")
+@router.get("/semantic/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def list_semantic(employee_key: str):
     """GET /semantic/{key}：列出该员工的全部语义记忆。"""
     items = long_term_memory.list_semantic(employee_key)
@@ -51,7 +57,7 @@ class SemanticBody(BaseModel):
     category: str = "fact"
     importance: float = 0.5
 
-@router.post("/semantic/{employee_key}")
+@router.post("/semantic/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def add_semantic(employee_key: str, body: SemanticBody):
     """POST /semantic/{key}：新增一条语义记忆（与已有高相似则合并）。"""
     m = SemanticMemory(
@@ -64,7 +70,7 @@ async def add_semantic(employee_key: str, body: SemanticBody):
     return _ok(saved.model_dump(by_alias=True, mode="json"))
 
 
-@router.delete("/semantic/{employee_key}/{memory_id}")
+@router.delete("/semantic/{employee_key}/{memory_id}", dependencies=[Depends(_validate_employee_key)])
 async def delete_semantic(employee_key: str, memory_id: str):
     """DELETE /semantic/{key}/{id}：删除一条语义记忆，不存在返 404。"""
     if not long_term_memory.delete_semantic(employee_key, memory_id):
@@ -74,7 +80,7 @@ async def delete_semantic(employee_key: str, memory_id: str):
 
 # ── 经验记忆 ──────────────────────────────────────────
 
-@router.get("/episodic/{employee_key}")
+@router.get("/episodic/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def list_episodic(employee_key: str):
     """GET /episodic/{key}：列出该员工的全部经验记忆。"""
     items = long_term_memory.list_episodic(employee_key)
@@ -89,7 +95,7 @@ class EpisodicBody(BaseModel):
     success_score: float = Field(0.5, alias="successScore")
     model_config = {"populate_by_name": True}
 
-@router.post("/episodic/{employee_key}")
+@router.post("/episodic/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def add_episodic(employee_key: str, body: EpisodicBody):
     """POST /episodic/{key}：新增一条经验记忆。"""
     m = EpisodicMemory(
@@ -103,7 +109,7 @@ async def add_episodic(employee_key: str, body: EpisodicBody):
     return _ok(saved.model_dump(by_alias=True, mode="json"))
 
 
-@router.delete("/episodic/{employee_key}/{memory_id}")
+@router.delete("/episodic/{employee_key}/{memory_id}", dependencies=[Depends(_validate_employee_key)])
 async def delete_episodic(employee_key: str, memory_id: str):
     """DELETE /episodic/{key}/{id}：删除一条经验记忆，不存在返 404。"""
     if not long_term_memory.delete_episodic(employee_key, memory_id):
@@ -113,7 +119,7 @@ async def delete_episodic(employee_key: str, memory_id: str):
 
 # ── 行为记忆 ──────────────────────────────────────────
 
-@router.get("/procedural/{employee_key}")
+@router.get("/procedural/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def list_procedural(employee_key: str):
     """GET /procedural/{key}：列出该员工的全部行为记忆。"""
     items = long_term_memory.list_procedural(employee_key)
@@ -126,7 +132,7 @@ class ProceduralBody(BaseModel):
     rationale: str = ""
     confidence: float = 0.5
 
-@router.post("/procedural/{employee_key}")
+@router.post("/procedural/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def add_procedural(employee_key: str, body: ProceduralBody):
     """POST /procedural/{key}：新增一条行为记忆（与已有高相似则合并）。"""
     m = ProceduralMemory(
@@ -139,7 +145,7 @@ async def add_procedural(employee_key: str, body: ProceduralBody):
     return _ok(saved.model_dump(by_alias=True, mode="json"))
 
 
-@router.delete("/procedural/{employee_key}/{memory_id}")
+@router.delete("/procedural/{employee_key}/{memory_id}", dependencies=[Depends(_validate_employee_key)])
 async def delete_procedural(employee_key: str, memory_id: str):
     """DELETE /procedural/{key}/{id}：删除一条行为记忆，不存在返 404。"""
     if not long_term_memory.delete_procedural(employee_key, memory_id):
@@ -149,7 +155,7 @@ async def delete_procedural(employee_key: str, memory_id: str):
 
 # ── 手动触发记忆提取 ─────────────────────────────────
 
-@router.post("/extract/{employee_key}/{session_id}")
+@router.post("/extract/{employee_key}/{session_id}", dependencies=[Depends(_validate_employee_key)])
 async def trigger_extraction(employee_key: str, session_id: str):
     """POST /extract/{key}/{session_id}：从指定会话手动提取记忆并存入长期记忆，会话不存在返 404。"""
     from app.dependencies import memory_store
@@ -166,7 +172,7 @@ async def trigger_extraction(employee_key: str, session_id: str):
 
 # ── Deep Dream 蒸馏 ───────────────────────────────────
 
-@router.post("/distill/{employee_key}")
+@router.post("/distill/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def trigger_distillation(employee_key: str):
     """POST /distill/{key}：立即触发一次记忆蒸馏并返回日志。"""
     from app.services.distillation import run_distillation
@@ -174,7 +180,7 @@ async def trigger_distillation(employee_key: str):
     return _ok(log.model_dump(by_alias=True, mode="json"))
 
 
-@router.get("/distillation-logs/{employee_key}")
+@router.get("/distillation-logs/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def get_distillation_logs(employee_key: str):
     """GET /distillation-logs/{key}：列出该员工的蒸馏历史。"""
     from app.services.distillation import list_distillation_logs

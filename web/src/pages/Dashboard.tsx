@@ -24,7 +24,8 @@ interface Readiness {
 interface ProjectSummary {
   project_id: string; name: string; description: string; updated_at: string; cardCount: number;
   episode_count?: number; aspect_ratio?: string; production_goal?: 'storyboard' | 'images' | 'final';
-  pinned?: boolean; stats?: { readiness?: Readiness };
+  pinned?: boolean;
+  stats?: { readiness?: Readiness; story_preview?: { has_final_video?: boolean } };
 }
 
 const EMPTY_READINESS: Readiness = {
@@ -97,7 +98,7 @@ export default function Dashboard() {
   const runningTasks = tasks.filter(t => ['queued', 'in_progress', 'deferred'].includes(t.status));
   const failedTasks = tasks.filter(t => t.status === 'complete' && t.result && !t.result.success);
   const totalBlockers = projects.reduce((sum, p) => sum + (p.stats?.readiness?.blockers || 0), 0);
-  const totalDelivered = projects.reduce((sum, p) => sum + (p.stats?.readiness?.delivered || 0), 0);
+  const projectsWithFinalVideo = projects.filter(project => project.stats?.story_preview?.has_final_video).length;
   const todayLabel = new Intl.DateTimeFormat('zh-CN', {
     month: 'long',
     day: 'numeric',
@@ -148,7 +149,7 @@ export default function Dashboard() {
     <main className="today-page" aria-labelledby="dashboard-title">
       <header className="today-header">
         <div className="today-title-lockup">
-          <span className="today-kicker">CREATIVE OPERATIONS</span>
+          <span className="today-kicker">制作工作台</span>
           <div className="today-title-row">
             <Title id="dashboard-title" level={1}>今日制作</Title>
             <HelpHint
@@ -205,9 +206,9 @@ export default function Dashboard() {
                 <Progress
                   type="circle"
                   percent={readiness.overall_progress}
-                  size={isMobile ? 76 : 88}
+                  size={isMobile ? 60 : 68}
                   strokeWidth={5}
-                  strokeColor={{ '0%': '#a48466', '100%': '#718070' }}
+                  strokeColor={COLORS.iris}
                   trailColor="rgba(255,255,255,.1)"
                   format={percent => <span>{percent}<small>%</small></span>}
                   aria-label={`${primary.name} 完成度 ${readiness.overall_progress}%`}
@@ -217,7 +218,7 @@ export default function Dashboard() {
                 <span>
                   系统推荐下一步
                   <HelpHint
-                    tone="dark"
+                    tone="light"
                     title="为什么推荐这一步？"
                     content="系统根据剧本、人物、场景、分镜、图片和视频的真实完成情况，选择当前最早缺失的生产环节。"
                   />
@@ -238,11 +239,11 @@ export default function Dashboard() {
           <aside className="today-readiness" aria-label="当前项目交付就绪度">
             <div className="today-readiness-heading">
               <div>
-                <span className="today-panel-kicker">DELIVERY RADAR</span>
+                <span className="today-panel-kicker">制作检查</span>
                 <strong>
                   交付就绪度
                   <HelpHint
-                    tone="dark"
+                    tone="light"
                     title="交付就绪度怎么算？"
                     content="按镜头检查制作规格、镜头图片、镜头视频和最终确认。它表示完成程度，不代表模型画面质量评分。"
                   />
@@ -286,7 +287,7 @@ export default function Dashboard() {
         <section className="today-empty-hero">
           <div className="today-empty-art" aria-hidden="true"><PlusOutlined /></div>
           <div>
-            <span className="today-kicker">YOUR FIRST PRODUCTION</span>
+            <span className="today-kicker">第一部作品</span>
             <Title level={2}>从一句创意，开始第一部作品</Title>
             <p>选择交付目标，数字员工会带你完成剧本、分镜、镜头图片和视频。</p>
           </div>
@@ -309,7 +310,7 @@ export default function Dashboard() {
         <div><span className="today-stat-icon is-violet"><AppstoreOutlined /></span><p><small>制作项目</small><strong>{projects.length}</strong><em>个项目</em></p></div>
         <div><span className="today-stat-icon is-blue"><CloudSyncOutlined /></span><p><small>正在运行</small><strong>{runningTasks.length}</strong><em>项任务</em></p></div>
         <div><span className={`today-stat-icon ${totalBlockers ? 'is-amber' : 'is-green'}`}><ExclamationCircleOutlined /></span><p><small>制作风险</small><strong>{totalBlockers}</strong><em>项待处理</em></p></div>
-        <div><span className="today-stat-icon is-green"><CheckCircleOutlined /></span><p><small>累计交付</small><strong>{totalDelivered}</strong><em>个镜头</em></p></div>
+        <div><span className="today-stat-icon is-green"><CheckCircleOutlined /></span><p><small>已有成片</small><strong>{projectsWithFinalVideo}</strong><em>个项目</em></p></div>
       </section>
 
       {(canManageProduction && totalBlockers > 0 || failedTasks.length > 0) && <div className="today-attention" role="status" aria-live="polite">
@@ -327,7 +328,7 @@ export default function Dashboard() {
       <section className={`today-lower-grid ${!canManageProduction ? 'is-single' : ''}`}>
         {canManageProduction && <div className="today-panel today-project-panel">
           <div className="today-panel-heading">
-            <div><span className="today-panel-kicker">ACTIVE PRODUCTIONS</span><Title level={3}>重点项目</Title></div>
+            <div><span className="today-panel-kicker">继续创作</span><Title level={3}>重点项目</Title></div>
             <Button type="text" onClick={() => navigate('/production')}>查看全部 <ArrowRightOutlined /></Button>
           </div>
           <div className="today-project-list">
@@ -346,7 +347,7 @@ export default function Dashboard() {
                   </div>
                   <div className="today-row-progress">
                     <span>{progress}%</span>
-                    <Progress percent={progress} showInfo={false} strokeColor={COLORS.iris} trailColor="#edf0f7" size="small" aria-label={`${project.name} 完成度 ${progress}%`} />
+                    <Progress percent={progress} showInfo={false} strokeColor={COLORS.iris} trailColor={COLORS.border} size="small" aria-label={`${project.name} 完成度 ${progress}%`} />
                   </div>
                   {!isMobile && <ArrowRightOutlined className="today-row-arrow" aria-hidden />}
                 </button>
@@ -368,7 +369,7 @@ export default function Dashboard() {
 
         {canUseWorkbench && <aside className="today-panel today-task-panel" aria-live="polite">
           <div className="today-panel-heading">
-            <div><span className="today-panel-kicker">AGENT ACTIVITY</span><Title level={3}>员工任务</Title></div>
+            <div><span className="today-panel-kicker">后台进展</span><Title level={3}>员工任务</Title></div>
             <Button type="text" onClick={() => navigate('/tasks')}>任务中心</Button>
           </div>
           <div className="today-task-summary">

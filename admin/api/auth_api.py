@@ -33,11 +33,11 @@ def login(req: LoginRequest):
 
 @router.get("/me")
 def me(claims: dict = Depends(require_login)):
-    """GET /api/admin/auth/me：返回当前登录用户信息（剔除密码哈希）及权限列表；token 对应用户已不存在返回 401。"""
+    """GET /api/admin/auth/me：返回当前登录用户信息（剔除密码哈希）及权限列表；token 对应用户不存在或已禁用返回 401。"""
     username = claims.get("sub")
     user = user_store.get(username)
-    if not user:
-        raise HTTPException(status_code=401, detail="用户不存在")
+    if not user or not user.get("enabled", True):
+        raise HTTPException(status_code=401, detail="用户不存在或已被禁用")
     permissions = user_store.get_permissions(username)
     safe = dict(user)
     safe.pop("passwordHash", None)

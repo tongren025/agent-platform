@@ -26,8 +26,8 @@ export default function AdminLogin() {
     try {
       const res = await adminApi.login(username, password);
       adminToken.set(res.token);
-      // 管理端与用户端共用会话跳转闸门，重新登录后必须复位。
-      resetSessionGuard();
+      // 管理端登录成功后只恢复本端会话。
+      resetSessionGuard('admin');
       message.success('登录成功');
       navigate('/admin/dashboard', { replace: true });
     } catch (e: any) {

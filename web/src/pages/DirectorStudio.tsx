@@ -49,6 +49,7 @@ interface Project {
   name: string;
   description?: string;
   source_type: string;
+  episode_count?: number;
   team_code?: string;
   aspect_ratio: string;
   updated_at: string;
@@ -1535,7 +1536,7 @@ export default function DirectorStudio() {
               <Title level={2}>{state.project.name}</Title>
               <p>{state.project.description || '从创意素材到可交付成片，持续推进当前制作。'}</p>
               <div className="director-project-meta">
-                <span>{state.project.source_type === 'gc' ? '概念片' : '漫剧'}</span>
+                <span>{state.project.source_type === 'gc' ? '概念片' : state.project.episode_count === 1 ? '单集短片' : '剧集项目'}</span>
                 <span>{state.project.aspect_ratio}</span>
                 <span>{state.totalUnits} 个镜头</span>
                 <span className="is-goal">目标：{PRODUCTION_GOALS[productionGoal].label}</span>

@@ -75,12 +75,11 @@ _EVOLUTION_PROMPT = """\
 """
 
 
-def _data_dir(emp_key: str, *, create: bool = False) -> Path:
-    """员工进化数据目录；读取不存在员工时不创建目录。"""
-    d = BASE_DIR / "data" / "evolution" / emp_key
-    if create:
-        d.mkdir(parents=True, exist_ok=True)
-    return d
+def _data_dir(emp_key: str) -> Path:
+    """返回合法员工的进化目录；仅实际写入时由原子写函数创建目录。"""
+    from app.services.long_term_memory import _sanitize
+
+    return BASE_DIR / "data" / "evolution" / _sanitize(emp_key)
 
 
 def _insights_path(emp_key: str) -> Path:
@@ -140,7 +139,7 @@ def last_run_at(employee_key: str) -> datetime | None:
     """最近一次进化分析（成功或失败都算）的时间；无记录返回 None。
 
     与 `distillation.last_run_at` 同理：供调度器做跨进程重启的当天去重。
-    需要立刻重跑走 `POST /evolution/{key}/analyze` 手动触发。
+    需要立刻重跑走 `POST /api/v1/agentapp/evolution/analyze/{employee_key}` 手动触发。
     """
     p = _run_logs_path(employee_key)
     if not p.exists():

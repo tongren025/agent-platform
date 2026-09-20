@@ -269,9 +269,8 @@ type RequestOptions = RequestInit & {
 };
 
 async function request<T>(path: string, init?: RequestOptions): Promise<T> {
-  // 已经在跳登录页的路上就不再发请求：这些请求必然 401，
-  // 只会在页面卸载前刷出一串无意义的失败日志。
-  if (isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
+  // 用户端凭证失效后封锁后续请求，避免导航完成前重复发送无效请求。
+  if (isSessionExpired('user')) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = userToken.get();
   const { timeoutMs, ...fetchInit } = init || {};
   const timeoutController = timeoutMs && !fetchInit.signal ? new AbortController() : null;
@@ -300,7 +299,7 @@ async function request<T>(path: string, init?: RequestOptions): Promise<T> {
   if (res.status === 401) {
     // 凭证失效:统一清 token 回登录页,免得每个页面各自处理
     userToken.clear();
-    redirectToLogin('/login');
+    redirectToLogin('user');
     throw new Error(SESSION_EXPIRED_MESSAGE);
   }
   if (!res.ok) {
@@ -372,7 +371,7 @@ async function streamAgentRun(
   data: Record<string, unknown>,
   handlers: AgentStreamHandlers = {},
 ): Promise<AgentRunResponse> {
-  if (isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
+  if (isSessionExpired('user')) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = userToken.get();
   const res = await friendlyFetch(`${BASE}${path}`, {
     method: 'POST',
@@ -385,7 +384,7 @@ async function streamAgentRun(
   });
   if (res.status === 401) {
     userToken.clear();
-    redirectToLogin('/login');
+    redirectToLogin('user');
     throw new Error(SESSION_EXPIRED_MESSAGE);
   }
   if (!res.ok) throw new Error(await getHttpErrorMessage(res));
@@ -437,7 +436,7 @@ async function download(
   fallbackName: string,
   init?: RequestInit,
 ): Promise<{ filename: string }> {
-  if (isSessionExpired()) throw new Error(SESSION_EXPIRED_MESSAGE);
+  if (isSessionExpired('user')) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = userToken.get();
   const res = await friendlyFetch(`${BASE}${path}`, {
     ...init,
@@ -449,7 +448,7 @@ async function download(
   });
   if (res.status === 401) {
     userToken.clear();
-    redirectToLogin('/login');
+    redirectToLogin('user');
     throw new Error(SESSION_EXPIRED_MESSAGE);
   }
   if (!res.ok) {

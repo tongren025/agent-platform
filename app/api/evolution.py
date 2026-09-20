@@ -1,14 +1,20 @@
 """自我进化系统 API。"""
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
-from app.api.common import ok as _ok
+from app.api.common import ok as _ok, validate_key
+
+
+def _validate_employee_key(employee_key: str) -> None:
+    """在访问员工目录前拒绝路径穿越参数，错误返回 400。"""
+    validate_key(employee_key, label="employee_key")
+
 
 router = APIRouter(prefix="/api/v1/agentapp/evolution", tags=["evolution"])
 
 
-@router.get("/insights/{employee_key}")
+@router.get("/insights/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def get_insights(employee_key: str):
     """GET /insights/{key}：列出某员工的全部进化建议。"""
     from app.services.evolution import list_insights
@@ -16,7 +22,7 @@ async def get_insights(employee_key: str):
     return _ok([it.model_dump(by_alias=True, mode="json") for it in items])
 
 
-@router.post("/analyze/{employee_key}")
+@router.post("/analyze/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def trigger_analysis(employee_key: str):
     """POST /analyze/{key}：立即触发一次自我进化分析并返回运行日志。"""
     from app.services.evolution import run_evolution_analysis
@@ -24,7 +30,7 @@ async def trigger_analysis(employee_key: str):
     return _ok(log.model_dump(by_alias=True, mode="json"))
 
 
-@router.post("/accept/{employee_key}/{insight_id}")
+@router.post("/accept/{employee_key}/{insight_id}", dependencies=[Depends(_validate_employee_key)])
 async def accept(employee_key: str, insight_id: str):
     """POST /accept/{key}/{id}：采纳一条建议并落地；不存在或已处理返 404。"""
     from app.services.evolution import accept_insight
@@ -33,7 +39,7 @@ async def accept(employee_key: str, insight_id: str):
     return _ok()
 
 
-@router.post("/reject/{employee_key}/{insight_id}")
+@router.post("/reject/{employee_key}/{insight_id}", dependencies=[Depends(_validate_employee_key)])
 async def reject(employee_key: str, insight_id: str):
     """POST /reject/{key}/{id}：驳回一条建议；不存在或已处理返 404。"""
     from app.services.evolution import reject_insight
@@ -42,7 +48,7 @@ async def reject(employee_key: str, insight_id: str):
     return _ok()
 
 
-@router.get("/run-logs/{employee_key}")
+@router.get("/run-logs/{employee_key}", dependencies=[Depends(_validate_employee_key)])
 async def get_run_logs(employee_key: str):
     """GET /run-logs/{key}：列出某员工的进化运行日志。"""
     from app.services.evolution import list_run_logs

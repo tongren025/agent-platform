@@ -69,10 +69,10 @@ _DISTILLATION_PROMPT = """\
 
 
 def _log_path(emp_key: str) -> Path:
-    """员工蒸馏日志文件路径（顺带创建其目录）。"""
-    d = BASE_DIR / "data" / "memory" / emp_key
-    d.mkdir(parents=True, exist_ok=True)
-    return d / "distillation_logs.json"
+    """返回合法员工的蒸馏日志路径；只读查询不创建目录。"""
+    from app.services.long_term_memory import _sanitize
+
+    return BASE_DIR / "data" / "memory" / _sanitize(emp_key) / "distillation_logs.json"
 
 
 def _load_logs(emp_key: str) -> list[DistillationLog]:
@@ -101,7 +101,7 @@ def last_run_at(employee_key: str) -> datetime | None:
     供调度器做**跨进程重启**的当天去重：调度器的 `_distill_done_today` 只活在内存里，
     进程一重启就忘光，于是每次重启都把全部员工重跑一遍（每次都是十几秒的 LLM 调用）。
     失败也计入"今天已尝试"，避免失败后每 30 秒重试一整天；
-    需要立刻重跑走 `POST /memory/{key}/distill` 手动触发。
+    需要立刻重跑走 `POST /api/v1/agentapp/memory/distill/{employee_key}` 手动触发。
     """
     p = _log_path(employee_key)
     if not p.exists():

@@ -1,4 +1,4 @@
-"""管理端独立服务的配置——与用户端分离的鉴权口令 + 端口。
+"""管理端独立服务配置：管理员初始化口令、两端共用的签名密钥和监听端口。
 
 全部走环境变量，未配置时落到仅供本地开发的默认值。
 生产部署请务必设置 ADMIN_PASSWORD 和 ADMIN_SECRET。
@@ -6,15 +6,13 @@
 from __future__ import annotations
 
 import os
-import secrets
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 # 本模块的常量都在导入时求值，所以必须先把 .env 灌进 os.environ 再读。
 # 独立 admin 进程（uvicorn admin.main:app）不经过 app/config.py，
-# 少了这一行就读不到 .env，ADMIN_SECRET 会静默落到下面的随机分支——
-# 结果是 app 与 admin 两进程签发的 token 互不认账。
+# 保证两个进程读取同一密钥；开发环境缺省使用固定开发密钥，生产环境缺省则拒绝启动。
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 # 管理员账号口令：优先读环境变量，否则用默认（仅本地开发）
@@ -39,8 +37,10 @@ else:
 if APP_ENV in {"production", "prod"}:
     if ADMIN_PASSWORD.lower() in {"", "admin", "admin123", "change-me-in-prod", "changeme"} or len(ADMIN_PASSWORD) < 12:
         raise RuntimeError("生产环境必须设置至少 12 位 ADMIN_PASSWORD，不能使用示例默认值")
-    if len(ADMIN_SECRET) < 32 or ADMIN_SECRET.lower() in {"admin", "admin123", "change-me-in-prod", "changeme"}:
-        raise RuntimeError("生产环境 ADMIN_SECRET 至少需要 32 位")
+    if len(ADMIN_SECRET) < 32 or ADMIN_SECRET.lower() in {
+        "admin", "admin123", "change-me-in-prod", "changeme", "dev-only-secret-change-in-production",
+    }:
+        raise RuntimeError("生产环境 ADMIN_SECRET 至少需要 32 位，不能使用示例或开发默认密钥")
 
 # token 有效期（秒），默认 12 小时
 ADMIN_TOKEN_TTL = int(os.environ.get("ADMIN_TOKEN_TTL", str(12 * 3600)))

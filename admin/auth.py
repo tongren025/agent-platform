@@ -8,6 +8,7 @@ import base64
 import hashlib
 import hmac
 import json
+import math
 import time
 
 from fastapi import Header, HTTPException
@@ -32,7 +33,7 @@ def _sign(payload: bytes) -> str:
 
 
 def issue_token(username: str, role: str = "admin") -> str:
-    """签发管理端 token：payload(sub/role/exp) + HMAC 签名，格式 body.sig，有效期 ADMIN_TOKEN_TTL。"""
+    """签发两端共用的身份 token；访问权限由请求时的账号状态与角色决定。"""
     payload = json.dumps(
         {"sub": username, "role": role, "exp": int(time.time()) + ADMIN_TOKEN_TTL},
         separators=(",", ":"),
@@ -44,29 +45,50 @@ def parse_token(token: str) -> dict:
     """解析并校验 token：格式、HMAC 签名（常量时间比较）、过期时间，任一不过返 401。"""
     try:
         body, sig = token.split(".", 1)
+        # compare_digest 的字符串输入必须是 ASCII；非法签名仍按凭证错误处理。
+        if not sig.isascii():
+            raise ValueError("签名必须为 ASCII")
         payload = _b64decode(body)
     except Exception:
         raise HTTPException(status_code=401, detail="token 格式非法")
     if not hmac.compare_digest(sig, _sign(payload)):
         raise HTTPException(status_code=401, detail="token 签名校验失败")
-    data = json.loads(payload)
-    if data.get("exp", 0) < time.time():
+    try:
+        data = json.loads(payload)
+        if not isinstance(data, dict):
+            raise ValueError("payload 必须为对象")
+        if not isinstance(data.get("sub"), str) or not data["sub"].strip():
+            raise ValueError("缺少账号标识")
+        expires_at = data.get("exp")
+        if isinstance(expires_at, bool) or not isinstance(expires_at, (int, float)):
+            raise ValueError("有效期必须为数值")
+        if not math.isfinite(expires_at):
+            raise ValueError("有效期必须为有限数值")
+    except (ValueError, TypeError, OverflowError, RecursionError) as exc:
+        raise HTTPException(status_code=401, detail="token 内容非法") from exc
+    if expires_at <= time.time():
         raise HTTPException(status_code=401, detail="token 已过期，请重新登录")
     return data
 
 
 def require_admin(authorization: str = Header(default="")) -> dict:
-    """校验 token 并要求 system:admin 权限。"""
-    if not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="缺少凭证")
-    claims = parse_token(authorization[len("Bearer "):].strip())
-    if claims.get("role") != "admin":
+    """校验当前账号及实时 system:admin 权限，降权后旧 token 立即失去管理权限。"""
+    from app.dependencies import user_store
+
+    claims = require_login(authorization)
+    if "system:admin" not in user_store.get_permissions(claims["sub"]):
         raise HTTPException(status_code=403, detail="需要管理员权限")
     return claims
 
 
 def require_login(authorization: str = Header(default="")) -> dict:
-    """校验 token，任何已登录用户均可。"""
+    """校验 token 与实时账号状态；已删除、禁用的账号不能继续使用旧凭证。"""
+    from app.dependencies import user_store
+
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="缺少凭证")
-    return parse_token(authorization[len("Bearer "):].strip())
+    claims = parse_token(authorization[len("Bearer "):].strip())
+    user = user_store.get(claims["sub"])
+    if not user or not user.get("enabled", True):
+        raise HTTPException(status_code=401, detail="账号不存在或已被禁用")
+    return {**claims, "role": user.get("role", "viewer")}

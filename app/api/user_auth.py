@@ -52,7 +52,7 @@ def me(authorization: str = Header(default="")):
 
 @router.get("/check")
 def check_token(token: str = ""):
-    """GET /check：校验 token 有效且用户启用，返回用户名/角色/权限列表。"""
+    """兼容旧客户端的 query token 校验；返回实时角色，浏览器新代码优先使用 /me。"""
     if not token:
         raise HTTPException(status_code=401, detail="未提供 token")
     claims = parse_token(token)
@@ -62,6 +62,6 @@ def check_token(token: str = ""):
     permissions = user_store.get_permissions(claims.get("sub", ""))
     return ok({
         "username": claims.get("sub"),
-        "role": claims.get("role"),
+        "role": user.get("role", "viewer"),
         "permissions": permissions,
     })

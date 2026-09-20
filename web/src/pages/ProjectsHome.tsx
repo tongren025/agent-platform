@@ -1,4 +1,4 @@
-// “我的项目”入口：先帮助用户选故事、看已有剧情画面，再进入专业制作工具。
+// 项目入口：以真实素材、成片状态和下一步组织制作，保留故事阅读与专业流程入口。
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -19,7 +19,8 @@ import {
   Typography,
 } from 'antd';
 import {
-  BookOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
   BulbOutlined,
   EyeOutlined,
   PictureOutlined,
@@ -34,6 +35,7 @@ import { message } from '../ui';
 import { MEMORY_SWORDSMAN_STARTER } from '../storyStarters';
 import {
   extractOneLineStory,
+  friendlyCopy,
   friendlyProjectName,
   projectTypePresentation,
 } from '../storyPresentation';
@@ -59,12 +61,16 @@ interface ProjectListItem {
   source_type: string;
   source_content?: string;
   updated_at: string;
+  episode_count?: number;
+  episode_duration_seconds?: number;
   pinned?: boolean;
   settings?: Record<string, any>;
   stats?: {
     story_preview?: StoryPreview;
     readiness?: {
       overall_progress?: number;
+      spec_ready?: number;
+      blockers?: number;
       next_action?: string;
     };
   };
@@ -85,10 +91,10 @@ interface NewProjectForm {
 const EMPTY_FORM: NewProjectForm = {
   name: '',
   description: '',
-  sourceType: 'outline',
+  sourceType: 'idea',
   sourceContent: '',
-  episodeCount: 12,
-  episodeDurationSeconds: 90,
+  episodeCount: 1,
+  episodeDurationSeconds: 180,
   aspectRatio: '9:16',
   visualStyle: '',
   productionGoal: 'final',
@@ -104,17 +110,22 @@ function ProjectCover({
   images,
   available,
   known,
+  title,
 }: {
   images: string[];
   available: number;
   known: boolean;
+  title: string;
 }) {
   const visible = images.filter(Boolean).slice(0, 4);
   if (!visible.length) {
     return (
       <div className="story-project-cover story-project-cover--empty">
-        <BookOutlined />
-        <span>{known ? '还没有可看的剧情图' : '打开后查看故事画面'}</span>
+        <VideoCameraOutlined aria-hidden />
+        <strong>{title}</strong>
+        <span>{available > 0
+          ? `已有 ${available} 张画面 · 打开项目查看`
+          : known ? '画面待生成 · 从故事开始制作' : '打开项目查看素材'}</span>
       </div>
     );
   }
@@ -158,6 +169,24 @@ function resolveStoryPreview(project: ProjectListItem): StoryPreview | undefined
   };
 }
 
+
+function projectNextStep(project: ProjectListItem, preview?: StoryPreview): string {
+  if (preview?.has_final_video) return '查看成片，确认交付版本';
+  const nextAction = friendlyCopy(project.stats?.readiness?.next_action || '');
+  // 镜头卡完成不能代替成片文件；成片状态始终以 story_preview 的真实媒体为准。
+  if (nextAction.includes('成片已经')) return '检查剪辑并导出成片';
+  if (nextAction) return nextAction;
+  if (preview?.video_count) return '检查镜头视频，继续剪辑与审片';
+  if (preview?.available_images) return '确认画面，继续生成镜头视频';
+  return '完善故事与剧本，确定第一个镜头';
+}
+
+function projectUpdatedLabel(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return `${date.getMonth() + 1}月${date.getDate()}日更新`;
+}
+
 export default function ProjectsHome() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<ProjectListItem[]>([]);
@@ -186,6 +215,14 @@ export default function ProjectsHome() {
     if (Boolean(a.pinned) !== Boolean(b.pinned)) return a.pinned ? -1 : 1;
     return String(b.updated_at || '').localeCompare(String(a.updated_at || ''));
   }), [projects]);
+
+  const projectSummary = useMemo(() => {
+    const previews = projects.map(resolveStoryPreview);
+    return {
+      withImages: previews.filter(preview => (preview?.available_images || 0) > 0).length,
+      withFinalVideo: previews.filter(preview => preview?.has_final_video).length,
+    };
+  }, [projects]);
 
   const openCreate = () => {
     setCreateStep(0);
@@ -256,22 +293,21 @@ export default function ProjectsHome() {
     <main className="story-page projects-home">
       <section className="story-home-hero">
         <div>
-          <Text className="story-eyebrow">故事库</Text>
+          <Text className="story-eyebrow">创作工作室</Text>
           <Title level={2}>我的项目</Title>
           <Paragraph>
-            先看懂故事，再处理制作。打开项目后只会先展示一句话剧情和已经生成的画面；
-            提示词、卡片和流程状态都收在“进入制作”里。
+            从一个好故事，到一支完整短片。查看现有素材，接着上一次的进度继续制作。
           </Paragraph>
         </div>
         <Button type="primary" size="large" icon={<PlusOutlined />} onClick={openCreate}>
-          新建故事
+          新建作品
         </Button>
       </section>
 
       {loading ? (
         <div className="story-centered-state" role="status" aria-live="polite">
           <Spin size="large" />
-          <Text type="secondary">正在整理你的故事…</Text>
+          <Text type="secondary">正在读取作品和制作进度…</Text>
         </div>
       ) : loadError ? (
         <Alert
@@ -287,22 +323,26 @@ export default function ProjectsHome() {
             image={<img src="/empty-create.svg" alt="" width={170} />}
             description={(
               <Space direction="vertical" size={4}>
-                <Text strong>还没有故事项目</Text>
-                <Text type="secondary">先写一句话故事，之后再逐步生成角色和剧情画面。</Text>
+                <Text strong>开始你的第一部作品</Text>
+                <Text type="secondary">先写清一个人物、一件难事和一次改变，再把它拍成短片。</Text>
               </Space>
             )}
           >
-            <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新建第一个故事</Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>创建第一部短片</Button>
           </Empty>
         </Card>
       ) : (
         <>
+          <section className="story-project-summary" aria-label="作品概况">
+            <div><strong>{orderedProjects.length}</strong><span>全部作品</span></div>
+            <div><strong>{projectSummary.withImages}</strong><span>已有画面</span></div>
+            <div><strong>{projectSummary.withFinalVideo}</strong><span>已有成片</span></div>
+          </section>
           <div className="story-section-heading">
             <div>
-              <Title level={4}>选择一个故事</Title>
-              <Text type="secondary">卡片只显示能帮助你理解故事的信息。</Text>
+              <Title level={4}>继续你的作品</Title>
+              <Text type="secondary">重点项目优先，其余按最近更新排序。</Text>
             </div>
-            <Text type="secondary">{orderedProjects.length} 个项目</Text>
           </div>
           <Row gutter={[18, 18]}>
             {orderedProjects.map(project => {
@@ -310,9 +350,16 @@ export default function ProjectsHome() {
               const preview = resolveStoryPreview(project);
               const previewKnown = Boolean(preview);
               const available = preview?.available_images || 0;
-              const expected = preview?.expected_images || 0;
               const missing = preview?.missing_images || 0;
               const videos = preview?.video_count || 0;
+              const hasFinalVideo = Boolean(preview?.has_final_video);
+              const episodeCount = Number(project.episode_count ?? project.settings?.episode_count);
+              const typeLabel = episodeCount === 1 && project.source_type !== 'gc' ? '单集短片' : type.label;
+              const statusLabel = hasFinalVideo ? '已有成片'
+                : videos > 0 ? '视频制作中'
+                  : available > 0 ? '画面制作中'
+                    : project.stats?.readiness?.spec_ready ? '分镜准备中' : '故事准备中';
+              const nextStep = projectNextStep(project, preview);
               return (
                 <Col key={project.project_id} xs={24} md={12} xl={8}>
                   <Card className="story-project-card" styles={{ body: { padding: 0 } }}>
@@ -320,14 +367,20 @@ export default function ProjectsHome() {
                       images={preview?.preview_images || []}
                       available={available}
                       known={previewKnown}
+                      title={friendlyProjectName(project.name)}
                     />
                     <div className="story-project-card__body">
-                      <Space size={6} wrap>
-                        <Tag color={type.color}>{type.label}</Tag>
-                        {project.pinned && <Tag color="gold">重点项目</Tag>}
-                      </Space>
+                      <div className="story-project-card__tags">
+                        <Space size={6} wrap>
+                          <Tag className="story-project-kind">{typeLabel}</Tag>
+                          {project.pinned && <Tag color="gold">重点项目</Tag>}
+                        </Space>
+                        <span className={`story-project-state${hasFinalVideo ? ' is-finished' : ''}`}>
+                          {hasFinalVideo ? <CheckCircleOutlined /> : <ClockCircleOutlined />} {statusLabel}
+                        </span>
+                      </div>
                       <Title level={4}>{friendlyProjectName(project.name)}</Title>
-                      <Paragraph ellipsis={{ rows: 3 }}>
+                      <Paragraph ellipsis={{ rows: 2 }}>
                         {extractOneLineStory(project) || '还没有一句话故事。'}
                       </Paragraph>
                       <div className="story-project-signals">
@@ -338,25 +391,32 @@ export default function ProjectsHome() {
                             : previewKnown ? '暂无剧情画面' : '打开查看剧情画面'}
                         </span>
                         {missing > 0 && <span>{missing} 张未生成</span>}
-                        {expected > 0 && videos > 0 && (
+                        {videos > 0 && (
                           <span><VideoCameraOutlined /> {videos} 段视频</span>
                         )}
+                      </div>
+                      <div className="story-project-next">
+                        <span>下一步</span>
+                        <strong>{nextStep}</strong>
                       </div>
                       <div className="story-project-card__actions">
                         <Button
                           type="primary"
-                          icon={<EyeOutlined />}
-                          onClick={() => navigate(`/production/${project.project_id}`)}
+                          icon={<PlayCircleOutlined />}
+                          onClick={() => navigate(hasFinalVideo
+                            ? `/studio?project=${encodeURIComponent(project.project_id)}`
+                            : `/production/${project.project_id}/pipeline`)}
                         >
-                          看故事
+                          {hasFinalVideo ? '查看成片' : '继续制作'}
                         </Button>
                         <Button
                           type="text"
-                          icon={<PlayCircleOutlined />}
-                          onClick={() => navigate(`/production/${project.project_id}/pipeline`)}
+                          icon={<EyeOutlined />}
+                          onClick={() => navigate(`/production/${project.project_id}`)}
                         >
-                          进入制作
+                          故事与画面
                         </Button>
+                        <span className="story-project-updated">{projectUpdatedLabel(project.updated_at)}</span>
                       </div>
                     </div>
                   </Card>
@@ -368,7 +428,7 @@ export default function ProjectsHome() {
       )}
 
       <Modal
-        title="新建故事"
+        title="新建作品"
         open={createOpen}
         onCancel={() => setCreateOpen(false)}
         width={640}
@@ -378,7 +438,7 @@ export default function ProjectsHome() {
           <Button key="next" type="primary" onClick={nextCreateStep}>下一步：制作计划</Button>,
         ] : [
           <Button key="back" onClick={() => setCreateStep(0)}>上一步</Button>,
-          <Button key="create" type="primary" loading={creating} onClick={createProject}>创建故事</Button>,
+          <Button key="create" type="primary" loading={creating} onClick={createProject}>创建作品</Button>,
         ]}
       >
         <Steps
@@ -389,20 +449,23 @@ export default function ProjectsHome() {
         />
         {createStep === 0 ? (
           <div className="story-form-grid">
-            <Alert
-              type="info"
-              showIcon
-              icon={<BulbOutlined />}
-              message="想先看看完整填写方式？"
-              description="“失忆剑客”是可编辑的30秒创作模板，不是项目库里已经存在的剧本。只有点击创建后才会成为你的项目。"
-              action={(
-                <Button type="dashed" onClick={applyMemorySwordsmanStarter}>
-                  套用失忆剑客模板
-                </Button>
-              )}
-            />
+            <details className="story-template-helper">
+              <summary>用示例了解故事怎么填写</summary>
+              <Alert
+                type="info"
+                showIcon
+                icon={<BulbOutlined />}
+                message="想先看看完整填写方式？"
+                description="“失忆剑客”是可编辑的30秒创作模板。套用会替换当前表单，点击创建后才会成为项目。"
+                action={(
+                  <Button type="dashed" onClick={applyMemorySwordsmanStarter}>
+                    套用失忆剑客模板
+                  </Button>
+                )}
+              />
+            </details>
             <label>
-              <Text strong>项目形式</Text>
+              <Text strong>故事来源</Text>
               <Select
                 value={form.sourceType}
                 onChange={sourceType => setForm(current => ({
@@ -411,11 +474,11 @@ export default function ProjectsHome() {
                   ...(sourceType === 'gc' ? { episodeCount: 1, episodeDurationSeconds: 30 } : {}),
                 }))}
                 options={[
-                  { value: 'outline', label: '连续剧集' },
+                  { value: 'outline', label: '故事大纲（单集或系列）' },
                   { value: 'gc', label: '概念预告片（约 30 秒看故事与画风）' },
                   { value: 'novel', label: '小说改编剧集' },
                   { value: 'script', label: '已有剧本项目' },
-                  { value: 'idea', label: '故事创意' },
+                  { value: 'idea', label: '原创故事创意' },
                 ]}
               />
             </label>
@@ -424,7 +487,7 @@ export default function ProjectsHome() {
               <Input
                 value={form.name}
                 onChange={event => setForm(current => ({ ...current, name: event.target.value }))}
-                placeholder="例如：铁心恋人 · 第一季"
+                placeholder="给这部作品起一个名字"
               />
             </label>
             <label>
@@ -433,7 +496,7 @@ export default function ProjectsHome() {
               <TextArea
                 value={form.description}
                 onChange={event => setForm(current => ({ ...current, description: event.target.value }))}
-                placeholder="例如：不需要任何人保护的女保镖，意外唤醒了一个只听她命令的军用仿生人。"
+                placeholder="谁想做成什么事，遇到了什么阻碍，最后做出了什么选择？"
                 rows={3}
               />
             </label>
@@ -451,6 +514,11 @@ export default function ProjectsHome() {
           <div className="story-form-grid story-form-grid--two">
             {form.sourceType !== 'gc' && (
               <>
+                <div className="story-plan-presets">
+                  <span>快速设置</span>
+                  <Button size="small" onClick={() => setForm(current => ({ ...current, episodeCount: 1, episodeDurationSeconds: 180 }))}>3 分钟单集短片</Button>
+                  <Button size="small" onClick={() => setForm(current => ({ ...current, episodeCount: 12, episodeDurationSeconds: 90 }))}>12 集短剧</Button>
+                </div>
                 <label>
                   <Text strong>计划集数</Text>
                   <InputNumber
@@ -467,7 +535,7 @@ export default function ProjectsHome() {
                     min={5}
                     max={3600}
                     value={form.episodeDurationSeconds}
-                    onChange={value => setForm(current => ({ ...current, episodeDurationSeconds: value || 90 }))}
+                    onChange={value => setForm(current => ({ ...current, episodeDurationSeconds: value || 180 }))}
                     style={{ width: '100%' }}
                   />
                 </label>
@@ -512,7 +580,7 @@ export default function ProjectsHome() {
               <Input
                 value={form.visualStyle}
                 onChange={event => setForm(current => ({ ...current, visualStyle: event.target.value }))}
-                placeholder="例如：干净二维东方幻想动画"
+                placeholder="例如：自然光、真实生活质感、克制的电影镜头"
               />
             </label>
           </div>

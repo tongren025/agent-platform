@@ -11,8 +11,8 @@
 - 开关:USER_API_AUTH=false 整体关闭(应急逃生口),默认开。
 
 token 复用 admin/auth.py 的 HMAC 签发(user_auth.py 登录时颁发,同一密钥)。
-注意:ADMIN_SECRET 未配置时每次重启随机生成——app 与 admin 两个进程的
-token 互不通用,且重启即全体失效;生产务必在 .env 固定 ADMIN_SECRET。
+开发环境未配置 ADMIN_SECRET 时使用固定开发密钥，两端可以校验同一凭证；
+生产环境必须显式配置足够强的 ADMIN_SECRET，否则启动失败。权限仍按实时账号校验。
 """
 from __future__ import annotations
 
