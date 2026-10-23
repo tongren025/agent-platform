@@ -3,32 +3,60 @@ FastAPI application entry point.
 
 Port of C# Program.cs — Agent Service.
 """
+
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
+import asyncio
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-
-from app.config import BASE_DIR, settings
-from app.core.settings import settings as core_settings
-from app.core.logging import configure_logging, get_logger
-from app.core.middleware import RequestContextMiddleware
-from app.core.errors import register_exception_handlers
-from app.core.observability import setup_metrics
-from app.core.rate_limit import limiter, rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from app.api import admin_proxy, agent, ai_providers, canvas, director, evolution, knowledge_graph, memory_api, pipeline, production, quick_prompts, registry, runs, scrape, sessions, skills, strategy_proxy, system_manager, tasks, trend_sources, user_auth, workflow
 
 import app.tools.builtin  # noqa: F401
-import app.tools.delegate  # noqa: F401
 import app.tools.deep  # noqa: F401
+import app.tools.delegate  # noqa: F401
 import app.tools.media  # noqa: F401
 import app.tools.strategy.handlers  # noqa: F401
+from app.api import (
+    admin_proxy,
+    agent,
+    ai_providers,
+    canvas,
+    director,
+    evolution,
+    foundation,
+    knowledge_graph,
+    memory_api,
+    pipeline,
+    production,
+    quick_prompts,
+    registry,
+    runs,
+    scrape,
+    sessions,
+    shanhaijing,
+    skills,
+    story_acceptance,
+    strategy_proxy,
+    system_manager,
+    tasks,
+    timeline_exports,
+    trend_sources,
+    user_auth,
+    workflow,
+)
+from app.config import BASE_DIR, settings
+from app.core.errors import register_exception_handlers
+from app.core.llm_observability import shutdown_langfuse
+from app.core.logging import configure_logging, get_logger
+from app.core.middleware import RequestContextMiddleware
+from app.core.observability import setup_metrics
+from app.core.rate_limit import limiter, rate_limit_exceeded_handler
+from app.core.settings import settings as core_settings
 
 configure_logging()
 logger = get_logger(__name__)
@@ -78,8 +106,10 @@ def _migrate_teams_and_seed() -> None:
 
     try:
         from app.core.settings import settings as core_settings
+
         if core_settings.seed_demo_workflows:
             from app.services.seed_workflows import seed_comic_drama
+
             seed_comic_drama()
     except Exception:
         logger.warning("种子工作流注入失败", exc_info=True)
@@ -93,16 +123,24 @@ async def lifespan(app: FastAPI):
     try:
         from app.services.builtin_registry_migration import (
             migrate_builtin_comic_registry,
+            migrate_builtin_live_action_registry,
         )
 
         migrate_builtin_comic_registry()
+        migrate_builtin_live_action_registry()
     except Exception:
         # 兜底保护启动；迁移器内部已经逐条隔离，这里只处理导入或框架级异常。
-        logger.warning("内置漫剧配置版本迁移失败", exc_info=True)
+        logger.warning("内置制作团队配置版本迁移失败", exc_info=True)
     from app.dependencies import daily_scheduler
+
     daily_scheduler.start()
-    yield
-    await daily_scheduler.stop()
+    try:
+        yield
+    finally:
+        try:
+            await daily_scheduler.stop()
+        finally:
+            await asyncio.to_thread(shutdown_langfuse)
 
 
 # ── App ─────────────────────────────────────────────────────────────
@@ -113,6 +151,7 @@ app = FastAPI(title="Agent Service", version="v1", lifespan=lifespan)
 # add_middleware 后添加者在外层,故按内→外的相反顺序书写。
 if core_settings.user_api_auth:
     from app.core.auth import UserAuthMiddleware
+
     app.add_middleware(UserAuthMiddleware)
 app.add_middleware(RequestContextMiddleware)
 app.add_middleware(
@@ -134,6 +173,7 @@ def healthcheck():
     """存活探针——供负载均衡 / docker-compose healthcheck 使用，不做依赖检查。"""
     return "ok"
 
+
 app.include_router(user_auth.router)
 app.include_router(admin_proxy.router)
 app.include_router(registry.router)
@@ -150,11 +190,15 @@ app.include_router(production.router)
 app.include_router(director.router)
 app.include_router(quick_prompts.router)
 app.include_router(canvas.router)
+app.include_router(timeline_exports.router)
+app.include_router(story_acceptance.router)
 app.include_router(skills.router)
 app.include_router(knowledge_graph.router)
 app.include_router(evolution.router)
 app.include_router(trend_sources.router)
 app.include_router(tasks.router)
+app.include_router(foundation.router)
+app.include_router(shanhaijing.router)
 app.include_router(system_manager.router)
 
 
@@ -193,6 +237,7 @@ if wwwroot.exists():
         if index_file.exists():
             return FileResponse(index_file, headers=_INDEX_NO_CACHE)
         from fastapi.responses import JSONResponse
+
         return JSONResponse(status_code=404, content={"message": "Not Found"})
 
 

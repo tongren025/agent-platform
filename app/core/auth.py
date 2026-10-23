@@ -14,6 +14,7 @@ token 复用 admin/auth.py 的 HMAC 签发(user_auth.py 登录时颁发,同一�
 开发环境未配置 ADMIN_SECRET 时使用固定开发密钥，两端可以校验同一凭证；
 生产环境必须显式配置足够强的 ADMIN_SECRET，否则启动失败。权限仍按实时账号校验。
 """
+
 from __future__ import annotations
 
 from fastapi import HTTPException
@@ -29,10 +30,15 @@ _AUTH_EXEMPT_PREFIXES = ("/api/v1/agentapp/auth/", "/api/admin/")
 # 素材若挂在鉴权路由下必然 401、图片永远渲染不出来。故对媒体路由的 GET/HEAD 放行,
 # 与 app.main 里已有的 /uploads 免鉴权 StaticFiles 挂载保持一致。
 # 写操作(上传)仍需 production:manage;serve_resource 自带路径穿越防护。
-_READ_EXEMPT_PREFIXES = ("/api/v1/agentapp/production/resource/",)
+_READ_EXEMPT_PREFIXES = (
+    "/api/v1/agentapp/production/resource/",
+    "/api/v1/agentapp/shanhaijing/image-proxy",
+)
 
 # 写操作的前缀 → 所需权限。顺序即匹配顺序:更长/更具体的前缀放前面。
 _WRITE_PERMS: list[tuple[str, str]] = [
+    ("/api/v1/foundation/knowledge", "employee:manage"),
+    ("/api/v1/foundation/graph", "employee:manage"),
     ("/api/v1/agentapp/system-manager/actions", "tool:manage"),
     ("/api/v1/agentapp/system-manager/changes", "tool:manage"),
     ("/api/v1/agentapp/system-manager/skills", "tool:manage"),
@@ -46,6 +52,7 @@ _WRITE_PERMS: list[tuple[str, str]] = [
     ("/api/v1/agentapp/director", "production:manage"),
     ("/api/v1/agentapp/production", "production:manage"),
     ("/api/v1/agentapp/canvas", "production:manage"),
+    ("/api/v1/agentapp/shanhaijing", "production:manage"),
     ("/api/v1/pipeline", "production:manage"),
     ("/api/v1/agentapp/memory", "employee:manage"),
     ("/api/v1/agentapp/scrape", "employee:manage"),
@@ -61,7 +68,9 @@ _READ_METHODS = {"GET", "HEAD"}
 
 def _envelope(status: int, message: str) -> JSONResponse:
     """构造与 app.api.common.ok() 一致的 {code, message, data} 错误信封响应。"""
-    return JSONResponse(status_code=status, content={"code": status, "message": message, "data": None})
+    return JSONResponse(
+        status_code=status, content={"code": status, "message": message, "data": None}
+    )
 
 
 def _required_write_perm(path: str) -> str:
@@ -91,7 +100,7 @@ class UserAuthMiddleware(BaseHTTPMiddleware):
         if not auth_header.startswith("Bearer "):
             return _envelope(401, "未登录或缺少凭证")
         try:
-            claims = parse_token(auth_header[len("Bearer "):].strip())
+            claims = parse_token(auth_header[len("Bearer ") :].strip())
         except HTTPException as exc:
             return _envelope(exc.status_code, str(exc.detail))
 

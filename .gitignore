@@ -16,3 +16,12 @@ data/system-manager/proposals/
 .codegraph/
 
 # 其余运行数据、备份、日志、构建产物、依赖与缓存均同步到私有远程仓库。
+
+# 公共底座运行时知识与图谱数据
+data/foundation/
+
+# Langfuse 本机运行版本备份与定向构建上下文，不进入版本库或镜像。
+.langfuse-local/
+
+# 本地临时测试缓存与锁死目录
+.tmp/pytest-tiexin-*/

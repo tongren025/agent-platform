@@ -1,0 +1,462 @@
+[
+  {
+    "id": "jiuweihu",
+    "name": "九尾狐",
+    "pinyin": "jiǔ wěi hú",
+    "title": "青丘祥瑞 · 灵狐仙影",
+    "category": "瑞兽",
+    "mountain": "《南山经》· 青丘之山",
+    "classic_quote": "又东三百里，曰青丘之山，其阳多玉，其阴多青䨼。有兽焉，其状如狐而九尾，其音如婴儿，能食人，食者不蛊。",
+    "modern_desc": "青丘之山的祥瑞神兽，身具九尾，啼鸣如赤子初诞。其肉能御百毒妖邪，上古视其为多子昌盛与王道太平之天命祥兆。",
+    "ability": "辟邪防蛊、灵慧幻化、通晓人言",
+    "images": [
+      {
+        "id": "img_jwh_1",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/05/NineTailsFox.JPG",
+        "title": "古籍《山海经》刻本·青丘九尾狐图",
+        "source": "Wikimedia Commons / 传世刻本",
+        "is_cover": true
+      },
+      {
+        "id": "img_jwh_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Hokusai_Sangoku_Yoko-den.jpg/500px-Hokusai_Sangoku_Yoko-den.jpg",
+        "title": "葛饰北斋《三国妖狐传》·九尾金毛仙狐画卷",
+        "source": "大都会艺术博物馆藏品",
+        "is_cover": false
+      },
+      {
+        "id": "img_jwh_3",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Prince_Hanzoku_terrorised_by_a_nine-_tailed_fox.jpg/800px-Prince_Hanzoku_terrorised_by_a_nine-_tailed_fox.jpg",
+        "title": "九尾神狐降凡显圣图卷",
+        "source": "典籍版画辑录",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "青丘",
+      "祥瑞",
+      "九尾",
+      "食者不蛊",
+      "天狐仙灵"
+    ],
+    "created_at": "2026-10-23T02:30:06.848535+00:00",
+    "updated_at": "2026-10-23T02:30:06.848535+00:00"
+  },
+  {
+    "id": "zhulong",
+    "name": "烛龙",
+    "pinyin": "zhú lóng",
+    "title": "钟山之神 · 创世烛阴",
+    "category": "创世神祇",
+    "mountain": "《海外北经》· 钟山",
+    "classic_quote": "钟山之神，名曰烛阴，视为昼，瞑为夜，吹为冬，呼为夏，不饮，不食，不息，息为风。身长千里。人面，蛇身，赤色，居钟山下。",
+    "modern_desc": "极北钟山的盘古化身级尊神。人面蛇躯，身长万里赤红如烈火。开眸天地破晓为白昼，闭目寰宇沉沦为黑夜，吐气成夏，吸气凝冬。",
+    "ability": "执掌昼夜更迭、司掌寒暑节候、吐纳乾坤狂风",
+    "images": [
+      {
+        "id": "img_zl_1",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Shan_hai_jing_Zhuyin.jpg/500px-Shan_hai_jing_Zhuyin.jpg",
+        "title": "明清《山海经》版画·钟山烛阴神图",
+        "source": "明代《山海经图》",
+        "is_cover": true
+      },
+      {
+        "id": "img_zl_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/SekienShokuin.jpg/500px-SekienShokuin.jpg",
+        "title": "鸟山石燕《画图百鬼夜行》·烛阴法相",
+        "source": "古典绘本图鉴",
+        "is_cover": false
+      },
+      {
+        "id": "img_zl_3",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic45_-_%E7%87%AD%E9%99%B0%E7%A5%9E%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic45_-_%E7%87%AD%E9%99%B0%E7%A5%9E%E5%9C%96.png",
+        "title": "《古今图书集成》神异典·烛阴神像全图",
+        "source": "故宫文渊阁藏本",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "钟山之神",
+      "烛阴",
+      "千里赤龙",
+      "昼夜主宰",
+      "人面蛇身"
+    ],
+    "created_at": "2026-10-23T02:30:06.848535+00:00",
+    "updated_at": "2026-10-23T02:30:06.848535+00:00"
+  },
+  {
+    "id": "xingtian",
+    "name": "刑天",
+    "pinyin": "xíng tiān",
+    "title": "常羊战尊 · 猛志常在",
+    "category": "远古战神",
+    "mountain": "《海外西经》· 常羊之山",
+    "classic_quote": "刑天与帝至此争神，帝断其首，葬之於常羊之山，乃以乳为目，以脐为口，操干戚以舞。",
+    "modern_desc": "炎帝麾下至烈战神，与天帝逐鹿于常羊之野。虽身首分离，犹以双乳化为烈日神目，以肚脐化作雷霆怒口，执巨斧重盾舞动战意。",
+    "ability": "不灭战魂、干戚碎天、断首战神、怒目撼神",
+    "images": [
+      {
+        "id": "img_xt_1",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Xingtian.jpg",
+        "title": "古籍《山海经》刻本·刑天断首舞干戚",
+        "source": "清代刻本珍藏",
+        "is_cover": true
+      },
+      {
+        "id": "img_xt_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic18_-_%E5%BD%A2%E5%A4%A9%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic18_-_%E5%BD%A2%E5%A4%A9%E5%9C%96.png",
+        "title": "《古今图书集成》神异典·形天战神真容",
+        "source": "武英殿聚珍版",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "常羊山",
+      "以乳为目",
+      "以脐为口",
+      "操干戚以舞",
+      "不屈战魂"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "taotie",
+    "name": "饕餮",
+    "pinyin": "tāo tiè",
+    "title": "钩吾凶神 · 吞天狍鸮",
+    "category": "上古四凶",
+    "mountain": "《北山经》· 钩吾之山",
+    "classic_quote": "钩吾之山，其上多玉，其下多铜。有兽焉，其状如羊身人面，其目在腋下，虎齿人爪，其音如婴儿，名曰狍鸮，是食人。",
+    "modern_desc": "山海经本名狍鸮，四凶之一。羊躯人面，目藏双腋之下，虎齿钢爪。贪暴嗜食，能吞天地万物。商周青铜鼎彝常刻其威严神纹用以镇煞。",
+    "ability": "吞噬万物、摄魂威慑、青铜镇邪、凶威滔天",
+    "images": [
+      {
+        "id": "img_tt_1",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Liu_Ding_part.jpg/600px-Liu_Ding_part.jpg",
+        "title": "商周青铜重器·神秘饕餮神面原纹",
+        "source": "中国国家博物馆",
+        "is_cover": true
+      },
+      {
+        "id": "img_tt_2",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Han_Bronze_Door_Knocker_Taotie_Face.jpg",
+        "title": "汉代青铜饕餮衔环铺首像",
+        "source": "故宫博物院藏品",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "上古四凶",
+      "钩吾山",
+      "目在腋下",
+      "羊身人面",
+      "吞噬万象"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "baize",
+    "name": "白泽",
+    "pinyin": "bái zé",
+    "title": "昆仑德兽 · 万象通晓",
+    "category": "瑞兽",
+    "mountain": "《海内经》轶传 / 《白泽精怪图》",
+    "classic_quote": "东望山有兽，名曰白泽，能言语，达万物之情，通万物之貌。黄帝巡狩至海滨，白泽出，帝令图写之以示天下。",
+    "modern_desc": "至圣祥瑞神兽，生有重瞳异角，通晓世间万国人言。洞悉天下精怪一万一千五百二十种之名讳形貌与克制之道，黄帝尊其为天相圣兽。",
+    "ability": "洞悉万物名貌、禳灾辟易百鬼、通人言晓阴阳、趋吉避凶",
+    "images": [
+      {
+        "id": "img_bz_1",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Gusukuma_Portrait_of_the_Sacred_Beast_Baize.jpg/600px-Gusukuma_Portrait_of_the_Sacred_Beast_Baize.jpg",
+        "title": "宫廷秘藏传世绢本·《白泽之图》真迹",
+        "source": "古琉球王府藏画",
+        "is_cover": true
+      },
+      {
+        "id": "img_bz_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/SekienHakutaku.jpg/400px-SekienHakutaku.jpg",
+        "title": "鸟山石燕经典笔录《白泽神兽像》",
+        "source": "古典珍本绘本",
+        "is_cover": false
+      },
+      {
+        "id": "img_bz_3",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Pelliot_chinois_2682.jpg/600px-Pelliot_chinois_2682.jpg",
+        "title": "法国国家图书馆藏敦煌遗书 P.2682《白泽精怪图》唐写本",
+        "source": "敦煌藏经洞手卷",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "昆仑圣兽",
+      "白泽图",
+      "万象皆知",
+      "辟邪禳灾",
+      "百鬼克星"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "qiongqi",
+    "name": "穷奇",
+    "pinyin": "qióng qí",
+    "title": "邽山凶虎 · 飞翼煞星",
+    "category": "上古四凶",
+    "mountain": "《西山经》· 邽山 / 《海内北经》",
+    "classic_quote": "邽山，其上有兽焉，其状如虎，猬毛，名曰穷奇，音如嗥狗，是食人。穷奇状如虎，有翼，食人从首始，所食被发。",
+    "modern_desc": "西方邽山凶煞异兽，外形如同一只生有双翼的玄虎，毛发坚韧如钢针猬刺，叫声如恶犬长嗥。性喜惩善扬恶，为四凶中最为凌厉的空中捕猎者。",
+    "ability": "凌空扑袭、钢刺猬毛、摄杀煞气、凶威压世",
+    "images": [
+      {
+        "id": "img_qq_1",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Shan_Hai_Jing_Qiongji.jpg",
+        "title": "《山海经》刻本古图·飞天凶虎穷奇",
+        "source": "明代《山海经图》",
+        "is_cover": true
+      },
+      {
+        "id": "img_qq_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Imperial_Encyclopaedia_-_Animal_Kingdom_-_pic186_-_%E7%AA%AE%E5%A5%87%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Animal_Kingdom_-_pic186_-_%E7%AA%AE%E5%A5%87%E5%9C%96.png",
+        "title": "《古今图书集成》禽虫典·穷奇双翼灵兽图",
+        "source": "清代官修大典",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "上古四凶",
+      "邽山之兽",
+      "生翼玄虎",
+      "猬毛刚刺",
+      "食人从首"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "bifang",
+    "name": "毕方",
+    "pinyin": "bì fāng",
+    "title": "章莪火灵 · 独足神禽",
+    "category": "神禽异鸟",
+    "mountain": "《西山经》· 章莪之山",
+    "classic_quote": "章莪之山，有鸟焉，其状如鹤，一足，赤文青质而白喙，名曰毕方，其鸣自叫也，见则其邑有讹火。",
+    "modern_desc": "火神祝融的乘骑侍禽。形似青色神鹤却只生单足，青翠羽翼间密布朱砂烈火纹章，喙洁如雪。鸣声自呼其名“毕方——”，现世则引天降灵火。",
+    "ability": "御天火、聚炽焰、单足踏焰、木生火灵",
+    "images": [
+      {
+        "id": "img_bf_1",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Imperial_Encyclopaedia_-_Animal_Kingdom_-_pic113_-_%E7%95%A2%E6%96%B9%E5%9C%96.svg/600px-Imperial_Encyclopaedia_-_Animal_Kingdom_-_pic113_-_%E7%95%A2%E6%96%B9%E5%9C%96.svg.png",
+        "title": "《古今图书集成》禽虫典·毕方独足神鸟全图",
+        "source": "文渊阁藏本图录",
+        "is_cover": true
+      },
+      {
+        "id": "img_bf_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Wu-Renchen-Shanhai-jing-guangzhu-Bifang.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Bifang.jpg",
+        "title": "吴任臣《山海经广注》清初珍本·毕方图刻",
+        "source": "清康熙刻本",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "章莪山",
+      "独足青鹤",
+      "引天火",
+      "祝融侍禽",
+      "赤文青羽"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "yinglong",
+    "name": "应龙",
+    "pinyin": "yìng lóng",
+    "title": "创世真龙 · 双翼战祖",
+    "category": "创世神祇",
+    "mountain": "《大荒东经》· 凶犁土丘",
+    "classic_quote": "大荒东北隅有山，名曰凶犁土丘。应龙处南极，杀蚩尤与夸父，不得复上，故下数旱。旱而为应龙之状，乃得大雨。",
+    "modern_desc": "华夏神话中具翼之祖龙。助轩辕黄帝斩蚩尤平九黎，又助大禹开山治水，以龙尾画地成江河，引洪入沧海。翻云覆雨，神威无匹。",
+    "ability": "布云施雨、御雷破空、龙尾划江、战阵降魔",
+    "images": [
+      {
+        "id": "img_yl_1",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Shan_Hai_Jing_Yinglong.jpg/500px-Shan_Hai_Jing_Yinglong.jpg",
+        "title": "《山海经》典藏版画·应龙腾云展翅像",
+        "source": "古籍雕版原图",
+        "is_cover": true
+      },
+      {
+        "id": "img_yl_2",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/be/Wakan_Sansai_Zue_-_Oryu.jpg",
+        "title": "《和汉三才图会》卷之四十一·双翼应龙法相图",
+        "source": "传统百科全书绘本",
+        "is_cover": false
+      },
+      {
+        "id": "img_yl_3",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/%E5%BA%94%E9%BE%99.jpg/600px-%E5%BA%94%E9%BE%99.jpg",
+        "title": "历代帝陵石刻与典籍·应龙潜渊图",
+        "source": "传世碑刻典籍",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "凶犁土丘",
+      "生翼应龙",
+      "助禹治水",
+      "司掌风雨",
+      "战祖真龙"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "dijiang",
+    "name": "帝江",
+    "pinyin": "dì jiāng",
+    "title": "天山神明 · 浑敦仙乐",
+    "category": "异兽",
+    "mountain": "《西山经》· 天山",
+    "classic_quote": "有神焉，其状如黄囊，赤如丹火，六足四翼，浑敦无面目，是识歌舞，实惟帝江也。",
+    "modern_desc": "西方天山神圣，宛若一轮赤红丹火凝聚之球囊，生有六足与四副羽翼。虽无七窍面目，却极通灵犀，精通天地旋律，能踏空起舞。",
+    "ability": "浑沌大道、御空翔舞、天籁之音、造化初元",
+    "images": [
+      {
+        "id": "img_dj_1",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/%E8%A5%BF%E5%B1%B1%E7%B6%93-%E5%B8%9D%E6%B1%9F.svg/600px-%E8%A5%BF%E5%B1%B1%E7%B6%93-%E5%B8%9D%E6%B1%9F.svg.png",
+        "title": "《西山经》清代彩绘善本·神明帝江图",
+        "source": "典籍精绘插图",
+        "is_cover": true
+      },
+      {
+        "id": "img_dj_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic19_-_%E5%B8%9D%E6%B1%9F%E7%A5%9E%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic19_-_%E5%B8%9D%E6%B1%9F%E7%A5%9E%E5%9C%96.png",
+        "title": "《古今图书集成》神异典·帝江神尊原刻",
+        "source": "清康熙铜活字本",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "天山",
+      "六足四翼",
+      "浑敦无面目",
+      "通晓歌舞",
+      "丹火仙囊"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "jingwei",
+    "name": "精卫",
+    "pinyin": "jīng wèi",
+    "title": "发鸠义鸟 · 矢志填海",
+    "category": "神禽异鸟",
+    "mountain": "《北山经》· 发鸠之山",
+    "classic_quote": "发鸠之山，有鸟焉，其状如乌，文首，白喙，赤足，名曰精卫，其鸣自詨。是炎帝之少女，名曰女娃。女娃游于东海，溺而不返，故为精卫，常衔西山之木石，以堙于东海。",
+    "modern_desc": "炎帝稚女溺于东海，精魂化作神鸟。生有五彩花纹之额，洁白喙喙，赤红双爪。衔西山木石誓填汪洋，成为中华民族百折不挠的象征。",
+    "ability": "誓志不磨、衔石破浪、炎帝仙脉、万死不辞",
+    "images": [
+      {
+        "id": "img_jw_1",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/%E4%B8%89%E6%89%8D%E5%9C%96%E6%9C%83_13%E9%B8%9F%E5%85%BD_%E7%B2%BE%E5%8D%AB.svg/500px-%E4%B8%89%E6%89%8D%E5%9C%96%E6%9C%83_13%E9%B8%9F%E5%85%BD_%E7%B2%BE%E5%8D%AB.svg.png",
+        "title": "明代王圻《三才图会》鸟兽十三卷·精卫神鸟像",
+        "source": "明万历原刊本",
+        "is_cover": true
+      },
+      {
+        "id": "img_jw_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Tianjin_railway_station_ceiling_0857.jpg/800px-Tianjin_railway_station_ceiling_0857.jpg",
+        "title": "大型古典穹顶壁画·《精卫填海》悲壮史诗图",
+        "source": "艺术壁画摄影集",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "发鸠山",
+      "精卫填海",
+      "炎帝少女",
+      "文首白喙",
+      "坚毅不拔"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "kui",
+    "name": "夔牛",
+    "pinyin": "kuí niú",
+    "title": "流波雷兽 · 鼓震五百里",
+    "category": "异兽",
+    "mountain": "《大荒东经》· 流波之山",
+    "classic_quote": "东海中有流波山，入海七千里。其上有兽，状如牛，苍身而无角，一足，出入水则必风雨，其光如日月，其声如雷，其名曰夔。黄帝得之，以其皮为鼓，橛以雷兽之骨，声闻五百里，以威天下。",
+    "modern_desc": "东海流波仙山上的独足雷神座兽。苍青色无角如硕牛，入海则狂风骤雨齐至，二目闪耀如悬日月，吼声若惊雷炸裂。黄帝制其皮为神鼓以震退蚩尤。",
+    "ability": "召唤狂风暴雨、目若日月、声震五百里、雷霆天威",
+    "images": [
+      {
+        "id": "img_kui_1",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Wu-Renchen-Shanhai-jing-guangzhu-Kui.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Kui.jpg",
+        "title": "吴任臣《山海经广注》清刻本·流波山夔牛全图",
+        "source": "清康熙刻本",
+        "is_cover": true
+      },
+      {
+        "id": "img_kui_2",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Shan_Hai_Jing_Kui.jpg",
+        "title": "古刻《山海经图》·独足青身夔兽像",
+        "source": "传世木刻版画",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "流波山",
+      "一足雷兽",
+      "苍身无角",
+      "夔牛神鼓",
+      "声如雷霆"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  },
+  {
+    "id": "luwu",
+    "name": "开明兽 / 陆吾",
+    "pinyin": "kāi míng shòu / lù wú",
+    "title": "昆仑司都 · 天门九首天卫",
+    "category": "镇山神兽",
+    "mountain": "《海内西经》/《西山经》· 昆仑之丘",
+    "classic_quote": "昆仑南渊深三百仞。开明兽身大类虎而九首，皆人面，东向立昆仑上。神陆吾司之，其神状虎身而九尾，人面而虎爪，司天之九部及帝之囿时。",
+    "modern_desc": "昆仑帝之下都第一天卫。虎躯而长九颗人面首级，目空四海，威慑天界九门。又作陆吾天神，虎躯九尾人面，代天帝镇守天界苑圃九野。",
+    "ability": "九面观八荒、守御天门、虎威荡秽、镇守昆仑",
+    "images": [
+      {
+        "id": "img_lw_1",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Shan_Hai_Jing_Kaimeiju.jpg",
+        "title": "古版《山海经图》·昆仑九首开明兽",
+        "source": "明代古版木刻",
+        "is_cover": true
+      },
+      {
+        "id": "img_lw_2",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic17_-_%E9%99%B8%E5%90%BE%E7%A5%9E%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic17_-_%E9%99%B8%E5%90%BE%E7%A5%9E%E5%9C%96.png",
+        "title": "《古今图书集成》神异典·昆仑司都陆吾天神图",
+        "source": "故宫文渊阁藏典",
+        "is_cover": false
+      }
+    ],
+    "tags": [
+      "昆仑之丘",
+      "开明兽",
+      "陆吾神",
+      "九首人面",
+      "天门禁卫"
+    ],
+    "created_at": "2026-10-23T02:30:06.849165+00:00",
+    "updated_at": "2026-10-23T02:30:06.849165+00:00"
+  }
+]
