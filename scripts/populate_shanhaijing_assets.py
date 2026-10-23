@@ -1,0 +1,804 @@
+import json
+import hashlib
+from datetime import datetime, timezone
+from pathlib import Path
+
+# 24位核心山海经角色完整短剧资产库
+EPIC_CHARACTERS = [
+    {
+        "id": "zhulong",
+        "name": "烛龙",
+        "pinyin": "zhú lóng",
+        "title": "钟山之神 · 创世烛阴",
+        "category": "创世神祇",
+        "mountain": "《海外北经》· 钟山",
+        "classic_quote": "钟山之神，名曰烛阴，视为昼，瞑为夜，吹为冬，呼为夏，不饮，不食，不息，息为风。身长千里。人面，蛇身，赤色，居钟山下。",
+        "modern_desc": "极北钟山的创世尊神。人面蛇躯，身长万里赤红如烈火。开眸天地破晓为白昼，闭目寰宇沉沦为黑夜，吐气成夏，吸气凝冬。",
+        "ability": "执掌昼夜更迭、司掌寒暑节候、开目焚天、闭目永夜",
+        "mortal_identity": "【现代凡相】三甲医院急诊科夜班医生（林夜）。常年面对生死抢救，黑眼圈极深，沉默疲惫，受制于现实医疗伦理与生死无常。",
+        "divine_form": "【夜间真身】千丈赤红烛龙法相。人面蛇躯，盘绕万仞钟山绝壁，口衔太古火精。睁目赤霞照彻幽冥，闭目万古冰封永夜。",
+        "visual_prompt": "Masterpiece, cinematic concept art, Shan Hai Jing Torch Dragon (Zhu Long), colossal scale, human-faced crimson dragon body coiled around a colossal towering cliff, opening eyes to ignite the entire sky with blazing auroral dawn, mystical ancient totems engraved on dragon scales, clouds swirling beneath, a tiny modern human silhouette standing on the peak gazing up (scale contrast), volumetric Tyndall lighting, dark gold and crimson red palette, IMAX 70mm, 8k resolution, photorealistic epic fantasy, octane render.",
+        "tags": ["钟山之神", "烛阴", "千里赤龙", "昼夜主宰", "人面蛇身", "主角真身"],
+        "images": [
+            {
+                "id": "img_zl_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Shan_hai_jing_Zhuyin.jpg/500px-Shan_hai_jing_Zhuyin.jpg",
+                "title": "明清《山海经》版画·钟山烛阴神图",
+                "source": "明代《山海经图》",
+                "is_cover": True
+            },
+            {
+                "id": "img_zl_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/SekienShokuin.jpg/500px-SekienShokuin.jpg",
+                "title": "鸟山石燕《画图百鬼夜行》·烛阴法相",
+                "source": "古典绘本图鉴",
+                "is_cover": False
+            },
+            {
+                "id": "img_zl_3",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic45_-_%E7%87%AD%E9%99%B0%E7%A5%9E%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic45_-_%E7%87%AD%E9%99%B0%E7%A5%9E%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·烛阴神像全图",
+                "source": "故宫文渊阁藏本",
+                "is_cover": False
+            },
+            {
+                "id": "img_zl_4",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Dragon_scroll_detail.jpg/1200px-Dragon_scroll_detail.jpg",
+                "title": "宋代陈容《九龙图》·赤火盘云神龙真身卷",
+                "source": "波士顿美术馆藏品",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "jiuweihu",
+        "name": "九尾狐",
+        "pinyin": "jiǔ wěi hú",
+        "title": "青丘祥瑞 · 灵狐仙影",
+        "category": "瑞兽",
+        "mountain": "《南山经》· 青丘之山",
+        "classic_quote": "又东三百里，曰青丘之山，其阳多玉，其阴多青䨼。有兽焉，其状如狐而九尾，其音如婴儿，能食人，食者不蛊。",
+        "modern_desc": "青丘之山的祥瑞神兽，身具九尾，啼鸣如赤子初诞。其肉能御百毒妖邪，上古视其为多子昌盛与王道太平之天命祥兆。",
+        "ability": "辟邪防蛊、灵慧幻化、通晓人言、九尾乱空",
+        "mortal_identity": "【现代凡相】清冷古画古籍修复师（苏黎）。在博物馆地库常年独居，手指白皙纤细，受尽世故人情算计，内心极度封闭警惕。",
+        "divine_form": "【夜间真身】青丘天狐神主法相。白发金瞳，九条垂天雪色巨尾遮蔽血月，周身狐火流转，足踏之处繁花化为古青丘神国幻境。",
+        "visual_prompt": "Masterpiece, cinematic concept art, Shan Hai Jing Nine-Tailed Fox (Jiu Wei Hu) ancient celestial form, colossal ethereal nine white glowing tails sweeping across the entire night sky, partially obscuring the shattered blood moon, ancient floating Chinese temples, flowing silver spiritual energy, ink-wash and cyan-gold bioluminescence, intricate mythical jewelry, grand wide-angle perspective, dynamic composition, hyper-detailed, IMAX 70mm, 8k resolution, octane render.",
+        "tags": ["青丘", "祥瑞", "九尾", "食者不蛊", "天狐仙灵", "女主角"],
+        "images": [
+            {
+                "id": "img_jwh_1",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/0/05/NineTailsFox.JPG",
+                "title": "古籍《山海经》刻本·青丘九尾狐图",
+                "source": "Wikimedia Commons / 传世刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_jwh_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Hokusai_Sangoku_Yoko-den.jpg/500px-Hokusai_Sangoku_Yoko-den.jpg",
+                "title": "葛饰北斋《三国妖狐传》·九尾金毛仙狐画卷",
+                "source": "大都会艺术博物馆藏品",
+                "is_cover": False
+            },
+            {
+                "id": "img_jwh_3",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Prince_Hanzoku_terrorised_by_a_nine-_tailed_fox.jpg/800px-Prince_Hanzoku_terrorised_by_a_nine-_tailed_fox.jpg",
+                "title": "九尾神狐降凡显圣图卷",
+                "source": "典籍版画辑录",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "xingtian",
+        "name": "刑天",
+        "pinyin": "xíng tiān",
+        "title": "常羊战尊 · 猛志常在",
+        "category": "远古战神",
+        "mountain": "《海外西经》· 常羊之山",
+        "classic_quote": "刑天与帝至此争神，帝断其首，葬之於常羊之山，乃以乳为目，以脐为口，操干戚以舞。",
+        "modern_desc": "炎帝麾下至烈战神，与天帝逐鹿于常羊之野。虽身首分离，犹以双乳化为烈日神目，以肚脐化作雷霆怒口，执巨斧重盾舞动战意。",
+        "ability": "不灭战魂、干戚碎天、断首战神、怒目撼神",
+        "mortal_identity": "【现代凡相】地下八角笼伤痕累累的陪练拳手（雷烈）。为重病妹妹拼死挨打，在现实底层被欺凌剥削，却骨硬如铁永不服输。",
+        "divine_form": "【夜间真身】常羊山无头战神法相。身躯如岳峙渊渟，以乳为目喷吐神火，以脐为口咆哮九天，手执青铜巨斧与撼天战盾，一人独挡十万神魔。",
+        "visual_prompt": "Masterpiece, cinematic concept art, Xing Tian ancient Chinese headless war god from Shan Hai Jing, eyes on his chest blazing with fierce fire, mouth on his navel roaring, wielding a massive bronze battle-axe and divine shield, standing amid a thunderous ruined battlefield, lightning striking his muscular scarred torso, colossal scale, billowing dust and embers, epic dark fantasy, IMAX shot, unreal engine 5 render, hyper-detailed, 8k.",
+        "tags": ["常羊山", "舞干戚", "刑天", "断首战神", "猛志固常在"],
+        "images": [
+            {
+                "id": "img_xt_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Xingtian_1.jpg/500px-Xingtian_1.jpg",
+                "title": "清刻本《山海经广注》·刑天舞干戚原图",
+                "source": "清代藏版刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_xt_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic18_-_%E5%BD%A2%E5%A4%A9%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic18_-_%E5%BD%A2%E5%A4%A9%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·形天神图",
+                "source": "故宫文渊阁原版",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "taotie",
+        "name": "饕餮",
+        "pinyin": "tāo tiè",
+        "title": "贪食之煞 · 吞噬无厌",
+        "category": "上古四凶",
+        "mountain": "《北山经》· 钩吾之山",
+        "classic_quote": "钩吾之山，其上多玉，其下多铜。有兽焉，其状如羊身人面，其目在腋下，虎齿人爪，其音如婴儿，名曰狍鸮，是食人。",
+        "modern_desc": "上古四凶之一的狍鸮饕餮。羊身人面，双目深陷于腋下，长有利如巨刃之虎齿与人手利爪，啼叫宛如幼婴啼哭，极尽贪婪与吞噬万物之暴戾。",
+        "ability": "暴食吞天、化万物为虚无、噬魂夺魄、虚空归墟",
+        "mortal_identity": "【现代凡相】厌食与暴食交替的米其林黑珍珠主厨（顾饕）。味觉超凡通神，却因灵魂空虚永远无法被满足，冷酷苛刻。",
+        "divine_form": "【夜间真身】大荒虚空暴食巨凶法相。山岳般的羊躯覆满青铜蚀刻魔纹，腋下双瞳泛起黑洞引力，血盆巨口展开吞天噬地，群山如沙砾崩塌。",
+        "visual_prompt": "Cinematic concept art, Shan Hai Jing ancient four perils beast Tao Tie (Taotie), colossal eldritch monster, body of a sheep with a horrifying human-like face, glowing menacing eyes located beneath its massive armpits, tiger fangs, human hands with obsidian claws, unleashing an abyssal black-hole vortex from its maw devouring mountains and stormclouds, dark bronze and smoky obsidian color tones, eerie volumetric mist, terrifying epic scale, masterpiece, 8k.",
+        "tags": ["钩吾山", "上古四凶", "狍鸮", "目在腋下", "贪婪暴食"],
+        "images": [
+            {
+                "id": "img_tt_1",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Shan_Hai_Jing_Taotie.jpg",
+                "title": "古籍《山海经》刻本·狍鸮饕餮神图",
+                "source": "传世木刻集",
+                "is_cover": True
+            },
+            {
+                "id": "img_tt_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic39_-_%E9%A5%95%E9%A4%AE%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic39_-_%E9%A5%95%E9%A4%AE%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·四凶饕餮全图",
+                "source": "清康熙铜活字本",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "qiongqi",
+        "name": "穷奇",
+        "pinyin": "qióng qí",
+        "title": "恶煞飞翼 · 抑善扬恶",
+        "category": "上古四凶",
+        "mountain": "《西山经》· 邽山",
+        "classic_quote": "邽山，其上有兽焉，其状如牛，蝟毛，名曰穷奇，音如獋狗，是食人。西北有兽焉，状似虎，有翼，食人从首始，所食尽噉。",
+        "modern_desc": "上古四凶之二。状如猛虎背生巨翼，毛发硬挺如刺猬钢针。惩善扬恶，闻人有争则助凶残不讲理者，喜食善人之鼻与头颅。",
+        "ability": "逆乱阴阳、翼斩雷霆、煽动恶念、钢鬃破盾",
+        "mortal_identity": "【现代凡相】顶尖华尔街资本并购秃鹰律师（齐渊）。深谙人性的阴暗与利益博弈，冷血无情，专门猎杀老实本分的创业者。",
+        "divine_form": "【夜间真身】凶煞飞翼巨虎法相。赤黑钢鬃倒竖如戟，背展千尺恶魔骨翼，利爪下踩踏着破碎的苍生神殿，双瞳闪耀猩红狂乱雷电。",
+        "visual_prompt": "Cinematic dark fantasy art, Shan Hai Jing legendary beast Qiong Qi (Qiongqi), giant winged tiger with razor-sharp steel-like fur, massive bat-like demonic wings spreading across a crimson stormy sky, glowing blood-red feline eyes, fangs dripping with shadowy lightning, standing atop a shattered mountain peak, dark fantasy anime aesthetic, dramatic rim lighting, epic scale contrast, 8k, octane render.",
+        "tags": ["邽山", "四凶", "双翼猛虎", "抑善扬恶", "食人恶煞"],
+        "images": [
+            {
+                "id": "img_qq_1",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Shan_Hai_Jing_Qiongqi.jpg",
+                "title": "古版《山海经图》·邽山神兽穷奇原图",
+                "source": "明代刻本插图",
+                "is_cover": True
+            },
+            {
+                "id": "img_qq_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/SekienKyoki.jpg/500px-SekienKyoki.jpg",
+                "title": "鸟山石燕《今昔画图续百鬼》·穷奇神像",
+                "source": "典籍古版画",
+                "is_cover": False
+            },
+            {
+                "id": "img_qq_3",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic41_-_%E7%AA%AE%E5%A5%87%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic41_-_%E7%AA%AE%E5%A5%87%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·穷奇恶兽全图",
+                "source": "故宫文渊阁原版",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "jinwu",
+        "name": "金乌",
+        "pinyin": "jīn wū",
+        "title": "大日炎精 · 扶桑日御",
+        "category": "神禽异鸟",
+        "mountain": "《海外东经》· 汤谷扶桑",
+        "classic_quote": "下有汤谷。汤谷上有扶桑，十日所浴，在黑齿北。居水中，有大木，九日居下枝，一日居上枝。阳鸟，三足，金光照彻大荒。",
+        "modern_desc": "居于东海汤谷神木扶桑之上的大日化身。三足金乌，通体燃烧纯阳炽烈天火，每日轮值巡游苍穹，为大荒万灵赐予光明与生机。",
+        "ability": "大日真火、十日凌空、焚天化地、破除至暗",
+        "mortal_identity": "【现代凡相】托卡马克受控核聚变实验室核心科研员（陆阳）。长年承受辐射与光芒侵蚀，双眼近乎失明，性格狂热专注。",
+        "divine_form": "【夜间真身】三足大日金乌法相。巨禽羽翼若恒星耀斑，三足宛如纯金熔铸的神祇之矛，腾空而起化为焚尽九天阴煞的大荒烈日。",
+        "visual_prompt": "Epic cinematic still, Three-legged Golden Sun Bird (San Zu Jin Wu) from Chinese mythology Shan Hai Jing, colossal divine crow forged of blazing thermonuclear plasma and golden feathers, three powerful talons radiating solar flares, ascending from the cosmic Fusang tree, blinding divine halo, solar prominences swirling in the dark void, golden and incandescent white brilliance, IMAX 70mm, 8k resolution, cosmic fantasy masterpiece.",
+        "tags": ["汤谷", "扶桑", "三足金乌", "大日真火", "太阳神鸟"],
+        "images": [
+            {
+                "id": "img_jw_sun_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Golden_Sun_Bird_Chengdu.jpg/600px-Golden_Sun_Bird_Chengdu.jpg",
+                "title": "古蜀金沙遗址·太阳神鸟金箔天象国宝",
+                "source": "成都金沙遗址博物馆",
+                "is_cover": True
+            },
+            {
+                "id": "img_jw_sun_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Wu-Renchen-Shanhai-jing-guangzhu-Sanri.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Sanri.jpg",
+                "title": "《山海经广注》刻本·汤谷十日扶桑三足乌图",
+                "source": "清康熙刻本",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "baize",
+        "name": "白泽",
+        "pinyin": "bái zé",
+        "title": "昆仑通灵 · 万物通达",
+        "category": "瑞兽",
+        "mountain": "《大荒西经》· 东海流波",
+        "classic_quote": "东海有兽曰白泽，能言语，达知万物之情，通晓天下鬼神情貌。黄帝巡狩至海滨，白泽出，令作图以示天下，以辟百邪。",
+        "modern_desc": "通晓三界万灵情貌的圣德瑞兽。头生双角，能口吐人言，知晓天下千百一千五百二十种鬼怪邪祟之形貌与破法。黄帝得其绘《白泽精怪图》。",
+        "ability": "通达万物、洞悉真名、克制万邪、预测天机",
+        "mortal_identity": "【现代凡相】省公安厅特约微表情与犯罪心理画像大师（白明）。洞察世间一切虚妄，却被无尽的心灵污秽折磨得夜夜失眠。",
+        "divine_form": "【夜间真身】昆仑通灵圣兽白泽真身。羊身狮首生有数只天眼，通体如羊脂白玉，周身环绕太古真名符箓与金光圣卷，言出法随斥退万鬼。",
+        "visual_prompt": "Masterpiece, ethereal concept art, mythical beast Bai Ze (Hakutaku) from Shan Hai Jing, magnificent celestial creature with snowy silk fur, multiple golden horns, glowing divine eyes across its body perceiving all spirits of heaven and earth, surrounded by floating ancient Chinese scrolls and glowing golden talismans, tranquil sacred mountain realm with floating lotus petals, soft heavenly lighting, studio ghibli meets Makoto Shinkai epic scale, 8k.",
+        "tags": ["东海", "白泽精怪图", "通晓天下", "避邪瑞兽", "智圣化身"],
+        "images": [
+            {
+                "id": "img_bz_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/Hakutaku.jpg/500px-Hakutaku.jpg",
+                "title": "鸟山石燕《画图百鬼夜行》·白泽通灵圣兽图",
+                "source": "古典绘本图鉴",
+                "is_cover": True
+            },
+            {
+                "id": "img_bz_2",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Baize_banner.jpg",
+                "title": "敦煌莫高窟藏经洞·唐代白泽避邪天幡古画",
+                "source": "大英博物馆敦煌藏卷",
+                "is_cover": False
+            },
+            {
+                "id": "img_bz_3",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic20_-_%E7%99%BD%E6%BE%A4%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic20_-_%E7%99%BD%E6%BE%A4%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·通晓万物神兽白泽图",
+                "source": "故宫文渊阁原版",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "kunpeng",
+        "name": "鲲鹏",
+        "pinyin": "kūn péng",
+        "title": "北冥巨灵 · 垂天之云",
+        "category": "异兽",
+        "mountain": "《北山经》· 北冥之海",
+        "classic_quote": "北冥有鱼，其名为鲲，鲲之大，不知其几千里也；化而为鸟，其名为鹏，鹏之背，不知其几千里也，怒而飞，其翼若垂天之云。",
+        "modern_desc": "北冥极渊之至尊化境。在水则为深海巨鲲，激荡千里狂澜；振翼化为神鹏，巨翼如覆天阴云，抟扶摇而上九万里，背负青天傲视寰宇。",
+        "ability": "水击三千里、九万里扶摇、吞海化鹏、虚空翱翔",
+        "mortal_identity": "【现代凡相】远洋极地破冰科考船轮机长（岳鹏）。孤独航行在零下四十度的漆黑极夜南大洋，胸襟广阔却饱尝人世孤独漂泊。",
+        "divine_form": "【夜间真身】万古鲲鹏双极法相。深渊巨鲲冲破千丈玄冰巨浪，金蓝鳞甲在极光下羽化为万顷垂天神翼，遮蔽整片天际星云。",
+        "visual_prompt": "Cinematic epic wide shot, Shan Hai Jing Kun Peng, dual transformation of colossal Leviathan and giant Roc bird, massive oceanic leviathan breaching stormy black waves, its dorsal fins morphing into miles of celestial feather wings rising into the stratosphere, clouds parted by monumental sonic ripples, bioluminescent deep-sea cyan glow transitioning into auroral golden plumage, colossal scale, awe-inspiring, IMAX film grain, 8k.",
+        "tags": ["北冥", "化而为鹏", "水击三千里", "翼若垂天之云", "大荒极兽"],
+        "images": [
+            {
+                "id": "img_kp_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Chen_Rong_Nine_Dragons_detail.jpg/800px-Chen_Rong_Nine_Dragons_detail.jpg",
+                "title": "宋代陈容水墨巨卷·北冥破浪化境神图",
+                "source": "传世水墨珍本",
+                "is_cover": True
+            },
+            {
+                "id": "img_kp_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic30_-_%E4%B9%98%E9%BB%83%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic30_-_%E4%B9%98%E9%BB%83%E5%9C%96.png",
+                "title": "古刻本神异图集·大荒腾空神鸟鹏卷",
+                "source": "故宫文渊阁藏",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "bifang",
+        "name": "毕方",
+        "pinyin": "bì fāng",
+        "title": "独足火灵 · 兆天大火",
+        "category": "神禽异鸟",
+        "mountain": "《西山经》· 章莪之山",
+        "classic_quote": "章莪之山，有鸟焉，其状如鹤，一足，赤文青质而白喙，名曰毕方，其鸣自叫也，见则其邑有讹火。",
+        "modern_desc": "章莪山一足赤火神鸟。体貌如仙鹤，青翠羽衣上布满暗红神焰图腾，独足金爪白喙。鸣啼声若自呼其名，所显圣之处必引动天火雷劫。",
+        "ability": "御天火、召地煞、独足踏炎、火精护体",
+        "mortal_identity": "【现代凡相】森林特勤灭火突击队长（方烈）。在一次特大火灾中为救幼童腿部重残，退居二线，深藏一颗滚烫炽烈的救生之心。",
+        "divine_form": "【夜间真身】章莪山一足火神鸟毕方真身。千丈青羽鹤躯缠绕青红神焰，单足踏在雷击木之巅，啼鸣破空引动九天赤火燎原，焚灭邪祟。",
+        "visual_prompt": "Cinematic concept painting, mythical fire bird Bi Fang from Shan Hai Jing, elegant giant avian with azure blue feathers patterned with glowing crimson runes, single powerful obsidian talon perched on a burning redwood, stark white beak sparking with embers, wildfire spiraling into a celestial vortex behind it, dark smoky atmosphere illuminated by intense firelight, hyper-detailed, masterpiece, 8k.",
+        "tags": ["章莪之山", "一足神鸟", "青质赤文", "大火之兆", "天火之精"],
+        "images": [
+            {
+                "id": "img_bf_1",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Shan_Hai_Jing_Bifang.jpg",
+                "title": "明清《山海经》版画·章莪山毕方神鸟图",
+                "source": "明代古版木刻",
+                "is_cover": True
+            },
+            {
+                "id": "img_bf_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic26_-_%E7%95%A2%E6%96%B9%E9%B3%A5%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic26_-_%E7%95%A2%E6%96%B9%E9%B3%A5%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·毕方鸟神像全图",
+                "source": "故宫文渊阁原版",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "yinglong",
+        "name": "应龙",
+        "pinyin": "yìng lóng",
+        "title": "创世翼龙 · 斩蚩尤诛夸父",
+        "category": "远古战神",
+        "mountain": "《大荒东经》· 凶黎之丘",
+        "classic_quote": "大荒东北隅中，有山名曰凶黎之丘。应龙处南极，杀蚩尤与夸父，不得复上，故下数旱。旱而为应龙之状，乃得大雨。",
+        "modern_desc": "身生双翼之上古黄帝战神之龙。曾于逐鹿之战斩杀蚩尤与夸父，司掌行云布雨与江海蓄水之天职。后又助大禹导水开山，功盖洪荒。",
+        "ability": "蓄水降甘霖、展翼撕天穹、诛杀战神、定鼎江山",
+        "mortal_identity": "【现代凡相】三峡水利工程水下特种潜水排险队长（龙霆）。长年冒着深水高压在洪峰下堵漏，默默守护千家万户的大江安澜。",
+        "divine_form": "【夜间真身】凶黎之丘金翼应龙真身。浑身覆满青金战甲龙鳞，背生蔽日垂天龙翼，振翅呼啸唤来九天霖雨，利爪可断苍山巨岳。",
+        "visual_prompt": "Cinematic fantasy blockbuster shot, Ying Long ancient winged dragon from Shan Hai Jing, monumental gold and azure dragon with majestic feathered dragon wings, descending through torrential thunderstorm and cascading waterfalls, ancient battle armor fused into dragon scales, lightning crackling across dragon horns, hyper-realistic water simulation, volumetric mist, epic composition, unreal engine 5, 8k.",
+        "tags": ["凶黎之丘", "双翼真龙", "蓄水布雨", "斩蚩尤夸父", "大禹治水"],
+        "images": [
+            {
+                "id": "img_yl_1",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Shan_Hai_Jing_Yinglong.jpg",
+                "title": "古本《山海经图》·凶黎之丘应龙战天图",
+                "source": "明代典籍木刻",
+                "is_cover": True
+            },
+            {
+                "id": "img_yl_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic29_-_%E6%87%89%E9%BE%8D%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic29_-_%E6%87%89%E9%BE%8D%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·应龙展翅全图",
+                "source": "清康熙铜活字本",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "chiyou",
+        "name": "蚩尤",
+        "pinyin": "chī yóu",
+        "title": "九黎兵主 · 铜头铁额",
+        "category": "远古战神",
+        "mountain": "《大荒北经》· 冀州之野",
+        "classic_quote": "蚩尤作兵伐黄帝，黄帝乃令应龙攻之冀州之野。蚩尤请风伯雨师，纵大风雨。黄帝乃下天女曰魃，雨止，遂杀蚩尤。",
+        "modern_desc": "上古九黎之君，华夏兵器始祖战神。传说铜头铁额，八臂各持矛戈刀戟，呼风唤雨吞吐迷雾，逐鹿中原威震天帝，百死战魂不灭。",
+        "ability": "统御万兵、铜头铁骨、吞金啖石、呼风唤雨",
+        "mortal_identity": "【现代凡相】军工重型特种合金锻造老技师（段九黎）。身躯精壮，皮肤布满火花烫伤，对金属冶炼有神一般的嗅觉，性格沉稳坚毅。",
+        "divine_form": "【夜间真身】九黎兵主蚩尤法相。铜铸巨角冲天，八臂如擎天玄铁神柱各持上古荒神兵，步履踏碎九黎山川，百万兵魂虚影如潮相随。",
+        "visual_prompt": "Cinematic epic fantasy poster, Chi You ancient God of War from Chinese mythology, colossal bronze-skinned colossus with iron horned skull, eight muscular arms wielding ancient serrated battle gear, halberds, curved bronze blades and dragon shields, molten red sparks radiating from chest armor, stormy mountain pass with ten thousand phantom warriors marching, dramatic backlight, IMAX 70mm, 8k.",
+        "tags": ["冀州之野", "兵主蚩尤", "八臂持戈", "铜头铁额", "战神之首"],
+        "images": [
+            {
+                "id": "img_cy_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic31_-_%E8%9A%A9%E5%B0%A4%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic31_-_%E8%9A%A9%E5%B0%A4%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·九黎战神蚩尤图",
+                "source": "故宫文渊阁藏本",
+                "is_cover": True
+            },
+            {
+                "id": "img_cy_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/Miao_festival_Chiyou_totem.jpg/600px-Miao_festival_Chiyou_totem.jpg",
+                "title": "苗疆九黎图腾·千古兵主尊神石刻",
+                "source": "民间非遗民俗典藏",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "nuwa",
+        "name": "女娲",
+        "pinyin": "nǚ wā",
+        "title": "创世始祖 · 炼石补天",
+        "category": "创世神祇",
+        "mountain": "《大荒西经》· 栗广之野",
+        "classic_quote": "有神十人，名曰女娲之肠，化为神，处栗广之野，横道而卧。昔者共工触不周之山，天柱折，地维绝。女娲炼五色石以补苍天。",
+        "modern_desc": "华夏人文始祖、化育生灵之母神。抟黄土以造万民，炼五色神石以补残破青天，断鳌足以立四极天柱，功参鸿蒙，一日七十化。",
+        "ability": "抟土造化、补天定维、一日七十化、化生万灵",
+        "mortal_identity": "【现代凡相】前沿干细胞与生命再生科学首席女科学家（叶华）。倾尽一生寻找治愈绝症与延续生命基因的奥秘，仁爱温和。",
+        "divine_form": "【夜间真身】人首蛇身创世圣母女娲真身。神圣白玉蛇尾如星河蜿蜒盘旋，托举五彩神石缝补崩裂的天幕裂隙，七十道造化光轮环绕法相。",
+        "visual_prompt": "Masterpiece cinematic still, Nuwa ancient primordial mother goddess from Shan Hai Jing, divine woman with graceful coiled jade serpent tail, holding aloft glowing five-colored celestial stones to mend a fractured cosmic sky, divine heavenly light pouring through cracks in reality, clouds of stardust and primordial clay, ethereal silk robes floating in zero gravity, serene divine expression, 8k resolution, octane render.",
+        "tags": ["栗广之野", "女娲补天", "人首蛇身", "抟土造人", "创世母神"],
+        "images": [
+            {
+                "id": "img_nw_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Fuxi_and_Nuwa_Astrological_Scroll_from_Turfan.jpg/600px-Fuxi_and_Nuwa_Astrological_Scroll_from_Turfan.jpg",
+                "title": "唐代吐鲁番绢画·伏羲女娲人首蛇身星历图",
+                "source": "中国国家博物馆藏",
+                "is_cover": True
+            },
+            {
+                "id": "img_nw_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic45_-_%E7%87%AD%E9%99%B0%E7%A5%9E%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic45_-_%E7%87%AD%E9%99%B0%E7%A5%9E%E5%9C%96.png",
+                "title": "传世古典壁画·上古神女造化生灵图卷",
+                "source": "古籍文献图库",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "xiangliu",
+        "name": "相柳",
+        "pinyin": "xiāng liǔ",
+        "title": "九首毒神 · 泽国死水",
+        "category": "异兽",
+        "mountain": "《海外北经》· 共工之台",
+        "classic_quote": "共工之臣曰相柳氏，九首，以食于九山。相柳之所抵，厥为泽溪。禹杀相柳，其血腥，不可以树五谷种。禹厥之，三仞三沮，乃以为众帝之台。",
+        "modern_desc": "水神共工之重臣，九首人面蛇身的至毒凶神。九首可同时进食九座山峦之灵脉，所喷毒液侵蚀之处尽化为恶臭死沼，寸草不生。",
+        "ability": "九首毒煞、蚀骨毒血、淹没九山、化土为泽",
+        "mortal_identity": "【现代凡相】化工生化毒理首席分析师（柳玄）。性格孤僻偏激，常年戴防毒面具，对化学腐蚀与毒剂如数家珍，内心充满厌世情绪。",
+        "divine_form": "【夜间真身】九首巨蟒相柳真身。青黑巨躯盘踞在万顷毒瘴沼泽，九颗人面蛇首各吐墨绿剧毒烟柱，毒血泼洒之处古岳腐化为黑色泥潭。",
+        "visual_prompt": "Cinematic dark fantasy art, Xiang Liu nine-headed toxic serpent from Shan Hai Jing, monumental swamp behemoth with nine serpentine heads bearing human visage, scales glistening with poisonous jade-green slime, breathing emerald noxious smog that dissolves ancient stone temples, desolate dead marshlands, eerie bioluminescent fungal glow, dark moody atmosphere, hyper-detailed, 8k.",
+        "tags": ["共工之台", "九首蛇身", "相柳", "恶泽毒水", "大禹斩相柳"],
+        "images": [
+            {
+                "id": "img_xl_1",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Shan_Hai_Jing_Xiangliu.jpg",
+                "title": "明刻《山海经图》·共工之臣九首相柳巨蛇",
+                "source": "明代典籍木刻",
+                "is_cover": True
+            },
+            {
+                "id": "img_xl_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Wu-Renchen-Shanhai-jing-guangzhu-Xiangliu.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Xiangliu.jpg",
+                "title": "吴任臣《山海经广注》·九首人面蛇躯相柳图",
+                "source": "清康熙刻本",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "kuafu",
+        "name": "夸父",
+        "pinyin": "kuā fù",
+        "title": "逐日巨神 · 杖化邓林",
+        "category": "远古战神",
+        "mountain": "《海外北经》· 夸父之山",
+        "classic_quote": "夸父与日逐走，入日；渴，欲得饮，饮于河、渭；河、渭不足，北饮大泽。未至，道渴而死。弃其杖，化为邓林。",
+        "modern_desc": "成都载天之山的巍峨巨神。与大荒骄阳逐走比拼，饮尽黄河渭水仍感焦渴，奔赴大泽途中力竭化道。弃掷神木手杖化为绵延千里的邓林桃源。",
+        "ability": "移山跨海、逐日神速、身躯化岳、神木成林",
+        "mortal_identity": "【现代凡相】高原超长距离极限马拉松越野跑者（关夸）。双脚布满茧子与血泡，在无人区以命相搏，只为证明人类意志的绝对极限。",
+        "divine_form": "【夜间真身】逐日巨神夸父法相。如摩天山峰般高耸入云，每一步踏下江河奔涌，右手执撑天桃木神木，在漫天霞光中迈步追逐燃烧的金乌大日。",
+        "visual_prompt": "Cinematic epic landscape art, Kua Fu giant chasing the sun from Shan Hai Jing, gargantuan titan striding across mountain ranges, colossal footprints forming deep lakes, holding a massive ancient wooden staff that sprouts blooming pink peach blossoms, reaching toward a monumental blinding golden sun on the horizon, dusty golden sunset atmosphere, colossal sense of scale, photorealistic fantasy, 8k.",
+        "tags": ["夸父之山", "夸父逐日", "杖化邓林", "饮尽河渭", "不屈巨神"],
+        "images": [
+            {
+                "id": "img_kf_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Wu-Renchen-Shanhai-jing-guangzhu-Kuafu.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Kuafu.jpg",
+                "title": "《山海经广注》刻本·巨神夸父手执神木追日",
+                "source": "清康熙刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_kf_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic23_-_%E8%AA%87%E7%88%B6%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic23_-_%E8%AA%87%E7%88%B6%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·夸父逐日巨神图",
+                "source": "故宫文渊阁原版",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "jingwei",
+        "name": "精卫",
+        "pinyin": "jīng wèi",
+        "title": "发鸠义鸟 · 矢志填海",
+        "category": "神禽异鸟",
+        "mountain": "《北山经》· 发鸠之山",
+        "classic_quote": "发鸠之山，有鸟焉，其状如乌，文首，白喙，赤足，名曰精卫，其鸣自詨。是炎帝之少女，名曰女娃。女娃游于东海，溺而不返，故为精卫，常衔西山之木石，以堙于东海。",
+        "modern_desc": "炎帝稚女溺于东海，精魂化作神鸟。生有五彩花纹之额，洁白喙喙，赤红双爪。衔西山木石誓填汪洋，成为中华民族百折不挠的象征。",
+        "ability": "誓志不磨、衔石破浪、炎帝仙脉、万死不辞",
+        "mortal_identity": "【现代凡相】深海海洋环境保护公益志愿者（宁卫）。在波涛汹涌的海面上默默打捞垃圾与废弃油污，屡受巨头阻挠却从未退缩半步。",
+        "divine_form": "【夜间真身】发鸠山义鸟精卫法相。娇小却散发着耀眼炎帝圣辉的神鸟，额生九彩神纹，白玉喙噙着太古五岳神石，迎着万仞怒涛俯冲直下。",
+        "visual_prompt": "Emotional cinematic concept art, Jing Wei mythical spirit bird from Shan Hai Jing, ethereal small raven-like bird with colorful crowned head, pure alabaster beak, and crimson claws, carrying a glowing mountain pebble toward a colossal raging oceanic maelstrom, massive stormy waves towering like mountains, rays of divine golden sunlight breaking through dark storm clouds, tragic yet heroic tone, Makoto Shinkai style, hyper-detailed, 8k.",
+        "tags": ["发鸠山", "精卫填海", "炎帝少女", "文首白喙", "坚毅不拔"],
+        "images": [
+            {
+                "id": "img_jw_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/%E4%B8%89%E6%89%8D%E5%9C%96%E6%9C%83_13%E9%B8%9F%E5%85%BD_%E7%B2%BE%E5%8D%AB.svg/500px-%E4%B8%89%E6%89%8D%E5%9C%96%E6%9C%83_13%E9%B8%9F%E5%85%BD_%E7%B2%BE%E5%8D%AB.svg.png",
+                "title": "明代王圻《三才图会》鸟兽十三卷·精卫神鸟像",
+                "source": "明万历原刊本",
+                "is_cover": True
+            },
+            {
+                "id": "img_jw_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Tianjin_railway_station_ceiling_0857.jpg/800px-Tianjin_railway_station_ceiling_0857.jpg",
+                "title": "大型古典穹顶壁画·《精卫填海》悲壮史诗图",
+                "source": "艺术壁画摄影集",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "kuiniu",
+        "name": "夔牛",
+        "pinyin": "kuí niú",
+        "title": "流波雷兽 · 鼓震五百里",
+        "category": "异兽",
+        "mountain": "《大荒东经》· 流波之山",
+        "classic_quote": "东海中有流波山，入海七千里。其上有兽，状如牛，苍身而无角，一足，出入水则必风雨，其光如日月，其声如雷，其名曰夔。黄帝得之，以其皮为鼓，橛以雷兽之骨，声闻五百里，以威天下。",
+        "modern_desc": "东海流波仙山上的独足雷神座兽。苍青色无角如硕牛，入海则狂风骤雨齐至，二目闪耀如悬日月，吼声若惊雷炸裂。黄帝制其皮为神鼓以震退蚩尤。",
+        "ability": "召唤狂风暴雨、目若日月、声震五百里、雷霆天威",
+        "mortal_identity": "【现代凡相】地下重金属摇滚乐队传奇贝斯兼鼓手（雷震）。身材魁梧，常年戴耳塞对抗耳鸣，每击一槌皆如狂雷落世震人心魄。",
+        "divine_form": "【夜间真身】流波山苍青独足夔牛真身。庞大如岛礁，苍青鳞甲流转亿万伏特紫雷，独足踏破万丈怒海，双目如日月悬照，一吼天地惊雷炸裂五百里。",
+        "visual_prompt": "Cinematic epic digital painting, Kui Niu single-legged thunder beast from Shan Hai Jing, colossal one-legged azure storm beast emerging from the violent ocean surf of Liubo mountain, body glowing with blue and violet lightning arcs, eyes shining like twin blazing suns, soundwaves visibly warping the atmosphere, dark turbulent typhoon, thunderbolts striking the sea, intense dramatic lighting, 8k.",
+        "tags": ["流波山", "一足雷兽", "苍身无角", "夔牛神鼓", "声如雷霆"],
+        "images": [
+            {
+                "id": "img_kui_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Wu-Renchen-Shanhai-jing-guangzhu-Kui.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Kui.jpg",
+                "title": "吴任臣《山海经广注》清刻本·流波山夔牛全图",
+                "source": "清康熙刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_kui_2",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Shan_Hai_Jing_Kui.jpg",
+                "title": "古刻《山海经图》·独足青身夔兽像",
+                "source": "传世木刻版画",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "luwu",
+        "name": "开明兽 / 陆吾",
+        "pinyin": "kāi míng shòu / lù wú",
+        "title": "昆仑司都 · 天门九首天卫",
+        "category": "镇山神兽",
+        "mountain": "《海内西经》/《西山经》· 昆仑之丘",
+        "classic_quote": "昆仑南渊深三百仞。开明兽身大类虎而九首，皆人面，东向立昆仑上。神陆吾司之，其神状虎身而九尾，人面而虎爪，司天之九部及帝之囿时。",
+        "modern_desc": "昆仑帝之下都第一天卫。虎躯而长九颗人面首级，目空四海，威慑天界九门。又作陆吾天神，虎躯九尾人面，代天帝镇守天界苑圃九野。",
+        "ability": "九面观八荒、守御天门、虎威荡秽、镇守昆仑",
+        "mortal_identity": "【现代凡相】绝密金库与国宝特种安保督察官（陆天野）。眼神锐利无匹，洞悉全场任何监控盲区与异常风吹草动，严谨克制。",
+        "divine_form": "【夜间真身】昆仑司都开明兽/陆吾真身。白金神虎巨躯，九颗威严人首俯视天门九道界碑，九条金光虎尾横扫雷云，神威浩荡不可逾越。",
+        "visual_prompt": "Cinematic epic concept art, Shan Hai Jing sacred guardian Lu Wu and Kai Ming Shou, colossal mythical feline titan with celestial tiger body, nine ethereal human-like wise faces with glowing third eyes, nine majestic tails whipping through mountain mist, guarding the colossal floating gates of Kunlun paradise, ancient golden jade pillars, divine heavenly aurora, monumental scale, 8k.",
+        "tags": ["昆仑之丘", "开明兽", "陆吾神", "九首人面", "天门禁卫"],
+        "images": [
+            {
+                "id": "img_lw_1",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Shan_Hai_Jing_Kaimeiju.jpg",
+                "title": "古版《山海经图》·昆仑九首开明兽",
+                "source": "明代古版木刻",
+                "is_cover": True
+            },
+            {
+                "id": "img_lw_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic17_-_%E9%99%B8%E5%90%BE%E7%A5%9E%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic17_-_%E9%99%B8%E5%90%BE%E7%A5%9E%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·昆仑司都陆吾天神图",
+                "source": "故宫文渊阁藏典",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "dijiang",
+        "name": "帝江",
+        "pinyin": "dì jiāng",
+        "title": "天山神明 · 浑敦仙乐",
+        "category": "异兽",
+        "mountain": "《西山经》· 天山",
+        "classic_quote": "有神焉，其状如黄囊，赤如丹火，六足四翼，浑敦无面目，是识歌舞，实惟帝江也。",
+        "modern_desc": "西方天山神圣，宛若一轮赤红丹火凝聚之球囊，生有六足与四副羽翼。虽无七窍面目，却极通灵犀，精通天地旋律，能踏空起舞。",
+        "ability": "浑沌大道、御空翔舞、天籁之音、造化初元",
+        "mortal_identity": "【现代凡相】先天失聪却誉满全球的现代交响乐先锋指挥家（江乐）。以身体骨骼共振感知声浪，创造令世人惊叹的无声天籁。",
+        "divine_form": "【夜间真身】天山混沌初元帝江真身。赤如丹火的玄奥金囊神球，六只朱足踏着星辰律动，四副金羽遮天翱翔，无面无目却流淌着抚平万古创伤的天地神乐。",
+        "visual_prompt": "Masterpiece surreal concept art, Shan Hai Jing primordial deity Di Jiang, spherical celestial entity glowing like deep crimson cinnabar fire, six sturdy divine paws, four radiant golden wings fluttering with cosmic dust, faceless enigmatic divine sphere vibrating with harmonic golden sacred geometry lines, dancing amidst kaleidoscopic nebula clouds, breathtaking transcendent atmosphere, 8k, octane render.",
+        "tags": ["天山", "六足四翼", "浑敦无面目", "通晓歌舞", "丹火仙囊"],
+        "images": [
+            {
+                "id": "img_dj_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/%E8%A5%BF%E5%B1%B1%E7%B6%93-%E5%B8%9D%E6%B1%9F.svg/600px-%E8%A5%BF%E5%B1%B1%E7%B6%93-%E5%B8%9D%E6%B1%9F.svg.png",
+                "title": "《西山经》清代彩绘善本·神明帝江图",
+                "source": "典籍精绘插图",
+                "is_cover": True
+            },
+            {
+                "id": "img_dj_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic19_-_%E5%B8%9D%E6%B1%9F%E7%A5%9E%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic19_-_%E5%B8%9D%E6%B1%9F%E7%A5%9E%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·帝江神尊原刻",
+                "source": "清康熙铜活字本",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "bashe",
+        "name": "巴蛇",
+        "pinyin": "bā shé",
+        "title": "洞庭黑水 · 吞象巨蟒",
+        "category": "异兽",
+        "mountain": "《海内南经》· 洞庭之山",
+        "classic_quote": "巴蛇食象，三岁而出其骨，君子服之，无心腹之疾。其为蛇青黄赤黑。一曰黑蛇青首，在洞庭南。",
+        "modern_desc": "洞庭之野的吞天巨蟒。身躯长逾百丈，黑身青首，能将巨象一口生吞，三年方吐其骨骸。其灵骨入药可愈人间一切心腹重疾。",
+        "ability": "吞天噬岳、黑水潜行、鳞甲坚如精钢、化解百毒",
+        "mortal_identity": "【现代凡相】千米地下深渊盾构机主司机兼爆破专家（巴岳）。在不见天日的幽闭深地工作，沉默寡言，力量雄浑。",
+        "divine_form": "【夜间真身】洞庭黑水玄蛇巴蛇真身。墨黑蛇鳞散发玄铁冷光，苍青蛇首高达百尺，巨吻微张将整条大荒峡谷卷入腹中，渊深莫测。",
+        "visual_prompt": "Cinematic dark fantasy illustration, Ba She colossal titan python from Shan Hai Jing, gargantuan obsidian black snake body with an iridescent emerald head, coiling around a misty ancient mountain gorge, capable of swallowing mammoths whole, dense foggy valley, damp mossy boulders, eerie dramatic volumetric fog, dark fantasy movie still, 8k.",
+        "tags": ["海内南经", "巴蛇吞象", "黑蛇青首", "洞庭水府", "巨蟒玄煞"],
+        "images": [
+            {
+                "id": "img_bs_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Wu-Renchen-Shanhai-jing-guangzhu-Bashe.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Bashe.jpg",
+                "title": "吴任臣《山海经广注》·洞庭黑水吞象巴蛇图",
+                "source": "清康熙刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_bs_2",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Shan_Hai_Jing_Bashe.jpg",
+                "title": "明刊本《山海经图》·黑身青首巴蛇巨蟒",
+                "source": "明代善本",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "zhuque",
+        "name": "朱雀 / 凤皇",
+        "pinyin": "zhū què / fèng huáng",
+        "title": "丹穴离火 · 涅槃天灵",
+        "category": "神禽异鸟",
+        "mountain": "《南山经》· 丹穴之山",
+        "classic_quote": "丹穴之山，有鸟焉，其状如鸡，五采而文，名曰凤皇，首文曰德，翼文曰义，背文曰礼，膺文曰仁，腹文曰信。饮食自然，自歌自舞，见则天下安宁。",
+        "modern_desc": "大荒天界至高五德神鸟。头顶浮现五德神篆，羽翼流转赤金离火，出则四海波平、天下安宁太平，具有浴火重生、不死不灭之至高神性。",
+        "ability": "五德合一、涅槃重生、神音抚魂、驱散永夜",
+        "mortal_identity": "【现代凡相】享誉世界的青年古典舞首席舞蹈家（凤仪）。因骨裂伤痛面临舞台生涯终结，咬牙在轮椅上依然用双手跳出生命的绝美。",
+        "divine_form": "【夜间真身】丹穴离火不死神君朱雀真身。万顷赤霞五彩真羽如云海舒展，自南明离火中长啸涅槃重生，万千祥瑞火雨垂落洗涤世间污秽。",
+        "visual_prompt": "Breathtaking cinematic still, Vermilion Bird Zhu Que / Feng Huang from Shan Hai Jing, supreme divine phoenix with iridescent crimson and gold plumage, trailing magnificent glowing feathers across a starlit night sky, surrounded by dancing ethereal lotus flames that do not burn, flying above ancient mist-covered pagodas, high fantasy masterpiece, Makoto Shinkai vibrant colors, 8k resolution.",
+        "tags": ["丹穴之山", "南极天朱雀", "五德神鸟", "天下安宁", "涅槃重生"],
+        "images": [
+            {
+                "id": "img_zq_1",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Shan_Hai_Jing_Fenghuang.jpg",
+                "title": "明清《山海经》版画·丹穴之山凤皇祥瑞",
+                "source": "明代古版木刻",
+                "is_cover": True
+            },
+            {
+                "id": "img_zq_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Suzaku_Takatori_tomb.jpg/600px-Suzaku_Takatori_tomb.jpg",
+                "title": "高松冢古墓天象壁画·赤炎神君朱雀法相",
+                "source": "国宝壁画写真",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "chenghuang",
+        "name": "乘黄",
+        "pinyin": "chéng huáng",
+        "title": "白民之乘 · 寿考二千",
+        "category": "瑞兽",
+        "mountain": "《海外西经》· 白民之国",
+        "classic_quote": "白民之国在龙鱼北，白身披发。有乘黄，其状如狐，其背上有角，乘之寿二千岁。",
+        "modern_desc": "海外白民国所栖之至尊延寿神兽。体型如灵狐，脊背长有两只腾空玉角，祥云随行，古来凡有天命大德之人乘之，可得两千岁寿考长生。",
+        "ability": "延寿二千载、祥瑞护身、御风腾云、消灾避劫",
+        "mortal_identity": "【现代凡相】濒临失传的古法非遗玉雕与漆器守艺老人（黄承）。守着破旧的小弄堂手工作坊，双手雕琢千年岁月，淡泊名利。",
+        "divine_form": "【夜间真身】白民之国神兽乘黄法相。金芒璀璨的九尾狐身，脊背上两只如龙角般的白玉神角直插云霄，踏云而行洒落万朵长生寿云。",
+        "visual_prompt": "Masterpiece enchanting concept art, Cheng Huang sacred mythical beast from Shan Hai Jing, majestic fox-like animal with sleek golden-amber fur, two glowing spiritual dragon horns emerging from its back, trotting gracefully through an enchanted ancient cedar forest, glowing fireflies and floating golden dust, warm ethereal dawn sunlight, studio ghibli aesthetic mixed with hyper-realistic textures, 8k.",
+        "tags": ["白民之国", "乘之寿二千岁", "背上有角", "延寿吉兽", "长生祥瑞"],
+        "images": [
+            {
+                "id": "img_ch_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Wu-Renchen-Shanhai-jing-guangzhu-Chenghuang.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Chenghuang.jpg",
+                "title": "《山海经广注》刻本·白民之国神兽乘黄",
+                "source": "清康熙刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_ch_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic30_-_%E4%B9%98%E9%BB%83%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic30_-_%E4%B9%98%E9%BB%83%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·背生双角吉兽乘黄图",
+                "source": "清代文渊阁典藏",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "bo",
+        "name": "驳",
+        "pinyin": "bó",
+        "title": "中曲神驹 · 辟兵御戈",
+        "category": "异兽",
+        "mountain": "《西山经》· 中曲之山",
+        "classic_quote": "中曲之山，有兽焉，其状如白马，锯齿，食虎豹，可以御兵。其音如鼓，其名曰驳。",
+        "modern_desc": "中曲山能吞食猛虎凶豹的辟兵猛兽。外形如一匹俊朗白马，生有黑尾、锋利独角与利如锯齿之利齿，蹄音宛若战鼓轰鸣，佩之可御战阵兵戈。",
+        "ability": "生食虎豹、辟除兵戈战灾、战鼓神啸、踏破重围",
+        "mortal_identity": "【现代凡相】战地记者兼国际人道主义救援向导（白戈）。数次穿梭在枪林弹雨之中护送孤儿难民撤离，心怀慈悲却骁勇善战。",
+        "divine_form": "【夜间真身】中曲山神兽驳真身。雪白神骏身披玄黑雷电龙尾，额头生出螺旋开山金角，锯齿间撕裂虎豹妖煞，一声长嘶如万面战鼓震碎敌胆。",
+        "visual_prompt": "Cinematic fantasy art, Shan Hai Jing mythical beast Bo, majestic muscular pure white stallion with saw-like obsidian teeth, a single spiraling ivory horn on forehead, powerful black predator tail, standing victorious over defeated phantom predators on a misty pine mountain cliff, stormy dawn sky, heroic aura, detailed fur rendering, 8k.",
+        "tags": ["中曲之山", "白马黑尾", "食虎豹", "可以御兵", "战鼓雷鸣"],
+        "images": [
+            {
+                "id": "img_bo_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Wu-Renchen-Shanhai-jing-guangzhu-Bo.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Bo.jpg",
+                "title": "《山海经广注》刻本·中曲之山食虎豹神兽驳",
+                "source": "清康熙刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_bo_2",
+                "url": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Shan_Hai_Jing_Bo.jpg",
+                "title": "明代《山海经图》·白马巨角神兽驳",
+                "source": "传世古籍版画",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "hundun",
+        "name": "混沌",
+        "pinyin": "hùn dùn",
+        "title": "昆仑无相 · 上古四凶",
+        "category": "上古四凶",
+        "mountain": "《西次三经》· 昆仑之西",
+        "classic_quote": "昆仑之西有兽焉，其状如犬，长毛四足，似熊而无爪，有目而不见，行不开，有两耳而不闻，有人知往，有腹无五脏，有肠直而不旋，食物径过。",
+        "modern_desc": "上古四凶之一的混沌。外形似长毛恶犬，有目却视而不见，有耳却听而不闻，无五脏七窍，行为反常悖理，德义不顺，专与天道相抗衡。",
+        "ability": "无序侵蚀、逆乱法则、混淆是非、虚无崩坏",
+        "mortal_identity": "【现代凡相】解构主义先锋哲学家兼暗网匿名黑客（莫非）。蔑视一切既定规则与逻辑，视世界为虚妄程序代码。",
+        "divine_form": "【夜间真身】大荒无相混沌古凶法相。身如深不见底的引力虚无漩涡，长毛四爪扭曲着周围的光线与时空维度，所经之处万象归于无序尘埃。",
+        "visual_prompt": "Cinematic surreal dark fantasy art, Shan Hai Jing four perils beast Hun Dun (Hundun), primordial amorphous entity of shapeless dark matter and shimmering cosmic fog, surrounded by swirling gravitational distortions, ancient corrupted totems, unearthly eldritch aura, eerie cosmic horror aesthetic, masterpiece, dark cinematic lighting, 8k.",
+        "tags": ["昆仑之西", "上古四凶", "长毛无爪", "无目无耳", "无序混沌"],
+        "images": [
+            {
+                "id": "img_hd_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Wu-Renchen-Shanhai-jing-guangzhu-Hundun.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Hundun.jpg",
+                "title": "《山海经广注》·上古四凶混沌法相原图",
+                "source": "清康熙刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_hd_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic40_-_%E6%B8%BE%E6%B2%8C%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic40_-_%E6%B8%BE%E6%B2%8C%E5%9C%96.png",
+                "title": "《古今图书集成》·四凶之混沌恶兽图",
+                "source": "故宫文渊阁原版",
+                "is_cover": False
+            }
+        ]
+    },
+    {
+        "id": "taowu",
+        "name": "檮杌",
+        "pinyin": "táo wù",
+        "title": "西荒难驯 · 傲狠顽兽",
+        "category": "上古四凶",
+        "mountain": "《西荒经》· 西方荒原",
+        "classic_quote": "西方荒中有兽焉，其状如虎而大，毛长二尺，人面，虎足，猪口牙，尾长一丈八尺，搅乱荒中，名曰檮杌。一名傲狠，一名难训。",
+        "modern_desc": "西方荒原不可驯服的凶暴凶兽。身躯壮硕胜过猛虎，毛长二尺，人面獠牙，生有一丈八尺之铁尾。性格桀骜傲狠，宁死不退，绝不受人教诲。",
+        "ability": "不死暴怒、铁尾断岳、凶煞难驯、狂战不止",
+        "mortal_identity": "【现代凡相】特种装甲爆破手兼极限野外攀登狂人（陶顽）。脾气桀骜烈火，绝不向任何特权势力低头，敢与天下任何不公死磕到底。",
+        "divine_form": "【夜间真身】西方荒原巨凶檮杌真身。千尺巨虎披覆如蓑长毛，人面怒容獠牙外翻，一丈八尺精钢长尾狂甩击碎玄武岩悬崖，狂战神火染红西荒大地。",
+        "visual_prompt": "Cinematic action-packed concept art, Tao Wu mythical beast from Shan Hai Jing, titanic ferocious saber-toothed beast with long wild shaggy fur, a fierce human-like warrior face, massive obsidian tusks and eighteen-foot spiked tail thrashing through shattered basalt canyons, magma glowing in ground cracks, savage raw power, unreal engine 5 render, 8k.",
+        "tags": ["西荒经", "上古四凶", "傲狠难训", "猪口獠牙", "万死不退"],
+        "images": [
+            {
+                "id": "img_tw_1",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Wu-Renchen-Shanhai-jing-guangzhu-Taowu.jpg/500px-Wu-Renchen-Shanhai-jing-guangzhu-Taowu.jpg",
+                "title": "《山海经广注》刻本·西方荒原巨兽檮杌图",
+                "source": "清康熙刻本",
+                "is_cover": True
+            },
+            {
+                "id": "img_tw_2",
+                "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic42_-_%E6%AB%AE%E6%9D%8C%E5%9C%96.png/600px-Imperial_Encyclopaedia_-_Spirits_and_the_Supernatural_-_pic42_-_%E6%AB%AE%E6%9D%8C%E5%9C%96.png",
+                "title": "《古今图书集成》神异典·西方傲狠檮杌图",
+                "source": "故宫文渊阁原版",
+                "is_cover": False
+            }
+        ]
+    }
+]
+
+def main():
+    target_file = Path("data/shanhaijing/characters.json")
+    target_file.parent.mkdir(parents=True, exist_ok=True)
+    
+    # 丰富创建时间和更新时间
+    now = datetime.now(timezone.utc).isoformat()
+    for c in EPIC_CHARACTERS:
+        if "created_at" not in c:
+            c["created_at"] = now
+        c["updated_at"] = now
+    
+    target_file.write_text(json.dumps(EPIC_CHARACTERS, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"Successfully generated {len(EPIC_CHARACTERS)} characters with full short-drama assets into {target_file}")
+
+if __name__ == "__main__":
+    main()

@@ -514,3 +514,122 @@
   color: #0f172a;
   font-weight: 500;
 }
+
+/* ── 现代短剧双重身份与高震撼出图样式 ───────────────────────── */
+
+.shanhai-card-dual-box {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.shanhai-dual-row {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.shanhai-dual-badge {
+  font-size: 11px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.shanhai-dual-badge.mortal {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.shanhai-dual-badge.divine {
+  background: #fdf4ff;
+  color: #86198f;
+  border: 1px solid #f5d0fe;
+}
+
+.shanhai-dual-text {
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+/* 详情弹窗双重身份卡片 */
+.shanhai-detail-dual-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .shanhai-detail-dual-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.shanhai-detail-dual-card {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.shanhai-detail-dual-card.mortal {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.shanhai-detail-dual-card.divine {
+  background: #faf5ff;
+  border-color: #e9d5ff;
+}
+
+.shanhai-detail-dual-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.shanhai-detail-dual-card.mortal .shanhai-detail-dual-title {
+  color: #15803d;
+}
+
+.shanhai-detail-dual-card.divine .shanhai-detail-dual-title {
+  color: #7e22ce;
+}
+
+.shanhai-detail-dual-content {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+/* 电影级出图提示词盒子 */
+.shanhai-prompt-box {
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid #1e293b;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.shanhai-prompt-code {
+  background: transparent !important;
+  border: none !important;
+  color: #38bdf8 !important;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

@@ -627,6 +627,9 @@ POST /cards/batch-status 的请求体：要更新的卡片 ID 列表与目标状
 | `classic_quote` | string | 否 | 默认值："" |
 | `modern_desc` | string | 否 | 默认值："" |
 | `ability` | string | 否 | 默认值："" |
+| `mortal_identity` | string 或 null | 否 | 默认值："" |
+| `divine_form` | string 或 null | 否 | 默认值："" |
+| `visual_prompt` | string 或 null | 否 | 默认值："" |
 | `images` | array&lt;CharacterImage&gt; | 否 |  |
 | `tags` | array&lt;string&gt; | 否 |  |
 | `auto_fetch_images` | boolean | 否 | 默认值：false |
@@ -657,6 +660,9 @@ POST /cards/batch-status 的请求体：要更新的卡片 ID 列表与目标状
 | `classic_quote` | string 或 null | 否 |  |
 | `modern_desc` | string 或 null | 否 |  |
 | `ability` | string 或 null | 否 |  |
+| `mortal_identity` | string 或 null | 否 |  |
+| `divine_form` | string 或 null | 否 |  |
+| `visual_prompt` | string 或 null | 否 |  |
 | `images` | array&lt;CharacterImage&gt; 或 null | 否 |  |
 | `tags` | array&lt;string&gt; 或 null | 否 |  |
 

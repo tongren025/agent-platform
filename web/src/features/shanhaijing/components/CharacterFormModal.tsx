@@ -49,6 +49,9 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
           classic_quote: character.classic_quote,
           modern_desc: character.modern_desc,
           ability: character.ability,
+          mortal_identity: character.mortal_identity,
+          divine_form: character.divine_form,
+          visual_prompt: character.visual_prompt,
           tags: character.tags?.join(', '),
           auto_fetch_images: false,
         });
@@ -100,6 +103,9 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
         classic_quote: values.classic_quote?.trim() || '',
         modern_desc: values.modern_desc?.trim() || '',
         ability: values.ability?.trim() || '',
+        mortal_identity: values.mortal_identity?.trim() || '',
+        divine_form: values.divine_form?.trim() || '',
+        visual_prompt: values.visual_prompt?.trim() || '',
         tags: tagsArray,
         auto_fetch_images: Boolean(values.auto_fetch_images),
       };
@@ -201,6 +207,21 @@ export const CharacterFormModal: React.FC<CharacterFormModalProps> = ({
 
         <Form.Item name="ability" label="神职、异能与祥凶寓意">
           <Input placeholder="例如：辟邪防蛊、灵慧幻化、通晓人言" />
+        </Form.Item>
+
+        <Form.Item name="mortal_identity" label="☀️ 白天凡相（现代短剧身份设定）">
+          <Input placeholder="例如：【现代凡相】急诊科夜班医生（林夜），见惯生死，疲惫执着..." />
+        </Form.Item>
+
+        <Form.Item name="divine_form" label="🌙 夜晚真身（山海古神洪荒法相）">
+          <Input placeholder="例如：【夜间真身】千丈赤红烛龙法相，盘绕钟山绝壁，开目为昼闭目为夜..." />
+        </Form.Item>
+
+        <Form.Item name="visual_prompt" label="🎬 电影级 AI 分镜出图 Prompt (Midjourney / Flux / Seedance)">
+          <TextArea
+            rows={2}
+            placeholder="例如：Masterpiece, cinematic concept art, Shan Hai Jing Torch Dragon, colossal scale, Tyndall lighting, 8k..."
+          />
         </Form.Item>
 
         <Form.Item name="tags" label="考据标签（逗号分隔）">

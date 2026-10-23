@@ -7,6 +7,7 @@ import {
   Tooltip,
   Typography,
   Popconfirm,
+  message,
 } from 'antd';
 import {
   EyeOutlined,
@@ -15,6 +16,8 @@ import {
   VideoCameraOutlined,
   DeleteOutlined,
   PictureOutlined,
+  CopyOutlined,
+  ThunderboltOutlined,
 } from '@ant-design/icons';
 import type { ShanhaiCharacter } from '../types';
 import { toSafeImageUrl } from '../api';
@@ -151,6 +154,23 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             立项
           </Button>
         </Tooltip>,
+        character.visual_prompt ? (
+          <Tooltip key="prompt" title="一键复制电影级AI分镜生图词 (Midjourney/Flux/Seedance)">
+            <Button
+              type="text"
+              icon={<CopyOutlined />}
+              size="small"
+              style={{ color: '#8b5cf6' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(character.visual_prompt || '');
+                message.success(`已复制 ${character.name} 电影级分镜出图提示词！可直接用于 Midjourney / Flux 生图`);
+              }}
+            >
+              出图词
+            </Button>
+          </Tooltip>
+        ) : null,
         onDelete && (
           <Popconfirm
             key="delete"
@@ -186,6 +206,28 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
       {character.title && (
         <div className="shanhai-card-honor-title">{character.title}</div>
+      )}
+
+      {/* 现代短剧双重身份（白天凡人 vs 夜晚古神） */}
+      {(character.mortal_identity || character.divine_form) && (
+        <div className="shanhai-card-dual-box">
+          {character.mortal_identity && (
+            <div className="shanhai-dual-row mortal">
+              <span className="shanhai-dual-badge mortal">☀️ 白天</span>
+              <span className="shanhai-dual-text" title={character.mortal_identity}>
+                {character.mortal_identity.replace(/^【现代凡相】/, '')}
+              </span>
+            </div>
+          )}
+          {character.divine_form && (
+            <div className="shanhai-dual-row divine">
+              <span className="shanhai-dual-badge divine">🌙 夜晚</span>
+              <span className="shanhai-dual-text" title={character.divine_form}>
+                {character.divine_form.replace(/^【夜间真身】/, '')}
+              </span>
+            </div>
+          )}
+        </div>
       )}
 
       {/* 原文引录 */}
