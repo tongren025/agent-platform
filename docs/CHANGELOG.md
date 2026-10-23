@@ -1,3 +1,8 @@
+## [2026-10-23] 部署 SSH 长连接保活
+
+- 生产部署在前端编译成功后出现 `client_loop: send disconnect: Broken pipe`；为 GitHub Actions 的 SSH 连接增加每 30 秒一次的保活，最多容忍 20 次未响应，并将连接建立超时限制为 20 秒。
+- 影响面：`.github/workflows/ci.yml` 的生产部署连接；不修改 API、数据表或服务器凭据，也不把保活当作服务器资源故障的修复。
+
 # 改动记录 CHANGELOG
 
 ## [2026-10-23] feat: 山海经专栏大规模扩充短剧素材库、双重形态人设与电影级AI出图Prompt
