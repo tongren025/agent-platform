@@ -21,6 +21,7 @@ from pydantic import BaseModel, Field
 
 from app.config import BASE_DIR
 from app.api.common import ok as _ok, validate_key as _validate
+from app.services import shanhaijing_sources
 
 router = APIRouter(prefix="/api/v1/agentapp/shanhaijing", tags=["shanhaijing"])
 
@@ -597,6 +598,39 @@ def search_web_images_for_character(keyword: str, max_count: int = 3) -> List[di
 
 
 # ── HTTP 端点路由 ─────────────────────────────────────────────────────
+
+
+@router.get("/editions")
+def list_source_editions():
+    """原典版本、十八卷目录和本地阅读资源状态。"""
+    try:
+        return _ok(shanhaijing_sources.list_editions())
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail="原典资料暂不可用") from exc
+
+
+@router.get("/editions/{edition_id}")
+def get_source_edition(edition_id: str):
+    """查询单一版本；未知版本返回404。"""
+    try:
+        edition = shanhaijing_sources.get_edition(edition_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail="原典资料暂不可用") from exc
+    if edition is None:
+        raise HTTPException(status_code=404, detail="原典版本不存在")
+    return _ok(edition)
+
+
+@router.get("/characters/{char_id}/citations")
+def get_character_citations(char_id: str):
+    """独立读取角色原文出处；角色编辑与重置不覆盖出处文件。"""
+    _validate(char_id)
+    if not any(character.id == char_id for character in _load_characters()):
+        raise HTTPException(status_code=404, detail="山海角色未找到")
+    try:
+        return _ok(shanhaijing_sources.get_character_citations(char_id))
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail="角色出处资料暂不可用") from exc
 
 
 @router.get("/categories")

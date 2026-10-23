@@ -40,6 +40,18 @@ An open-source multi-agent platform for AI-driven short-form anime (漫剧) prod
 
 ## 核心功能
 
+### 山海经原典阅读
+
+山海经专栏 `/shanhaijing` 提供1180年宋刻本阅读入口、十八卷目录和角色原文出处。阅读器逐页加载144张书影，角色出处区分已核对摘录、待考及其他典籍。版本与出处独立保存在 `data/shanhaijing/editions.json`、`citations.json`，编辑角色不覆盖考据记录。
+
+原色PDF约609 MiB，不打入前端构建或Git。部署前先在离线准备环境安装 `pypdfium2`、`Pillow`，执行：
+
+```powershell
+python scripts/prepare_shanhaijing_edition.py --source output/pdf/shanhaijing-song-1180/song-1180-color.pdf
+```
+
+生成的 `data/uploads/shanhaijing/editions/song-1180/` 由现有 `/uploads` 提供，包含原件、144张WebP书影与 `ready.json`。生产Compose沿用 `./data:/app/data`；基础Compose的 `app_data` 命名卷需另行导入该目录及两个JSON清单。不新增端口、服务或数据库表。原件来源、页码约定、导入与验收见 [宋本接入说明](docs/SHANHAIJING_SONG_1180_INTEGRATION.md)。
+
 ### 系统管家
 - **全局产品教练** — 每个用户页面右下角均可打开，自动识别当前页面，解释功能并给出下一步操作
 - **系统自检** — 盘点数字员工、Skill、工具和 MCP，读取最近失败运行；复杂问题由 `Agent.SystemManagerModel` 指定的模型结合最近对话、结构化会话状态和本地手册解释，界面显示本轮真实模型
