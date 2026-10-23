@@ -275,3 +275,14 @@ Docker 上下文排除本地 worktree 和依赖缓存，但保留 production 种
 历史 SSH 超时发生在服务器编译前端期间；减少重复构建不等于确认内存故障已修复。
 若再次出现 `Timeout, server ... not responding`，需检查服务器 `free -h`、`swapon --show`
 及内核 OOM 日志，并结合构建日志定位；不要把 SSH 登录成功当作部署完成。
+
+### 部署 SSH 连接中断
+
+Actions 的部署连接使用 `ConnectTimeout=20`、`ServerAliveInterval=30` 和
+`ServerAliveCountMax=20`：连接建立最多等待 20 秒，长时间构建期间每 30 秒发送 SSH 保活，
+连续约 10 分钟无响应才判断连接失效。严格 host key 校验和专用 key 限制保持不变。
+
+2026-10-23 的部署日志显示 Vite 已成功编译，随后出现 `Broken pipe`，流程未进入容器更新或健康检查。
+这表明 SSH 通道中断，不能据此认定编译失败，也不能认定远端进程已退出。重跑前应在服务器确认
+没有遗留部署/构建进程，并检查 `uptime`、`free -h`、`df -h /`、`docker stats --no-stream`。
+保活可减少空闲连接被网络设备断开的风险，不能解决 OOM、磁盘耗尽或服务器长时间无响应。

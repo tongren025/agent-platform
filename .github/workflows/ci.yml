@@ -88,6 +88,9 @@ jobs:
 
           ssh \
             -i ~/.ssh/deploy_key \
+            -o ConnectTimeout=20 \
+            -o ServerAliveInterval=30 \
+            -o ServerAliveCountMax=20 \
             -o BatchMode=yes \
             -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=yes \
