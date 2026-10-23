@@ -228,7 +228,9 @@ else
     cp deploy/nginx/default-http-only.conf deploy/nginx/_active.conf
 fi
 
-docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+# 同一份运行时镜像只构建一次；构建成功后再更新容器。
+docker compose -f docker-compose.prod.yml build app
+docker compose -f docker-compose.prod.yml up -d --no-build --remove-orphans
 
 # ── 8. 等待数据库就绪 → 跑迁移 ────────────────────────────
 log "等待 PostgreSQL 就绪..."

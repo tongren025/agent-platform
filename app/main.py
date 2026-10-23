@@ -6,7 +6,6 @@ Port of C# Program.cs — Agent Service.
 
 from __future__ import annotations
 
-import asyncio
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
@@ -28,7 +27,6 @@ from app.api import (
     canvas,
     director,
     evolution,
-    foundation,
     knowledge_graph,
     memory_api,
     pipeline,
@@ -40,18 +38,15 @@ from app.api import (
     sessions,
     shanhaijing,
     skills,
-    story_acceptance,
     strategy_proxy,
     system_manager,
     tasks,
-    timeline_exports,
     trend_sources,
     user_auth,
     workflow,
 )
 from app.config import BASE_DIR, settings
 from app.core.errors import register_exception_handlers
-from app.core.llm_observability import shutdown_langfuse
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware import RequestContextMiddleware
 from app.core.observability import setup_metrics
@@ -123,11 +118,9 @@ async def lifespan(app: FastAPI):
     try:
         from app.services.builtin_registry_migration import (
             migrate_builtin_comic_registry,
-            migrate_builtin_live_action_registry,
         )
 
         migrate_builtin_comic_registry()
-        migrate_builtin_live_action_registry()
     except Exception:
         # 兜底保护启动；迁移器内部已经逐条隔离，这里只处理导入或框架级异常。
         logger.warning("内置制作团队配置版本迁移失败", exc_info=True)
@@ -137,10 +130,7 @@ async def lifespan(app: FastAPI):
     try:
         yield
     finally:
-        try:
-            await daily_scheduler.stop()
-        finally:
-            await asyncio.to_thread(shutdown_langfuse)
+        await daily_scheduler.stop()
 
 
 # ── App ─────────────────────────────────────────────────────────────
@@ -190,14 +180,11 @@ app.include_router(production.router)
 app.include_router(director.router)
 app.include_router(quick_prompts.router)
 app.include_router(canvas.router)
-app.include_router(timeline_exports.router)
-app.include_router(story_acceptance.router)
 app.include_router(skills.router)
 app.include_router(knowledge_graph.router)
 app.include_router(evolution.router)
 app.include_router(trend_sources.router)
 app.include_router(tasks.router)
-app.include_router(foundation.router)
 app.include_router(shanhaijing.router)
 app.include_router(system_manager.router)
 

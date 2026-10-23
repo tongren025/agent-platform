@@ -9,7 +9,8 @@ import { userToken } from './userAuth';
 import { friendlyFetch, getHttpErrorMessage, readJson } from './httpErrors';
 import { isSessionExpired, redirectToLogin } from './sessionGuard';
 
-const BASE = '/api/v1/agentapp';
+/** 业务模块共享用户端 API 前缀，图片代理等地址保持同源。 */
+export const BASE = '/api/v1/agentapp';
 
 const SESSION_EXPIRED_MESSAGE = '登录已失效，请重新登录';
 
@@ -268,7 +269,8 @@ type RequestOptions = RequestInit & {
   timeoutMs?: number;
 };
 
-async function request<T>(path: string, init?: RequestOptions): Promise<T> {
+/** 业务模块复用鉴权、会话失效闸门与错误信封处理。 */
+export async function request<T>(path: string, init?: RequestOptions): Promise<T> {
   // 用户端凭证失效后封锁后续请求，避免导航完成前重复发送无效请求。
   if (isSessionExpired('user')) throw new Error(SESSION_EXPIRED_MESSAGE);
   const token = userToken.get();

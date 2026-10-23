@@ -109,7 +109,7 @@ python -m pytest -q tests/test_api_reference.py
 
 `--check` 会在文件缺失或内容过时时返回非零并给出修复命令，不会修改文件。生成过程只校验文档与当前 OpenAPI 是否同步，不访问上游服务或验证实际媒体效果。接口、请求模型或固定接入说明改变后应重新生成并提交文档。
 
-当前 OpenAPI 公开方法：用户端 257 条，管理端 19 条。
+当前 OpenAPI 公开方法：用户端 267 条，管理端 19 条。
 
 ## 7. 用户端接口清单
 
@@ -316,6 +316,16 @@ python -m pytest -q tests/test_api_reference.py
 | `GET` | `/api/v1/agentapp/scrape/sources/{code}/history` | `list_history_api_v1_agentapp_scrape_sources__code__history_get` | GET /sources/{code}/history：列出该源的历史运行记录。 | path code：string，必填 | — |
 | `GET` | `/api/v1/agentapp/scrape/sources/{code}/prompts` | `list_prompts_api_v1_agentapp_scrape_sources__code__prompts_get` | GET /sources/{code}/prompts：列出该源已采集的提示词（limit 1-600）。 | path code：string，必填<br>query limit：integer，可选；默认值：200；minimum=1；maximum=600 | — |
 | `POST` | `/api/v1/agentapp/scrape/sources/{code}/run` | `run_source_now_api_v1_agentapp_scrape_sources__code__run_post` | POST /sources/{code}/run：立即执行一次采集（不等定时），返回本次运行结果。 | path code：string，必填 | — |
+| `GET` | `/api/v1/agentapp/shanhaijing/categories` | `get_categories_api_v1_agentapp_shanhaijing_categories_get` | 获取山海经专栏分类与山系分布统计。 | — | — |
+| `GET` | `/api/v1/agentapp/shanhaijing/characters` | `list_characters_api_v1_agentapp_shanhaijing_characters_get` | GET /characters：查询山海经专栏角色列表。 | query category：string 或 null，可选；分类筛选（如瑞兽、上古四凶、神禽异鸟等）<br>query mountain：string 或 null，可选；山系经卷筛选（如南山经、西山经、海外经等）<br>query query：string 或 null，可选；按名字、拼音、典籍古文检索 | — |
+| `POST` | `/api/v1/agentapp/shanhaijing/characters` | `create_character_api_v1_agentapp_shanhaijing_characters_post` | POST /characters：新增山海经角色（支持根据名称自动从网上检索1~3张图片）。 | — | application/json：CharacterCreateRequest，必填 |
+| `DELETE` | `/api/v1/agentapp/shanhaijing/characters/{char_id}` | `delete_character_api_v1_agentapp_shanhaijing_characters__char_id__delete` | DELETE /characters/{char_id}：删除指定山海经角色。 | path char_id：string，必填 | — |
+| `GET` | `/api/v1/agentapp/shanhaijing/characters/{char_id}` | `get_character_api_v1_agentapp_shanhaijing_characters__char_id__get` | GET /characters/{char_id}：获取单个山海经角色详情。 | path char_id：string，必填 | — |
+| `PUT` | `/api/v1/agentapp/shanhaijing/characters/{char_id}` | `update_character_api_v1_agentapp_shanhaijing_characters__char_id__put` | PUT /characters/{char_id}：更新山海经角色资料或图片。 | path char_id：string，必填 | application/json：CharacterUpdateRequest，必填 |
+| `POST` | `/api/v1/agentapp/shanhaijing/characters/{char_id}/fetch-web-images` | `fetch_character_web_images_api_v1_agentapp_shanhaijing_characters__char_id__fetch_web_images_post` | 为指定角色从网上检索 1-3 张图片，并可一键存入专栏中。 | path char_id：string，必填<br>query count：integer，可选；检索图片数量（1-3张）；默认值：3；minimum=1；maximum=5<br>query apply_to_character：boolean，可选；是否直接保存到该角色的画廊中；默认值：true | — |
+| `GET` | `/api/v1/agentapp/shanhaijing/image-proxy` | `image_proxy_api_v1_agentapp_shanhaijing_image_proxy_get` | GET /image-proxy：图片代理与本地缓存服务。 | query url：string，必填；需要代理加载的网络图片 URL | — |
+| `POST` | `/api/v1/agentapp/shanhaijing/reset-defaults` | `reset_default_characters_api_v1_agentapp_shanhaijing_reset_defaults_post` | POST /reset-defaults：重置为系统预设的 12 位典籍经典角色与全量图片。 | — | — |
+| `GET` | `/api/v1/agentapp/shanhaijing/search-web-images` | `search_web_images_api_v1_agentapp_shanhaijing_search_web_images_get` | GET /search-web-images：自由从网上检索 1-3 张山海经相关图片。 | query query：string，必填；要检索的山海经角色或神兽名称<br>query count：integer，可选；检索图片数量；默认值：3；minimum=1；maximum=5 | — |
 | `GET` | `/api/v1/agentapp/skills/analyze` | `get_analysis_api_v1_agentapp_skills_analyze_get` | 读取缓存的分析报告。 | — | — |
 | `POST` | `/api/v1/agentapp/skills/analyze` | `analyze_trends_api_v1_agentapp_skills_analyze_post` | 用 LLM 生成 AI 趋势分析报告（同一天复用缓存）。 | — | — |
 | `GET` | `/api/v1/agentapp/skills/digest` | `get_digest_api_v1_agentapp_skills_digest_get` | 读当前简报（已剔除已读条目）。不触发 LLM。 | — | — |
@@ -601,6 +611,54 @@ POST /cards/batch-status 的请求体：要更新的卡片 ID 列表与目标状
 | `type` | string | 否 | 默认值："image" |
 | `position` | object | 否 |  |
 | `data` | object | 否 |  |
+
+### CharacterCreateRequest
+
+新建角色请求。
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| `id` | string 或 null | 否 |  |
+| `name` | string | 是 |  |
+| `pinyin` | string | 否 | 默认值："" |
+| `title` | string | 否 | 默认值："" |
+| `category` | string | 否 | 默认值："异兽" |
+| `mountain` | string | 否 | 默认值："" |
+| `classic_quote` | string | 否 | 默认值："" |
+| `modern_desc` | string | 否 | 默认值："" |
+| `ability` | string | 否 | 默认值："" |
+| `images` | array&lt;CharacterImage&gt; | 否 |  |
+| `tags` | array&lt;string&gt; | 否 |  |
+| `auto_fetch_images` | boolean | 否 | 默认值：false |
+
+### CharacterImage
+
+角色图片元数据。
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| `id` | string | 否 |  |
+| `url` | string | 是 |  |
+| `title` | string | 否 | 默认值："山海经图谱" |
+| `source` | string | 否 | 默认值："网络检索" |
+| `is_cover` | boolean | 否 | 默认值：false |
+
+### CharacterUpdateRequest
+
+更新角色请求。
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| `name` | string 或 null | 否 |  |
+| `pinyin` | string 或 null | 否 |  |
+| `title` | string 或 null | 否 |  |
+| `category` | string 或 null | 否 |  |
+| `mountain` | string 或 null | 否 |  |
+| `classic_quote` | string 或 null | 否 |  |
+| `modern_desc` | string 或 null | 否 |  |
+| `ability` | string 或 null | 否 |  |
+| `images` | array&lt;CharacterImage&gt; 或 null | 否 |  |
+| `tags` | array&lt;string&gt; 或 null | 否 |  |
 
 ### ConfirmActionBody
 

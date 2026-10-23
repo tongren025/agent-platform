@@ -51,6 +51,7 @@ services:
           memory: 96M
 
   app:
+    image: agent-platform-runtime:local
     build: .
     restart: unless-stopped
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
@@ -76,7 +77,7 @@ services:
           memory: 384M
 
   admin:
-    build: .
+    image: agent-platform-runtime:local
     restart: unless-stopped
     command: ["uvicorn", "admin.main:app", "--host", "0.0.0.0", "--port", "8001", "--workers", "1"]
     env_file: .env
@@ -100,7 +101,7 @@ services:
           memory: 256M
 
   worker:
-    build: .
+    image: agent-platform-runtime:local
     restart: unless-stopped
     command: ["python", "-m", "app.tasks.worker"]
     env_file: .env

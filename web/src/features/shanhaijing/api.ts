@@ -1,7 +1,7 @@
 /**
  * 山海经专栏 HTTP API 请求接口。
  */
-import { BASE, request } from '@/shared/api/client';
+import { BASE, request } from '../../api';
 import type { ShanhaiCategoryInfo, ShanhaiCharacter, WebImageResult } from './types';
 
 export const shanhaijingApi = {
