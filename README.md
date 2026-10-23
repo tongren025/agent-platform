@@ -745,3 +745,10 @@ memory / evolution / ai-providers / auth 登录等完整端点以 `app/api/` 代
 ## 许可证
 
 [AGPL-3.0](LICENSE)。个人使用、自部署、二次开发完全自由;若基于本项目对外提供网络服务(含 SaaS),需按同协议开源你的修改。商业闭源授权请通过 Issue 联系。
+
+
+### CI/CD 修复与生产镜像
+
+当前前端入口为 `web/src/main.tsx → web/src/App.tsx`，山海经专栏从该入口注册。
+生产 Compose 由 app 构建 `agent-platform-runtime:local`，admin/worker 复用同一镜像；
+自动部署在构建成功后才更新容器。排障和手工构建顺序见 [运行手册](docs/RUNBOOK.md#10-github-actions-自动部署)。

@@ -41,6 +41,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const McpOAuthCallback = lazy(() => import('./pages/McpOAuthCallback'));
 const UserGuide = lazy(() => import('./pages/UserGuide'));
 const MobileCreator = lazy(() => import('./pages/MobileCreator'));
+const ShanhaijingPortal = lazy(() => import('./features/shanhaijing/pages/ShanhaijingPortal'));
 
 function ResponsiveLanding() {
   const isPhone = typeof window !== 'undefined'
@@ -82,6 +83,7 @@ export default function App() {
           <Route path="/production/:pid/pipeline" element={<Production />} />
           <Route path="/production/:pid" element={<ProductionHub />} />
           <Route path="/canvas" element={<Canvas />} />
+          <Route path="/shanhaijing" element={<ShanhaijingPortal />} />
           <Route path="/trends" element={<SkillTracker />} />
           <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
           <Route path="/evolution" element={<Evolution />} />

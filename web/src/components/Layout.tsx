@@ -4,6 +4,7 @@ import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Tooltip } from 'antd';
 import {
   BookOutlined,
+  CompassOutlined,
   DashboardOutlined,
   TeamOutlined,
   MessageOutlined,
@@ -48,6 +49,7 @@ const navSections: NavSection[] = [
       { key: '/studio', icon: <PlaySquareOutlined />, label: '快速制作', perm: 'production:manage' },
       { key: '/production', icon: <VideoCameraOutlined />, label: '我的项目', perm: 'production:manage' },
       { key: '/canvas', icon: <ExpandOutlined />, label: '画布中心', perm: 'production:manage' },
+      { key: '/shanhaijing', icon: <CompassOutlined />, label: '山海经专栏' },
     ],
   },
   {

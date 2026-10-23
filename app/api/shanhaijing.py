@@ -20,7 +20,7 @@ from fastapi import APIRouter, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 
 from app.config import BASE_DIR
-from app.shared.http import ok as _ok, validate_key as _validate
+from app.api.common import ok as _ok, validate_key as _validate
 
 router = APIRouter(prefix="/api/v1/agentapp/shanhaijing", tags=["shanhaijing"])
 

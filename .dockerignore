@@ -30,3 +30,13 @@ openspec/
 # OS
 Thumbs.db
 .DS_Store
+
+# 本地工作目录与其他项目不参与运行镜像构建
+.worktrees/
+.codex/
+.agents/
+.tmp/
+third_party/
+wwwroot/
+**/node_modules/
+**/__pycache__/

@@ -57,3 +57,12 @@ def test_grafana_optional_provisioning_directories_exist():
 
     assert (provisioning / "plugins").is_dir()
     assert (provisioning / "alerting").is_dir()
+
+
+def test_production_services_share_one_build():
+    """三个运行角色使用同一镜像，生产更新只需构建一次。"""
+    services = yaml.safe_load((ROOT / "docker-compose.prod.yml").read_text(encoding="utf-8"))["services"]
+    runtime = [services[name] for name in ("app", "admin", "worker")]
+    assert len({service["image"] for service in runtime}) == 1
+    assert "build" in services["app"]
+    assert all("build" not in services[name] for name in ("admin", "worker"))

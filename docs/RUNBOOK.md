@@ -260,3 +260,18 @@ curl -fsS https://aikirito.cloud/healthcheck
 
 需要重新部署当前 `master` 时，在 GitHub Actions 的 `CI/CD` 页面选择 **Run workflow**；不要登录服务器
 手工 `git pull`。服务器 `.env` 与运行数据仍按本 Runbook 的数据持久化规则维护。
+
+### CI 缺失模块与构建超时
+
+CI 使用 Git 提交内容，不会读取开发机器尚未提交的重构文件。2026-10-23 的失败包含
+`app.shared` 和前端新目录的悬空引用；山海经现在接入现有公共工具、HTTP 客户端和实际路由。
+新增 API 后应运行 `python scripts/generate_api_reference.py` 并一并提交文档。
+
+生产 `app` 负责构建 `agent-platform-runtime:local`，`admin` 和 `worker` 复用该镜像。
+部署脚本先执行 `docker compose -f docker-compose.prod.yml build app`，成功后才运行
+`up -d --no-build --remove-orphans`。手工更新某个角色前也必须先构建 app，避免复用旧镜像。
+Docker 上下文排除本地 worktree 和依赖缓存，但保留 production 种子数据与趋势快照。
+
+历史 SSH 超时发生在服务器编译前端期间；减少重复构建不等于确认内存故障已修复。
+若再次出现 `Timeout, server ... not responding`，需检查服务器 `free -h`、`swapon --show`
+及内核 OOM 日志，并结合构建日志定位；不要把 SSH 登录成功当作部署完成。
