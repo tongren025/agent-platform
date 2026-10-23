@@ -89,7 +89,9 @@ export default function ShanhaijingPortal() {
         const matchQuote = c.classic_quote?.toLowerCase().includes(q);
         const matchDesc = c.modern_desc?.toLowerCase().includes(q);
         const matchTags = c.tags?.some((t) => t.toLowerCase().includes(q));
-        if (!matchName && !matchPinyin && !matchQuote && !matchDesc && !matchTags) {
+        const matchMortal = c.mortal_identity?.toLowerCase().includes(q);
+        const matchDivine = c.divine_form?.toLowerCase().includes(q);
+        if (!matchName && !matchPinyin && !matchQuote && !matchDesc && !matchTags && !matchMortal && !matchDivine) {
           return false;
         }
       }
@@ -175,11 +177,11 @@ export default function ShanhaijingPortal() {
       {/* 顶部古典 Banner */}
       <div className="shanhai-hero-banner">
         <div className="shanhai-hero-badge">
-          <FireOutlined /> 东方典籍 · 东方古典志怪美学专栏
+          <FireOutlined /> 高质量短剧生产引擎 · 山海经洪荒大荒漫剧角色库
         </div>
-        <h1 className="shanhai-hero-title">山海经专栏 · 大荒异志录</h1>
+        <h1 className="shanhai-hero-title">山海经专栏 · 洪荒双相漫剧图鉴</h1>
         <p className="shanhai-hero-subtitle">
-          汇聚《山海经》全卷异兽、神祇与神禽图鉴。专栏中每位角色单独建档立项，支持实时从网络检索 1~3 张古籍插画与传世画卷，并可一键将设定与形象无缝带入漫剧工作流。
+          收录 24 位《山海经》典籍古神、远古战神与异兽。专为「白天凡相 · 夜晚古神真身」高质量漫剧短剧定制，每位角色配备 2~4 张高清画卷、双重人设档案与电影级 AI 分镜出图 Prompt（Midjourney/Flux/Seedance 2.0 一键复制）。
         </p>
 
         <div className="shanhai-stats-bar">

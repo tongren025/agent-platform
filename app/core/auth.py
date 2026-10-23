@@ -32,7 +32,7 @@ _AUTH_EXEMPT_PREFIXES = ("/api/v1/agentapp/auth/", "/api/admin/")
 # 写操作(上传)仍需 production:manage;serve_resource 自带路径穿越防护。
 _READ_EXEMPT_PREFIXES = (
     "/api/v1/agentapp/production/resource/",
-    "/api/v1/agentapp/shanhaijing/image-proxy",
+    "/api/v1/agentapp/shanhaijing",
 )
 
 # 写操作的前缀 → 所需权限。顺序即匹配顺序:更长/更具体的前缀放前面。

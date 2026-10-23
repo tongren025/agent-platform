@@ -54,6 +54,9 @@ class ShanhaiCharacter(BaseModel):
     classic_quote: str = ""
     modern_desc: str = ""
     ability: str = ""
+    mortal_identity: Optional[str] = ""
+    divine_form: Optional[str] = ""
+    visual_prompt: Optional[str] = ""
     images: List[CharacterImage] = Field(default_factory=list)
     tags: List[str] = Field(default_factory=list)
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
@@ -72,6 +75,9 @@ class CharacterCreateRequest(BaseModel):
     classic_quote: str = ""
     modern_desc: str = ""
     ability: str = ""
+    mortal_identity: Optional[str] = ""
+    divine_form: Optional[str] = ""
+    visual_prompt: Optional[str] = ""
     images: List[CharacterImage] = Field(default_factory=list)
     tags: List[str] = Field(default_factory=list)
     auto_fetch_images: bool = False
@@ -88,6 +94,9 @@ class CharacterUpdateRequest(BaseModel):
     classic_quote: Optional[str] = None
     modern_desc: Optional[str] = None
     ability: Optional[str] = None
+    mortal_identity: Optional[str] = None
+    divine_form: Optional[str] = None
+    visual_prompt: Optional[str] = None
     images: Optional[List[CharacterImage]] = None
     tags: Optional[List[str]] = None
 
@@ -679,6 +688,9 @@ def create_character(body: CharacterCreateRequest):
         classic_quote=body.classic_quote,
         modern_desc=body.modern_desc,
         ability=body.ability,
+        mortal_identity=body.mortal_identity or "",
+        divine_form=body.divine_form or "",
+        visual_prompt=body.visual_prompt or "",
         images=images,
         tags=body.tags or [name, body.category],
     )

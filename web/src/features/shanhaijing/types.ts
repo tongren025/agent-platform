@@ -20,6 +20,9 @@ export interface ShanhaiCharacter {
   classic_quote: string;
   modern_desc: string;
   ability?: string;
+  mortal_identity?: string;
+  divine_form?: string;
+  visual_prompt?: string;
   images: CharacterImage[];
   tags: string[];
   created_at?: string;

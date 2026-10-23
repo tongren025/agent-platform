@@ -18,6 +18,8 @@ import {
   BookOutlined,
   ThunderboltOutlined,
   LinkOutlined,
+  CopyOutlined,
+  FireOutlined,
 } from '@ant-design/icons';
 import type { ShanhaiCharacter } from '../types';
 import { toSafeImageUrl } from '../api';
@@ -173,6 +175,67 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
               </div>
               <div className="shanhai-ability-box">
                 {character.ability}
+              </div>
+            </div>
+          )}
+
+          {/* 现代短剧双重身份设定 */}
+          {(character.mortal_identity || character.divine_form) && (
+            <div className="shanhai-detail-section" style={{ marginTop: 16 }}>
+              <div className="shanhai-section-title" style={{ color: '#7c3aed' }}>
+                <VideoCameraOutlined style={{ marginRight: 6 }} />
+                短剧双形态设定（白天凡人 vs 夜晚古神）
+              </div>
+              <div className="shanhai-detail-dual-container">
+                {character.mortal_identity && (
+                  <div className="shanhai-detail-dual-card mortal">
+                    <div className="shanhai-detail-dual-title">☀️ 白天凡相（现代身份）</div>
+                    <div className="shanhai-detail-dual-content">{character.mortal_identity}</div>
+                  </div>
+                )}
+                {character.divine_form && (
+                  <div className="shanhai-detail-dual-card divine">
+                    <div className="shanhai-detail-dual-title">🌙 夜晚真身（洪荒古神法相）</div>
+                    <div className="shanhai-detail-dual-content">{character.divine_form}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 电影级漫剧出图 Prompt */}
+          {character.visual_prompt && (
+            <div className="shanhai-detail-section" style={{ marginTop: 16 }}>
+              <div
+                className="shanhai-section-title"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  color: '#ea580c',
+                }}
+              >
+                <span>
+                  <FireOutlined style={{ marginRight: 6 }} />
+                  电影级漫剧出图 Prompt (Midjourney / Flux / Seedance 2.0)
+                </span>
+                <Button
+                  size="small"
+                  type="primary"
+                  icon={<CopyOutlined />}
+                  style={{ background: '#7c3aed', borderColor: '#7c3aed' }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(character.visual_prompt || '');
+                    message.success(`已复制 ${character.name} 电影级生图词！可直接粘贴至 Midjourney / Flux 生图`);
+                  }}
+                >
+                  一键复制提示词
+                </Button>
+              </div>
+              <div className="shanhai-prompt-box">
+                <Text code className="shanhai-prompt-code">
+                  {character.visual_prompt}
+                </Text>
               </div>
             </div>
           )}
