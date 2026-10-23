@@ -1,15 +1,5 @@
-import React, { useState } from 'react';
-import {
-  Modal,
-  Tag,
-  Button,
-  Space,
-  Descriptions,
-  Divider,
-  Image,
-  Typography,
-  message,
-} from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Tag, Button, Divider, Image, Typography, message } from 'antd';
 import {
   CompassOutlined,
   CloudDownloadOutlined,
@@ -17,14 +7,15 @@ import {
   PictureOutlined,
   BookOutlined,
   ThunderboltOutlined,
-  LinkOutlined,
   CopyOutlined,
   FireOutlined,
 } from '@ant-design/icons';
 import type { ShanhaiCharacter } from '../types';
 import { toSafeImageUrl } from '../api';
+import { CharacterSources } from './CharacterSources';
+import type { ReadingTarget } from './OriginalTextLibrary';
 
-const { Title, Paragraph, Text } = Typography;
+const { Paragraph, Text } = Typography;
 
 interface CharacterDetailModalProps {
   character: ShanhaiCharacter | null;
@@ -32,6 +23,7 @@ interface CharacterDetailModalProps {
   onClose: () => void;
   onSearchImages: (char: ShanhaiCharacter) => void;
   onImportToStudio: (char: ShanhaiCharacter) => void;
+  onReadSource: (target: ReadingTarget) => void;
 }
 
 export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
@@ -40,11 +32,14 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
   onClose,
   onSearchImages,
   onImportToStudio,
+  onReadSource,
 }) => {
-  if (!character) return null;
-
-  const images = character.images || [];
   const [selectedImgIdx, setSelectedImgIdx] = useState(0);
+  useEffect(() => {
+    setSelectedImgIdx(0);
+  }, [character?.id]);
+  if (!character) return null;
+  const images = character.images || [];
 
   const activeImg = images[selectedImgIdx] || images[0];
 
@@ -86,7 +81,9 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
           <span className="shanhai-modal-badge">{character.category}</span>
           <span className="shanhai-modal-name">{character.name}</span>
           {character.pinyin && <span className="shanhai-modal-pinyin">({character.pinyin})</span>}
-          {character.title && <span className="shanhai-modal-title-suffix">· {character.title}</span>}
+          {character.title && (
+            <span className="shanhai-modal-title-suffix">· {character.title}</span>
+          )}
         </div>
       }
     >
@@ -141,15 +138,18 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
 
         {/* 右侧：典籍原文、白话考释与神力属性 */}
         <div className="shanhai-detail-info">
+          {open && (
+            <CharacterSources key={character.id} characterId={character.id} onRead={onReadSource} />
+          )}
           <div className="shanhai-detail-section">
             <div className="shanhai-section-title">
               <BookOutlined style={{ marginRight: 6, color: '#b45309' }} />
-              山海经古籍原文
+              角色档案引文（待逐字校勘）
             </div>
             <div className="shanhai-quote-full-box">
               <div className="shanhai-mountain-origin">
                 <CompassOutlined style={{ marginRight: 4 }} />
-                典籍出处：{character.mountain || '《山海经》大荒篇'}
+                档案标注：{character.mountain || '《山海经》大荒篇'}
               </div>
               <Paragraph className="shanhai-ancient-text">
                 {character.classic_quote || '未载原文引句。'}
@@ -160,7 +160,7 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
           <div className="shanhai-detail-section" style={{ marginTop: 16 }}>
             <div className="shanhai-section-title">
               <PictureOutlined style={{ marginRight: 6, color: '#059669' }} />
-              外貌特征与白话考释
+              角色释义与创作设定
             </div>
             <Paragraph className="shanhai-modern-text">
               {character.modern_desc || '暂无释义考据。'}
@@ -173,9 +173,7 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
                 <ThunderboltOutlined style={{ marginRight: 6, color: '#d97706' }} />
                 神职、异能与祥凶寓意
               </div>
-              <div className="shanhai-ability-box">
-                {character.ability}
-              </div>
+              <div className="shanhai-ability-box">{character.ability}</div>
             </div>
           )}
 
@@ -189,13 +187,17 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
               <div className="shanhai-detail-dual-container">
                 {character.mortal_identity && (
                   <div className="shanhai-detail-dual-card mortal">
-                    <div className="shanhai-detail-dual-title">☀️ 白天凡相（现代身份）</div>
+                    <div className="shanhai-detail-dual-title">
+                      ☀️ 白天凡相（现代身份）
+                    </div>
                     <div className="shanhai-detail-dual-content">{character.mortal_identity}</div>
                   </div>
                 )}
                 {character.divine_form && (
                   <div className="shanhai-detail-dual-card divine">
-                    <div className="shanhai-detail-dual-title">🌙 夜晚真身（洪荒古神法相）</div>
+                    <div className="shanhai-detail-dual-title">
+                      🌙 夜晚真身（洪荒古神法相）
+                    </div>
                     <div className="shanhai-detail-dual-content">{character.divine_form}</div>
                   </div>
                 )}
@@ -226,7 +228,9 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
                   style={{ background: '#7c3aed', borderColor: '#7c3aed' }}
                   onClick={() => {
                     navigator.clipboard.writeText(character.visual_prompt || '');
-                    message.success(`已复制 ${character.name} 电影级生图词！可直接粘贴至 Midjourney / Flux 生图`);
+                    message.success(
+                      `已复制 ${character.name} 电影级生图词！可直接粘贴至 Midjourney / Flux 生图`,
+                    );
                   }}
                 >
                   一键复制提示词

@@ -1,0 +1,109 @@
+[
+  {
+    "id": "song-1180-chiyang",
+    "asset_key": "song-1180",
+    "title": "山海经十八卷 宋淳熙七年池阳郡斋刊本",
+    "year": 1180,
+    "annotator": "郭璞",
+    "editor": "尤袤",
+    "holding_institution": "中国国家图书馆",
+    "shelfmark": "08272",
+    "page_count": 144,
+    "file_bytes": 638328511,
+    "sha256": "ee948b889c4f46e8e963d543bf370afc5b8de205803f3db7efd49b44aea50cf7",
+    "source_url": "https://www.shuge.org/view/shan_hai_jing/",
+    "notes": "原色扫描本，无全文搜索。馆藏原书缺尤袤卷末跋；书影页码以PDF为准，可能含左右两半叶，卷首页可能同时包含上卷末尾。",
+    "chapters": [
+      {
+        "number": 1,
+        "title": "南山经",
+        "start_pdf_page": 9
+      },
+      {
+        "number": 2,
+        "title": "西山经",
+        "start_pdf_page": 16
+      },
+      {
+        "number": 3,
+        "title": "北山经",
+        "start_pdf_page": 34
+      },
+      {
+        "number": 4,
+        "title": "东山经",
+        "start_pdf_page": 54
+      },
+      {
+        "number": 5,
+        "title": "中山经",
+        "start_pdf_page": 61
+      },
+      {
+        "number": 6,
+        "title": "海外南经",
+        "start_pdf_page": 90
+      },
+      {
+        "number": 7,
+        "title": "海外西经",
+        "start_pdf_page": 93
+      },
+      {
+        "number": 8,
+        "title": "海外北经",
+        "start_pdf_page": 101
+      },
+      {
+        "number": 9,
+        "title": "海外东经",
+        "start_pdf_page": 104
+      },
+      {
+        "number": 10,
+        "title": "海内南经",
+        "start_pdf_page": 107
+      },
+      {
+        "number": 11,
+        "title": "海内西经",
+        "start_pdf_page": 109
+      },
+      {
+        "number": 12,
+        "title": "海内北经",
+        "start_pdf_page": 112
+      },
+      {
+        "number": 13,
+        "title": "海内东经",
+        "start_pdf_page": 115
+      },
+      {
+        "number": 14,
+        "title": "大荒东经",
+        "start_pdf_page": 119
+      },
+      {
+        "number": 15,
+        "title": "大荒南经",
+        "start_pdf_page": 123
+      },
+      {
+        "number": 16,
+        "title": "大荒西经",
+        "start_pdf_page": 127
+      },
+      {
+        "number": 17,
+        "title": "大荒北经",
+        "start_pdf_page": 132
+      },
+      {
+        "number": 18,
+        "title": "海内经",
+        "start_pdf_page": 136
+      }
+    ]
+  }
+]

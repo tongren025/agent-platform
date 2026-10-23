@@ -1,0 +1,227 @@
+.shanhai-original-library {
+  margin: 24px 0;
+  padding: 24px;
+  background: #fffcf5;
+  border: 1px solid #e8dbc1;
+  border-radius: 12px;
+  color: #453624;
+}
+.shanhai-original-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #8b5e21;
+}
+.shanhai-original-heading h2 {
+  font-size: 20px;
+  margin: 0 0 8px;
+}
+.shanhai-original-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.shanhai-original-summary p {
+  margin: 10px 0 0;
+}
+.shanhai-original-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.shanhai-source-note {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #726553;
+  margin: 10px 0;
+}
+.shanhai-chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+.shanhai-chapter-grid button,
+.shanhai-reader-chapters button {
+  border: 1px solid #e4d6bb;
+  background: #fff;
+  color: #51412b;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 12px;
+  text-align: left;
+  font: inherit;
+}
+.shanhai-chapter-grid button {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.shanhai-chapter-grid small,
+.shanhai-reader-chapters small {
+  color: #8c7b62;
+  font-size: 12px;
+}
+.shanhai-chapter-grid button:hover,
+.shanhai-reader-chapters button:hover {
+  border-color: #b47c2c;
+  background: #fff7e6;
+}
+.shanhai-chapter-grid button:focus-visible,
+.shanhai-reader-chapters button:focus-visible {
+  outline: 2px solid #b47c2c;
+  outline-offset: 2px;
+}
+.shanhai-reader-toolbar {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.shanhai-reader-layout {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 14px;
+  height: min(70vh, 900px);
+}
+.shanhai-reader-chapters {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 2px;
+}
+.shanhai-reader-chapters button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 10px;
+  font-size: 13px;
+}
+.shanhai-reader-chapters button[aria-current='page'] {
+  background: #f7e5bf;
+  border-color: #b47c2c;
+  font-weight: 600;
+}
+.shanhai-reader-page {
+  overflow: auto;
+  background: #e9dfce;
+  border-radius: 8px;
+  padding: 8px;
+}
+.shanhai-reader-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 350px;
+}
+.shanhai-citations {
+  margin-bottom: 20px;
+}
+.shanhai-citations h3 {
+  font-size: 16px;
+  color: #8b5e21;
+}
+.shanhai-citation-card {
+  border: 1px solid #e8dbc1;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 10px;
+  background: #fffcf5;
+}
+.shanhai-citation-card strong {
+  display: inline;
+  line-height: 2;
+}
+.shanhai-citation-card blockquote {
+  margin: 12px 0;
+  border-left: 3px solid #bd9459;
+  padding-left: 12px;
+  font-family: 'Noto Serif SC', 'SimSun', serif;
+  font-size: 16px;
+  line-height: 1.9;
+}
+@media (max-width: 1100px) {
+  .shanhai-chapter-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .shanhai-original-library {
+    padding: 16px;
+  }
+  .shanhai-chapter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .shanhai-reader-layout {
+    display: flex;
+    flex-direction: column;
+    height: 65vh;
+  }
+  .shanhai-reader-chapters {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: 52px;
+  }
+  .shanhai-reader-chapters button {
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .shanhai-reader-page {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .shanhai-reader-modal {
+    top: 8px;
+    padding-bottom: 0;
+  }
+  .shanhai-reader-modal .ant-modal-content {
+    max-height: calc(100dvh - 16px);
+    display: flex;
+    flex-direction: column;
+  }
+  .shanhai-reader-modal .ant-modal-body {
+    height: calc(100dvh - 120px);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+  }
+  .shanhai-reader-toolbar {
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+  .shanhai-reader-toolbar .ant-btn {
+    padding-inline: 8px;
+    font-size: 12px;
+  }
+  .shanhai-reader-toolbar .ant-input-number {
+    width: 58px;
+  }
+  .shanhai-reader-toolbar label {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .shanhai-reader-modal .shanhai-source-note {
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 6px 0;
+    flex-shrink: 0;
+  }
+  .shanhai-reader-layout {
+    flex: 1;
+    height: auto;
+    min-height: 220px;
+  }
+  .shanhai-reader-chapters {
+    flex-shrink: 0;
+  }
+}

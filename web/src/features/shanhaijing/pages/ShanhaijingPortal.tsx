@@ -20,8 +20,6 @@ import {
   ReloadOutlined,
   CloudDownloadOutlined,
   FireOutlined,
-  BookOutlined,
-  PictureOutlined,
 } from '@ant-design/icons';
 import type { ShanhaiCharacter, ShanhaiCategoryInfo } from '../types';
 import { shanhaijingApi } from '../api';
@@ -29,10 +27,14 @@ import { CharacterCard } from '../components/CharacterCard';
 import { CharacterDetailModal } from '../components/CharacterDetailModal';
 import { WebImageSearchModal } from '../components/WebImageSearchModal';
 import { CharacterFormModal } from '../components/CharacterFormModal';
+import { OriginalTextLibrary } from '../components/OriginalTextLibrary';
+import type { ReadingTarget } from '../components/OriginalTextLibrary';
+import { OriginalTextReader } from '../components/OriginalTextReader';
 import './ShanhaijingPortal.css';
 
 export default function ShanhaijingPortal() {
   const navigate = useNavigate();
+  const [readingTarget, setReadingTarget] = useState<ReadingTarget | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [characters, setCharacters] = useState<ShanhaiCharacter[]>([]);
@@ -204,6 +206,8 @@ export default function ShanhaijingPortal() {
         </div>
       </div>
 
+      <OriginalTextLibrary onRead={setReadingTarget} />
+
       {/* 筛选与操作工具栏 */}
       <div className="shanhai-toolbar">
         {/* 第一行：品类切换与核心操作 */}
@@ -339,9 +343,18 @@ export default function ShanhaijingPortal() {
         </Empty>
       )}
 
+      {readingTarget && (
+        <OriginalTextReader
+          key={`${readingTarget.editionId}-${readingTarget.page}`}
+          target={readingTarget}
+          onClose={() => setReadingTarget(null)}
+        />
+      )}
+
       {/* 角色详考模态框 */}
       <CharacterDetailModal
         open={Boolean(detailChar)}
+        onReadSource={setReadingTarget}
         character={detailChar}
         onClose={() => setDetailChar(null)}
         onSearchImages={(c) => {

@@ -2,9 +2,20 @@
  * 山海经专栏 HTTP API 请求接口。
  */
 import { BASE, request } from '@/shared/api/client';
-import type { ShanhaiCategoryInfo, ShanhaiCharacter, WebImageResult } from './types';
+import type { ShanhaiCategoryInfo, ShanhaiCharacter, ShanhaiEdition, ShanhaiCitation, WebImageResult } from './types';
 
 export const shanhaijingApi = {
+  /** 查询原典版本与卷目录。 */
+  listEditions: (signal?: AbortSignal) =>
+    request<ShanhaiEdition[]>('/shanhaijing/editions', { signal }),
+  /** 读取版本详情及书影资源状态。 */
+  getEdition: (id: string, signal?: AbortSignal) =>
+    request<ShanhaiEdition>(`/shanhaijing/editions/${encodeURIComponent(id)}`, { signal }),
+  /** 原文出处独立于角色编辑接口保存。 */
+  getCitations: (id: string, signal?: AbortSignal) =>
+    request<ShanhaiCitation[]>(`/shanhaijing/characters/${encodeURIComponent(id)}/citations`, {
+      signal,
+    }),
   /** 获取山海经分类与山系概览 */
   getCategories: () =>
     request<ShanhaiCategoryInfo>('/shanhaijing/categories'),

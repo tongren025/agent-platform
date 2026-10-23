@@ -25,3 +25,7 @@ data/foundation/
 
 # 本地临时测试缓存与锁死目录
 .tmp/pytest-tiexin-*/
+
+# 1180宋本原件与派生书影由离线导入部署；小型版本/出处清单保留在Git。
+output/pdf/shanhaijing-song-1180/*.pdf
+data/uploads/shanhaijing/editions/song-1180/
